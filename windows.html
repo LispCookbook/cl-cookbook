@@ -165,9 +165,6 @@ build.bat</pre>
           file. This will result in the creation of a clisp.bat file on the
           desktop. You can delete this batch file, move it to another directory
           or leave it on the desktop - it will not be used by this setup.</li>
-        <li>The clisp-indent.el utility provides better Lisp indentation and is
-          part of the CLISP distribution. You need to copy it from the c:\bin\clisp-2.29\emacs directory and put it into the
-          c:\home\site directory. </li>
         <li>Create a file named _clisprc.lisp in the c:\home directory. This
           file can have any initializations that need to occur when CLISP
           starts. For the time being, just leave it empty.</li>
@@ -187,10 +184,19 @@ build.bat</pre>
           from Franz.</li>
         <li>From the Windows Start menu, navigate to the Allegro CL group and
           startup ACL.</li>
-        <li>On the ACL Tools menu, select the Options menu item. Click on the
-          Editor tab and select the checkbox titled &quot;Open files in GNU
-          Emacs&quot;. Click Ok and exit ACL.</li>
+        <li>In the Listener (Debug Window), enter the following:</li>
       </ul>
+<blockquote>
+  <pre>(progn
+  (build-lisp-image &quot;alisp.dxl&quot; :case-mode :case-insensitive-upper
+                    :include-ide nil :restart-app-function nil)
+  (sys:copy-file &quot;sys:allegro-ansi.exe&quot; &quot;sys:alisp.exe&quot;))
+  </pre>
+</blockquote>
+<ul>
+  <li>A non-IDE Lisp image &amp; exe (alisp.exe) will be created in the ACL
+    directory to be used with Emacs. Exit the ACL IDE.</li>
+</ul>
       <h3><a name="Installing LispWorks">6. Installing LispWorks</a></h3>
       <ul>
         <li>In order to use LispWorks with ILISP, it is necessary to create a
@@ -263,8 +269,6 @@ lispworks-4200 -init c:\home\lisp\console.lisp</pre>
         <li>If not all the Lisp implementations were downloaded, the .emacs file
           will still work &quot;as is&quot; with the following exceptions:
           <ul>
-            <li>If you didn't download CLISP, search for &quot;clisp-indent&quot;
-              and comment out that line. </li>
             <li>If you attempt to run an implementation that you didn't
               download, you will get a run-time error. </li>
           </ul>
@@ -277,9 +281,9 @@ lispworks-4200 -init c:\home\lisp\console.lisp</pre>
           <ul>
             <li>Double-click on the &quot;site&quot; directory to drill down
               into that directory</li>
-            <li>Compile the clisp-indent.el (if you installed CLISP) and cua.el files
+            <li>Compile the cua.el file
               by pressing &quot;B&quot; when the cursor is on the file name in
-              the dired window (answer &quot;y&quot; to the &quot;Byte-Compile .emacs
+              the dired window (answer &quot;y&quot; to the &quot;Byte-Compile
               (y or n)&quot; prompt)</li>
             <li>If you installed CLISP, do the following:
               <ul>
@@ -330,36 +334,35 @@ lispworks-4200 -init c:\home\lisp\console.lisp</pre>
                 </li>
               </ul>
             </li>
+            <li>Click in the dired window and press &quot;M-C-F5&quot; (the
+              minibuffer window at the bottom will say &quot;lisp-used: :acl-eli&quot;
+              indicating that you have toggled to ACL mode)
+            </li>
             <li>If you installed ACL, do the following:
               <ul>
-                <li>Click in the dired window and press &quot;M-C-F5&quot; (the
-              minibuffer window at the bottom will say &quot;lisp-used: :acl-eli&quot;
-              indicating that you have toggled to ACL mode)</li>
-                <li>Test that ACL runs by pressing &quot;F5&quot;
-              <ul>
-                <li>The ACL application should start up, click on the ok button
-                  after the splash screen</li>
-                <li>In the ACL application, select the menu option File/Open and
-                  open the ftp.cl file in the examples directory of ACL (it
-                  should open in Emacs and the ACL menus should appear in the
+                <li>Test that ACL runs by pressing &quot;F5&quot;. The ACL application should start up, and a Listener will
+                  appear in a separate window
+                  <ul>
+                    <li>Switch back to Emacs - a Listener for ACL should also be
+                  present in an Emacs *common-lisp* buffer and the ACL menus should appear in the
                   Emacs menu bar.</li>
-                <li>Click in the ftp.cl Emacs window and press &quot;C-h b&quot;
+                    <li>Click in the *common-lisp* window and press &quot;C-h b&quot;
                   (this will show you the keybindings that are in effect for
                   ELI/ACL)</li>
-                <li>Click in the *Help* window and scroll through the keybinding
+                    <li>Click in the *Help* window and scroll through the keybinding
                   list. When finished, press &quot;F4&quot; to close that window</li>
-                <li>Click in the ftp.cl Emacs window and select the ACLFile/Exit
+                    <li>Click in the *common-lisp* window and select the ACLFile/Exit
                   Allegro CL menu option (this will close down the ACL
                   connection and the ACL application will end)</li>
-              </ul>
+                  </ul>
                 </li>
               </ul>
             </li>
-            <li>If you installed LispWorks, do the following:
-              <ul>
                 <li>Click in the dired window and press &quot;M-C-F5&quot; (the
               minibuffer window at the bottom will say &quot;lisp-used: :lw-ilisp&quot;
               indicating that you have toggled to LispWorks mode)</li>
+            <li>If you installed LispWorks, do the following:
+              <ul>
                 <li>Test that LispWorks runs by pressing &quot;F5&quot; (LispWorks
               should open in the bottom window and the ILISP menu should appear
               in the Emacs menu bar)
@@ -375,11 +378,11 @@ lispworks-4200 -init c:\home\lisp\console.lisp</pre>
                 </li>
               </ul>
             </li>
-            <li>If you installed Corman, do the following:
-              <ul>
                 <li>Click in the dired window and press &quot;M-C-F5&quot; (the
               minibuffer window at the bottom will say &quot;lisp-used: :corman-eshell&quot;
               indicating that you have toggled to Corman mode)</li>
+            <li>If you installed Corman, do the following:
+              <ul>
                 <li>Test that Corman runs by pressing &quot;F5&quot;
               <ul>
                 <li>The Emacs eshell should start up and it should start up

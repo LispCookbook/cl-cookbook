@@ -21,7 +21,7 @@
 (defvar cormanlisp-program "c:/bin/corman-1.5/clconsole.exe -image c:/bin/corman-1.5/cormanlisp.img")
 
 ;; Franz Allegro Common Lisp - ELI
-(defvar fi:common-lisp-image-name "c:/bin/ACL-6.2/allegro-ansi.exe")
+(defvar fi:common-lisp-image-name "c:/bin/ACL-6.2/alisp.exe")
 (defvar fi:common-lisp-directory "c:/bin/ACL-6.2/")
 
 ;; Xanalys LispWorks - ILISP
@@ -182,7 +182,6 @@
 	lisp-no-popper t)	
   (require 'completer)
   (require 'ilisp)
-  (require 'clisp-indent)
   ;; Fix clisp interaction buffer (Windows)
   (modify-coding-system-alist 'process "lisp" 'unix)
   ;; All the *.d and *.lisp sources are in UTF-8 encoding.
