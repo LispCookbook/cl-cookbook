@@ -68,7 +68,7 @@
     (concat lispworks-dir "lw43-console")))
 
 ;; Corman Common Lisp - Inferior Lisp Mode 
-(defvar cormanlisp-dir (concat use-bin "corman-1.5/"))
+(defvar cormanlisp-dir (concat use-bin "corman-2.5/"))
 (defvar cormanlisp-exe (concat cormanlisp-dir "clconsole.exe"))
 (defvar cormanlisp-program (concat cormanlisp-exe " -image " cormanlisp-dir "cormanlisp.img"))
 
