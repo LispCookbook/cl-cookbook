@@ -84,12 +84,12 @@ Please note the following:</p>
   <li>Download the precompiled <a href="http://www.gnu.org/software/emacs/">Emacs</a>
     binaries for Windows from <a href="ftp://ftp.gnu.org/gnu/windows/emacs/21.1/emacs-21.1-fullbin-i386.tar.gz">ftp://ftp.gnu.org/gnu/windows/emacs/21.1/emacs-21.1-fullbin-i386.tar.gz</a></li>
   <li>Use Winzip to unpack the files (Suggested directory: c:\emacs)</li>
-  <li>Using Run on the Windows Start menu, enter &quot;c:\emacs\bin\runemacs.exe&quot;
-    to verify that the program works. On the Help menu, there is an Emacs
-    on-line tutorial. If you are unfamiliar with Emacs, you should (at least)
-    complete this tutorial before proceeding any further. The remainder of this
-    chapter's instructions will assume that you have at least basic familiarity
-    with the use of Emacs.</li>
+  <li>Using Run on the Windows Start menu, enter
+    &quot;c:\emacs\bin\runemacs.exe&quot; to verify that the program works. On
+    the Help menu, there is an Emacs on-line tutorial. If you are unfamiliar
+    with Emacs, you should (at least) complete this tutorial before proceeding
+    any further. The remainder of this chapter's instructions will assume that
+    you have at least basic familiarity with the use of Emacs.</li>
   <li>Create the following directories (used later):&nbsp;</li>
 </ul>
 <blockquote>
@@ -139,18 +139,18 @@ Please note the following:</p>
     <p>This will result in the install.lisp file replacing the version of
     install.lisp that is already in the c:\clisp-2.27\src\ directory. There will
     still be the (mostly empty) downloaded CVS clisp directory tree in the
-    c:\home\site directory - this can be deleted now. </li>
+    c:\home\site directory - this can be deleted now.</li>
   <li>You now need to complete the installation process for CLISP by running the
     install.bat file. To do this, go to a dos command line, cd to the
     c:\clisp-2.27 directory and run the install.bat file. This will result in
     the creation of a clisp.bat file on the desktop. Move this file from the
     desktop to the c:\home\lisp directory. The clisp.bat file will be used to
     start CLISP from within Emacs. (Note: Some people choose to edit this batch
-    file to include other parameters. I personally add the &quot;-ansi -I -q&quot;
-    switches to mine. This makes CLISP more ILISP friendly, ANSI CL compliant
-    and eliminates the startup banner. Once you have moved the clisp.bat file to
-    the c:\home\lisp directory, you may want to modify this file - an
-    explanation of all of the different switch settings is in the
+    file to include other parameters. I personally add the &quot;-ansi -I
+    -q&quot; switches to mine. This makes CLISP more ILISP friendly, ANSI CL
+    compliant and eliminates the startup banner. Once you have moved the
+    clisp.bat file to the c:\home\lisp directory, you may want to modify this
+    file - an explanation of all of the different switch settings is in the
     c:\clisp-2.27\doc\clisp.html file).</li>
   <li>The clisp-indent.el utility provides better Lisp indentation - it is
     actually part of CLISP but isn't included in the Windows zip file. You need
@@ -207,8 +207,8 @@ Please note the following:</p>
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   (t 'xemacs19)))<br>
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  ((string-match <b><font color="#FF0000">&quot;^2[01]\.&quot;</font></b> emacs-version)
-  'emacs20)<br>
+  ((string-match <b><font color="#FF0000">&quot;^2[01]\.&quot;</font></b>
+  emacs-version) 'emacs20)<br>
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   ((string-match &quot;^19\.&quot; emacs-version) 'emacs19)<br>
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -247,10 +247,10 @@ Please note the following:</p>
 Emacs utilities</a></h3>
 <ul>
   <li>The current 5.11 version of the <a href="http://sourceforge.net/projects/ilisp/">ILISP</a>
-    package (Lisp development environment used with clisp) does not work
-    properly with Emacs v21.1 (also, the latest version of the Hyperspec needs
-    the CVS version as well); therefore, it is necessary to download the CVS
-    version of this package. </li>
+    package (Lisp development environment used with clisp) has some problems
+    when used with Emacs v21.1 (also, the latest version of the Hyperspec needs
+    the CVS version as well); therefore, it is preferable to download the CVS
+    version of this package.</li>
   <li>Go to a dos command line and enter the following commands to download the
     CVS version of ILISP (Note: when you are prompted for the CVS password after
     entering line#2, just press enter):</li>
@@ -258,8 +258,7 @@ Emacs utilities</a></h3>
 <blockquote>
   <blockquote>
     <p>cd c:\home\site<br>
-    cvs -d:pserver:anonymous@cvs.ILISP.sourceforge.net:/cvsroot/ILISP
-    login&nbsp;<br>
+    cvs -d:pserver:anonymous@cvs.ILISP.sourceforge.net:/cvsroot/ILISP login&nbsp;<br>
     cvs -z3 -d:pserver:anonymous@cvs.ILISP.sourceforge.net:/cvsroot/ILISP co
     ILISP</p>
   </blockquote>
@@ -305,7 +304,8 @@ documentation</a></h3>
       &quot;\&quot;)</li>
     <li>PATH: The c:\emacs\bin and c:\home\lisp directory paths should be
       prepended to the existing PATH to ensure that the Emacs executable and the
-      CLISP executables can be found (e.g. -- set path=c:\emacs\bin;c:\home\lisp;%path%)</li>
+      CLISP executables can be found (e.g. -- set
+      path=c:\emacs\bin;c:\home\lisp;%path%)</li>
   </ul>
 </blockquote>
 <ul>
@@ -318,8 +318,8 @@ documentation</a></h3>
     directory separator character).</li>
   <li>Reboot the PC after making the above changes and configuration settings</li>
   <li>Start Emacs (either by using the Start menu's Gnu Emacs shortcut or by
-    using Run on the Windows Start menu with the command &quot;c:\emacs\bin\runemacs.exe&quot;)
-    and do the following:
+    using Run on the Windows Start menu with the command
+    &quot;c:\emacs\bin\runemacs.exe&quot;) and do the following:
     <ul>
       <li>Compile the .emacs file by pressing &quot;B&quot; when the cursor is
         on the file in the initial dired window (answer &quot;y&quot; to the
@@ -329,8 +329,8 @@ documentation</a></h3>
       <li>Compile the clisp-indent.el and cua.el files in the same manner as was
         done for .emacs</li>
       <li>Start CLISP by pressing F5</li>
-      <li>After starting ILISP/CLISP in Emacs, use &quot;M-x ilisp-compile-inits&quot;
-        to compile the CLISP Lisp initialization files</li>
+      <li>After starting ILISP/CLISP in Emacs, use &quot;M-x
+        ilisp-compile-inits&quot; to compile the CLISP Lisp initialization files</li>
     </ul>
   </li>
   <li>All configuration steps should now be complete - exit Emacs by pressing
@@ -339,8 +339,8 @@ documentation</a></h3>
 <h3><a name="Testing the environments">8. Testing the environments</a></h3>
 <ul>
   <li>Start Emacs (either by using the Start menu's Gnu Emacs shortcut or by
-    using Run on the Windows Start menu with the command &quot;c:\emacs\bin\runemacs.exe&quot;)
-    and do the following:
+    using Run on the Windows Start menu with the command
+    &quot;c:\emacs\bin\runemacs.exe&quot;) and do the following:
     <ul>
       <li>Test that CLISP runs by pressing &quot;F5&quot; (CLISP should open in
         the bottom window and the ILISP menu should appear in the Emacs menu
