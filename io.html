@@ -14,8 +14,8 @@ pre { margin-left:20px; }
 
  <h2>Content</h2>
 <ul>
-<li><a href="#redir">Redirecting the Standard Output of your
-  Program</a>
+<li><a href="#redir">Redirecting the Standard Output of your Program</a>
+<li><a href="#faith">Faithful output with character streams</a>
   </ul>
 
   <a name="#redir"><h3>Redirecting the Standard Output of your Program</h3></a>
@@ -53,10 +53,135 @@ pre { margin-left:20px; }
   *STANDARD-OUTPUT*, executes its body, closes the file, and restores
   *STANDARD-OUTPUT* to its former value.  It doesn't get more
    comfortable than this!
+
+  <a name="#faith"><h3>Faithful output with character streams</h3></a>
+By <em>faithful output</em> I mean that characters with codes between 0 and 255 will be
+written out as is. It means, that I can <code>(PRINC (CODE-CHAR 0..255) s)</code> to a stream and
+expect 8-bit bytes to be written out, which is not obvious in the
+times of Unicode and 16 or 32 bit character representations.
+
+It does <em>not</em> require that the characters &auml;, &szlig;, or &thorn; must
+have their <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_char_c.htm">CHAR-CODE</a> in the range 0..255 - the implementation is free
+to use any code. But it does require that no <code>#\Newline</code> to CRLF translation takes place, among
+others.
+<br>&nbsp;<br>
+
+Common Lisp has a long tradition of distinguishing character from byte
+(binary) I/O, e.g. <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_rd_by.htm">READ-BYTE</a> and <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_rd_cha.htm">READ-CHAR</a> are in the standard.
+Some implementations let both functions be called
+interchangeably. Others allow either one or the other. (The <a href="http://ww.telent.net/cliki/simple-stream">simple stream proposal</a>
+defines the notion of a <em>bivalent stream</em> where both are possible.)
+<br>&nbsp;<br>
+
+Varying element-types are useful as some protocols rely on the ability
+to send 8-Bit output on a channel. E.g. with HTTP, the header is
+normally ASCII and ought to use CRLF as line terminators, whereas the
+body can have the MIME type application/octet-stream, where CRLF
+translation would destroy the data. (This is how the Netscape
+browser on MS-Windows destroys data sent by incorrectly configured
+Webservers which declare unknown files as having MIME type text/plain
+- the default in most Apache configurations).
+<br>&nbsp;<br>
+
+What follows is a list of implementation dependent choices and
+behaviours and some code to experiment.
+
+<ul>
+<li><b>CLISP:</b>
+On CLISP, faithful output is impossible.
+You ought to use <code>(SETF (STREAM-ELEMENT-TYPE F) '(UNSIGNED-BYTE 8))</code>,
+where the ability to <code>SETF</code> is a CLISP-specific extension.
+Apart from that, the closest approximation is
+<pre>
+:external-format
+(ext:make-encoding :charset 'charset:iso-8859-1 :line-terminator :unix)
+</pre>
+It will append a single <code>#\Newline</code> to the file if there is none at the end.
+
+Yet this behaviour is acceptable for e.g. <a href="http://www.fractalconcept.com/asp/html/cl-pdf.html">CL-PDF</a> which writes *mostly*
+ASCII and &quot;EOF~%&quot; at the end of the .pdf file.
+
+Using <code>:EXTERNAL-FORMAT :UNIX</code> will cause portability problems, since the default character set on MS-Windows is <code>CHARSET:CP1252</code>.
+<code>CHARSET:CP1252</code> doesn't allow output of e.g. <code>(CODE-CHAR #x81)</code>:
+<pre>
+;*** - Character #\u0080 cannot be represented in the character set CHARSET:CP1252
+</pre>
+
+Characters with code &gt; 127 cannot be represented in ASCII:
+<pre>
+;*** - Character #\u0080 cannot be represented in the character set CHARSET:ASCII
+</pre>
+<li><b>CMUCL:</b>
+<code>:EXTERNAL-FORMAT :DEFAULT</code> (untested)
+- no unicode, so probably no problems.
+<li><b>AllegroCL:</b>
+<code>#+(AND ALLEGRO UNIX) :DEFAULT</code> (untested)
+- seems enough on UNIX, but would not work on the MS-Windows port of AllegroCL.
+<li><b>LispWorks:</b>
+<code>:EXTERNAL-FORMAT '(:DEFAULT :EOL-STYLE :LF)</code> (untested)
+</ul>
+
+Here's some sample code to play with:
+<pre>
+(defvar *unicode-test-file* "faithtest-out.txt")
+
+(defun generate-256 (&key (filename *unicode-test-file*)
+			  #+CLISP (charset 'charset:iso-8859-1)
+                          external-format)
+  (let ((e (or external-format
+	       #+CLISP (ext:make-encoding :charset charset :line-terminator :unix))))
+    (describe e)
+    (with-open-file (f filename :direction :output
+		     :external-format e)
+      (write-sequence
+        (loop with s = (make-string 256)
+	      for i from 0 to 255
+	      do (setf (char s i) (code-char i))
+	      finally (return s))
+       f)
+      (terpri f)
+      (file-position f))))
+
+;(generate-256 :external-format :default)
+;#+CLISP (generate-256 :external-format :unix)
+;#+CLISP (generate-256 :external-format 'charset:ascii)
+;(generate-256)
+
+(defun check-256 (&optional (filename *unicode-test-file*))
+  (with-open-file (f filename :direction :input
+		     :element-type '(unsigned-byte 8))
+    (loop for i from 0
+	  for c = (read-byte f nil nil)
+	  while c
+	  unless (= c i)
+	  do (format t "~&Position ~D found ~D(#x~X)." i c c)
+	  when (and (= i 33) (= c 32))
+	  do (let ((c (read-byte f)))
+	       (format t "~&Resync back 1 byte ~D(#x~X) - cause CRLF?." c c) ))
+    (file-length f)))
+
+#| CLISP
+(check-256 *unicode-test-file*)
+(progn (generate-256 :external-format :unix) (check-256))
+; uses UTF-8 -> 385 bytes
+
+(progn (generate-256 :charset 'charset:iso-8859-1) (check-256))
+Position 256 found 10(#xA).
+; Means it terminates line on output!
+
+(progn (generate-256 :external-format :default) (check-256))
+; uses UTF-8 + CRLF(on MS-Windows) -> 387 bytes
+
+(progn (generate-256 :external-format
+  (ext:make-encoding :charset 'charset:iso-8859-1 :line-terminator :mac)) (check-256))
+(progn (generate-256 :external-format
+  (ext:make-encoding :charset 'charset:iso-8859-1 :line-terminator :dos)) (check-256))
+|#
+</pre>
 </td></tr></table>
   
 <hr>
 <a href="license.html">Copyright</a> &copy; 2002 The Common Lisp Cookbook Project
 <address>http://cl-cookbook.sourceforge.net/</address>
-<!-- hhmts start --> Last modified: Wed Feb 13 14:56:50 CET 2002 <!-- hhmts end -->
+<!-- hhmts start --> Last modified: Thu Mar 21 01:01:09 CET 2002 <!-- hhmts end -->
 </body> </html>
