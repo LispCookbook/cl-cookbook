@@ -293,7 +293,6 @@ techniques, in other implementations you have to specify
 whether the socket is going to be used for text or binary
 data.
 
-
 <a name="close"></a>
 <h3>Closing</h3>
 
@@ -325,6 +324,13 @@ contents of the specified file. Here is the code:
 --------------------------cut here------------------------------------
 (in-package :port)
 
+;;; Utilities
+
+(defun http-send-line (stream line)
+  "Send a line of text to the HTTP stream, terminating it with CR+LF."
+  (princ line stream)
+  (princ #\Return stream)
+  (princ #\Newline stream))
 ;;; Server
 
 (defun http-0.9-server (port root)
@@ -370,7 +376,7 @@ Returns the filename, or NIL if the request is incorrect."
       (serve-file socket
                   (concatenate 'string root filename))
     ;; Incorrect request, return error
-    (format socket "HTTP/0.9 400 Invalid HTTP Request.~%"))
+    (http-send-line socket "HTTP/0.9 400 Invalid HTTP Request."))
   
   ;; Make sure the client sees the output - not really
   ;; necessary since we close the socket right after this.
@@ -387,7 +393,7 @@ Returns the filename, or NIL if the request is incorrect."
         (loop
           (let ((line (read-line in nil nil)))
             (unless line (return))
-            (format socket "~a~%" line))))
+            (http-send-line socket line))))
     
     ;; No, return error
     (format socket "HTTP/0.9 401 Not found.~%")))
@@ -404,7 +410,7 @@ to standard output."
         (progn
           (format t "&gt; Sending request to ~a:~a...~%" server port)
           ;; Send request
-          (format socket "GET ~a HTTP/0.9~%~%" path)
+          (http-send-line socket (format nil "GET ~a HTTP/0.9~%~%" path))
           (force-output socket)
           
           ;; Read response and output it
