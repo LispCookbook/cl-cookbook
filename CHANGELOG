@@ -1,11 +1,19 @@
+2002-12-25
+  Slight changes to macros.html to make it look like the rest of the cookbook
+  Added initial entry for macros.html to CHANGELOG
+  Added new chapter 'Miscellaneous'
+  Linked misc.html from index.html
+  Added section 'Re-using complex data structures' (orginally by Marco Antoniotti) to 'Miscellaneous'
+  Added section 'Using ADJUST-ARRAY instead of consing up...' (originally by Pierpaolo Bernardi) to 'Miscellaneous'
+  Added Marco Antoniotti and Pierpaolo Bernardi to the list of contributors
+  Added Pascal Constanza's guide to link section
+  Added Mark Watson's book to link section
+
 2002-10-22
-  Updated windows.html and .emacs by Bill Clementson to revert to Corman Lisp 1.5 due to problems with running
-  clconsole.exe inside of emacs in version 2.0.
+  Updated windows.html and .emacs by Bill Clementson to revert to Corman Lisp 1.5 due to problems with running clconsole.exe inside of emacs in version 2.0.
 
 2002-10-21
-  Updated windows.html and .emacs by Bill Clementson to add support for Corman Lisp 2.0, removed instructions for
-  the w3 utility (not necessary for viewing documentation) and provide support in .emacs for auto-detecting which
-  lisp implementations have been installed.
+  Updated windows.html and .emacs by Bill Clementson to add support for Corman Lisp 2.0, removed instructions for the w3 utility (not necessary for viewing documentation) and provide support in .emacs for auto-detecting which lisp implementations have been installed.
 
 2002-10-15
   Updated windows.html by Bill Clementson to include instructions to change lisp-used, EMACSDIR & ILISPDIR variables.
@@ -16,127 +24,116 @@
 2002-09-22
   Updated .emacs by Bill Clementson to add generic eval-last-sexp support on C-x C-e for elisp & inferior lisps.
 
+2002-09-08
+  New chapter macros.html by Drew McDermott
+
 2002-09-03
   Updated windows.html to adjust location of environmental variable instructions.
 	
 2002-08-29
-  updated windows.html and .emacs by Bill Clementson to not show separate ACL listener window on startup.
+  Updated windows.html and .emacs by Bill Clementson to not show separate ACL listener window on startup.
 
 2002-08-29
-  updated windows.html and .emacs by Bill Clementson as follows:
-	
-  1. Changes for ACL6.2 (use alisp.exe instead of allegro-ansi.exe due to heap size limitations in trial edition).
-  2. Eliminate clisp-indent.el from setup to eliminate need to modify .emacs if clisp isn't installed.
+  Updated windows.html and .emacs by Bill Clementson as follows:	
+    1. Changes for ACL6.2 (use alisp.exe instead of allegro-ansi.exe due to heap size limitations in trial edition).
+    2. Eliminate clisp-indent.el from setup to eliminate need to modify .emacs if clisp isn't installed.
 
 2002-08-20
-  updated windows.html and .emacs by Bill Clementson as follows:
-
-  1. Support for new versions of Emacs, ILISP, CLISP & ACL
-  2. Removed dependency on .bat files
-  3. Simplified installation
-  4. Made it easier to install only a single (or a few) Lisp implementations
-  5. Added shading to pre code blocks as in other Cookbook pages
-  6. No longer byte-compile the .emacs file
+  Updated windows.html and .emacs by Bill Clementson as follows:
+    1. Support for new versions of Emacs, ILISP, CLISP & ACL
+    2. Removed dependency on .bat files
+    3. Simplified installation
+    4. Made it easier to install only a single (or a few) Lisp implementations
+    5. Added shading to pre code blocks as in other Cookbook pages
+    6. No longer byte-compile the .emacs file
 
 2002-08-02
-  linked systems.html from index.html
+  Linked systems.html from index.html
 
 2002-08-01
-  new chapter systems.html by Alberto Riva
+  New chapter systems.html by Alberto Riva
 
 2002-07-08
-  typos to process.html. In particular, fix the mailboxes example code. 
+  Typos to process.html. In particular, fix the mailboxes example code. 
 	
 2002-07-03
-  flesh out process.html - complete as it's going to get for now.
+  Flesh out process.html - complete as it's going to get for now.
 	
 2002-06-28
-  cleanups to process.html and add section on thread state.
+  Cleanups to process.html and add section on thread state.
 	
 2002-06-26
-  add mp:process-wait to process.html.
+  Add mp:process-wait to process.html.
 	
 2002-06-25
-  start chapter on threads.
+  Start chapter on threads.
 
 2002-06-21
-  rearrangements to os.html and process.html, ready for chapter on
-  threads.
+  Rearrangements to os.html and process.html, ready for chapter on threads.
 
 2002-05-23
-  changes in sockets.html by Alberto Riva
-  (due to hints by John Wiseman and John Foderaro)
+  Changes in sockets.html by Alberto Riva (due to hints by John Wiseman and John Foderaro)
 
 2002-05-22
-  changes in string.html to get rid of literal constants
-  (due to a hint by Peter Van Eynde)
-  initial files chapter (Edi Weitz)
-  cosmetic changes to PRE tag
-  replaced hhtm stuff in footer with CVS header
+  Changes in string.html to get rid of literal constants (due to a hint by Peter Van Eynde)
+  Initial files chapter (Edi Weitz)
+  Cosmetic changes to PRE tag
+  Replaced hhtm stuff in footer with CVS header
 
 2002-04-25
-  changed LW example in io.html (due to a hint by Marc Battyani)
+  Changed LW example in io.html (due to a hint by Marc Battyani)
   Null change - just testing out my cvs (NDL)
 	
 2002-04-24
   NDL added self as contributor
 	
 2002-04-04
-  added introduction to hashes.html, minor cosmetic changes
+  Added introduction to hashes.html, minor cosmetic changes
 
 2002-04-03
-  added link to Nick Levine's 'Lisp and Elements of Style' to
-  index.html
+  Added link to Nick Levine's 'Lisp and Elements of Style' to index.html
 
 2002-03-31
-  .emacs & windows.html: mods for CLISP 2.28 (new version) and 
-  changes suggested by Luke Crook
+  .emacs & windows.html: mods for CLISP 2.28 (new version) and changes suggested by Luke Crook
 
 2002-03-28
-  corrections in "faithful output" entry (also by Jörg)
+  Corrections in "faithful output" entry (also by Jörg)
 
 2002-03-21
-  added "faithful output" entry (by Jörg-Cyril Höhle) in IO chapter
+  Added "faithful output" entry (by Jörg-Cyril Höhle) in IO chapter
 
 2002-03-08
   .emacs & windows.html: added support for LispWorks 
 
 2002-03-02
-  removed buildilisp.bat because it's part of ILISP now
+  Removed buildilisp.bat because it's part of ILISP now
   
 2002-03-01
-  .emacs: mods to reflect fixes made to clisp install.lisp in CLISP 
-  CVS and eliminate compile-time warnings (Bill Clementson)
-  windows.html: mods to reflect fixes made to clisp install.lisp in 
-  CVS and the introduction of icompile.bat in ILISP CVS.
+  .emacs: mods to reflect fixes made to clisp install.lisp in CLISP  CVS and eliminate compile-time warnings (Bill Clementson)
+  windows.html: mods to reflect fixes made to clisp install.lisp in CVS and the introduction of icompile.bat in ILISP CVS.
 
 2002-02-25
   index.html: added link to CHANGELOG (Edi Weitz)
 
 2002-02-24
-  added chapter about sockets by Alberto Riva
+  Added chapter about sockets by Alberto Riva
 
-  Windows IDE chapter: modified comments re ILISP compatibility
-  with Emacs 21.1 (Bill Clementson)
+  Windows IDE chapter: modified comments re ILISP compatibility with Emacs 21.1 (Bill Clementson)
 
-  added HTML table (fixed width) to Windows IDE chapter
+  Added HTML table (fixed width) to Windows IDE chapter
 
 2002-02-23
-  Windows IDE chapter: mods to CLISP/CormanLisp installs
-  (Bill Clementson)
+  Windows IDE chapter: mods to CLISP/CormanLisp installs (Bill Clementson)
 
 2002-02-19
-  added chapter about Windows IDE (including sample .emacs and batch file)
-  by Bill Clementson
+  Added chapter about Windows IDE (including sample .emacs and batch file) by Bill Clementson
 
-  added chapter about processes and threads which currently consists
-  of the 'forking with CMUCL' example by Martin Cracauer
+  Added chapter about processes and threads which currently consists of the 'forking with CMUCL' example by Martin Cracauer
 
-  added Bill Clementson and Martin Cracauer to the list of contributors
+  Added Bill Clementson and Martin Cracauer to the list of contributors
 
 2002-02-18
-  Moved cookbook to Sourceforge. Imported the contents from agharta.de
-  web server into the CVS repository.
+  Moved cookbook to Sourceforge. Imported the contents from agharta.de web server into the CVS repository.
 
   The cookbook now consists of:
     - chapter about strings by Edi Weitz
@@ -167,6 +164,4 @@
     - license
 
 2002-02-05
-  Cookbook started at <http://agharta.de/cookbook/> with two chapters
-  initially - a chapter about dates and times by Alberto Riva and a
-  chapter about strings by Edi Weitz.
+  Cookbook started at <http://agharta.de/cookbook/> with two chapters initially - a chapter about dates and times by Alberto Riva and a chapter about strings by Edi Weitz.
