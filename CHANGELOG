@@ -1,3 +1,6 @@
+2002-03-02
+  removed buildilisp.bat because it's part of ILISP now
+  
 2002-03-01
   .emacs: mods to reflect fixes made to clisp install.lisp in CLISP 
   CVS and eliminate compile-time warnings (Bill Clementson)
