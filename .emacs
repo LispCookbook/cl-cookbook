@@ -140,6 +140,7 @@
 (put 'eval-expression 'disabled nil)
 (put 'set-goal-column 'disabled nil)
 (put 'narrow-to-page 'disabled nil)
+(put 'narrow-to-region 'disabled nil)
 (put 'eval-expression 'disabled nil)
 (put 'downcase-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
@@ -371,6 +372,13 @@
 	    (ignore-errors (semantic-default-elisp-setup))
 	    (set (make-local-variable lisp-indent-function)
 		 'common-lisp-indent-function)))
+
+(add-hook 'fi:lisp-listener-mode-hook
+	  (lambda ()
+	    (let ((map (current-local-map)))
+	      (define-key map [tab] 'comint-dynamic-complete)
+	      (define-key map [(meta p)] 'fi:pop-input)
+	      (define-key map [(meta n)] 'fi:push-input))))
 
 (add-hook 'fi:lisp-mode-hook
 	  (function
@@ -628,24 +636,28 @@ region progressively moves outward over enclosing expressions."
 
 ;; Lisp documentation
 (global-set-key [f1]
-		'(lambda ()
-		   (interactive)
+		'(lambda (arg)
+		   (interactive "P")
 		   (ignore-errors
 		     (let ((common-lisp-hyperspec-root
 			    (if macosx-p
 				(concat "file://" common-lisp-hyperspec-root)
 			      common-lisp-hyperspec-root)))
 		       (load-library hyperspec-prog)
-		       (common-lisp-hyperspec (thing-at-point 'symbol))))))
+		       (if arg
+			   (common-lisp-hyperspec-format (char-to-string (char-after (point))))
+			 (common-lisp-hyperspec (thing-at-point 'symbol)))))))
 
 (global-set-key [(shift f1)]
-		'(lambda ()
-		   (interactive)
+		'(lambda (arg)
+		   (interactive "P")
 		   (ignore-errors
 		     (let ((browse-url-browser-function 'browse-url-w3)
 			   (common-lisp-hyperspec-root (concat "file://" common-lisp-hyperspec-root)))
 		       (load-library hyperspec-prog)
-		       (common-lisp-hyperspec (thing-at-point 'symbol))))))
+		       (if arg
+			   (common-lisp-hyperspec-format (char-to-string (char-after (point))))
+			 (common-lisp-hyperspec (thing-at-point 'symbol)))))))
 
 (global-set-key [(control f1)] 
 		'(lambda ()
