@@ -1,3 +1,6 @@
+2003-10-21
+	Added CLOS tutorial.
+	
 2003-10-09
 	Updated .emacs by Bill Clementson to support re-indentation of
 	top-level sexp/defun.
