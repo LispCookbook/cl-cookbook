@@ -1,5 +1,4 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
-<!-- Edi I've never used CVS headers before, help please! -->
 
 <html> 
 
@@ -17,10 +16,7 @@ pre { margin-left:20px; background-color:#e0e0e0 }
 
 <h1><a href="index.html">The Common Lisp Cookbook</a> - Using the Win32 API</h1>
 
-<h1>Rough Draft</h1>
-
 <h2>Contents</h2>
-
 
 <ul>
 <li><a href="#intro">Introduction and Scope</a>
@@ -84,13 +80,13 @@ program:
 (export '(initialize-appendix-b))
 
 (DefMsgHandler appendix-b-proc MsgMap ()
-  (wm-paint
+  (WM_PAINT
     (text-out "Hello from Lisp!" 0 0 :color (RGB 0 0 255))
     0))
 
 (defun initialize-appendix-b ()
   (DefActiveTopWindow "Hello" 'appendix-b-proc
-    :style ws-overlappedwindow :width 150 :height 200 :title "Hello Program"))
+    :style ws_overlappedwindow :width 150 :height 200 :title "Hello Program"))
 </pre></code>
 
 <p>Lispworks for Windows</a> version 4.2.7 is used.  (The Personal
@@ -118,9 +114,7 @@ The Cookbook welcomes contributions broadening coverage in these (and
 other) areas.
 
 <p>Anyone programming for the Win32 API should be familiar with 
-<a href= 
-"http://www.amazon.com/exec/obidos/tg/detail/-/157231995X/qid=1046930284/sr=8-1/ref=sr_8_1/002-4919941-0014430?v=glance&s=books&n=507846"
->
+<a href="http://www.charlespetzold.com/pw5/index.html">
 Programming Windows, The Definitive Guide to the Win32 API</a> by
 Charles Petzold, or a comparable book.  
 
@@ -396,6 +390,47 @@ which is the ASCII version of TextOut.
 have been able to resolve those problems by ensuring I made consistent
 use of the :dbcs and/or W/A declarations.
 
+<p>Edi Weitz asked if the :dbcs keyword decides at compile time or at
+run time which function to call, the ...A or the ...W.  I wrote the
+following program:
+
+<p><code><pre>
+(in-package :cl-user)
+
+(fli:define-foreign-function
+  (MessageBox "MessageBox" :dbcs :calling-convention :stdcall)
+  ((hwnd (:unsigned :long)) (text (:unsigned :long)) (title (:unsigned :long)) (flags (:unsigned :long)))
+ :result-type (:unsigned :long))
+
+(defun external-format ()
+  (if (string= (software-type) "Windows NT")
+      :unicode
+    :ascii))
+
+(defun display-format-used ()
+  (fli:with-foreign-string 
+   (unicode-p u-ec u-bc :external-format (external-format)) "Unicode"
+    (fli:with-foreign-string 
+     (ascii-p a-ec a-bc :external-format (external-format)) "Ascii"
+      (fli:with-foreign-string
+       (title-p t-ec t-bc :external-format (external-format)) "External Format"
+        (if (eq (external-format) :unicode)
+	    (messagebox 0 (fli:pointer-address unicode-p)
+	      (fli:pointer-address title-p) 0)
+	  (messagebox 0 (fli:pointer-address ascii-p)
+	    (fli:pointer-address title-p) 0))))))
+
+(compile 'external-format)
+(compile 'display-format-used)
+
+(deliver 'display-format-used "dbcs-run" 5)
+(quit)
+
+; We then have dbcs-run.exe.  When run on Windows XP, dbcs-run pops up a messagebox
+; displaying "Unicode".  The same dbcs-run.exe file, ftp'd to a Macintosh running OS 9 with
+; Virtual PC running Windows 98, pops up a message box displaying "Ascii".
+</pre></code>
+
 
 <a name="fli"></a>
 <h3>FLI - The Foreign Language Interface - Translating C Header Files to Lisp</h3>
@@ -442,22 +477,28 @@ the pointer.  That is not handy if one is trying to pass a null
 pointer to the OS.  Thus, I find it easier to call most parameters
 long, although I bend that rule from time to time.
 
-<p>When passing a pointer value to the OS, for example when passing
-the address of a <code>RECT</code> to <code>GetClientRect</code>,
-there are two steps that need to happen: 1) allocate the foreign
-structure and 2) pass the address of that allocated structure to the
-OS.  Most of the time these allocations are best handled with
+<p>Lispworks FLI pointers are actually a Lisp structure containing an
+address retrieved, or unboxed, by fli:pointer-address.  When passing a
+pointer value to the OS, for example when passing the address of a
+<code>RECT</code> to <code>GetClientRect</code>, there are two steps
+that need to happen: 1) allocate the foreign structure and 2) pass the
+address of that allocated structure to the OS.  Most of the time these
+allocations are best handled with
 <code>fli:with-dynamic-foreign-objects</code> enclosing calls to
 <code>fli:allocate-dynamic-foreign-object</code> because one doesn't
 have to worry about deallocations. I pass the address of the allocated
 structure using <code>fli:pointer-address</code> (unboxing the pointer
 value) and define the field in the foreign function's parameter list
-as an unsigned long. The FLI allows things to be defined such that
-Lispworks will try automatic coercion (unboxing) but the approach I
-chose is very clear to me and works well in both directions (OS->Lisp,
-Lisp->OS).  This may simply be a result of my current lack of complete
-understanding and there may be a better way.  My current philosophy is
-"confuse Lisp or the OS as little as possible".
+as an unsigned long. 
+
+<p>The FLI allows things to be defined such that Lispworks will try
+automatic coercion (unboxing).  Try defining the parameter type as
+:pointer.  However, Lispworks complains when trying to pass a NULL
+pointer, although I did not try creating a FLI pointer with address
+zero.  The approach I chose, calling pointers unsigned longs, is clear
+to me and works well in both directions (OS->Lisp, Lisp->OS).  This
+may simply be a result of my current lack of complete understanding
+and there may be a better way.
 
 <p>On occasion is it helpful to define C arrays inside C structures, in
 particular in <code>sPAINTSTRUCT</code>. This works but I don't like
@@ -470,12 +511,15 @@ something like:
   (let ((ptr (fli:make-pointer 
               :address (fli:pointer-address to-struct-ptr :type :char))))
      (fli:incf-pointer ptr byte-offset)
-     (strcpy (fli:pointer-address ptr) (fli:pointer-address src-ptr))))
+     (wcscpy (fli:pointer-address ptr) (fli:pointer-address src-ptr))))
 </pre></code>
 
-<br>where strcpy is defined through the FLI (and requires :dbcs).  I
-hope there's a better way to do this and that someone quickly teaches
-me.
+<br>where wcscpy, the wide-character version of strcpy, is defined
+through the FLI.  I hope there's a better way to do this and that
+someone quickly teaches me.  I haven't worked enough with different
+OSes and Lispworks to know the best way to choose strcpy vs. wcscpy,
+other than to use (software-type) to decide which to call. (Or use
+(external-format), defined in Appendix A.)
 
 <p>Although the data types defined to Lisp are kept a minimum, it is
 very useful for documentation purposes to mimic the typedef names used
@@ -487,18 +531,26 @@ types.
 program:
 
 <p><code><pre>
-(defconstant CW-USEDEFAULT       #x80000000)
-(defconstant IDC-ARROW                32512)
-(defconstant SW-SHOW                      5)
-(defconstant WM-CLOSE            #x00000010)
-(defconstant WM-DESTROY          #x00000002)
+(defconstant CW_USEDEFAULT       #x80000000)
+(defconstant IDC_ARROW                32512)
+(defconstant SW_SHOW                      5)
+(defconstant WM_CLOSE            #x00000010)
+(defconstant WM_DESTROY          #x00000002)
 </pre></code>
 
 <p>These constants are given by name, without values, in the MSDN
 documentation.  The Lisp program needs not only the name but also the
 value. An easy way to find the necessary values is to grep through the
 VC98/Include directory.  Visual Studio contains a "find in files"
-function on its toolbar which allows this kind of search.
+function on its toolbar which allows this kind of search. Kenny Tilton
+says, "What I did was grab any VC++ project that builds (the NeHe
+OpenGL site is full of VC++ projects (see OpenGL tutorials in sidebar
+to left of the page at <a
+href="http://nehe.gamedev.net">http:///nehe.gamedev.net</a>) which
+built without a problem for me) and then right-click on the symbol I
+was curious about. (Of > course first you have to find a reference
+<g>.) VC++ then offers 'find definition' and will jump right to a
+header entry for a function or constant or macro or whatever."
 
 
 <a name="fli-structures"></a>
@@ -576,8 +628,8 @@ foreign environment can be defined in the following manner:
     ((hwnd hwnd) (msg ulong) 
      (wparam ulong) (lparam ulong))
   (case msg 
-   (#.wm-paint (wndproc-paint hwnd msg wparam lparam))
-   #+console (#.wm-destroy (PostQuitMessage 0) 0)
+   (#.WM_PAINT (wndproc-paint hwnd msg wparam lparam))
+   #+console (#.WM_DESTROY (PostQuitMessage 0) 0)
    (t (DefWindowProc hwnd msg wparam lparam))))
 </pre></code>
 
@@ -586,14 +638,14 @@ wndproc once for every message sent to the program. Wndproc is
 responsible for understanding the message and calling the appropriate
 function. 
 
-<p>The #. reader macro returns the value of <code>wm-paint</code> and
-<code>wm-destroy</code> at compile-time, allowing <code>case</code> to
+<p>The #. reader macro returns the value of <code>WM_PAINT</code> and
+<code>WM_DESTROY</code> at compile-time, allowing <code>case</code> to
 work. #+console means "include the next form only if :console is a
 member of *features*".  
 
 <p>The example Win32 Lisp program in Appendix A
 may be run either from the Lispworks IDE or from console mode, such as
-ilisp in emacs.  If <code>PostQuitMessage</code> is called from the
+ILISP in Emacs.  If <code>PostQuitMessage</code> is called from the
 IDE, the IDE shuts down. If <code>PostQuitMessage</code> is not called
 in console mode, the Win32 window does not close.
 
@@ -602,28 +654,28 @@ in console mode, the Win32 window does not close.
 <h3>Starting the Program</h3>
 
 Multiprocessing is always running under the Lispworks IDE but may or
-may not be running using ilisp under emacs.  Using multiprocessing is
+may not be running using ILISP under Emacs.  Using multiprocessing is
 great because one can peek and poke at the program and its variables,
 provide new or redefined functions which take effect immediately, and
 even make Win32 API calls, all while the program is running and the
 window is visible with all its buttons and menus active.
 
-<p>Using multiprocessing has not proven so nice for me under ilisp. I
-love the ilisp and emacs environment.  The Lispworks IDE is very nice,
+<p>Using multiprocessing has not proven so nice for me under ILISP. I
+love the ILISP and Emacs environment.  The Lispworks IDE is very nice,
 and I keep a copy of it going for certain tasks such as finding online
 manuals and using debug tools such as the inspector.  For editing and
-most running, though, I prefer emacs and ilisp. However, I have not
-learned how to view multiple processes under ilisp, nor do I know how
-to switch between them.  When I use multiprocessing with ilisp, it
+most running, though, I prefer Emacs and ILISP. However, I have not
+learned how to view multiple processes under ILISP, nor do I know how
+to switch between them.  When I use multiprocessing with ILISP, it
 appears to me that any thread with a condition grabs *standard-output*
 and *standard-input*.  I don't know how to switch back to the other
 thread.  This is enough of a problem that I don't use multiprocessing
-under ilisp and when I need or want the interactive debug capabilities
+under ILISP and when I need or want the interactive debug capabilities
 possible with multiprocessing, or need multiprocessing in any form, I
 switch to the Lispworks IDE.
 
 <p>When running under the IDE, Lispworks provides the message pump.
-When running under emacs/ilisp (or in console mode, as would happen in
+When running under Emacs/ILISP (or in console mode, as would happen in
 a delivered application), the Lisp program itself must provide the
 message pump.  
 
@@ -769,7 +821,7 @@ hard-coded 'W' in the foreign function name.
 <a name="raiiandgc"></a>
 <h3>RAII and GC</h3>
 
-A common C++ idiom is "Resource Acquisition Is Initializtion", in
+A common C++ idiom is "Resource Acquisition Is Initialization", in
 which a C++ object acquires an operating system resource, perhaps an
 open file, in the constructor and releases the resource in the
 object's destructor. These objects may have dynamic or indefinite
@@ -900,7 +952,7 @@ more-specific handlers defined for selected messages in the derived
 class.  CLOS handles this nicely.  I have a <code>DefMsgHandler</code>
 macro that calls RegisterClass, defines the CLOS method for each
 message to be handled, takes care of necessary housekeeping in
-ubiquitous functions such as <code>wm-paint</code>, and allows easy
+ubiquitous functions such as <code>WM_PAINT</code>, and allows easy
 definition of function bodies to be executed for each desired type of
 message. Other macros are useful for defining pushbuttons, edit boxes,
 list views, and other Win32 controls.
@@ -922,14 +974,21 @@ columns.
 <a name="conclusion"></a>
 <h3>Conclusion</h3>
 
-Lisp provides an interactive and rich programming environment. The
+The example code presented in the text and in appendicies A-C places
+an emphasis on staying in Lisp and accessing the Win32 API from
+there. Paul Tarvydas has code in <a href="#appendixd">Appendix D</a>
+which demonstrates cooperation and interaction between C and Lisp.  In
+Paul's well-documented example, a C dll is used to drive the message
+loop.  The Lisp callback function's address is placed from within Lisp
+into a variable in the dll.
+
+<p>Lisp provides an interactive and rich programming environment. The
 judicious use of macros to create language extensions in Lisp
 concentrates application-specific information into small local areas
 of the overall system.  This simplifies the effort of understanding
 the application, increases the reliability of the application, reduces
 maintenance time, and increases the reliability of maintenance
 changes.  Lisp is designed to make this easy.
-
 
 
 <p>&nbsp;
@@ -964,34 +1023,34 @@ program source code visible while reading the text.
 
 ; Not all of these are verified by testing in code
 ; More are included than are used to allow play
-(defconstant COLOR-WINDOW                 5)
-(defconstant CS-HREDRAW                   1)
-(defconstant CS-VREDRAW                   2)
-(defconstant CW-USEDEFAULT       #x80000000)
-(defconstant IDC-ARROW                32512)
-(defconstant SW-SHOW                      5)
-(defconstant WM-CLOSE            #x00000010)
-(defconstant WM-DESTROY          #x00000002)
-(defconstant WM-PAINT            #x0000000f)
-(defconstant WS-BORDER           #x00080000)
-(defconstant WS-CAPTION          #x00C00000)
-(defconstant WS-CHILD            #x40000000)
-(defconstant WS-DISABLED         #x08000000)
-(defconstant WS-EX-CONTROLPARENT #x00010000)
-(defconstant WS-EX-APPWINDOW     #x00040000)
-(defconstant WS-MAXIMIZEBOX      #x00010000)
-(defconstant WS-MINIMIZEBOX      #x00020000)
-(defconstant WS-OVERLAPPED       #x00000000)
-(defconstant WS-POPUP            #x80000000)
-(defconstant WS-SYSMENU          #x00080000)
-(defconstant WS-THICKFRAME       #x00040000)
-(defconstant WS-VISIBLE          #x10000000)
+(defconstant COLOR_WINDOW                 5)
+(defconstant CS_HREDRAW                   1)
+(defconstant CS_VREDRAW                   2)
+(defconstant CW_USEDEFAULT       #x80000000)
+(defconstant IDC_ARROW                32512)
+(defconstant SW_SHOW                      5)
+(defconstant WM_CLOSE            #x00000010)
+(defconstant WM_DESTROY          #x00000002)
+(defconstant WM_PAINT            #x0000000f)
+(defconstant WS_BORDER           #x00080000)
+(defconstant WS_CAPTION          #x00C00000)
+(defconstant WS_CHILD            #x40000000)
+(defconstant WS_DISABLED         #x08000000)
+(defconstant WS_EX_CONTROLPARENT #x00010000)
+(defconstant WS_EX_APPWINDOW     #x00040000)
+(defconstant WS_MAXIMIZEBOX      #x00010000)
+(defconstant WS_MINIMIZEBOX      #x00020000)
+(defconstant WS_OVERLAPPED       #x00000000)
+(defconstant WS_POPUP            #x80000000)
+(defconstant WS_SYSMENU          #x00080000)
+(defconstant WS_THICKFRAME       #x00040000)
+(defconstant WS_VISIBLE          #x10000000)
 
 ; Aggregates 
-(defconstant WS-POPUPWINDOW (logior ws-popup ws-border ws-sysmenu))
-(defconstant WS-OVERLAPPEDWINDOW (logior ws-overlapped ws-caption 
-                                         ws-sysmenu ws-thickframe
-                                         ws-minimizebox ws-maximizebox))
+(defconstant WS_POPUPWINDOW (logior ws_popup ws_border ws_sysmenu))
+(defconstant WS_OVERLAPPEDWINDOW (logior ws_overlapped ws_caption 
+                                         ws_sysmenu ws_thickframe
+                                         ws_minimizebox ws_maximizebox))
 
 ;--- Win32 SDK data types
 
@@ -1167,8 +1226,8 @@ program source code visible while reading the text.
     ((hwnd hwnd) (msg (:unsigned :long)) 
      (wparam (:unsigned :long)) (lparam (:unsigned :long)))
   (case msg 
-   (#.wm-paint (wndproc-paint hwnd msg wparam lparam))
-   #+console (#.wm-destroy (PostQuitMessage 0) 0)
+   (#.WM_PAINT (wndproc-paint hwnd msg wparam lparam))
+   #+console (#.WM_DESTROY (PostQuitMessage 0) 0)
    (t (DefWindowProc hwnd msg wparam lparam))))
 
 
@@ -1196,15 +1255,15 @@ program source code visible while reading the text.
 	  (wp-p (fli:make-pointer :symbol-name "wndproc")))
       (unwind-protect
 	  (progn 
-	    (setf (fli:foreign-slot-value wc-p 'style) (logior cs-hredraw cs-vredraw))
+	    (setf (fli:foreign-slot-value wc-p 'style) (logior cs_hredraw cs_vredraw))
 	    (setf (fli:foreign-slot-value wc-p 'lpfnWndProc)
 		  (fli:pointer-address wp-p))
 	    (setf (fli:foreign-slot-value wc-p 'cbClsExtra) 0)
 	    (setf (fli:foreign-slot-value wc-p 'cbWndExtra) 0)
 	    (setf (fli:foreign-slot-value wc-p 'hInstance) (current-module-handle))
 	    (setf (fli:foreign-slot-value wc-p 'hIcon) 0)
-	    (setf (fli:foreign-slot-value wc-p 'hCursor) (LoadCursor 0 IDC-ARROW))
-	    (setf (fli:foreign-slot-value wc-p 'hbrBackground) (1+ color-window))
+	    (setf (fli:foreign-slot-value wc-p 'hCursor) (LoadCursor 0 IDC_ARROW))
+	    (setf (fli:foreign-slot-value wc-p 'hbrBackground) (1+ color_window))
 	    (setf (fli:foreign-slot-value wc-p 'lpszMenuName) 0)
 	    (setf (fli:foreign-slot-value wc-p 'lpszClassName) cn-p)
 	    (setq rslt (RegisterClass (fli:pointer-address wc-p))))
@@ -1225,7 +1284,7 @@ program source code visible while reading the text.
     (fli:with-foreign-string ;; window name pointer
         (wn-p ec bc :external-format (external-format)) window-name
       (let ((hwnd (createwindowex 0 cn-p wn-p 
-                     (logior ws-visible ws-overlappedwindow)
+                     (logior ws_visible ws_overlappedwindow)
                      cw-usedefault cw-usedefault cw-usedefault cw-usedefault
                      ;0 0 640 480
                      0 0 (GetModuleHandle-current 0) 0)))
@@ -1244,7 +1303,7 @@ program source code visible while reading the text.
 
 ; CloseWindow
 (defun close-window (hwnd)
-  (sendmessage hwnd wm-close 0 0))
+  (sendmessage hwnd WM_CLOSE 0 0))
 
 
 (defmacro create-toplevel-window (window-name)
@@ -1272,13 +1331,13 @@ Returns the window handle."
 (export '(initialize-appendix-b))
 
 (DefMsgHandler appendix-b-proc MsgMap ()
-  (wm-paint
+  (WM_PAINT
     (text-out "Hello, Lisp!" 0 0 :color (RGB 0 0 255))
     0))
 
 (defun initialize-appendix-b ()
   (DefActiveTopWindow "Hello" 'appendix-b-proc
-    :style ws-overlappedwindow :width 200 :height 100 :title "Hello Program"))
+    :style ws_overlappedwindow :width 200 :height 100 :title "Hello Program"))
 </pre></code>
 
 <p>
@@ -1301,8 +1360,8 @@ Returns the window handle."
 
 ; Define a message handler routine named testproc, inheriting
 ;  from the base MsgMap. Others could inherit from this one...
-(DefMsgHandler appendix-c-proc MsgMap (:hbrbackground (1+ color-btnface))
-  (wm-create
+(DefMsgHandler appendix-c-proc MsgMap (:hbrbackground (1+ color_btnface))
+  (WM_CREATE
    
      (DefGroupBox hwndGroupBox "Wish List" 25 30 300 70) ;; left top width height
    
@@ -1336,7 +1395,7 @@ Returns the window handle."
 	  (mMessageBox "Don't you like it?" "Whatsamatta U."))))
      0)
 
-  (wm-paint
+  (WM_PAINT
      (with-font "Arial" -20 font-normal 0 0 0 ;; points weight italic bold underline
 	(text-out "I Like Lisp" 70 5 :color (RGB 0 0 255)))
      (with-font "Arial" -11 font-bold 0 0 0
@@ -1346,7 +1405,7 @@ Returns the window handle."
 
 (defun initialize-appendix-c ()
   (DefActiveTopWindow "Test" 'appendix-c-proc
-    :style ws-overlappedwindow :width 360 :height 450
+    :style ws_overlappedwindow :width 360 :height 450
     :title "First Lisp Screenshot"))
 </pre></code>
 
@@ -1357,15 +1416,12 @@ Returns the window handle."
 <a name="appendixd"></a>
 <h3>Appendix D:  Paul Tarvydas's Example</h3>
 
+
 <code><pre>
-Here's an example that creates a windows class (in C) and gets invoked 
-and 
-handled from LWW.  It is similar to the "Hello" example in Petzhold, 
-except 
-that it hooks to the LWW mainloop instead of creating its own.  
-Probably it 
-ain't as pretty as it might be, due to my rustiness with Win32 (and my 
-lack 
+Here's an example that creates a windows class (in C) and gets invoked and 
+handled from LWW.  It is similar to the "Hello" example in Petzhold, except 
+that it hooks to the LWW mainloop instead of creating its own.  Probably it 
+ain't as pretty as it might be, due to my rustiness with Win32 (and my lack 
 of patience with it :-).
 
 To use:
@@ -1383,24 +1439,19 @@ lispworksxxx.exe.
 8) In the listener, type "(run)".
 9) You should then see a window with "hello" in the middle of it.
 
-The example window class is built and initialized in C (called from the 
-lisp 
-mainline).  The windows callbacks to this window are handled in lisp 
-(eg. the 
+The example window class is built and initialized in C (called from the lisp 
+mainline).  The windows callbacks to this window are handled in lisp (eg. the 
 WM_PAINT message) - windows has been given a pointer to a lisp function 
-(Lisp_WndProc) and has been told to use it for callbacks.  The lisp 
-code 
+(Lisp_WndProc) and has been told to use it for callbacks.  The lisp code 
 makes direct Win32 calls that display the "hello" text.  Lisp uses FLI 
-foreign functions and foreign variables to set this up.  [If one were 
-doing 
-this on a real project, a less contrived flow of control would be 
-chosen, but 
+foreign functions and foreign variables to set this up.  [If one were doing 
+this on a real project, a less contrived flow of control would be chosen, but 
 this one appears to exercise the FLI calls that you were asking about].
 
 [I welcome comments from anyone, re. style, simplification, etc.]
 
 Paul Tarvydas
-tarvydas at spamoffattcanada dotca
+tarvydas at spamoff-attcanada dotca
 
 //
 // Example of creating a windows class in
@@ -1656,8 +1707,8 @@ exit
   (fli:register-module "debug/wintest.dll")
 
   ; poke the function pointer for the lisp windows proc
-  (setf (Lisp_WndProc) (fli:make-pointer :symbol-name 
-"func_Lisp_WndProc"))
+  (setf (Lisp_WndProc) 
+        (fli:make-pointer :symbol-name "func_Lisp_WndProc"))
 
   ; create the Windows class for ExWindow
   (C_CreateClass)
