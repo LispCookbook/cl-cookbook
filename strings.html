@@ -44,7 +44,7 @@ strings here.
 <h3>Accessing Substrings</h3>
 
 As a string is a sequence, you can access substrings with the 
-<a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_subseq.htm"><code>SUBSEQ</code></a>
+<a href="http://www.lispworks.com/reference/HyperSpec/Body/f_subseq.htm"><code>SUBSEQ</code></a>
 function. The index into the string is, as always, zero-based. The
 third, optional, argument is the index of the first character which is
 not a part of the substring, it is <em>not</em> the length of the
@@ -62,7 +62,7 @@ substring.
 </pre>
   
 You can also manipulate the substring if you use <code>SUBSEQ</code>
-together with <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/m_setf_.htm"><code>SETF</code></A>.
+together with <a href="http://www.lispworks.com/reference/HyperSpec/Body/m_setf_.htm"><code>SETF</code></A>.
   
 <pre>
 * (defparameter *my-string* (string "Harpo Marx"))
@@ -76,7 +76,7 @@ together with <a href="http://www.xanalys.com/software_tools/reference/HyperSpec
 </pre>
   
 But note that the string isn't &quot;stretchable&quot;. To cite from the
-<a href="http://www.xanalys.com/software_tools/reference/HyperSpec/index.html">HyperSpec</a>:
+<a href="http://www.lispworks.com/reference/HyperSpec/index.html">HyperSpec</a>:
 &quot;If the subsequence and the new sequence are not of 
 equal length, the shorter length determines the number of elements
 that are replaced.&quot; For example:
@@ -102,7 +102,7 @@ that are replaced.&quot; For example:
 <a name="chars"></a>
 <h3>Accessing Individual Characters</h3>
 
-You can use the function <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_char_.htm"><code>CHAR</code></a>
+You can use the function <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_char_.htm"><code>CHAR</code></a>
 to access individual characters of a string. <code>CHAR</code> can
 also be used in conjunction with <code>SETF</code>.
   
@@ -121,14 +121,14 @@ also be used in conjunction with <code>SETF</code>.
 "Grouchy Marx"
 </pre>
 
-Note that there's also <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_char_.htm"><code>SCHAR</code></A>.
+Note that there's also <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_char_.htm"><code>SCHAR</code></A>.
 If efficiency is important, <code>SCHAR</code> can be a bit faster 
 where appropriate.
 <p>
 
 Because strings are arrays and thus sequences, you can also use the more
-generic functions <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_aref.htm"><code>AREF</code></a>
-and <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_elt.htm"><code>ELT</code></a>
+generic functions <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_aref.htm"><code>AREF</code></a>
+and <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_elt.htm"><code>ELT</code></a>
 (which are more general while <code>CHAR</code> might be implemented
 more efficiently). 
 
@@ -147,7 +147,7 @@ more efficiently).
 
 There's a slew of (sequence) functions that can be used to
 manipulate a string and we'll only provide some
-examples here. See the <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/c_sequen.htm">sequences
+examples here. See the <a href="http://www.lispworks.com/reference/HyperSpec/Body/c_sequen.htm">sequences
 dictionary</a> in the HyperSpec for more.
 
 <pre>
@@ -175,7 +175,7 @@ dictionary</a> in the HyperSpec for more.
 <a name="concat"></a>
 <h3>Concatenating Strings</h3>
 
-The name says it all: <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_concat.htm"><code>CONCATENATE</code></a>
+The name says it all: <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_concat.htm"><code>CONCATENATE</code></a>
 is your friend. Note that this a generic sequence function and you
 have to provide the result type as the first argument.
 
@@ -193,9 +193,9 @@ what exactly your data is.
 
 If you build your string one character at a time, make it an
 <em>adjustable</em> VECTOR (a one-dimensional <a
-href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/15_.htm">ARRAY</a>)
+href="http://www.lispworks.com/reference/HyperSpec/Body/15_.htm">ARRAY</a>)
 of type character with a fill-pointer of zero, then use <a
-href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_vec_ps.htm"><code>VECTOR-PUSH-EXTEND</code></a>
+href="http://www.lispworks.com/reference/HyperSpec/Body/f_vec_ps.htm"><code>VECTOR-PUSH-EXTEND</code></a>
 on it.  That way, you can also give hints to the system if you can
 estimate how long the string will be. (See the optional third argument
 to <code>VECTOR-PUSH-EXTEND</code>.)
@@ -218,7 +218,7 @@ NIL
 If the string will be constructed out of (the printed
 representations of) arbitrary objects, (symbols, numbers,
 characters, strings, ...), you can use <a
-href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_format.htm"><code>FORMAT</code></a>
+href="http://www.lispworks.com/reference/HyperSpec/Body/f_format.htm"><code>FORMAT</code></a>
 with an output stream argument of <code>NIL</code>. This directs
 <code>FORMAT</code> to return the indicated output as a string.
 
@@ -239,7 +239,7 @@ emulate <code>CONCATENATE</code>.
 
 <code>FORMAT</code> can do a lot more processing but it has a
 relatively arcane syntax. After this last example, you can find the
-details in <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/22_c.htm">the
+details in <a href="http://www.lispworks.com/reference/HyperSpec/Body/22_c.htm">the
 CLHS section about formatted output</a>. 
 
 <pre>
@@ -249,11 +249,11 @@ CLHS section about formatted output</a>.
 </pre>
 
 Another way to create a string out of the printed representation of
-various object is using <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/m_w_out_.htm"><code>WITH-OUTPUT-TO-STRING</code></a>.
+various object is using <a href="http://www.lispworks.com/reference/HyperSpec/Body/m_w_out_.htm"><code>WITH-OUTPUT-TO-STRING</code></a>.
 The value of this handy macro is a string containing everything that
 was output to the string stream within the body to the macro. This
 means you also have the full power of 
-<a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_format.htm"><code>FORMAT</code></a>
+<a href="http://www.lispworks.com/reference/HyperSpec/Body/f_format.htm"><code>FORMAT</code></a>
 at your disposal, should you need it.
 
 <pre>
@@ -268,7 +268,7 @@ at your disposal, should you need it.
 <a name="process"></a>
 <h3>Processing a String One Character at a Time</h3>
 
-Use the <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_map.htm"><code>MAP</code></a>
+Use the <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_map.htm"><code>MAP</code></a>
 function to process a string one character at a time.
 
 <pre>
@@ -290,7 +290,7 @@ function to process a string one character at a time.
 "Groucho Marx"
 </pre>
 
-Or do it with <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/06_a.htm"><code>LOOP</code></a>.
+Or do it with <a href="http://www.lispworks.com/reference/HyperSpec/Body/06_a.htm"><code>LOOP</code></a>.
 
 <pre>
 * (loop for char across "Zeppo"
@@ -303,8 +303,8 @@ Or do it with <a href="http://www.xanalys.com/software_tools/reference/HyperSpec
 <h3>Reversing a String by Word or Character</h3>
 
 Reversing a string by character is easy using the built-in 
-<a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_revers.htm"><code>REVERSE</code></a>
-function (or its <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/26_glo_d.htm#destructive">destructive</a> counterpart <code>NREVERSE</code>).
+<a href="http://www.lispworks.com/reference/HyperSpec/Body/f_revers.htm"><code>REVERSE</code></a>
+function (or its <a href="http://www.lispworks.com/reference/HyperSpec/Body/26_glo_d.htm#destructive">destructive</a> counterpart <code>NREVERSE</code>).
 
 <pre>
 *(defparameter *my-string* (string "DSL"))
@@ -360,7 +360,7 @@ JOIN-STRING-LIST
 <a name="case"></a>
 <h3>Controlling Case</h3>
 
-Common Lisp has a couple of <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_stg_up.htm">functions
+Common Lisp has a couple of <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_stg_up.htm">functions
 to control the case of a string</a>.
 
 <pre>
@@ -405,7 +405,7 @@ conversion, the result may be either <em>string</em> or a copy of it,
 at the implementation's discretion." This implies the last result in
 the following example is implementation-dependent - it may either be
 &quot;BIG&quot; or &quot;BUG&quot;. If you want to be sure, use <a
-href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_cp_seq.htm"><code>COPY-SEQ</code></a>.
+href="http://www.lispworks.com/reference/HyperSpec/Body/f_cp_seq.htm"><code>COPY-SEQ</code></a>.
 
 <pre>
 * (defparameter *my-string* (string "BIG"))
@@ -425,7 +425,7 @@ href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_cp_seq.ht
 <h3>Trimming Blanks from the Ends of a String</h3>
 
 Not only can you trim blanks, but you can get rid of arbitary characters.
-The functions <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_stg_tr.htm"><code>STRING-TRIM</code>, <code>STRING-LEFT-TRIM</code> and <code>STRING-RIGHT-TRIM</code></a>
+The functions <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_stg_tr.htm"><code>STRING-TRIM</code>, <code>STRING-LEFT-TRIM</code> and <code>STRING-RIGHT-TRIM</code></a>
 return a substring of their second argument where all characters that
 are in the first argument are removed  off the beginning and/or
 the end. The first argument can be any <em>sequence</em> of characters.
@@ -451,7 +451,7 @@ href="#case">Controlling Case</a> also applies here.
 <a name="symbols"></a>
 <h3>Converting between Symbols and Strings</h3>
 
-The function <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_intern.htm"><code>INTERN</code></a>
+The function <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_intern.htm"><code>INTERN</code></a>
 will &quot;convert&quot; a string to a symbol. Actually, it will check
 whether the symbol denoted by the string (its first argument) is
 already accessible in the package (its second, optional, argument
@@ -459,7 +459,7 @@ which defaults to the current package) and enter it, if
 necessary, into this package. It is beyond the scope of this chapter
 to explain all the concepts involved and to address the second return
 value of this function. See <a
-href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/11_.htm">the
+href="http://www.lispworks.com/reference/HyperSpec/Body/11_.htm">the
 CLHS chapter about packages</a> for details.
 <p>
 
@@ -491,7 +491,7 @@ NIL
 </pre>
 
 To do the opposite, convert from a symbol to a string, use 
-<a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_symb_2.htm">SYMBOL-NAME</a> or <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_string.htm"><code>STRING</code></a>.
+<a href="http://www.lispworks.com/reference/HyperSpec/Body/f_symb_2.htm">SYMBOL-NAME</a> or <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_string.htm"><code>STRING</code></a>.
 
 <pre>
 * (symbol-name 'MY-SYMBOL)
@@ -508,12 +508,12 @@ To do the opposite, convert from a symbol to a string, use
 <a name="conv-chars"></a>
 <h3>Converting between Characters and Strings</h3>
 
-You can use <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_coerce.htm"><code>COERCE</code></A>
+You can use <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_coerce.htm"><code>COERCE</code></A>
 to convert a string of length 1 to a character. You can also use
 <code>COERCE</code> to convert any sequence of characters into a
 string. You can <em>not</em> use <code>COERCE</code> to convert a
 character to a string, though - you'll have to use 
-<a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_string.htm"><code>STRING</code></a>
+<a href="http://www.lispworks.com/reference/HyperSpec/Body/f_string.htm"><code>STRING</code></a>
 instead.
   
 <pre>
@@ -547,8 +547,8 @@ Type-error in KERNEL::OBJECT-NOT-TYPE-ERROR-HANDLER:
 <a name="find-el"></a>
 <h3>Finding an Element of a String</h3>
 
-Use <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_find_.htm"><code>FIND</code></a>,
-<a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_pos_p.htm"><code>POSITION</code></a>,
+Use <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_find_.htm"><code>FIND</code></a>,
+<a href="http://www.lispworks.com/reference/HyperSpec/Body/f_pos_p.htm"><code>POSITION</code></a>,
 and their <code>-IF</code> counterparts to find characters in a string.
 
 <pre>
@@ -572,7 +572,7 @@ NIL
 43
 </pre>
 
-Or use <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_countc.htm"><code>COUNT</code></a>
+Or use <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_countc.htm"><code>COUNT</code></a>
 and friends to count characters in a string.
 
 <pre>
@@ -590,7 +590,7 @@ and friends to count characters in a string.
 <a name="find-sub"></a>
 <h3>Finding a Substring of a String</h3>
 
-The function <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_search.htm"><code>SEARCH</code></a>
+The function <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_search.htm"><code>SEARCH</code></a>
 can find substrings of a string.
 
 <pre>
@@ -612,7 +612,7 @@ NIL
 <a name="number"></a>
 <h3>Converting a String to a Number</h3>
 
-CL provides the <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_parse_.htm"><code>PARSE-INTEGER</code></a>
+CL provides the <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_parse_.htm"><code>PARSE-INTEGER</code></a>
 to convert a string representation of an integer to the corresponding
 numeric value. The second return value is the index into the string
 where the parsing stopped.
@@ -645,8 +645,8 @@ Error in function PARSE-INTEGER:
 <code>PARSE-INTEGER</code> doesn't understand radix specifiers like
 <code>#X</code>, nor is there a built-in function to parse other
 numeric types. You could use 
-<a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_rd_fro.htm"><code>READ-FROM-STRING</code></a>
-in this case, but be aware that the full <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/02_b.htm">reader</a>
+<a href="http://www.lispworks.com/reference/HyperSpec/Body/f_rd_fro.htm"><code>READ-FROM-STRING</code></a>
+in this case, but be aware that the full <a href="http://www.lispworks.com/reference/HyperSpec/Body/02_b.htm">reader</a>
 is in effect if you're using this function.
 
 <pre>
@@ -682,12 +682,12 @@ SYMBOL
 <h3>Comparing Strings</h3>
 
 The general functions
-<a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_equal.htm"><code>EQUAL</code></a>
-and <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_equalp.htm"><code>EQUALP</code></a>
+<a href="http://www.lispworks.com/reference/HyperSpec/Body/f_equal.htm"><code>EQUAL</code></a>
+and <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_equalp.htm"><code>EQUALP</code></a>
 can be used to test whether two strings are equal. The strings are
 compared element-by-element, either in a case-sensitive manner
 (<code>EQUAL</code>) or not (<code>EQUALP</code>). There's also a
-bunch of <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_stgeq_.htm">string-specific 
+bunch of <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_stgeq_.htm">string-specific 
 comparison functions</a>. You'll want to use these if you're deploying
 <em>implementation-defined</em> attributes of characters. Check your
 vendor's documentation in this case.
@@ -695,8 +695,8 @@ vendor's documentation in this case.
 
 Here are a few examples. Note that all functions that test for
 inequality return the position of the first mismatch as a 
-<a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/26_glo_g.htm#generalized_boolean">generalized
-boolean</a>. You can also use the generic sequence function <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_mismat.htm"><code>MISMATCH</code></a>
+<a href="http://www.lispworks.com/reference/HyperSpec/Body/26_glo_g.htm#generalized_boolean">generalized
+boolean</a>. You can also use the generic sequence function <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_mismat.htm"><code>MISMATCH</code></a>
 if you need more versatility.
 
 <pre>

@@ -15,7 +15,8 @@ pre { margin-left:20px; background-color:#e0e0e0 }
 <h2>Contents</h2>
 <ul>
 <li><a href="#redir">Redirecting the Standard Output of your Program</a>
-<li><a href="#faith">Faithful output with character streams</a>
+<li><a href="#faith">Faithful Output with Character Streams</a>
+<li><a href="#bulk">Fast Bulk I/O</a>
 </ul>
 
 
@@ -29,7 +30,7 @@ You do it like this:
   <em>...</em>)
 </pre>
 
-Because <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/v_debug_.htm"><code>*STANDARD-OUTPUT*</code></a>
+Because <a href="http://www.lispworks.com/reference/HyperSpec/Body/v_debug_.htm"><code>*STANDARD-OUTPUT*</code></a>
 is a dynamic variable, all references to it during execution of the
 body of the <code>LET</code> form refer to the stream that you bound
 it to.  After exiting the <code>LET</code> form, the old value of
@@ -52,7 +53,7 @@ following:
   <em>...</em>)
 </pre>
   
-<a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/m_w_open.htm"><code>WITH-OPEN-FILE</code></a>
+<a href="http://www.lispworks.com/reference/HyperSpec/Body/m_w_open.htm"><code>WITH-OPEN-FILE</code></a>
 opens the file - creating it if necessary - binds 
 <code>*STANDARD-OUTPUT*</code>, executes its body, closes the file,
 and restores <code>*STANDARD-OUTPUT*</code> to its former value. It
@@ -60,7 +61,7 @@ doesn't get more comfortable than this!
 
 
 <a name="faith"></a>
-<h3>Faithful output with character streams</h3>
+<h3>Faithful Output with Character Streams</h3>
 
 By <em>faithful output</em> I mean that characters with codes between 0 and 255 will be
 written out as is. It means, that I can <code>(PRINC (CODE-CHAR 0..255) s)</code> to a stream and
@@ -68,15 +69,15 @@ expect 8-bit bytes to be written out, which is not obvious in the
 times of Unicode and 16 or 32 bit character representations.
 
 It does <em>not</em> require that the characters &auml;, &szlig;, or &thorn; must
-have their <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_char_c.htm"><code>CHAR-CODE</code></a>
+have their <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_char_c.htm"><code>CHAR-CODE</code></a>
 in the range 0..255 - the implementation is free 
 to use any code. But it does require that no <code>#\Newline</code> to CRLF translation takes place, among
 others.
 <p>
 
 Common Lisp has a long tradition of distinguishing character from byte
-(binary) I/O, e.g. <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_rd_by.htm"><code>READ-BYTE</code></a>
-and <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_rd_cha.htm"><code>READ-CHAR</code></a>
+(binary) I/O, e.g. <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_rd_by.htm"><code>READ-BYTE</code></a>
+and <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_rd_cha.htm"><code>READ-CHAR</code></a>
 are in the standard. Some implementations let both functions be called
 interchangeably. Others allow either one or the other. 
 (The <a href="http://ww.telent.net/cliki/simple-stream">simple stream proposal</a>
@@ -180,6 +181,19 @@ Here's some sample code to play with:
 (progn (generate-256 :external-format
   (ext:make-encoding :charset 'charset:iso-8859-1 :line-terminator :dos)) (check-256))
 |#
+</pre>
+
+<a name="bulk"></a>
+<h3>Fast Bulk I/O</h3>
+
+If you need to copy a lot of data and the source and destination are
+both streams (of the same <a href="http://www.lispworks.com/reference/HyperSpec/Body/26_glo_e.htm#element_type">element type</a>), it's very fast to use <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_rd_seq.htm">READ-SEQUENCE</a> and <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_wr_seq.htm">WRITE-SEQUENCE</a>:
+
+<pre>
+(let ((buf (make-array 4096 :element-type (stream-element-type input-stream)))
+  (loop for pos = (read-sequence input-stream)
+        while (plusp pos)
+        do (write-sequence buf output-stream :end pos))))
 </pre>
   
 <hr>

@@ -54,12 +54,12 @@ ADDER
 </pre>
 
 Here we have defined the function <code>ADDER</code> which returns an <em>object</em> of
-<em>type</em> <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/t_fn.htm"><code>FUNCTION</code></a>. To create such an
+<em>type</em> <a href="http://www.lispworks.com/reference/HyperSpec/Body/t_fn.htm"><code>FUNCTION</code></a>. To create such an
 object you'll have to use the special operator <a
-href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/s_fn.htm"><code>FUNCTION</code></a> and apply it to a <em>lambda expression</em>. <code>(FUNCTION <em>form</em>)</code>
+href="http://www.lispworks.com/reference/HyperSpec/Body/s_fn.htm"><code>FUNCTION</code></a> and apply it to a <em>lambda expression</em>. <code>(FUNCTION <em>form</em>)</code>
 may be abbreviated as <code>#'<em>form</em></code>. In our example
 above we used a shorthand notation provided by the macro <a
-href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/m_lambda.htm"><code>LAMBDA</code></a>. Without this little bit of syntactical
+href="http://www.lispworks.com/reference/HyperSpec/Body/m_lambda.htm"><code>LAMBDA</code></a>. Without this little bit of syntactical
 sugar we would have to write it as
 
 <pre>
@@ -132,17 +132,17 @@ To simplify a bit, you can think of each symbol in CL having (at
 least) two &quot;cells&quot; in which information is stored. One cell
 - sometimes referred to as its <em>value cell</em> - can hold a value
 that is <em>bound</em> to this symbol, and you can use <a
-href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_boundp.htm"><code>BOUNDP</code></a> to test whether the symbol is bound to
+href="http://www.lispworks.com/reference/HyperSpec/Body/f_boundp.htm"><code>BOUNDP</code></a> to test whether the symbol is bound to
 a value (in the global environment).  You can access the value cell of
-a symbol with <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_symb_5.htm"><code>SYMBOL-VALUE</code></a>.
+a symbol with <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_symb_5.htm"><code>SYMBOL-VALUE</code></a>.
 <p>
 
 The other cell - sometimes referred to as its <em>function cell</em> -
 can hold the definition of the symbol's (global) function binding. In
 this case, the symbol is said to be <em>fbound</em> to this
-definition. You can use <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_fbound.htm"><code>FBOUNDP</code></a> to test
+definition. You can use <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_fbound.htm"><code>FBOUNDP</code></a> to test
 whether a symbol is fbound. You can access the function cell of a
-symbol (in the global environment) with <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_symb_1.htm"><code>SYMBOL-FUNCTION</code></a>.
+symbol (in the global environment) with <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_symb_1.htm"><code>SYMBOL-FUNCTION</code></a>.
 <p>
 
 Now, if a <em>symbol</em> is evaluated, it is treated as a
@@ -165,8 +165,8 @@ like
 This explains the error message we got above - <code>(ADDER 3)</code>
 is neither a symbol nor a lambda expression. But, you might ask, how
 <em>do</em> we use the function object that is returned by <code>ADDER</code>? The answer
-is: Use <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_funcal.htm"><code>FUNCALL</code></a> or <a
-href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_apply.htm"><code>APPLY</code></a>:
+is: Use <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_funcal.htm"><code>FUNCALL</code></a> or <a
+href="http://www.lispworks.com/reference/HyperSpec/Body/f_apply.htm"><code>APPLY</code></a>:
 
 <pre>
 ;;; continued from above
@@ -191,7 +191,7 @@ Note that in the last example the function object returned by
 to use the symbol <code>*MY-FUN*</code> in the car of a compound form,
 we have to explicitely store something in its <em>function cell</em>
 (which is normally done for us by the macro
-<a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/m_defun.htm"><code>DEFUN</code></a>):
+<a href="http://www.lispworks.com/reference/HyperSpec/Body/m_defun.htm"><code>DEFUN</code></a>):
 
 <pre>
 ;;; continued from above
@@ -238,7 +238,7 @@ function cell (is fbound to the function), i.e. <code>'+</code>.
 All of the above is <em>extremely simplified</em> - we haven't even
 mentioned macros, special forms, symbol macros, self-evaluating
 objects, and lexical environments. Read the CLHS section about <a
-href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/03_aba.htm">Form Evaluation</a> for the real deal.
+href="http://www.lispworks.com/reference/HyperSpec/Body/03_aba.htm">Form Evaluation</a> for the real deal.
 
 
 <a name="curry"></a>
@@ -268,7 +268,7 @@ CURRY
 1000
 </pre>
 
-Note that the <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/m_declai.htm"><code>DECLAIM</code></a>
+Note that the <a href="http://www.lispworks.com/reference/HyperSpec/Body/m_declai.htm"><code>DECLAIM</code></a>
 statement above is just a hint for the compiler so it can produce more
 efficient code if it so wishes. Leaving it out won't change the
 semantics of the function.

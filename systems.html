@@ -111,9 +111,9 @@
     complex undertaking that requires careful planning. Combine this
     with the fact that ANSI CL provides an alternative, although much
     more limited, way of managing code (<A
-    href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_provid.htm"><code>PROVIDE</code></A>
+    href="http://www.lispworks.com/reference/HyperSpec/Body/f_provid.htm"><code>PROVIDE</code></A>
     and <A
-    href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_provid.htm"><code>REQUIRE</code></A>),
+    href="http://www.lispworks.com/reference/HyperSpec/Body/f_provid.htm"><code>REQUIRE</code></A>),
     and the whole issue can quickly become a nightmare for
     beginners. So here is a suggestion on a possible way to organize
     your code, one that works best for small, self-contained packages
@@ -170,7 +170,7 @@
     and the system will be compiled (if needed) and loaded; moreover,
     all of its external symbols will be imported into the current
     package. If you later modify your code, you just have to call <A
-    href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_provid.htm"><code>REQUIRE</code></A>
+    href="http://www.lispworks.com/reference/HyperSpec/Body/f_provid.htm"><code>REQUIRE</code></A>
     again, and the system will be recompiled and reloaded. This
     behaves approximately like the <code>use</code> command in Perl or
     the <code>import</code> statement in Java: it allows you to easily

@@ -1,42 +1,47 @@
+2003-12-07
+  Added "Fast Bulk I/O" entry by Zach Beane
+  Added Zach Beane to list of contributors
+  Updated links to CLHS (now at www.lispworks.com)
+
 2003-11-01
-	Added "Using Emacs as a Lisp IDE" material.
+  Added "Using Emacs as a Lisp IDE" material.
 
 2003-10-21
-	Added CLOS tutorial.
-	
+  Added CLOS tutorial.
+  
 2003-10-09
-	Updated .emacs by Bill Clementson to support re-indentation of
-	top-level sexp/defun.
+  Updated .emacs by Bill Clementson to support re-indentation of
+  top-level sexp/defun.
 
 2003-10-04
-	Updated index.html, and added emacs-ide.html by Bill
-	Clementson. Added place-holder page for the "Using Emacs as a Lisp
-	IDE" page that I will post after my ILC2003 presentation.
+  Updated index.html, and added emacs-ide.html by Bill
+  Clementson. Added place-holder page for the "Using Emacs as a Lisp
+  IDE" page that I will post after my ILC2003 presentation.
 
 2003-10-03
-	Updated windows.html, and .emacs by Bill Clementson - added back
-	in Corman Lisp support (nobody else seemed to be having problems
-	with it but me) and added support for the info version of the ANSI
-	CL documentation.
+  Updated windows.html, and .emacs by Bill Clementson - added back
+  in Corman Lisp support (nobody else seemed to be having problems
+  with it but me) and added support for the info version of the ANSI
+  CL documentation.
 
 2003-09-30
-	Updated windows.html, and .emacs by Bill Clementson - removed
-	Corman Lisp support since haven't been able to get Corman releases
-	after 1.5 to work in either inferior lisp mode or ilisp.
+  Updated windows.html, and .emacs by Bill Clementson - removed
+  Corman Lisp support since haven't been able to get Corman releases
+  after 1.5 to work in either inferior lisp mode or ilisp.
 
 2003-09-25
-	Updated .emacs by Bill Clementson - allow evals in info.
+  Updated .emacs by Bill Clementson - allow evals in info.
 
 2003-09-15
-	Updated windows.html, and .emacs by Bill Clementson - minor key
-	mods.
+  Updated windows.html, and .emacs by Bill Clementson - minor key
+  mods.
 
 2003-09-14
-	Updated windows.html, and .emacs by Bill Clementson - minor mods.
+  Updated windows.html, and .emacs by Bill Clementson - minor mods.
 
 2003-09-03
-	Updated windows.html, and .emacs by Bill Clementson to support
-	clisp 2.31.
+  Updated windows.html, and .emacs by Bill Clementson to support
+  clisp 2.31.
 
 2003-09-02
   Updated windows.html and index.html by Bill Clementson-minor edits and
