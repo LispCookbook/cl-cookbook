@@ -1,3 +1,6 @@
+2002-03-08
+  .emacs & windows.html: added support for LispWorks 
+
 2002-03-02
   removed buildilisp.bat because it's part of ILISP now
   

@@ -33,11 +33,9 @@ Setting up an IDE with Emacs on Windows</h1>
           this is a simplistic approach, it is more usable than the raw
           clconsole application provided with this implementation</li>
         <li><b>Xanalys LispWorks:</b> ILISP will be used in Emacs to provide the
-          development environment <b>TO-DO</b> (Note: the trial version of the
-          product doesn't provide a non-gui Lisp image and this is necessary if
-          the product is to be used with Emacs. Xanalys will be providing me
-          with an evaluation version of LispWorks so that I can provide an
-          equivalent set of instructions for LispWorks in the future.)</li>
+          development environment (Note: the trial version of the product
+          doesn't provide a non-gui Lisp image and this is necessary if the
+          product is to be used with Emacs.)</li>
       </ul>
       <p>By exactly following the installation instructions, the user will wind
       up with an Emacs setup that:</p>
@@ -58,15 +56,19 @@ Setting up an IDE with Emacs on Windows</h1>
         <li><a href="#Installing Emacs">Installing Emacs</a></li>
         <li><a href="#Installing CLISP">Installing CLISP</a></li>
         <li><a href="#Installing ACL">Installing ACL</a></li>
+        <li><a href="#Installing LispWorks">Installing LispWorks</a></li>
         <li><a href="#Installing Corman CL">Installing Corman CL</a></li>
         <li><a href="#Installing additional Emacs utilities">Installing
           additional Emacs utilities</a></li>
         <li><a href="#Installing on-line documentation">Installing on-line
           documentation</a></li>
         <li><a href="#Configuration steps">Configuration steps</a></li>
-        <li><a href="#Testing the environments">Testing the environments</a></li>
-        <li><a href="#Sample .emacs file">Sample .emacs file</a></li>
+        <li><a href="#Testing the environments">Testing the environments<br>
+          </a></li>
       </ol>
+      <p>There is also a short appendix describing the sample .emacs file:<br>
+      &nbsp;&nbsp; A.&nbsp;&nbsp;&nbsp; <a href="#Sample .emacs file">Sample .emacs
+      file</a></p>
       <p>For each installation, an installation directory is suggested. It isn't
       necessary to install in that directory; however, if you use the suggested
       names, the provided Emacs start-up file (.emacs) will work
@@ -225,7 +227,54 @@ Setting up an IDE with Emacs on Windows</h1>
         emacs-version)))))<br>
         </p>
       </blockquote>
-      <h3><a name="Installing Corman CL">4. Installing Corman CL</a></h3>
+      <h3><a name="Installing LispWorks">4. Installing LispWorks</a></h3>
+      <ul>
+        <li>In order to use LispWorks with ILISP, it is necessary to create a
+          non-gui console version of the LispWorks executable. This is not
+          possible with the free downloadable &quot;Personal&quot; version of
+          LispWorks. It is only possible with the commercial
+          &quot;Professional&quot; and &quot;Enterprise&quot; editions. These
+          can be ordered off the Xanalys web site at <a href="http://www.xanalys.com">www.xanalys.com</a>.
+          The following instructions assume that you have the commercial version
+          of LispWorks. If you don't, skip this section. (Note: the supplied .emacs
+          file will still work ok, you just won't be able to try out the
+          LispWorks ILISP mode.)</li>
+        <li>Run the LispWorks installation program and install LispWorks
+          (Suggested directory: C:\Program Files\Xanalys). </li>
+        <li>Create a file called console.lisp in the c:\home\lisp\ directory.
+          This file will be used to create the non-gui console version of the
+          LispWorks executable. The file should have the following lines in it:</li>
+      </ul>
+      <blockquote>
+        <blockquote>
+          <p>(load-all-patches)<br>
+          (save-image &quot;lw42-console&quot; :console t :environment nil)<br>
+          (quit)</p>
+        </blockquote>
+      </blockquote>
+      <ul>
+        <li>Go to a dos command line and enter the following commands to create
+          the non-gui console version of the LispWorks executable:</li>
+      </ul>
+      <blockquote>
+        <blockquote>
+          <p>cd c:\Program Files\Xanalys\LispWorks<br>
+          lispworks-4200 -init c:\home\lisp\console.lisp</p>
+        </blockquote>
+        <p>This will result in the lw42-console.exe file being created in the
+        c:\Program Files\Xanalys\LispWorks directory.</p>
+      </blockquote>
+      <ul>
+        <li>Create a file called lispworks.bat in the c:\home\lisp\ directory.
+          This file is the startup file called by ILISP. The file should have
+          the following lines in it:
+          <blockquote>
+            <p>@echo off<br>
+            &quot;c:/Program Files/Xanalys/LispWorks/lw42-console.exe&quot;</p>
+          </blockquote>
+        </li>
+      </ul>
+      <h3><a name="Installing Corman CL">5. Installing Corman CL</a></h3>
       <ul>
         <li>Download the precompiled Emacs binaries for <a href="http://www.corman.net/">Corman
           Lisp</a> for Windows from <a href="http://corman.net/CormanLisp/CormanLisp_1_5_Setupex.exe">http://corman.net/CormanLisp/CormanLisp_1_5_Setupex.exe</a></li>
@@ -243,7 +292,7 @@ Setting up an IDE with Emacs on Windows</h1>
         -image &quot;C:\Program Files\Corman Tools\Corman Lisp 1.5\cormanlisp.img&quot;<br>
         </p>
       </blockquote>
-      <h3><a name="Installing additional Emacs utilities">5. Installing
+      <h3><a name="Installing additional Emacs utilities">6. Installing
       additional Emacs utilities</a></h3>
       <ul>
         <li>The current 5.11 version of the <a href="http://sourceforge.net/projects/ilisp/">ILISP</a>
@@ -251,7 +300,7 @@ Setting up an IDE with Emacs on Windows</h1>
           problems when used with Emacs v21.1 (also, the latest version of the
           Hyperspec needs the CVS version as well); therefore, it is preferable
           to download the CVS version of this package.</li>
-        <li>Go to a dos command line and enter the following commands to
+        <li>Go to a dos command line and enter the following 3 commands to
           download the CVS version of ILISP (Note: when you are prompted for the
           CVS password after entering line#2, just press enter):</li>
       </ul>
@@ -282,7 +331,7 @@ Setting up an IDE with Emacs on Windows</h1>
         <li>Download the sample .emacs file from <a href=".emacs">here</a> and
           place it in the c:\home directory</li>
       </ul>
-      <h3><a name="Installing on-line documentation">6. Installing on-line
+      <h3><a name="Installing on-line documentation">7. Installing on-line
       documentation</a></h3>
       <ul>
         <li>Download the <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/">Common
@@ -292,7 +341,7 @@ Setting up an IDE with Emacs on Windows</h1>
           Lisp the Language</a> reference from <a href="http://www-2.cs.cmu.edu/afs/cs.cmu.edu/project/ai-repository/ai/lang/lisp/doc/cltl/cltl_ht.tgz">http://www-2.cs.cmu.edu/afs/cs.cmu.edu/project/ai-repository/ai/lang/lisp/doc/cltl/cltl_ht.tgz</a></li>
         <li>Use Winzip to unpack the files (Suggested directory: c:\home\docs)</li>
       </ul>
-      <h3><a name="Configuration steps">7. Configuration steps</a></h3>
+      <h3><a name="Configuration steps">8. Configuration steps</a></h3>
       <ul>
         <li>Setup environmental variables either in the autoexec.bat file (e.g.
           - Windows/98) or the Control Panel/System (e.g. - Windows/NT/2000)</li>
@@ -328,16 +377,25 @@ Setting up an IDE with Emacs on Windows</h1>
               into that directory</li>
             <li>Compile the clisp-indent.el and cua.el files in the same manner
               as was done for .emacs</li>
-            <li>Start CLISP by pressing F5</li>
+            <li>Start CLISP by pressing &quot;F5&quot;</li>
             <li>After starting ILISP/CLISP in Emacs, use &quot;M-x
               ilisp-compile-inits&quot; to compile the CLISP Lisp initialization
-              files</li>
+              files. When finished, press &quot;F4&quot; to close the *clisp-hs*
+              window.</li>
+            <li>Press &quot;M-C-F5&quot; twice in succession (the minibuffer
+              window at the bottom will say &quot;lisp-used: :lw-ilisp&quot;
+              indicating that you have toggled to LispWorks mode)</li>
+            <li>Start LispWorks by pressing &quot;F5&quot;</li>
+            <li>After starting ILISP/CLISP in Emacs, use &quot;M-x
+              ilisp-compile-inits&quot; to compile the LispWorks Lisp
+              initialization files. When finished, press &quot;F4&quot; to close
+              the *clisp-hs* window.</li>
           </ul>
         </li>
         <li>All configuration steps should now be complete - exit Emacs by
           pressing &quot;M-F4&quot;</li>
       </ul>
-      <h3><a name="Testing the environments">8. Testing the environments</a></h3>
+      <h3><a name="Testing the environments">9. Testing the environments</a></h3>
       <ul>
         <li>Start Emacs (either by using the Start menu's Gnu Emacs shortcut or
           by using Run on the Windows Start menu with the command &quot;c:\emacs\bin\runemacs.exe&quot;)
@@ -357,7 +415,7 @@ Setting up an IDE with Emacs on Windows</h1>
               </ul>
             </li>
             <li>Click in the dired window and press &quot;M-C-F5&quot; (the
-              minibuffer window at the bottom will say &quot;lisp-used: :acl&quot;
+              minibuffer window at the bottom will say &quot;lisp-used: :acl-eli&quot;
               indicating that you have toggled to ACL mode)</li>
             <li>Test that ACL runs by pressing &quot;F5&quot;
               <ul>
@@ -378,7 +436,23 @@ Setting up an IDE with Emacs on Windows</h1>
               </ul>
             </li>
             <li>Click in the dired window and press &quot;M-C-F5&quot; (the
-              minibuffer window at the bottom will say &quot;lisp-used: :corman&quot;
+              minibuffer window at the bottom will say &quot;lisp-used: :lw-ilisp&quot;
+              indicating that you have toggled to LispWorks mode)</li>
+            <li>Test that LispWorks runs by pressing &quot;F5&quot; (LispWorks
+              should open in the bottom window and the ILISP menu should appear
+              in the Emacs menu bar)
+              <ul>
+                <li>Click in the *lispworks* window and press &quot;C-h b&quot;
+                  (this will show you the keybindings that are in effect for
+                  ILISP/LispWorks)</li>
+                <li>Click in the *Help* window and scroll through the keybinding
+                  list. When finished, press &quot;F4&quot; to close that window</li>
+                <li>Click in the *lispworks* window and press &quot;F4&quot; to
+                  close that window</li>
+              </ul>
+            </li>
+            <li>Click in the dired window and press &quot;M-C-F5&quot; (the
+              minibuffer window at the bottom will say &quot;lisp-used: :corman-eshell&quot;
               indicating that you have toggled to Corman mode)</li>
             <li>Test that Corman runs by pressing &quot;F5&quot;
               <ul>
@@ -397,7 +471,9 @@ Setting up an IDE with Emacs on Windows</h1>
           </ul>
         </li>
       </ul>
-      <h3><a name="Sample .emacs file">9. Sample .emacs file</a></h3>
+      <p>You should now have a working Windows/Emacs setup that supports a
+      number of different Lisp implementations.</p>
+      <h3><a name="Sample .emacs file">A. Sample .emacs file</a></h3>
       <ul>
         <li>Following is a brief explanation of each of the sections of the
           sample <a href=".emacs">.emacs</a> file:

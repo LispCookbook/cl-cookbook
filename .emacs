@@ -14,18 +14,21 @@
 (defvar common-lisp-hyperspec-symbol-table (concat common-lisp-hyperspec-root "Data/Map_Sym.txt"))
 (defvar hyperspec-prog (concat use-home "site/ilisp/extra/hyperspec"))
 
-;; Gnu CLISP (switches for ANSI, ILISP & no banner)
+;; Gnu CLISP - ILISP (switches for ANSI, ILISP & no banner)
 (defvar clisp-hs-program "clisp -ansi -I -q")
 
-;; Corman Common Lisp
+;; Corman Common Lisp - ESHELL
 (defvar cormanlisp-program "corman.bat")
 
-;; Franz Allegro Common Lisp
+;; Franz Allegro Common Lisp - ELI
 (defvar fi:common-lisp-image-name "C:/Program Files/ACL/allegro-ansi.exe")
 (defvar fi:common-lisp-directory "C:/Program Files/ACL/")
 
+;; Xanalys LispWorks - ILISP
+(defvar lispworks-program "lispworks")
+
 ;; Default Lisp implementation to use
-(defvar lisp-used :clisp "Recognized values are :clisp, :acl, :corman")
+(defvar lisp-used :clisp-ilisp "Recognized values are :clisp-ilisp, :acl-eli, :lw-ilisp, :corman-eshell")
 
 ;; Set up load path 
 (setq load-path (append (list (concat use-home "")
@@ -177,8 +180,9 @@
 
   ;; Start up Lisp 
   (cond
-   ((eq lisp-used :clisp)
-    ;; CLISP using ILISP
+   ((or (eq lisp-used :clisp-ilisp)
+	(eq lisp-used :lw-ilisp))
+    ;; CLISP, LispWorks or ACL using ILISP
     ;; Change default key prefix from C-Z to C-c FSF standard
     (setq ilisp-*use-fsf-compliant-keybindings* t
 	  ilisp-*arglist-message-lisp-space-p* t
@@ -195,27 +199,31 @@
     ;; All the *.d and *.lisp sources are in UTF-8 encoding.
     (modify-coding-system-alist 'file "\\.\\(d\\|lisp\\)\\'" 'utf-8)
 	
-    (add-hook 'ilisp-load-hook
-	      (function
-	       (lambda ()
-		 ;; Set a keybinding for the COMMON-LISP-HYPERSPEC command
-		 (defkey-ilisp "" 'common-lisp-hyperspec)
-		 (message "Running ilisp-load-hook")
-		 ;; Set the inferior Lisp directory to the directory of
-		 ;; the buffer that spawned it on the first prompt.
-		 (add-hook 'ilisp-init-hook
-			   '(lambda ()
-			      (default-directory-lisp ilisp-last-buffer))))))
-    (clisp-hs))
-   ((eq lisp-used :acl)
-    ;; Franz Allegro Common Lisp using eli
-    (load "fi-site-init")
+     (add-hook 'ilisp-load-hook
+               (function
+                 (lambda ()
+	     ;; Set a keybinding for the COMMON-LISP-HYPERSPEC command
+                   (defkey-ilisp "" 'common-lisp-hyperspec)
+                   (message "Running ilisp-load-hook")
+		;; Set the inferior Lisp directory to the directory of
+                   ;; the buffer that spawned it on the first prompt.
+                   (add-hook 'ilisp-init-hook
+                             '(lambda ()
+                               (default-directory-lisp ilisp-last-buffer))))))
+     (cond
+       ((eq lisp-used :clisp-ilisp)
+         (clisp-hs))
+       ((eq lisp-used :lw-ilisp)
+         (lispworks))))
+   ((eq lisp-used :acl-eli)
+     ;; Franz Allegro Common Lisp using eli
+   (load "fi-site-init")
     (fi:common-lisp fi:common-lisp-buffer-name
 		    fi:common-lisp-directory
 		    fi:common-lisp-image-name
 		    fi:common-lisp-image-arguments
 		    fi:common-lisp-host))
-   ((eq lisp-used :corman)
+   ((eq lisp-used :corman-eshell)
     ;; Corman Common Lisp using eshell
     (cond
      ((string= "w32" window-system)
@@ -225,7 +233,7 @@
       (eshell-send-input))))))
 
 (defun goto-match-paren (arg)
-  "Go to the matching parenthesis if on parenthesis."
+"Go to the matching parenthesis if on parenthesis."
   (interactive "p")
   (cond ((looking-at "\\s\(") (forward-list 1) (backward-char 1))
         ((looking-at "\\s\)") (forward-char 1) (backward-list 1))
@@ -303,15 +311,17 @@
 
 (global-set-key [(control meta f5)]
 		(function
-		 (lambda ()
-		  (interactive)
-		  (cond
-		    ((eq lisp-used :clisp)
-		     (setq lisp-used :acl))
-		    ((eq lisp-used :acl)
-		     (setq lisp-used :corman))
-		    (t (setq lisp-used :clisp)))
-		  (message "lisp-used: %s" lisp-used))))
+                  (lambda ()
+                    (interactive)
+                    (cond
+                      ((eq lisp-used :clisp-ilisp)
+                        (setq lisp-used :acl-eli))
+                      ((eq lisp-used :acl-eli)
+                        (setq lisp-used :lw-ilisp))
+                      ((eq lisp-used :lw-ilisp)
+                        (setq lisp-used :corman-eshell))
+                      (t (setq lisp-used :clisp-ilisp)))
+                    (message "lisp-used: %s" lisp-used))))
 
 ;;__________________________________________________________________________
 ;;;;    Windows Key Overrides
