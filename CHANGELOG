@@ -1,3 +1,9 @@
+2002-03-01
+  .emacs: mods to reflect fixes made to clisp install.lisp in CLISP 
+  CVS and eliminate compile-time warnings (Bill Clementson)
+  windows.html: mods to reflect fixes made to clisp install.lisp in 
+  CVS and the introduction of icompile.bat in ILISP CVS.
+
 2002-02-25
   index.html: added link to CHANGELOG (Edi Weitz)
 
