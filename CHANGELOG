@@ -1,3 +1,7 @@
+2003-10-09
+	Updated .emacs by Bill Clementson to support re-indentation of
+	top-level sexp/defun.
+
 2003-10-04
 	Updated index.html, and added emacs-ide.html by Bill
 	Clementson. Added place-holder page for the "Using Emacs as a Lisp

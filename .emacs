@@ -629,6 +629,24 @@ region progressively moves outward over enclosing expressions."
 	(forward-sexp))
       (replace-match ""))))
 
+(defadvice fi:indent-sexp (around indent-defun ())
+  "Indent the enclosing defun (or top-level sexp)."
+  (interactive)
+  (save-excursion
+    (beginning-of-defun)
+    ad-do-it))
+
+(ad-activate 'fi:indent-sexp)
+
+(defadvice indent-sexp-ilisp (around indent-defun ())
+  "Indent the enclosing defun (or top-level sexp)."
+  (interactive)
+  (save-excursion
+    (beginning-of-defun)
+    ad-do-it))
+
+(ad-activate 'indent-sexp-ilisp)
+
 ;;__________________________________________________________________________
 ;;;;    Programming - Elisp
 
@@ -641,6 +659,15 @@ region progressively moves outward over enclosing expressions."
 	     ;; Default to auto-indent on Enter
 	     (define-key emacs-lisp-mode-map [(control j)] 'newline)
 	     (define-key emacs-lisp-mode-map [(control m)] 'newline-and-indent)))
+
+(defadvice indent-sexp (around indent-defun (&optional endpos))
+  "Indent the enclosing defun (or top-level sexp)."
+  (interactive)
+  (save-excursion
+    (beginning-of-defun)
+    ad-do-it))
+
+(ad-activate 'indent-sexp)
 
 ;;__________________________________________________________________________
 ;;;;    Programming - Lisp in Info (allow eval of sexps in Info docs)
