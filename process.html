@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <!-- 	$Header$	 -->
 <html> <head>
-<title>The Common Lisp Cookbook - Interfacing with your OS</title>
+<title>The Common Lisp Cookbook - Threads</title>
 <style type="text/css">
 pre { margin-left:20px; background-color:#e0e0e0 }
 </style>
@@ -9,69 +9,41 @@ pre { margin-left:20px; background-color:#e0e0e0 }
 </head>
 
 <body bgcolor=white>
-<h1><a href="index.html">The Common Lisp Cookbook</a> - Processes and Threads</h1>
+<h1><a href="index.html">The Common Lisp Cookbook</a> - Threads</h1>
 
 
 <h2>Contents</h2>
 
 <ul>
-<li><a href="#fork-cmucl">Forking with CMUCL</a>
+<li><a href="#tag">Heading</a>
 </ul>
 
-The ANSI Common Lisp standard doesn't mention this topic. So almost
+<p>By <cite>threads</cite>, I mean separate execution strands within a
+single Lisp process. For information about communication with other
+<cite>processes</cite>, see <a href="os.html">Interfacing with your
+OS</a>.</p>
+
+<p>The ANSI Common Lisp standard doesn't mention this topic. So almost
 everything that can be said here depends on your OS and your
-implementation. 
+implementation.</p>
 
+<p>Speaking of implementations, the following discussion currently
+refers only to <a href="http://www.xanalys.com/">Xanalys</a> <a
+href="http://www.xanalys.com/software_tools/products/">LispWorks</a>.
+It has been tested on LispWorks for Windows version 4.2.6 running on
+Windows NT (SP 6). Your mileage may vary. I will add "support" for
+other implementations and operating systems to this page later, if I
+have the time and access to the appropriate materials.</p>
 
-<a name="fork-cmucl"></a>
-<h3>Forking with CMUCL</h3>
+<a name="tag"></a>
+<h3>Heading</h3>
 
-Here's a function by Martin Cracauer that'll allow you to compile a
-couple of files in parallel with <a
-href="http://www.cons.org/cmucl/">CMUCL</a>. It demonstrates how to
-use the UNIX <a href="http://www.freebsd.org/cgi/man.cgi?query=fork&apropos=0&sektion=0&manpath=FreeBSD+4.5-RELEASE&format=html"><code>fork</code></a>
-system call with this CL implementation. 
+Some words.
 
 <pre>
-(defparameter *sigchld* 0)
 
-(defparameter *compile-files-debug* 2)
+Some code</pre>
 
-(defun sigchld-handler (p1 p2 p3)
-  (when (&gt; 0 *compile-files-debug*)
-    (print (list "returned" p1 p2 p3))
-    (force-output))
-  (decf *sigchld*))
-
-(defun compile-files (files &key (load nil))
-  (setq *sigchld* 0)
-  (system:enable-interrupt unix:sigchld #'sigchld-handler)
-  (do ((f files (cdr f)))
-      ((not f))
-    (format t "~&process ~d diving for ~a" (unix:unix-getpid)
-	    `(compile-file ,(car f)))
-    (force-output)
-    (let ((pid (unix:unix-fork)))
-      (if (/= 0 pid)
-	  ;; parent
-	  (incf *sigchld*)
-	;; child
-	(progn
-	  (compile-file (car f) :verbose nil :print nil)
-	  (unix:unix-exit 0)))))
-  (do () ((= 0 *sigchld*))
-    (sleep 1)
-    (when (&gt; 0 *compile-files-debug*)
-      (format t "~&process ~d still waiting for ~d childs"
-	      (unix:unix-getpid) *sigchld*)))
-  (when (&gt; 0 *compile-files-debug*)
-    (format t "~&finished"))
-  (when load
-    (do ((f files (cdr f)))
-	((not f))
-      (load (compile-file-pathname (car f))))))
-</pre>
-  
 <hr>
 <a href="license.html">Copyright</a> &copy; 2002 The Common Lisp Cookbook Project
 <address>http://cl-cookbook.sourceforge.net/</address>
