@@ -1,3 +1,9 @@
+2002-08-29
+  updated windows.html and .emacs by Bill Clementson as follows:
+	
+  1. Changes for ACL6.2 (use alisp.exe instead of allegro-ansi.exe due to heap size limitations in trial edition).
+  2. Eliminate clisp-indent.el from setup to eliminate need to modify .emacs if clisp isn't installed.
+
 2002-08-20
   updated windows.html and .emacs by Bill Clementson as follows:
 
