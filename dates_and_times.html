@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <!-- 	$Header$	 -->
 <html> <head>
-<title>The Common Lisp Cookbook - Packages</title>
+<title>The Common Lisp Cookbook - Dates and Times</title>
 <style type="text/css">
 pre { margin-left:20px; background-color:#e0e0e0 }
 </style>
@@ -37,7 +37,7 @@ function <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body
 * (get-universal-time)
 3220993326
 </pre>
-  
+
 Of course this value is not very readable, so you can use the function
 <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_dec_un.htm"><code>DECODE-UNIVERSAL-TIME</code></a> to turn it into a &quot;calendar time&quot; representation:
 
@@ -70,7 +70,7 @@ current time directly:
 <pre>
 * (get-decoded-time)
 </pre>
-  
+
 is equivalent to
 
 <pre>
@@ -81,15 +81,15 @@ Here is an example of how to use these functions in a program:
 
 <pre>
 * (defconstant *day-names*
-    '("Monday" "Tuesday" "Wednesday" 
-      "Thursday" "Friday" "Saturday" 
+    '("Monday" "Tuesday" "Wednesday"
+      "Thursday" "Friday" "Saturday"
       "Sunday"))
 *DAY-NAMES*
 
 * (multiple-value-bind
 	(second minute hour date month year day-of-week dst-p tz)
 	(get-decoded-time)
-    (format t "It is now ~2,'0d:~2,'0d:~2,'0d of ~a, ~d/~2,'0d/~d (GMT~@d)" 
+    (format t "It is now ~2,'0d:~2,'0d:~2,'0d of ~a, ~d/~2,'0d/~d (GMT~@d)"
 	      hour
 	      minute
 	      second
@@ -104,7 +104,7 @@ It is now 17:07:17 of Saturday, 1/26/2002 (GMT-5)
 Of course the call to <code>GET-DECODED-TIME</code> above could be
 replaced by <code>(DECODE-UNIVERSAL-TIME n)</code>, where n is any
 integer number, to print an arbitrary date. You can also go the other
-way around: the function 
+way around: the function
 <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_encode.htm"><code>ENCODE-UNIVERSAL-TIME</code></a> lets you encode a calendar time into the
 corresponding universal time. This function takes six mandatory
 arguments (seconds, minutes, hours, date, month and year) and one
@@ -118,7 +118,7 @@ optional argument (the time zone) and it returns a universal time:
 Note that the result is automatically adjusted for daylight savings
 time if the time zone is not supplied. If it is supplied, than Lisp
 assumes that the specified time zone already accounts for daylight
-savings time, and no adjustment is performed. 
+savings time, and no adjustment is performed.
 <p>
 
 Since universal times are simply numbers, they are easier and safer to
@@ -148,7 +148,7 @@ That's a bit over 52 million seconds, corresponding to 6035 days, 20
 hours and 21 minutes (you can verify this by dividing that number by
 60, 60 and 24 in succession). Going beyond days is a bit harder
 because months and years don't have a fixed length, but the above is
-approximately 16 and a half years. 
+approximately 16 and a half years.
 <p>
 
 You can in theory use differences between universal times to measure
@@ -163,10 +163,10 @@ time and vice-versa, how to perform calculations on universal times,
 and how to format calendar times in a human-readable way. The last
 piece that is missing is how to parse a string represented as a
 human-readable string (e.g. &quot;03/11/1997&quot;) and turn it into a calendar
-time. Unfortunately this turns out to be very difficult in the general 
+time. Unfortunately this turns out to be very difficult in the general
 case, due to the multitude of different ways of writing dates and
-times that we use. In some cases it might not even be possible without 
-context information: the above example can be correctly parsed both as 
+times that we use. In some cases it might not even be possible without
+context information: the above example can be correctly parsed both as
 March 11th or as November 3rd according to where you are living. In
 conclusion, either force your users to write dates in a fixed format,
 or be prepared to write a very intelligent parsing function!
@@ -221,13 +221,13 @@ problem about measuring a function's run time:
 </pre>
 
 A good way to see the difference between real time and run time is to
-test the above code using a call such as <code>(SLEEP 3)</code>. 
-The <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_sleep.htm"><code>SLEEP</code></a> function 
+test the above code using a call such as <code>(SLEEP 3)</code>.
+The <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_sleep.htm"><code>SLEEP</code></a> function
 suspends the execution of your code for the specified number of
 seconds. You should therefore see a real time very close to the
 argument of <code>SLEEP</code> and a run time very close to
 zero. Let's turn the above code into a macro in order to make it more
-general: 
+general:
 
 <pre>
 * (defmacro timing (&body forms)
@@ -314,7 +314,7 @@ Sunday is 0. Works for years after 1752."
   (let ((offset '(0 3 2 5 0 3 5 1 4 6 2 4)))
     (when (< month 3)
       (decf year 1))
-    (mod 
+    (mod
      (truncate (+ year
                   (/ year 4)
                   (/ (- year)
