@@ -48,6 +48,7 @@
 (setq fi:common-lisp-directory acl-dir)
 (if mswindows-p
     (setq fi:common-lisp-image-arguments '("+B" "+cm")))
+(setq fi:lisp-evals-always-compile t)
 (setq fi:legacy-keybindings nil)
 (setq fi:arglist-on-space t)
 ;;(setq fi:auto-arglist-pop-up-style '("*CL-arglist*" . nil))
@@ -335,6 +336,8 @@
 	  (lambda ()
 	    (imenu-add-to-menubar "Symbols")
 	    (outline-minor-mode)
+	    (make-local-variable 'outline-regexp)
+	    (setq outline-regexp "^(.*")
 	    (ignore-errors (semantic-default-elisp-setup))
 	    (set (make-local-variable lisp-indent-function)
 		 'common-lisp-indent-function)))
@@ -369,6 +372,8 @@
 (add-hook 'fi:common-lisp-mode-hook
 	  (lambda ()
 	    (outline-minor-mode)
+	    (make-local-variable 'outline-regexp)
+	    (setq outline-regexp "^(.*")
 	    (ignore-errors (semantic-default-elisp-setup))
 	    (set (make-local-variable lisp-indent-function)
 		 'common-lisp-indent-function)))
@@ -503,20 +508,23 @@ commands)."
     (cond 
      ;;Region selected - evaluate region
      ((not (equal mark-active nil))
-      (cond ((and (equal mode-name "Lisp")
+      (cond ((and (or (equal mode-name "Lisp")
+		      (equal mode-name "Info"))
 		  (boundp 'ilisp-buffer)
 		  (member* ilisp-buffer (buffer-list)
 			   :key #'buffer-name
 			   :test #'equal))
 	     (eval-region-lisp (mark) (point)))
-	    ((and (equal mode-name "Common Lisp")
+	    ((and (or (equal mode-name "Common Lisp")
+		      (equal mode-name "Info"))
 		  (boundp 'fi:common-lisp-buffer-name)
 		  (member* fi:common-lisp-buffer-name (buffer-list)
 			   :key #'buffer-name
 			   :test #'equal))
 	     (fi:lisp-eval-or-compile-region nil))
 	    ((and (or (equal mode-name "Emacs-Lisp")
-		      (equal mode-name "Emacs Lisp"))
+		      (equal mode-name "Emacs Lisp")
+		      (equal mode-name "Info"))
 		  (member* "*scratch*" (buffer-list)
 			   :key #'buffer-name
 			   :test #'equal))
@@ -552,7 +560,8 @@ commands)."
 	(edit-buffer (current-buffer))
 	(lisp-buffer nil)
 	(eval-command nil))
-    (cond ((and (equal mode-name "Lisp")
+    (cond ((and (or (equal mode-name "Lisp")
+		    (equal mode-name "Info"))
 		(boundp 'ilisp-buffer)
 		(member* ilisp-buffer (buffer-list)
 			 :key #'buffer-name
@@ -560,7 +569,8 @@ commands)."
 		(get-buffer-process (get-buffer ilisp-buffer)))
 	   (setq lisp-buffer (get-buffer ilisp-buffer)
 		 eval-command 'return-ilisp))
-	  ((and (equal mode-name "Common Lisp")
+	  ((and (or (equal mode-name "Common Lisp")
+		    (equal mode-name "Info"))
 		(boundp 'fi:common-lisp-buffer-name)
 		(member* fi:common-lisp-buffer-name (buffer-list)
 			 :key #'buffer-name
@@ -569,7 +579,8 @@ commands)."
 	   (setq lisp-buffer (get-buffer fi:common-lisp-buffer-name)
 		 eval-command 'fi:inferior-lisp-newline))
 	  ((and (or (equal mode-name "Emacs-Lisp")
-		    (equal mode-name "Emacs Lisp"))
+		    (equal mode-name "Emacs Lisp")
+		    (equal mode-name "Info"))
 		(member* "*scratch*" (buffer-list)
 			 :key #'buffer-name
 			 :test #'equal))
@@ -630,6 +641,14 @@ region progressively moves outward over enclosing expressions."
 	     ;; Default to auto-indent on Enter
 	     (define-key emacs-lisp-mode-map [(control j)] 'newline)
 	     (define-key emacs-lisp-mode-map [(control m)] 'newline-and-indent)))
+
+;;__________________________________________________________________________
+;;;;    Programming - Lisp in Info (allow eval of sexps in Info docs)
+
+(add-hook 'Info-mode-hook
+	  '(lambda ()
+	     (interactive)
+	     (define-key Info-mode-map [(control c) (x)] 'copy-eval-dwim-lisp)))
 
 ;;__________________________________________________________________________
 ;;;;    Lisp Key Overrides
