@@ -15,20 +15,24 @@
 (defvar hyperspec-prog (concat use-home "site/ilisp/extra/hyperspec"))
 
 ;; Gnu CLISP - ILISP (switches for ANSI & no banner)
-(defvar clisp-exe "c:/bin/clisp-2.30/lisp.exe")
-(defvar clisp-program (concat clisp-exe " -B c:/bin/clisp-2.30/ -M c:/bin/clisp-2.30/lispinit.mem -ansi -q"))
+(defvar clisp-dir "c:/bin/clisp-2.30/")
+(defvar clisp-exe (concat clisp-dir "lisp.exe"))
+(defvar clisp-program (concat clisp-exe " -B " clisp-dir " -M " clisp-dir "lispinit.mem -ansi -q"))
 
 ;; Corman Common Lisp - Inferior Lisp Mode 
-(defvar cormanlisp-exe "c:/bin/corman-2.0/clconsole.exe")
-(defvar cormanlisp-program (concat cormanlisp-exe " -image c:/bin/corman-2.0/cormanlisp.img"))
+(defvar cormanlisp-dir "c:/bin/corman-2.0/")
+(defvar cormanlisp-exe (concat cormanlisp-dir "clconsole.exe"))
+(defvar cormanlisp-program (concat cormanlisp-exe " -image " cormanlisp-dir "cormanlisp.img"))
 
 ;; Franz Allegro Common Lisp - ELI
-(defvar fi:common-lisp-image-name "c:/bin/ACL-6.2/alisp.exe")
-(defvar fi:common-lisp-directory "c:/bin/ACL-6.2/")
+(defvar acl-dir "c:/bin/ACL-6.2/")
+(defvar fi:common-lisp-image-name (concat acl-dir "alisp.exe"))
+(defvar fi:common-lisp-directory acl-dir)
 (defvar fi:common-lisp-image-arguments '("+cx"))
 
 ;; Xanalys LispWorks - ILISP
-(defvar lispworks-program "c:/bin/lispworks-4.2/lw42-console.exe")
+(defvar lispworks-dir "c:/bin/lispworks-4.2/")
+(defvar lispworks-program (concat lispworks-dir "lw42-console.exe"))
 
 (defvar lisp-implementations '() "Lisp impelementations installed")
 
