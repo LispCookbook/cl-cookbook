@@ -1,0 +1,62 @@
+<body bgcolor=white>
+<h1><a href="index.html">The Common Lisp Cookbook</a> - Processes and Threads</h1>
+
+<table border=0 cellpadding=0 cellspacing=0 width=550><tr valign=top><td width=550>
+
+
+<h2>Content</h2>
+<ul>
+<li><a href="#fork-cmucl">Forking with CMUCL</a>
+  </ul>
+
+  The ANSI Common Lisp standard doesn't mention this topic. So almost everything that can be said here depends on your OS and your implementation.
+
+  <a name="fork-cmucl"><h3>Forking with CMUCL</h3></a>
+Here's a function by Martin Cracauer that'll allow you to compile a couple of files in parallel with <a href="http://www.cons.org/cmucl/">CMUCL</a>. It demonstrates how to use the UNIX <a href="http://www.freebsd.org/cgi/man.cgi?query=fork&apropos=0&sektion=0&manpath=FreeBSD+4.5-RELEASE&format=html"><code>fork</code></a> system call with this CL implementation.
+
+  <pre>
+(defparameter *sigchld* 0)
+
+(defparameter *compile-files-debug* 2)
+
+(defun sigchld-handler (p1 p2 p3)
+  (when (&gt; 0 *compile-files-debug*)
+    (print (list "returned" p1 p2 p3))
+    (force-output))
+  (decf *sigchld*))
+
+(defun compile-files (files &key (load nil))
+  (setq *sigchld* 0)
+  (system:enable-interrupt unix:sigchld #'sigchld-handler)
+  (do ((f files (cdr f)))
+      ((not f))
+    (format t "~&process ~d diving for ~a" (unix:unix-getpid)
+	    `(compile-file ,(car f)))
+    (force-output)
+    (let ((pid (unix:unix-fork)))
+      (if (/= 0 pid)
+	  ;; parent
+	  (incf *sigchld*)
+	;; child
+	(progn
+	  (compile-file (car f) :verbose nil :print nil)
+	  (unix:unix-exit 0)))))
+  (do () ((= 0 *sigchld*))
+    (sleep 1)
+    (when (&gt; 0 *compile-files-debug*)
+      (format t "~&process ~d still waiting for ~d childs"
+	      (unix:unix-getpid) *sigchld*)))
+  (when (&gt; 0 *compile-files-debug*)
+    (format t "~&finished"))
+  (when load
+    (do ((f files (cdr f)))
+	((not f))
+      (load (compile-file-pathname (car f))))))
+</pre>
+  
+</td></tr></table>
+<hr>
+<a href="license.html">Copyright</a> &copy; 2002 The Common Lisp Cookbook Project
+<address>http://cl-cookbook.sourceforge.net/</address>
+<!-- hhmts start --> Last modified: Wed Feb 20 02:11:24 CET 2002 <!-- hhmts end -->
+</body> </html>
