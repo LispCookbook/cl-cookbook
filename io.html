@@ -134,7 +134,6 @@ Here's some sample code to play with:
 	      do (setf (char s i) (code-char i))
 	      finally (return s))
        f)
-      (terpri f)
       (file-position f))))
 
 ;(generate-256 :external-format :default)
@@ -161,7 +160,6 @@ Here's some sample code to play with:
 ; uses UTF-8 -&gt; 385 bytes
 
 (progn (generate-256 :charset 'charset:iso-8859-1) (check-256))
-Position 256 found 10(#xA).
 
 (progn (generate-256 :external-format :default) (check-256))
 ; uses UTF-8 + CRLF(on MS-Windows) -&gt; 387 bytes
@@ -177,5 +175,5 @@ Position 256 found 10(#xA).
 <hr>
 <a href="license.html">Copyright</a> &copy; 2002 The Common Lisp Cookbook Project
 <address>http://cl-cookbook.sourceforge.net/</address>
-<!-- hhmts start --> Last modified: Thu Mar 28 20:48:00 CET 2002 <!-- hhmts end -->
+<!-- hhmts start --> Last modified: Thu Mar 28 21:06:14 CET 2002 <!-- hhmts end -->
 </body> </html>
