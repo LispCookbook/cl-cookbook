@@ -1,3 +1,6 @@
+2002-09-22
+  Updated .emacs by Bill Clementson to add generic eval-last-sexp support on C-x C-e for elisp & inferior lisps.
+
 2002-09-03
   Updated windows.html to adjust location of environmental variable instructions.
 	

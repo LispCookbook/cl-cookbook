@@ -227,6 +227,38 @@
         ((looking-at "\\s\)") (forward-char 1) (backward-list 1))
         (t nil)))
 
+(defun generic-eval-last-sexp (arg)
+  "Evaluate last s-expression in either elisp, ilisp, acl, or corman."
+  (interactive "p")
+  (cond
+    ((or (equal mode-name "Emacs-Lisp")
+	 (equal mode-name "Emacs Lisp"))
+      (eval-last-sexp nil))
+    ((or (eq lisp-used :clisp-ilisp)
+	 (eq lisp-used :lw-ilisp))
+      (save-excursion
+        (backward-char 1)
+        (if (looking-at "\\s\)") 
+          (progn
+            (forward-char 1) 
+            (backward-list 1)
+            (eval-next-sexp-lisp)))))
+    ((eq lisp-used :acl-eli)
+      (fi:lisp-eval-last-sexp))
+    ((eq lisp-used :corman-eshell)
+      (let* ((end (point))
+             (start
+               (progn
+                 (save-excursion
+                   (forward-sexp -1)
+                   (point))))
+             (arg (buffer-substring start end)))
+        (set-buffer "*eshell*")
+        (goto-char (point-max))
+        (insert arg)
+        (eshell-send-input)
+        (goto-char (point-max))))))
+
 ;;__________________________________________________________________________
 ;;;;    Programming - Elisp
 
@@ -311,6 +343,8 @@
 		     (:lw-ilisp (setq lisp-used :corman-eshell))
 		     (t (setq lisp-used :clisp-ilisp)))
 		   (message "lisp-used: %s" lisp-used)))
+
+(global-set-key [(control x) (control e)] 'generic-eval-last-sexp)
 
 ;;__________________________________________________________________________
 ;;;;    Windows Key Overrides
