@@ -1,33 +1,77 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <!-- 	$Header$	 -->
-<html> <head>
-<title>The Common Lisp Cookbook - Hash Tables</title>
-<style type="text/css">
-pre { margin-left:20px; }
-</style>
+<html> 
 
+<head>
+  <title>The Common Lisp Cookbook - Hash Tables</title>
+  <style type="text/css">
+  pre { margin-left:20px; }
+  </style>
 </head>
 
 <body bgcolor=white>
 <h1><a href="index.html">The Common Lisp Cookbook</a> - Hash Tables</h1>
-<table border=0 cellpadding=0 cellspacing=0 width=550><tr valign=top><td width=550>
 
- <h2>Content</h2>
+<h2>Content</h2>
 <ul>
+<li><a href="#intro">Introduction</a>
+<li><a href="#create">Creating a Hash Table</a>
+<li><a href="#get">Getting a value from a Hash Table</a>
 <li><a href="#add">Adding an Element to a Hash Table</a>
 <li><a href="#test">Testing for the Presence of a Key in a Hash Table</a>
-<li><a href="#del">Deleting from a Hash</a>
-<li><a href="#traverse">Traversing a Hash</a>
+<li><a href="#del">Deleting from a Hash Table</a>
+<li><a href="#traverse">Traversing a Hash Table</a>
 <li><a href="#count">Counting the Entries in a Hash Table</a>
 <li><a href="#size">Performance Issues: The Size of your Hash Table</a>
-  </ul>
+</ul>
 
-  <a name="add"><h3>Adding an Element to a Hash Table</h3></a>
-  If you want to add an element to a hash table, you can use <a
-  href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_gethas.htm">GETHASH</A>, the function to retrieve elements from the hash table, in conjunction with <a
-  href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/m_setf_.htm">SETF</A>.
 
-  <pre>
+<a name="intro"></a>
+<h3>Introduction</h3>
+
+Hash Tables are a powerful data structure, associating 
+keys with values in a very efficient way. Hash Tables 
+are often preferred over association lists whenever 
+performance is an issue, but they introduce a little 
+overhead that makes assoc lists better if there are 
+only a few key-value pairs to maintain. 
+
+
+<a name="create"></a>
+<h3>Creating a Hash Table</h3> 
+
+Hash Tables are created using the function 
+<a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_mk_has.htm"><code>MAKE-HASH-TABLE</code></a>.
+It has no required argument. Its most used optional keyword argument
+is <code>:TEST</code>, specifying the function used to test the
+equality of keys.
+
+
+<a name="get"></a>
+<h3>Getting a value from a Hash Table</h3> 
+
+The function 
+<a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_gethas.htm"><code>GETHASH</code></a>
+takes two required arguments: a 
+key and a hash table. It returns two values: the value 
+corresponding to the key in the hash table (or NIL if 
+not found), and a boolean indicating whether the key 
+was found in the table. That second value is necessary 
+since NIL is a valid value in a key-value pair, so 
+getting NIL as first value from <code>GETHASH</code> does not 
+necessarily mean that the key was not found in the 
+table.   
+
+
+<a name="add"></a>
+<h3>Adding an Element to a Hash Table</h3>
+
+If you want to add an element to a hash table, you can use 
+<code>GETHASH</code>, the function to retrieve elements from the hash
+table, in conjunction with 
+<a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/m_setf_.htm"><code>SETF</code></a>.
+
+<pre>
 * (defparameter *my-hash* (make-hash-table))
 *MY-HASH*
 * (setf (gethash 'one-entry *my-hash*) "one")
@@ -42,14 +86,17 @@ T
 T
 </pre>
 
-<a name="test"><h3>Testing for the Presence of a Key in a Hash Table</h3></a>
-  The first value returned by GETHASH is the object in the hash table
-  that's associated with the key you provided as an argument to
-  GETHASH or NIL if no value exists for this key. This value can act
-  as a <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/26_glo_g.htm#generalized_boolean">generalized
+
+<a name="test"></a>
+<h3>Testing for the Presence of a Key in a Hash Table</h3>
+
+The first value returned by GETHASH is the object in the hash table
+that's associated with the key you provided as an argument to
+GETHASH or NIL if no value exists for this key. This value can act
+as a <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/26_glo_g.htm#generalized_boolean">generalized
 boolean</a> if you want to test for the presence of keys.
 
-  <pre>
+<pre>
 * (defparameter *my-hash* (make-hash-table))
 *MY-HASH*
 * (setf (gethash 'one-entry *my-hash*) "one")
@@ -64,8 +111,8 @@ boolean</a> if you want to test for the presence of keys.
 "Key does not exist"
 </pre>
 
-  But note that this does <em>not</em> work if NIL is amongst the
-  values that you want to store in the hash.
+But note that this does <em>not</em> work if NIL is amongst the
+values that you want to store in the hash.
 
   <pre>
 ;;; continued from above
@@ -77,8 +124,8 @@ NIL
 "Key does not exist"
 </pre>
 
-  In this case you'll have to check the <em>second</em> return value of GETHASH
-  which will always return NIL if no value is found and T otherwise.
+In this case you'll have to check the <em>second</em> return value of GETHASH
+which will always return NIL if no value is found and T otherwise.
   
 <pre>
 ;;; continued from above
@@ -92,12 +139,15 @@ NIL
 "Key does not exist"
 </pre>  
 
-<a name="del"><h3>Deleting from a Hash</h3></a>
-Use <a
-href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_remhas.htm">REMHASH</a>
-to delete  a hash entry. Both the key and its associated value
+
+<a name="del"></a>
+<h3>Deleting from a Hash Table</h3>
+
+Use <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_remhas.htm"><code>REMHASH</code></a>
+to delete a hash entry. Both the key and its associated value
 will be removed from the hash table. REMHASH returns T if there was
 such an entry, NIL otherwise.
+
 <pre>
 * (defparameter *my-hash* (make-hash-table))
 *MY-HASH*
@@ -121,17 +171,20 @@ NIL
 NIL
 </pre>
 
-<a name="traverse"><h3>Traversing a Hash</h3></a>
+
+<a name="traverse"></a>
+<h3>Traversing a Hash Table</h3>
+
 If you want to perform an action on each entry (i.e., each key-value
 pair) in a hash table, you have several options:
-<br>&nbsp;<br>
-You can use <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_maphas.htm">MAPHASH</a> which iterates over all
-entries in the hash table. Its first argument must be a function which
-accepts <em>two</em> arguments, the key and the value of each
-entry. Note that due to the nature of hash tables you <em>can't</em> control
-the order in which the entries are provided by MAPHASH (or other
-traversing constructs). MAPHASH always
-returns NIL.
+<p>
+
+You can use <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_maphas.htm"><code>MAPHASH</code></a> 
+which iterates over all entries in the hash table. Its first argument
+must be a function which accepts <em>two</em> arguments, the key and
+the value of each entry. Note that due to the nature of hash tables
+you <em>can't</em> control the order in which the entries are provided
+by MAPHASH (or other traversing constructs). MAPHASH always returns NIL.
 
 <pre>
 * (defparameter *my-hash* (make-hash-table))
@@ -155,8 +208,8 @@ The value associated with the key NIL is NIL-VALUE
 </pre>
 
 You can also use <a
-href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/m_w_hash.htm">WITH-HASH-TABLE-ITERATOR</a>, a macro which turns
-(via <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/s_flet_.htm">MACROLET</a>)
+href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/m_w_hash.htm"><code>WITH-HASH-TABLE-ITERATOR</code></a>, a macro which turns
+(via <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/s_flet_.htm"><code>MACROLET</code></a>)
 its first argument into an iterator that on each invocation returns
 three values per hash table entry - a generalized boolean that's true
 if an entry is returned, the key of the entry, and the value of the
@@ -178,11 +231,15 @@ The value associated with the key NIL is NIL-VALUE
 NIL
 </pre>
 
-Note the following caveat from the HyperSpec: "It is unspecified what happens if any of the implicit interior state of an iteration is returned outside the dynamic extent of the WITH-HASH-TABLE-ITERATOR form such as by returning some closure over the invocation form."
+Note the following caveat from the HyperSpec: "It is unspecified what
+happens if any of the implicit interior state of an iteration is
+returned outside the dynamic extent of the
+<code>WITH-HASH-TABLE-ITERATOR</code> form such as by returning some
+closure over the invocation form."
+<p>
 
-<br>&nbsp;<br>
 And there's always <a
-href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/06_a.htm">LOOP</a>:
+href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/06_a.htm"><code>LOOP</code></a>:
 
 <pre>
 ;;; same hash-table as above
@@ -218,11 +275,13 @@ NIL -> NIL-VALUE
 NIL
 </pre>
 
-<a name="count"><h3>Counting the Entries in a Hash Table</h3></a>
+
+<a name="count"></a>
+<h3>Counting the Entries in a Hash Table</h3>
 
 No need to use your fingers - Common Lisp has a built-in function to
 do it for you: <a
-href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_hash_1.htm">HASH-TABLE-COUNT</a>.
+href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_hash_1.htm"><code>HASH-TABLE-COUNT</code></a>.
 
 <pre>
 * (defparameter *my-hash* (make-hash-table))
@@ -247,15 +306,16 @@ TWO
 0
 </pre>
 
-<a name="size"><h3>Performance Issues: The Size of your Hash Table</h3></a>
 
-The <a
-href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_mk_has.htm">MAKE-HASH-TABLE</a>
-function has a couple of optional parameters which control the initial
-size of your hash table and how it'll grow if it needs to grow. This
-can be an important performance issue if you're working with large
-hash tables. Here's an (admittedly not very scientific) example with
-<a href="http://www.cons.org/cmucl">CMUCL</a> pre-18d on Linux:
+<a name="size"></a>
+<h3>Performance Issues: The Size of your Hash Table</h3>
+
+The <code>MAKE-HASH-TABLE</code> function has a couple of optional
+parameters which control the initial size of your hash table and how
+it'll grow if it needs to grow. This can be an important performance
+issue if you're working with large hash tables. Here's an (admittedly
+not very scientific) example with <a
+href="http://www.cons.org/cmucl">CMUCL</a> pre-18d on Linux:
 
 <pre>
 * (defparameter *my-hash* (make-hash-table))
@@ -288,8 +348,8 @@ Evaluation took:
 NIL
 </pre>
 
-The values for <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_hash_4.htm">HASH-TABLE-SIZE</a> and <a
-href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_hash_2.htm">HASH-TABLE-REHASH-SIZE</a> are
+The values for <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_hash_4.htm"><code>HASH-TABLE-SIZE</code></a> and <a
+href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_hash_2.htm"><code>HASH-TABLE-REHASH-SIZE</code></a> are
 implementation-dependent. In our case, CMUCL chooses and initial size
 of 65, and it will increase the size of the hash by 50 percent
 whenever it needs to grow. Let's see how often we have to re-size the
@@ -352,8 +412,9 @@ NIL
 That's obviously much faster. And there was no consing involved
 because we didn't have to re-size at all. If we don't know the final
 size in advance but can guess the growth behaviour of our hash table
-we can also provide this value to MAKE-HASH-SIZE. We can provide an
-integer to specify absolute growth or a float to specify relative growth.
+we can also provide this value to <code>MAKE-HASH-TABLE</code>. We can
+provide an integer to specify absolute growth or a float to specify
+relative growth.
 
 <pre>
 * (defparameter *my-hash* (make-hash-table :rehash-size 100000))
@@ -377,15 +438,20 @@ NIL
 
 Also rather fast (we only needed one re-size) but much more consing
 because almost the whole hash table (minus 65 initial elements) had to
-be built during the loop.  <br>&nbsp;<br>
- Note that you can also specify the
-REHASH-THRESHOLD while creating a new hash table. One final remark:
-Your implementation is allowed to <em>completely ignore</em> the
-values provided for REHASH-SIZE and REHASH-THRESHOLD...
-</td></tr></table>
+be built during the loop.
+<p>
+
+Note that you can also specify the <code>REHASH-THRESHOLD</code> while
+creating a new hash table. One final remark: Your implementation is
+allowed to <em>completely ignore</em> the values provided for
+<code>REHASH-SIZE</code> and <code>REHASH-THRESHOLD</code>...
+<p>
 
 <hr>
 <a href="license.html">Copyright</a> &copy; 2002 The Common Lisp Cookbook Project
 <address>http://cl-cookbook.sourceforge.net/</address>
-<!-- hhmts start --> Last modified: Thu Feb 14 14:01:06 CET 2002 <!-- hhmts end -->
-</body> </html>
+<!-- hhmts start --> Last modified: Wed Apr 03 14:47:55 CET 2002 <!-- hhmts end -->
+
+</body>
+
+</html>
