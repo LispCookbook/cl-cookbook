@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<!-- 	$Header$	 -->
+<html> <head>
+<title>The Common Lisp Cookbook - Input/Output</title>
+<style type="text/css">
+pre { margin-left:20px; }
+</style>
+
+</head>
+
+<body bgcolor=white>
+<h1><a href="index.html">The Common Lisp Cookbook</a> - Input/Output</h1>
+<table border=0 cellpadding=0 cellspacing=0 width=550><tr valign=top><td width=550>
+
+ <h2>Content</h2>
+<ul>
+<li><a href="#redir">Redirecting the Standard Output of your
+  Program</a>
+  </ul>
+
+  <a name="#redir"><h3>Redirecting the Standard Output of your Program</h3></a>
+
+  You do it like this:
+
+<pre>
+(let ((*standard-output* <em>&lt;some form generating a stream&gt;</em>))
+  <em>...</em>)
+</pre>
+
+   Because <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/v_debug_.htm">*STANDARD-OUTPUT*</a> is a dynamic variable, all references to
+   it during execution of the body of the LET form refer to the stream
+   that you bound it to.  After exiting the LET form, the old value of
+   *STANDARD-OUTPUT* is restored, no matter if the exit was by normal
+   execution, a RETURN-FROM leaving the whole function, an exception,
+   or what-have-you.  (This is, incidentally, why global variables
+   lose much of their brokenness in Common Lisp compared to other
+   languages: since they can be bound for the execution of a specific
+   form without the risk of losing their former value after the form
+   has finished, their use is quite safe; they act much like
+   additional parameters that are passed to every function.)
+<br>&nbsp;<br>
+   If the output of the program should go to a file, you can do the
+   following:
+
+<pre>
+(with-open-file (*standard-output* "somefile.dat" :direction :output
+                                   :if-exists :supersede)
+  <em>...</em>)
+</pre>
+  
+   <a
+  href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/m_w_open.htm">WITH-OPEN-FILE</a> opens the file - creating it if necessary - binds
+  *STANDARD-OUTPUT*, executes its body, closes the file, and restores
+  *STANDARD-OUTPUT* to its former value.  It doesn't get more
+   comfortable than this!
+</td></tr></table>
+  
+<hr>
+<a href="license.html">Copyright</a> &copy; 2002 The Common Lisp Cookbook Project
+<address>http://cl-cookbook.sourceforge.net/</address>
+<!-- hhmts start --> Last modified: Wed Feb 13 14:56:50 CET 2002 <!-- hhmts end -->
+</body> </html>

@@ -1,0 +1,58 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<!-- 	$Header$	 -->
+<html> <head>
+<title>The Common Lisp Cookbook - Interfacing with your OS</title>
+<style type="text/css">
+pre { margin-left:20px; }
+</style>
+
+</head>
+
+<body bgcolor=white>
+<h1><a href="index.html">The Common Lisp Cookbook</a> - Interfacing with your OS</h1>
+
+<table border=0 cellpadding=0 cellspacing=0 width=550><tr valign=top><td width=550>
+
+
+<h2>Content</h2>
+<ul>
+<li><a href="#env">Accessing Environment variables</a>
+  </ul>
+
+  The ANSI Common Lisp standard doesn't mention this topic. (Keep in mind that it was written at a time where <a href="http://kogs-www.informatik.uni-hamburg.de/~moeller/symbolics-info/symbolics.html">Lisp Machines</a> were at their peak. On these boxes Lisp <em>was</em> your operating system!) So almost everything that can be said here depends on your OS and your implementation.
+
+  <a name="env"><h3>Accessing Environment variables</h3></a>
+Here's a function that'll allow you to look at Unix/Linux environment variables on a lot of different CL implementations:
+
+  <pre>
+* (defun my-getenv (name &optional default)
+    #+CMU
+    (let ((x (assoc name ext:*environment-list*
+                    :test #'string=)))
+      (if x (cdr x) default))
+    #-CMU
+    (or 
+     #+Allegro (sys:getenv name)
+     #+CLISP (ext:getenv name)
+     #+ECL (si:getenv name)
+     #+SBCL (sb-unix::posix-getenv name)
+     #+LISPWORKS (lispworks:environment-variable name)
+     default))
+MY-GETENV
+* (my-getenv "HOME")
+"/home/edi"
+* (my-getenv "HOM")
+NIL
+* (my-getenv "HOM" "huh?")
+"huh?"
+</pre>
+
+  You should also note that some of these implementations also provide the ability to <em>set</em> these variables. These include ECL (<code>SI:SETENV</code>) and AllegroCL, LispWorks, and CLISP where you can use the functions from above together with <a
+  href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/m_setf_.htm">SETF</A>. This feature might be important if you want to start subprocesses from your Lisp environment.
+
+</td></tr></table>
+<hr>
+<a href="license.html">Copyright</a> &copy; 2002 The Common Lisp Cookbook Project
+<address>http://cl-cookbook.sourceforge.net/</address>
+<!-- hhmts start --> Last modified: Wed Feb 13 14:57:05 CET 2002 <!-- hhmts end -->
+</body> </html>
