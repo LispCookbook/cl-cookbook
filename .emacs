@@ -14,11 +14,13 @@
 (defvar common-lisp-hyperspec-symbol-table (concat common-lisp-hyperspec-root "Data/Map_Sym.txt"))
 (defvar hyperspec-prog (concat use-home "site/ilisp/extra/hyperspec"))
 
-;; Gnu CLISP - ILISP (switches for ANSI, ILISP & no banner)
-(defvar clisp-hs-program "c:/bin/clisp-2.30/lisp.exe -B c:/bin/clisp-2.30/ -M c:/bin/clisp-2.30/lispinit.mem -ansi -I -q")
+;; Gnu CLISP - ILISP (switches for ANSI & no banner)
+(defvar clisp-exe "c:/bin/clisp-2.30/lisp.exe")
+(defvar clisp-program (concat clisp-exe " -B c:/bin/clisp-2.30/ -M c:/bin/clisp-2.30/lispinit.mem -ansi -q"))
 
-;; Corman Common Lisp - ESHELL
-(defvar cormanlisp-program "c:/bin/corman-1.5/clconsole.exe -image c:/bin/corman-1.5/cormanlisp.img")
+;; Corman Common Lisp - Inferior Lisp Mode 
+(defvar cormanlisp-exe "c:/bin/corman-2.0/clconsole.exe")
+(defvar cormanlisp-program (concat cormanlisp-exe " -image c:/bin/corman-2.0/cormanlisp.img"))
 
 ;; Franz Allegro Common Lisp - ELI
 (defvar fi:common-lisp-image-name "c:/bin/ACL-6.2/alisp.exe")
@@ -28,15 +30,21 @@
 ;; Xanalys LispWorks - ILISP
 (defvar lispworks-program "c:/bin/lispworks-4.2/lw42-console.exe")
 
-;; Default Lisp implementation to use
-(defvar lisp-used :clisp-ilisp "Recognized values are :clisp-ilisp, :acl-eli, :lw-ilisp, :corman-eshell")
+(defvar lisp-implementations '() "Lisp impelementations installed")
+
+(if (file-exists-p lispworks-program) (setq lisp-implementations (cons :lw-ilisp lisp-implementations)))
+(if (file-exists-p cormanlisp-exe) (setq lisp-implementations (cons :corman-inf lisp-implementations)))
+(if (file-exists-p fi:common-lisp-image-name) (setq lisp-implementations (cons :acl-eli lisp-implementations)))
+(if (file-exists-p clisp-exe) (setq lisp-implementations (cons :clisp-ilisp lisp-implementations)))
+
+;; Default Lisp implementation to use (to override, change to one of :clisp-ilisp, :acl-eli, :lw-ilisp, :corman-inf)
+(defvar lisp-used (elt lisp-implementations 0) "Last Lisp implementation used")
 
 ;; Set up load path 
 (setq load-path (append (list (concat use-home "")
                               (concat use-home "site")
                               (concat use-home "site/ilisp")
-                              (concat fi:common-lisp-directory "eli")
-                              (concat use-home "site/w3/lisp"))
+                              (concat fi:common-lisp-directory "eli"))
                         load-path))
 
 ;; Specify where backup files are stored
@@ -50,7 +58,6 @@
 (require 'font-lock)
 (require 'recentf)
 (recentf-mode 1) 
-(require 'pc-mode)
 (require 'mouse-sel)
 (require 'hippie-exp)
 (require 'browse-url)
@@ -77,7 +84,6 @@
 
 ;; Misc customizations
 (fset 'yes-or-no-p 'y-or-n-p)           ;replace y-e-s by y
-(defalias 'yes-or-no-p 'y-or-n-p)
 (setq inhibit-startup-message t)        ;no splash screen
 (defconst use-backup-dir t)             ;use backup directory
 (defconst query-replace-highlight t)    ;highlight during query
@@ -143,8 +149,8 @@
 	try-complete-lisp-symbol
 	try-expand-whole-kill))
 
-;; Code display options
-(show-paren-mode 1)		        ;highlight matching parenthesis
+;; Code display options (highlight parens & colorize)
+(show-paren-mode 1)
 (add-hook 'font-lock-mode-hook 'turn-on-lazy-lock)
 
 ;;__________________________________________________________________________
@@ -213,12 +219,9 @@
 		    fi:common-lisp-image-arguments
 		    fi:common-lisp-host))
 
-   ((eq lisp-used :corman-eshell)
-    ;; Corman Common Lisp using eshell
-    (eshell)
-    (set-buffer "*eshell*")
-    (insert cormanlisp-program)
-    (eshell-send-input))))
+   ((eq lisp-used :corman-inf)
+    ;; Corman Common Lisp using inferior lisp mode
+    (run-lisp cormanlisp-program))))
 
 (defun goto-match-paren (arg)
   "Go to the matching parenthesis if on parenthesis."
@@ -231,33 +234,23 @@
   "Evaluate last s-expression in either elisp, ilisp, acl, or corman."
   (interactive "p")
   (cond
-    ((or (equal mode-name "Emacs-Lisp")
-	 (equal mode-name "Emacs Lisp"))
-      (eval-last-sexp nil))
-    ((or (eq lisp-used :clisp-ilisp)
-	 (eq lisp-used :lw-ilisp))
-      (save-excursion
-        (backward-char 1)
-        (if (looking-at "\\s\)") 
+   ((or (equal mode-name "Emacs-Lisp")
+	(equal mode-name "Emacs Lisp")
+	(equal (current-buffer) (get-buffer "*scratch*")))
+    (eval-last-sexp nil))
+   ((or (eq lisp-used :clisp-ilisp)
+	(eq lisp-used :lw-ilisp))
+    (save-excursion
+      (backward-char 1)
+      (if (looking-at "\\s\)") 
           (progn
             (forward-char 1) 
             (backward-list 1)
             (eval-next-sexp-lisp)))))
-    ((eq lisp-used :acl-eli)
-      (fi:lisp-eval-last-sexp))
-    ((eq lisp-used :corman-eshell)
-      (let* ((end (point))
-             (start
-               (progn
-                 (save-excursion
-                   (forward-sexp -1)
-                   (point))))
-             (arg (buffer-substring start end)))
-        (set-buffer "*eshell*")
-        (goto-char (point-max))
-        (insert arg)
-        (eshell-send-input)
-        (goto-char (point-max))))))
+   ((eq lisp-used :acl-eli)
+    (fi:lisp-eval-last-sexp))
+   ((eq lisp-used :corman-inf)
+    (lisp-eval-last-sexp))))
 
 ;;__________________________________________________________________________
 ;;;;    Programming - Elisp
@@ -323,25 +316,24 @@
 ;; Lisp documentation
 (global-set-key [f1]
 		'(lambda ()
-		   (interactive)
-		   (load-library hyperspec-prog)
-		   (common-lisp-hyperspec (thing-at-point 'symbol))))
+		  (interactive)
+		  (load-library hyperspec-prog)
+		  (common-lisp-hyperspec (thing-at-point 'symbol))))
 (global-set-key [(meta f1)]
 		'(lambda ()
-		   (interactive)
-		   (load-library cltl2-prog)
-		   (cltl2-lookup (thing-at-point 'symbol))))
+		  (interactive)
+		  (load-library cltl2-prog)
+		  (cltl2-lookup (thing-at-point 'symbol))))
 (global-set-key [f5] 'start-lisp)
 (global-set-key [f11] 'comment-region)
 
 (global-set-key [(control meta f5)]
 		'(lambda ()
 		   (interactive)
-		   (case lisp-used
-		     (:clisp-ilisp (setq lisp-used :acl-eli))
-		     (:acl-eli (setq lisp-used :lw-ilisp))
-		     (:lw-ilisp (setq lisp-used :corman-eshell))
-		     (t (setq lisp-used :clisp-ilisp)))
+		   (let ((lisp-number (+ 1 (position lisp-used lisp-implementations))))
+		     (if (> lisp-number (- (length lisp-implementations) 1))
+			 (setq lisp-used (elt lisp-implementations 0))
+		       (setq lisp-used (elt lisp-implementations lisp-number))))
 		   (message "lisp-used: %s" lisp-used)))
 
 (global-set-key [(control x) (control e)] 'generic-eval-last-sexp)
@@ -366,8 +358,10 @@
 (global-set-key [(meta s)] 'save-buffer)
 
 ;; C-z=Undo, C-c=Copy, C-x=Cut, C-v=Paste
-(require 'cua)
-(CUA-mode t)
+(ignore-errors
+  (progn
+    (require 'cua)
+    (CUA-mode t)))
 
 ;;__________________________________________________________________________
 ;;;;    Start Directory
