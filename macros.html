@@ -66,11 +66,21 @@ precisely this, by specifying a program for transforming the input
 pattern <code>(setq2 <i>v<sub>1</sub></i> <i>v<sub>2</sub></i>
 <i>e</i>)</code> into the output pattern <code>(progn ...)</code>.
 
-<p>Here's how we could define the <code>setq2</code> macro: <pre>
-(defmacro setq2 (v1 v2 e) (list 'progn (list 'setq v1 e) (list 'setq
-v2 e))) </pre> This is very close to the following function definition
-<pre> (defun setq2F (v1 v2 e) (list 'progn (list 'setq v1 e) (list
-'setq v2 e))) </pre> If we evaluated <code>(setq2F 'x 'y '(+ z
+<p>Here's how we could define the <code>setq2</code> macro:
+
+<pre>
+(defmacro setq2 (v1 v2 e)
+  (list 'progn (list 'setq v1 e) (list 'setq v2 e)))
+</pre>
+
+This is very close to the following function definition:
+
+<pre>
+(defun setq2F (v1 v2 e)
+  (list 'progn (list 'setq v1 e) (list 'setq v2 e)))
+</pre>
+
+If we evaluated <code>(setq2F 'x 'y '(+ z
 3))</code>, we would get <code>(progn (setq x (+ z 3)) (setq y (+ z
 3)))</code>.  This is a perfectly ordinary Lisp computation, whose
 sole point of interest is that its output is a piece of executable
@@ -162,6 +172,7 @@ can do anything it likes with them.  For instance, here's an even more
 useless variant of <code>setq</code>: <code>(setq-reversible <i>e<sub>1</sub></i> <i>e<sub>2</sub></i> <i>d</i>)</code>
 behaves like <code>(setq <i>e<sub>1</sub></i> <i>e<sub>2</sub></i>)</code> if <i>d=</i><code>:normal</code>, and behaves like
 <code>(setq <i>e<sub>2</sub></i> <i>e<sub>1</sub></i>)</code> if <i>d=</i><code>:backward</code>.  It could be defined thus:
+
 <pre>
 (defmacro setq-reversible (e1 e2 d)
    (case d 
@@ -184,9 +195,11 @@ ourselves wanting is a notation that provides the skeleton of an
 expression, with some of the pieces filled in with new expressions.
 That's what backquote provides.  Instead of the the <code>list</code>
 expression given above, one writes
+
 <pre>
 <b>`</b>(progn (setq ,v1 ,e) (setg ,v2 ,e))
 </pre>
+
 The backquote (<code><b>`</b></code>) character signals that in the expression that
 follows, every subexpression <EM>not</EM> preceded by a comma is to be
 quoted, and every subexpression preceded by a comma is to be
@@ -213,6 +226,7 @@ of nested backquote plus some examples.
 
 <p>One problem with backquote is that once you learn it you tend to use
 for every list-building occasion.  For instance, you might write
+
 <pre>
 (mapcan (lambda (x)
            (cond ((symbolp x) <b>`</b>((,x)))
@@ -220,6 +234,7 @@ for every list-building occasion.  For instance, you might write
                  (t '())))
         some-list)
 </pre>
+
 which yields <code>((a) 15 15)</code> when <code>some-list</code> = <code>(a 6 15)</code>.
 The problem is that <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_mapc_.htm"><code>mapcan</code></a> destructively alters the results
 returned by the <a href="http://www.lispworks.com/reference/HyperSpec/Body/s_lambda.htm"><code>lambda</code></a>-expression.  Can we be sure that the
@@ -230,6 +245,7 @@ close analysis will show that they must be fresh, but in general
 backquote is not obligated to return a fresh list every time (whether
 it does or not is implementation-dependent).  If the example above got
 changed to 
+
 <pre>
 (mapcan (lambda (x)
            (cond ((symbolp x) <b>`</b>((,x)))
@@ -238,6 +254,7 @@ changed to
                  (t '())))
         some-list)
 </pre>
+
 then backquote may well treat <code><b>`</b>(low)</code> as if it were <code>'(low)</code>;
 the list will be allocated at load time, and every time the <code>lambda</code> is evaluated, that same chunk of storage will be returned.  So
 if we  evaluate the expression with <code>some-list</code> = <code>(a 6 15)</code>,
@@ -257,6 +274,7 @@ to think very carefully any time you use <a href="http://www.lispworks.com/refer
 
 <p>To fix the bug, you can write <code>(map 'list ...)</code> instead of <code>mapcan</code>.  However, if you are determined to use <code>mapcan</code>, write
 the expression this way:
+
 <pre>
 (mapcan (lambda (x)
            (cond ((symbolp x) (list <b>`</b>(,x)))
@@ -270,9 +288,11 @@ the expression this way:
 S-expressions, that is, hierarchical expressions that consist of
 symbols, numbers, and strings, and that are not conceptualized as
 changing in length.  For instance, I would never write 
+
 <pre>
 (setq sk <b>`</b>(,x ,@sk))
 </pre>
+
 If <code>sk</code> is being used as a stack, that is, it's going to be <a href="http://www.lispworks.com/reference/HyperSpec/Body/m_pop.htm"><code>pop</code></a>ped in the normal course of things, I would write tt  (push x
 sk).  If not, I would write <code>(setq sk (cons x sk))</code>.
 
@@ -294,6 +314,7 @@ variable, and then set <code>v1</code> and <code>v2</code> to it.  To make tempo
 variables, we use the <code>gensym</code> function, which returns a fresh
 variable guaranteed to appear nowhere else.  Here is what the macro
 should look like:
+
 <pre>
 (defmacro setq2 (v1 v2 e)
    (let ((tempvar (gensym)))
@@ -301,11 +322,14 @@ should look like:
           (progn (setq ,v1 ,tempvar) 
                  (setq ,v2 ,tempvar)))))
 </pre>
+
 Now <code>(setq2 x y (+ x 3))</code> expands to 
+
 <pre>
    (let ((#:g2003 (+ x 3)))
       (progn (setq x #:g2003) (setq y #:g2003)))
 </pre>
+
 Here <code>gensym</code> has returned the symbol <code>#:g2003</code>, which prints
 in this funny way because it won't be recognized by the reader.  (Nor
 is there any need for the reader to recognize it, since it exists only
@@ -346,18 +370,26 @@ useful, let me point out what sorts of syntactic extensions are
 generally <EM>not</EM> useful, or best accomplished using means other
 than macros.  Some novices think macros are useful for open-coding
 functions.  So, instead of defining
+
 <pre>
-(defun sqone (x) (let ((y (+ x 1))) (* y y)))
+(defun sqone (x)
+  (let ((y (+ x 1))) (* y y)))
 </pre>
+
 they might define
+
 <pre>
 (defmacro sqone (x)
    <b>`</b>(let ((y (+ ,x 1))) (* y y)))
 </pre>
+
 So that <code>(sqone (* z 13))</code> might expand into 
+
 <pre>
-(let ((y (+ (* z 13) 1))) (* y y))
+(let ((y (+ (* z 13) 1)))
+  (* y y))
 </pre>
+
 This is correct, but a waste of effort.  For one thing, the amount of
 time saved is almost certainly negligible.  If it's really important
 that <code>sqone</code> be expanded inline, one can put <code>(declaim (inline
@@ -374,6 +406,7 @@ define <tt>\</tt><tt>\</tt> as a macro: <code>(defmacro <tt>\</tt><tt>\</tt> (&a
 <p>Many people find <code>mapcar</code> and <code>mapcan</code> a bit too obscure,
 especially when used with large <code>lambda</code> expressions.  Rather than
 write something like
+
 <pre>
 (mapcar (lambda (x)
            (let ((y (hairy-fun1 x)) (z (hairy-fun2 x)))
@@ -384,7 +417,9 @@ write something like
                     ))))
         l)
 </pre>
+
 we might prefer to write 
+
 <pre>
 (for (x :in l)
    (let ((y (hairy-fun1 x)) (z (hairy-fun2 x)))
@@ -396,6 +431,7 @@ we might prefer to write
 </pre>
 
 <p>This macro might be defined thus:
+
 <pre>
 (defmacro for (listspec exp)
    (cond ((and (= (length listspec) 3)
@@ -406,6 +442,7 @@ we might prefer to write
                    ,(caddr listspec)))
          (t (error "Ill-formed: %s" <b>`</b>(for ,listspec ,exp)))))
 </pre>
+
 (This is a simplified version of a macro by Chris Riesbeck.)
 
 <p>It's worth stopping for a second to discuss the role 
@@ -430,17 +467,21 @@ macro definition to check for the presence of the guide symbol.  If I
 had used <code>in</code> instead, I would have had to think about which
 package <EM>my</EM> <code>in</code> lives in and which package the macro user's
 <code>in</code> lives in.  One way to avoid trouble would be to write
+
 <pre>
 (and (symbolp (cadr listspec))
      (eq (intern (symbol-name (cadr listspec)) 
                  :keyword)
          ':in))
 </pre>
+
 Another would be to write
+
 <pre>
 (and (symbolp (cadr listspec))
      (string= (symbol-name (cadr listspec)) (symbol-name 'in)))
 </pre>
+
 which
 neither of which is particularly clear or aesthetic.
 The keyword package is there to provide a home for
@@ -519,6 +560,7 @@ has to be a macro.  Here is an implementation:
                  (t
                   `(format nil "~a" ,x))))))
 </pre>
+
 <p>(Another approach would be have <code>symstuff</code> return a single call of
 the form <code>(format nil <EM>format-string</EM> <EM>-forms-</EM>)</code>,
 where the <EM>forms</EM> are derived from the <EM>pieces</EM>, and the <EM>format-string</EM> consists of interleaved ~a's and strings.)
@@ -526,22 +568,28 @@ where the <EM>forms</EM> are derived from the <EM>pieces</EM>, and the <EM>forma
 <p>Sometimes a macro is needed only temporarily, as a sort of syntactic
 scaffolding.  Suppose you need to define 12 functions, but they fall
 into 3 stereotyped groups of 4:
+
 <pre>
-(defun make-a-zip (y z) (vector 2 'zip y z))
-(defun test-whether-zip (x) (and (vectorp x) (eq (aref x 1) 'zip)))
+(defun make-a-zip (y z)
+  (vector 2 'zip y z))
+(defun test-whether-zip (x)
+  (and (vectorp x) (eq (aref x 1) 'zip)))
 (defun zip-copy (x) ...)
 (defun zip-deactivate (x) ...)
 
-<p>(defun make-a-zap (u v w) (vector 3 'zap u v w))
+<p>(defun make-a-zap (u v w)
+  (vector 3 'zap u v w))
 (defun test-whether-zap (x) ...)
 (defun zap-copy (x) ...)
 (defun zap-deactivate (x) ...)
 
-<p>(defun make-a-zep () (vector 0 'zep))
+<p>(defun make-a-zep ()
+  (vector 0 'zep))
 (defun test-whether-zep (x) ...)
 (defun zep-copy (x) ...)
 (defun zep-deactivate (x) ...)
 </pre>
+
 Where the omitted pieces are the same in all similarly named
 functions.  (That is, the &quot;...&quot; in <code>zep-deactivate</code> is the
 same code as the &quot;...&quot; in <code>zip-deactivate</code>, and so forth.)
@@ -550,6 +598,7 @@ Here, for the sake of concreteness, if not plausibility, <code>zip</code>,
 The functions could be rather large, and it would get tedious
 keeping them all in synch as they are debugged.  An alternative would
 be to use a macro:
+
 <pre>
 (defmacro odd-define (name buildargs)
    <b>`</b>(progn (defun ,(build-symbol make-a- (:&lt; name)) 
@@ -613,6 +662,7 @@ subexpression the current form and pretty-print it.
 into something complex containing a subform that is itself a macro
 form beginning with the symbol <code>odd-define</code>.  You suspect there is
 a bug in the subform.  You might issue the following commands:
+
 <pre>
 &gt; (ex (hair-squared ...))
 (PROGN (DEFUN ...)
@@ -659,6 +709,7 @@ think of the command as a variant of <code>setq</code>.
                     (find-nth-occurrence ',s *current-form* ,k)))
        (values)))
 </pre>
+
 <p>
 The <code>ex</code> macro expands to a form containing a call to <code>macroexpand-1</code>, a built-in function that does one step of macro
 expansion to a form whose <code>car</code> is the name of a macro.  (If given
