@@ -97,12 +97,12 @@ md c:\bin\     </pre>
     binaries for Windows from <a href="ftp://ftp.gnu.org/gnu/windows/emacs/21.2/emacs-21.2-fullbin-i386.tar.gz">ftp://ftp.gnu.org/gnu/windows/emacs/21.2/emacs-21.2-fullbin-i386.tar.gz</a>
     and use Winzip to unpack the files into the c:\bin directory. This should
     result in a new directory: c:\bin\emacs-21.2</li>
-  <li>Using Run on the Windows Start menu, enter
-    &quot;c:\bin\emacs-21.2\bin\runemacs.exe&quot; to verify that the program
-    works. On the Help menu, there is an Emacs on-line tutorial. If you are
-    unfamiliar with Emacs, you should (at least) complete this tutorial before
-    proceeding any further. The remainder of this chapter's instructions will
-    assume that you have at least basic familiarity with the use of Emacs.</li>
+  <li>Using Run on the Windows Start menu, enter &quot;c:\bin\emacs-21.2\bin\runemacs.exe&quot;
+    to verify that the program works. On the Help menu, there is an Emacs
+    on-line tutorial. If you are unfamiliar with Emacs, you should (at least)
+    complete this tutorial before proceeding any further. The remainder of this
+    chapter's instructions will assume that you have at least basic familiarity
+    with the use of Emacs.</li>
 </ul>
 <h3><a name="Installing additional Emacs utilities">2. Installing additional
 Emacs utilities</a></h3>
@@ -110,7 +110,10 @@ Emacs utilities</a></h3>
   <li>Download the <a href="http://sourceforge.net/projects/ilisp/">ILISP</a>
     package from <a href="http://prdownloads.sourceforge.net/ilisp/ilisp-5.12.0.tar.gz?download">http://prdownloads.sourceforge.net/ilisp/ilisp-5.12.0.tar.gz?download</a>
     and use Winzip to unpack it into the c:\home\site directory. This should
-    result in a new directory: c:\home\site\ilisp-5.12.0\</li>
+    result in a new directory: <a href="file:///c:/home/site/ilisp-5.12.0/">c:\home\site\ilisp-5.12.0\</a></li>
+  <li>Edit the EMACSDIR and ILISPDIR variables at the beginning of the
+    icompile.bat file in the ilisp-5.12.0 directory so that they match the
+    settings given below.</li>
   <li>Download the <a href="http://www.cs.indiana.edu/elisp/w3/docs.html">w3</a>
     package (needed for browsing the Lisp documentation) from <a href="ftp://ftp.xemacs.org/pub/xemacs/emacs-w3/w3.tar.gz">ftp://ftp.xemacs.org/pub/xemacs/emacs-w3/w3.tar.gz</a>&nbsp;and
     use Winzip to unpack it into the c:\home\site directory. This should result
@@ -269,8 +272,8 @@ lispworks-4200 -init c:\home\lisp\console.lisp</pre>
   </li>
   <li>Reboot the PC after making the above changes and configuration settings</li>
   <li>Start Emacs (either by using the Start menu's Gnu Emacs shortcut or by
-    using Run on the Windows Start menu with the command
-    &quot;c:\emacs\bin\runemacs.exe&quot;) and do the following:
+    using Run on the Windows Start menu with the command &quot;c:\emacs\bin\runemacs.exe&quot;)
+    and do the following:
     <ul>
       <li>Double-click on the &quot;site&quot; directory to drill down into that
         directory</li>
@@ -306,8 +309,8 @@ lispworks-4200 -init c:\home\lisp\console.lisp</pre>
 <h3><a name="Testing the environments">9. Testing the environments</a></h3>
 <ul>
   <li>Start Emacs (either by using the Start menu's Gnu Emacs shortcut or by
-    using Run on the Windows Start menu with the command
-    &quot;c:\emacs\bin\runemacs.exe&quot;) and do the following:
+    using Run on the Windows Start menu with the command &quot;c:\emacs\bin\runemacs.exe&quot;)
+    and do the following:
     <ul>
       <li>If you installed CLISP, do the following:
         <ul>
@@ -316,8 +319,7 @@ lispworks-4200 -init c:\home\lisp\console.lisp</pre>
             menu bar)
             <ul>
               <li>Click in the *clisp-hs* window and press &quot;C-h b&quot;
-                (this will show you the keybindings that are in effect for
-                ILISP/CLISP)</li>
+                (this will show you the keybindings that are in effect for ILISP/CLISP)</li>
               <li>Click in the *Help* window and scroll through the keybinding
                 list. When finished, press &quot;F4&quot; to close that window</li>
               <li>Click in the *clisp-hs* window and press &quot;F4&quot; to
@@ -338,8 +340,7 @@ lispworks-4200 -init c:\home\lisp\console.lisp</pre>
                 *common-lisp* buffer and the ACL menus should appear in the
                 Emacs menu bar.</li>
               <li>Click in the *common-lisp* window and press &quot;C-h b&quot;
-                (this will show you the keybindings that are in effect for
-                ELI/ACL)</li>
+                (this will show you the keybindings that are in effect for ELI/ACL)</li>
               <li>Click in the *Help* window and scroll through the keybinding
                 list. When finished, press &quot;F4&quot; to close that window</li>
               <li>Click in the *common-lisp* window and select the ACLFile/Exit
@@ -359,8 +360,7 @@ lispworks-4200 -init c:\home\lisp\console.lisp</pre>
             the Emacs menu bar)
             <ul>
               <li>Click in the *lispworks* window and press &quot;C-h b&quot;
-                (this will show you the keybindings that are in effect for
-                ILISP/LispWorks)</li>
+                (this will show you the keybindings that are in effect for ILISP/LispWorks)</li>
               <li>Click in the *Help* window and scroll through the keybinding
                 list. When finished, press &quot;F4&quot; to close that window</li>
               <li>Click in the *lispworks* window and press &quot;F4&quot; to
@@ -379,8 +379,7 @@ lispworks-4200 -init c:\home\lisp\console.lisp</pre>
               <li>The Emacs eshell should start up and it should start up Corman
                 CL (the Corman CL prompt will be a &quot;?&quot;)</li>
               <li>Click in the *eshell* window and press &quot;C-h b&quot; (this
-                will show you the keybindings that are in effect for
-                eshell/Corman)</li>
+                will show you the keybindings that are in effect for eshell/Corman)</li>
               <li>Click in the *Help* window and scroll through the keybinding
                 list. When finished, press &quot;F4&quot; to close that window</li>
               <li>Click in the *eshell* window and press &quot;F4&quot; to close
@@ -391,9 +390,8 @@ lispworks-4200 -init c:\home\lisp\console.lisp</pre>
       </li>
       <li>You can test that the online documentation works by pressing
         &quot;F1&quot; (for the HyperSpect) or &quot;M-F1&quot; (for CLtL2) when
-        the cursor is on a Lisp keyword (e.g. -- &quot;defun&quot; or
-        &quot;setq&quot;). This should bring up a browser with the documentation
-        for that keyword.</li>
+        the cursor is on a Lisp keyword (e.g. -- &quot;defun&quot; or &quot;setq&quot;).
+        This should bring up a browser with the documentation for that keyword.</li>
       <li>Exit Emacs by pressing &quot;M-F4&quot;</li>
     </ul>
   </li>
