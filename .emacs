@@ -14,6 +14,9 @@
 (defvar common-lisp-hyperspec-symbol-table (concat common-lisp-hyperspec-root "Data/Map_Sym.txt"))
 (defvar hyperspec-prog (concat use-home "site/ilisp/extra/hyperspec"))
 
+;; Gnu CLISP (switches for ANSI, ILISP & no banner)
+(defvar clisp-hs-program "clisp -ansi -I -q")
+
 ;; Corman Common Lisp
 (defvar cormanlisp-program "corman.bat")
 
@@ -50,6 +53,11 @@
 
 (autoload 'dabbrev-expand "dabbrev" "Word completion." t)
 (autoload 'turn-on-lazy-lock "lazy-lock" "Force enable Lazy Lock mode.")
+
+(eval-when (compile)
+  (load "esh-mode")
+  (require 'ilisp)
+  (load "fi-site-init"))
 
 ;;__________________________________________________________________________
 ;;;;    System Customizations 
@@ -175,7 +183,6 @@
     (setq ilisp-*use-fsf-compliant-keybindings* t
 	  ilisp-*arglist-message-lisp-space-p* t
 	  ilisp-print-info-message-command t
-	  clisp-hs-program "clisp"
 	  lisp-no-popper t)	
 	
     (require 'completer)
