@@ -1,15 +1,18 @@
-<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
 <!-- 	$Header$	 -->
 <html> <head>
 <title>The Common Lisp Cookbook - Threads</title>
 <style type="text/css">
-pre { margin-left:20px; background-color:#e0e0e0 }
-code { background-color:#e0e0e0 }
+<!---
+    pre { margin-left:20px; background-color:#e0e0e0 }
+    code { background-color:#e0e0e0 }
+ -->
 </style>
 
 </head>
 
-<body bgcolor=white>
+<body bgcolor="white">
 <h1><a href="index.html">The Common Lisp Cookbook</a> - Threads</h1>
 
 
@@ -22,8 +25,8 @@ none...</p>
 <li><a href="#why_bother">Why bother?</a></li>
 <li><a href="#basics">Basics</a></li>
 <li><a href="#output">Where's my output?</a></li>
-<li><a href="#communicating">Communicating with other threads</a></li>  <i>(under construction)</i>
-<li><a href="#initializing">Initializing multithreading</a></li>  <i>(under construction)</i>
+<li><a href="#communicating_1">Communicating with other threads 1: <code>mp:process-wait</code></a></li>
+<li><a href="#initializing">Initializing multithreading</a>  <i>(under construction)</i></li>
 <li><i>and more</i></li>
 </ul>
 
@@ -76,8 +79,7 @@ dynamic bindings) with different parts of the application;</li>
 
 </ul>
 
-<a name="basics"></a>
-<h3>Basics</h3>
+<a name="basics"></a><h3>Basics</h3>
 
 <p>In order to run a function in a separate thread, you need to do two
 things.</p>
@@ -142,80 +144,224 @@ thread executes asynchronously.</li>
 <p>Another simple example:</p>
 
 <pre>
-
 CL-USER 15 &gt; (mp:process-run-function "sleep in the background" nil 'sleep 10)
 #&lt;MP:PROCESS Name "sleep in the background" Priority 850000 State "Running"&gt;
 
 CL-USER 16 &gt; (mp:find-process-from-name "sleep in the background")
 #&lt;MP:PROCESS Name "sleep in the background" Priority 0 State "Sleeping on mailbox"&gt;
 
-CL-USER 17 &gt; (sleep 10)       ;; At this point the listener sleeps for ten seconds
+CL-USER 17 &gt; (sleep 10)     ;; At this point the listener sleeps for ten seconds
 NIL
 
 CL-USER 18 &gt; (mp:find-process-from-name "sleep in the background")
-NIL                           ;; The background process has finished its job and terminated
+NIL                         ;; The background process has finished its job and terminated
 
 CL-USER 19 &gt;
-
 </pre>
+
+<p><strong>Warning!</strong> Note the difference between:</p>
+
+<pre>(dotimes (i 20)
+  (mp:process-run-function "One closure" ()
+                           (lambda () (print i #.*standard-output*))))
+</pre>
+<p>and</p>
+<pre>
+(dotimes (i 20)
+  (mp:process-run-function "Twenty different bindings" ()
+                           (lambda (j) (print j #.*standard-output*))
+                           i))
+</pre>
+
+<p>In the first case, all twenty threads share the same closure
+variable <code>i</code>. The threads execute
+<cite>asynchronously</cite> - in other words there's no way to tell
+exactly when or in what order they'll execute. In this case (try it!)
+the observed behaviour is that LispWorks initialises all 20 threads
+before any of them have a chance to start running. By far the easiest
+way of dealing with this is to ensure that variables which need to be
+private to each thread are bound on a per-thread basis.</p>
 
 <p><strong>Exercise:</strong> get two or three new threads running
 simultaneously, and convince yourself they're all there.</p>
 
 
-<a name="output"></a>
-<h3>Where's my output?</h3>
+<a name="output"></a><h3>Where's my output?</h3>
 
 <p>An obvious way to test whether threads are behaving as you imagine
 they ought, is to get them to print messages to the listener. For
 example, you might feel justified in trying something like:</p>
 
 <pre>
-
 CL-USER 23 &gt; (mp:process-run-function "test" () (lambda () (print 99)))
 #&lt;MP:PROCESS Name "test" Priority 850000 State "Running"&gt;
 
 CL-USER 24 &gt; ;; Where's my output?
-
 </pre>
 
 <p>Where indeed is your output? The answer is that your new thread has
 a different <code>*standard-output*</code> to the listener, and that's
 where your output has gone to. Here is how you might find out where
-precisely that is:
+precisely that is:</p>
 
 <pre>
-
-CL-USER 1 &gt; (mp:process-run-function ""() (lambda () (print *standard-output* #.*standard-output*)))
+CL-USER 25 &gt; (mp:process-run-function
+              "" ()
+              (lambda ()
+                (print *standard-output* #.*standard-output*)))
 #&lt;MP:PROCESS Name "" Priority 850000 State "Running"&gt;
 
 #&lt;Synonym stream to *TERMINAL-IO*&gt;
-CL-USER 2 &gt;
-
+CL-USER 26 &gt;
 </pre>
 
 <p><strong>Exercise:</strong> Open the console
 (i.e. <code>*terminal-io*</code>) by evaluating <code>(read-char
 *terminal-io*)</code>; type a <code>#\Newline</code> into the console
-to return to <code>read-char</code>. Now you can prove directly where
-a thread's output goes.</p>
+to return from <code>read-char</code>. Now you can prove directly where
+a thread's output goes (by sending something there).</p>
 
 
 
-<a name="communicating"></a>
-<h3>Communicating with other threads</h3>
+<a name="communicating_1"></a><h3>Communicating with other threads 1: <code>mp:process-wait</code></h3>
+
+<p>In all the above examples, a thread is created to run a simple
+function and then halt. In a typical application at least some of your
+threads will run an <cite>event loop</cite> of some sort. An event
+loop is a function which repeatedly waits for an external event to
+occur. When an event is noticed, it is dispatched (maybe to another
+thread) for processing and the event loop cycles back to its waiting
+state. The "other thread" here might already exist (perhaps running an
+event loop of its own) or might be created specifically to perform
+this task (i.e. handle a single event) and then terminate.</p>
+
+<p>It might be tempting to construct an event loop using
+<code>cl:sleep</code>. For example:</p>
+
+<pre>
+(defun bogus-event-loop ()
+  (loop
+   (sleep 1)                        ; THIS IS WRONG
+   (when (something-has-happened)
+     (act-on-that-thing))))
+
+(mp:process-run-function "Bogus event loop" ()
+                         'bogus-event-loop)
+</pre>
+
+<p>This is a poor choice, because you're condemned to waiting for the
+<code>sleep</code> to return before you can perform the wake-up
+test. (Also, it's possible that your implementation cannot sleep one
+single thread without sleeping the whole lisp process. In such cases,
+any processing required before the predicate
+<code>something-has-happened</code> can return true will never happen.)</p>
+
+<p>Consider instead:</p>
+
+<pre>
+(defun improved-event-loop ()
+  (loop
+   (mp:process-wait "Waiting for something to happen"
+                    'something-has-happened)
+   (act-on-that-thing)))
+</pre>
+
+<p>The arguments to <code>mp:process-wait</code> are a string (which
+you should use for describing what this thread is waiting for), a
+function and optionally arguments to that function. The current thread
+will effectively sleep until the function returns true. The function
+can watch either internal state...</p>
+
+<pre>
+(defun flush-entries-to-file (entries-symbol max-length file)
+  (loop
+   ;; Wait until we have enough entries to justify going to disk.
+   (mp:process-wait (format nil "Waiting for ~a entr~:@p" max-length)
+                    (lambda ()
+                      (>= (length (symbol-value entries-symbol)) max-length)))
+   ;; In this example, don't bother to spawn off a new thread to
+   ;; perform the task.
+   (let ((entries (shiftf (symbol-value entries-symbol) nil)))
+     (with-open-file (ostream file
+                              :direction :output
+                              :if-exists :append
+			      :if-does-not-exist :create)
+       (format ostream "~%Flushing entries:")
+       (dolist (entry (reverse entries))
+         (print entry ostream))))))
+
+;; Test bed to drive the event loop
+(defvar *test-entries* nil)
+(defvar *test-file* "c:/temp/test-flush-entries.txt")
+(defun test-flush-entries-to-file ()
+  (let ((tester
+         (mp:process-run-function "Test writing entries to file" ()
+                                  'flush-entries-to-file
+                                  '*test-entries*
+                                  10
+                                  *test-file*)))
+    (dotimes (i 100)
+      (push i *test-entries*)
+      ;; Without the delay introduced by sleep, all 100 entries are
+      ;; generated before the flusher has a chance to wake up.
+      (sleep 0.1))
+    (mp:process-kill tester)))
+</pre>
+
+<p>... or external state...</p>
+
+<pre>
+(defun flush-entries-from-file (file reporting-stream)
+  (loop
+   ;; Wait for given file to exist on disk.
+   (mp:process-wait (format nil "Waiting for ~a" file)
+                    'probe-file file)
+   ;; Empty the file to the reporting-stream, being careful to
+   ;; allow more contents to accumulate while this is happening.
+   (format reporting-stream "~&amp;Reading ~a:~%" file)
+   (let ((temp-file (format nil "~a.temp" file)))
+     (rename-file file temp-file)
+     (with-open-file (istream temp-file)
+       (loop (let ((line (read-line istream nil)))
+               (unless line
+                 (return))
+               (write-line line reporting-stream))))
+     (delete-file temp-file))))
+
+(defun test-flush-entries-from-file ()
+  (delete-file *test-file*)
+  (let ((tester
+         (mp:process-run-function "Test reading entries from file" ()
+                                  'flush-entries-from-file
+                                  *test-file*
+                                  *standard-output*)))
+    ;; Use the previous example to create test data for this test.
+    (test-flush-entries-to-log-file)
+    (mp:process-kill tester)))
+</pre>
+
+<p>Although both of these examples were somewhat contrived, note their
+intentions to preserve their data from external modification once the
+waiting threads have woken up. In the first example,
+<code>shiftf</code> is used to atomically retrieve a symbol-value and
+reset it. In the above examples, this level of care didn't
+particularly matter, but in some applications it may be important to
+keep threads from trampling on each other's data.</p>
+
+<p>Note also the use of <code>mp:process-kill</code> to terminate
+unwanted threads when each test is complete.</p>
+
+<a name="initializing"></a><h3>Initializing multithreading</h3>
 
 <p><i>under construction</i></p>
 
 
-<a name="initializing"></a>
-<h3>Initializing multithreading</h3>
-
-<p><i>under construction</i></p>
-
-
-<hr>
+<hr />
 <a href="license.html">Copyright</a> &copy; 2002 The Common Lisp Cookbook Project
 <address>http://cl-cookbook.sourceforge.net/</address>
-<br>$Header$
+<br />
+<p><a href="http://validator.w3.org/check/referer"><img
+src="http://www.w3.org/Icons/valid-xhtml10" alt="Valid XHTML 1.0!"
+height="31" width="88" /></a></p>
+<p>$Header$</p>
 </body> </html>
