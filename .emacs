@@ -59,8 +59,8 @@
 
 (eval-when (compile)
   (load "esh-mode")
-  (require 'ilisp)
-  (load "fi-site-init"))
+  (load "fi-site-init")
+  (require 'ilisp))
 
 ;;__________________________________________________________________________
 ;;;;    System Customizations 
@@ -216,8 +216,8 @@
        ((eq lisp-used :lw-ilisp)
          (lispworks))))
    ((eq lisp-used :acl-eli)
-     ;; Franz Allegro Common Lisp using eli
-   (load "fi-site-init")
+    ;; Franz Allegro Common Lisp using eli
+    (load "fi-site-init")
     (fi:common-lisp fi:common-lisp-buffer-name
 		    fi:common-lisp-directory
 		    fi:common-lisp-image-name

@@ -78,12 +78,19 @@ Setting up an IDE with Emacs on Windows</h1>
           retaining the directory structure, and then rename the high-level
           directory to the suggested name&nbsp;</li>
         <li>If you use alternative directory names, you will need to modify the
-          .emacs file (instructions provided in step #7)</li>
+          .emacs file (instructions provided in step #8)</li>
         <li>The instructions assume you are using Winzip; however, you can use
           any alternative utility</li>
         <li>When you unpack .gz files with Winzip, it will ask you &quot;Should
           WinZip decompress it to a temporary folder and open it?&quot; - click
           on &quot;No&quot;</li>
+        <li>The instructions assume that you will be downloading all the
+          implementations; however, it is not necessary to do so. You should
+          complete steps #1, #6, #7 and the relevant parts of #8 &amp; #9
+          (regardless of which implementations you download) and you will need
+          to download at least one of #2 - #5. If you don't download all of the
+          implementations, you will need to make some modifications to the .emacs
+          file. Some guidance on this is given in step #8</li>
       </ul>
       <h3><a name="Installing Emacs">1. Installing Emacs</a></h3>
       <ul>
@@ -109,66 +116,20 @@ Setting up an IDE with Emacs on Windows</h1>
       <h3><a name="Installing CLISP">2. Installing CLISP</a></h3>
       <ul>
         <li>Download the precompiled <a href="http://clisp.cons.org/">CLISP</a>
-          binaries for Windows from <a href="http://prdownloads.sourceforge.net/clisp/clisp-2.27-win32.zip">http://prdownloads.sourceforge.net/clisp/clisp-2.27-win32.zip</a></li>
+          binaries for Windows from <a href="http://prdownloads.sourceforge.net/clisp/clisp-2.28-win32.zip">http://prdownloads.sourceforge.net/clisp/clisp-2.28-win32.zip</a></li>
         <li>Use Winzip to unpack the files (Suggested directory: c:\Program
-          Files\clisp-2.27)</li>
-        <li>The install.bat file for CLISP runs the install.lisp program;
-          however, the version of the program included with the CLISP 2.27
-          Windows distribution will not work properly with some versions of
-          Windows. It is necessary to download the CVS version of the file.</li>
-        <li>If you don't have a CVS utility, you will need to download one in
-          order to get the CVS version of install.lisp (Note: You will need CVS
-          later on as well):
-          <ul>
-            <li>Download CVS from <a href="http://ftp.cvshome.org/win32/cvs1-11-1p1.zip">http://ftp.cvshome.org/win32/cvs1-11-1p1.zip</a></li>
-            <li>Use Winzip to unpack the cvs.exe file into the c:\home\site
-              directory or into a directory that is in your PATH.</li>
-          </ul>
-        </li>
-        <li>Download the install.lisp utility from CVS and put it into the
-          c:\Program Files\clisp-2.27\src directory, replacing the version of
-          install.lisp that is already there. To do this, enter the following
-          commands from a dos command line (Note: when you are prompted for the
-          CVS password after entering line#2, just press enter):
-          <blockquote>
-            <p>cd c:\home\site<br>
-            <tt>cvs -d:pserver:anonymous@cvs.clisp.sourceforge.net:/cvsroot/clisp
-            login</tt><br>
-            cvs -z3 -d:pserver:anonymous@cvs.clisp.sourceforge.net:/cvsroot/clisp
-            co clisp/src/install.lisp<br>
-            cd c:\Program Files\clisp-2.27\src\<br>
-            copy c:\home\site\clisp\src\install.lisp install.lisp</p>
-          </blockquote>
-          <p>This will result in the install.lisp file replacing the version of
-          install.lisp that is already in the c:\Program Files\clisp-2.27\src\
-          directory. There will still be the (mostly empty) downloaded CVS clisp
-          directory tree in the c:\home\site directory - this can be deleted
-          now.</li>
+          Files\clisp-2.28)</li>
         <li>You now need to complete the installation process for CLISP by
           running the install.bat file. To do this, go to a dos command line, cd
-          to the c:\Program Files\clisp-2.27 directory and run the install.bat
+          to the c:\Program Files\clisp-2.28 directory and run the install.bat
           file. This will result in the creation of a clisp.bat file on the
           desktop. Move this file from the desktop to the c:\home\lisp
           directory. The clisp.bat file will be used to start CLISP from within
           Emacs.</li>
-        <li>The clisp-indent.el utility provides better Lisp indentation - it is
-          actually part of CLISP but isn't included in the Windows zip file. You
-          need to download it separately from CVS and put it into the
-          c:\home\site directory. To get it from CVS, enter the following
-          commands from a dos command line (Note: when you are prompted for the
-          CVS password after entering line#2, just press enter):
-          <blockquote>
-            <p>cd c:\home\site<br>
-            <tt>cvs -d:pserver:anonymous@cvs.clisp.sourceforge.net:/cvsroot/clisp
-            login</tt><br>
-            cvs -z3 -d:pserver:anonymous@cvs.clisp.sourceforge.net:/cvsroot/clisp
-            co clisp/emacs/clisp-indent.el<br>
-            copy clisp\emacs\clisp-indent.el&nbsp; clisp-indent.el</p>
-          </blockquote>
-          <p>This will result in the clisp-indent.el file being in the
-          c:\home\site directory. There will still be the (mostly empty)
-          downloaded CVS clisp directory tree in the c:\home\site directory -
-          this can be deleted now.</li>
+        <li>The clisp-indent.el utility provides better Lisp indentation and is
+          part of the CLISP distribution. You need to copy it from the
+          C:\Program Files\clisp-2.28\emacs directory and put it into the
+          c:\home\site directory. </li>
         <li>Create a file named _clisprc.lisp in the c:\home directory. This
           file can have any initializations that need to occur when CLISP
           starts. For the time being, just leave it empty.</li>
@@ -240,27 +201,23 @@ Setting up an IDE with Emacs on Windows</h1>
           file will still work ok, you just won't be able to try out the
           LispWorks ILISP mode.)</li>
         <li>Run the LispWorks installation program and install LispWorks
-          (Suggested directory: C:\Program Files\Xanalys). </li>
+          (Suggested directory: C:\Program Files\Xanalys).</li>
         <li>Create a file called console.lisp in the c:\home\lisp\ directory.
           This file will be used to create the non-gui console version of the
           LispWorks executable. The file should have the following lines in it:</li>
       </ul>
       <blockquote>
-        <blockquote>
-          <p>(load-all-patches)<br>
-          (save-image &quot;lw42-console&quot; :console t :environment nil)<br>
-          (quit)</p>
-        </blockquote>
+        <p>(load-all-patches)<br>
+        (save-image &quot;lw42-console&quot; :console t :environment nil)<br>
+        (quit)</p>
       </blockquote>
       <ul>
         <li>Go to a dos command line and enter the following commands to create
           the non-gui console version of the LispWorks executable:</li>
       </ul>
       <blockquote>
-        <blockquote>
-          <p>cd c:\Program Files\Xanalys\LispWorks<br>
-          lispworks-4200 -init c:\home\lisp\console.lisp</p>
-        </blockquote>
+        <p>cd c:\Program Files\Xanalys\LispWorks<br>
+        lispworks-4200 -init c:\home\lisp\console.lisp</p>
         <p>This will result in the lw42-console.exe file being created in the
         c:\Program Files\Xanalys\LispWorks directory.</p>
       </blockquote>
@@ -268,11 +225,8 @@ Setting up an IDE with Emacs on Windows</h1>
         <li>Create a file called lispworks.bat in the c:\home\lisp\ directory.
           This file is the startup file called by ILISP. The file should have
           the following lines in it:
-          <blockquote>
-            <p>@echo off<br>
-            &quot;c:/Program Files/Xanalys/LispWorks/lw42-console.exe&quot;</p>
-          </blockquote>
-        </li>
+          <p>@echo off<br>
+          &quot;c:/Program Files/Xanalys/LispWorks/lw42-console.exe&quot;</li>
       </ul>
       <h3><a name="Installing Corman CL">5. Installing Corman CL</a></h3>
       <ul>
@@ -300,18 +254,24 @@ Setting up an IDE with Emacs on Windows</h1>
           problems when used with Emacs v21.1 (also, the latest version of the
           Hyperspec needs the CVS version as well); therefore, it is preferable
           to download the CVS version of this package.</li>
+        <li>If you don't have a CVS utility, you will need to download one in
+          order to get the CVS version of ILISP:
+          <ul>
+            <li>Download CVS from <a href="http://ftp.cvshome.org/win32/cvs1-11-1p1.zip">http://ftp.cvshome.org/win32/cvs1-11-1p1.zip</a></li>
+            <li>Use Winzip to unpack the cvs.exe file into the c:\home\site
+              directory or into a directory that is in your PATH.</li>
+          </ul>
+        </li>
         <li>Go to a dos command line and enter the following 3 commands to
           download the CVS version of ILISP (Note: when you are prompted for the
           CVS password after entering line#2, just press enter):</li>
       </ul>
       <blockquote>
-        <blockquote>
-          <p>cd c:\home\site<br>
-          cvs -d:pserver:anonymous@cvs.ILISP.sourceforge.net:/cvsroot/ILISP
-          login&nbsp;<br>
-          cvs -z3 -d:pserver:anonymous@cvs.ILISP.sourceforge.net:/cvsroot/ILISP
-          co ILISP</p>
-        </blockquote>
+        <p>cd c:\home\site<br>
+        cvs -d:pserver:anonymous@cvs.ilisp.sourceforge.net:/cvsroot/ilisp
+        login&nbsp;<br>
+        cvs -z3 -d:pserver:anonymous@cvs.ilisp.sourceforge.net:/cvsroot/ilisp co
+        ilisp</p>
         <p>There should now be an ILISP directory in the c:\home\site directory.</p>
       </blockquote>
       <ul>
@@ -352,7 +312,7 @@ Setting up an IDE with Emacs on Windows</h1>
             than &quot;\&quot;)</li>
           <li>PATH: The c:\emacs\bin and c:\home\lisp directory paths should be
             prepended to the existing PATH to ensure that the Emacs executable
-            and the CLISP executables can be found (e.g. -- set path=c:\emacs\bin;c:\home\lisp;%path%)</li>
+            and the lisp batch files can be found (e.g. -- set path=c:\emacs\bin;c:\home\lisp;%path%)</li>
         </ul>
       </blockquote>
       <ul>
@@ -363,6 +323,18 @@ Setting up an IDE with Emacs on Windows</h1>
           modified with the correct directory locations (Note: when specifying
           directory locations in the .emacs file, use &quot;/&quot; rather than
           &quot;\&quot; as the directory separator character).</li>
+        <li>If not all the Lisp implementations were downloaded, it will be
+          necessary to edit the .emacs file so that it compiles. In general, you
+          will only need to edit a few specific lines and can ignore most of the
+          others. For example:
+          <ul>
+            <li>If you didn't download ACL, search for &quot;fi-site-init&quot;
+              in the .emacs file and comment out those lines. Also search for
+              &quot;fi:&quot; and comment out those lines.</li>
+            <li>If you didn't download CLISP, search for &quot;clisp-indent&quot;
+              and comment out that line. </li>
+          </ul>
+        </li>
         <li>Reboot the PC after making the above changes and configuration
           settings</li>
         <li>Start Emacs (either by using the Start menu's Gnu Emacs shortcut or

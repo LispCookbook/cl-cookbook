@@ -1,3 +1,7 @@
+2002-03-31
+  .emacs & windows.html: mods for CLISP 2.28 (new version) and 
+  changes suggested by Luke Crook
+
 2002-03-28
   corrections in "faithful output" entry (also by Jörg)
 
