@@ -124,7 +124,7 @@ Characters with code &gt; 127 cannot be represented in ASCII:
 <code>#+(AND ALLEGRO UNIX) :DEFAULT</code> (untested)
 - seems enough on UNIX, but would not work on the MS-Windows port of AllegroCL.
 <li><b>LispWorks:</b>
-<code>:EXTERNAL-FORMAT '(:DEFAULT :EOL-STYLE :LF)</code> (untested)
+<code>:EXTERNAL-FORMAT '(:LATIN-1 :EOL-STYLE :LF)</code> (confirmed by Marc Battyani)
 </ul>
 
 Here's some sample code to play with:
