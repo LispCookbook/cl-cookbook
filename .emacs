@@ -27,7 +27,7 @@
 ;; Gnu CLISP - Inferior Lisp Mode & ILISP (switches for ANSI & no banner)
 (defvar clisp-dir
   (if mswindows-p
-      (concat use-bin "clisp-2.30/")
+      (concat use-bin "clisp-2.31/full/")
     "/sw/bin/"))
 (defvar clisp-exe
   (if mswindows-p

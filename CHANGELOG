@@ -1,3 +1,7 @@
+2003-09-03
+	Updated windows.html, and .emacs by Bill Clementson to support
+	clisp 2.31.
+
 2003-09-02
   Updated windows.html and index.html by Bill Clementson-minor edits and
   update of cua-emul.el download site.
