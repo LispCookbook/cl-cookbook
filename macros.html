@@ -85,7 +85,7 @@ pattern <SAMP>(setq2 <i>v<sub>1</sub></i> <i>v<sub>2</sub></i> <i>e</i>)</SAMP> 
 </pre>
 This is very close to the following function definition
 <pre>
-(defmacro setq2F (v1 v2 e)
+(defun setq2F (v1 v2 e)
    (list 'progn (list 'setq v1 e) (list 'setq v2 e)))
 </pre>
 If we evaluated <SAMP>(setq2F 'x 'y '(+ z 3))</SAMP>, we would get
@@ -157,7 +157,7 @@ compile time for the macro form).  So if we defined a macro thus:
 </pre>
 then 
 <table>
-<TR> <TD align=left> <EM>If we call it thus ...</EM> </TD> <TD align=left> <EM>The parameters's values are
+<TR> <TD align=left> <EM>If we call it thus ...</EM> </TD> <TD align=left> <EM>The parameters' values are
 ...</EM> </TD></TR>
 <TR> <TD align=left> <SAMP>(foo a)</SAMP> </TD> <TD align=left> <SAMP>x<i>=</i>a, y<i>=</i>nil, cxt<i>=</i>null</SAMP> </TD></TR>
 <TR> <TD align=left> <SAMP>(foo (+ a 1) (- y 1))</SAMP> </TD> <TD align=left> <SAMP>x<i>=</i>(+ a 1), y<i>=</i>(- y 1),
