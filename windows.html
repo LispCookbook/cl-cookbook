@@ -3,8 +3,8 @@
 <html>
 
 <head>
-<title>The Common Lisp Cookbook - Setting up an IDE with Emacs on Windows or Mac OS X
-</title>
+<title>The Common Lisp Cookbook - Setting up an IDE with Emacs on Windows or Mac 
+OS X</title>
 <style type="text/css">pre          { background-color: #e0e0e0; margin-left: 20px }
 </style>
 </head>
@@ -150,12 +150,11 @@ icompile.bat</pre>
   don't download the cua.el utility.</li>
   <li>OPTIONAL: If you want Emacs to emulate the Windows-style buffer switching 
   (e.g. - C-TAB to move from buffer to buffer), download the
-  <a href="http://www.vegetable.demon.co.uk/wence/cua-emul.el">
-  cua-emul.el</a> utility from
-  <a href="http://www.vegetable.demon.co.uk/wence/cua-emul.el">
-  http://www.vegetable.demon.co.uk/wence/cua-emul.el</a> and put it 
-  into the c:\home\site directory. If you want to use the Emacs defaults for 
-  buffer switching, don't download the cua-emul.el utility.</li>
+  <a href="http://www.vegetable.demon.co.uk/wence/cua-emul.el">cua-emul.el</a> 
+  utility from <a href="http://www.vegetable.demon.co.uk/wence/cua-emul.el">
+  http://www.vegetable.demon.co.uk/wence/cua-emul.el</a> and put it into the 
+  c:\home\site directory. If you want to use the Emacs defaults for buffer 
+  switching, don't download the cua-emul.el utility.</li>
   <li>OPTIONAL: The standard code colorization that is done by Emacs is not to 
   everyone's taste. If you want to use my custom colorization scheme (included 
   in the sample .emacs file) or use one of the standard ones that are included 
@@ -505,6 +504,12 @@ different Lisp implementations.</p>
       page for the Lisp symbol under the cursor using the default browser.</li>
       <li>S-F1 - Brings up the CL Hyperspec (if it was installed) documentation 
       page for the Lisp symbol under the cursor using w3 (if it was installed).</li>
+      <li>C-u F1 - Brings up the CL Hyperspec (if it was installed) 
+      documentation page for the format character under the cursor using the 
+      default browser.</li>
+      <li>C-u S-F1 - Brings up the CL Hyperspec (if it was installed) 
+      documentation page for the format character under the cursor using w3 (if 
+      it was installed).</li>
       <li>C-F1 - Brings up the Franz CL (if it was installed) documentation page 
       for the Lisp symbol under the cursor using the default browser.</li>
       <li>C-S-F1 - Brings up the Franz CL (if it was installed) documentation 
@@ -518,6 +523,10 @@ different Lisp implementations.</p>
       F5 to start it).</li>
       <li>C-M-F5 - Toggles between the different installed Lisp implementations.
       </li>
+      <li>M-p - For ACL only, in a Lisp listener, retrieves the previous 
+      historical entry (this is already the binding in ILISP).</li>
+      <li>M-n - For ACL only, in a Lisp listener, retrieves the next historical 
+      entry (this is already the binding in ILISP).</li>
       <li>C-c d - For ACL only, does a &quot;Do What I Mean&quot; eval/compile (see 
       function documentation for eli-lisp-eval-or-compile-dwim).</li>
       <li>C-c x - For ACL or the ILISP Lisps, does a &quot;Do What I Mean&quot; eval/compile 
