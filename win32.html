@@ -209,12 +209,9 @@ queued. A certain sequence of messages is queued when a window is
 created, for instance.  Events, such as mouse movements, cause other
 messages to be queued.
 
-<li>Menus, buttons, and other controls should be accessible via the
-keyboard or the mouse and the call to TranslateMessage facilitates
-this transparency.
-
-<li>DispatchMessage is a call to the OS requesting the OS to handle
-the message.  The OS handles the message by calling another
+<li>TranslateMessage translates virtual-key messages to character
+messages.  DispatchMessage is a call to the OS requesting the OS to
+handle the message.  The OS handles the message by calling another
 subroutine, or function, in the application program.  The application
 function which is called is the function specified in a call to
 RegisterClass, which included a class name parameter, where that class
@@ -634,10 +631,7 @@ message pump.
 <code>create-toplevel-window</code> ensures multiprocessing is running
 when in console mode. The function
 <code>create-toplevel-window-run</code> performs the message pump
-operation in console mode but not otherwise. The message pump in the
-program in Appendix A does not include the normal call to
-<code>TranslateMessage</code>, which should be included in most
-production programs.
+operation in console mode but not otherwise. 
 
 <p>The program in Appendix A makes a call to register-class when the file is
 loaded. The call needs to be made only once and so I make the call
@@ -904,7 +898,7 @@ messages and let the CLOS method dispatcher find the proper function
 for each message.  This allows message handlers to be inherited and
 more-specific handlers defined for selected messages in the derived
 class.  CLOS handles this nicely.  I have a <code>DefMsgHandler</code>
-macro that calls RegisterClass, defines the CLOS classes for each
+macro that calls RegisterClass, defines the CLOS method for each
 message to be handled, takes care of necessary housekeeping in
 ubiquitous functions such as <code>wm-paint</code>, and allows easy
 definition of function bodies to be executed for each desired type of
@@ -1153,6 +1147,12 @@ program source code visible while reading the text.
      (lpString lpctstr) (cbString uint))
   :result-type bool)
 
+; TranslateMessage
+(fli:define-foreign-function
+    (TranslateMessage "TranslateMessage" :calling-convention :stdcall)
+    ((msg-ptr ulong))
+  :result-type bool)
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;
@@ -1239,6 +1239,7 @@ program source code visible while reading the text.
 	    (do ((gm (GetMessage (fli:pointer-address ms) 0 0 0)
 		     (GetMessage (fli:pointer-address ms) 0 0 0)))
 		((zerop gm) (fli:foreign-slot-value ms 'wParam))
+	      (TranslateMessage (fli:pointer-address ms))
 	      (DispatchMessage (fli:pointer-address ms)))))))))
 
 ; CloseWindow
