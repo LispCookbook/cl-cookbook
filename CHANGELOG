@@ -1,3 +1,6 @@
+2002-09-23
+  Updated windows.html and .emacs by Bill Clementson to support CLISP v2.30.
+
 2002-09-22
   Updated .emacs by Bill Clementson to add generic eval-last-sexp support on C-x C-e for elisp & inferior lisps.
 

@@ -15,7 +15,7 @@
 (defvar hyperspec-prog (concat use-home "site/ilisp/extra/hyperspec"))
 
 ;; Gnu CLISP - ILISP (switches for ANSI, ILISP & no banner)
-(defvar clisp-hs-program "c:/bin/clisp-2.29/lisp.exe -B c:/bin/clisp-2.29/ -M c:/bin/clisp-2.29/lispinit.mem -ansi -I -q")
+(defvar clisp-hs-program "c:/bin/clisp-2.30/lisp.exe -B c:/bin/clisp-2.30/ -M c:/bin/clisp-2.30/lispinit.mem -ansi -I -q")
 
 ;; Corman Common Lisp - ESHELL
 (defvar cormanlisp-program "c:/bin/corman-1.5/clconsole.exe -image c:/bin/corman-1.5/cormanlisp.img")
