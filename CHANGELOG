@@ -1,9 +1,12 @@
+2002-12-26
+  Fixed some typos in misc.html, license.html, and in this file
+
 2002-12-25
   Slight changes to macros.html to make it look like the rest of the cookbook
   Added initial entry for macros.html to CHANGELOG
   Added new chapter 'Miscellaneous'
   Linked misc.html from index.html
-  Added section 'Re-using complex data structures' (orginally by Marco Antoniotti) to 'Miscellaneous'
+  Added section 'Re-using complex data structures' (originally by Marco Antoniotti) to 'Miscellaneous'
   Added section 'Using ADJUST-ARRAY instead of consing up...' (originally by Pierpaolo Bernardi) to 'Miscellaneous'
   Added Marco Antoniotti and Pierpaolo Bernardi to the list of contributors
   Added Pascal Constanza's guide to link section
