@@ -128,10 +128,11 @@ md c:\bin\     </pre>
 <blockquote>
   <pre>ren c:\home\site\ilisp-5.12.0 c:\home\site\ilisp
 cd c:\home\site\ilisp
+set EMACSDIR=c:\bin\emacs-21.2
+set ILISPDIR=c:\home\site\ilisp
 icompile.bat
 ren c:\home\site\w3-4.Opre.47 c:\home\site\w3<a href="file:///c:/home/site/ilisp">
 </a>cd c:\home\site\w3
-set EMACSDIR=c:\bin\emacs-21.2\
 build.bat</pre>
 </blockquote>
       <ul>
@@ -252,7 +253,7 @@ lispworks-4200 -init c:\home\lisp\console.lisp</pre>
             one of the two (better to leave the system one if you want multiple
             login users to use your same emacs configuration) and make certain
             that it is set to the c:\home directory.)</li>
-          <li>EMACSDIR: Should be set to c:\bin\emacs-21.2\</li>
+          <li>EMACSDIR: Should be set to c:\bin\emacs-21.2</li>
           <li>PATH: The c:\bin\emacs-21.2\bin directory path should be
             prepended to the existing PATH to ensure that the Emacs executable can be found (e.g. -- set
             path=c:\bin\emacs-21.2\bin;%path%)</li>
