@@ -11,18 +11,26 @@ pre { margin-left:20px; }
 <body bgcolor=white>
 <h1><a href="index.html">The Common Lisp Cookbook</a> - Processes and Threads</h1>
 
-<table border=0 cellpadding=0 cellspacing=0 width=550><tr valign=top><td width=550>
 
+<h2>Contents</h2>
 
-<h2>Content</h2>
 <ul>
 <li><a href="#fork-cmucl">Forking with CMUCL</a>
-  </ul>
+</ul>
 
-  The ANSI Common Lisp standard doesn't mention this topic. So almost everything that can be said here depends on your OS and your implementation.
+The ANSI Common Lisp standard doesn't mention this topic. So almost
+everything that can be said here depends on your OS and your
+implementation. 
 
-  <a name="fork-cmucl"><h3>Forking with CMUCL</h3></a>
-Here's a function by Martin Cracauer that'll allow you to compile a couple of files in parallel with <a href="http://www.cons.org/cmucl/">CMUCL</a>. It demonstrates how to use the UNIX <a href="http://www.freebsd.org/cgi/man.cgi?query=fork&apropos=0&sektion=0&manpath=FreeBSD+4.5-RELEASE&format=html"><code>fork</code></a> system call with this CL implementation.
+
+<a name="fork-cmucl"></a>
+<h3>Forking with CMUCL</h3>
+
+Here's a function by Martin Cracauer that'll allow you to compile a
+couple of files in parallel with <a
+href="http://www.cons.org/cmucl/">CMUCL</a>. It demonstrates how to
+use the UNIX <a href="http://www.freebsd.org/cgi/man.cgi?query=fork&apropos=0&sektion=0&manpath=FreeBSD+4.5-RELEASE&format=html"><code>fork</code></a>
+system call with this CL implementation. 
 
 <pre>
 (defparameter *sigchld* 0)
@@ -64,7 +72,6 @@ Here's a function by Martin Cracauer that'll allow you to compile a couple of fi
       (load (compile-file-pathname (car f))))))
 </pre>
   
-</td></tr></table>
 <hr>
 <a href="license.html">Copyright</a> &copy; 2002 The Common Lisp Cookbook Project
 <address>http://cl-cookbook.sourceforge.net/</address>

@@ -9,11 +9,12 @@ pre { margin-left:20px; }
 </head>
 
 <body bgcolor=white>
+
 <h1><a href="index.html">The Common Lisp Cookbook</a> - Sockets</h1>
 
-<table border=0 cellpadding=0 cellspacing=0 width=550><tr valign=top><td width=550>
 
-<h2>Content</h2>
+<h2>Contents</h2>
+
 <ul>
 <li><a href="#intro">Introduction</a>
 <li><a href="#adr">Addresses</a>
@@ -22,161 +23,168 @@ pre { margin-left:20px; }
 <li><a href="#comm">Communication</a>
 <li><a href="#close">Closing</a>
 <li><a href="#example">A complete example</a>
-  </ul>
+</ul>
 
-          ANSI Common Lisp does not provide standard functions to
-          operate on sockets, but all major CL implementations have
-          added socket support to their environments. Although all
-          socket packages offer roughly the same functionalities, they
-          use slightly different names for functions, making it hard
-          to provide a standardized description. In this chapter, we
-          will use the socket library contained in <A
-          href="http://clocc.sourceforge.net/dist/port.html">PORT</A>,
-          that in turn is part of the <A
-          href="http://clocc.sourceforge.net/">Common Lisp Open Code
-          Collection</A> (CLOCC). The socket functions provided by
-          PORT currently work without modifications on a wide range of
-          Common Lisp implementations (Allegro, Lispworks, CLISP, CMU
-          CL, SBCL, GCL).  Therefore, this section does not contain
-          pointers to the Common Lisp HyperSpec. We refer you to the
-          documentation of the PORT package for more information. Even 
-          if you do not use port, the concepts described here will most 
-          likely apply to your Lisp implementation, and it should not
-          be hard to find out what the equivalent functions are in it.
-          
-          <a name="intro"><h3>Introduction</h3></a>
+ANSI Common Lisp does not provide standard functions to
+operate on sockets, but all major CL implementations have
+added socket support to their environments. Although all
+socket packages offer roughly the same functionalities, they
+use slightly different names for functions, making it hard
+to provide a standardized description. In this chapter, we
+will use the socket library contained in <A
+href="http://clocc.sourceforge.net/dist/port.html">PORT</A>,
+that in turn is part of the <A
+href="http://clocc.sourceforge.net/">Common Lisp Open Code
+Collection</A> (CLOCC). The socket functions provided by
+PORT currently work without modifications on a wide range of
+Common Lisp implementations (Allegro, Lispworks, CLISP, CMU
+CL, SBCL, GCL).  Therefore, this section does not contain
+pointers to the Common Lisp HyperSpec. We refer you to the
+documentation of the PORT package for more information. Even 
+if you do not use port, the concepts described here will most 
+likely apply to your Lisp implementation, and it should not
+be hard to find out what the equivalent functions are in it.
 
-          <P>First of all, some theory. If you are interested in using
-          sockets you probably already know this stuff, but it is
-          useful to go through it anyway to establish our
-          terminology. A <b>socket</b> is a two-way, reliable
-          communication stream between two processes, usually (but not
-          necessarily) running on different computers. Several types
-          of sockets exist, but in the following we are only going to
-          describe <b>TCP</b> sockets.  A socket connection originates
-          from a <b>port</b> on a <b>client</b> machine, and reaches
-          another port on a <b>server</b> machine. Therefore, a
-          connected socket is identified by four data elements: the
-          address of the client computer, the port on the client
-          computer, the address of the server computer and the port on
-          the server computer. In the following we will describe how
-            to implement both TCP clients and servers in Common
-            Lisp. Of course, nothing prevents you from using a CL
-            client to connect to a server written in a different
-            language, and vice-versa.</p>
 
-    <p>Addresses can be represented in three different ways. The one
-    you are probably most familiar with is the human-readable form,
-    such as <tt>www.lisp.org</tt>. We will call this a
-    <b>hostname</b>. Each hostname is associated with a unique <b>IP
-    address</b>, represented by four bytes. These are usually written
-    in <b>dotted</b> notation: <tt>128.18.65.4</tt>. The translation
-    between a hostname and a dotted IP address is called a <b>DNS
-    lookup</b>, and normally occurs behind the scenes in modern
-    systems. Finally, an address can be easily converted from dotted
-    notation to an <b>ipaddr</b>, which is simply the long integer
-    formed by the four bytes in the dotted address. The ipaddr
-    corresponding to the above example is 2148679940. To summarize:
-    humans use hostnames that are easier to memorize and type;
-    software uses IP addresses that are stored as ipaddrs but are usually
-    printed in dotted notation.</p>
+<a name="intro"></a>
+<h3>Introduction</h3>
+
+<p>First of all, some theory. If you are interested in using
+sockets you probably already know this stuff, but it is
+useful to go through it anyway to establish our
+terminology. A <b>socket</b> is a two-way, reliable
+communication stream between two processes, usually (but not
+necessarily) running on different computers. Several types
+of sockets exist, but in the following we are only going to
+describe <b>TCP</b> sockets.  A socket connection originates
+from a <b>port</b> on a <b>client</b> machine, and reaches
+another port on a <b>server</b> machine. Therefore, a
+connected socket is identified by four data elements: the
+address of the client computer, the port on the client
+computer, the address of the server computer and the port on
+the server computer. In the following we will describe how
+to implement both TCP clients and servers in Common
+Lisp. Of course, nothing prevents you from using a CL
+client to connect to a server written in a different
+language, and vice-versa.</p>
+
+<p>Addresses can be represented in three different ways. The one
+you are probably most familiar with is the human-readable form,
+such as <tt>www.lisp.org</tt>. We will call this a
+<b>hostname</b>. Each hostname is associated with a unique <b>IP
+address</b>, represented by four bytes. These are usually written
+in <b>dotted</b> notation: <tt>128.18.65.4</tt>. The translation
+between a hostname and a dotted IP address is called a <b>DNS
+lookup</b>, and normally occurs behind the scenes in modern
+systems. Finally, an address can be easily converted from dotted
+notation to an <b>ipaddr</b>, which is simply the long integer
+formed by the four bytes in the dotted address. The ipaddr
+corresponding to the above example is 2148679940. To summarize:
+humans use hostnames that are easier to memorize and type;
+software uses IP addresses that are stored as ipaddrs but are usually
+printed in dotted notation.</p>
       
-    <p>Ports are represented as integer numbers in the range
-    0-65535. In general, ports can be chosen arbitrarily (except that
-    some ports might only be available to privileged users on Unix and
-    similar operating systems), but two processes that need to
-    communicate through sockets should have a way of knowing which
-    port to use. Let's look at how sockets are normally used, in order 
-      to make this point clear. 
-    <ol>
-      <li>A process on computer A (the server) <b>opens</b> TCP port X
-      and prepares to <b>accept</b> connections.</li>
-      <li>A process on computer B (the client) <b>creates</b> a socket 
-        connecting port Y on B to port X on A. (Note that B needs to
-        know that A opened port X, but A does not need to know that
-        the socket originates from port Y on B. Y is usually chosen
-        randomly by the TCP implementation.)</li>
-      <li>The server process accepts the socket connection, and spawns 
-        a thread or a sub-process to <b>handle</b> it.</li>
-      <li>A and B can freely exchange data over the socket, until
-        either the client or the server closes it.</li>
-    </ol>
+<p>Ports are represented as integer numbers in the range
+0-65535. In general, ports can be chosen arbitrarily (except that
+some ports might only be available to privileged users on Unix and
+similar operating systems), but two processes that need to
+communicate through sockets should have a way of knowing which
+port to use. Let's look at how sockets are normally used, in order 
+to make this point clear. 
+<ol>
+  <li>A process on computer A (the server) <b>opens</b> TCP port X
+    and prepares to <b>accept</b> connections.</li>
+  <li>A process on computer B (the client) <b>creates</b> a socket 
+    connecting port Y on B to port X on A. (Note that B needs to
+    know that A opened port X, but A does not need to know that
+    the socket originates from port Y on B. Y is usually chosen
+    randomly by the TCP implementation.)</li>
+  <li>The server process accepts the socket connection, and spawns 
+    a thread or a sub-process to <b>handle</b> it.</li>
+  <li>A and B can freely exchange data over the socket, until
+    either the client or the server closes it.</li>
+</ol>
 
-    <a name="adr"><h3>Addresses</h3></a>
-    <p>A prerequisite for working with sockets is the ability to
-      convert hostnames to IP addresses and vice versa. The function
-      RESOLVE-HOST-IPADDR takes a hostname as its argument and returns 
-      a HOSTENT structure. For example:
 
-<PRE>
+<a name="adr"></a>
+<h3>Addresses</h3>
+
+<p>A prerequisite for working with sockets is the ability to
+convert hostnames to IP addresses and vice versa. The function
+RESOLVE-HOST-IPADDR takes a hostname as its argument and returns 
+a HOSTENT structure. For example:
+
+<pre>
 &gt; (resolve-host-ipaddr "www.lisp.org")
 #S(HOSTENT :NAME "bibop.alu.org" :ALIASES NIL :ADDR-LIST ("128.18.65.4") :ADDR-TYPE 2)
-</PRE>
+</pre>
 
-    This structure contains four fields, but the only ones we are
-    interested in are NAME and ADDR-LIST. NAME contains the
-    <i>canonical</i> hostname of the machine (that might or might not
-    be the same as the argument), while ADDR-LIST contains the IP
-    address corresponding to the given hostname (in some cases a
-    hostname is mapped to more than one IP address for load-balancing
-    purposes, but not all implementations return the additional
-    addresses). You can also use this function to perform the reverse
-    mapping: 
+This structure contains four fields, but the only ones we are
+interested in are NAME and ADDR-LIST. NAME contains the
+<i>canonical</i> hostname of the machine (that might or might not
+be the same as the argument), while ADDR-LIST contains the IP
+address corresponding to the given hostname (in some cases a
+hostname is mapped to more than one IP address for load-balancing
+purposes, but not all implementations return the additional
+addresses). You can also use this function to perform the reverse
+mapping: 
 
- <PRE>
- &gt; (resolve-host-ipaddr "128.18.65.4")
- #S(HOSTENT :NAME "bibop.alu.org" :ALIASES NIL :ADDR-LIST ("128.18.65.4") :ADDR-TYPE 2)
- </PRE>
+<pre>
+&gt; (resolve-host-ipaddr "128.18.65.4")
+#S(HOSTENT :NAME "bibop.alu.org" :ALIASES NIL :ADDR-LIST ("128.18.65.4") :ADDR-TYPE 2)
+</pre>
 
-    The functions DOTTED-TO-IPADDR and IPADDR-TO-DOTTED are used to
-    convert from dotted notation to ipaddrs:
+The functions DOTTED-TO-IPADDR and IPADDR-TO-DOTTED are used to
+convert from dotted notation to ipaddrs:
 
-<PRE>
+<pre>
 &gt; (dotted-to-ipaddr "128.18.65.4")
 2148679940
 &gt; (ipaddr-to-dotted 2148679940)
 "128.18.65.4"
-</PRE>
+</pre>
 
-          <a name="server"><h3>Server sockets</h3></a>
 
-          <P>As we saw earlier, the first step in setting up a socket
-          consists in the server process <i>opening a port</i>. This is
-          accomplished with the OPEN-SOCKET-SERVER function, that
-          takes the port number (an integer) as its argument and
-          returns an object representing the open socket port. There
-          are two ways that things could go wrong at this stage:
-          either your process does not have sufficient privileges to
-          open the desired port (for example, you are trying to open a 
-            port below 1024 without being root under unix), or the
-            port you have chosen has already been opened by another
-            process. In both cases, Lisp will signal an error.
+<a name="server"></a>
+<h3>Server sockets</h3>
 
-          <P>Assuming you have successfully opened the server port,
-          your process should now start waiting for incoming
-          connections. The function SOCKET-ACCEPT takes the &quot;open
-          port&quot; structure returned by OPEN-SOCKET-SERVER as
-          input, and waits until a connection attempt is received on
-          the port. The keyword argument :WAIT controls how the
-          waiting happens exactly: if it is specified and is a
-          positive number, the function will wait for a connection for
-          the specified number of seconds at most. If a connection is
-          not received before timeout, the function returns NIL. If
-          :WAIT is not specified, the function waits forever. When a
-          connection is received, the function returns a
-          &quot;socket-stream&quot; object, and the server process
-            turns to handling the connection.
+<P>As we saw earlier, the first step in setting up a socket
+consists in the server process <i>opening a port</i>. This is
+accomplished with the OPEN-SOCKET-SERVER function, that
+takes the port number (an integer) as its argument and
+returns an object representing the open socket port. There
+are two ways that things could go wrong at this stage:
+either your process does not have sufficient privileges to
+open the desired port (for example, you are trying to open a 
+port below 1024 without being root under unix), or the
+port you have chosen has already been opened by another
+process. In both cases, Lisp will signal an error.
 
-          <P>If the Lisp environment you are using supports multiple
-          processes or threads, you can take advantage of this feature
-          to avoid tying up the server when handling a connection. The
-          problem is that while it is executing code to handle a
-          connection, the server cannot call SOCKET-ACCEPT, and
-          therefore other clients trying to connect will not be
-          served. Using multiprocessing, you can prevent this from
-          happening by spawning a new process to handle each request,
-          so that the main process is always available to accept new
-          connections. For example:
+<P>Assuming you have successfully opened the server port,
+your process should now start waiting for incoming
+connections. The function SOCKET-ACCEPT takes the &quot;open
+port&quot; structure returned by OPEN-SOCKET-SERVER as
+input, and waits until a connection attempt is received on
+the port. The keyword argument :WAIT controls how the
+waiting happens exactly: if it is specified and is a
+positive number, the function will wait for a connection for
+the specified number of seconds at most. If a connection is
+not received before timeout, the function returns NIL. If
+:WAIT is not specified, the function waits forever. When a
+connection is received, the function returns a
+&quot;socket-stream&quot; object, and the server process
+turns to handling the connection.
+
+<P>If the Lisp environment you are using supports multiple
+processes or threads, you can take advantage of this feature
+to avoid tying up the server when handling a connection. The
+problem is that while it is executing code to handle a
+connection, the server cannot call SOCKET-ACCEPT, and
+therefore other clients trying to connect will not be
+served. Using multiprocessing, you can prevent this from
+happening by spawning a new process to handle each request,
+so that the main process is always available to accept new
+connections. For example:
 
 <pre>
 ;; Open the server socket
@@ -195,115 +203,123 @@ pre { margin-left:20px; }
     ))
 </pre>
 
-          <P>We assumed the existence of a function called
-          MAKE-PROCESS that creates a new Lisp thread to run a
-          function call. In this case the thread runs a user-defined
-          function called HANDLE-CONNECTION that takes the socket
-          stream as its only argument and operates on it. After
-          handing the connection to the subprocess, the main process
-            immediately returns to the SOCKET-ACCEPT call to wait for
-            another incoming connection. This basic structure could be 
-            extended to limit the number of concurrent processes,
-            to perform load balancing, request logging, etc.
+<P>We assumed the existence of a function called
+MAKE-PROCESS that creates a new Lisp thread to run a
+function call. In this case the thread runs a user-defined
+function called HANDLE-CONNECTION that takes the socket
+stream as its only argument and operates on it. After
+handing the connection to the subprocess, the main process
+immediately returns to the SOCKET-ACCEPT call to wait for
+another incoming connection. This basic structure could be 
+extended to limit the number of concurrent processes,
+to perform load balancing, request logging, etc.
             
-          <a name="client"><H3>Client sockets</H3></a>
-          <p>Let's now look at the other side of the story. On the client 
-          machine, the Lisp process should call OPEN-SOCKET,
-          specifying both the host to connect to and the port
-          number. The host can be specified in any of the formats we
-          saw above, while the port should be an integer. Several
-          scenarios are possible now:
 
-          <UL>
-            <LI>The specified port was not opened on the remote
-              machine. In this case OPEN-SOCKET returns immediately
-              with a &quot;connection refused&quot; error.</LI>
-            <LI>The destination port was opened but the server process 
-              did not call SOCKET-ACCEPT. In this case the connection
-              will be established, but no one will be listening at the 
-              other end. This should never happen when connecting to
-              properly written servers.</LI>
-            <LI>The destination port is open and the server process is 
-              listening. In this case the connection is established,
-              and OPEN-SOCKET returns a &quot;socket-stream&quot;
-              structure.</LI>
-          </UL>
+<a name="client"></a>
+<h3>Client sockets</h3>
 
-          <P>Note that the socket-stream structures returned to the
-            server and client processes when a connection is
-            successfully established are simmetrical: each of them
-            contains two pairs (IP address, port number) for both the
-            local and the remote end of the socket. The roles of the
-            two pairs will be reversed in the two structures, that is:
+<p>Let's now look at the other side of the story. On the client 
+machine, the Lisp process should call OPEN-SOCKET,
+specifying both the host to connect to and the port
+number. The host can be specified in any of the formats we
+saw above, while the port should be an integer. Several
+scenarios are possible now:
 
-<PRE>
+<ul>
+  <li>The specified port was not opened on the remote
+    machine. In this case OPEN-SOCKET returns immediately
+    with a &quot;connection refused&quot; error.</li>
+  <li>The destination port was opened but the server process 
+    did not call SOCKET-ACCEPT. In this case the connection
+    will be established, but no one will be listening at the 
+    other end. This should never happen when connecting to
+    properly written servers.</li>
+  <li>The destination port is open and the server process is 
+    listening. In this case the connection is established,
+    and OPEN-SOCKET returns a &quot;socket-stream&quot;
+    structure.</li>
+</ul>
+
+<P>Note that the socket-stream structures returned to the
+server and client processes when a connection is
+successfully established are simmetrical: each of them
+contains two pairs (IP address, port number) for both the
+local and the remote end of the socket. The roles of the
+two pairs will be reversed in the two structures, that is:
+
+<pre>
 #&lt;SOCKET-STREAM [A:X] to [B:Y]&gt; (on A)
 #&lt;SOCKET-STREAM [B:Y] to [A:X]&gt; (on B)
-</PRE>
+</pre>
 
-          <P>The function SOCKET-HOST/PORT returns the four pieces of
-            information in a socket-stream structure as multiple values.
+<P>The function SOCKET-HOST/PORT returns the four pieces of
+information in a socket-stream structure as multiple values.
 
-          <a name="comm"><H3>Communication</H3></a>
 
-          <P>Once both the client and the server are in possession of
-          an open socket stream, they can start communicating. Since
-          socket streams are a type of streams, the two agents can
-          communicate by writing to them (e.g., using FORMAT) and
-          reading from them (e.g. using READ-LINE or READ). This is,
-            for example, how the client would send a string to the
-            server:
+<a name="comm"></a>
+<h3>Communication</h3>
 
-<PRE>
+<P>Once both the client and the server are in possession of
+an open socket stream, they can start communicating. Since
+socket streams are a type of streams, the two agents can
+communicate by writing to them (e.g., using FORMAT) and
+reading from them (e.g. using READ-LINE or READ). This is,
+for example, how the client would send a string to the
+server:
+
+<pre>
 &gt; (format client-stream "Username: user1~%")
 &gt; (force-output client-stream)
-</PRE>
+</pre>
 
-          And the server would do the following to read the message:
+And the server would do the following to read the message:
 
-<PRE>
+<pre>
 &gt; (read-line server-stream)
 "Username: user1"
-</PRE>
+</pre>
           
-          Note that since socket streams are usually buffered, the
-          data is actually sent over the network only when the buffer
-          is full, when the stream is closed or when you call
-          FORCE-OUTPUT on the stream. If you need to be sure that the
-          data is sent out (for example, because you are then
-          expecting an answer), it is a good idea to call FORCE-OUTPUT
-          after all output operations. Note also that communication
-          can take place in both directions at once. Finally, what we
-          said so far applies to text data. In some implementations
-          you can send binary data over a socket using the same
-          techniques, in other implementations you have to specify
-          whether the socket is going to be used for text or binary
-          data.
-
-          <a name="close"><H3>Closing</H3></a>
-
-          <P>The socket can be closed by either party, by calling the
-          regular CL function CLOSE on the sockets. The server can
-          close the server socket with the function
-          SOCKET-SERVER-CLOSE.
+Note that since socket streams are usually buffered, the
+data is actually sent over the network only when the buffer
+is full, when the stream is closed or when you call
+FORCE-OUTPUT on the stream. If you need to be sure that the
+data is sent out (for example, because you are then
+expecting an answer), it is a good idea to call FORCE-OUTPUT
+after all output operations. Note also that communication
+can take place in both directions at once. Finally, what we
+said so far applies to text data. In some implementations
+you can send binary data over a socket using the same
+techniques, in other implementations you have to specify
+whether the socket is going to be used for text or binary
+data.
 
 
-          <a name="example"><H3>A complete example</H3></a>
+<a name="close"></a>
+<h3>Closing</h3>
 
-          <P>In this section we will implement a very simple HTTP/0.9
-            server and client. HTTP/0.9 is a primitive version of the
-            HTTP protocol currently used by all Web servers and
-            clients. It is a very simple query-response protocol whose 
-            only purpose is to allow a client to retrieve a document
-            from a server. The client sends a request line with the
-            following format:
+The socket can be closed by either party, by calling the
+regular CL function CLOSE on the sockets. The server can
+close the server socket with the function
+SOCKET-SERVER-CLOSE.
 
-<PRE>
+
+<a name="example"></a>
+<h3>A complete example</h3>
+
+In this section we will implement a very simple HTTP/0.9
+server and client. HTTP/0.9 is a primitive version of the
+HTTP protocol currently used by all Web servers and
+clients. It is a very simple query-response protocol whose 
+only purpose is to allow a client to retrieve a document
+from a server. The client sends a request line with the
+following format:
+
+<pre>
 GET /pathname/to/file HTTP/0.9
-</PRE>
+</pre>
 
-          <P>followed by a blank line, and the server replies with the 
-            contents of the specified file. Here is the code:
+followed by a blank line, and the server replies with the 
+contents of the specified file. Here is the code:
 
 <pre>
 --------------------------cut here------------------------------------
@@ -403,33 +419,32 @@ to standard output."
 --------------------------cut here------------------------------------
 </pre>
 
-          <P>To run this example you should open two Lisp listeners,
-          and load the PORT package followed by the above code into
-          both of them. On one of them (the server) call:
+To run this example you should open two Lisp listeners,
+and load the PORT package followed by the above code into
+both of them. On one of them (the server) call:
 
 <pre>
 (http-0.9-server 8080 "/etc/")
 </pre>
 
-          (You can select any directory as the root, and exposing the
-          contents of /etc is usually not a good idea, but of course
-          this is just an example). You will not see anything
-          happening, meaning that the server is idle waiting for
-          connection. Then in the second listener (the client) call:
+(You can select any directory as the root, and exposing the
+contents of /etc is usually not a good idea, but of course
+this is just an example). You will not see anything
+happening, meaning that the server is idle waiting for
+connection. Then in the second listener (the client) call:
 
 <pre>
 (http-get "localhost" 8080 "/hosts")
 </pre>
 
-          and you should see the contents of your /etc/hosts file
-          printed to standard output. In this case we used "localhost" 
-          as the server's hostname because we are running both the
-          client and the server on the same machine for simplicity,
-          but of course they could be on two different machines. Note
-          that the server runs forever, you will have to interrupt it
-          manually after you have finished trying it.
-  
-</td></tr></table>
+and you should see the contents of your /etc/hosts file
+printed to standard output. In this case we used "localhost" 
+as the server's hostname because we are running both the
+client and the server on the same machine for simplicity,
+but of course they could be on two different machines. Note
+that the server runs forever, you will have to interrupt it
+manually after you have finished trying it.
+<p>
 
 <hr>
 <a href="license.html">Copyright</a> &copy; 2002 The Common Lisp Cookbook Project

@@ -10,37 +10,41 @@ pre { margin-left:20px; }
 
 <body bgcolor=white>
 <h1><a href="index.html">The Common Lisp Cookbook</a> - Input/Output</h1>
-<table border=0 cellpadding=0 cellspacing=0 width=550><tr valign=top><td width=550>
 
- <h2>Content</h2>
+
+<h2>Contents</h2>
 <ul>
 <li><a href="#redir">Redirecting the Standard Output of your Program</a>
 <li><a href="#faith">Faithful output with character streams</a>
-  </ul>
+</ul>
 
-  <a name="#redir"><h3>Redirecting the Standard Output of your Program</h3></a>
 
-  You do it like this:
+<a name="#redir"></a>
+<h3>Redirecting the Standard Output of your Program</h3>
+
+You do it like this:
 
 <pre>
 (let ((*standard-output* <em>&lt;some form generating a stream&gt;</em>))
   <em>...</em>)
 </pre>
 
-   Because <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/v_debug_.htm">*STANDARD-OUTPUT*</a> is a dynamic variable, all references to
-   it during execution of the body of the LET form refer to the stream
-   that you bound it to.  After exiting the LET form, the old value of
-   *STANDARD-OUTPUT* is restored, no matter if the exit was by normal
-   execution, a RETURN-FROM leaving the whole function, an exception,
-   or what-have-you.  (This is, incidentally, why global variables
-   lose much of their brokenness in Common Lisp compared to other
-   languages: since they can be bound for the execution of a specific
-   form without the risk of losing their former value after the form
-   has finished, their use is quite safe; they act much like
-   additional parameters that are passed to every function.)
-<br>&nbsp;<br>
-   If the output of the program should go to a file, you can do the
-   following:
+Because <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/v_debug_.htm"><code>*STANDARD-OUTPUT*</code></a>
+is a dynamic variable, all references to it during execution of the
+body of the <code>LET</code> form refer to the stream that you bound
+it to.  After exiting the <code>LET</code> form, the old value of
+<code>*STANDARD-OUTPUT*</code> is restored, no matter if the exit was
+by normal execution, a <code>RETURN-FROM</code> leaving the whole
+function, an exception, or what-have-you.  (This is, incidentally, why
+global variables lose much of their brokenness in Common Lisp compared
+to other languages: since they can be bound for the execution of a
+specific form without the risk of losing their former value after the
+form has finished, their use is quite safe; they act much like
+additional parameters that are passed to every function.)
+<p>
+
+If the output of the program should go to a file, you can do the
+following:
 
 <pre>
 (with-open-file (*standard-output* "somefile.dat" :direction :output
@@ -48,30 +52,37 @@ pre { margin-left:20px; }
   <em>...</em>)
 </pre>
   
-   <a
-  href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/m_w_open.htm">WITH-OPEN-FILE</a> opens the file - creating it if necessary - binds
-  *STANDARD-OUTPUT*, executes its body, closes the file, and restores
-  *STANDARD-OUTPUT* to its former value.  It doesn't get more
-   comfortable than this!
+<a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/m_w_open.htm"><code>WITH-OPEN-FILE</code></a>
+opens the file - creating it if necessary - binds 
+<code>*STANDARD-OUTPUT*</code>, executes its body, closes the file,
+and restores <code>*STANDARD-OUTPUT*</code> to its former value. It
+doesn't get more comfortable than this!
 
-  <a name="#faith"><h3>Faithful output with character streams</h3></a>
+
+<a name="#faith"></a>
+<h3>Faithful output with character streams</h3>
+
 By <em>faithful output</em> I mean that characters with codes between 0 and 255 will be
 written out as is. It means, that I can <code>(PRINC (CODE-CHAR 0..255) s)</code> to a stream and
 expect 8-bit bytes to be written out, which is not obvious in the
 times of Unicode and 16 or 32 bit character representations.
 
 It does <em>not</em> require that the characters &auml;, &szlig;, or &thorn; must
-have their <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_char_c.htm">CHAR-CODE</a> in the range 0..255 - the implementation is free
+have their <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_char_c.htm"><code>CHAR-CODE</code></a>
+in the range 0..255 - the implementation is free 
 to use any code. But it does require that no <code>#\Newline</code> to CRLF translation takes place, among
 others.
-<br>&nbsp;<br>
+<p>
 
 Common Lisp has a long tradition of distinguishing character from byte
-(binary) I/O, e.g. <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_rd_by.htm">READ-BYTE</a> and <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_rd_cha.htm">READ-CHAR</a> are in the standard.
-Some implementations let both functions be called
-interchangeably. Others allow either one or the other. (The <a href="http://ww.telent.net/cliki/simple-stream">simple stream proposal</a>
-defines the notion of a <em>bivalent stream</em> where both are possible.)
-<br>&nbsp;<br>
+(binary) I/O, e.g. <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_rd_by.htm"><code>READ-BYTE</code></a>
+and <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/Body/f_rd_cha.htm"><code>READ-CHAR</code></a>
+are in the standard. Some implementations let both functions be called
+interchangeably. Others allow either one or the other. 
+(The <a href="http://ww.telent.net/cliki/simple-stream">simple stream proposal</a>
+defines the notion of a <em>bivalent stream</em> where both are
+possible.)
+<p>
 
 Varying element-types are useful as some protocols rely on the ability
 to send 8-Bit output on a channel. E.g. with HTTP, the header is
@@ -170,7 +181,6 @@ Here's some sample code to play with:
   (ext:make-encoding :charset 'charset:iso-8859-1 :line-terminator :dos)) (check-256))
 |#
 </pre>
-</td></tr></table>
   
 <hr>
 <a href="license.html">Copyright</a> &copy; 2002 The Common Lisp Cookbook Project
