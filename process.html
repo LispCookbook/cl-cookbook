@@ -220,7 +220,7 @@ NIL                      ;; The sleeping thread has finished its job and termina
 CL-USER 19 &gt;
 </pre>
 
-<p><strong>CLosures! Warning!</strong> Note the difference between:</p>
+<p><strong>Closures! Warning!</strong> Note the difference between:</p>
 
 <pre>(dotimes (i 20)
   (mp:process-run-function "One closure" ()
@@ -520,14 +520,14 @@ threads can invoke any number of these operations "at the same time"
 without corrupting the mailbox structure.</p>
 
 <p>The following example uses mailboxes to transfer "data" from ten
-"generating" thread to one "processing" thread. The function
+"generating" threads to one "processing" thread. The function
 <code>mp:mailbox-send</code> takes a mailbox and an arbitrary lisp
 object as its arguments. Objects sent to the mailbox are queued in
 <cite>FIFO</cite> (first in, first out) order, and are retrieved by
 calling <code>mp:mailbox-read</code>. Note that this this function
 will hang if the mailbox is empty when it is invoked; the wait reason
 and timeout are optional arguments. Note also how the timeout is used
-to terminate the "processing" thread after the data have stopped
+here to terminate the "processing" thread after the data have stopped
 arriving.</p>
 
 <pre>
@@ -554,8 +554,7 @@ arriving.</p>
             (return))))))
     ;; See the Slightly Tougher Exercise below...
     (mp:process-wait "Waiting for mailbox to exist."
-                     'identity
-                     mailbox)
+                     (lambda () mailbox))
     ;; Return mailbox so that others can share it.
     mailbox))
 
@@ -829,7 +828,7 @@ multithreading hasn't started.</p>
 
 <p>To start multithreading, call
 <code>(mp:initialize-multiprocessing)</code>. Specify the threads that
-should run on startup of multithreading is via the variable
+should run on startup of multithreading via the variable
 <code>mp:*initial-processes*</code>. This is a list whose members are
 themselves lists to which <code>mp:process-run-function</code> can be
 applied. <strong>Warning:</strong> do not remove any entries which the
