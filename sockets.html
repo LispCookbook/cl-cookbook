@@ -49,43 +49,43 @@ be hard to find out what the equivalent functions are in it.
 <a name="intro"></a>
 <h3>Introduction</h3>
 
-<p>First of all, some theory. If you are interested in using
-sockets you probably already know this stuff, but it is
-useful to go through it anyway to establish our
-terminology. A <b>socket</b> is a two-way, reliable
-communication stream between two processes, usually (but not
-necessarily) running on different computers. Several types
-of sockets exist, but in the following we are only going to
-describe <b>TCP</b> sockets.  A socket connection originates
-from a <b>port</b> on a <b>client</b> machine, and reaches
-another port on a <b>server</b> machine. Therefore, a
-connected socket is identified by four data elements: the
-address of the client computer, the port on the client
-computer, the address of the server computer and the port on
-the server computer. In the following we will describe how
-to implement both TCP clients and servers in Common
-Lisp. Of course, nothing prevents you from using a CL
-client to connect to a server written in a different
-language, and vice-versa.</p>
+<p>First of all, some theory. If you are interested in using sockets
+you probably already know this stuff, but it is useful to go through
+it anyway to establish our terminology. A <b>socket</b> is a
+communication channel between two processes, usually (but not
+necessarily) running on different computers. Several types of sockets
+exist, but in the following we are only going to describe <b>TCP</b>
+sockets, that implement a reliable, two-way communication stream.  A
+socket connection originates from a <b>port</b> on a <b>client</b>
+machine, and reaches another port on a <b>server</b>
+machine. Therefore, a connected socket is identified by four data
+elements: the address of the client computer, the port on the client
+computer, the address of the server computer and the port on the
+server computer. This particular way of using sockets is referred to
+as the "Internet" address family. Under Unix, there is also an
+alternative address family ("Unix") that uses local files as sockets. 
+In the following we will describe how to implement both TCP clients
+and servers in Common Lisp. Of course, nothing prevents you from using
+a CL client to connect to a server written in a different language,
+and vice-versa.</p>
 
-<p>Addresses can be represented in three different ways. The one
-you are probably most familiar with is the human-readable form,
-such as <tt>www.lisp.org</tt>. We will call this a
-<b>hostname</b>. Each hostname is associated with a unique <b>IP
-address</b>, represented by four bytes. These are usually written
-in <b>dotted</b> notation: <tt>128.18.65.4</tt>. The translation
-between a hostname and a dotted IP address is called a <b>DNS
-lookup</b>, and normally occurs behind the scenes in modern
-systems. Finally, an address can be easily converted from dotted
-notation to an <b>ipaddr</b>, which is simply the long integer
-formed by the four bytes in the dotted address. The ipaddr
-corresponding to the above example is 2148679940. To summarize:
-humans use hostnames that are easier to memorize and type;
-software uses IP addresses that are stored as ipaddrs but are usually
-printed in dotted notation.</p>
+<p>Addresses can be represented in three different ways. The one you
+are probably most familiar with is the human-readable form, such as
+<tt>www.lisp.org</tt>. We will call this a <b>hostname</b>. Each
+hostname may be associated with one or more <b>IP addresses</b>, each
+represented by four bytes. These are usually written in <b>dotted</b>
+notation: <tt>128.18.65.4</tt>. The translation between a hostname and
+a dotted IP address is called a <b>DNS lookup</b>, and normally occurs
+behind the scenes in modern systems. Finally, an address can be easily
+converted from dotted notation to an <b>ipaddr</b>, which is simply
+the long integer formed by the four bytes in the dotted address. The
+ipaddr corresponding to the above example is 2148679940. To summarize:
+humans use hostnames that are easier to memorize and type; software
+uses IP addresses that are stored as ipaddrs but are usually printed
+in dotted notation.</p>
       
 <p>Ports are represented as integer numbers in the range
-0-65535. In general, ports can be chosen arbitrarily (except that
+1-65535. In general, ports can be chosen arbitrarily (except that
 some ports might only be available to privileged users on Unix and
 similar operating systems), but two processes that need to
 communicate through sockets should have a way of knowing which
@@ -226,18 +226,21 @@ saw above, while the port should be an integer. Several
 scenarios are possible now:
 
 <ul>
-  <li>The specified port was not opened on the remote
-    machine. In this case OPEN-SOCKET returns immediately
-    with a &quot;connection refused&quot; error.</li>
-  <li>The destination port was opened but the server process 
-    did not call SOCKET-ACCEPT. In this case the connection
-    will be established, but no one will be listening at the 
-    other end. This should never happen when connecting to
-    properly written servers.</li>
   <li>The destination port is open and the server process is 
     listening. In this case the connection is established,
     and OPEN-SOCKET returns a &quot;socket-stream&quot;
     structure.</li>
+  <li>The destination port was opened but the server process 
+    did not call SOCKET-ACCEPT. In this case the connection
+    will be established and put in a backlog queue by the operating
+    system (provided there is still room in the queue), until the
+    server process gets around to calling SOCKET-ACCEPT. Things
+    then proceed as in the previous case.</li>
+  <li>The specified port was not opened on the remote
+    machine. In this case OPEN-SOCKET returns immediately
+    with a &quot;connection refused&quot; error.</li>
+</li>
+
 </ul>
 
 <P>Note that the socket-stream structures returned to the
