@@ -15,17 +15,17 @@
 (defvar hyperspec-prog (concat use-home "site/ilisp/extra/hyperspec"))
 
 ;; Gnu CLISP - ILISP (switches for ANSI, ILISP & no banner)
-(defvar clisp-hs-program "clisp -ansi -I -q")
+(defvar clisp-hs-program "c:/bin/clisp-2.29/lisp.exe -B c:/bin/clisp-2.29/ -M c:/bin/clisp-2.29/lispinit.mem -ansi -I -q")
 
 ;; Corman Common Lisp - ESHELL
-(defvar cormanlisp-program "corman.bat")
+(defvar cormanlisp-program "c:/bin/corman-1.5/clconsole.exe -image c:/bin/corman-1.5/cormanlisp.img")
 
 ;; Franz Allegro Common Lisp - ELI
-(defvar fi:common-lisp-image-name "C:/Program Files/ACL/allegro-ansi.exe")
-(defvar fi:common-lisp-directory "C:/Program Files/ACL/")
+(defvar fi:common-lisp-image-name "c:/bin/ACL-6.2/allegro-ansi.exe")
+(defvar fi:common-lisp-directory "c:/bin/ACL-6.2/")
 
 ;; Xanalys LispWorks - ILISP
-(defvar lispworks-program "lispworks")
+(defvar lispworks-program "c:/bin/lispworks-4.2/lw42-console.exe")
 
 ;; Default Lisp implementation to use
 (defvar lisp-used :clisp-ilisp "Recognized values are :clisp-ilisp, :acl-eli, :lw-ilisp, :corman-eshell")
@@ -56,11 +56,6 @@
 
 (autoload 'dabbrev-expand "dabbrev" "Word completion." t)
 (autoload 'turn-on-lazy-lock "lazy-lock" "Force enable Lazy Lock mode.")
-
-(eval-when (compile)
-  (load "esh-mode")
-  (load "fi-site-init")
-  (require 'ilisp))
 
 ;;__________________________________________________________________________
 ;;;;    System Customizations 
@@ -118,13 +113,12 @@
       (find-file (file-name-sans-versions file t)))))
 
 (add-hook 'dired-mode-hook
-	  (function
-	   (lambda()
+	  '(lambda()
 	     (define-key dired-mode-map [delete] 'dired-do-delete)
 	     (define-key dired-mode-map [C-return] 'dired-find-file-other-window)
 	     (define-key dired-mode-map [C-down-mouse-1] 'mouse-buffer-menu)
 	     (define-key dired-mode-map [double-down-mouse-1] 'dired-mouse-find-file)	     
-	     (define-key dired-mode-map [return] 'my-dired-find-file))))
+	     (define-key dired-mode-map [return] 'my-dired-find-file)))
 
 ;; Set the name of the host and current path/file in title bar:
 (setq frame-title-format
@@ -164,57 +158,52 @@
 		("\\.cl$" . lisp-mode)
 		)auto-mode-alist))
 
-;; Lisp documentation
-(load-library cltl2-prog)
-(load-library hyperspec-prog)
+(add-hook 'lisp-mode-hook
+	  '(lambda ()
+	     (imenu-add-to-menubar "Symbols")))
+
+(add-hook 'ilisp-load-hook
+	  '(lambda ()
+	     ;; Set a keybinding for the COMMON-LISP-HYPERSPEC command
+	     (defkey-ilisp "" 'common-lisp-hyperspec)
+	     (message "Running ilisp-load-hook")
+	     ;; Set the inferior Lisp directory to the directory of
+	     ;; the buffer that spawned it on the first prompt.
+	     (add-hook 'ilisp-init-hook
+		       '(lambda ()
+			  (default-directory-lisp ilisp-last-buffer)))))
+
+(defun my-setup-ilisp ()
+  "Set up common variables used by ilisp"
+  (interactive)
+  (setq ilisp-*use-fsf-compliant-keybindings* t
+	ilisp-*arglist-message-lisp-space-p* t
+	ilisp-print-info-message-command t
+	lisp-no-popper t)	
+  (require 'completer)
+  (require 'ilisp)
+  (require 'clisp-indent)
+  ;; Fix clisp interaction buffer (Windows)
+  (modify-coding-system-alist 'process "lisp" 'unix)
+  ;; All the *.d and *.lisp sources are in UTF-8 encoding.
+  (modify-coding-system-alist 'file "\\.\\(d\\|lisp\\)\\'" 'utf-8))
 
 (defun start-lisp ()
   "Set up environment for the lisp implementation that was chosen"
   (interactive)
   (setq lisp-indent-function 'common-lisp-indent-function)
-  (add-hook
-   'lisp-mode-hook
-   (function
-    (lambda ()
-      (imenu-add-to-menubar "Symbols"))))
 
   ;; Start up Lisp 
   (cond
    ((or (eq lisp-used :clisp-ilisp)
 	(eq lisp-used :lw-ilisp))
-    ;; CLISP, LispWorks or ACL using ILISP
-    ;; Change default key prefix from C-Z to C-c FSF standard
-    (setq ilisp-*use-fsf-compliant-keybindings* t
-	  ilisp-*arglist-message-lisp-space-p* t
-	  ilisp-print-info-message-command t
-	  lisp-no-popper t)	
-	
-    (require 'completer)
-    (require 'ilisp)
-    (require 'clisp-indent)
+    ;; CLISP, or LispWorks using ILISP
+    (my-setup-ilisp)
 
-    ;; Fix clisp interaction buffer (Windows)
-    (modify-coding-system-alist 'process "lisp" 'unix)
+    (case lisp-used
+     (:clisp-ilisp (clisp-hs))
+     (:lw-ilisp (lispworks))))
 
-    ;; All the *.d and *.lisp sources are in UTF-8 encoding.
-    (modify-coding-system-alist 'file "\\.\\(d\\|lisp\\)\\'" 'utf-8)
-	
-     (add-hook 'ilisp-load-hook
-               (function
-                 (lambda ()
-	     ;; Set a keybinding for the COMMON-LISP-HYPERSPEC command
-                   (defkey-ilisp "" 'common-lisp-hyperspec)
-                   (message "Running ilisp-load-hook")
-		;; Set the inferior Lisp directory to the directory of
-                   ;; the buffer that spawned it on the first prompt.
-                   (add-hook 'ilisp-init-hook
-                             '(lambda ()
-                               (default-directory-lisp ilisp-last-buffer))))))
-     (cond
-       ((eq lisp-used :clisp-ilisp)
-         (clisp-hs))
-       ((eq lisp-used :lw-ilisp)
-         (lispworks))))
    ((eq lisp-used :acl-eli)
     ;; Franz Allegro Common Lisp using eli
     (load "fi-site-init")
@@ -223,17 +212,16 @@
 		    fi:common-lisp-image-name
 		    fi:common-lisp-image-arguments
 		    fi:common-lisp-host))
+
    ((eq lisp-used :corman-eshell)
     ;; Corman Common Lisp using eshell
-    (cond
-     ((string= "w32" window-system)
-      (eshell)
-      (set-buffer "*eshell*")
-      (insert cormanlisp-program)
-      (eshell-send-input))))))
+    (eshell)
+    (set-buffer "*eshell*")
+    (insert cormanlisp-program)
+    (eshell-send-input))))
 
 (defun goto-match-paren (arg)
-"Go to the matching parenthesis if on parenthesis."
+  "Go to the matching parenthesis if on parenthesis."
   (interactive "p")
   (cond ((looking-at "\\s\(") (forward-list 1) (backward-char 1))
         ((looking-at "\\s\)") (forward-char 1) (backward-list 1))
@@ -243,8 +231,7 @@
 ;;;;    Programming - Elisp
 
 (add-hook 'emacs-lisp-mode-hook
-	  (function
-	   (lambda ()
+	  '(lambda ()
 	     (interactive)
 	     (require 'eldoc)
 	     (turn-on-eldoc-mode)
@@ -252,7 +239,7 @@
 	     (define-key emacs-lisp-mode-map [(shift f3)] 'ffap)
              ;; Default to auto-indent on Enter
 	     (define-key emacs-lisp-mode-map [(control j)] 'newline)
-	     (define-key emacs-lisp-mode-map [(control m)] 'newline-and-indent))))
+	     (define-key emacs-lisp-mode-map [(control m)] 'newline-and-indent)))
 
 ;;__________________________________________________________________________
 ;;;;    Standard Key Overrides
@@ -267,11 +254,10 @@
 
 ;; Prevent accidentally killing emacs.
 (global-set-key [(control x) (control c)]
-		(function
-		 (lambda ()
+		'(lambda ()
 		   (interactive)
 		   (if (y-or-n-p-with-timeout "Do you really want to exit Emacs ? " 4 nil)
-		       (save-buffers-kill-emacs)))))
+		       (save-buffers-kill-emacs))))
 
 ;; Match parentheses
 (global-set-key [(control \])] 'goto-match-paren)
@@ -285,13 +271,11 @@
 
 ;; Eshell and Windows shell
 (global-set-key [f12]
-		(function
-		 (lambda ()
+		'(lambda ()
 		   (interactive)
-		   (eshell))))
+		   (eshell)))
 (global-set-key [(control f12)]
-		(function
-		 (lambda ()
+		'(lambda ()
 		   (interactive)
 		   (cond
 		    ((string-match "windows" (symbol-name system-type))
@@ -299,29 +283,34 @@
 			    (expand-file-name (concat (getenv "EMACS_DIR") "/bin/cmdproxy.exe")))
 			   (shell-file-name "cmdproxy.exe"))
 		       (shell)))
-		    (t (shell))))))
+		    (t (shell)))))
 
 ;;__________________________________________________________________________
 ;;;;    Lisp Key Overrides
 
-(global-set-key [f1] 'common-lisp-hyperspec)
-(global-set-key [(meta f1)] 'cltl2-lookup)
+;; Lisp documentation
+(global-set-key [f1]
+		'(lambda ()
+		   (interactive)
+		   (load-library hyperspec-prog)
+		   (common-lisp-hyperspec (thing-at-point 'symbol))))
+(global-set-key [(meta f1)]
+		'(lambda ()
+		   (interactive)
+		   (load-library cltl2-prog)
+		   (cltl2-lookup (thing-at-point 'symbol))))
 (global-set-key [f5] 'start-lisp)
 (global-set-key [f11] 'comment-region)
 
 (global-set-key [(control meta f5)]
-		(function
-                  (lambda ()
-                    (interactive)
-                    (cond
-                      ((eq lisp-used :clisp-ilisp)
-                        (setq lisp-used :acl-eli))
-                      ((eq lisp-used :acl-eli)
-                        (setq lisp-used :lw-ilisp))
-                      ((eq lisp-used :lw-ilisp)
-                        (setq lisp-used :corman-eshell))
-                      (t (setq lisp-used :clisp-ilisp)))
-                    (message "lisp-used: %s" lisp-used))))
+		'(lambda ()
+		   (interactive)
+		   (case lisp-used
+		     (:clisp-ilisp (setq lisp-used :acl-eli))
+		     (:acl-eli (setq lisp-used :lw-ilisp))
+		     (:lw-ilisp (setq lisp-used :corman-eshell))
+		     (t (setq lisp-used :clisp-ilisp)))
+		   (message "lisp-used: %s" lisp-used)))
 
 ;;__________________________________________________________________________
 ;;;;    Windows Key Overrides
