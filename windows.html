@@ -26,7 +26,6 @@ implementations on Windows:</p>
   <li><b>Allegro Common Lisp (ACL):</b> Franz's own &quot;ELI&quot; will be used in Emacs.</li>
   <li><b>CLISP:</b> ILISP and Emacs Inferior Lisp Mode will be two alternative 
   environments that can be used with CLISP.</li>
-  <li><b>Corman Common Lisp:</b> The Emacs Inferior Lisp Mode will be used.</li>
   <li><b>Xanalys LispWorks:</b> ILISP will be used in Emacs to provide the 
   development environment (Note: the trial version of the product doesn't 
   provide a non-gui Lisp image and this is necessary if the product is to be 
@@ -56,7 +55,6 @@ with an Emacs setup that:</p>
   <li><a href="#Installing CLISP">Installing CLISP</a> (optional)</li>
   <li><a href="#Installing ACL">Installing ACL</a> (optional)</li>
   <li><a href="#Installing LispWorks">Installing LispWorks</a> (optional)</li>
-  <li><a href="#Installing Corman CL">Installing Corman CL</a> (optional)</li>
   <li><a href="#Configuration steps">Configuration steps</a></li>
   <li><a href="#Testing the environments">Testing the environments</a></li>
 </ol>
@@ -283,22 +281,7 @@ lispworks-4200 -init c:\home\lisp\console.lisp</pre>
   <p>This will result in the lw42-console.exe file being created in the 
   c:\bin\lispworks-4.2 directory.</p>
 </blockquote>
-<h3><a name="Installing Corman CL">7. Installing Corman CL</a> (optional)</h3>
-<ul>
-  <li>Download the precompiled binaries of <a href="http://www.corman.net/">
-  Corman Lisp</a> for Windows from:
-  <a href="http://www.cormanlisp.com/cgi/rgcorman/ccl_download_form.cgi">
-  http://www.cormanlisp.com/cgi/rgcorman/ccl_download_form.cgi</a></li>
-  <li>Run the downloaded installation program (CormanLisp_1_5_Setupex.exe) and 
-  install Corman CL into the c:\bin\corman-1.5 directory. (Note: as of the time 
-  this file was created, only Corman 1.5 will work in Emacs and this version 
-  will only work with Inferior Lisp mode). If anyone is successful in getting a 
-  later version of Corman to run in either Inferior Lisp mode or ILISP, please 
-  send an email to either Edi Weitz or Bill Clementson (email addresses are on 
-  the <a href="http://cl-cookbook.sourceforge.net/">CL Cookbook home page</a>) 
-  explaining how you were able to do this. </li>
-</ul>
-<h3><a name="Configuration steps">8. Configuration steps</a></h3>
+<h3><a name="Configuration steps">7. Configuration steps</a></h3>
 <ul>
   <li>Setup environmental variables either in the autoexec.bat file (e.g. - 
   Windows/98) or the Control Panel/System (e.g. - Windows/NT/2000/XP):</li>
@@ -390,7 +373,7 @@ lispworks-4200 -init c:\home\lisp\console.lisp</pre>
   &quot;C-x C-c&quot; and pressing &quot;y&quot; when you get the &quot;Do you really want to exit Emacs 
   ? (y or n)&quot; prompt in the minibuffer.</li>
 </ul>
-<h3><a name="Testing the environments">9. Testing the environments</a></h3>
+<h3><a name="Testing the environments">8. Testing the environments</a></h3>
 <ul>
   <li>Start Emacs (either by using the Start menu's Gnu Emacs shortcut or by 
   using Run on the Windows Start menu with the command &quot;c:\emacs\bin\runemacs.exe&quot;) 
@@ -451,27 +434,6 @@ lispworks-4200 -init c:\home\lisp\console.lisp</pre>
       </li>
     </ul>
     </li>
-    <li>Click in the dired window and press &quot;C-M-F5&quot; (the minibuffer window at 
-    the bottom will say &quot;lisp-used: :corman-eshell&quot; indicating that you have 
-    toggled to Corman mode).</li>
-    <li>If you installed Corman, do the following:
-    <ul>
-      <li>Click in the dired window and press &quot;C-M-F5&quot; until the minibuffer 
-      window at the bottom says &quot;lisp-used: :corman-inf&quot; indicating that you 
-      have toggled to Corman mode).</li>
-      <li>Test that Corman runs by pressing &quot;F5&quot;.
-      <ul>
-        <li>Click in the *inferior-lisp* window and press &quot;C-h b&quot; (this will 
-        show you the keybindings that are in effect for Corman in Inferior Lisp 
-        Mode).</li>
-        <li>Click in the *Help* window and scroll through the keybinding list. 
-        When finished, press &quot;F4&quot; to close that window.</li>
-        <li>Click in the *inferior-lisp* window and press &quot;F4&quot; to close that 
-        window.</li>
-      </ul>
-      </li>
-    </ul>
-    </li>
     <li>If you installed the documentation, you can test that the online 
     documentation works by pressing &quot;F1&quot; (for the HyperSpect) or &quot;M-F1&quot; (for 
     CLtL2) when the cursor is on a Lisp keyword (e.g. -- &quot;defun&quot; or &quot;setq&quot;). 
@@ -492,7 +454,7 @@ different Lisp implementations.</p>
     different Lisp implementations, Lisp documentation and Emacs-specific files. 
     It also sets the default Lisp implementation (Note: if you want to specify a 
     different default Lisp implementation, change the lisp-used variable to one 
-    of :clisp-ilisp, :acl-eli, :lw-ilisp, :corman-inf).</li>
+    of :clisp-ilisp, :clisp-inf, :acl-eli, :lw-ilisp).</li>
     <li><b>Initial Code Load:</b> Loads Emacs files that are needed later on.</li>
     <li><b>System Customizations: </b>Some standard customizations that make 
     Emacs easier to use.</li>

@@ -67,11 +67,6 @@
       (concat lispworks-dir "lw42-console.exe")
     (concat lispworks-dir "lw43-console")))
 
-;; Corman Common Lisp - Inferior Lisp Mode 
-(defvar cormanlisp-dir (concat use-bin "corman-1.5/"))
-(defvar cormanlisp-exe (concat cormanlisp-dir "clconsole.exe"))
-(defvar cormanlisp-program (concat cormanlisp-exe " -image " cormanlisp-dir "cormanlisp.img"))
-
 ;; OpenMCL - ILISP
 (setq openmcl-program (concat use-bin "ccl/scripts/openmcl"))
 
@@ -85,12 +80,11 @@
 (if (file-exists-p sbcl-exe) (setq lisp-implementations (cons :sbcl-ilisp lisp-implementations)))
 (if (file-exists-p openmcl-program) (setq lisp-implementations (cons :openmcl-ilisp lisp-implementations)))
 (if (file-exists-p lispworks-program) (setq lisp-implementations (cons :lw-ilisp lisp-implementations)))
-(if (file-exists-p cormanlisp-exe) (setq lisp-implementations (cons :corman-inf lisp-implementations)))
 (if (file-exists-p clisp-exe) (setq lisp-implementations (cons :clisp-inf lisp-implementations)))
 (if (file-exists-p clisp-exe) (setq lisp-implementations (cons :clisp-ilisp lisp-implementations)))
 (if (file-exists-p fi:common-lisp-image-name) (setq lisp-implementations (cons :acl-eli lisp-implementations)))
 
-;; Default Lisp to use (set to one of :acl-eli, :clisp-ilisp, :clisp-inf, :corman-inf, :lw-ilisp, :openmcl-ilisp, sbcl-ilisp)
+;; Default Lisp to use (set to one of :acl-eli, :clisp-ilisp, :clisp-inf, :lw-ilisp, :openmcl-ilisp, sbcl-ilisp)
 (defvar lisp-used (elt lisp-implementations 0) "Last Lisp implementation used.")
 
 ;; Set up load path 
@@ -419,10 +413,7 @@
 		     fi:common-lisp-host))
 
     ((eq lisp-used :clisp-inf)
-     (run-lisp clisp-hs-program))
-
-    ((eq lisp-used :corman-inf)
-     (run-lisp cormanlisp-program))))
+     (run-lisp clisp-hs-program))))
 
 ;;__________________________________________________________________________
 ;;;;    Programming - Common Lisp (functions not provided by CL modes)
@@ -450,9 +441,7 @@
 			  (t (setf result (read result))))
 		    result))
 		 ((eq lisp-used :acl-eli)
-		  (fi:eval-in-lisp arg))
-		 ((eq lisp-used :corman-inf)
-		  (nil)))))
+		  (fi:eval-in-lisp arg)))))
 
 (defun eli-lisp-eval-or-compile-dwim (compilep)
   "Send the appropriate forms to the Lisp subprocess associated with

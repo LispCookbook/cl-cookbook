@@ -1,3 +1,8 @@
+2003-09-30
+	Updated windows.html, and .emacs by Bill Clementson - removed
+	Corman Lisp support since haven't been able to get Corman releases
+	after 1.5 to work in either inferior lisp mode or ilisp.
+
 2003-09-25
 	Updated .emacs by Bill Clementson - allow evals in info.
 
