@@ -4,8 +4,7 @@
 
 <head>
 <title>The Common Lisp Cookbook - Setting up an IDE with Emacs on Windows</title>
-<style type="text/css">
-pre { margin-left:20px; background-color:#e0e0e0 }
+<style type="text/css">pre          { background-color: #e0e0e0; margin-left: 20px }
 </style>
 </head>
 
@@ -13,118 +12,111 @@ pre { margin-left:20px; background-color:#e0e0e0 }
 
 <h1><a href="http://cl-cookbook.sourceforge.net/">The Common Lisp Cookbook</a> -
 Setting up an IDE with Emacs on Windows</h1>
-
-      <p>Emacs is the preferred Lisp source code editor for most CL developers;
-      however, it is not easy for an Emacs neophyte to get an Emacs environment
-      set up and configured properly for Lisp development. The problem is
-      compounded if the development platform is Microsoft Windows since Unix
-      (and variants) is the more common platform used by experienced Lisp
-      developers. In order to help a Lisp beginner set up an Emacs Common Lisp
-      development environment on a Microsoft Windows PC, this chapter will lay
-      out step-by-step instructions for installing all the necessary components
-      for each of the most popular Common Lisp implementations on Windows:</p>
-      <ul>
-        <li><b>CLISP:</b> ILISP will be used in Emacs to provide the development
-          environment</li>
-        <li><b>Allegro Common Lisp (ACL):</b> Franz's own &quot;ELI&quot; will
-          be used in Emacs</li>
-        <li><b>Corman Common Lisp:</b> The Emacs eshell will be used - although
-          this is a simplistic approach, it is more usable than the raw
-          clconsole application provided with this implementation</li>
-        <li><b>Xanalys LispWorks:</b> ILISP will be used in Emacs to provide the
-          development environment (Note: the trial version of the product
-          doesn't provide a non-gui Lisp image and this is necessary if the
-          product is to be used with Emacs.)</li>
-      </ul>
-      <p>By exactly following the installation instructions, the user will wind
-      up with an Emacs setup that:</p>
-      <ul>
-        <li>Allows the user to trial the most popular Lisp implementations for
-          Windows</li>
-        <li>Allows the user to try out 3 different techniques (ILISP, ELI,
-          eshell) for establishing a Lisp development environment in Emacs -
-          each with its own sets of pluses and minuses</li>
-        <li>Configures Emacs so that it has keystroke bindings more similar to
-          what a Windows user is accustomed to</li>
-        <li>Configures Emacs with a number of custom configuration settings that
-          are commonly used</li>
-      </ul>
-
-
-      <h2>Contents</h2>
-
-      <p>The following steps will be covered in this chapter:</p>
-      <ol>
-        <li><a href="#Installing Emacs">Installing Emacs</a></li>
-        <li><a href="#Installing additional Emacs utilities">Installing
-          additional Emacs utilities</a></li>
-        <li><a href="#Installing on-line documentation">Installing on-line
-          documentation</a></li>
-        <li><a href="#Installing CLISP">Installing CLISP</a> (optional)</li>
-        <li><a href="#Installing ACL">Installing ACL</a> (optional)</li>
-        <li><a href="#Installing LispWorks">Installing LispWorks</a> (optional)</li>
-        <li><a href="#Installing Corman CL">Installing Corman CL</a> (optional)</li>
-        <li><a href="#Configuration steps">Configuration steps</a></li>
-        <li><a href="#Testing the environments">Testing the environments
-          </a></li>
-      </ol>
-      <p>There is also a short appendix describing the sample .emacs file:<br>
-      &nbsp;&nbsp; A.&nbsp;&nbsp;&nbsp; <a href="#Sample .emacs file">Sample .emacs
-      file</a></p>
-      <p>For each installation, an installation directory is suggested. It is
-      recommended that you install in the suggested directory since, if you use the suggested
-      directory names, the provided Emacs start-up file (.emacs) will work
-      &quot;out-of-the-box&quot;. Please note the following:</p>
-      <ul>
-        <li>If you use alternative directory names, you will need to modify the
-          .emacs file (instructions provided in step #8)</li>
-        <li>The instructions assume you are using Winzip; however, you can use
-          any alternative utility</li>
-        <li>When you unpack .gz files with Winzip, it will ask you &quot;Should
-          WinZip decompress it to a temporary folder and open it?&quot; - click
-          on &quot;No&quot;</li>
-        <li>There are instructions for downloading all the
-          implementations; however, it is not necessary to do so. You should
-          complete steps #1, #2, #3 and the relevant parts of #8 &amp; #9
-          (regardless of which implementations you download) and you will need
-          to download at least one of #4 - #7. You can download multiple
-          implementations if you want to trial them. If you don't download all of the
-          implementations, you may need to make some modifications to the .emacs
-          file. Some guidance on this is given in step #8</li>
-      </ul>
-      <h3><a name="Installing Emacs">1. Installing Emacs</a></h3>
-      <ul>
-        <li>From a command line, create the following directories (used later):&nbsp;
-          <pre>md c:\home\
+<p>Emacs is the preferred Lisp source code editor for most CL developers;
+however, it is not easy for an Emacs neophyte to get an Emacs environment set up
+and configured properly for Lisp development. The problem is compounded if the
+development platform is Microsoft Windows since Unix (and variants) is the more
+common platform used by experienced Lisp developers. In order to help a Lisp
+beginner set up an Emacs Common Lisp development environment on a Microsoft
+Windows PC, this chapter will lay out step-by-step instructions for installing
+all the necessary components for each of the most popular Common Lisp
+implementations on Windows:</p>
+<ul>
+  <li><b>CLISP:</b> ILISP will be used in Emacs to provide the development
+    environment</li>
+  <li><b>Allegro Common Lisp (ACL):</b> Franz's own &quot;ELI&quot; will be used
+    in Emacs</li>
+  <li><b>Corman Common Lisp:</b> The Emacs eshell will be used - although this
+    is a simplistic approach, it is more usable than the raw clconsole
+    application provided with this implementation</li>
+  <li><b>Xanalys LispWorks:</b> ILISP will be used in Emacs to provide the
+    development environment (Note: the trial version of the product doesn't
+    provide a non-gui Lisp image and this is necessary if the product is to be
+    used with Emacs.)</li>
+</ul>
+<p>By exactly following the installation instructions, the user will wind up
+with an Emacs setup that:</p>
+<ul>
+  <li>Allows the user to trial the most popular Lisp implementations for Windows</li>
+  <li>Allows the user to try out 3 different techniques (ILISP, ELI, eshell) for
+    establishing a Lisp development environment in Emacs - each with its own
+    sets of pluses and minuses</li>
+  <li>Configures Emacs so that it has keystroke bindings more similar to what a
+    Windows user is accustomed to</li>
+  <li>Configures Emacs with a number of custom configuration settings that are
+    commonly used</li>
+</ul>
+<h2>Contents</h2>
+<p>The following steps will be covered in this chapter:</p>
+<ol>
+  <li><a href="#Installing Emacs">Installing Emacs</a></li>
+  <li><a href="#Installing additional Emacs utilities">Installing additional
+    Emacs utilities</a></li>
+  <li><a href="#Installing on-line documentation">Installing on-line
+    documentation</a></li>
+  <li><a href="#Installing CLISP">Installing CLISP</a> (optional)</li>
+  <li><a href="#Installing ACL">Installing ACL</a> (optional)</li>
+  <li><a href="#Installing LispWorks">Installing LispWorks</a> (optional)</li>
+  <li><a href="#Installing Corman CL">Installing Corman CL</a> (optional)</li>
+  <li><a href="#Configuration steps">Configuration steps</a></li>
+  <li><a href="#Testing the environments">Testing the environments</a></li>
+</ol>
+<p>There is also a short appendix describing the sample .emacs file:<br>
+&nbsp;&nbsp; A.&nbsp;&nbsp;&nbsp; <a href="#Sample .emacs file">Sample .emacs
+file</a></p>
+<p>For each installation, an installation directory is suggested. It is
+recommended that you install in the suggested directory since, if you use the
+suggested directory names, the provided Emacs start-up file (.emacs) will work
+&quot;out-of-the-box&quot;. Please note the following:</p>
+<ul>
+  <li>If you use alternative directory names, you will need to modify the .emacs
+    file (instructions provided in step #8)</li>
+  <li>The instructions assume you are using Winzip; however, you can use any
+    alternative utility</li>
+  <li>When you unpack .gz files with Winzip, it will ask you &quot;Should WinZip
+    decompress it to a temporary folder and open it?&quot; - click on
+    &quot;No&quot;</li>
+  <li>There are instructions for downloading all the implementations; however,
+    it is not necessary to do so. You should complete steps #1, #2, #3 and the
+    relevant parts of #8 &amp; #9 (regardless of which implementations you
+    download) and you will need to download at least one of #4 - #7. You can
+    download multiple implementations if you want to trial them. If you don't
+    download all of the implementations, you may need to make some modifications
+    to the .emacs file. Some guidance on this is given in step #8</li>
+</ul>
+<h3><a name="Installing Emacs">1. Installing Emacs</a></h3>
+<ul>
+  <li>From a command line, create the following directories (used later):&nbsp;
+    <pre>md c:\home\
 md c:\home\site\
 md c:\home\docs\
 md c:\home\lisp\
 md c:\bin\     </pre>
-        </li>
-        <li>Download the precompiled <a href="http://www.gnu.org/software/emacs/">Emacs</a>
-          binaries for Windows from <a href="ftp://ftp.gnu.org/gnu/windows/emacs/21.2/emacs-21.2-fullbin-i386.tar.gz">ftp://ftp.gnu.org/gnu/windows/emacs/21.2/emacs-21.2-fullbin-i386.tar.gz</a>
-          and use Winzip to unpack the files into the c:\bin directory. This
-          should result in a new directory: c:\bin\emacs-21.2</li>
-        <li>Using Run on the Windows Start menu, enter &quot;c:\bin\emacs-21.2\bin\runemacs.exe&quot;
-          to verify that the program works. On the Help menu, there is an Emacs
-          on-line tutorial. If you are unfamiliar with Emacs, you should (at
-          least) complete this tutorial before proceeding any further. The
-          remainder of this chapter's instructions will assume that you have at
-          least basic familiarity with the use of Emacs.</li>
-      </ul>
-      <h3><a name="Installing additional Emacs utilities">2. Installing
-      additional Emacs utilities</a></h3>
-      <ul>
-        <li>Download the <a href="http://sourceforge.net/projects/ilisp/">ILISP</a>
-          package from <a href="http://prdownloads.sourceforge.net/ilisp/ilisp-5.12.0.tar.gz?download">http://prdownloads.sourceforge.net/ilisp/ilisp-5.12.0.tar.gz?download</a>
-          and use Winzip to unpack it into the c:\home\site directory. This
-          should result in a new directory: c:\home\site\ilisp-5.12.0\</li>
-        <li>Download the <a href="http://www.cs.indiana.edu/elisp/w3/docs.html">w3</a>
-          package (needed for browsing the Lisp documentation) from <a href="ftp://ftp.xemacs.org/pub/xemacs/emacs-w3/w3.tar.gz">ftp://ftp.xemacs.org/pub/xemacs/emacs-w3/w3.tar.gz</a>&nbsp;and
-          use Winzip to unpack it into the c:\home\site directory. This should
-          result in a new directory: c:\home\site\w3-4.Opre.47\</li>
-        <li>From a command line, enter the following commands:</li>
-      </ul>
+  </li>
+  <li>Download the precompiled <a href="http://www.gnu.org/software/emacs/">Emacs</a>
+    binaries for Windows from <a href="ftp://ftp.gnu.org/gnu/windows/emacs/21.2/emacs-21.2-fullbin-i386.tar.gz">ftp://ftp.gnu.org/gnu/windows/emacs/21.2/emacs-21.2-fullbin-i386.tar.gz</a>
+    and use Winzip to unpack the files into the c:\bin directory. This should
+    result in a new directory: c:\bin\emacs-21.2</li>
+  <li>Using Run on the Windows Start menu, enter
+    &quot;c:\bin\emacs-21.2\bin\runemacs.exe&quot; to verify that the program
+    works. On the Help menu, there is an Emacs on-line tutorial. If you are
+    unfamiliar with Emacs, you should (at least) complete this tutorial before
+    proceeding any further. The remainder of this chapter's instructions will
+    assume that you have at least basic familiarity with the use of Emacs.</li>
+</ul>
+<h3><a name="Installing additional Emacs utilities">2. Installing additional
+Emacs utilities</a></h3>
+<ul>
+  <li>Download the <a href="http://sourceforge.net/projects/ilisp/">ILISP</a>
+    package from <a href="http://prdownloads.sourceforge.net/ilisp/ilisp-5.12.0.tar.gz?download">http://prdownloads.sourceforge.net/ilisp/ilisp-5.12.0.tar.gz?download</a>
+    and use Winzip to unpack it into the c:\home\site directory. This should
+    result in a new directory: c:\home\site\ilisp-5.12.0\</li>
+  <li>Download the <a href="http://www.cs.indiana.edu/elisp/w3/docs.html">w3</a>
+    package (needed for browsing the Lisp documentation) from <a href="ftp://ftp.xemacs.org/pub/xemacs/emacs-w3/w3.tar.gz">ftp://ftp.xemacs.org/pub/xemacs/emacs-w3/w3.tar.gz</a>&nbsp;and
+    use Winzip to unpack it into the c:\home\site directory. This should result
+    in a new directory: c:\home\site\w3-4.Opre.47\</li>
+  <li>From a command line, enter the following commands:</li>
+</ul>
 <blockquote>
   <pre>ren c:\home\site\ilisp-5.12.0 c:\home\site\ilisp
 cd c:\home\site\ilisp
@@ -135,58 +127,58 @@ ren c:\home\site\w3-4.Opre.47 c:\home\site\w3<a href="file:///c:/home/site/ilisp
 </a>cd c:\home\site\w3
 build.bat</pre>
 </blockquote>
-      <ul>
-        <li>Download the <a href="http://www.cua.dk/cua.html">cua.el</a> utility
-          (provides Windows standard key mappings)&nbsp; from <a href="http://www.cua.dk/cua.el">http://www.cua.dk/cua.el</a>
-          and put it into the c:\home\site directory</li>
-        <li>Download the sample .emacs file from <a href=".emacs">here</a> and
-          place it in the c:\home directory</li>
-      </ul>
-      <h3><a name="Installing on-line documentation">3. Installing on-line
-      documentation</a></h3>
-      <ul>
-        <li>Download the <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/">Common
-          Lisp Hyperspec</a> reference from <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/HyperSpec-6-0.tar.gz">http://www.xanalys.com/software_tools/reference/HyperSpec/HyperSpec-6-0.tar.gz</a>
-          and use Winzip to unpack the files into the c:\home\docs directory. This
-          should result in a new directory: c:\home\docs\HyperSpec</li>
-        <li>Download the <a href="http://www-2.cs.cmu.edu/Groups/AI/html/cltl/cltl2.html">Common
-          Lisp the Language</a> reference from <a href="http://www-2.cs.cmu.edu/afs/cs.cmu.edu/project/ai-repository/ai/lang/lisp/doc/cltl/cltl_ht.tgz">http://www-2.cs.cmu.edu/afs/cs.cmu.edu/project/ai-repository/ai/lang/lisp/doc/cltl/cltl_ht.tgz</a>
-          and use Winzip to unpack the files into the c:\home\docs directory. This
-          should result in a new directory: c:\home\docs\cltl</li>
-      </ul>
-      <h3><a name="Installing CLISP">4. Installing CLISP</a></h3>
-      <ul>
-        <li>Download the precompiled <a href="http://clisp.cons.org/">CLISP</a>
-          binaries for Windows from <a href="http://prdownloads.sourceforge.net/clisp/clisp-2.30-win32.zip">http://prdownloads.sourceforge.net/clisp/clisp-2.30-win32.zip</a></li>
-        <li>Use Winzip to unpack the files into the c:\bin directory This should
-          result in a new directory: c:\bin\clisp-2.30&nbsp;</li>
-        <li>You now need to complete the installation process for CLISP by
-          running the install.bat file. To do this, go to a dos command line, cd
-          to the c:\bin\clisp-2.30 directory and run the install.bat
-          file. This will result in the creation of a clisp.bat file on the
-          desktop. You can delete this batch file, move it to another directory
-          or leave it on the desktop - it will not be used by this setup.</li>
-        <li>Create a file named _clisprc.lisp in the c:\home directory. This
-          file can have any initializations that need to occur when CLISP
-          starts. For the time being, just leave it empty.</li>
-      </ul>
-      <h3><a name="Installing ACL">5. Installing ACL</a></h3>
-      <ul>
-        <li>Download the trial version of <a href="http://www.franz.com/">Franz's
-          ACL</a> for Windows from <a href="http://www.franz.com/downloads/index.lhtml#acl">http://www.franz.com/downloads/index.lhtml#acl</a>
-          &nbsp;</li>
-        <li>(Note: you will need to agree to their license and provide an email
-          address. Franz will send you an email with instructions on how to
-          download the temporary license key. The key works for 60 days and a
-          new one can be downloaded before that one expires).</li>
-        <li>Run the downloaded installation program (acl62_trial.exe) and
-          install ACL into the c:\bin\acl-6.2 directory.</li>
-        <li>Install the license key as per the instructions that you received
-          from Franz.</li>
-        <li>From the Windows Start menu, navigate to the Allegro CL group and
-          startup ACL.</li>
-        <li>In the Listener (Debug Window), enter the following:</li>
-      </ul>
+<ul>
+  <li>Download the <a href="http://www.cua.dk/cua.html">cua.el</a> utility
+    (provides Windows standard key mappings)&nbsp; from <a href="http://www.cua.dk/cua.el">http://www.cua.dk/cua.el</a>
+    and put it into the c:\home\site directory</li>
+  <li>Download the sample .emacs file from <a href=".emacs">here</a> and place
+    it in the c:\home directory</li>
+</ul>
+<h3><a name="Installing on-line documentation">3. Installing on-line
+documentation</a></h3>
+<ul>
+  <li>Download the <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/">Common
+    Lisp Hyperspec</a> reference from <a href="http://www.xanalys.com/software_tools/reference/HyperSpec/HyperSpec-6-0.tar.gz">http://www.xanalys.com/software_tools/reference/HyperSpec/HyperSpec-6-0.tar.gz</a>
+    and use Winzip to unpack the files into the c:\home\docs directory. This
+    should result in a new directory: c:\home\docs\HyperSpec</li>
+  <li>Download the <a href="http://www-2.cs.cmu.edu/Groups/AI/html/cltl/cltl2.html">Common
+    Lisp the Language</a> reference from <a href="http://www-2.cs.cmu.edu/afs/cs.cmu.edu/project/ai-repository/ai/lang/lisp/doc/cltl/cltl_ht.tgz">http://www-2.cs.cmu.edu/afs/cs.cmu.edu/project/ai-repository/ai/lang/lisp/doc/cltl/cltl_ht.tgz</a>
+    and use Winzip to unpack the files into the c:\home\docs directory. This
+    should result in a new directory: c:\home\docs\cltl</li>
+</ul>
+<h3><a name="Installing CLISP">4. Installing CLISP</a></h3>
+<ul>
+  <li>Download the precompiled <a href="http://clisp.cons.org/">CLISP</a>
+    binaries for Windows from <a href="http://prdownloads.sourceforge.net/clisp/clisp-2.30-win32.zip">http://prdownloads.sourceforge.net/clisp/clisp-2.30-win32.zip</a></li>
+  <li>Use Winzip to unpack the files into the c:\bin directory This should
+    result in a new directory: c:\bin\clisp-2.30&nbsp;</li>
+  <li>You now need to complete the installation process for CLISP by running the
+    install.bat file. To do this, go to a dos command line, cd to the
+    c:\bin\clisp-2.30 directory and run the install.bat file. This will result
+    in the creation of a clisp.bat file on the desktop. You can delete this
+    batch file, move it to another directory or leave it on the desktop - it
+    will not be used by this setup.</li>
+  <li>Create a file named _clisprc.lisp in the c:\home directory. This file can
+    have any initializations that need to occur when CLISP starts. For the time
+    being, just leave it empty.</li>
+</ul>
+<h3><a name="Installing ACL">5. Installing ACL</a></h3>
+<ul>
+  <li>Download the trial version of <a href="http://www.franz.com/">Franz's ACL</a>
+    for Windows from <a href="http://www.franz.com/downloads/index.lhtml#acl">http://www.franz.com/downloads/index.lhtml#acl</a>
+    &nbsp;</li>
+  <li>(Note: you will need to agree to their license and provide an email
+    address. Franz will send you an email with instructions on how to download
+    the temporary license key. The key works for 60 days and a new one can be
+    downloaded before that one expires).</li>
+  <li>Run the downloaded installation program (acl62_trial.exe) and install ACL
+    into the c:\bin\acl-6.2 directory.</li>
+  <li>Install the license key as per the instructions that you received from
+    Franz.</li>
+  <li>From the Windows Start menu, navigate to the Allegro CL group and startup
+    ACL.</li>
+  <li>In the Listener (Debug Window), enter the following:</li>
+</ul>
 <blockquote>
   <pre>(progn
   (build-lisp-image &quot;alisp.dxl&quot; :case-mode :case-insensitive-upper
@@ -198,250 +190,250 @@ build.bat</pre>
   <li>A non-IDE Lisp image &amp; exe (alisp.exe) will be created in the ACL
     directory to be used with Emacs. Exit the ACL IDE.</li>
 </ul>
-      <h3><a name="Installing LispWorks">6. Installing LispWorks</a></h3>
-      <ul>
-        <li>In order to use LispWorks with ILISP, it is necessary to create a
-          non-gui console version of the LispWorks executable. This is not
-          possible with the free downloadable &quot;Personal&quot; version of
-          LispWorks. It is only possible with the commercial
-          &quot;Professional&quot; and &quot;Enterprise&quot; editions. These
-          can be ordered off the Xanalys web site at <a href="http://www.xanalys.com">www.xanalys.com</a>.
-          The following instructions assume that you have the commercial version
-          of LispWorks. If you don't, skip this section. (Note: the supplied .emacs
-          file will still work ok, you just won't be able to try out the
-          LispWorks ILISP mode.)</li>
-        <li>Run the LispWorks installation program and install LispWorks into
-          the c:\bin\lispworks-4.2 directory.</li>
-        <li>Create a file called console.lisp in the c:\home\lisp\ directory.
-          This file will be used to create the non-gui console version of the
-          LispWorks executable. The file should have the following lines in it:</li>
-      </ul>
-      <blockquote>
-        <pre>(load-all-patches)
+<h3><a name="Installing LispWorks">6. Installing LispWorks</a></h3>
+<ul>
+  <li>In order to use LispWorks with ILISP, it is necessary to create a non-gui
+    console version of the LispWorks executable. This is not possible with the
+    free downloadable &quot;Personal&quot; version of LispWorks. It is only
+    possible with the commercial &quot;Professional&quot; and
+    &quot;Enterprise&quot; editions. These can be ordered off the Xanalys web
+    site at <a href="http://www.xanalys.com">www.xanalys.com</a>. The following
+    instructions assume that you have the commercial version of LispWorks. If
+    you don't, skip this section. (Note: the supplied .emacs file will still
+    work ok, you just won't be able to try out the LispWorks ILISP mode.)</li>
+  <li>Run the LispWorks installation program and install LispWorks into the
+    c:\bin\lispworks-4.2 directory.</li>
+  <li>Create a file called console.lisp in the c:\home\lisp\ directory. This
+    file will be used to create the non-gui console version of the LispWorks
+    executable. The file should have the following lines in it:</li>
+</ul>
+<blockquote>
+  <pre>(load-all-patches)
 (save-image &quot;lw42-console&quot; :console t :environment nil)
 (quit)</pre>
-      </blockquote>
-      <ul>
-        <li>Go to a dos command line and enter the following commands to create
-          the non-gui console version of the LispWorks executable:</li>
-      </ul>
-      <blockquote>
-        <pre>cd c:\bin\lispworks-4.2
+</blockquote>
+<ul>
+  <li>Go to a dos command line and enter the following commands to create the
+    non-gui console version of the LispWorks executable:</li>
+</ul>
+<blockquote>
+  <pre>cd c:\bin\lispworks-4.2
 lispworks-4200 -init c:\home\lisp\console.lisp</pre>
-        <p>This will result in the lw42-console.exe file being created in the c:\bin\lispworks-4.2
-        directory.</p>
-      </blockquote>
-      <h3><a name="Installing Corman CL">7. Installing Corman CL</a></h3>
-      <ul>
-        <li>Download the precompiled Emacs binaries for <a href="http://www.corman.net/">Corman
-          Lisp</a> for Windows from <a href="http://corman.net/CormanLisp/CormanLisp_1_5_Setupex.exe">http://corman.net/CormanLisp/CormanLisp_1_5_Setupex.exe</a></li>
-        <li>Run the downloaded installation program (CormanLisp_1_5_Setupex.exe)
-          and install Corman CL into the c:\bin\corman-1.5 directory.</li>
-      </ul>
-      <h3><a name="Configuration steps">8. Configuration steps</a></h3>
-      <ul>
-        <li>Setup environmental variables either in the autoexec.bat file (e.g.
-          - Windows/98) or the Control Panel/System (e.g. - Windows/NT/2000/XP)</li>
-      </ul>
-      <blockquote>
+  <p>This will result in the lw42-console.exe file being created in the
+  c:\bin\lispworks-4.2 directory.</p>
+</blockquote>
+<h3><a name="Installing Corman CL">7. Installing Corman CL</a></h3>
+<ul>
+  <li>Download the precompiled Emacs binaries for <a href="http://www.corman.net/">Corman
+    Lisp</a> for Windows from <a href="http://corman.net/CormanLisp/CormanLisp_1_5_Setupex.exe">http://corman.net/CormanLisp/CormanLisp_1_5_Setupex.exe</a></li>
+  <li>Run the downloaded installation program (CormanLisp_1_5_Setupex.exe) and
+    install Corman CL into the c:\bin\corman-1.5 directory.</li>
+</ul>
+<h3><a name="Configuration steps">8. Configuration steps</a></h3>
+<ul>
+  <li>Setup environmental variables either in the autoexec.bat file (e.g. -
+    Windows/98) or the Control Panel/System (e.g. - Windows/NT/2000/XP)</li>
+</ul>
+<blockquote>
+  <ul>
+    <li>HOME: Should be set to c:/home (Note: use &quot;/&quot; rather than
+      &quot;\&quot;. Note also that you should make certain that you don't have
+      both a User and a System HOME variable set up when setting up the HOME
+      environmental variable under Windows/NT/2000/XP. If you do, the User
+      variable will override the System one. Delete one of the two (better to
+      leave the system one if you want multiple login users to use your same
+      emacs configuration) and make certain that it is set to the c:\home
+      directory.)</li>
+    <li>EMACSDIR: Should be set to c:\bin\emacs-21.2</li>
+    <li>PATH: The c:\bin\emacs-21.2\bin directory path should be prepended to
+      the existing PATH to ensure that the Emacs executable can be found (e.g.
+      -- set path=c:\bin\emacs-21.2\bin;%path%)</li>
+  </ul>
+</blockquote>
+<ul>
+  <li>If the specified directory locations were used, no changes to the .emacs
+    file should be necessary. If file locations were changed, the directory
+    locations that are specified in the first section of the .emacs file (the
+    &quot;Site-Specific Variables&quot; section) should be modified with the
+    correct directory locations (Note: when specifying directory locations in
+    the .emacs file, use &quot;/&quot; rather than &quot;\&quot; as the
+    directory separator character).</li>
+  <li>If not all the Lisp implementations were downloaded, the .emacs file will
+    still work &quot;as is&quot; with the following exceptions:
+    <ul>
+      <li>If you attempt to run an implementation that you didn't download, you
+        will get a run-time error. You will probably want to change the
+        lisp-used variable (default value is :clisp-ilisp) to default to the
+        main lisp implementation that you will be using.</li>
+    </ul>
+  </li>
+  <li>Reboot the PC after making the above changes and configuration settings</li>
+  <li>Start Emacs (either by using the Start menu's Gnu Emacs shortcut or by
+    using Run on the Windows Start menu with the command
+    &quot;c:\emacs\bin\runemacs.exe&quot;) and do the following:
+    <ul>
+      <li>Double-click on the &quot;site&quot; directory to drill down into that
+        directory</li>
+      <li>Compile the cua.el file by pressing &quot;B&quot; when the cursor is
+        on the file name in the dired window (answer &quot;y&quot; to the
+        &quot;Byte-Compile (y or n)&quot; prompt)</li>
+      <li>If you installed CLISP, do the following:
         <ul>
-          <li>HOME: Should be set to c:/home (Note: use &quot;/&quot; rather
-            than &quot;\&quot;. Note also that you should make certain that you
-            don't have both a User and a System HOME variable set up when
-            setting up the HOME environmental variable under Windows/NT/2000/XP.
-            If you do, the User variable will override the System one. Delete
-            one of the two (better to leave the system one if you want multiple
-            login users to use your same emacs configuration) and make certain
-            that it is set to the c:\home directory.)</li>
-          <li>EMACSDIR: Should be set to c:\bin\emacs-21.2</li>
-          <li>PATH: The c:\bin\emacs-21.2\bin directory path should be
-            prepended to the existing PATH to ensure that the Emacs executable can be found (e.g. -- set
-            path=c:\bin\emacs-21.2\bin;%path%)</li>
+          <li>Start CLISP by pressing &quot;F5&quot;</li>
+          <li>After starting ILISP/CLISP in Emacs, use &quot;M-x
+            ilisp-compile-inits&quot; to compile the CLISP Lisp initialization
+            files. When finished, press &quot;F4&quot; to close the *clisp-hs*
+            window.</li>
         </ul>
-      </blockquote>
-      <ul>
-        <li>If the specified directory locations were used, no changes to the .emacs
-          file should be necessary. If file locations were changed, the
-          directory locations that are specified in the first section of the .emacs
-          file (the &quot;Site-Specific Variables&quot; section) should be
-          modified with the correct directory locations (Note: when specifying
-          directory locations in the .emacs file, use &quot;/&quot; rather than
-          &quot;\&quot; as the directory separator character).</li>
-        <li>If not all the Lisp implementations were downloaded, the .emacs file
-          will still work &quot;as is&quot; with the following exceptions:
-          <ul>
-            <li>If you attempt to run an implementation that you didn't
-              download, you will get a run-time error. </li>
-          </ul>
-        </li>
-        <li>Reboot the PC after making the above changes and configuration
-          settings</li>
-        <li>Start Emacs (either by using the Start menu's Gnu Emacs shortcut or
-          by using Run on the Windows Start menu with the command &quot;c:\emacs\bin\runemacs.exe&quot;)
-          and do the following:
-          <ul>
-            <li>Double-click on the &quot;site&quot; directory to drill down
-              into that directory</li>
-            <li>Compile the cua.el file
-              by pressing &quot;B&quot; when the cursor is on the file name in
-              the dired window (answer &quot;y&quot; to the &quot;Byte-Compile
-              (y or n)&quot; prompt)</li>
-            <li>If you installed CLISP, do the following:
-              <ul>
-                <li>Start CLISP by pressing &quot;F5&quot;</li>
-                <li>After starting ILISP/CLISP in Emacs, use &quot;M-x
-              ilisp-compile-inits&quot; to compile the CLISP Lisp initialization
-              files. When finished, press &quot;F4&quot; to close the *clisp-hs*
-              window.</li>
-              </ul>
-            </li>
-            <li>If you installed Lispworks, do the following:
-              <ul>
-                <li>Press &quot;M-C-F5&quot; twice in succession (the minibuffer
-              window at the bottom will say &quot;lisp-used: :lw-ilisp&quot;
-              indicating that you have toggled to LispWorks mode)</li>
-                <li>Start LispWorks by pressing &quot;F5&quot;</li>
-                <li>After starting ILISP/CLISP in Emacs, use &quot;M-x
-              ilisp-compile-inits&quot; to compile the LispWorks Lisp
-              initialization files. When finished, press &quot;F4&quot; to close
-              the *clisp-hs* window.</li>
-              </ul>
-            </li>
-          </ul>
-        </li>
-        <li>All configuration steps should now be complete - exit Emacs by
-          pressing &quot;M-F4&quot;</li>
-      </ul>
-      <h3><a name="Testing the environments">9. Testing the environments</a></h3>
-      <ul>
-        <li>Start Emacs (either by using the Start menu's Gnu Emacs shortcut or
-          by using Run on the Windows Start menu with the command &quot;c:\emacs\bin\runemacs.exe&quot;)
-          and do the following:
-          <ul>
-            <li>If you installed CLISP, do the following:
-              <ul>
-                <li>Test that CLISP runs by pressing &quot;F5&quot; (CLISP should
-              open in the bottom window and the ILISP menu should appear in the
-              Emacs menu bar)
-              <ul>
-                <li>Click in the *clisp-hs* window and press &quot;C-h b&quot;
-                  (this will show you the keybindings that are in effect for
-                  ILISP/CLISP)</li>
-                <li>Click in the *Help* window and scroll through the keybinding
-                  list. When finished, press &quot;F4&quot; to close that window</li>
-                <li>Click in the *clisp-hs* window and press &quot;F4&quot; to
-                  close that window</li>
-              </ul>
-                </li>
-              </ul>
-            </li>
-            <li>Click in the dired window and press &quot;M-C-F5&quot; (the
-              minibuffer window at the bottom will say &quot;lisp-used: :acl-eli&quot;
-              indicating that you have toggled to ACL mode)
-            </li>
-            <li>If you installed ACL, do the following:
-              <ul>
-                <li>Test that ACL runs by pressing &quot;F5&quot;. The ACL icon
-                  will appear in the Windows system tray.
-                  <ul>
-                    <li>A Listener for ACL should also appear in an Emacs *common-lisp* buffer and the ACL menus should appear in the
-                  Emacs menu bar.</li>
-                    <li>Click in the *common-lisp* window and press &quot;C-h b&quot;
-                  (this will show you the keybindings that are in effect for
-                  ELI/ACL)</li>
-                    <li>Click in the *Help* window and scroll through the keybinding
-                  list. When finished, press &quot;F4&quot; to close that window</li>
-                    <li>Click in the *common-lisp* window and select the ACLFile/Exit
-                  Allegro CL menu option (this will close down the ACL
-                  connection and the ACL application will end)</li>
-                  </ul>
-                </li>
-              </ul>
-            </li>
-                <li>Click in the dired window and press &quot;M-C-F5&quot; (the
-              minibuffer window at the bottom will say &quot;lisp-used: :lw-ilisp&quot;
-              indicating that you have toggled to LispWorks mode)</li>
-            <li>If you installed LispWorks, do the following:
-              <ul>
-                <li>Test that LispWorks runs by pressing &quot;F5&quot; (LispWorks
-              should open in the bottom window and the ILISP menu should appear
-              in the Emacs menu bar)
-              <ul>
-                <li>Click in the *lispworks* window and press &quot;C-h b&quot;
-                  (this will show you the keybindings that are in effect for
-                  ILISP/LispWorks)</li>
-                <li>Click in the *Help* window and scroll through the keybinding
-                  list. When finished, press &quot;F4&quot; to close that window</li>
-                <li>Click in the *lispworks* window and press &quot;F4&quot; to
-                  close that window</li>
-              </ul>
-                </li>
-              </ul>
-            </li>
-                <li>Click in the dired window and press &quot;M-C-F5&quot; (the
-              minibuffer window at the bottom will say &quot;lisp-used: :corman-eshell&quot;
-              indicating that you have toggled to Corman mode)</li>
-            <li>If you installed Corman, do the following:
-              <ul>
-                <li>Test that Corman runs by pressing &quot;F5&quot;
-              <ul>
-                <li>The Emacs eshell should start up and it should start up
-                  Corman CL (the Corman CL prompt will be a &quot;?&quot;)</li>
-                <li>Click in the *eshell* window and press &quot;C-h b&quot;
-                  (this will show you the keybindings that are in effect for
-                  eshell/Corman)</li>
-                <li>Click in the *Help* window and scroll through the keybinding
-                  list. When finished, press &quot;F4&quot; to close that window</li>
-                <li>Click in the *eshell* window and press &quot;F4&quot; to
-                  close that window</li>
-              </ul>
-                </li>
-              </ul>
-            </li>
-            <li>You can test that the online documentation works by pressing
-              &quot;F1&quot; (for the HyperSpect) or &quot;M-F1&quot; (for
-              CLtL2) when the cursor is on a Lisp keyword (e.g. -- &quot;defun&quot;
-              or &quot;setq&quot;). This should bring up a browser with the
-              documentation for that keyword.</li>
-            <li>Exit Emacs by pressing &quot;M-F4&quot;</li>
-          </ul>
-        </li>
-      </ul>
-      <p>You should now have a working Windows/Emacs setup that supports a
-      number of different Lisp implementations.</p>
-      <h3><a name="Sample .emacs file">A. Sample .emacs file</a></h3>
-      <ul>
-        <li>Following is a brief explanation of each of the sections of the
-          sample <a href=".emacs">.emacs</a> file:
-          <ul>
-            <li><b>Site-Specific Variables: </b>Contains directory locations for
-              the different Lisp implementations, Lisp documentation and Emacs-specific
-              files. It also sets the default Lisp implementation to CLISP
-              (Note: if you want to specify a different default Lisp
-              implementation, change the lisp-used variable - accepted values
-              are listed in the comment for the variable).</li>
-            <li><b>Initial Code Load:</b> Loads Emacs files that are needed
-              later on</li>
-            <li><b>System Customizations: </b>Some standard customizations that
-              make Emacs easier to use.</li>
-            <li><b>Programming - Common Lisp:</b> CL-specific setup</li>
-            <li><b>Programming -&nbsp; Elisp: </b>Emacs Lisp-specific setup</li>
-            <li><b>Standard Key Overrides:</b> Some convenience key setups</li>
-            <li><b>Lisp Key Overrides:</b> ILISP &amp; ELI have their own key
-              mappings - here are some extra ones</li>
-            <li><b>Windows Key Overrides: </b>These settings make Emacs feel
-              more like a Windows application</li>
-            <li><b>Start Directory:</b> After Emacs starts up, the start
-              directory will be the HOME directory</li>
-          </ul>
-        </li>
-      </ul>
-
+      </li>
+      <li>If you installed Lispworks, do the following:
+        <ul>
+          <li>Press &quot;M-C-F5&quot; twice in succession (the minibuffer
+            window at the bottom will say &quot;lisp-used: :lw-ilisp&quot;
+            indicating that you have toggled to LispWorks mode)</li>
+          <li>Start LispWorks by pressing &quot;F5&quot;</li>
+          <li>After starting ILISP/CLISP in Emacs, use &quot;M-x
+            ilisp-compile-inits&quot; to compile the LispWorks Lisp
+            initialization files. When finished, press &quot;F4&quot; to close
+            the *clisp-hs* window.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>All configuration steps should now be complete - exit Emacs by pressing
+    &quot;M-F4&quot;</li>
+</ul>
+<h3><a name="Testing the environments">9. Testing the environments</a></h3>
+<ul>
+  <li>Start Emacs (either by using the Start menu's Gnu Emacs shortcut or by
+    using Run on the Windows Start menu with the command
+    &quot;c:\emacs\bin\runemacs.exe&quot;) and do the following:
+    <ul>
+      <li>If you installed CLISP, do the following:
+        <ul>
+          <li>Test that CLISP runs by pressing &quot;F5&quot; (CLISP should open
+            in the bottom window and the ILISP menu should appear in the Emacs
+            menu bar)
+            <ul>
+              <li>Click in the *clisp-hs* window and press &quot;C-h b&quot;
+                (this will show you the keybindings that are in effect for
+                ILISP/CLISP)</li>
+              <li>Click in the *Help* window and scroll through the keybinding
+                list. When finished, press &quot;F4&quot; to close that window</li>
+              <li>Click in the *clisp-hs* window and press &quot;F4&quot; to
+                close that window</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li>Click in the dired window and press &quot;M-C-F5&quot; (the minibuffer
+        window at the bottom will say &quot;lisp-used: :acl-eli&quot; indicating
+        that you have toggled to ACL mode)</li>
+      <li>If you installed ACL, do the following:
+        <ul>
+          <li>Test that ACL runs by pressing &quot;F5&quot;. The ACL icon will
+            appear in the Windows system tray.
+            <ul>
+              <li>A Listener for ACL should also appear in an Emacs
+                *common-lisp* buffer and the ACL menus should appear in the
+                Emacs menu bar.</li>
+              <li>Click in the *common-lisp* window and press &quot;C-h b&quot;
+                (this will show you the keybindings that are in effect for
+                ELI/ACL)</li>
+              <li>Click in the *Help* window and scroll through the keybinding
+                list. When finished, press &quot;F4&quot; to close that window</li>
+              <li>Click in the *common-lisp* window and select the ACLFile/Exit
+                Allegro CL menu option (this will close down the ACL connection
+                and the ACL application will end)</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li>Click in the dired window and press &quot;M-C-F5&quot; (the minibuffer
+        window at the bottom will say &quot;lisp-used: :lw-ilisp&quot;
+        indicating that you have toggled to LispWorks mode)</li>
+      <li>If you installed LispWorks, do the following:
+        <ul>
+          <li>Test that LispWorks runs by pressing &quot;F5&quot; (LispWorks
+            should open in the bottom window and the ILISP menu should appear in
+            the Emacs menu bar)
+            <ul>
+              <li>Click in the *lispworks* window and press &quot;C-h b&quot;
+                (this will show you the keybindings that are in effect for
+                ILISP/LispWorks)</li>
+              <li>Click in the *Help* window and scroll through the keybinding
+                list. When finished, press &quot;F4&quot; to close that window</li>
+              <li>Click in the *lispworks* window and press &quot;F4&quot; to
+                close that window</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li>Click in the dired window and press &quot;M-C-F5&quot; (the minibuffer
+        window at the bottom will say &quot;lisp-used: :corman-eshell&quot;
+        indicating that you have toggled to Corman mode)</li>
+      <li>If you installed Corman, do the following:
+        <ul>
+          <li>Test that Corman runs by pressing &quot;F5&quot;
+            <ul>
+              <li>The Emacs eshell should start up and it should start up Corman
+                CL (the Corman CL prompt will be a &quot;?&quot;)</li>
+              <li>Click in the *eshell* window and press &quot;C-h b&quot; (this
+                will show you the keybindings that are in effect for
+                eshell/Corman)</li>
+              <li>Click in the *Help* window and scroll through the keybinding
+                list. When finished, press &quot;F4&quot; to close that window</li>
+              <li>Click in the *eshell* window and press &quot;F4&quot; to close
+                that window</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li>You can test that the online documentation works by pressing
+        &quot;F1&quot; (for the HyperSpect) or &quot;M-F1&quot; (for CLtL2) when
+        the cursor is on a Lisp keyword (e.g. -- &quot;defun&quot; or
+        &quot;setq&quot;). This should bring up a browser with the documentation
+        for that keyword.</li>
+      <li>Exit Emacs by pressing &quot;M-F4&quot;</li>
+    </ul>
+  </li>
+</ul>
+<p>You should now have a working Windows/Emacs setup that supports a number of
+different Lisp implementations.</p>
+<h3><a name="Sample .emacs file">A. Sample .emacs file</a></h3>
+<ul>
+  <li>Following is a brief explanation of each of the sections of the sample <a href=".emacs">.emacs</a>
+    file:
+    <ul>
+      <li><b>Site-Specific Variables: </b>Contains directory locations for the
+        different Lisp implementations, Lisp documentation and Emacs-specific
+        files. It also sets the default Lisp implementation to CLISP (Note: if
+        you want to specify a different default Lisp implementation, change the
+        lisp-used variable - accepted values are listed in the comment for the
+        variable).</li>
+      <li><b>Initial Code Load:</b> Loads Emacs files that are needed later on</li>
+      <li><b>System Customizations: </b>Some standard customizations that make
+        Emacs easier to use.</li>
+      <li><b>Programming - Common Lisp:</b> CL-specific setup</li>
+      <li><b>Programming -&nbsp; Elisp: </b>Emacs Lisp-specific setup</li>
+      <li><b>Standard Key Overrides:</b> Some convenience key setups</li>
+      <li><b>Lisp Key Overrides:</b> ILISP &amp; ELI have their own key mappings
+        - here are some extra ones</li>
+      <li><b>Windows Key Overrides: </b>These settings make Emacs feel more like
+        a Windows application</li>
+      <li><b>Start Directory:</b> After Emacs starts up, the start directory
+        will be the HOME directory</li>
+    </ul>
+  </li>
+</ul>
 <hr>
-<a href="license.html">Copyright</a> © 2002 The Common Lisp
-Cookbook Project
-<address>http://cl-cookbook.sourceforge.net/</address>
-<br>$Header$
+<a href="license.html">Copyright</a> © 2002 The Common Lisp Cookbook Project
+<address>
+  http://cl-cookbook.sourceforge.net/
+</address>
+<br>
+$Header: /cvsroot/cl-cookbook/cl-cookbook/windows.html,v 1.15 2002/09/23
+15:56:58 bill_clementson Exp $
 
 </body>
 
