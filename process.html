@@ -4,6 +4,7 @@
 <title>The Common Lisp Cookbook - Threads</title>
 <style type="text/css">
 pre { margin-left:20px; background-color:#e0e0e0 }
+code { background-color:#e0e0e0 }
 </style>
 
 </head>
@@ -12,10 +13,18 @@ pre { margin-left:20px; background-color:#e0e0e0 }
 <h1><a href="index.html">The Common Lisp Cookbook</a> - Threads</h1>
 
 
+<p>This page is only partially written. Still, half is better than
+none...</p>
+
 <h2>Contents</h2>
 
 <ul>
-<li><a href="#tag">Heading</a>
+<li><a href="#why_bother">Why bother?</a></li>
+<li><a href="#basics">Basics</a></li>
+<li><a href="#output">Where's my output?</a></li>
+<li><a href="#communicating">Communicating with other threads</a></li>  <i>(under construction)</i>
+<li><a href="#initializing">Initializing multithreading</a></li>  <i>(under construction)</i>
+<li><i>and more</i></li>
 </ul>
 
 <p>By <cite>threads</cite>, I mean separate execution strands within a
@@ -35,14 +44,175 @@ Windows NT (SP 6). Your mileage may vary. I will add "support" for
 other implementations and operating systems to this page later, if I
 have the time and access to the appropriate materials.</p>
 
-<a name="tag"></a>
-<h3>Heading</h3>
+<a name="why_bother"></a>
+<h3>Why bother?</h3>
 
-Some words.
+<p>The first question to resolve is: why bother with threads?
+Sometimes your answer will simply be that your application is so
+straightforward that you need not concern youself with threads at
+all. But in many other cases it's difficult to imagine how a
+sophisticated application can be written without multi-threading. For
+example:</p>
+
+<ul>
+
+<li>you might be writing a server which needs to be able to respond to
+more than one user / connection at a time;</li>
+
+<li>you might want to perform some background activity, without
+halting the main application while this is going on;</li>
+
+<li>you might want to keep the application running while waiting for
+some system resource to become available;</li>
+
+<li>you might need to interface with some other system which requires
+multithreading (for example, "windows" under Windows generally run in
+their own threads);</li>
+
+<li>you might want to associate different contexts (e.g. different
+dynamic bindings) with different parts of the application;</li>
+
+<li>you might even have the simple need to do two things at once.</li>
+
+</ul>
+
+<a name="basics"></a>
+<h3>Basics</h3>
+
+<p>In order to run a function in a separate thread, you need to do two
+things.</p>
+
+<ol>
+
+<li>Make sure that multithreading is running. By default,
+multithreading is always running in the LispWorks for Windows
+environment so in this case there is nothing to do. See
+<a href="#initializing">initializing multithreading</a> below to find
+out how to get threads running on other platforms.</li>
+
+<li>Now call your function, in its new thread. For example:
+
+<pre>
+(defvar *foo* 0)
+(defun foo () (incf *foo*))
+(mp:process-run-function "Incrementing *foo*" nil 'foo)
+*foo*  => 1
+</pre>
+
+</li>
+</ol>
+
+<p>In the above example, you created a new thread called
+<code>"Incrementing *foo*"</code>. The function <code>foo</code> was
+invoked (with no arguments) in that thread. When <code>foo</code>
+returned, the thread no longer had any work to do and so was
+terminated.</p>
+
+<p>Note the following:</p>
+
+<ul>
+
+<li>The first argument to <code>mp:process-run-function</code> is a
+string naming the thread. You don't have to make the names unique, but
+it's a smart move if you do in actual code, as it's a great way to
+tell your threads apart when you're debugging them. When playing
+around in the listener, you'll often find no harm in using an empty
+string here.</li>
+
+<li>The second argument to <code>mp:process-run-function</code> is a
+list of <cite>process initialization keywords</cite>. You'll almost
+always leave this empty (so you needn't bother about any details).</li>
+
+<li>The third argument is the function to invoke in the new
+thread. This should be a function designator, for example, an <code>fboundp</code>
+symbol or a <code>lambda</code> form. </li>
+
+<li>Any remaining arguments to <code>mp:process-run-function</code>
+are passed to your function. So calls to
+<code>mp:process-run-function</code> look like calls to
+<code>funcall</code> with two additional arguments at the
+beginning.</li>
+
+<li>A call to <code>mp:process-run-function</code> returns immediately
+(the return value is of type <code>mp:process</code>), while the new
+thread executes asynchronously.</li>
+
+</ul>
+
+<p>Another simple example:</p>
 
 <pre>
 
-Some code</pre>
+CL-USER 15 &gt; (mp:process-run-function "sleep in the background" nil 'sleep 10)
+#&lt;MP:PROCESS Name "sleep in the background" Priority 850000 State "Running"&gt;
+
+CL-USER 16 &gt; (mp:find-process-from-name "sleep in the background")
+#&lt;MP:PROCESS Name "sleep in the background" Priority 0 State "Sleeping on mailbox"&gt;
+
+CL-USER 17 &gt; (sleep 10)       ;; At this point the listener sleeps for ten seconds
+NIL
+
+CL-USER 18 &gt; (mp:find-process-from-name "sleep in the background")
+NIL                           ;; The background process has finished its job and terminated
+
+CL-USER 19 &gt;
+
+</pre>
+
+<p><strong>Exercise:</strong> get two or three new threads running
+simultaneously, and convince yourself they're all there.</p>
+
+
+<a name="output"></a>
+<h3>Where's my output?</h3>
+
+<p>An obvious way to test whether threads are behaving as you imagine
+they ought, is to get them to print messages to the listener. For
+example, you might feel justified in trying something like:</p>
+
+<pre>
+
+CL-USER 23 &gt; (mp:process-run-function "test" () (lambda () (print 99)))
+#&lt;MP:PROCESS Name "test" Priority 850000 State "Running"&gt;
+
+CL-USER 24 &gt; ;; Where's my output?
+
+</pre>
+
+<p>Where indeed is your output? The answer is that your new thread has
+a different <code>*standard-output*</code> to the listener, and that's
+where your output has gone to. Here is how you might find out where
+precisely that is:
+
+<pre>
+
+CL-USER 1 &gt; (mp:process-run-function ""() (lambda () (print *standard-output* #.*standard-output*)))
+#&lt;MP:PROCESS Name "" Priority 850000 State "Running"&gt;
+
+#&lt;Synonym stream to *TERMINAL-IO*&gt;
+CL-USER 2 &gt;
+
+</pre>
+
+<p><strong>Exercise:</strong> Open the console
+(i.e. <code>*terminal-io*</code>) by evaluating <code>(read-char
+*terminal-io*)</code>; type a <code>#\Newline</code> into the console
+to return to <code>read-char</code>. Now you can prove directly where
+a thread's output goes.</p>
+
+
+
+<a name="communicating"></a>
+<h3>Communicating with other threads</h3>
+
+<p><i>under construction</i></p>
+
+
+<a name="initializing"></a>
+<h3>Initializing multithreading</h3>
+
+<p><i>under construction</i></p>
+
 
 <hr>
 <a href="license.html">Copyright</a> &copy; 2002 The Common Lisp Cookbook Project
