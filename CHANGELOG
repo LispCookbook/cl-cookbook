@@ -1,3 +1,8 @@
+2003-10-04
+	Updated index.html, and added emacs-ide.html by Bill
+	Clementson. Added place-holder page for the "Using Emacs as a Lisp
+	IDE" page that I will post after my ILC2003 presentation.
+
 2003-10-03
 	Updated windows.html, and .emacs by Bill Clementson - added back
 	in Corman Lisp support (nobody else seemed to be having problems
