@@ -4,7 +4,7 @@
 <html> <head>
 <title>The Common Lisp Cookbook - Threads</title>
 <style type="text/css">
-<!---
+ <!--
     pre { margin-left:20px; background-color:#e0e0e0 }
     code { background-color:#e0e0e0 }
  -->
@@ -25,19 +25,30 @@ none...</p>
 <li><a href="#why_bother">Why bother?</a></li>
 <li><a href="#basics">Basics</a></li>
 <li><a href="#output">Where's my output?</a></li>
-<li><a href="#communicating_1">Communicating with other threads 1: <code>mp:process-wait</code></a></li>
+<li><a href="#waiting">Waiting</a></li>
+<li><a href="#state">Per-thread state</a></li>
 <li><a href="#initializing">Initializing multithreading</a>  <i>(under construction)</i></li>
 <li><i>and more</i></li>
 </ul>
 
 <p>By <cite>threads</cite>, I mean separate execution strands within a
-single Lisp process. For information about communication with other
-<cite>processes</cite>, see <a href="os.html">Interfacing with your
-OS</a>.</p>
+single Lisp process, sharing the same address space. Typically,
+execution is automatically switched between these strands by the
+system (either by the lisp kernel or by the operating system) so that
+tasks appear to be completed in parallel (asynchronously). This page
+discusses the creation and management of threads and of the
+interactions between them. For information about the interaction of
+lisp and other <cite>processes</cite>, see <a
+href="os.html">Interfacing with your OS</a>.</p>
 
 <p>The ANSI Common Lisp standard doesn't mention this topic. So almost
 everything that can be said here depends on your OS and your
-implementation.</p>
+implementation. It's not just a question of different symbols in
+different packages (although that might be enough to get you started,
+so see the <a
+href="http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/portableaserve/portableaserve/acl-compat/">acl-compat</a>
+package at Sourceforge and in particular the files whose names match
+"acl-mp-*.lisp") - concepts can vary too.</p>
 
 <p>Speaking of implementations, the following discussion currently
 refers only to <a href="http://www.xanalys.com/">Xanalys</a> <a
@@ -223,7 +234,7 @@ a thread's output goes (by sending something there).</p>
 
 
 
-<a name="communicating_1"></a><h3>Communicating with other threads 1: <code>mp:process-wait</code></h3>
+<a name="waiting"></a><h3>Waiting</h3>
 
 <p>In all the above examples, a thread is created to run a simple
 function and then halt. In a typical application at least some of your
@@ -351,17 +362,114 @@ keep threads from trampling on each other's data.</p>
 <p>Note also the use of <code>mp:process-kill</code> to terminate
 unwanted threads when each test is complete.</p>
 
+<p><strong>Exercise:</strong> Create and test a thread which will wait
+until the symbol <code>foo</code> is <code>boundp</code> and then
+announce the fact.</p>
+
+
+<a name="state"></a><h3>Per-thread state</h3>
+
+<p>Every thread in your lisp system has its own execution stack and
+hence its own private state. The following aspects of state will
+therefore vary between different threads:</p>
+
+<ul>
+<li>bindings of dynamic variables;</li>
+<li><code>catch</code> tags;</li>
+<li>condition handlers, <code>unwind-protect</code>, etc.;</li>
+</ul>
+
+<p>On the other hand, the following are globally <strong>set</strong>
+rather than <strong>bound</strong> in a lisp system and so will not
+vary between threads:</p>
+
+<ul>
+<li>definitions of functions, methods, classes, conditions, packages;</li>
+<li>contents of any "compound" objects: cons cells, arrays, structure
+objects, CLOS objects, hash-tables;</li>
+<li>values of lexical variables in shared closures;</li>
+<li>state of any stream;</li>
+<li>symbol property-lists.</li>
+</ul>
+
+<p>To see how per-thread variable bindings can lead you astray,
+consider the following examples:</p>
+
+<pre>
+CL-USER 34 &gt; (defvar *foo* nil)
+*FOO*
+
+CL-USER 35 &gt; (mp:process-run-function "" () (lambda () (setf *foo* 1)))
+#&lt;MP:PROCESS Name "" Priority 850000 State "Running"&gt;
+
+CL-USER 36 &gt; *foo*
+1
+
+CL-USER 37 &gt; (mp:process-run-function
+              "Bind in new thread, can't see elsewhere." ()
+              (lambda ()
+                (let ((*foo* 2))
+                  (sleep 5)
+		  (setf *foo* 3)
+                  (print 'done #.*standard-output*))))
+#&lt;MP:PROCESS Name "" Priority 850000 State "Running"&gt;
+
+CL-USER 38 &gt; *foo*
+1
+
+DONE
+CL-USER 39 &gt; (let ((*foo* 4))
+               (mp:process-run-function
+                "Bind in old thread, can't see elsewhere." ()
+                (lambda () (print *foo* #.*standard-output*))))
+#&lt;MP:PROCESS Name "" Priority 850000 State "Running"&gt;
+
+1
+CL-USER 40 &gt;
+</pre>
+
+<p>In both lines 34 and 35, <code>*foo*</code> is globally
+<strong>set</strong>. This means that every thread shares the symbol's
+value. In line 37, <code>*foo*</code> is <strong>bound</strong> only
+within the new thread; the original thread (i.e. the listener) does
+not see this binding or the result of a <code>setf</code> within the
+binding. Similarly, in line 39 the <strong>binding</strong> is present
+only in the original thread. To create a binding in a new thread, use
+<code>mp:*process-initial-bindings*</code>:</p>
+
+<pre>
+CL-USER 17 &gt; (let ((mp:*process-initial-bindings*
+                    ;; Note the "dotted list" format - an unpleasant trap
+		    ;; for the unwary. Note also that new value is pushed
+		    ;; onto existing list so that system defaults aren't lost.
+                    (cons '(*foo* . 5) mp:*process-initial-bindings*)))
+               (mp:process-run-function
+                "Bind around new thread." ()
+                (lambda ()
+                  (print *foo* #.*standard-output*))))
+#&lt;MP:PROCESS Name "Bind around new thread." Priority 850000 State "Running"&gt;
+
+5
+CL-USER 18 &gt;
+</pre>
+
+<p><strong>Exercise:</strong> Explain why calling
+<code>in-package</code> in one listener does not affect the package in
+another.</p>
+
 <a name="initializing"></a><h3>Initializing multithreading</h3>
 
 <p><i>under construction</i></p>
 
 
 <hr />
+<table width="100%"><tr><td>
 <a href="license.html">Copyright</a> &copy; 2002 The Common Lisp Cookbook Project
 <address>http://cl-cookbook.sourceforge.net/</address>
-<br />
-<p><a href="http://validator.w3.org/check/referer"><img
+</td><td align="right">
+<a href="http://validator.w3.org/check/referer"><img
 src="http://www.w3.org/Icons/valid-xhtml10" alt="Valid XHTML 1.0!"
-height="31" width="88" /></a></p>
+height="31" width="88" /></a>
+</td></tr></table>
 <p>$Header$</p>
 </body> </html>
