@@ -88,18 +88,13 @@ behaviours and some code to experiment.
 
 <ul>
 <li><b>CLISP:</b>
-On CLISP, faithful output is impossible.
-You ought to use <code>(SETF (STREAM-ELEMENT-TYPE F) '(UNSIGNED-BYTE 8))</code>,
-where the ability to <code>SETF</code> is a CLISP-specific extension.
-Apart from that, the closest approximation is
+On CLISP, faithful output is possible using
 <pre>
 :external-format
 (ext:make-encoding :charset 'charset:iso-8859-1 :line-terminator :unix)
 </pre>
-It will append a single <code>#\Newline</code> to the file if there is none at the end.
-
-Yet this behaviour is acceptable for e.g. <a href="http://www.fractalconcept.com/asp/html/cl-pdf.html">CL-PDF</a> which writes *mostly*
-ASCII and &quot;EOF~%&quot; at the end of the .pdf file.
+You can also use <code>(SETF (STREAM-ELEMENT-TYPE F) '(UNSIGNED-BYTE 8))</code>,
+where the ability to <code>SETF</code> is a CLISP-specific extension.
 
 Using <code>:EXTERNAL-FORMAT :UNIX</code> will cause portability problems, since the default character set on MS-Windows is <code>CHARSET:CP1252</code>.
 <code>CHARSET:CP1252</code> doesn't allow output of e.g. <code>(CODE-CHAR #x81)</code>:
@@ -167,7 +162,6 @@ Here's some sample code to play with:
 
 (progn (generate-256 :charset 'charset:iso-8859-1) (check-256))
 Position 256 found 10(#xA).
-; Means it terminates line on output!
 
 (progn (generate-256 :external-format :default) (check-256))
 ; uses UTF-8 + CRLF(on MS-Windows) -&gt; 387 bytes
@@ -183,5 +177,5 @@ Position 256 found 10(#xA).
 <hr>
 <a href="license.html">Copyright</a> &copy; 2002 The Common Lisp Cookbook Project
 <address>http://cl-cookbook.sourceforge.net/</address>
-<!-- hhmts start --> Last modified: Thu Mar 21 01:07:27 CET 2002 <!-- hhmts end -->
+<!-- hhmts start --> Last modified: Thu Mar 28 20:48:00 CET 2002 <!-- hhmts end -->
 </body> </html>
