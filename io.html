@@ -187,7 +187,7 @@ Here's some sample code to play with:
 <h3>Fast Bulk I/O</h3>
 
 If you need to copy a lot of data and the source and destination are
-both streams (of the same <a href="http://www.lispworks.com/reference/HyperSpec/Body/26_glo_e.htm#element_type">element type</a>), it's very fast to use <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_rd_seq.htm">READ-SEQUENCE</a> and <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_wr_seq.htm">WRITE-SEQUENCE</a>:
+both streams (of the same <a href="http://www.lispworks.com/reference/HyperSpec/Body/26_glo_e.htm#element_type">element type</a>), it's very fast to use <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_rd_seq.htm"><code>READ-SEQUENCE</code></a> and <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_wr_seq.htm"><code>WRITE-SEQUENCE</code></a>:
 
 <pre>
 (let ((buf (make-array 4096 :element-type (stream-element-type input-stream)))
