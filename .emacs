@@ -23,6 +23,7 @@
 ;; Franz Allegro Common Lisp - ELI
 (defvar fi:common-lisp-image-name "c:/bin/ACL-6.2/alisp.exe")
 (defvar fi:common-lisp-directory "c:/bin/ACL-6.2/")
+(defvar fi:common-lisp-image-arguments '("+cx"))
 
 ;; Xanalys LispWorks - ILISP
 (defvar lispworks-program "c:/bin/lispworks-4.2/lw42-console.exe")
