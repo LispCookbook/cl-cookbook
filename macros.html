@@ -438,17 +438,25 @@ obvious.
 macro definition to check for the presence of the guide symbol.  If I
 had used <SAMP>in</SAMP> instead, I would have had to think about which
 package <EM>my</EM> <SAMP>in</SAMP> lives in and which package the macro user's
-<SAMP>in</SAMP> lives in.  The safest thing to do would be to write
+<SAMP>in</SAMP> lives in.  One way to avoid trouble would be to write
+<pre>
+   (and (symbolp (cadr listspec))
+        (eq (intern (symbol-name (cadr listspec)) 
+                    :keyword)
+            ':in))
+</pre>
+Another would be to write
 <pre>
     (and (symbolp (cadr listspec))
          (string= (symbol-name (cadr listspec)) (symbol-name 'in)))
 </pre>
 which
-is just uglier.  The keyword package is there to provide a home for
+neither of which is particularly clear or aesthetic.
+The keyword package is there to provide a home for
 symbols whose home is not per se relevant to anything; you might as
 well use it.<font size=-1>[Note: In ANSI Lisp, 
 I could have written <SAMP>"IN"</SAMP> instead of <SAMP>(symbol-name 'in)</SAMP>, but there are Lisp implementations that do not
-convert symbols' names to uppercase.  Since I think the whole
+l convert symbols' names to uppercase.  Since I think the whole
 uppercase conversion idea is an embarrassing relic, I try to write
 code that is portable to those implementations.]</font>
 
