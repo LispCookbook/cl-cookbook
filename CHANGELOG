@@ -1,11 +1,17 @@
+2002-08-02
+  linked systems.html from index.html
+
+2002-08-01
+  new chapter systems.html by Alberto Riva
+
 2002-07-08
-   typos to process.html. In particular, fix the mailboxes example code. 
+  typos to process.html. In particular, fix the mailboxes example code. 
 	
 2002-07-03
-   flesh out process.html - complete as it's going to get for now.
+  flesh out process.html - complete as it's going to get for now.
 	
 2002-06-28
-   cleanups to process.html and add section on thread state.
+  cleanups to process.html and add section on thread state.
 	
 2002-06-26
   add mp:process-wait to process.html.
