@@ -1,0 +1,57 @@
+2002-02-24
+  added chapter about sockets by Alberto Riva
+
+  Windows IDE chapter: modified comments re ILISP compatibility
+  with Emacs 21.1 (Bill Clementson)
+
+  added HTML table (fixed width) to Windows IDE chapter
+
+2002-02-23
+  Windows IDE chapter: mods to CLISP/CormanLisp installs
+  (Bill Clementson)
+
+2002-02-19
+  added chapter about Windows IDE (including sample .emacs and batch file)
+  by Bill Clementson
+
+  added chapter about processes and threads which currently consists
+  of the 'forking with CMUCL' example by Martin Cracauer
+
+  added Bill Clementson and Martin Cracauer to the list of contributors
+
+2002-02-18
+  Moved cookbook to Sourceforge. Imported the contents from agharta.de
+  web server into the CVS repository.
+
+  The cookbook now consists of:
+    - chapter about strings by Edi Weitz
+      with corrections and additions by Rudi Schlatte, Paul Foley,
+      and Lieven Marchand
+    - chapter about dates and times by Alberto Riva,
+      plus one entry about computing the day of the week by Gerald Doussot
+    - chapter about hash tables by Edi Weitz
+      with corrections and additions by Paul Foley and Kalman Reti
+    - page about pattern matching and regular expressions
+      which mainly consists of a link to the CLiki page
+    - chapter about functions,
+      entry about functions which return functions by Edi Weitz
+      with corrections by Paul Foley,
+      entry about currying functions by Paul Foley
+    - chapter about input/output,
+      currently one entry about redirecting stdout by Rudi Schlatte
+    - chapter about packages,
+      currently one entry about listing all symbols by Frederic Brunel
+    - chapter about OS interfacing,
+      currently one entry about accessing environment variables
+      by Paul Foley with additons by Jörg-Cyril Höhle and Edi Weitz
+    - chapter about foreign function interfaces,
+      gethostname CLISP example by Jörg-Cyril Höhle
+      with additions by Reini Urban,
+      gethostname ACL example by Alberto Riva
+    - starting page (index.html) including the list of contributors
+    - license
+
+2002-02-05
+  Cookbook started at <http://agharta.de/cookbook/> with two chapters
+  initially - a chapter about dates and times by Alberto Riva and a
+  chapter about strings by Edi Weitz.
