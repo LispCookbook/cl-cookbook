@@ -17,10 +17,10 @@
 ;; Gnu CLISP - ILISP (switches for ANSI & no banner)
 (defvar clisp-dir "c:/bin/clisp-2.30/")
 (defvar clisp-exe (concat clisp-dir "lisp.exe"))
-(defvar clisp-program (concat clisp-exe " -B " clisp-dir " -M " clisp-dir "lispinit.mem -ansi -q"))
+(defvar clisp-hs-program (concat clisp-exe " -B " clisp-dir " -M " clisp-dir "lispinit.mem -ansi -q"))
 
 ;; Corman Common Lisp - Inferior Lisp Mode 
-(defvar cormanlisp-dir "c:/bin/corman-2.0/")
+(defvar cormanlisp-dir "c:/bin/corman-1.5/")
 (defvar cormanlisp-exe (concat cormanlisp-dir "clconsole.exe"))
 (defvar cormanlisp-program (concat cormanlisp-exe " -image " cormanlisp-dir "cormanlisp.img"))
 

@@ -1,3 +1,7 @@
+2002-10-22
+  Updated windows.html and .emacs by Bill Clementson to revert to Corman Lisp 1.5 due to problems with running
+  clconsole.exe inside of emacs in version 2.0.
+
 2002-10-21
   Updated windows.html and .emacs by Bill Clementson to add support for Corman Lisp 2.0, removed instructions for
   the w3 utility (not necessary for viewing documentation) and provide support in .emacs for auto-detecting which
