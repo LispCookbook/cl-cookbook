@@ -1,0 +1,703 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<TITLE>
+The Common Lisp Cookbook - Macros and Backquote
+</TITLE>
+</HEAD>
+<BODY>
+
+
+
+
+<p>
+
+
+
+
+
+<p><H1><FONT color=#003300>Macros and Backquote</FONT></H1>
+
+<p>
+<H3><FONT color=black>Drew McDermott</FONT></H3>
+        
+<p>
+
+
+
+
+Table of Contents <a name="LtohTOCentry-0"></a>
+
+<ol>
+  <li><a href="#LtohTOCentry-1">How Macros Work</a>
+  <li><a href="#LtohTOCentry-2">Backquote</a>
+  <li><a href="#LtohTOCentry-3">Getting Macros Right</a>
+  <li><a href="#LtohTOCentry-4">What Macros are For</a>
+</ol>
+</ol>
+
+
+<p><a name="LtohTOCentry-1"></a>
+<hr><H2><FONT color=black>How Macros Work</FONT></H2>
+<a name="sec:macrointro"><font size="-1" style="color: blue">How Macros Work</font></a>
+
+<p>The word <EM>macro</EM> is used generally in computer science to mean a
+syntactic extension to a programming language.<font size=-1>[Note: The name
+comes from the word "macro-instruction,'' which was a useful feature
+of many second-generation assembly languages.  A macro-instruction
+looked like a single instruction, but expanded into a sequence of
+actual instructions.  The basic idea has since been used many times,
+notably in the C preprocessor.  The name "macro'' is perhaps not
+ideal, since it connotes nothing relevant to what it names, but we're
+stuck with it.]</font> 
+Although many languages have a macro facility, none of them
+are as powerful as Lisp's.  The basic mechanism  of Lisp
+macros is simple, but has subtle complexities, so 
+learning your way around it takes a bit of practice.
+
+<p>A macro is an ordinary piece of Lisp code that operates on <EM>another piece of putative Lisp code,</EM> translating it into (a version
+closer to) executable Lisp.  That may sound a bit complicated, so
+let's give a simple example.  Suppose you want a version of <SAMP>setq</SAMP>
+that sets two variables to the same value.  So if you write
+
+<p><pre>
+   (setq2 x y (+ z 3))
+</pre>
+
+<p>when <SAMP>z</SAMP>=8 both <SAMP>x</SAMP> and <SAMP>y</SAMP> are set to 11.  (I can't
+think of any use for this, but it's just an example.)
+
+<p>It should be obvious that we can't define <SAMP>setq2</SAMP> as a function.
+If <SAMP>x</SAMP>=50 and <SAMP>y</SAMP>=<i>-5</i>, this function would receive the values
+50, <i>-5</i>, and 11; it would have no knowledge of what variables were
+supposed to be set.  What we really want to say is, When you (the Lisp
+system) see <SAMP>(setq2 <i>v<sub>1</sub></i> <i>v<sub>2</sub></i> <i>e</i>)</SAMP>, treat it as equivalent to 
+<SAMP>(progn (setq <i>v<sub>1</sub></i> <i>e</i>) (setq <i>v<sub>2</sub></i> <i>e</i>))</SAMP>.  
+Actually, this isn't
+quite right, but it will do for now.  A macro allows us to do
+precisely this, by specifying a program for transforming the input
+pattern <SAMP>(setq2 <i>v<sub>1</sub></i> <i>v<sub>2</sub></i> <i>e</i>)</SAMP> into the output pattern <SAMP>(progn ...)</SAMP>.  
+
+<p>Here's how we could define the <SAMP>setq2</SAMP> macro:
+<pre>
+(defmacro setq2 (v1 v2 e)
+   (list 'progn (list 'setq v1 e) (list 'setq v2 e)))
+</pre>
+This is very close to the following function definition
+<pre>
+(defmacro setq2F (v1 v2 e)
+   (list 'progn (list 'setq v1 e) (list 'setq v2 e)))
+</pre>
+If we evaluated <SAMP>(setq2F 'x 'y '(+ z 3))</SAMP>, we would get
+<SAMP>(progn (setq x (+ z 3)) (setq y (+ z 3)))</SAMP>.  This is a perfectly
+ordinary Lisp computation, whose sole point of interest is that its
+output is a piece of executable Lisp code.  What <SAMP>defmacro</SAMP> does
+is create this function implicitly and arrange that whenever an
+expression of the form <SAMP>(setq2 x y (+ z 3))</SAMP> is seen, <SAMP>setq2F</SAMP>
+is called with the pieces of the form as arguments, namely <SAMP>x</SAMP>,
+<SAMP>y</SAMP>, and <SAMP>(+ z 3)</SAMP>.  The resulting piece of code then replaces
+the call to <SAMP>setq2</SAMP>, and execution resumes as if the new piece of
+code had occurred in the first place.  The macro form is said to <EM>expand</EM> into the new piece of code.
+
+<p>This is all there is to it, except, of course, for the myriad subtle
+consequences.  The main consequence is that <EM>run time for the <SAMP>setq2</SAMP> macro is compile time for its context.</EM>  That is, suppose the
+Lisp system is compiling a function, and midway through it finds the
+expression <SAMP>(setq2 x y (+ z 3))</SAMP>.  The job of the compiler is, of
+course, to translate source code into something executable, such as
+machine language or perhaps byte code.  Hence it doesn't
+execute the source code, but operates on it in various mysterious
+ways.  However, once the compiler sees the <SAMP>setq2</SAMP> expression, it
+must suddenly switch to executing the body of the <SAMP>setq2</SAMP> macro.
+As I said, this is an ordinary piece of Lisp code, which can in
+principle do anything any other piece of Lisp code can do.  That means
+that when the compiler is running, the entire Lisp (run-time) system
+must be present.
+
+<p>Novices often make the following sort of mistake.  Suppose that the
+<SAMP>setq2</SAMP> macro needs to do some complex transformation on its <SAMP>e</SAMP> argument before plugging it into the result.  Suppose this
+transformation can be written as a Lisp procedure <SAMP>comtran</SAMP>.  The
+novice will often write:
+
+<p><pre>
+(defmacro setq2 (v1 v2 e)
+   (let ((e1 (comtran e)))
+      (list 'progn (list 'setq v1 e1) (list 'setq v2 e1))))
+
+<p>(defmacro comtran (exp) ...) ;; <EM>Wrong!</EM>
+</pre>
+
+<p>The mistake is to suppose that once a macro is called, the Lisp system
+enters a "macro world,'' so naturally everything in that world must
+be defined using <SAMP>defmacro</SAMP>.  This is the wrong picture.  The
+right picture is that <SAMP>defmacro</SAMP> enables a step into the <EM>ordinary Lisp world</EM>, but in which the principal object of
+manipulation is Lisp code.  Once that step is taken, one uses ordinary
+Lisp function definitions:
+
+<p><pre>
+(defmacro setq2 (v1 v2 e)
+   (let ((e1 (comtran e)))
+      (list 'progn (list 'setq v1 e1) (list 'setq v2 e1))))
+
+<p>(defun comtran (exp) ...) ;; <EM>Right!</EM>
+</pre>
+
+<p>One possible explanation for this mistake may be that in other
+languages, such as C, invoking a preprocessor macro <EM>does</EM> get you
+into a different world; you can't run an arbitrary C program.  It
+might be worth pausing to think about what it might mean to be able to.
+
+<p>Another subtle consequence is that we must spell out how the arguments
+to the macro get distributed to the hypothetical behind-the-scenes
+function (called <SAMP>setq2F</SAMP> in my example).  In most cases, it is
+easy to do so: In defining a macro, we use all the usual <SAMP>lambda</SAMP>-list syntax, such as <SAMP>&amp;optional</SAMP>, <SAMP>&amp;rest</SAMP>, <SAMP>&amp;key</SAMP>, but what gets bound to the formal parameters are pieces of the
+macro form, not their values (which are mostly unknown, this being
+compile time for the macro form).  So if we defined a macro thus:
+<pre>
+   (defmacro foo (x &amp;optional y &amp;key (cxt 'null)) ...)
+</pre>
+then 
+<table>
+<TR> <TD align=left> <EM>If we call it thus ...</EM> </TD> <TD align=left> <EM>The parameters's values are
+...</EM> </TD></TR>
+<TR> <TD align=left> <SAMP>(foo a)</SAMP> </TD> <TD align=left> <SAMP>x<i>=</i>a, y<i>=</i>nil, cxt<i>=</i>null</SAMP> </TD></TR>
+<TR> <TD align=left> <SAMP>(foo (+ a 1) (- y 1))</SAMP> </TD> <TD align=left> <SAMP>x<i>=</i>(+ a 1), y<i>=</i>(- y 1),
+cxt<i>=</i>null</SAMP> </TD></TR>
+<TR> <TD align=left> <SAMP>(foo a b :cxt (zap zip))</SAMP> </TD> <TD align=left> <SAMP>x<i>=</i>a, y<i>=</i>b, cxt<i>=</i>(zap zip)</SAMP> 
+</table>
+
+<p>Note that the values of the variables are the actual expressions <SAMP>(+ a 1)</SAMP> and <SAMP>(zap zip)</SAMP>.  There is no requirement that these
+expressions' values be known, or even that they have values.  The macro
+can do anything it likes with them.  For instance, here's an even more
+useless variant of <SAMP>setq</SAMP>: <SAMP>(setq-reversible <i>e<sub>1</sub></i> <i>e<sub>2</sub></i> <i>d</i>)</SAMP>
+behaves like <SAMP>(setq <i>e<sub>1</sub></i> <i>e<sub>2</sub></i>)</SAMP> if <i>d=</i><SAMP>:normal</SAMP>, and behaves like
+<SAMP>(setq <i>e<sub>2</sub></i> <i>e<sub>1</sub></i>)</SAMP> if <i>d=</i><SAMP>:backward</SAMP>.  It could be defined thus:
+<pre>
+(defmacro setq-reversible (e1 e2 d)
+   (case d 
+      (:normal (list 'setq e1 e2))
+      (:backward (list 'setq e2 e1))
+      (t (error ...))))
+</pre>
+
+<p><a name="LtohTOCentry-2"></a>
+<hr><H2><FONT color=black>Backquote</FONT></H2>
+
+<p>Before taking another step, we need to introduce a piece of Lisp
+notation that is indispensable to defining macros, even though
+technically it is quite independent of macros.  This is the <EM>backquote facility</EM>.  As we saw above, the main job of a macro, when
+all is said and done, is to define a piece of Lisp code, and that
+means evaluating expressions such as <SAMP>(list 
+'prog (list 'setq ...) ...)</SAMP>.  As these expressions grow in
+complexity, it becomes hard to read them and write them.  What we find
+ourselves wanting is a notation that provides the skeleton of an
+expression, with some of the pieces filled in with new expressions.
+That's what backquote provides.  Instead of the the <SAMP>list</SAMP>
+expression given above, one writes
+<pre>
+    <b><font color=#000099>`</font></b>(progn (setq ,v1 ,e) (setg ,v2 ,e))
+</pre>
+The backquote (<SAMP><b><font color=#000099>`</font></b></SAMP>) character signals that in the expression that
+follows, every subexpression <EM>not</EM> preceded by a comma is to be
+quoted, and every subexpression preceded by a comma is to be
+evaluated.  
+
+<p>That's mostly all there is to backquote.  There are just two extra
+items to point out.  First, if you write "<SAMP>,@<i>e</i></SAMP>'' instead of
+"<SAMP>,<i>e</i></SAMP>'' then the  value of <i>e</i> is spliced into the result.  So
+if <SAMP>v<i>=</i>(oh boy)</SAMP>, then <SAMP><b><font color=#000099>`</font></b>(zap ,@v ,v)</SAMP> evaluates to <SAMP>(zap oh boy
+(oh boy))</SAMP>.  The second occurrence of <SAMP>v</SAMP> is replaced by its
+value.  The first is replaced by the elements of its value.  If <SAMP>v</SAMP> had had value <SAMP>()</SAMP>, it would have disappeared entirely: the
+value of <SAMP>(zap ,@v ,v)</SAMP> would have been <SAMP>(zap ())</SAMP>, which is the same as
+<SAMP>(zap nil)</SAMP>.  
+
+<p>Second, one might wonder what happens if a backquote expression occurs
+inside another backquote.  The answer is that the backquote becomes
+essentially unreadable and unwriteable; using nested backquote is
+usually a tedious debugging exercise.  The reason, in my not-so-humble
+opinion, is that backquote is defined wrong.  A comma pairs up with
+the innermost backquote when the default should be that it pairs up
+with the outermost.  But this is not the place for a rant or
+tutorial; consult your favorite  Lisp reference for the exact behavior
+of nested backquote plus some examples.
+
+<p>One problem with backquote is that once you learn it you tend to use
+for every list-building occasion.  For instance, you might write
+<pre>
+(mapcan (lambda (x)
+           (cond ((symbolp x) <b><font color=#000099>`</font></b>((,x)))
+                 ((&gt; x 10) <b><font color=#000099>`</font></b>(,x ,x))
+                 (t '())))
+        some-list)
+</pre>
+which yields <SAMP>((a) 15 15)</SAMP> when <SAMP>some-list</SAMP> = <SAMP>(a 6 15)</SAMP>.
+The problem is that <SAMP>mapcan</SAMP> destructively alters the results
+returned by the <SAMP>lambda</SAMP>-expression.  Can we be sure that the
+lists returned by that expression are "fresh,'' that is, they are
+different (in the <SAMP>eq</SAMP> sense) from the structures returned on
+other calls of that <SAMP>lambda</SAMP> expression?  In the present case,
+close analysis will show that they must be fresh, but in general
+backquote is not obligated to return a fresh list every time (whether
+it does or not is implementation-dependent).  If the example above got
+changed to 
+<pre>
+(mapcan (lambda (x)
+           (cond ((symbolp x) <b><font color=#000099>`</font></b>((,x)))
+                 ((&gt; x 10) <b><font color=#000099>`</font></b>(,x ,x))
+                 ((&gt;= x 0) <b><font color=#000099>`</font></b>(low))
+                 (t '())))
+        some-list)
+</pre>
+then backquote may well treat <SAMP><b><font color=#000099>`</font></b>(low)</SAMP> as if it were <SAMP>'(low)</SAMP>;
+the list will be allocated at load time, and every time the <SAMP>lambda</SAMP> is evaluated, that same chunk of storage will be returned.  So
+if we  evaluate the expression with <SAMP>some-list</SAMP> = <SAMP>(a 6 15)</SAMP>,
+we will get <SAMP>((a) low 15 15)</SAMP>, but as a side effect the constant
+<SAMP>(low)</SAMP> will get clobbered to become <SAMP>(low 15 15)</SAMP>.  If we
+then evaluate the expression with, say, <SAMP>some-list</SAMP> = <SAMP>(8
+oops)</SAMP>, the result will be <SAMP>(low 15 15 (oops))</SAMP>, and now the
+"constant'' that started off as <SAMP>'(low)</SAMP> will be <SAMP>(low 15 15
+(oops))</SAMP>.<font size=-1>[Note: The bug exemplified here takes other forms, and has
+often bit newbies - as well as experienced programmers - in the
+ass.  The general form is that a constant list is produced as the
+value of something that is later destructively altered.  The first
+line of defense against this bug is never to destructively alter any
+list.  For newbies, this is also the last line of defense.  For those
+of us who imagine we're more sophisticated, the next line of defense is
+to think very carefully any time you use <SAMP>nconc</SAMP> or <SAMP>mapcan</SAMP>.]</font>
+
+<p>To fix the bug, you can write <SAMP>(map 'list ...)</SAMP> instead of <SAMP>mapcan</SAMP>.  However, if you are determined to use <SAMP>mapcan</SAMP>, write
+the expression this way:
+<pre>
+(mapcan (lambda (x)
+           (cond ((symbolp x) (list <b><font color=#000099>`</font></b>(,x)))
+                 ((&gt; x 10) (list x x))
+                 ((&gt;= x 0) (list 'low))
+                 (t '())))
+        some-list)
+</pre>
+
+<p>My personal preference is to use backquote <EM>only</EM> to build
+S-expressions, that is, hierarchical expressions that consist of
+symbols, numbers, and strings, and that are not conceptualized as
+changing in length.  For instance, I would never write 
+<pre>
+   (setq sk <b><font color=#000099>`</font></b>(,x ,@sk))
+</pre>
+If <SAMP>sk</SAMP> is being used as a stack, that is, it's going to be <SAMP>pop</SAMP>ped in the normal course of things, I would write tt  (push x
+sk).  If not, I would write <SAMP>(setq sk (cons x sk))</SAMP>.
+
+<p><a name="LtohTOCentry-3"></a>
+<hr><H2><FONT color=black>Getting Macros Right</FONT></H2>
+
+<p>I said in section&nbsp;<a href="#sec:macrointro">here</a> that my definition of <SAMP>setq2</SAMP> wasn't quite right, and now it's time to fix it.
+
+<p>Suppose we write <SAMP>(setq2 x y (+ x 3))</SAMP>, when <SAMP>x</SAMP><i>=8</i>.  Then
+according to the definition given above, this form will expand into 
+<SAMP>(progn (setq x (+ x 3)) (setq y (+ x 3)))</SAMP>, so that <SAMP>x</SAMP> will
+have value 11 and <SAMP>y</SAMP> will have value 14.  Chances are that isn't
+what the macro is expected to do (although you never know).  Another
+problematic case is <SAMP>(setq2 x y (pop l))</SAMP>, which causes <SAMP>l</SAMP> to
+be popped twice; again, probably not right.
+
+<p>The solution is to evaluate <SAMP>e</SAMP> just once, save it in a temporary
+variable, and then set <SAMP>v1</SAMP> and <SAMP>v2</SAMP> to it.  To make temporary
+variables, we use the <SAMP>gensym</SAMP> function, which returns a fresh
+variable guaranteed to appear nowhere else.  Here is what the macro
+should look like:
+<pre>
+(defmacro setq2 (v1 v2 e)
+   (let ((tempvar (gensym)))
+      <b><font color=#000099>`</font></b>(let ((,tempvar ,e))
+          (progn (setq ,v1 ,tempvar) 
+                 (setq ,v2 ,tempvar)))))
+</pre>
+Now <SAMP>(setq2 x y (+ x 3))</SAMP> expands to 
+<pre>
+   (let ((#:g2003 (+ x 3)))
+      (progn (setq x #:g2003) (setq y #:g2003)))
+</pre>
+Here <SAMP>gensym</SAMP> has returned the symbol <SAMP>#:g2003</SAMP>, which prints
+in this funny way because it won't be recognized by the reader.  (Nor
+is there any need for the reader to recognize it, since it exists only
+long enough for the code that contains it to be compiled.)  
+
+<p>Exercise: Verify that this new version works correctly for the case
+<SAMP>(setq2 x y (pop l1))</SAMP>.
+
+<p>Exercise: Try writing the new version of the macro without using
+backquote.  If you can't do it, you have done the exercise correctly,
+and learned what backquote is for!
+
+<p>The moral of this section is to think carefully about which
+expressions in a macro get evaluated and when.  Be on the lookout for
+situations where the same expression gets plugged into the output
+twice (as <SAMP>e</SAMP> was in my original macro design).  For complex
+macros, watch out for cases where the order that expressions are
+evaluated differs from the order in which they are written.  This is
+sure to trip up some user of the macro - even if you are the only
+user.
+
+<p><a name="LtohTOCentry-4"></a>
+<hr><H2><FONT color=black>What Macros are For</FONT></H2>
+
+<p>Macros are for making syntactic extensions to Lisp.  One often hears
+it said that macros are a bad idea, that users can't be trusted with
+them, and so forth.  Balderdash.  It is just as reasonable to extend a
+language syntactically as to extend it by defining your own
+procedures.  It may be true that the casual reader of your code can't
+understand the code without seeing the macro definitions, but then the
+casual reader can't understand it without seeing function definitions
+either.  Having <SAMP>defmethods</SAMP> strewn around several files
+contributes far more to unclarity than macros ever have, but that's a
+different diatribe.
+
+<p>Before surveying what sorts of syntactic extensions I have found
+useful, let me point out what sorts of syntactic extensions are
+generally <EM>not</EM> useful, or best accomplished using means other
+than macros.  Some novices think macros are useful for open-coding
+functions.  So, instead of defining
+<pre>
+   (defun sqone (x) (let ((y (+ x 1))) (* y y)))
+</pre>
+they might define
+<pre>
+   (defmacro sqone (x)
+      <b><font color=#000099>`</font></b>(let ((y (+ ,x 1))) (* y y)))
+</pre>
+So that <SAMP>(sqone (* z 13))</SAMP> might expand into 
+<pre>
+    (let ((y (+ (* z 13) 1))) (* y y))
+</pre>
+This is correct, but a waste of effort.  For one thing, the amount of
+time saved is almost certainly negligible.  If it's really important
+that <SAMP>sqone</SAMP> be expanded inline, one can put <SAMP>(declaim (inline
+sqone))</SAMP> before <SAMP>sqone</SAMP> is defined (although the compiler is not
+obligated to honor this declaration).  For another, once <SAMP>sqone</SAMP>
+is defined as a macro, it becomes impossible to write <SAMP>(mapcar
+#'sqone ll)</SAMP>, or 
+to do anything else with it except call it.  
+
+<p>But macros have a thousand and one legitimate uses.  Why write <SAMP>(lambda (x) ...)</SAMP> when you can write <SAMP>(<tt>\</tt><tt>\</tt> (x) ...)</SAMP>?  Just
+define <tt>\</tt><tt>\</tt> as a macro: <SAMP>(defmacro <tt>\</tt><tt>\</tt> (&amp;rest l) <b><font color=#000099>`</font></b>(lambda
+,@l))</SAMP>. 
+
+<p>Many people find <SAMP>mapcar</SAMP> and <SAMP>mapcan</SAMP> a bit too obscure,
+especially when used with large <SAMP>lambda</SAMP> expressions.  Rather than
+write something like
+<pre>
+(mapcar (lambda (x)
+           (let ((y (hairy-fun1 x)) (z (hairy-fun2 x)))
+              (dolist (y1 y)
+                 (dolist (z1 z) 
+                    <EM>... and further meaningless</EM>
+                    <EM>space-filling nonsense...</EM>
+                    ))))
+        l)
+</pre>
+we might prefer to write 
+<pre>
+(for (x :in l)
+   (let ((y (hairy-fun1 x)) (z (hairy-fun2 x)))
+      (dolist (y1 y)
+         (dolist (z1 z) 
+            <EM>... and further meaningless</EM>
+            <EM>space-filling nonsense...</EM>
+            ))))
+</pre>
+
+<p>This macro might be defined thus:
+<pre>
+(defmacro for (listspec exp)
+   (cond ((and (= (length listspec) 3)
+               (symbolp (car listspec))
+               (eq (cadr listspec) ':in))
+          <b><font color=#000099>`</font></b>(mapcar (lambda (,(car listspec))
+                      ,exp)
+                   ,(caddr listspec)))
+         (t (error "Ill-formed: %s" <b><font color=#000099>`</font></b>(for ,listspec ,exp)))))
+</pre>
+(This is a simplified version of a macro by Chris Riesbeck.)
+
+<p>It's worth stopping for a second to discuss the role 
+the keyword <SAMP>:in</SAMP> plays in this macro.  It serves as a sort of
+"local syntax marker,'' in that it has no meaning as far as Lisp is
+concerned, but does serve as a syntactic guidepost for  the macro
+itself.  I will refer to these markers as <EM>guide symbols</EM>.
+(Here its job may seem trivial, but if we generalized the
+<SAMP>for</SAMP> macro to allow multiple list arguments and an implicit <SAMP>progn</SAMP> in the body the <SAMP>:in</SAMP>s would be crucial in telling us where
+the arguments stopped and the body began.)
+
+<p>It is not strictly necessary for the guide symbols of a macro to be in
+the keyword package, but it is a good idea, for two reasons.  First,
+they highlight to the reader that something idiosyncratic is going
+on.  A form like <SAMP>(for ((x in (foobar a b 'oof))) (something-hairy
+x (list x)))</SAMP> looks a bit wrong already, because of the double
+parentheses before the <SAMP>x</SAMP>.  But using "<SAMP>:in</SAMP>'' makes it more
+obvious.  
+
+<p>Second, notice that I wrote <SAMP>(eq (cadr listspec) ':in)</SAMP> in the
+macro definition to check for the presence of the guide symbol.  If I
+had used <SAMP>in</SAMP> instead, I would have had to think about which
+package <EM>my</EM> <SAMP>in</SAMP> lives in and which package the macro user's
+<SAMP>in</SAMP> lives in.  The safest thing to do would be to write
+<pre>
+    (and (symbolp (cadr listspec))
+         (string= (symbol-name (cadr listspec)) (symbol-name 'in)))
+</pre>
+which
+is just uglier.  The keyword package is there to provide a home for
+symbols whose home is not per se relevant to anything; you might as
+well use it.<font size=-1>[Note: In ANSI Lisp, 
+I could have written <SAMP>"IN"</SAMP> instead of <SAMP>(symbol-name 'in)</SAMP>, but there are Lisp implementations that do not
+convert symbols' names to uppercase.  Since I think the whole
+uppercase conversion idea is an embarrassing relic, I try to write
+code that is portable to those implementations.]</font>
+
+<p>Let's look at another example, both to illustrate a nice macro, and to
+provide an auxiliary function for some of the discussion below.  One
+often wants to create new symbols in Lisp, and <SAMP>gensym</SAMP> is not
+always adequate for building them.  Here is a description of an
+alternative facility called <SAMP>build-symbol</SAMP>:
+<blockquote>
+<SAMP>(build-symbol [(:package <i>p</i>)] <EM>-pieces-</EM>)</SAMP> builds a
+symbol by concatenating the given <EM>pieces</EM> and interns it as
+specified by <i>p</i>.  For each element 
+of <EM>pieces</EM>, if it is a ... 
+<UL>
+<li><strong></strong> ... string: The string is added to the new symbol's name.
+<li><strong></strong> ... symbol: The name of the symbol is added to the new symbol's
+name.
+<li><strong></strong> ... expression of the form <SAMP>(:&lt; <i>e</i>)</SAMP>: <i>e</i> should evaluate
+to a string, symbol, or number; the characters of the value of <i>e</i> (as
+printed by 
+<SAMP>princ</SAMP>) are concatenated into the new symbol's name.
+<li><strong></strong> ... expression of the form <SAMP>(:++ <i>p</i>)</SAMP>: <i>p</i> should be a place expression (i.e.,
+appropriate as the first argument to <SAMP>setf</SAMP>), whose value is an
+integer; the value is incremented by 1, and the new value is
+concatenated intot he new symbol's name.
+</UL>
+If the <SAMP>:package</SAMP> specification is omitted, it defaults to the
+value of <SAMP>*package*</SAMP>.  If <i>p</i> is <SAMP>nil</SAMP>, the symbol is interned nowhere.
+Otherwise, it should evaluate to a package designator (usually, a
+keyword whose name is the same of a package).
+</blockquote>
+For example, <SAMP>(build-symbol (:&lt; x) "-" (:++ *x-num*))</SAMP>, when <SAMP>x</SAMP> = <SAMP>foo</SAMP> and 
+<SAMP>*x-num*</SAMP> = 8, sets <SAMP>*x-num*</SAMP> to 9 and 
+ evaluates to
+<SAMP>FOO-9</SAMP>.  If evaluated again, the result will be <SAMP>FOO-10</SAMP>, and so
+forth.  
+
+<p>Obviously, <SAMP>build-symbol</SAMP> can't be implemented as a function; it
+has to be a macro.  Here is an implementation:
+
+<pre>
+(defmacro build-symbol (&rest l)
+   (let ((p (find-if (lambda (x) (and (consp x) (eq (car x) ':package)))
+                     l)))
+      (cond (p
+             (setq l (remove p l))))
+      (let ((pkg (cond ((eq (cadr p) 'nil)
+                        nil)
+                       (t `(find-package ',(cadr p))))))
+         (cond (p
+                (cond (pkg
+                       `(values (intern ,(symstuff l) ,pkg)))
+                      (t
+                       `(make-symbol ,(symstuff l)))))
+               (t
+                `(values (intern ,(symstuff l))))))))
+
+(defun symstuff (l)
+   `(concatenate 'string
+      ,@(for (x :in l)
+           (cond ((stringp x)
+                  `',x)
+                 ((atom x)
+                  `',(format nil "~a" x))
+                 ((eq (car x) ':&lt;)
+                  `(format nil "~a" ,(cadr x)))
+                 ((eq (car x) ':++)
+                  `(format nil "~a" (incf ,(cadr x))))
+                 (t
+                  `(format nil "~a" ,x))))))
+</pre>
+<p>(Another approach would be have <SAMP>symstuff</SAMP> return a single call of
+the form <SAMP>(format nil <EM>format-string</EM> <EM>-forms-</EM>)</SAMP>,
+where the <EM>forms</EM> are derived from the <EM>pieces</EM>, and the <EM>format-string</EM> consists of interleaved ~a's and strings.)
+
+<p>Sometimes a macro is needed only temporarily, as a sort of syntactic
+scaffolding.  Suppose you need to define 12 functions, but they fall
+into 3 stereotyped groups of 4:
+<pre>
+(defun make-a-zip (y z) (vector 2 'zip y z))
+(defun test-whether-zip (x) (and (vectorp x) (eq (aref x 1) 'zip)))
+(defun zip-copy (x) ...)
+(defun zip-deactivate (x) ...)
+
+<p>(defun make-a-zap (u v w) (vector 3 'zap u v w))
+(defun test-whether-zap (x) ...)
+(defun zap-copy (x) ...)
+(defun zap-deactivate (x) ...)
+
+<p>(defun make-a-zep () (vector 0 'zep))
+(defun test-whether-zep (x) ...)
+(defun zep-copy (x) ...)
+(defun zep-deactivate (x) ...)
+</pre>
+Where the omitted pieces are the same in all similarly named
+functions.  (That is, the "...'' in <SAMP>zep-deactivate</SAMP> is the
+same code as the "...'' in <SAMP>zip-deactivate</SAMP>, and so forth.)
+Here, for the sake of concreteness, if not plausibility, <SAMP>zip</SAMP>,
+<SAMP>zap</SAMP>, and <SAMP>zep</SAMP> are behaving like odd little data structures.
+The functions could be rather large, and it would get tedious
+keeping them all in synch as they are debugged.  An alternative would
+be to use a macro:
+<pre>
+(defmacro odd-define (name buildargs)
+   <b><font color=#000099>`</font></b>(progn (defun ,(build-symbol make-a- (:&lt; name)) 
+                                 ,buildargs
+              (vector ,(length buildargs) ',name ,@buildargs))
+           (defun ,(build-symbol test-whether- (:&lt; name)) (x)
+              (and (vectorp x) (eq (aref x 1) ',name))
+           (defun ,(build-symbol (:&lt; name) -copy) (x) 
+              ...)
+           (defun ,(build-symbol (:&lt; name) -deactivate) (x) 
+              ...))))
+
+<p>(odd-define zip (y z))
+(odd-define zap (u v w))
+(odd-define zep ())
+</pre>
+
+<p>If all the uses of this macro are collected in this one place, it
+might be clearer to make it a local macro using <SAMP>macrolet</SAMP>:
+
+<p><pre>
+(macrolet ((odd-define (name buildargs)
+              <b><font color=#000099>`</font></b>(progn (defun ,(build-symbol make-a- (:&lt; name)) 
+                                            ,buildargs
+                         (vector ,(length buildargs) 
+                                 ',name
+                                  ,@buildargs))
+                      (defun ,(build-symbol test-whether- (:&lt; name)) 
+                             (x)
+                         (and (vectorp x) (eq (aref x 1) ',name))
+                      (defun ,(build-symbol (:&lt; name) -copy) (x) 
+                         ...)
+                      (defun ,(build-symbol (:&lt; name) -deactivate) (x)
+                          ...)))))
+   (odd-define zip (y z))
+   (odd-define zap (u v w))
+   (odd-define zep ()))
+</pre>
+
+<p>Finally, macros are essential for defining "command languages.''
+A <EM>command</EM> is a function with a short name for use by users in
+interacting with Lisp's read-eval-print loop.  A short name is useful
+and possible because we want it to be easy to type and we don't care
+much whether the name clashes some other command; if two command
+names clash, we can change one of them.  
+
+<p>As an example, let's define a little command language for debugging
+macros.  (You may actually find this useful.)  There are just two
+commands, <SAMP>ex</SAMP> and <SAMP>fi</SAMP>. 
+They keep track of a "current form,'' the thing to be macro-expanded
+or the result of such an expansion:
+<OL>
+<li><strong></strong>  <SAMP>(ex [<EM>form</EM>])</SAMP>: Apply <SAMP>macro-expand1</SAMP> to <EM>form</EM> (if supplied) or the current form,
+and make the  result the current form.  Then pretty-print the current form.
+<li><strong></strong> <SAMP>(fi <i>s</i> [<i>k</i>])</SAMP>: Find the <i>k</i>'th subexpression of the
+current form whose <SAMP>car</SAMP> is <i>s</i>. (<i>k</i> defaults to 0.)   Make that
+subexpression the current form and pretty-print it.
+</OL>
+
+<p>Suppose you're trying to debug a macro <SAMP>hair-squared</SAMP> that expands
+into something complex containing a subform that is itself a macro
+form beginning with the symbol <SAMP>odd-define</SAMP>.  You suspect there is
+a bug in the subform.  You might issue the following commands:
+<pre>
+ &gt; (ex (hair-squared ...))
+(PROGN (DEFUN ...)
+         (ODD-DEFINE ZIP (U V W))
+         ...)
+ &gt; (fi odd-define)
+ (ODD-DEFINE ZIP (U V W))
+ &gt; (ex)
+ (PROGN (DEFUN MAKE-A-ZIP (U V W) ...)        
+    ...)
+</pre>
+
+<p>Once again, it is clear that <SAMP>ex</SAMP> and <SAMP>fi</SAMP> cannot be
+functions, although they could easily be made into functions if we
+were willing to type a quote before their arguments.  But using
+"quote'' often seems inappropriate in commands.  For one thing,
+having to type it is a nuisance in a context where we are trying to
+save keystrokes, especially if the argument in question is 
+always quoted.
+For another, in many cases it just seems
+inappropriate.  If we 
+had a command that took a symbol as one of its arguments and set it to
+a value, it would just be strange to write <SAMP>(<EM>command</EM> 'x
+...)</SAMP> instead of <SAMP>(<EM>command</EM> x ...)</SAMP>, because we want to
+think of the command as a variant of <SAMP>setq</SAMP>.  
+
+<p>Here is how <SAMP>ex</SAMP> and <SAMP>fi </SAMP> might be defined:
+
+<pre>
+(defvar *current-form*)
+
+(defmacro ex (&optional (form nil form-supplied))
+   `(progn
+       (pprint (setq *current-form*
+                     (macroexpand-1
+                        ,(cond (form-supplied
+                                `',form)
+                               (t '*current-form*)))))
+       (values)))
+
+(defmacro fi (s &optional (k 0))
+   `(progn
+       (pprint (setq *current-form*
+                    (find-nth-occurrence ',s *current-form* ,k)))
+       (values)))
+</pre>
+<p>
+The <SAMP>ex</SAMP> macro expands to a form containing a call to <SAMP>macroexpand-1</SAMP>, a built-in function that does one step of macro
+expansion to a form whose <SAMP>car</SAMP> is the name of a macro.  (If given
+some other form, it returns the form unchanged.)  <SAMP>pprint</SAMP> is a
+built-in function that pretty-prints its argument.  Because we are
+using <SAMP>ex</SAMP> and <SAMP>fi</SAMP> at a read-eval-print loop, any value
+returned by their expansions will be printed.  Here the expansion is
+executed for side effect, so we arrange to return no values at all by
+having the expansion return <SAMP>(values)</SAMP>.  
+
+<p>In some Lisp
+implementations, read-eval-print loops routinely print results using
+<SAMP>pprint</SAMP>.  In those implementations we could simplify <SAMP>ex</SAMP> and
+<SAMP>fi</SAMP> by having them print nothing, but just return the value of <SAMP>*current-form*</SAMP>, which the read-eval-print loop will then print prettily.
+Use your judgment.
+
+<p>I leave the definition of <SAMP>find-nth-occurrence</SAMP> as an exercise.  
+You might also want to define a command that just sets and prints the
+current form: <SAMP>(cf <i>e</i>)</SAMP>.  
+
+<p>One caution: In general, command languages
+will consist of a mixture of macros and functions, with convenience
+for their definer (and usually sole user) being the main
+consideration.  If a command seems to "want'' to evaluate some of its
+arguments sometimes, you have to decide whether to define two (or
+more) versions 
+of it, or just one, a function whose arguments must be quoted to
+prevent their being evaluated.  For the <SAMP>cf</SAMP> command mentioned in
+the prevous paragraph, some users might prefer <SAMP>cf</SAMP> to  be a
+function, some a macro.
+
+<p>
+<HR>
+<font size=+0> <EM>[LaTeX -> HTML by <a href="http://www.best.com/~quong/ltoh/">ltoh</a>]</EM></font><br>
+<ADDRESS>
+<font size=+0><A href="http://www.best.com/~quong">Russell W. Quong</A>
+(<A href="mailto:quong@best.com.REMOVETHIS-SPAM-FILTER-PART"><SAMP>quong@best.com.REMOVETHIS-SPAM-FILTER-PART</SAMP></A>)
+<br>Last modified: <font color=maroon><samp>Sep  7 2002</samp></font>
+</font></ADDRESS>
+</BODY>
+</HTML>
