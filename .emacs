@@ -1,5 +1,4 @@
 ;;; .emacs - an emacs initialization file created by Bill Clementson
-;;; $Header$
 
 ;;__________________________________________________________________________
 ;;;;    Site-Specific Variables 
@@ -16,12 +15,7 @@
 (defvar hyperspec-prog (concat use-home "site/ilisp/extra/hyperspec"))
 
 ;; Corman Common Lisp
-(defvar cormanlisp-dir "C:/home/lisp/")
-(defvar cormanlisp-program (concat cormanlisp-dir
-                                   "clconsole.exe"
-                                   " -image "
-                                   cormanlisp-dir
-                                   "cormanlisp.img"))
+(defvar cormanlisp-program "corman.bat")
 
 ;; Franz Allegro Common Lisp
 (defvar fi:common-lisp-image-name "C:/Program Files/ACL/allegro-ansi.exe")
