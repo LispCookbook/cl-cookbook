@@ -1,6 +1,8 @@
 2002-05-22
   changes in string.html to get rid of literal constants
   (due to a hint by Peter Van Eynde)
+  initial files chapter (Edi Weitz)
+  cosmetic changes to PRE tag
 
 2002-04-25
   changed LW example in io.html (due to a hint by Marc Battyani)
