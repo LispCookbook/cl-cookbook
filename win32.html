@@ -1285,7 +1285,7 @@ program source code visible while reading the text.
         (wn-p ec bc :external-format (external-format)) window-name
       (let ((hwnd (createwindowex 0 cn-p wn-p 
                      (logior ws_visible ws_overlappedwindow)
-                     cw-usedefault cw-usedefault cw-usedefault cw-usedefault
+                     cw_usedefault cw_usedefault cw_usedefault cw_usedefault
                      ;0 0 640 480
                      0 0 (GetModuleHandle-current 0) 0)))
         (when (zerop hwnd)

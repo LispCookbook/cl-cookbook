@@ -1,4 +1,7 @@
-2003-03-16
+2003-03-18
+  Changed cw-usedefault to cw_usedefault in some code.	
+
+2003-03-18
   Added win32.html last week.
   Incoporating suggested changes from Kenny Tilton and Edi Weitz.
   Maintaining CHANGELOG. Including Paul Tarvydas and Kenny Tilton
