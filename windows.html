@@ -187,12 +187,12 @@ icompile.bat</pre>
 documentation</a> (optional)</h3>
 <ul>
   <li>OPTIONAL: Download the
-  <a href="http://www.lispworks.com/reference/HyperSpec/">Common 
-  Lisp Hyperspec</a> reference from:
+  <a href="http://www.lispworks.com/reference/HyperSpec/">Common Lisp Hyperspec</a> 
+  reference from:
   <a href="http://www.lispworks.com/reference/HyperSpec/HyperSpec-6-0.tar.gz">
-  http://www.lispworks.com/reference/HyperSpec/HyperSpec-6-0.tar.gz</a> 
-  and use Winzip to unpack the files into the c:\home\docs directory. This 
-  should result in a new directory: c:\home\docs\HyperSpec</li>
+  http://www.lispworks.com/reference/HyperSpec/HyperSpec-6-0.tar.gz</a> and use 
+  Winzip to unpack the files into the c:\home\docs directory. This should result 
+  in a new directory: c:\home\docs\HyperSpec</li>
   <li>OPTIONAL: Download the
   <a href="http://www-2.cs.cmu.edu/Groups/AI/html/cltl/cltl2.html">Common Lisp 
   the Language</a> (CLtL2) reference from:
@@ -300,9 +300,14 @@ lispworks-4200 -init c:\home\lisp\console.lisp</pre>
   Corman Lisp</a> for Windows from:
   <a href="http://www.cormanlisp.com/cgi/rgcorman/ccl_download_form.cgi">
   http://www.cormanlisp.com/cgi/rgcorman/ccl_download_form.cgi</a></li>
-  <li>Run the downloaded installation program (CormanLisp_1_5_Setupex.exe) and 
-  install Corman CL into the c:\bin\corman-1.5 directory.</li>
+  <li>Run the downloaded installation program and install Corman CL into the 
+  c:\bin\corman-2.5 directory.</li>
+  <li>Open the file &quot;c:\bin\corman-2.5\init.lisp&quot;, then remove or comment out 
+  the following line (line #3):</li>
 </ul>
+<blockquote>
+  <pre>(setf (current-directory) *cormanlisp-directory*)</pre>
+</blockquote>
 <h3><a name="Configuration steps">8. Configuration steps</a></h3>
 <ul>
   <li>Setup environmental variables either in the autoexec.bat file (e.g. - 

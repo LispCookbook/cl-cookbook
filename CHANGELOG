@@ -1,3 +1,7 @@
+2003-11-01
+  Updated windows.html, and .emacs by Bill Clementson to add support
+  for Corman Lisp v2.5.
+
 2003-12-07
   Added "Fast Bulk I/O" entry by Zach Beane
   Added Zach Beane to list of contributors
