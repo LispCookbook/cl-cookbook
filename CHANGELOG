@@ -1,3 +1,9 @@
+2003-10-03
+	Updated windows.html, and .emacs by Bill Clementson - added back
+	in Corman Lisp support (nobody else seemed to be having problems
+	with it but me) and added support for the info version of the ANSI
+	CL documentation.
+
 2003-09-30
 	Updated windows.html, and .emacs by Bill Clementson - removed
 	Corman Lisp support since haven't been able to get Corman releases
