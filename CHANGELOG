@@ -1,3 +1,8 @@
+2003-09-01
+  Updated windows.html, index.html, and .emacs by Bill Clementson to 
+  provide inital support for Mac OS X, add additional optional packages,
+  and simplify installation.
+
 2003-08-22
   Fixed typo in io.html
 
