@@ -767,6 +767,7 @@ region progressively moves outward over enclosing expressions."
 (global-set-key [f6] 'other-window)
 (global-set-key [f7] 'delete-other-windows)
 (global-set-key [(control f7)] 'ecb-toggle-ecb-windows)
+(global-set-key [(meta f7)] 'ecb-toggle-layout)
 
 ;; Shells
 (global-set-key [f12]
