@@ -163,14 +163,14 @@ Here's some sample code to play with:
 #| CLISP
 (check-256 *unicode-test-file*)
 (progn (generate-256 :external-format :unix) (check-256))
-; uses UTF-8 -> 385 bytes
+; uses UTF-8 -&gt; 385 bytes
 
 (progn (generate-256 :charset 'charset:iso-8859-1) (check-256))
 Position 256 found 10(#xA).
 ; Means it terminates line on output!
 
 (progn (generate-256 :external-format :default) (check-256))
-; uses UTF-8 + CRLF(on MS-Windows) -> 387 bytes
+; uses UTF-8 + CRLF(on MS-Windows) -&gt; 387 bytes
 
 (progn (generate-256 :external-format
   (ext:make-encoding :charset 'charset:iso-8859-1 :line-terminator :mac)) (check-256))
@@ -183,5 +183,5 @@ Position 256 found 10(#xA).
 <hr>
 <a href="license.html">Copyright</a> &copy; 2002 The Common Lisp Cookbook Project
 <address>http://cl-cookbook.sourceforge.net/</address>
-<!-- hhmts start --> Last modified: Thu Mar 21 01:01:09 CET 2002 <!-- hhmts end -->
+<!-- hhmts start --> Last modified: Thu Mar 21 01:07:27 CET 2002 <!-- hhmts end -->
 </body> </html>
