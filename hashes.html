@@ -41,7 +41,7 @@ only a few key-value pairs to maintain.
 <h3>Creating a Hash Table</h3> 
 
 Hash Tables are created using the function 
-<a href="http://www.lispworks.com/reference/HyperSpec/Body/f_mk_has.htm"><code>MAKE-HASH-TABLE</code></a>.
+<a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_mk_has.htm"><code>MAKE-HASH-TABLE</code></a>.
 It has no required argument. Its most used optional keyword argument
 is <code>:TEST</code>, specifying the function used to test the
 equality of keys.
@@ -51,7 +51,7 @@ equality of keys.
 <h3>Getting a value from a Hash Table</h3> 
 
 The function 
-<a href="http://www.lispworks.com/reference/HyperSpec/Body/f_gethas.htm"><code>GETHASH</code></a>
+<a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_gethas.htm"><code>GETHASH</code></a>
 takes two required arguments: a 
 key and a hash table. It returns two values: the value 
 corresponding to the key in the hash table (or NIL if 
@@ -69,7 +69,7 @@ table.
 If you want to add an element to a hash table, you can use 
 <code>GETHASH</code>, the function to retrieve elements from the hash
 table, in conjunction with 
-<a href="http://www.lispworks.com/reference/HyperSpec/Body/m_setf_.htm"><code>SETF</code></a>.
+<a href="http://www.lispworks.com/documentation/HyperSpec/Body/m_setf_.htm"><code>SETF</code></a>.
 
 <pre>
 * (defparameter *my-hash* (make-hash-table))
@@ -93,7 +93,7 @@ T
 The first value returned by GETHASH is the object in the hash table
 that's associated with the key you provided as an argument to
 GETHASH or NIL if no value exists for this key. This value can act
-as a <a href="http://www.lispworks.com/reference/HyperSpec/Body/26_glo_g.htm#generalized_boolean">generalized
+as a <a href="http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_g.htm#generalized_boolean">generalized
 boolean</a> if you want to test for the presence of keys.
 
 <pre>
@@ -143,7 +143,7 @@ which will always return NIL if no value is found and T otherwise.
 <a name="del"></a>
 <h3>Deleting from a Hash Table</h3>
 
-Use <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_remhas.htm"><code>REMHASH</code></a>
+Use <a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_remhas.htm"><code>REMHASH</code></a>
 to delete a hash entry. Both the key and its associated value
 will be removed from the hash table. REMHASH returns T if there was
 such an entry, NIL otherwise.
@@ -179,7 +179,7 @@ If you want to perform an action on each entry (i.e., each key-value
 pair) in a hash table, you have several options:
 <p>
 
-You can use <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_maphas.htm"><code>MAPHASH</code></a> 
+You can use <a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_maphas.htm"><code>MAPHASH</code></a> 
 which iterates over all entries in the hash table. Its first argument
 must be a function which accepts <em>two</em> arguments, the key and
 the value of each entry. Note that due to the nature of hash tables
@@ -208,8 +208,8 @@ The value associated with the key NIL is NIL-VALUE
 </pre>
 
 You can also use <a
-href="http://www.lispworks.com/reference/HyperSpec/Body/m_w_hash.htm"><code>WITH-HASH-TABLE-ITERATOR</code></a>, a macro which turns
-(via <a href="http://www.lispworks.com/reference/HyperSpec/Body/s_flet_.htm"><code>MACROLET</code></a>)
+href="http://www.lispworks.com/documentation/HyperSpec/Body/m_w_hash.htm"><code>WITH-HASH-TABLE-ITERATOR</code></a>, a macro which turns
+(via <a href="http://www.lispworks.com/documentation/HyperSpec/Body/s_flet_.htm"><code>MACROLET</code></a>)
 its first argument into an iterator that on each invocation returns
 three values per hash table entry - a generalized boolean that's true
 if an entry is returned, the key of the entry, and the value of the
@@ -239,7 +239,7 @@ closure over the invocation form."
 <p>
 
 And there's always <a
-href="http://www.lispworks.com/reference/HyperSpec/Body/06_a.htm"><code>LOOP</code></a>:
+href="http://www.lispworks.com/documentation/HyperSpec/Body/06_a.htm"><code>LOOP</code></a>:
 
 <pre>
 ;;; same hash-table as above
@@ -281,7 +281,7 @@ NIL
 
 No need to use your fingers - Common Lisp has a built-in function to
 do it for you: <a
-href="http://www.lispworks.com/reference/HyperSpec/Body/f_hash_1.htm"><code>HASH-TABLE-COUNT</code></a>.
+href="http://www.lispworks.com/documentation/HyperSpec/Body/f_hash_1.htm"><code>HASH-TABLE-COUNT</code></a>.
 
 <pre>
 * (defparameter *my-hash* (make-hash-table))
@@ -348,8 +348,8 @@ Evaluation took:
 NIL
 </pre>
 
-The values for <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_hash_4.htm"><code>HASH-TABLE-SIZE</code></a> and <a
-href="http://www.lispworks.com/reference/HyperSpec/Body/f_hash_2.htm"><code>HASH-TABLE-REHASH-SIZE</code></a> are
+The values for <a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_hash_4.htm"><code>HASH-TABLE-SIZE</code></a> and <a
+href="http://www.lispworks.com/documentation/HyperSpec/Body/f_hash_2.htm"><code>HASH-TABLE-REHASH-SIZE</code></a> are
 implementation-dependent. In our case, CMUCL chooses and initial size
 of 65, and it will increase the size of the hash by 50 percent
 whenever it needs to grow. Let's see how often we have to re-size the

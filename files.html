@@ -12,8 +12,8 @@ pre { margin-left:20px; background-color:#e0e0e0 }
 <h1><a href="index.html">The Common Lisp Cookbook</a> - Files and Directories</h1>
 
 Note: In this chapter, we use mainly <a
-href="http://www.lispworks.com/reference/HyperSpec/Body/19_aa.htm">namestrings</a> to <a href="http://www.lispworks.com/reference/HyperSpec/Body/19_.htm">specify
-filenames</a>. The issue of <a href="http://www.lispworks.com/reference/HyperSpec/Body/19_ab.htm">pathnames</a> will be
+href="http://www.lispworks.com/documentation/HyperSpec/Body/19_aa.htm">namestrings</a> to <a href="http://www.lispworks.com/documentation/HyperSpec/Body/19_.htm">specify
+filenames</a>. The issue of <a href="http://www.lispworks.com/documentation/HyperSpec/Body/19_ab.htm">pathnames</a> will be
 the topic of separate chapter <a
 href="http://www.tuxedo.org/~esr/jargon/html/entry/Real-Soon-Now.html">REAL
 SOON NOW</a>.
@@ -31,7 +31,7 @@ SOON NOW</a>.
 
 <a name="exists"><h3>Testing whether a File Exists</h3></a>
 
-  Use the function <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_probe_.htm"><code>PROBE-FILE</code></a> which will return a <a href="http://www.lispworks.com/reference/HyperSpec/Body/26_glo_g.htm#generalized_boolean">generalized boolean</a> - either <code>NIL</code> if the file doesn't exists, or its <a href="http://www.lispworks.com/reference/HyperSpec/Body/20_ac.htm">truename</a> (which might be different from the argument you supplied).
+  Use the function <a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_probe_.htm"><code>PROBE-FILE</code></a> which will return a <a href="http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_g.htm#generalized_boolean">generalized boolean</a> - either <code>NIL</code> if the file doesn't exists, or its <a href="http://www.lispworks.com/documentation/HyperSpec/Body/20_ac.htm">truename</a> (which might be different from the argument you supplied).
 
 <pre>
 edi@bird:/tmp&gt; ln -s /etc/passwd foo
@@ -57,7 +57,7 @@ NIL
 
 <a name="open"><h3>Opening a File</h3></a>
 
-Common Lisp has <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_open.htm"><code>OPEN</code></a> and <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_close.htm"><code>CLOSE</code></a> functions which resemble the functions of the same denominator from other programming languages you're probably familiar with. However, it is almost always recommendable to use the macro <a href="http://www.lispworks.com/reference/HyperSpec/Body/m_w_open.htm"><code>WITH-OPEN-FILE</code></a> instead. Not only will this macro open the file for you and close it when you're done, it'll also take care of it if your code leaves the body abnormally (such as by a use of <a href="http://www.lispworks.com/reference/HyperSpec/Body/s_throw.htm"></code>THROW</code></a>). A typical use of WITH-OPEN-FILE looks like this:
+Common Lisp has <a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_open.htm"><code>OPEN</code></a> and <a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_close.htm"><code>CLOSE</code></a> functions which resemble the functions of the same denominator from other programming languages you're probably familiar with. However, it is almost always recommendable to use the macro <a href="http://www.lispworks.com/documentation/HyperSpec/Body/m_w_open.htm"><code>WITH-OPEN-FILE</code></a> instead. Not only will this macro open the file for you and close it when you're done, it'll also take care of it if your code leaves the body abnormally (such as by a use of <a href="http://www.lispworks.com/documentation/HyperSpec/Body/s_throw.htm"></code>THROW</code></a>). A typical use of WITH-OPEN-FILE looks like this:
 
 <pre>
 (with-open-file (str &lt;<em>file-spec</em>&gt;
@@ -74,14 +74,14 @@ Common Lisp has <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_ope
   <li>&lt;<em>if-exists</em>&gt; specifies what to do if you want to open a file for writing and a file with that name already exists - this option is ignored if you just want to read from the file. The default is <code>:ERROR</code> which means that an error is signalled. Other useful options are <code>:SUPERSEDE</code> (meaning that the new file will replace the old one), <code>NIL</code> (the stream variable will be bound to <code>NIL</code>), and <code>:RENAME</code> (i.e. the old file is renamed).
   <li>&lt;<em>if-does-not-exist</em>&gt; specifies what to do if the file you want to open does not exist. It is one of <code>:ERROR</code> for signalling an error, <code>:CREATE</code> for creating an empty file, or <code>NIL</code> for binding the stream variable to <code>NIL</code>. The default is, to be brief, to do the right thing depending on the other options you provided. See the CLHS for details.
 </UL>
-Note that there are a lot more options to WITH-OPEN-FILE. See <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_open.htm">the CLHS entry for <code>OPEN</code></a> for all the details. You'll find some examples on how to use WITH-OPEN-FILE below. Also note that you usually don't need to provide any keyword arguments if you just want to open an existing file for reading.
+Note that there are a lot more options to WITH-OPEN-FILE. See <a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_open.htm">the CLHS entry for <code>OPEN</code></a> for all the details. You'll find some examples on how to use WITH-OPEN-FILE below. Also note that you usually don't need to provide any keyword arguments if you just want to open an existing file for reading.
 
   
 <a name="strings"><h3>Using Strings instead of Files</h3></a>
 
 <a name="line"><h3>Reading a File one Line at a Time</h3></a>
 
-  <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_rd_lin.htm"><code>READ-LINE</code></a> will read one line from a stream (which defaults to <a href="http://www.lispworks.com/reference/HyperSpec/Body/26_glo_s.htm#standard_input"><em>standard input</em></a>) the end of which is determined by either a newline character or the end of the file. It will return this line as a string <em>without</em> the trailing newline character. (Note that READ-LINE has a second return value which is true if there was no trailing newline, i.e. if the line was terminated by the end of the file.) READ-LINE will by default signal an error if the end of the file is reached. You can inhibit this by supplying NIL as the second argument. If you do this, READ-LINE will return NIL if it reaches the end of the file.
+  <a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_rd_lin.htm"><code>READ-LINE</code></a> will read one line from a stream (which defaults to <a href="http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_s.htm#standard_input"><em>standard input</em></a>) the end of which is determined by either a newline character or the end of the file. It will return this line as a string <em>without</em> the trailing newline character. (Note that READ-LINE has a second return value which is true if there was no trailing newline, i.e. if the line was terminated by the end of the file.) READ-LINE will by default signal an error if the end of the file is reached. You can inhibit this by supplying NIL as the second argument. If you do this, READ-LINE will return NIL if it reaches the end of the file.
 
 <pre>
 * (with-open-file (stream "/etc/passwd")
@@ -102,7 +102,7 @@ You can also supply a third argument which will be used instead of NIL to signal
 
 <a name="char"><h3>Reading a File one Character at a Time</h3></a>
 
-<a href="http://www.lispworks.com/reference/HyperSpec/Body/f_rd_cha.htm"><code>READ-CHAR</code></a> is similar to READ-LINE, but it only reads one character as opposed to one line. Of course, newline characters aren't treated differently from other characters by this function.
+<a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_rd_cha.htm"><code>READ-CHAR</code></a> is similar to READ-LINE, but it only reads one character as opposed to one line. Of course, newline characters aren't treated differently from other characters by this function.
 
 <pre>
 * (with-open-file (stream "/etc/passwd")
@@ -114,7 +114,7 @@ You can also supply a third argument which will be used instead of NIL to signal
 
 <a name="ahead"><h3>Looking one Character ahead</h3></a>
 
-You can 'look at' the next character of a stream without actually removing it from there - this is what the function <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_peek_c.htm"><code>PEEK-CHAR</code></a> is for. It can be used for three different purposes depending on its first (optional) argument (the second one being the stream it reads from): If the first argument is <code>NIL</code>, PEEK-CHAR will just return the next character that's waiting on the stream:
+You can 'look at' the next character of a stream without actually removing it from there - this is what the function <a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_peek_c.htm"><code>PEEK-CHAR</code></a> is for. It can be used for three different purposes depending on its first (optional) argument (the second one being the stream it reads from): If the first argument is <code>NIL</code>, PEEK-CHAR will just return the next character that's waiting on the stream:
 
 <PRE>
 * (with-input-from-string (stream "I'm not amused")
@@ -128,7 +128,7 @@ You can 'look at' the next character of a stream without actually removing it fr
 #\'
 </PRE>
 
-If the first argument is <code>T</code>, PEEK-CHAR will skip <a href="http://www.lispworks.com/reference/HyperSpec/Body/26_glo_w.htm#whitespace">whitespace</a> characters, i.e. it will return the next non-whitespace character that's waiting on the stream. The whitespace characters will vanish from the stream as if they had been read by READ-CHAR:
+If the first argument is <code>T</code>, PEEK-CHAR will skip <a href="http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_w.htm#whitespace">whitespace</a> characters, i.e. it will return the next non-whitespace character that's waiting on the stream. The whitespace characters will vanish from the stream as if they had been read by READ-CHAR:
 
 <PRE>
 * (with-input-from-string (stream "I'm 
@@ -178,7 +178,7 @@ Note that PEEK-CHAR has further optional arguments to control its behaviour on e
 THE-END
 </PRE>
 
-You can also put one character back onto the stream with the function <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_unrd_c.htm"><code>UNREAD-CHAR</code></a>. You can use it as if, <em>after</em> you have read a character, you decide that you'd better used PEEK-CHAR instead of READ-CHAR:
+You can also put one character back onto the stream with the function <a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_unrd_c.htm"><code>UNREAD-CHAR</code></a>. You can use it as if, <em>after</em> you have read a character, you decide that you'd better used PEEK-CHAR instead of READ-CHAR:
 
 <PRE>
 * (with-input-from-string (stream "I'm not amused")
@@ -195,7 +195,7 @@ Note that the front of a stream doesn't behave like a stack: You can only put ba
 
 <a name="random"><h3>Random Access to a File</h3></a>
 
-Use the function <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_file_p.htm"><code>FILE-POSITION</code></a> for random access to a file. If this function is used with one argument (a stream), it will return the current position within the stream. If it's used with two arguments (see below), it will actually change the <a href="http://www.lispworks.com/reference/HyperSpec/Body/26_glo_f.htm#file_position">file position</a> in the stream.
+Use the function <a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_file_p.htm"><code>FILE-POSITION</code></a> for random access to a file. If this function is used with one argument (a stream), it will return the current position within the stream. If it's used with two arguments (see below), it will actually change the <a href="http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_f.htm#file_position">file position</a> in the stream.
 
 <PRE>
 * (with-input-from-string (stream "I'm not amused")

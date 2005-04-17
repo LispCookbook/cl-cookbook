@@ -24,13 +24,13 @@ pre { margin-left:20px; background-color:#e0e0e0 }
 
 Sometimes you want your functions to behave in a 'functional' way,
 i.e. return <a
-href="http://www.lispworks.com/reference/HyperSpec/Body/26_glo_f.htm#fresh">fresh</a>
+href="http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_f.htm#fresh">fresh</a>
 results without side effects, sometimes you want them to re-use and
 modify existing data in a destructive way - consider the difference
 between <a
-href="http://www.lispworks.com/reference/HyperSpec/Body/f_append.htm"><code>APPEND</code></a>
+href="http://www.lispworks.com/documentation/HyperSpec/Body/f_append.htm"><code>APPEND</code></a>
 and <a
-href="http://www.lispworks.com/reference/HyperSpec/Body/f_nconc.htm"><code>NCONC</code></a>
+href="http://www.lispworks.com/documentation/HyperSpec/Body/f_nconc.htm"><code>NCONC</code></a>
 for an example.
 
 <p>
@@ -128,8 +128,8 @@ likely end up with
          has-table)
 </pre>
 
-But you don't have to. You can create <em>one</em> <a href="http://www.lispworks.com/reference/HyperSpec/Body/26_glo_d.htm#displaced_array">displaced</a> string and reuse
-it multiple times with <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_adjust.htm"><code>ADJUST-ARRAY</code></a>:
+But you don't have to. You can create <em>one</em> <a href="http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_d.htm#displaced_array">displaced</a> string and reuse
+it multiple times with <a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_adjust.htm"><code>ADJUST-ARRAY</code></a>:
 
 <pre>
 (let ((substring (make-array 0

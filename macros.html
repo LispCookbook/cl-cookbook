@@ -42,7 +42,7 @@ your way around it takes a bit of practice.
 <EM>another piece of putative Lisp code,</EM> translating it into (a
 version closer to) executable Lisp.  That may sound a bit complicated,
 so let's give a simple example.  Suppose you want a version of <a
-href="http://www.lispworks.com/reference/HyperSpec/Body/s_setq.htm"><code>setq</code></a>
+href="http://www.lispworks.com/documentation/HyperSpec/Body/s_setq.htm"><code>setq</code></a>
 that sets two variables to the same value.  So if you write
 
 <p><pre>
@@ -236,10 +236,10 @@ for every list-building occasion.  For instance, you might write
 </pre>
 
 which yields <code>((a) 15 15)</code> when <code>some-list</code> = <code>(a 6 15)</code>.
-The problem is that <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_mapc_.htm"><code>mapcan</code></a> destructively alters the results
-returned by the <a href="http://www.lispworks.com/reference/HyperSpec/Body/s_lambda.htm"><code>lambda</code></a>-expression.  Can we be sure that the
-lists returned by that expression are &quot;<a href="http://www.lispworks.com/reference/HyperSpec/Body/26_glo_f.htm#fresh">fresh</a>,&quot; that is, they are
-different (in the <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_eq.htm"><code>eq</code></a> sense) from the structures returned on
+The problem is that <a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_mapc_.htm"><code>mapcan</code></a> destructively alters the results
+returned by the <a href="http://www.lispworks.com/documentation/HyperSpec/Body/s_lambda.htm"><code>lambda</code></a>-expression.  Can we be sure that the
+lists returned by that expression are &quot;<a href="http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_f.htm#fresh">fresh</a>,&quot; that is, they are
+different (in the <a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_eq.htm"><code>eq</code></a> sense) from the structures returned on
 other calls of that <code>lambda</code> expression?  In the present case,
 close analysis will show that they must be fresh, but in general
 backquote is not obligated to return a fresh list every time (whether
@@ -270,7 +270,7 @@ value of something that is later destructively altered.  The first
 line of defense against this bug is never to destructively alter any
 list.  For newbies, this is also the last line of defense.  For those
 of us who imagine we're more sophisticated, the next line of defense is
-to think very carefully any time you use <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_nconc.htm"><code>nconc</code></a> or <code>mapcan</code>.)
+to think very carefully any time you use <a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_nconc.htm"><code>nconc</code></a> or <code>mapcan</code>.)
 
 <p>To fix the bug, you can write <code>(map 'list ...)</code> instead of <code>mapcan</code>.  However, if you are determined to use <code>mapcan</code>, write
 the expression this way:
@@ -293,7 +293,7 @@ changing in length.  For instance, I would never write
 (setq sk <b>`</b>(,x ,@sk))
 </pre>
 
-If <code>sk</code> is being used as a stack, that is, it's going to be <a href="http://www.lispworks.com/reference/HyperSpec/Body/m_pop.htm"><code>pop</code></a>ped in the normal course of things, I would write tt  (push x
+If <code>sk</code> is being used as a stack, that is, it's going to be <a href="http://www.lispworks.com/documentation/HyperSpec/Body/m_pop.htm"><code>pop</code></a>ped in the normal course of things, I would write tt  (push x
 sk).  If not, I would write <code>(setq sk (cons x sk))</code>.
 
 <a name="LtohTOCentry-3"></a>
@@ -361,7 +361,7 @@ language syntactically as to extend it by defining your own
 procedures.  It may be true that the casual reader of your code can't
 understand the code without seeing the macro definitions, but then the
 casual reader can't understand it without seeing function definitions
-either.  Having <a href="http://www.lispworks.com/reference/HyperSpec/Body/m_defmet.htm"><code>defmethod</code></a>s strewn around several files
+either.  Having <a href="http://www.lispworks.com/documentation/HyperSpec/Body/m_defmet.htm"><code>defmethod</code></a>s strewn around several files
 contributes far more to unclarity than macros ever have, but that's a
 different diatribe.
 
@@ -455,7 +455,7 @@ itself.  I will refer to these markers as <EM>guide symbols</EM>.
 the arguments stopped and the body began.)
 
 <p>It is not strictly necessary for the guide symbols of a macro to be in
-the <a href="http://www.lispworks.com/reference/HyperSpec/Body/11_abc.htm">keyword package</a>, but it is a good idea, for two reasons.  First,
+the <a href="http://www.lispworks.com/documentation/HyperSpec/Body/11_abc.htm">keyword package</a>, but it is a good idea, for two reasons.  First,
 they highlight to the reader that something idiosyncratic is going
 on.  A form like <code>(for ((x in (foobar a b 'oof))) (something-hairy
 x (list x)))</code> looks a bit wrong already, because of the double

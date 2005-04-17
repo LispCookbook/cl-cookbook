@@ -30,7 +30,7 @@ You do it like this:
   <em>...</em>)
 </pre>
 
-Because <a href="http://www.lispworks.com/reference/HyperSpec/Body/v_debug_.htm"><code>*STANDARD-OUTPUT*</code></a>
+Because <a href="http://www.lispworks.com/documentation/HyperSpec/Body/v_debug_.htm"><code>*STANDARD-OUTPUT*</code></a>
 is a dynamic variable, all references to it during execution of the
 body of the <code>LET</code> form refer to the stream that you bound
 it to.  After exiting the <code>LET</code> form, the old value of
@@ -53,7 +53,7 @@ following:
   <em>...</em>)
 </pre>
   
-<a href="http://www.lispworks.com/reference/HyperSpec/Body/m_w_open.htm"><code>WITH-OPEN-FILE</code></a>
+<a href="http://www.lispworks.com/documentation/HyperSpec/Body/m_w_open.htm"><code>WITH-OPEN-FILE</code></a>
 opens the file - creating it if necessary - binds 
 <code>*STANDARD-OUTPUT*</code>, executes its body, closes the file,
 and restores <code>*STANDARD-OUTPUT*</code> to its former value. It
@@ -69,15 +69,15 @@ expect 8-bit bytes to be written out, which is not obvious in the
 times of Unicode and 16 or 32 bit character representations.
 
 It does <em>not</em> require that the characters &auml;, &szlig;, or &thorn; must
-have their <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_char_c.htm"><code>CHAR-CODE</code></a>
+have their <a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_char_c.htm"><code>CHAR-CODE</code></a>
 in the range 0..255 - the implementation is free 
 to use any code. But it does require that no <code>#\Newline</code> to CRLF translation takes place, among
 others.
 <p>
 
 Common Lisp has a long tradition of distinguishing character from byte
-(binary) I/O, e.g. <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_rd_by.htm"><code>READ-BYTE</code></a>
-and <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_rd_cha.htm"><code>READ-CHAR</code></a>
+(binary) I/O, e.g. <a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_rd_by.htm"><code>READ-BYTE</code></a>
+and <a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_rd_cha.htm"><code>READ-CHAR</code></a>
 are in the standard. Some implementations let both functions be called
 interchangeably. Others allow either one or the other. 
 (The <a href="http://ww.telent.net/cliki/simple-stream">simple stream proposal</a>
@@ -187,7 +187,7 @@ Here's some sample code to play with:
 <h3>Fast Bulk I/O</h3>
 
 If you need to copy a lot of data and the source and destination are
-both streams (of the same <a href="http://www.lispworks.com/reference/HyperSpec/Body/26_glo_e.htm#element_type">element type</a>), it's very fast to use <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_rd_seq.htm"><code>READ-SEQUENCE</code></a> and <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_wr_seq.htm"><code>WRITE-SEQUENCE</code></a>:
+both streams (of the same <a href="http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_e.htm#element_type">element type</a>), it's very fast to use <a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_rd_seq.htm"><code>READ-SEQUENCE</code></a> and <a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_wr_seq.htm"><code>WRITE-SEQUENCE</code></a>:
 
 <pre>
 (let ((buf (make-array 4096 :element-type (stream-element-type input-stream)))

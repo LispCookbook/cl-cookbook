@@ -25,7 +25,7 @@ pre { margin-left:20px; background-color:#e0e0e0 }
 <a name="list"><h3>List all Symbols in a Package</h3></a>
 Common Lisp provides some macros to iterate through the symbols
 of a package. The two most interesting are: 
-<a href="http://www.lispworks.com/reference/HyperSpec/Body/m_do_sym.htm"><code>DO-SYMBOLS</code>
+<a href="http://www.lispworks.com/documentation/HyperSpec/Body/m_do_sym.htm"><code>DO-SYMBOLS</code>
 and <code>DO-EXTERNAL-SYMBOLS</code></a>. <code>DO-SYMBOLS</code>
 iterates over the symbols accessible in the package and
 <code>DO-EXTERNAL-SYMBOLS</code> only iterates over the external
@@ -50,7 +50,7 @@ You can also collect all these symbols in a list by writing:
 </pre>
 
 Or you can do it with <a
-href="http://www.lispworks.com/reference/HyperSpec/Body/06_a.htm"><code>LOOP</code></a>.
+href="http://www.lispworks.com/documentation/HyperSpec/Body/06_a.htm"><code>LOOP</code></a>.
 
 <pre>
 (loop for s being the external-symbols of (find-package "PACKAGE")

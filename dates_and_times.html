@@ -31,7 +31,7 @@ them separately.
 
 Universal time is represented as the number of seconds that have
 elapsed since 00:00 of January 1, 1900 in the GMT time zone. The
-function <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_get_un.htm"><code>GET-UNIVERSAL-TIME</code></a> returns the current universal time:
+function <a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_get_un.htm"><code>GET-UNIVERSAL-TIME</code></a> returns the current universal time:
 
 <pre>
 * (get-universal-time)
@@ -39,7 +39,7 @@ function <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_get_un.htm
 </pre>
 
 Of course this value is not very readable, so you can use the function
-<a href="http://www.lispworks.com/reference/HyperSpec/Body/f_dec_un.htm"><code>DECODE-UNIVERSAL-TIME</code></a> to turn it into a &quot;calendar time&quot; representation:
+<a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_dec_un.htm"><code>DECODE-UNIVERSAL-TIME</code></a> to turn it into a &quot;calendar time&quot; representation:
 
 <pre>
 * (decode-universal-time 3220993326)
@@ -64,7 +64,7 @@ in order to get GMT time. So in this example the decoded time would be
 daylight savings in effect. This, of course, relies on the computer's
 own clock, so make sure that it is set correctly (including the time
 zone you are in and the DST flag). As a shortcut, you can use
-<a href="http://www.lispworks.com/reference/HyperSpec/Body/f_get_un.htm"><code>GET-DECODED-TIME</code></a> to get the calendar time representation of the
+<a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_get_un.htm"><code>GET-DECODED-TIME</code></a> to get the calendar time representation of the
 current time directly:
 
 <pre>
@@ -105,7 +105,7 @@ Of course the call to <code>GET-DECODED-TIME</code> above could be
 replaced by <code>(DECODE-UNIVERSAL-TIME n)</code>, where n is any
 integer number, to print an arbitrary date. You can also go the other
 way around: the function
-<a href="http://www.lispworks.com/reference/HyperSpec/Body/f_encode.htm"><code>ENCODE-UNIVERSAL-TIME</code></a> lets you encode a calendar time into the
+<a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_encode.htm"><code>ENCODE-UNIVERSAL-TIME</code></a> lets you encode a calendar time into the
 corresponding universal time. This function takes six mandatory
 arguments (seconds, minutes, hours, date, month and year) and one
 optional argument (the time zone) and it returns a universal time:
@@ -185,7 +185,7 @@ the absolute value of an internal time is almost always meaningless;
 only differences between internal times are useful. The second
 difference is that internal time is not measured in seconds, but in a
 (usually smaller) unit whose value can be deduced from
-<a href="http://www.lispworks.com/reference/HyperSpec/Body/v_intern.htm"><code>INTERNAL-TIME-UNITS-PER-SECOND</code></a>:
+<a href="http://www.lispworks.com/documentation/HyperSpec/Body/v_intern.htm"><code>INTERNAL-TIME-UNITS-PER-SECOND</code></a>:
 
 <pre>
 * internal-time-units-per-second
@@ -203,8 +203,8 @@ process.  On most modern computers these two times will be different,
 since your CPU will never be entirely dedicated to your program (even
 on single-user machines, the CPU has to devote part of its time to
 processing interrupts, performing I/O, etc). The two functions used to
-retrieve internal times are called <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_get_in.htm"><code>GET-INTERNAL-REAL-TIME</code></a> and
-<a href="http://www.lispworks.com/reference/HyperSpec/Body/f_get__1.htm"><code>GET-INTERNAL-RUN-TIME</code></a> respectively. Using them, we can solve the above
+retrieve internal times are called <a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_get_in.htm"><code>GET-INTERNAL-REAL-TIME</code></a> and
+<a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_get__1.htm"><code>GET-INTERNAL-RUN-TIME</code></a> respectively. Using them, we can solve the above
 problem about measuring a function's run time:
 
 <pre>
@@ -222,7 +222,7 @@ problem about measuring a function's run time:
 
 A good way to see the difference between real time and run time is to
 test the above code using a call such as <code>(SLEEP 3)</code>.
-The <a href="http://www.lispworks.com/reference/HyperSpec/Body/f_sleep.htm"><code>SLEEP</code></a> function
+The <a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_sleep.htm"><code>SLEEP</code></a> function
 suspends the execution of your code for the specified number of
 seconds. You should therefore see a real time very close to the
 argument of <code>SLEEP</code> and a run time very close to
@@ -255,7 +255,7 @@ TIMING
 NIL
 </pre>
 
-The built-in macro <a href="http://www.lispworks.com/reference/HyperSpec/Body/m_time.htm"><code>TIME</code></a> does roughly the same as the above macro
+The built-in macro <a href="http://www.lispworks.com/documentation/HyperSpec/Body/m_time.htm"><code>TIME</code></a> does roughly the same as the above macro
 (it executes a form and prints timing information at the end),
 but it also usually provides information about memory usage, time
 spent in garbage collection, page faults, etc. The format of the
