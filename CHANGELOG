@@ -1,9 +1,9 @@
 2005-08-02
-  Updated index.html and added Emre Sevinc to contributors' list.
+  Clarification about idle process in process.html.
+  Updated index.html and added Emre Sevinc to list of contributors.
 
-2003-11-01
-  Updated windows.html, and .emacs by Bill Clementson to add support
-  for Corman Lisp v2.5.
+2005-04-17
+  Updated copyright notice and some links.
 
 2003-12-07
   Added "Fast Bulk I/O" entry by Zach Beane
@@ -11,6 +11,8 @@
   Updated links to CLHS (now at www.lispworks.com)
 
 2003-11-01
+  Updated windows.html, and .emacs by Bill Clementson to add support
+  for Corman Lisp v2.5.
   Added "Using Emacs as a Lisp IDE" material.
 
 2003-10-21

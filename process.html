@@ -748,8 +748,9 @@ locking mechanism is reduced to its most minimal form.</p>
 
 <p>Timers are a handy way of notifying your application that some
 period of time has elapsed. You should however be aware of the
-following vital piece of information: <strong>TIMERS RUN IN THE IDLE
-PROCESS</strong>...</p>
+following vital piece of information: <strong>TIMERS RUN IN WHATEVER
+PROCESS IS RUNNING WHEN THE TIME IS REACHED, WHICH IS LIKELY TO BE THE
+IDLE PROCESS IN CASES WHERE LISPWORKS IS SLEEPING</strong>...</p>
 
 <pre>
 CL-USER 62 &gt; (defun foo () (print mp:*current-process*
@@ -772,12 +773,13 @@ CL-USER 65 &gt; (mp:unschedule-timer *timer*)
 CL-USER 66 &gt;
 </pre>
 
-<p>A consequence of this is that any errors you get in
-a timer are errors in the idle process, which is the manager for
-multiprocessing and generally a Bad Place to Get Errors. This was
-potentially a more serious problem in LispWorks 4.1; it looks safer
-(i.e. non fatal) in LispWorks 4.2. In any case, you are advised always
-to switch to another process to run the contents of your timer.</p>
+<p>A consequence of this is that any errors you get in a timer are
+errors in the idle process, which is the manager for multiprocessing
+and generally a Bad Place to Get Errors. This was potentially a more
+serious problem in LispWorks 4.1; it looks safer (i.e. non fatal) in
+more recent editions of LispWorks.  In any case, you are advised
+always to switch to another process to run the contents of your
+timer.</p>
 
 <pre>
 (defvar *timer*)
