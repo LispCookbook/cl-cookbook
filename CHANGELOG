@@ -1,4 +1,6 @@
 2005-08-02
+  Added the replace-all function definition and one example for its
+  usage to strings.html.
   Clarification about idle process in process.html.
   Updated index.html and added Emre Sevinc to list of contributors.
 
