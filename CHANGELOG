@@ -1,3 +1,7 @@
+2005-08-03
+  Corrected the Emacs for Windows URL in strings.html and thus fixed/closed 
+  the bug related to it.
+
 2005-08-02
   Added the replace-all function definition and one example for its
   usage to strings.html.
