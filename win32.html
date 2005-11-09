@@ -749,7 +749,8 @@ Win32-specific features from within a CAPI program.
 ...
 
 (defun draw-image (pane x y width height)
-  (let ((hwnd (slot-value (capi-internals:representation pane) 'win32:hwnd)))
+  (let ((hwnd (capi:simple-pane-handle pane)))
+       ;; This returns the actual Win32 window handle
        ;; Now call CreateWindowEx with hwnd as the new window's parent
        ;; The Win32-defined window then covers the
        ;; CAPI window. After destroying or hiding the Win32 window, the
@@ -758,9 +759,6 @@ Win32-specific features from within a CAPI program.
 
 ....
 </pre></code>
-
-<p>(This uses capi-internals and may break in a future version of
-CAPI.)  
 
 <p>Note the connection from image-pane to pane-1, from image-pane to
 draw-image, and that pane-1 is contained in the CAPI window.
