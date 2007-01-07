@@ -1,0 +1,164 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<!-- 	$Header$	 -->
+<html> <head>
+<title>The Common Lisp Cookbook - Testing</title>
+<style type="text/css">
+pre { margin-left:20px; background-color:#e0e0e0 }
+</style>
+
+</head>
+
+<body bgcolor=white>
+
+<h1><a href="index.html">The Common Lisp Cookbook</a> - Testing</h1>
+<h2>Contents</h2>
+<ul>
+<li><a href="#installrt">Install RT</a></li>
+<li><a href="#writetest">Write a Test</a></li>
+<li><a href="#runtest">Run a test</a></li>
+<li><a href="#writesuite">Organize into suites</a></li>
+<li><a href="#rtend">RT Odds and Ends</a></li>
+<li><a href="#othertestframeworks">Other Test Frameworks</a></li>
+</ul>
+
+<p>So you want to easily test the code your writing? The following recipes 
+cover how to write automated tests. We will use an established and
+well-designed regression testing framework called 'RT'. In the last recipe we will
+discuss other options.</p>
+
+<a name="instllrt"></a>
+<h3>Install RT</h3>
+<p>You can learn more about Dr. Richard C. Waters' <a href="http://www.cliki.net/RT">RT on CLiki</a>. 
+We will get up and running quickly, by doing a standard asdf-install which will pull down Kevin Rosenburg's
+packaged version. <b>Note: sbcl users can simply use sb-rt which is prebundled with their system</b>.</p>
+<pre>
+;; Install rt from cliki 
+(asdf-install:install :rt)
+</pre>
+<p>This command downloads and installs the RT package. This step only needs to be done once. 
+If you just did the install then you can skip the next step.</p>
+
+<pre>
+(asdf:operate 'asdf:load-op :rt)
+</pre>
+<p>This line loads the RT package into your Lisp image.</p>
+
+<a name="writetest"></a>
+<h3>Write a Test</h3>
+<p>Normally we would be writing tests against our own code, but for clarity
+let's write some tests against operations from the <a href="strings.html#substrings">String recipes</a> sections.</p>
+<pre>
+; using *my-string* from the substrings recipe &quot;Groucho Marx&quot;
+(rt:deftest test-subseq-one-index (subseq *my-string* 8) &quot;Marx&quot;)
+TEST-SUBSEQ-ONE-INDEX
+</pre>
+<p>That substring recipe told us that we could expect &quot;Marx&quot; if we ask for substring to 8.
+We use the deftest macro, naming our test <code>test-subseq-one-index</code>. In the body of the test 
+we specify the code we want to test, followed by the expected results. The code 
+<code>(subseq *my-string* 8)</code>is evaluated 
+and the number of values return must match the number of expected results. In this example 
+their is only one value returned and it matches the one expected value <code>&quot;Marx&quot;</code>.
+For each actual, expected pair, they must be <b><code>EQUAL</code></b>. Note that the REPL prints 
+the test name and under the covers this test is added to the current test suite.</p>
+
+<a name="runtest"></a>
+<h3>Run a Test</h3>
+<p>We have defined a test, let's run it.</p>
+<pre>
+CL-USER> (rt:do-test 'test-subseq-one-index)
+TEST-SUBSEQ-ONE-INDEX
+</pre>
+<p>We have RT test our assertion for how <code>SUBSEQ</code> should behave.
+The test passes, so no errors are reported. do-test simply returns the name of the test. In the next example
+we will see how RT behaves with failing tests.</p>
+
+<p>Tests can be run one at a time with <code>DO-TEST</code> as you incrementally build
+up your system, or they can be run all at once with <code>DO-TESTS</code>. For our second test, let's define 
+and run a failing test.</p>
+
+<pre>
+CL-USER> (rt:deftest test-subseq-two-indicies (subseq *my-string* 0 7) &quot;Xroucho&quot;)
+TEST-SUBSEQ-TWO-INDICIES
+CL-USER> (rt:do-test 'test-subseq-two-indicies)
+Test TEST-SUBSEQ-TWO-INDICIES failed
+Form: (SUBSEQ *MY-STRING* 0 7)
+Expected value: &quot;Xroucho&quot;
+Actual value: &quot;Groucho&quot;.
+NIL
+</pre>
+<p>We purposely provide an expected value which is wrong, so that the test will fail. Notice 
+RT describes a failed test to standard output. Also the <code>DO-TEST</code> function
+returns <code>NIL</code> instead of the test as before.</p>
+
+<p>The great value of test code is running it automatically and frequently to find
+issues early in development. RT provides the <code>DO-TESTS</code> function to
+regress all of the tests.</p>
+<pre>
+CL-USER> (rt:do-tests)
+Doing 2 pending tests of 2 tests total.
+ TEST-SUBSEQ-ONE-INDEX
+Test TEST-SUBSEQ-TWO-INDICIES failed                                                                                                                          
+Form: (SUBSEQ *MY-STRING* 0 7)
+Expected value: &quot;Xroucho&quot;
+Actual value: &quot;Groucho&quot;.
+1 out of 2 total tests failed: TEST-SUBSEQ-TWO-INDICIES.
+NIL
+</pre>
+<p>Let's redefine <code>test-subseq-two-indicies</code> with a passing expected value. 
+Additionally let's define a third test.</p>
+<pre>
+CL-USER> (rt:deftest test-subseq-two-indicies (subseq *my-string* 0 7) &quot;Groucho&quot;)
+WARNING: Redefining test TEST-SUBSEQ-TWO-INDICIES
+TEST-SUBSEQ-TWO-INDICIES
+(rt:deftest test-concatenate-three-strings 
+	     (concatenate 'string &quot;Karl&quot; &quot; &quot; &quot;Marx&quot;) &quot;Karl Marx&quot;)
+TEST-CONCATENATE-THREE-STRINGS
+CL-USER> (rt:do-tests)
+Doing 3 pending tests of 3 tests total.
+ TEST-SUBSEQ-ONE-INDEX TEST-SUBSEQ-TWO-INDICIES
+ TEST-CONCATENATE-THREE-STRINGS
+No tests failed.
+T
+</pre>
+<p>Note that <code>DO-TESTS</code> picks up our third test <code>test-concatenate-three-strings</code>
+because it runs the entire test suite and prints a report to standard out that no tests have failed. 
+The value <code>T</code> is returned to signal a successful test run.</p>
+
+<a name="rtend"></a>
+<h3>RT Odds and Ends</h3>
+<p>If we pretend for a moment that <code>SUBSEQ</code> and <code>CONCATENATE</code> 
+  are Lisp operations which we have written, you can see how easy it is to build 
+up a collection of tests to exercise and regress code as we write and maintain it.</p>
+
+<p>If you like using RT so far, you will want to read up on the documentation which comes
+with it, or read the <a href="http://www.merl.com/publications/TR1991-004/">original paper</a> 
+from 1991 which covers RT and COVER (a code coverage framework).
+At a minimum you will want to add 
+<pre>(rem-all-tests)</pre> 
+to the beginning of your test code
+for the current project. You can use <code>CONTINUE-TESTING</code> to run all of the tests which have
+either failed, or are newly defined.</p>
+
+<a name="othertestframeworks"></a>
+<h3>Other Test Frameworks</h3>
+<p>Test Driven Development, xUnit testing frameworks, Automated Acceptance Tests, etc are quite the 
+rage in some areas  of contemporary programming. If RT doesn't fit your needs, or you would
+like to see what else is out there, please see the following:</p>
+<ul>
+<li><a href="http://www.cliki.net/test%20framework">CLiki Test Frameworks</a></li>
+<li><a href="http://wiki.alu.org/Test_Frameworks">ALU Wiki Test Frameworks</a></li>
+<li><a href="http://www.cl-user.net/asp/tags/unit-testing">Unit Testing</a> on The Common Lisp Directory</li>
+</ul>
+and one of many which is a good choice to look at is:
+<ul>
+<li><a href="http://common-lisp.net/project/bese/FiveAM.html">FiveAM</a> - Contemporary and very Lisp</li>
+<!-- TODO: I have some experience with FiveAM and quite like it.
+           What is the best junit style framework to recommend pr cl-cookbook? 
+<li><a href=""></a></li> -->
+</ul>
+
+<hr>
+<a href="license.html">Copyright</a> &copy; 2002-2007 The Common Lisp Cookbook Project
+<address>http://cl-cookbook.sourceforge.net/</address>
+<br>$Header$
+</body> </html>
