@@ -28,6 +28,7 @@ pre { margin-left:20px; background-color:#e0e0e0 }
 <li><a href="#find-el">Finding an Element of a String</a>
 <li><a href="#find-sub">Finding a Substring of a String</a>
 <li><a href="#number">Converting a String to a Number</a>
+<li><a href="#conv-number">Converting a Number to a String</a>
 <li><a href="#compare">Comparing Strings</a>
 </ul>
 
@@ -141,6 +142,35 @@ more efficiently).
 #\M
 </pre>
 
+Each character in a string has an integer code.  The range of
+recognized codes and Lisp's ability to print them is directed related
+to your implementation's character set support, e.g. ISO-8859-1, or
+Unicode.  Here are some examples in <a
+href="http://www.sbcl.org">SBCL</a> of UTF-8 which encodes characters
+as 1 to 4 8 bit bytes.  The first example shows a character outside
+the first 128 chars, or what is considered the normal Latin character
+set.  The second example shows a multibyte encoding (beyond the value
+255).  Notice the Lisp reader can round-trip characters by name.
+
+<pre>
+* (stream-external-format *standard-output*)
+
+:UTF-8
+* (code-char 200)
+
+#\LATIN_CAPITAL_LETTER_E_WITH_GRAVE
+* (char-code #\LATIN_CAPITAL_LETTER_E_WITH_GRAVE)
+
+200
+* (code-char 1488)
+#\HEBREW_LETTER_ALEF
+
+* (char-code #\HEBREW_LETTER_ALEF)
+1488
+</pre>
+
+Check out the <a href="http://en.wikipedia.org/wiki/UTF-8"><code>UTF-8
+Wikipedia article</code></a> for the range of supported characters and their encodings.
 
 <a name="manip"></a>
 <h3>Manipulating Parts of a String</h3>
@@ -572,12 +602,10 @@ instead.
 "HOWDY"
 * (string #\y)
 "y"
-* (coerce 'string #\y)
-
-Type-error in KERNEL::OBJECT-NOT-TYPE-ERROR-HANDLER:
-   #\y is not of type (OR CONS CLASS SYMBOL)
+* (coerce #\y 'string)
+#\y can't be converted to type STRING.
+   [Condition of type SIMPLE-TYPE-ERROR]
 </pre>
-
 
 <a name="find-el"></a>
 <h3>Finding an Element of a String</h3>
@@ -712,6 +740,30 @@ SYMBOL
 "gotcha"
 </pre>
 
+<a name="conv-number"></a>
+<h3>Converting a Number to a String</h3>
+
+The general function <a
+href="http://www.lispworks.com/documentation/HyperSpec/Body/f_wr_to_.htm"><code>WRITE-TO-STRING</code></A>
+or one of its simpler variants <code>PRIN1-TO-STRING</code> or
+<code>PRINC-TO-STRING</code> may be used to convert a number to a
+string.  With <code>WRITE-TO-STRING</code>, the :base keyword argument
+may be used to change the output base for a single call.  To change
+the output base globally, set <code>*print-base*</code> which defaults
+to 10.  Remember in Lisp, rational numbers are represented as
+quotients of two integers even when converted to strings.
+
+<pre>
+* (write-to-string 250)
+"250"
+* (write-to-string 250.02)
+"200.02"
+* (write-to-string 250 :base 5)
+"2000"
+* (write-to-string (/ 1 3))
+"1/3"
+* 
+</pre>
 
 <a name="compare"></a>
 <h3>Comparing Strings</h3>
