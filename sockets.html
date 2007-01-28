@@ -332,8 +332,8 @@ contents of the specified file. Here is the code:
 (defun http-send-line (stream line)
   "Send a line of text to the HTTP stream, terminating it with CR+LF."
   (princ line stream)
-  (princ #\Return stream)
-  (princ #\Newline stream))
+  (princ (code-char 13) stream)  ;; carriage-return
+  (princ (code-char 10) stream)) ;; linefeed
 ;;; Server
 
 (defun http-0.9-server (port root)
