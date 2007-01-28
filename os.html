@@ -15,7 +15,8 @@ pre { margin-left:20px; background-color:#e0e0e0 }
 <h2>Contents</h2>
 
 <ul>
-<li><a href="#env">Accessing Environment variables</a>
+<li><a href="#env">Accessing Environment Variables</a>
+<li><a href="#accessing-command-line">Accessing Command Line Arguments</a>
 <li><a href="#fork-cmucl">Forking with CMUCL</a>
 </ul>
 
@@ -64,6 +65,47 @@ you can use the functions from above together with
 This feature might be important if you want to start subprocesses from
 your Lisp environment.
 <p>
+
+<a name="accessing-command-line"></a>
+<h3>Accessing the command line arguments</h3>
+
+Accessing command line arguments is implementation-specific but it
+appears most implementations have a way of getting at them.  <a
+href="http://www.sbcl.org">SBCL</a> has the special variable <code>*posix-argv*</code>
+
+<pre> $ sbcl my-command-line-arg </pre>
+<p>....</p>
+<pre>* *posix-argv*
+
+("sbcl" "my-command-line-arg")
+* 
+</pre>
+
+More on using this to write standalone Lisp scripts can be found in the <a
+href="http://www.sbcl.org/manual/Unix_002dstyle-Command-Line-Protocol.html">SBCL Manual</a><p/>
+
+<a href="http://www.lispworks.com">LispWorks</a> has
+<code>system:*line-arguments-list*</code>
+
+<pre>
+CL-USER> system:*line-arguments-list*
+("/Users/cbrown/Projects/lisptty/tty-lispworks" "-init" "/Users/cbrown/Desktop/lisp/lispworks-init.lisp")
+</pre>
+
+<a href="http://www.cons.org/cmucl/">CMUCL</a> has interesting
+extensions for <a href="http://common-lisp.net/project/cmucl/doc/cmu-user/unix.html">manipulating the arguments</a>
+<p/>
+Here's a quick function to return the argument strings list across multiple
+implementations:
+
+<pre>
+(defun my-command-line ()
+  (or 
+   #+SBCL *posix-argv*  
+   #+LISPWORKS system:*line-arguments-list*
+   #+CMU extensions:*command-line-words*
+   nil))
+</pre>
 
 <a name="fork-cmucl"></a>
 <h3>Forking with CMUCL</h3>
