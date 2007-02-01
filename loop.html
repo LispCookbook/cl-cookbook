@@ -1,0 +1,213 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html> <head>
+<title>The Common Lisp Cookbook - The Powerful 'loop' Macro</title>
+<style type="text/css">
+pre { margin-left:20px; background-color:#e0e0e0 }
+</style>
+
+</head>
+
+<body bgcolor=white>
+<h1><a href="index.html">The Common Lisp Cookbook</a> - The Loop Macro</h1>
+
+<h2>Contents</h2>
+
+<ul>
+<li><a href="#background">Background</a>
+<li><a href="#examples">Examples</a>
+</ul>
+
+<a name="background"></a>
+<h3>Background</h3>
+The Loop Macro is one of the most valuable, and least documented of
+the operations in Common Lisp.  It is valuable because it is more
+powerful, more compact, and more readable than comparable Common Lisp
+constructs such as mapping operations and recursion.  It also uses a
+programming style that will be familiar to programmers who have worked
+with other more traditional languages.  This short guide provides
+examples of how to use the Loop Macro. <p/>
+
+The Loop macro is different than most Lisp expressions in having a
+complex internal syntax that is more similar to programming languages
+like C or Pascal.  So you need to read Loop expressions with half of
+your brain in Lisp mode, and the other half in Pascal mode. <p/>
+
+Think of Loop expressions as having four parts: expressions that set
+up variables that will be iterated, expressions that conditionally
+terminate the iteration, expressions that do something on each
+iteration, and expressions that do something right before the Loop
+exits.  In addition, Loop expressions can return a value.  It is very
+rare to use all of these parts in a given Loop expression, but you can
+combine them in many ways. <p/>
+
+The source of this tutorial is <a
+href="http://www.ai.sri.com/~pkarp/loop.html">Tutorial for the Common
+Lisp Loop Macro</a> and appears here by permission of <a href="mailto:pkarp@ai.sri.com">Peter Karp</a>
+
+<a name="examples"></a>
+<h3>Examples</h3>
+
+Iterate through a list, and print each element.
+<pre>
+
+
+* (loop for x in '(a b c d e)
+      do (print x) )
+
+A 
+B 
+C 
+D 
+E 
+NIL
+</pre>
+
+Iterate through two lists in parallel, and cons up a result that is
+returned as a value by Loop.
+
+<pre>
+* (loop for x in '(a b c d e)
+      for y in '(1 2 3 4 5)
+      collect (list x y) )
+
+((A 1) (B 2) (C 3) (D 4) (E 5))
+</pre>
+
+Iterate using a counter, and a variable whose value is computed from
+an expression on each iteration.
+
+<pre>
+* (loop for x from 1 to 5
+      for y = (* x 2)
+      collect y)
+
+(2 4 6 8 10)
+</pre>
+
+Iterate through a list, and have a counter iterate in parallel.  The
+length of the list determines when the iteration ends.  Two sets of
+actions are defined, one of which is executed conditionally.
+
+<pre>
+* (loop for x in '(a b c d e)
+      for y from 1
+
+      when (> y 1)
+      do (format t ", ")
+
+      do (format t "~A" x)
+      )
+      
+A, B, C, D, E
+NIL
+</pre>
+
+We could also write the preceding loop using the IF construct.
+
+<pre>
+* (loop for x in '(a b c d e)
+      for y from 1
+
+      if (> y 1)
+      do (format t ", ~A" x)
+      else do (format t "~A" x)
+      )
+      
+A, B, C, D, E
+NIL
+</pre>
+
+Terminate the loop early using a test.  Actions can consist of
+arbitrarily many lines and can refer to variables defined outside the
+lexical scope of the loop.
+
+<pre>
+* (loop for x in '(a b c d e 1 2 3 4)
+	until (numberp x)
+	collect (list x 'foo))
+
+((A FOO) (B FOO) (C FOO) (D FOO) (E FOO))
+</pre>
+
+&quot;While&quot; can also serve as a termination check.  Both
+&quot;do&quot; and &quot;collect&quot; can be combined in one
+expression.
+
+<pre>
+* (loop for x from 1
+      for y = (* x 10)
+      while (< y 100)
+
+      do (print (* x 5))
+
+      collect y)
+
+5 
+10 
+15 
+20 
+25 
+30 
+35 
+40 
+45 
+(10 20 30 40 50 60 70 80 90)
+</pre>
+
+Loops can be nested in various ways
+
+<pre>
+* (loop for x from 1 to 10
+      collect (loop for y from 1 to x 
+		    collect y) )
+
+((1) (1 2) (1 2 3) (1 2 3 4) (1 2 3 4 5) (1 2 3 4 5 6) (1 2 3 4 5 6 7)
+ (1 2 3 4 5 6 7 8) (1 2 3 4 5 6 7 8 9) (1 2 3 4 5 6 7 8 9 10))
+</pre>
+
+Several variables can loop through the components of a complex list.
+
+<pre>
+* (loop for (a b) in '((x 1) (y 2) (z 3))
+      collect (list b a) )
+
+((1 X) (2 Y) (3 Z))
+</pre>
+
+The &quot;return&quot; action both stops the loop and returns a
+result. Here we return the first numeric character in the string s.
+
+<pre>
+* (let ((s "alpha45"))
+  (loop for i from 0 below (length s)
+	for ch =  (char s i)
+	when (find ch "0123456789" :test #'eql)
+	return ch) )
+
+#\4
+</pre>
+
+Several actions provide shorthands for combinations of when/return
+
+<pre>
+* (loop for x in '(foo 2) 
+      thereis (numberp x))
+T
+</pre>
+
+<pre>
+* (loop for x in '(foo 2) 
+      never (numberp x))
+NIL
+</pre>
+
+<pre>
+* (loop for x in '(foo 2) 
+      always (numberp x))
+NIL
+</pre>
+
+<hr>
+<address></address>
+<!-- hhmts start --> Last modified: Thu Feb  1 13:51:44 SAST 2007 <!-- hhmts end -->
+</body> </html>
