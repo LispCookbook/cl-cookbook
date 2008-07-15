@@ -1,922 +1,903 @@
-<!doctype HTML PUBLIC "-//IETF//DTD HTML//EN"><html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 
-<head>
-<meta http-equiv="Content-Language" content="en-us">
-<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
-<meta name="ProgId" content="FrontPage.Editor.Document">
-<title>The Common Lisp Cookbook - Using Emacs as a Lisp IDE</title>
-<style type="text/css">pre          { background-color: #e0e0e0; margin-left: 20px }
-</style>
-</head>
+  <head>
+    <meta http-equiv="Content-Language" content="en-us" />
+    <meta name="GENERATOR" content="Microsoft FrontPage 5.0" />
+    <meta name="ProgId" content="FrontPage.Editor.Document" />
+    <title>The Common Lisp Cookbook - Using Emacs as a Lisp IDE</title>
+    <style type="text/css">
+      pre { background-color: #e0e0e0; margin-left: 20px }
+    </style>
+  </head>
 
-<body>
+  <body>
 
-<h1><a href="http://cl-cookbook.sourceforge.net/">The Common Lisp Cookbook</a> - 
-Using Emacs as a Lisp IDE</h1>
-<p>The material on this page was originally presented at the
-<a href="http://www.international-lisp-conference.org/index.html">ILC 2003 
-conference</a>. A paper with more in-depth coverage of some of the material on 
-this page can be found on
-<a href="http://home.comcast.net/~b.clementson/ilc_2003.htm">Bill Clementson's 
-ILC2003</a> page. </p>
-<p>This page is meant to provide an introduction to using Emacs as a Lisp IDE. 
-The key bindings used in the example code snippets assume an Emacs configuration 
-similar to that provided by the
-<a href="http://cl-cookbook.sourceforge.net/.emacs">.emacs</a> file that is 
-included as part of the
-<a href="http://cl-cookbook.sourceforge.net/windows.html">Setting up an IDE with 
-Emacs on Windows or Mac OS X</a> page. If you use ILISP, the key bindings 
-reflect the bindings that are present in the current CVS version of ILISP. </p>
-<dd>
-<h2>Contents</h2>
-<ol>
-  <li><a HREF="#Slide-2">Why Use Emacs?</a></li>
-  <li><a HREF="#Slide-3">Emacs Lisp vs Common Lisp</a></li>
-  <li><a HREF="#Slide-4">Lisp Modes in Emacs</a></li>
-  <li><a HREF="#Slide-5">Lisp Modes in Emacs - Inferior Lisp Mode</a></li>
-  <li><a HREF="#Slide-6">Lisp Modes in Emacs - ILISP</a></li>
-  <li><a HREF="#Slide-7">Lisp Modes in Emacs - ELI (Emacs-Lisp Interface)</a></li>
-  <li><a HREF="#Slide-8">Lisp Modes in Emacs - Which One to Choose?</a></li>
-  <li><a HREF="#Slide-9">Working with Lisp Code</a></li>
-  <li><a HREF="#Slide-10">Working with Lisp Code - Editing</a></li>
-  <li><a HREF="#Slide-11">Working with Lisp Code - Evaluating and Compiling Lisp</a></li>
-  <li><a HREF="#Slide-12">Working with Lisp Code - Searching Lisp Code</a></li>
-  <li><a HREF="#Slide-13">Lisp Documentation in Emacs - Learning About Lisp 
-  Symbols</a></li>
-  <li><a HREF="#Slide-14">Lisp Documentation in Emacs - Lisp Documentation</a></li>
-  <li><a HREF="#Slide-15">Miscellaneous</a></li>
-  <li><a HREF="#Slide-16">Questions/Answers</a></li>
-</ol>
-<h2><a NAME="Slide-2">Why Use Emacs?</a></h2>
-<ul>
-  <li>Emacs has fantastic support for working with Lisp code</li>
-  <li>Not tying yourself into a single CL vendor's editor</li>
-  <li>Runs on virtually every OS and CL implementation</li>
-  <li>Extensible</li>
-  <li>Can be customized to do many common tasks </li>
-  <li>Built-in support for different source code version control systems</li>
-  <li>Vast number of add-on packages</li>
-  <li>Emacs will probably always be around</li>
-  <li>Emacs works well either with a mouse or without a mouse</li>
-  <li>Emacs has a large user base with multiple newsgroups </li>
-  <li>Benefits of using Emacs far outweigh the effort spent in learning it</li>
-</ul>
-<h2><a NAME="Slide-3">Emacs Lisp vs Common Lisp</a></h2>
-<ul>
-  <li>Learning Emacs Lisp is useful and similar (but different from CL):
-  <ul>
-    <li>Dynamic scope is everywhere</li>
-  </ul>
-  <ul>
-    <li>No package system</li>
-  </ul>
-  <ul>
-    <li>There are no reader (or reader-related) functions</li>
-  </ul>
-  <ul>
-    <li>Does not support all the types that are supported in CL</li>
-  </ul>
-  <ul>
-    <li>Incomplete implementation of CLOS (with the add-on EIEIO package)</li>
-  </ul>
-  <ul>
-    <li>Not all of CL is supported</li>
-  </ul>
-  <ul>
-    <li>No numerical tower support</li>
-  </ul>
-  </li>
-</ul>
-<ul>
-  <li>Some good Emacs Lisp learning resources:
-  <ul>
-    <li>
-    <a HREF="http://www.gnu.org/manual/emacs-lisp-intro/emacs-lisp-intro.html" TARGET="refer-window">
-    An Introduction to Programming in Emacs Lisp</a></li>
-  </ul>
-  <ul>
-    <li><a HREF="http://www.oreilly.com/catalog/gnuext/" TARGET="refer-window">
-    Writing GNU Emacs Extensions</a></li>
-  </ul>
-  </li>
-</ul>
-<h2><a NAME="Slide-4">Lisp Modes in Emacs</a></h2>
-<ul>
-  <li>There are 3 different alternative major modes to use for CL programming:
-  <ul>
-    <li>Inferior Lisp Mode</li>
-  </ul>
-  <ul>
-    <li><a HREF="http://sourceforge.net/projects/ilisp/" TARGET="refer-window">
-    ILISP</a></li>
-  </ul>
-  <ul>
-    <li><a HREF="http://www.franz.com/" TARGET="refer-window">ELI</a></li>
-  </ul>
-  </li>
-</ul>
-<h2><a NAME="Slide-5">Lisp Modes in Emacs - Inferior Lisp Mode</a></h2>
-<ul>
-  <li>Pros:
-  <ul>
-    <li>Comes with Emacs</li>
-  </ul>
-  <ul>
-    <li>Fast start-up, easy setup</li>
-  </ul>
-  <ul>
-    <li>Supports many Lisp implementations</li>
-  </ul>
-  </li>
-</ul>
-<ul>
-  <li>Cons:
-  <ul>
-    <li>Limited functionality (compared to ILISP and ELI)</li>
-  </ul>
-  <ul>
-    <li>No multiprocessing support</li>
-  </ul>
-  <ul>
-    <li>Some conflicts with comint mode</li>
-  </ul>
-  </li>
-</ul>
-<ul>
-  <li>Setup:
-  <ul>
-    <li>Included with Emacs, so no separate installation required</li>
-  </ul>
-  </li>
-</ul>
-<h2><a NAME="Slide-6">Lisp Modes in Emacs - ILISP</a></h2>
-<ul>
-  <li>Pros:
-  <ul>
-    <li>Vastly superior to Inferior Lisp Mode in functionality</li>
-  </ul>
-  <ul>
-    <li>Supports many Lisp implementations</li>
-  </ul>
-  </li>
-</ul>
-<ul>
-  <li>Cons:
-  <ul>
-    <li>No multiprocessing support</li>
-  </ul>
-  <ul>
-    <li>Some conflicts with comint mode</li>
-  </ul>
-  </li>
-</ul>
-<ul>
-  <li>Setup:
-  <ul>
-    <li>A basic installation involves downloading the ILISP package from the web 
-    building it and configuring it</li>
-  </ul>
-  <ul>
-    <li>Customization can be complex, useful to use instructions on
-    <a HREF="http://cl-cookbook.sourceforge.net/windows.html" TARGET="refer-window">
-    CL Cookbook</a> to get started</li>
-  </ul>
-  </li>
-</ul>
-<h2><a NAME="Slide-7">Lisp Modes in Emacs - ELI (Emacs-Lisp Interface)</a></h2>
-<ul>
-  <li>Pros:
-  <ul>
-    <li>Supports multiprocessing (this is a big pro)</li>
-  </ul>
-  <ul>
-    <li>Has commands that allow you to work with changed definitions</li>
-  </ul>
-  <ul>
-    <li>Standard, consistent set of options for managing output</li>
-  </ul>
-  <ul>
-    <li>Support for ACL and support from Franz is very good</li>
-  </ul>
-  </li>
-</ul>
-<ul>
-  <li>Cons:
-  <ul>
-    <li>For CMUCL and SBCL, only limited functionality is available</li>
-  </ul>
-  <ul>
-    <li>No built-in support for accessing either Franz or CL documentation </li>
-  </ul>
-  </li>
-</ul>
-<ul>
-  <li>Setup:
-  <ul>
-    <li>Basic ELI setup is very straight-forward for ACL</li>
-  </ul>
-  </li>
-</ul>
-<h2><a NAME="Slide-8">Lisp Modes in Emacs - Which One to Choose?</a></h2>
-<ul>
-  <li>My Recommendation:
-  <ul>
-    <li>Inferior Lisp Mode for casual CL programming only</li>
-  </ul>
-  <ul>
-    <li>ELI if you use ACL</li>
-  </ul>
-  <ul>
-    <li>ILISP otherwise</li>
-  </ul>
-  </li>
-</ul>
-<ul>
-  <li>Best option would be one which provided ILISP/ELI functionality with 
-  multiprocessing support but this doesn't exist YET (except for ACL/ELI)</li>
-</ul>
-<h2><a NAME="Slide-9">Working with Lisp Code</a></h2>
-<ul>
-  <li>Lisp Editing</li>
-</ul>
-<ul>
-  <li>Evaluating and Compiling Lisp</li>
-</ul>
-<ul>
-  <li>Searching Lisp Code</li>
-</ul>
-<ul>
-  <li>Note: Example code assumes you are using a setup similar to what is 
-  defined in the <a href="http://cl-cookbook.sourceforge.net/.emacs">.emacs file
-  </a>from the
-  <a HREF="http://cl-cookbook.sourceforge.net/windows.html" TARGET="refer-window">
-  CL Cookbook</a> site</li>
-</ul>
-<h2><a NAME="Slide-10">Working with Lisp Code - Editing</a></h2>
-<ul>
-  <li>Forward/Backward/Up/Down movement and selection by s-expressions (
-  <a HREF="s1.lisp" TARGET="refer-window">s1.lisp</a> )</li>
-</ul>
-<pre><b>;; Put the cursor on the open parens of &quot;(defvar..&quot; and press &quot;C-M-f&quot;
-;; and &quot;C-M-b&quot; a few times to see how you move in units of sexps. Put
-;; the cursor on the second additon in the &quot;(progn&quot; statement and
-;; press &quot;C-M-t&quot; to swap the first addition sexp and the second
-;; one. Put the cursor on the open parens of &quot;(+ x&quot; in defun c and
-;; press &quot;C-M-@&quot; to highlight the entire sexp. Then press &quot;C-M-u&quot; to
-;; expand the selection &quot;upwards&quot; to the enclosing &quot;(let&quot;. Pressing
-;; &quot;C-M-d&quot; moves to the next enclosed sexp or (if you are at the
-;; beginning of a line) to the enclosed sexp on the line:</b> 
+    <h1><a href="http://cl-cookbook.sourceforge.net/">The Common Lisp Cookbook</a> - 
+    Using Emacs as a Lisp IDE</h1>
+    <p>The material on this page was originally presented at the
+    <a href="http://www.international-lisp-conference.org/index.html">ILC 2003 
+    conference</a>. A paper with more in-depth coverage of some of the material on 
+    this page can be found on
+    <a href="http://home.comcast.net/~b.clementson/ilc_2003.htm">Bill Clementson's 
+    ILC2003</a> page. </p>
+    <p>This page is meant to provide an introduction to using Emacs as a Lisp IDE. 
+    The key bindings used in the example code snippets assume an Emacs configuration 
+    similar to that provided by the
+    <a href="http://cl-cookbook.sourceforge.net/.emacs">.emacs</a> file that is 
+    included as part of the
+    <a href="http://cl-cookbook.sourceforge.net/windows.html">Setting up an IDE with 
+    Emacs on Windows or Mac OS X</a> page. If you use ILISP, the key bindings 
+    reflect the bindings that are present in the current CVS version of ILISP. </p>
+    <h2>Contents</h2>
+    <ol>
+      <li><a href="#Slide-2">Why Use Emacs?</a></li>
+      <li><a href="#Slide-3">Emacs Lisp vs Common Lisp</a></li>
+      <li><a href="#Slide-4">Lisp Modes in Emacs</a></li>
+      <li><a href="#Slide-5">Lisp Modes in Emacs - Inferior Lisp Mode</a></li>
+      <li><a href="#Slide-6">Lisp Modes in Emacs - ILISP</a></li>
+      <li><a href="#Slide-7">Lisp Modes in Emacs - ELI (Emacs-Lisp Interface)</a></li>
+      <li><a href="#Slide-8">Lisp Modes in Emacs - Which One to Choose?</a></li>
+      <li><a href="#Slide-9">Working with Lisp Code</a></li>
+      <li><a href="#Slide-10">Working with Lisp Code - Editing</a></li>
+      <li><a href="#Slide-11">Working with Lisp Code - Evaluating and Compiling Lisp</a></li>
+      <li><a href="#Slide-12">Working with Lisp Code - Searching Lisp Code</a></li>
+      <li><a href="#Slide-13">Lisp Documentation in Emacs - Learning About Lisp 
+      Symbols</a></li>
+      <li><a href="#Slide-14">Lisp Documentation in Emacs - Lisp Documentation</a></li>
+      <li><a href="#Slide-15">Miscellaneous</a></li>
+      <li><a href="#Slide-16">Questions/Answers</a></li>
+    </ol>
+    <h2><a name="Slide-2">Why Use Emacs?</a></h2>
+    <ul>
+      <li>Emacs has fantastic support for working with Lisp code</li>
+      <li>Not tying yourself into a single CL vendor's editor</li>
+      <li>Runs on virtually every OS and CL implementation</li>
+      <li>Extensible</li>
+      <li>Can be customized to do many common tasks </li>
+      <li>Built-in support for different source code version control systems</li>
+      <li>Vast number of add-on packages</li>
+      <li>Emacs will probably always be around</li>
+      <li>Emacs works well either with a mouse or without a mouse</li>
+      <li>Emacs has a large user base with multiple newsgroups </li>
+      <li>Benefits of using Emacs far outweigh the effort spent in learning it</li>
+    </ul>
+    <h2><a name="Slide-3">Emacs Lisp vs Common Lisp</a></h2>
+    <ul>
+      <li>Learning Emacs Lisp is useful and similar (but different from CL):
+      <ul>
+	<li>Dynamic scope is everywhere</li>
+      </ul>
+      <ul>
+	<li>No package system</li>
+      </ul>
+      <ul>
+	<li>There are no reader (or reader-related) functions</li>
+      </ul>
+      <ul>
+	<li>Does not support all the types that are supported in CL</li>
+      </ul>
+      <ul>
+	<li>Incomplete implementation of CLOS (with the add-on EIEIO package)</li>
+      </ul>
+      <ul>
+	<li>Not all of CL is supported</li>
+      </ul>
+      <ul>
+	<li>No numerical tower support</li>
+      </ul>
+      </li>
+    </ul>
+    <ul>
+      <li>Some good Emacs Lisp learning resources:
+      <ul>
+	<li>
+	  <a href="http://www.gnu.org/manual/emacs-lisp-intro/emacs-lisp-intro.html" target="refer-window">
+	An Introduction to Programming in Emacs Lisp</a></li>
+      </ul>
+      <ul>
+	<li><a href="http://www.oreilly.com/catalog/gnuext/" target="refer-window">
+	Writing GNU Emacs Extensions</a></li>
+      </ul>
+      </li>
+    </ul>
+    <h2><a name="Slide-4">Lisp Modes in Emacs</a></h2>
+    <ul>
+      <li>There are 4 different alternative major modes to use for CL programming:
+      <ul>
+	<li>Inferior Lisp Mode</li>
+      </ul>
+      <ul>
+	<li><a href="http://sourceforge.net/projects/ilisp/" target="refer-window">
+	ILISP</a></li>
+      </ul>
+      <ul>
+	<li><a href="http://www.franz.com/" target="refer-window">ELI</a></li>
+      </ul>
+      <ul>
+	<li><a href="http://common-lisp.net/project/slime/" target="refer-window">SLIME</a></li>
+      </ul>
+      </li>
+    </ul>
+    <h2><a name="Slide-5">Lisp Modes in Emacs - Inferior Lisp Mode</a></h2>
+    <ul>
+      <li>Pros:
+      <ul>
+	<li>Comes with Emacs</li>
+      </ul>
+      <ul>
+	<li>Fast start-up, easy setup</li>
+      </ul>
+      <ul>
+	<li>Supports many Lisp implementations</li>
+      </ul>
+      </li>
+    </ul>
+    <ul>
+      <li>Cons:
+      <ul>
+	<li>Limited functionality (compared to ILISP and ELI)</li>
+      </ul>
+      <ul>
+	<li>No multiprocessing support</li>
+      </ul>
+      <ul>
+	<li>Some conflicts with comint mode</li>
+      </ul>
+      </li>
+    </ul>
+    <ul>
+      <li>Setup:
+      <ul>
+	<li>Included with Emacs, so no separate installation required</li>
+      </ul>
+      </li>
+    </ul>
+    <h2><a name="slide-6">Lisp Modes in Emacs - ILISP</a></h2>
+    <ul>
+      <li>Pros:
+      <ul>
+	<li>Vastly superior to Inferior Lisp Mode in functionality</li>
+      </ul>
+      <ul>
+	<li>Supports many Lisp implementations</li>
+      </ul>
+      </li>
+    </ul>
+    <ul>
+      <li>Cons:
+      <ul>
+	<li>No multiprocessing support</li>
+      </ul>
+      <ul>
+	<li>Some conflicts with comint mode</li>
+      </ul>
+      </li>
+    </ul>
+    <ul>
+      <li>Setup:
+      <ul>
+	<li>A basic installation involves downloading the ILISP package from the web 
+	building it and configuring it</li>
+      </ul>
+      <ul>
+	<li>Customization can be complex, useful to use instructions on
+	<a href="http://cl-cookbook.sourceforge.net/windows.html" target="refer-window">
+	CL Cookbook</a> to get started</li>
+      </ul>
+      </li>
+    </ul>
+    <h2><a name="Slide-7">Lisp Modes in Emacs - ELI (Emacs-Lisp Interface)</a></h2>
+    <ul>
+      <li>Pros:
+      <ul>
+	<li>Supports multiprocessing (this is a big pro)</li>
+      </ul>
+      <ul>
+	<li>Has commands that allow you to work with changed definitions</li>
+      </ul>
+      <ul>
+	<li>Standard, consistent set of options for managing output</li>
+      </ul>
+      <ul>
+	<li>Support for ACL and support from Franz is very good</li>
+      </ul>
+      </li>
+    </ul>
+    <ul>
+      <li>Cons:
+      <ul>
+	<li>For CMUCL and SBCL, only limited functionality is available</li>
+      </ul>
+      <ul>
+	<li>No built-in support for accessing either Franz or CL documentation </li>
+      </ul>
+      </li>
+    </ul>
+    <ul>
+      <li>Setup:
+      <ul>
+	<li>Basic ELI setup is very straight-forward for ACL</li>
+      </ul>
+      </li>
+    </ul>
+    <h2><a name="Slide-8">Lisp Modes in Emacs - Which One to Choose?</a></h2>
+    <ul>
+      <li>My Recommendation:
 
-(defvar a &quot;a variable&quot;)
+      <ul>
+	<li>Inferior Lisp Mode for casual CL programming only</li>
+      </ul>
+      <ul>
+	<li>ELI if you use ACL</li>
+      </ul>
+      <ul>
+	<li>SLIME otherwise</li>
+      </ul>
+      </li>
+    </ul>
+    <h2><a name="Slide-9">Working with Lisp Code</a></h2>
+    <ul>
+      <li>Lisp Editing</li>
+    </ul>
+    <ul>
+      <li>Evaluating and Compiling Lisp</li>
+    </ul>
+    <ul>
+      <li>Searching Lisp Code</li>
+    </ul>
+    <ul>
+      <li>Note: Example code assumes you are using a setup similar to what is 
+      defined in the <a href="http://cl-cookbook.sourceforge.net/.emacs">.emacs file
+      </a>from the
+      <a href="http://cl-cookbook.sourceforge.net/windows.html" target="refer-window">
+      CL Cookbook</a> site</li>
+    </ul>
+    <h2><a name="Slide-10">Working with Lisp Code - Editing</a></h2>
+    <ul>
+      <li>Forward/Backward/Up/Down movement and selection by s-expressions (
+      <a href="s1.lisp" target="refer-window">s1.lisp</a> )</li>
+    </ul>
+    <pre><b>;; Put the cursor on the open parens of &quot;(defvar..&quot; and press &quot;C-M-f&quot;
+    ;; and &quot;C-M-b&quot; a few times to see how you move in units of sexps. Put
+    ;; the cursor on the second additon in the &quot;(progn&quot; statement and
+    ;; press &quot;C-M-t&quot; to swap the first addition sexp and the second
+    ;; one. Put the cursor on the open parens of &quot;(+ x&quot; in defun c and
+    ;; press &quot;C-M-@&quot; to highlight the entire sexp. Then press &quot;C-M-u&quot; to
+    ;; expand the selection &quot;upwards&quot; to the enclosing &quot;(let&quot;. Pressing
+    ;; &quot;C-M-d&quot; moves to the next enclosed sexp or (if you are at the
+    ;; beginning of a line) to the enclosed sexp on the line:</b> 
 
-(defun b ()
-  &quot;a function&quot;
-  (+ 2 2))
+    (defvar a &quot;a variable&quot;)
 
-(defun c ()
-  &quot;another function&quot;
-  (let ((x 42))
+    (defun b ()
+    &quot;a function&quot;
+    (+ 2 2))
+
+    (defun c ()
+    &quot;another function&quot;
+    (let ((x 42))
     (+ x
-       (+ 2 2)
-       (+ 3 3)
-       (+ 4 4))))
+    (+ 2 2)
+    (+ 3 3)
+    (+ 4 4))))
 
-(progn
-  (+ 1 1)
-  (+ 2 2)
-  (+ 3 3))
-</pre>
-<ul>
-  <li>Deleting s-expressions ( <a HREF="s2.lisp" TARGET="refer-window">s2.lisp</a> 
-  )</li>
-</ul>
-<pre><b>;; Put the cursor on the open parens of &quot;(progn ..&quot; and press &quot;C-M-k&quot;
-;; to delete it. Then press &quot;C-M-backspace&quot; to delete the sexp before
-;; the cursor:
-</b>
-(defun d ()
-  (if t  
-      (+ 3 3)
     (progn
-      (+ 1 1)
-      (if t
-	  (+ 2 2)
-	(+ 3 3)))
-    (+ 4 4)))
-</pre>
-<ul>
-  <li>Indenting s-expressions ( <a HREF="s3.lisp" TARGET="refer-window">s3.lisp</a> 
-  )</li>
-</ul>
-<pre><b>;; Put the cursor on the open parens of &quot;(defun ...&quot; and press &quot;C-M-q&quot;
-;; to indent the code:
-</b>
-(defun e ()
-&quot;A badly indented function.&quot;
-(let ((x 20))
-(loop for i from 0 to x 
-do (loop for j from 0 below 10 
-do (print j)) 
-(if (&lt; i 10)
-(let ((z nil) )
-(setq z (format t &quot;x=~d&quot; i))
-(print z))))))
-</pre>
-<p></p>
-<pre><b>;; This is the result:
-</b>
-(defun e ()
+    (+ 1 1)
+    (+ 2 2)
+    (+ 3 3))
+    </pre>
+    <ul>
+      <li>Deleting s-expressions ( <a href="s2.lisp" target="refer-window">s2.lisp</a> 
+      )</li>
+    </ul>
+    <pre><b>;; Put the cursor on the open parens of &quot;(progn ..&quot; and press &quot;C-M-k&quot;
+    ;; to delete it. Then press &quot;C-M-backspace&quot; to delete the sexp before
+    ;; the cursor:
+  </b>
+  (defun d ()
+  (if t  
+  (+ 3 3)
+  (progn
+  (+ 1 1)
+  (if t
+  (+ 2 2)
+  (+ 3 3)))
+  (+ 4 4)))
+    </pre>
+    <ul>
+      <li>Indenting s-expressions ( <a href="s3.lisp" target="refer-window">s3.lisp</a> 
+      )</li>
+    </ul>
+    <pre><b>;; Put the cursor on the open parens of &quot;(defun ...&quot; and press &quot;C-M-q&quot;
+    ;; to indent the code:
+  </b>
+  (defun e ()
   &quot;A badly indented function.&quot;
   (let ((x 20))
-    (loop for i from 0 to x 
-	do (loop for j from 0 below 10 
-	       do (print j)) 
-	   (if (&lt; i 10)
-	       (let ((z nil) )
-		 (setq z (format t &quot;x=~d&quot; i))
-		 (print z))))))
-</pre>
-<ul>
-  <li>Support for parenthesis ( <a HREF="s4.lisp" TARGET="refer-window">s4.lisp</a> 
-  )</li>
-</ul>
-<pre><b>;; Placing the cursor on a &quot;(&quot; or after a &quot;)&quot; highlights the matching
-;; parens:
-</b>
-(progn (+ 3 3) (- 2 2))
-</pre>
-<p></p>
-<pre><b>;; A mismatched parens is highlighted in a different color (put cursor
-;; after last parens and enter a &quot;)&quot; to see this:
-</b>
-(- 2 2)
-</pre>
-<p></p>
-<pre><b>;; You can also type &quot;M-x check-parens&quot; to locate mismatched parens in
-;; a buffer</b></pre>
-<p></p>
-<pre><b>;; Press &quot;M-(&quot; and you will get:
+  (loop for i from 0 to x 
+  do (loop for j from 0 below 10 
+  do (print j)) 
+  (if (&lt; i 10)
+  (let ((z nil) )
+  (setq z (format t &quot;x=~d&quot; i))
+  (print z))))))
+    </pre>
+    <p></p>
+    <pre><b>;; This is the result:
+  </b>
+  (defun e ()
+  &quot;A badly indented function.&quot;
+  (let ((x 20))
+  (loop for i from 0 to x 
+  do (loop for j from 0 below 10 
+  do (print j)) 
+  (if (&lt; i 10)
+  (let ((z nil) )
+  (setq z (format t &quot;x=~d&quot; i))
+  (print z))))))
+    </pre>
+    <ul>
+      <li>Support for parenthesis ( <a href="s4.lisp" target="refer-window">s4.lisp</a> 
+      )</li>
+    </ul>
+    <pre><b>;; Placing the cursor on a &quot;(&quot; or after a &quot;)&quot; highlights the matching
+    ;; parens:
+  </b>
+  (progn (+ 3 3) (- 2 2))
+    </pre>
+    <p></p>
+    <pre><b>;; A mismatched parens is highlighted in a different color (put cursor
+    ;; after last parens and enter a &quot;)&quot; to see this:
+  </b>
+  (- 2 2)
+    </pre>
+    <p></p>
+    <pre><b>;; You can also type &quot;M-x check-parens&quot; to locate mismatched parens in
+    ;; a buffer</b></pre>
+    <p></p>
+    <pre><b>;; Press &quot;M-(&quot; and you will get:
 
-</b>() 
-<b>;; with the cursor placed on the closing parens, ready to enter the
-;; function name. </b></pre>
-<p></p>
-<pre><b>;; Put the cursor on the open parens of the &quot;(+ 2 2)&quot; sexp below and
-;; press &quot;C-u 2 M-(&quot; to enclose the next 2 sexps with parens - then
-;; type &quot;+ 1&quot; to add &quot;1&quot; to the result of the following 2 sexps:
+    </b>() 
+    <b>;; with the cursor placed on the closing parens, ready to enter the
+    ;; function name. </b></pre>
+    <p></p>
+    <pre><b>;; Put the cursor on the open parens of the &quot;(+ 2 2)&quot; sexp below and
+    ;; press &quot;C-u 2 M-(&quot; to enclose the next 2 sexps with parens - then
+    ;; type &quot;+ 1&quot; to add &quot;1&quot; to the result of the following 2 sexps:
 
-</b>(progn (+ 2 2) (+ 3 3))
-</pre>
-<p></p>
-<pre><b>;; To delete the enclosing &quot;progn&quot; below, put the cursor on the open
-;; parens of the &quot;(+ 1 1)&quot; and press the following sequence of keys:
-;; &quot;C-M-k C-M-k C-M-k C-M-u C-M-k C-y M-y C-M-a C-M-q&quot;:
+    </b>(progn (+ 2 2) (+ 3 3))
+    </pre>
+    <p></p>
+    <pre><b>;; To delete the enclosing &quot;progn&quot; below, put the cursor on the open
+    ;; parens of the &quot;(+ 1 1)&quot; and press the following sequence of keys:
+    ;; &quot;C-M-k C-M-k C-M-k C-M-u C-M-k C-y M-y C-M-a C-M-q&quot;:
 
-</b>(defun a ()
-  (progn 
+    </b>(defun a ()
+    (progn 
     (+ 1 1)
     (+ 2 2)
     (+ 3 3)))
-</pre>
-<ul>
-  <li>Automatic code indentation (CL vs Elisp) (
-  <a HREF="s5.lisp" TARGET="refer-window">s5.lisp</a> )</li>
-</ul>
-<pre><b>;; Indentation is automatic for Lisp forms. Example: Put the cursor
-;; after the first addition form and press Enter:
+    </pre>
+    <ul>
+      <li>Automatic code indentation (CL vs Elisp) (
+      <a href="s5.lisp" target="refer-window">s5.lisp</a> )</li>
+    </ul>
+    <pre><b>;; Indentation is automatic for Lisp forms. Example: Put the cursor
+    ;; after the first addition form and press Enter:
 
-</b>(progn
-  (+ 3 3)
-  (- 2 2))
-</pre>
-<p></p>
-<pre><b>;; Pressing TAB will indent incorrectly indented code. Example: Put
-;; the cursor at the beginning of the &quot;(+ 3 3)&quot; form and press TAB:
+    </b>(progn
+    (+ 3 3)
+    (- 2 2))
+    </pre>
+    <p></p>
+    <pre><b>;; Pressing TAB will indent incorrectly indented code. Example: Put
+    ;; the cursor at the beginning of the &quot;(+ 3 3)&quot; form and press TAB:
 
-</b>(progn
-(+ 3 3))
-</pre>
-<p></p>
-<pre><b>;; CL indentation rules are different from Emacs Lisp indentation
-;; rules. Make certain you have the following code in a lisp mode hook
-;; in your .emacs file:
-
-</b>(set (make-local-variable lisp-indent-function)
-		 'common-lisp-indent-function)
-</pre>
-<ul>
-  <li>Close all parenthesis ( <a HREF="s6.lisp" TARGET="refer-window">s6.lisp</a> 
-  )</li>
-</ul>
-<pre><b>;; Press &quot;C-c ]&quot; (in ELI) or &quot;C-C C-v C-]&quot; (in ILISP) to close all
-;; parens. Example: Put cursor at end of following form and press the
-;; appropriate key sequence:
-
-</b>(progn (if nil (progn (+ 3 (- 2 1
-</pre>
-<ul>
-  <li>Code completion ( <a HREF="s7.lisp" TARGET="refer-window">s7.lisp</a> )</li>
-</ul>
-<pre><b>;; Type the following and press &quot;C-c TAB&quot; (both ELI &amp; ILISP) to get an
-;; automatic completion for defvar:
-
-</b>(defv
-</pre>
-<p></p>
-<pre><b>;; Typing in the following and pressing &quot;C-c TAB&quot; results in a list of
-;; altermatives:
-
-</b>(def
-</pre>
-<p></p>
-<pre><b>;; The Emacs hippie-expand command will expand both lisp symbols
-;; (however, it only works off of lisp symbol information that is
-;; either available in the buffers or a standard CL symbol) and
-;; directories. For example, type in the following and press &quot;C-c /&quot;
-;; to get a directory completion:
-
-</b>(setq x &quot;c:/pro
-</pre>
-<ul>
-  <li>Hiding/showing code ( <a HREF="s8.lisp" TARGET="refer-window">s8.lisp</a> 
-  )</li>
-</ul>
-<pre><b>;; Highlight the middle &quot;(if ...&quot; block and press &quot;C-x n n&quot; to hide
-;; everything but that block (&quot;C-x n w&quot; restores the other code):
-
-</b>(if a 
-    (+ 1 1))
-(if b
-    (+ 2 2))
-(if c
+    </b>(progn
     (+ 3 3))
-</pre>
-<p></p>
-<pre><b>;; Put the cursor on &quot;(defun b ...&quot; and press &quot;C-x n d&quot; to narrow to
-;; just defun b ((&quot;C-x n w&quot; restores the other code):
+    </pre>
+    <p></p>
+    <pre><b>;; CL indentation rules are different from Emacs Lisp indentation
+    ;; rules. Make certain you have the following code in a lisp mode hook
+    ;; in your .emacs file:
 
-</b>(defun a ()
-  (+ 1 1))
+    </b>(set (make-local-variable lisp-indent-function)
+    'common-lisp-indent-function)
+    </pre>
+    <ul>
+      <li>Close all parenthesis ( <a href="s6.lisp" target="refer-window">s6.lisp</a> 
+      )</li>
+    </ul>
+    <pre><b>;; Press &quot;C-c ]&quot; (in ELI) or &quot;C-C C-v C-]&quot; (in ILISP) to close all
+    ;; parens. Example: Put cursor at end of following form and press the
+    ;; appropriate key sequence:
 
-(defun b ()
-  (+ 2 2))
+    </b>(progn (if nil (progn (+ 3 (- 2 1
+    </pre>
+    <ul>
+      <li>Code completion ( <a href="s7.lisp" target="refer-window">s7.lisp</a> )</li>
+    </ul>
+    <pre><b>;; Type the following and press &quot;C-c TAB&quot; (both ELI &amp; ILISP) to get an
+    ;; automatic completion for defvar:
 
-(defun c ()
-  (+ 3 3))
-</pre>
-<ul>
-  <li>Comments ( <a HREF="s9.lisp" TARGET="refer-window">s9.lisp</a> )</li>
-</ul>
-<pre><b>;; Put the cursor on the following sexp and press &quot;M-;&quot; to get a
-;; code line comment (right-hand comment):
+    </b>(defv
+    </pre>
+    <p></p>
+    <pre><b>;; Typing in the following and pressing &quot;C-c TAB&quot; results in a list of
+    ;; altermatives:
 
-</b>(setq x 1)
-</pre>
-<p></p>
-<pre><b>;; Highlight the 2nd &amp; 3rd lines and press &quot;M-;&quot; to comment out those
-;; lines (highlighting them a 2nd time and pressing &quot;M-;&quot; removes the
-;; comment):
+    </b>(def
+    </pre>
+    <p></p>
+    <pre><b>;; The Emacs hippie-expand command will expand both lisp symbols
+    ;; (however, it only works off of lisp symbol information that is
+    ;; either available in the buffers or a standard CL symbol) and
+    ;; directories. For example, type in the following and press &quot;C-c /&quot;
+    ;; to get a directory completion:
 
-</b>(+ 1 1)
-(+ 2 2)
-(+ 3 3)
-</pre>
-<p></p>
-<pre><b>;; Using Paul Foley's comment functions allows you to selectively
-;; comment out embedded sexps. Example: Put the cursor on the &quot;(+ 4
-;; 4)&quot; sexp and press &quot;C-c ;&quot; to comment out that sexp. Pressing &quot;C-c
-;; ;&quot; comments out the enclosing sexp (and on upwards). Pressing &quot;C-c
-;; :&quot; removes the comment:
+    </b>(setq x &quot;c:/pro
+    </pre>
+    <ul>
+      <li>Hiding/showing code ( <a href="s8.lisp" target="refer-window">s8.lisp</a> 
+      )</li>
+    </ul>
+    <pre><b>;; Highlight the middle &quot;(if ...&quot; block and press &quot;C-x n n&quot; to hide
+    ;; everything but that block (&quot;C-x n w&quot; restores the other code):
 
-</b>(+ 1 (+ 2 (+ 3 (+ 4 4))))
-</pre>
-<p></p>
-<pre><b>;; Emacs knows how to wrap comment text intelligently. For example, this comment line spans
-;; muliple lines but is not aligned consitently
-;; with the rest of the comments/code in the file (everything else
-;; ends at
-;; column 68. Pressing &quot;M-q&quot; adjusts the comments appropriately.
-</b></pre>
-<h2><a NAME="Slide-11">Working with Lisp Code - Evaluating and Compiling Lisp</a></h2>
-<ul>
-  <li>buffer</li>
-</ul>
-<ul>
-  <li>region</li>
-</ul>
-<ul>
-  <li>defun</li>
-</ul>
-<ul>
-  <li>sexp (previous/next)</li>
-</ul>
-<ul>
-  <li>DWIM</li>
-</ul>
-<ul>
-  <li>Example code ( <a HREF="s11.lisp" TARGET="refer-window">s11.lisp</a> )
-  </li>
-</ul>
-<pre><b>;; Compile the entire buffer by pressing &quot;C-c C-b&quot; (ELI) or &quot;C-c C-k
-;; C-b&quot; (ILISP).
+    </b>(if a 
+    (+ 1 1))
+    (if b
+    (+ 2 2))
+    (if c
+    (+ 3 3))
+    </pre>
+    <p></p>
+    <pre><b>;; Put the cursor on &quot;(defun b ...&quot; and press &quot;C-x n d&quot; to narrow to
+    ;; just defun b ((&quot;C-x n w&quot; restores the other code):
 
-;; Compile a region by selecting the first 2 forms in test-all and
-;; pressing &quot;C-c C-r&quot; (ELI) or &quot;C-c C-k C-r&quot; (ILISP).
+    </b>(defun a ()
+    (+ 1 1))
 
-;; Compile a defun by putting the cursor inside the &quot;test-format&quot;
-;; defun and pressing &quot;C-c C-x&quot; (ELI) or &quot;C-c C-k C-d&quot; (ILISP).
+    (defun b ()
+    (+ 2 2))
 
-;; Compile the sexp before the point by putting the cursor after the
-;; closing paren of &quot;(test-format)&quot; and pressing &quot;C-c C-s&quot; (ELI). 
+    (defun c ()
+    (+ 3 3))
+    </pre>
+    <ul>
+      <li>Comments ( <a href="s9.lisp" target="refer-window">s9.lisp</a> )</li>
+    </ul>
+    <pre><b>;; Put the cursor on the following sexp and press &quot;M-;&quot; to get a
+    ;; code line comment (right-hand comment):
 
-;; As a general rule, to evaluate rather than compile, press &quot;C-u&quot;
-;; before the ELI command (e.g. -- &quot;C-u C-c C-s&quot; to evaluate the sexp
-;; before the point instead of &quot;C-c C-s&quot; to compile it) or enter the
-;; ILISP key sequence with a &quot;C-c C-j&quot; prefix rather than a &quot;C-c C-k&quot;
-;; prefix (e.g. -- use &quot;C-c C-j C-d&quot; to evaluate a defun instead of
-;; &quot;C-c C-k C-d&quot; to compile the defun)
+    </b>(setq x 1)
+    </pre>
+    <p></p>
+    <pre><b>;; Highlight the 2nd &amp; 3rd lines and press &quot;M-;&quot; to comment out those
+    ;; lines (highlighting them a 2nd time and pressing &quot;M-;&quot; removes the
+    ;; comment):
 
-;; The &quot;Do What I Mean&quot; evaluation/compilation functions work on the
-;; following basis: If a region is selected, process the region.  If
-;; the cursor is on or immediately after a ')', process the last sexp.
-;; If the cursor is on or immediately before a '(', process the next
-;; sexp. If the cursor is inside a defun, process the defun. If the
-;; cursor is inside a top-level sexp, process the top-level
-;; sexp. Tests are done in the order specified, so (if there is any
-;; ambiguity), make certain that the cursor is either on a parenthesis
-;; (for the last/next commands or not directly before/after/on a
-;; parenthesis for the defun/top-level commands.  Press &quot;C-c d&quot; (ELI)
-;; or &quot;C-c C-j C-j&quot; (ILISP).
+    </b>(+ 1 1)
+    (+ 2 2)
+    (+ 3 3)
+    </pre>
+    <p></p>
+    <pre><b>;; Using Paul Foley's comment functions allows you to selectively
+    ;; comment out embedded sexps. Example: Put the cursor on the &quot;(+ 4
+    ;; 4)&quot; sexp and press &quot;C-c ;&quot; to comment out that sexp. Pressing &quot;C-c
+    ;; ;&quot; comments out the enclosing sexp (and on upwards). Pressing &quot;C-c
+    ;; :&quot; removes the comment:
 
-</b>(defun test (n)
-  (loop for i from 0 below n
-	do (print i)))
+    </b>(+ 1 (+ 2 (+ 3 (+ 4 4))))
+    </pre>
+    <p></p>
+    <pre><b>;; Emacs knows how to wrap comment text intelligently. For example, this comment line spans
+    ;; muliple lines but is not aligned consitently
+    ;; with the rest of the comments/code in the file (everything else
+    ;; ends at
+    ;; column 68. Pressing &quot;M-q&quot; adjusts the comments appropriately.
+    </b></pre>
+    <h2><a name="Slide-11">Working with Lisp Code - Evaluating and Compiling Lisp</a></h2>
+    <ul>
+      <li>buffer</li>
+    </ul>
+    <ul>
+      <li>region</li>
+    </ul>
+    <ul>
+      <li>defun</li>
+    </ul>
+    <ul>
+      <li>sexp (previous/next)</li>
+    </ul>
+    <ul>
+      <li>DWIM</li>
+    </ul>
+    <ul>
+      <li>Example code ( <a href="s11.lisp" target="refer-window">s11.lisp</a> )
+      </li>
+    </ul>
+    <pre><b>;; Compile the entire buffer by pressing &quot;C-c C-b&quot; (ELI) or &quot;C-c C-k
+    ;; C-b&quot; (ILISP).
 
-(defun test-format ()
-  (format t &quot;This is a test.~%&quot;))
+    ;; Compile a region by selecting the first 2 forms in test-all and
+    ;; pressing &quot;C-c C-r&quot; (ELI) or &quot;C-c C-k C-r&quot; (ILISP).
 
-(defun test-format-loop (n)
-  (loop for i from 0 below n
-	do (test-format)
-	(sleep 1)))
+    ;; Compile a defun by putting the cursor inside the &quot;test-format&quot;
+    ;; defun and pressing &quot;C-c C-x&quot; (ELI) or &quot;C-c C-k C-d&quot; (ILISP).
 
-(defun test-all ()
-  (test 5)
-  (test-format)
-  (test-format-loop 5))
-</pre>
-<h2><a NAME="Slide-12">Working with Lisp Code - Searching Lisp Code</a></h2>
-<ul>
-  <li>Standard Emacs text search (isearch forward/backward, regexp searches, 
-  search/replace) ( <a HREF="s12.lisp" TARGET="refer-window">s12.lisp</a> )</li>
-</ul>
-<pre><b>;; &quot;C-s&quot; does an incremental search forward (e.g. - as each key is
-;; the search string is entered, the source file is searched for the
-;; first match. This can make finding specific text much quicker as
-;; you only need to type in the unique characters. Repeat searches
-;; (using the same search characters) can be done by repeatedly
-;; pressing &quot;C-s&quot;
+    ;; Compile the sexp before the point by putting the cursor after the
+    ;; closing paren of &quot;(test-format)&quot; and pressing &quot;C-c C-s&quot; (ELI). 
 
-;; &quot;C-r&quot; does an incremental search backward
+    ;; As a general rule, to evaluate rather than compile, press &quot;C-u&quot;
+    ;; before the ELI command (e.g. -- &quot;C-u C-c C-s&quot; to evaluate the sexp
+    ;; before the point instead of &quot;C-c C-s&quot; to compile it) or enter the
+    ;; ILISP key sequence with a &quot;C-c C-j&quot; prefix rather than a &quot;C-c C-k&quot;
+    ;; prefix (e.g. -- use &quot;C-c C-j C-d&quot; to evaluate a defun instead of
+    ;; &quot;C-c C-k C-d&quot; to compile the defun)
 
-;; &quot;C-s RET&quot; and &quot;C-r RET&quot; both do conventional string searches
-;; (forward and backward respectively)
+    ;; The &quot;Do What I Mean&quot; evaluation/compilation functions work on the
+    ;; following basis: If a region is selected, process the region.  If
+    ;; the cursor is on or immediately after a ')', process the last sexp.
+    ;; If the cursor is on or immediately before a '(', process the next
+    ;; sexp. If the cursor is inside a defun, process the defun. If the
+    ;; cursor is inside a top-level sexp, process the top-level
+    ;; sexp. Tests are done in the order specified, so (if there is any
+    ;; ambiguity), make certain that the cursor is either on a parenthesis
+    ;; (for the last/next commands or not directly before/after/on a
+    ;; parenthesis for the defun/top-level commands.  Press &quot;C-c d&quot; (ELI)
+    ;; or &quot;C-c C-j C-j&quot; (ILISP).
 
-;; &quot;C-M-s&quot; and &quot;C-M-r&quot; both do regular expression searches (forward
-;; and backward respectively)
+    </b>(defun test (n)
+    (loop for i from 0 below n
+    do (print i)))
 
-;; &quot;M-%&quot; does a search/replace while &quot;C-M-%&quot; does a regular
-;; expression search/replace</b></pre>
-<ul>
-  <li>Finding occurances (occur, grep) (
-  <a HREF="s13.lisp" TARGET="refer-window">s13.lisp</a> )</li>
-</ul>
-<pre><b>;; Use the Emacs &quot;occur&quot; function to find all occurances of a string
-;; (or regexp) in a buffer. Example: Enter &quot;M-x occur&quot; and enter the
-;; string &quot;defun&quot; to get a list of all the occurances of the
-;; characters &quot;defun&quot; in the current buffer.
+    (defun test-format ()
+    (format t &quot;This is a test.~%&quot;))
 
-</b>(defvar aa &quot;a&quot; &quot;a variable&quot;)
+    (defun test-format-loop (n)
+    (loop for i from 0 below n
+    do (test-format)
+    (sleep 1)))
 
-(defun b ()
-  &quot;a function&quot;
-  (+ 2 2))
+    (defun test-all ()
+    (test 5)
+    (test-format)
+    (test-format-loop 5))
+    </pre>
+    <h2><a name="Slide-12">Working with Lisp Code - Searching Lisp Code</a></h2>
+    <ul>
+      <li>Standard Emacs text search (isearch forward/backward, regexp searches, 
+      search/replace) ( <a href="s12.lisp" target="refer-window">s12.lisp</a> )</li>
+    </ul>
+    <pre><b>;; &quot;C-s&quot; does an incremental search forward (e.g. - as each key is
+    ;; the search string is entered, the source file is searched for the
+    ;; first match. This can make finding specific text much quicker as
+    ;; you only need to type in the unique characters. Repeat searches
+    ;; (using the same search characters) can be done by repeatedly
+    ;; pressing &quot;C-s&quot;
 
-(defun c ()
-  &quot;another function&quot;
-  (+ 3 3))
+    ;; &quot;C-r&quot; does an incremental search backward
 
-(defmacro d (x)
-  &quot;a macro&quot;
-  `(list ,x))
-</pre>
-<p></p>
-<pre><b>;; Use the Emacs &quot;grep&quot; function to find all occurances of a string
-;; (or regexp) in a multiple files. Example: Enter &quot;M-x grep&quot; and
-;; enter the string &quot;defun *.lisp&quot; to get a list of all the function
-;; definitions in lisp files in the current directory.</b></pre>
-<ul>
-  <li>Lisp symbols in current source (imenu) (
-  <a HREF="s14.lisp" TARGET="refer-window">s14.lisp</a> )</li>
-</ul>
-<pre><b>;; Open a lisp source file and press the middle mouse button for a
-;; pop-up window listing all variables and functions in the lisp
-;; source file.</b></pre>
-<ul>
-  <li>Lisp symbols using Lisp ( <a HREF="s15.lisp" TARGET="refer-window">
-  s15.lisp</a> )</li>
-</ul>
-<pre><b>;; Use the source location maintained by the CL implementation to
-;; locate source definitions.  First load this file and the s13.lisp
-;; file.  Then put the cursor on the &quot;aa&quot; variable in the following
-;; form and press &quot;C-c .&quot;  (ELI) or &quot;M-.&quot; (ILISP) to locate the
-;; definition.
+    ;; &quot;C-s RET&quot; and &quot;C-r RET&quot; both do conventional string searches
+    ;; (forward and backward respectively)
 
-</b>(setq x aa)
-</pre>
-<ul>
-  <li>Lisp symbols in multiple source files (etags) (
-  <a HREF="s16.lisp" TARGET="refer-window">s16.lisp</a> )</li>
-</ul>
-<pre><b>;; Enter &quot;M-x shell&quot; to bring up a shell window in the current
-;; directory. Then run &quot;etags *.lisp&quot; to create a TAG file containing
-;; all symbols in lisp files in the current directory. Then run &quot;etags
-;; -a subdir/*.lisp&quot; to add to the TAG file symbols from all lisp
-;; files in another directory. Locate the definition of the &quot;aa&quot;
-;; variable is the s13.lisp file by putting the cursor on the &quot;aa&quot; in
-;; the following form and pressing &quot;M-.&quot;.
+    ;; &quot;C-M-s&quot; and &quot;C-M-r&quot; both do regular expression searches (forward
+    ;; and backward respectively)
 
-</b>(setq x aa)
-</pre>
-<ul>
-  <li>Lisp symbols using
-  <a HREF="http://ecb.sourceforge.net/" TARGET="refer-window">ECB</a> (
-  <a HREF="s17.lisp" TARGET="refer-window">s17.lisp</a> )</li>
-</ul>
-<pre><b>;; Press &quot;M-x ecb-activate&quot; to start up ECB. Load a lisp file by
-;; pressing the middle mouse button (or the Enter key) on any file
-;; name in the ECB mini-window. Pressing the middle mouse button (or
-;; the Enter key) on any definition in the ECB symbol mini-window
-;; takes you to that definition. Press &quot;C-F7&quot; to toggle between full
-;; screen and ECB views.</b></pre>
-<h2><a NAME="Slide-13">Lisp Documentation in Emacs - Learning About Lisp Symbols</a></h2>
-<ul>
-  <li>Argument lists ( <a HREF="s18.lisp" TARGET="refer-window">s18.lisp</a> )</li>
-</ul>
-<pre><b>;; For ILISP/ELI, type in &quot;(set&quot; and press SPACE to get the arglist in
-;; the minibuffer.  For ILISP, type in &quot;(set&quot; and press &quot;C-c C-q C-a&quot;
-;; to get the arglist in the listener buffer.  For ILISP, type in
-;; &quot;(set &quot; and press &quot;C-u C-c C-q C-a&quot; to get the arguments for &quot;set&quot;
-;; pasted into the current buffer.  </b></pre>
-<ul>
-  <li>Documentation ( <a HREF="s19.lisp" TARGET="refer-window">s19.lisp</a> )</li>
-</ul>
-<pre><b>;; Enter and evaluate the following definitions, then put the cursor
-;; on &quot;(xx)&quot; and press &quot;C-c C-f&quot; (ELI) or &quot;C-c C-q C-o&quot; (ILISP) to get
-;; the function documentation.
+    ;; &quot;M-%&quot; does a search/replace while &quot;C-M-%&quot; does a regular
+    ;; expression search/replace</b></pre>
+    <ul>
+      <li>Finding occurances (occur, grep) (
+      <a href="s13.lisp" target="refer-window">s13.lisp</a> )</li>
+    </ul>
+    <pre><b>;; Use the Emacs &quot;occur&quot; function to find all occurances of a string
+    ;; (or regexp) in a buffer. Example: Enter &quot;M-x occur&quot; and enter the
+    ;; string &quot;defun&quot; to get a list of all the occurances of the
+    ;; characters &quot;defun&quot; in the current buffer.
 
-</b>(defun xx ()
-  &quot;A do-nothing function&quot;
-  nil)
+    </b>(defvar aa &quot;a&quot; &quot;a variable&quot;)
 
-(setf (documentation 'xx 'function) &quot;A function that does nil.&quot;)
+    (defun b ()
+    &quot;a function&quot;
+    (+ 2 2))
 
-(xx)
-</pre>
-<ul>
-  <li>Describe ( <a HREF="s20.lisp" TARGET="refer-window">s20.lisp</a> )</li>
-</ul>
-<pre><b>;; Enter and evaluate the following definitions, then put the cursor
-;; on &quot;(xx)&quot; and press &quot;C-c C-q C-d&quot; (ILISP) to get a description of
-;; the function.
+    (defun c ()
+    &quot;another function&quot;
+    (+ 3 3))
 
-</b>(defun xx ()
-  &quot;A do-nothing function&quot;
-  nil)
+    (defmacro d (x)
+    &quot;a macro&quot;
+    `(list ,x))
+    </pre>
+    <p></p>
+    <pre><b>;; Use the Emacs &quot;grep&quot; function to find all occurances of a string
+    ;; (or regexp) in a multiple files. Example: Enter &quot;M-x grep&quot; and
+    ;; enter the string &quot;defun *.lisp&quot; to get a list of all the function
+    ;; definitions in lisp files in the current directory.</b></pre>
+    <ul>
+      <li>Lisp symbols in current source (imenu) (
+      <a href="s14.lisp" target="refer-window">s14.lisp</a> )</li>
+    </ul>
+    <pre><b>;; Open a lisp source file and press the middle mouse button for a
+    ;; pop-up window listing all variables and functions in the lisp
+    ;; source file.</b></pre>
+    <ul>
+      <li>Lisp symbols using Lisp ( <a href="s15.lisp" target="refer-window">
+      s15.lisp</a> )</li>
+    </ul>
+    <pre><b>;; Use the source location maintained by the CL implementation to
+    ;; locate source definitions.  First load this file and the s13.lisp
+    ;; file.  Then put the cursor on the &quot;aa&quot; variable in the following
+    ;; form and press &quot;C-c .&quot;  (ELI) or &quot;M-.&quot; (ILISP) to locate the
+    ;; definition.
 
-(setf (documentation 'xx 'function) &quot;A function that does nil.&quot;)
+    </b>(setq x aa)
+    </pre>
+    <ul>
+      <li>Lisp symbols in multiple source files (etags) (
+      <a href="s16.lisp" target="refer-window">s16.lisp</a> )</li>
+    </ul>
+    <pre><b>;; Enter &quot;M-x shell&quot; to bring up a shell window in the current
+    ;; directory. Then run &quot;etags *.lisp&quot; to create a TAG file containing
+    ;; all symbols in lisp files in the current directory. Then run &quot;etags
+    ;; -a subdir/*.lisp&quot; to add to the TAG file symbols from all lisp
+    ;; files in another directory. Locate the definition of the &quot;aa&quot;
+    ;; variable is the s13.lisp file by putting the cursor on the &quot;aa&quot; in
+    ;; the following form and pressing &quot;M-.&quot;.
 
-(xx)
-</pre>
-<ul>
-  <li>Inspect ( <a HREF="s21.lisp" TARGET="refer-window">s21.lisp</a> )</li>
-</ul>
-<pre><b>;; Enter and evaluate the following definitions, then put the cursor
-;; on &quot;(xx)&quot; and press &quot;C-c C-q C-i&quot; (ILISP) to execute &quot;inspect&quot; on
-;; the &quot;xx&quot; function. Entering &quot;:h&quot; gives a list of help commands and
-;; &quot;:q&quot; exits &quot;inspect&quot;. 
+    </b>(setq x aa)
+    </pre>
+    <ul>
+      <li>Lisp symbols using
+      <a href="http://ecb.sourceforge.net/" target="refer-window">ECB</a> (
+      <a href="s17.lisp" target="refer-window">s17.lisp</a> )</li>
+    </ul>
+    <pre><b>;; Press &quot;M-x ecb-activate&quot; to start up ECB. Load a lisp file by
+    ;; pressing the middle mouse button (or the Enter key) on any file
+    ;; name in the ECB mini-window. Pressing the middle mouse button (or
+    ;; the Enter key) on any definition in the ECB symbol mini-window
+    ;; takes you to that definition. Press &quot;C-F7&quot; to toggle between full
+    ;; screen and ECB views.</b></pre>
+    <h2><a name="Slide-13">Lisp Documentation in Emacs - Learning About Lisp Symbols</a></h2>
+    <ul>
+      <li>Argument lists ( <a href="s18.lisp" target="refer-window">s18.lisp</a> )</li>
+    </ul>
+    <pre><b>;; For ILISP/ELI, type in &quot;(set&quot; and press SPACE to get the arglist in
+    ;; the minibuffer.  For ILISP, type in &quot;(set&quot; and press &quot;C-c C-q C-a&quot;
+    ;; to get the arglist in the listener buffer.  For ILISP, type in
+    ;; &quot;(set &quot; and press &quot;C-u C-c C-q C-a&quot; to get the arguments for &quot;set&quot;
+    ;; pasted into the current buffer.  </b></pre>
+    <ul>
+      <li>Documentation ( <a href="s19.lisp" target="refer-window">s19.lisp</a> )</li>
+    </ul>
+    <pre><b>;; Enter and evaluate the following definitions, then put the cursor
+    ;; on &quot;(xx)&quot; and press &quot;C-c C-f&quot; (ELI) or &quot;C-c C-q C-o&quot; (ILISP) to get
+    ;; the function documentation.
 
-</b>(defun xx ()
-  &quot;A do-nothing function&quot;
-  nil)
+    </b>(defun xx ()
+    &quot;A do-nothing function&quot;
+    nil)
 
-(setf (documentation 'xx 'function) &quot;A function that does nil.&quot;)
+    (setf (documentation 'xx 'function) &quot;A function that does nil.&quot;)
 
-(xx)
-</pre>
-<ul>
-  <li>Macroexpand ( <a HREF="s22.lisp" TARGET="refer-window">s22.lisp</a> )</li>
-</ul>
-<pre><b>;; Enter the following function definition, then put the cursor on the
-;; open parens of &quot;(defun ...&quot; and press &quot;C-c RET&quot; (ELI) or &quot;C-c C-b
-;; k&quot; (ILISP) to get a macroexpand-1. Then press &quot;C-c (&quot; (ELI) or &quot;C-c
-;; C-b C-k&quot; (ILISP) to get a recursive macroexpansion.
+    (xx)
+    </pre>
+    <ul>
+      <li>Describe ( <a href="s20.lisp" target="refer-window">s20.lisp</a> )</li>
+    </ul>
+    <pre><b>;; Enter and evaluate the following definitions, then put the cursor
+    ;; on &quot;(xx)&quot; and press &quot;C-c C-q C-d&quot; (ILISP) to get a description of
+    ;; the function.
 
-</b>(defun test (n)
-  (loop for i from 0 below n
-	do (print i)))
-</pre>
-<h2><a NAME="Slide-14">Lisp Documentation in Emacs - Lisp Documentation</a></h2>
-<ul>
-  <li>
-  <a HREF="ftp://ftp.lispworks.com/pub/software_tools/documentation/HyperSpec-7-0.tar.gz" TARGET="refer-window">
-  CL HyperSpec</a></li>
-</ul>
-<ul>
-  <li>
-  <a HREF="http://www-2.cs.cmu.edu/afs/cs.cmu.edu/project/ai-repository/ai/lang/lisp/doc/cltl/cltl_ht.tgz" TARGET="refer-window">
-  CLtL2</a></li>
-</ul>
-<ul>
-  <li>
-  <a HREF="http://www.franz.com/support/documentation/" TARGET="refer-window">
-  ACL Documenation</a></li>
-</ul>
-<ul>
-  <li>Example code ( <a HREF="s23.lisp" TARGET="refer-window">s23.lisp</a> )
-  </li>
-</ul>
-<pre><b>;; Put the cursor on the &quot;(format&quot; below and press &quot;F1&quot; to get the
-;; Hyperspec page for &quot;format&quot;. Put the cursor on the &quot;d&quot; in the
-;; format string and press &quot;C-u F1&quot; to get the Hyperspec page
-;; describing the &quot;Tilde D: Decimal&quot; format character.
+    </b>(defun xx ()
+    &quot;A do-nothing function&quot;
+    nil)
 
-</b>(format t &quot;One = ~d&quot; 1)
-</pre>
-<p></p>
-<pre><b>;; Note: Depending on the documentation packages that have been
-;; loaded, and the browser that you wish to use, the following keys
-;; may be used:
-;;            Default    W3
-;; Package    Browser  Browser  Format-Dft  Format-W3  Info
-;; =========  =======  =======  ==========  =========  ====
-;; Hyperspec    F1      S-F1    C-u F1      C-u S-F1
-;; CLtL2       M-F1    M-S-F1   
-;; ACL docs    C-F1    C-S-F1
-;; Info docs                                           C-M-F1</b></pre>
-<h2><a NAME="Slide-15">Miscellaneous</a></h2>
-<ul>
-  <li>Lisp Listener ( <a HREF="s24.lisp" TARGET="refer-window">s24.lisp</a> )</li>
-</ul>
-<pre><b>;; With the cursor on the &quot;let&quot;, press &quot;C-c x&quot; (ELI or ILISP) to
-;; evaluate a lisp form by copying it into the listener.
+    (setf (documentation 'xx 'function) &quot;A function that does nil.&quot;)
 
-</b>(let ((n 20))
-  (loop for i from 0 below n
-      do (print i)))
-</pre>
-<p></p>
-<pre><b>;; In ILISP, most of the eval &amp; compile functions have an &quot;and go&quot;
-;; equivalent that transfers the focus to the listener after
-;; execution. Their key bindings are the same as the normal
-;; eval/compile functions except that the final key does not have a
-;; &quot;Ctrl&quot; prefix. For example, put the cursor at the open paren of the
-;; &quot;(let ...&quot; sexp above and press &quot;C-c C-j C-n&quot; to evaluate in the
-;; source buffer. Then, press &quot;C-c C-j n&quot; to evaluate &quot;and go&quot; to the
-;; listener.</b></pre>
-<ul>
-  <li>Project Management
-  <ul>
-    <li>
-    <a HREF="http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/cclan/asdf/" TARGET="refer-window">
-    asdf</a></li>
-  </ul>
-  <ul>
-    <li><a HREF="http://sourceforge.net/projects/clocc" TARGET="refer-window">
-    mk-defsystem</a></li>
-  </ul>
-  </li>
-</ul>
-<ul>
-  <li>Debugging
-  <ul>
-    <li>ILISP has a standarized set of key bindings for debugging across 
-    implementations (&quot;C-c C-b C-h&quot; for a list of them).</li>
-  </ul>
-  </li>
-</ul>
-<ul>
-  <li>Comparing versions of code ( <a HREF="s10.lisp" TARGET="refer-window">
-  s10.lisp</a> , <a HREF="s10a.lisp" TARGET="refer-window">s10a.lisp</a> ,
-  <a HREF="s10b.lisp" TARGET="refer-window">s10b.lisp</a> )</li>
-</ul>
-<pre><b>;; Start the ediff utility by entering &quot;M-x ediff&quot;. Enter s10a.lisp as
-;; the first file name and s10b.lisp as the second file name. Press
-;; the space bar to step through the changes. When finished, press &quot;q&quot;
-;; to exit.</b></pre>
-<h2><a NAME="Slide-16">Questions/Answers</a></h2>
-<ul>
-  <li>Q1. Controlling evaluation output</li>
-</ul>
-<pre><b>Q1 I get irritated by ELI's switching to an output buffer when I evaluate a sexp in a Lisp source buffer.  </b></pre>
-<p></p>
-<pre><b>A1 You can control where ELI output goes to by setting the fi:pop-up-temp-window-behavior variable. Alternatively, 
-you can use my copy-eval-dwim-lisp function (bound to &quot;C-c x&quot;). It copies Lisp code from the source buffer to the 
-listener buffer and evaluates it there. Both buffers stay visible and focus remains in the source buffer. The code 
-works for ILISP, ELI and Emacs Lisp.</b></pre>
-<ul>
-  <li>Q2. Viewing HyperSpec from within Emacs</li>
-</ul>
-<pre><b>Q2 I like having access to the HyperSpec when I'm in Emacs, but why does it have to use an external browser? Why 
-can't I just see the HyperSpec in Emacs?</b></pre>
-<p></p>
-<pre><b>A2 If you use the Emacs add-on package W3 (or W3M which provides similar functionality), you can display HTML pages 
-inside of Emacs. Once you have W3 and the HyperSpec both installed, use code similar to the following to access the 
-HyperSpec from the Shift-F1 key:</b></pre>
-<p></p>
-<pre>(global-set-key [(shift f1)]
-		'(lambda ()
-		   (interactive)
-		   (let ((browse-url-browser-function 
-                            'browse-url-w3)
-		           (common-lisp-hyperspec-root            
-                            &quot;file://c:/home/docs/Hyperspec/&quot;)
-	                           (common-lisp-hyperspec-symbol-table 
-                             (concat common-lisp-hyperspec-root 
-                                         &quot;Data/Map_Sym.txt&quot;))
-		            (hyperspec-prog 
-                             &quot;c:/home/site/ilisp/extra/hyperspec&quot;))
-		     (load-library hyperspec-prog)
-		     (common-lisp-hyperspec 
-                        (thing-at-point 'symbol)))))
-</pre>
-<p></p>
-<pre><b>Note that the &quot;let&quot; in the above code sets the browse-url-browser-function to W3 for just the HyperSpec. You can
-either set the variable globally (if you want to always use W3 or some other specific browser) or locally (if you 
-want to use a specific browser and not the default one).</b></pre>
-<ul>
-  <li>Q3. Standard shell</li>
-</ul>
-<pre><b>Q3 I switch between UNIX® and Windows environments and, although Emacs makes this switch a lot easier, I find it 
-inconvenient having to use different Shell environments on different operating systems.</b></pre>
-<p></p>
-<pre><b>A3 On Windows, the <a href="http://www.cygwin.com/">Cygwin tools</a> provide a lot of the same tools that are available under UNIX® as well as a BASH 
-shell. Alternatively, you might want to consider using eshell, a shell written in Emacs Lisp that comes as a 
-standard feature in later releases of Emacs. You can access eshell by pressing &quot;F12&quot;.</b></pre>
-<ul>
-  <li>Q4. Using ACL tools with Emacs</li>
-</ul>
-<pre><b>Q4 I would like to use Emacs with Franz's ACL but find that I use the Franz tools so much that I can't afford to not 
-load their IDE.</b></pre>
-<p></p>
-<pre><b>A4 It doesn't have to be an either/or decision. On Windows, Franz allows you to specify (under Options) that Emacs 
-is to be the default editor in place of their built-in editor. On UNIX®, Emacs also works very well together with 
-the Franz tools.</b></pre>
-<ul>
-  <li>Q5. Windows-style cut/copy/paste</li>
-</ul>
-<pre><b>Q5 I want to use Emacs on a Windows machine. Unfortunately, I have the Windows cut/copy/paste key bindings burned 
-into my fingertips and would find it very difficult to switch back and forth between the Windows standard for these 
-shortcut keys and the Emacs standard.</b></pre>
-<p></p>
-<pre><b>A5 Luckily, you don't have to! Download <a href="http://www.emacswiki.org/cgi-bin/wiki.pl?CuaMode">cua.el</a> and you can continue to use the Windows defaults. In fact, you may 
-find that the following commands in your .emacs file will make Emacs more Windows-like:</b></pre>
-<p></p>
-<pre>;; Windows-like mouse/arrow movement &amp; selection
-(pc-selection-mode)                 
-(delete-selection-mode t)           
-;; C-z=Undo, C-c=Copy, C-x=Cut, C-v=Paste (needs cua.el)
-(require 'cua)
-(CUA-mode t)
-</pre>
-<ul>
-  <li>Q6. Simplified Emacs setup</li>
-</ul>
-<pre><b>Q6 There was a lot of Emacs Lisp code presented in this paper. Do I really have to type in all this stuff to get 
-started with Emacs and Lisp?</b></pre>
-<p></p>
-<pre><b>A6 No, there is a <a href="http://cl-cookbook.sourceforge.net/.emacs">sample .emacs file</a> that can be used to get started. It contains all of the configurations that 
-have been described in this page and (hopefully) should work with some minor tweaking. See the <a href="http://cl-cookbook.sourceforge.net/">CL-Cookbook</a> page on 
-&quot;<a href="http://cl-cookbook.sourceforge.net/windows.html">Setting up an IDE with Emacs on Windows or Mac OS X</a>&quot;.</b></pre>
-<ul>
-  <li>Q7. Alternatives to Emacs for CL programming</li>
-</ul>
-<pre><b>Q7 I've tried out Emacs and I just can't get used to it. What other Lisp-friendly alternative are there?</b></pre>
-<p></p>
-<pre><b>A7 The <a href="http://www.franz.com/">Franz</a>, <a href="http://www.lispworks.com/">LispWorks</a>, <a href="http://www.cormanlisp.com/">Corman</a>, and <a href="http://www.digitool.com/">Digitool</a> commercial Lisp offerings all have Lisp-aware editors.  
+    (xx)
+    </pre>
+    <ul>
+      <li>Inspect ( <a href="s21.lisp" target="refer-window">s21.lisp</a> )</li>
+    </ul>
+    <pre><b>;; Enter and evaluate the following definitions, then put the cursor
+    ;; on &quot;(xx)&quot; and press &quot;C-c C-q C-i&quot; (ILISP) to execute &quot;inspect&quot; on
+    ;; the &quot;xx&quot; function. Entering &quot;:h&quot; gives a list of help commands and
+    ;; &quot;:q&quot; exits &quot;inspect&quot;. 
 
-CMUCL has <a href="http://www.cons.org/cmucl/hemlock/index.html">Hemlock</a>, which is also <a href="http://www.stud.uni-karlsruhe.de/~unk6/hemlock/">being adapted for other Lisps</a>.
+    </b>(defun xx ()
+    &quot;A do-nothing function&quot;
+    nil)
 
-<a href="http://www.xemacs.org/">XEmacs</a> is an alternative to GNU Emacs that works with many of the same Elisp libraries. Some people prefer it to 
-GNU Emacs.  
+    (setf (documentation 'xx 'function) &quot;A function that does nil.&quot;)
 
-Vim can be used to edit Lisp code. An <a href="http://lisp-p.org/15-vim/">article</a> by Larry Clapp gives some pointers on how to use Vim with Lisp.  
+    (xx)
+    </pre>
+    <ul>
+      <li>Macroexpand ( <a href="s22.lisp" target="refer-window">s22.lisp</a> )</li>
+    </ul>
+    <pre><b>;; Enter the following function definition, then put the cursor on the
+    ;; open parens of &quot;(defun ...&quot; and press &quot;C-c RET&quot; (ELI) or &quot;C-c C-b
+    ;; k&quot; (ILISP) to get a macroexpand-1. Then press &quot;C-c (&quot; (ELI) or &quot;C-c
+    ;; C-b C-k&quot; (ILISP) to get a recursive macroexpansion.
 
-<a href="http://jabberwocky.sourceforge.net/">Jabberwocky</a> is a Lisp editor/debugger written in Java.  
+    </b>(defun test (n)
+    (loop for i from 0 below n
+    do (print i)))
+    </pre>
+    <h2><a name="Slide-14">Lisp Documentation in Emacs - Lisp Documentation</a></h2>
+    <ul>
+      <li>
+	<a href="ftp://ftp.lispworks.com/pub/software_tools/documentation/HyperSpec-7-0.tar.gz" 
+	   target="refer-window">
+      CL HyperSpec</a></li>
+    </ul>
+    <ul>
+      <li>
+	<a href="http://www-2.cs.cmu.edu/afs/cs.cmu.edu/project/ai-repository/ai/lang/lisp/doc/cltl/cltl_ht.tgz" 
+	   target="refer-window">
+      CLtL2</a></li>
+    </ul>
+    <ul>
+      <li>
+	<a href="http://www.franz.com/support/documentation/" target="refer-window">
+      ACL Documenation</a></li>
+    </ul>
+    <ul>
+      <li>Example code ( <a href="s23.lisp" target="refer-window">s23.lisp</a> )
+      </li>
+    </ul>
+    <pre><b>;; Put the cursor on the &quot;(format&quot; below and press &quot;F1&quot; to get the
+    ;; Hyperspec page for &quot;format&quot;. Put the cursor on the &quot;d&quot; in the
+    ;; format string and press &quot;C-u F1&quot; to get the Hyperspec page
+    ;; describing the &quot;Tilde D: Decimal&quot; format character.
 
-Lastly, for true masochists, notepad on Windows or ed on UNIX® can also be used. ;-)</b></pre>
-</dd>
+    </b>(format t &quot;One = ~d&quot; 1)
+    </pre>
+    <p></p>
+    <pre><b>;; Note: Depending on the documentation packages that have been
+    ;; loaded, and the browser that you wish to use, the following keys
+    ;; may be used:
+    ;;            Default    W3
+    ;; Package    Browser  Browser  Format-Dft  Format-W3  Info
+    ;; =========  =======  =======  ==========  =========  ====
+    ;; Hyperspec    F1      S-F1    C-u F1      C-u S-F1
+    ;; CLtL2       M-F1    M-S-F1   
+    ;; ACL docs    C-F1    C-S-F1
+    ;; Info docs                                           C-M-F1</b></pre>
+    <h2><a name="Slide-15">Miscellaneous</a></h2>
+    <ul>
+      <li>Lisp Listener ( <a href="s24.lisp" target="refer-window">s24.lisp</a> )</li>
+    </ul>
+    <pre><b>;; With the cursor on the &quot;let&quot;, press &quot;C-c x&quot; (ELI or ILISP) to
+    ;; evaluate a lisp form by copying it into the listener.
 
-</body>
+    </b>(let ((n 20))
+    (loop for i from 0 below n
+    do (print i)))
+    </pre>
+    <p></p>
+    <pre><b>;; In ILISP, most of the eval &amp; compile functions have an &quot;and go&quot;
+    ;; equivalent that transfers the focus to the listener after
+    ;; execution. Their key bindings are the same as the normal
+    ;; eval/compile functions except that the final key does not have a
+    ;; &quot;Ctrl&quot; prefix. For example, put the cursor at the open paren of the
+    ;; &quot;(let ...&quot; sexp above and press &quot;C-c C-j C-n&quot; to evaluate in the
+    ;; source buffer. Then, press &quot;C-c C-j n&quot; to evaluate &quot;and go&quot; to the
+    ;; listener.</b></pre>
+    <ul>
+      <li>Project Management
+      <ul>
+	<li>
+	  <a href="http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/cclan/asdf/" target="refer-window">
+	asdf</a></li>
+      </ul>
+      <ul>
+	<li><a href="http://sourceforge.net/projects/clocc" target="refer-window">
+	mk-defsystem</a></li>
+      </ul>
+      </li>
+    </ul>
+    <ul>
+      <li>Debugging
+      <ul>
+	<li>ILISP has a standarized set of key bindings for debugging across 
+	implementations (&quot;C-c C-b C-h&quot; for a list of them).</li>
+      </ul>
+      </li>
+    </ul>
+    <ul>
+      <li>Comparing versions of code ( <a href="s10.lisp" target="refer-window">
+      s10.lisp</a> , <a href="s10a.lisp" target="refer-window">s10a.lisp</a> ,
+      <a href="s10b.lisp" target="refer-window">s10b.lisp</a> )</li>
+    </ul>
+    <pre><b>;; Start the ediff utility by entering &quot;M-x ediff&quot;. Enter s10a.lisp as
+    ;; the first file name and s10b.lisp as the second file name. Press
+    ;; the space bar to step through the changes. When finished, press &quot;q&quot;
+    ;; to exit.</b></pre>
+    <h2><a name="Slide-16">Questions/Answers</a></h2>
+    <ul>
+      <li>Q1. Controlling evaluation output</li>
+      </ul> <pre><b>Q1 I get irritated by ELI's switching to an output buffer when I evaluate a sexp in a Lisp source
+      buffer.  </b></pre> <p></p> <pre><b>A1 You can control where ELI output goes to by setting the
+      fi:pop-up-temp-window-behavior variable. Alternatively, you can use my copy-eval-dwim-lisp function (bound to
+      &quot;C-c x&quot;). It copies Lisp code from the source buffer to the listener buffer and evaluates it there. Both
+      buffers stay visible and focus remains in the source buffer. The code works for ILISP, ELI and Emacs
+      Lisp.</b></pre> <ul>
+      <li>Q2. Viewing HyperSpec from within Emacs</li> </ul> <pre><b>Q2 I like having access to the HyperSpec when I'm
+      in Emacs, but why does it have to use an external browser? Why can't I just see the HyperSpec in Emacs?</b></pre>
+      <p></p> <pre><b>A2 If you use the Emacs add-on package W3 (or W3M which provides similar functionality), you can
+      display HTML pages inside of Emacs. Once you have W3 and the HyperSpec both installed, use code similar to the
+      following to access the HyperSpec from the Shift-F1 key:</b></pre> <p></p>
+      <pre>(global-set-key [(shift f1)]
+      '(lambda ()
+      (interactive)
+      (let ((browse-url-browser-function 
+      'browse-url-w3)
+      (common-lisp-hyperspec-root            
+      &quot;file://c:/home/docs/Hyperspec/&quot;)
+      (common-lisp-hyperspec-symbol-table 
+      (concat common-lisp-hyperspec-root 
+      &quot;Data/Map_Sym.txt&quot;))
+      (hyperspec-prog 
+      &quot;c:/home/site/ilisp/extra/hyperspec&quot;))
+      (load-library hyperspec-prog)
+      (common-lisp-hyperspec 
+      (thing-at-point 'symbol)))))
+      </pre>
+      <p></p>
+      <pre><b>Note that the &quot;let&quot; in the above code sets the browse-url-browser-function to W3 for just the
+      HyperSpec. You can either set the variable globally (if you want to always use W3 or some other specific browser)
+      or locally (if you want to use a specific browser and not the default one).</b></pre> <ul>
+      <li>Q3. Standard shell</li> </ul> <pre><b>Q3 I switch between UNIX® and Windows environments and, although
+      Emacs makes this switch a lot easier, I find it inconvenient having to use different Shell environments on
+      different operating systems.</b></pre> <p></p> <pre><b>A3 On Windows, the <a href="http://www.cygwin.com/">Cygwin
+      tools</a> provide a lot of the same tools that are available under UNIX® as well as a BASH shell. Alternatively,
+      you might want to consider using eshell, a shell written in Emacs Lisp that comes as a standard feature in later
+      releases of Emacs. You can access eshell by pressing &quot;F12&quot;.</b></pre> <ul>
+      <li>Q4. Using ACL tools with Emacs</li> </ul> <pre><b>Q4 I would like to use Emacs with Franz's ACL but find
+      that I use the Franz tools so much that I can't afford to not load their IDE.</b></pre> <p></p> <pre><b>A4 It
+      doesn't have to be an either/or decision. On Windows, Franz allows you to specify (under Options) that Emacs is to
+      be the default editor in place of their built-in editor. On UNIX®, Emacs also works very well together with the
+      Franz tools.</b></pre> <ul>
+      <li>Q5. Windows-style cut/copy/paste</li> </ul> <pre><b>Q5 I want to use Emacs on a Windows
+      machine. Unfortunately, I have the Windows cut/copy/paste key bindings burned into my fingertips and would find it
+      very difficult to switch back and forth between the Windows standard for these shortcut keys and the Emacs
+      standard.</b></pre> <p></p> <pre><b>A5 Luckily, you don't have to! Download <a
+      href="http://www.emacswiki.org/cgi-bin/wiki.pl?CuaMode">cua.el</a> and you can continue to use the Windows
+      defaults. In fact, you may find that the following commands in your .emacs file will make Emacs more
+      Windows-like:</b></pre> <p></p> <pre>;; Windows-like mouse/arrow movement &amp; selection (pc-selection-mode)
+      (delete-selection-mode t)
+      ;; C-z=Undo, C-c=Copy, C-x=Cut, C-v=Paste (needs cua.el)
+      (require 'cua) (CUA-mode t) </pre> <ul>
+      <li>Q6. Simplified Emacs setup</li> </ul> <pre><b>Q6 There was a lot of Emacs Lisp code presented in this
+      paper. Do I really have to type in all this stuff to get started with Emacs and Lisp?</b></pre> <p></p> <pre><b>A6
+      No, there is a <a href="http://cl-cookbook.sourceforge.net/.emacs">sample .emacs file</a> that can be used to get
+      started. It contains all of the configurations that have been described in this page and (hopefully) should work
+      with some minor tweaking. See the <a href="http://cl-cookbook.sourceforge.net/">CL-Cookbook</a> page on &quot;<a
+      href="http://cl-cookbook.sourceforge.net/windows.html">Setting up an IDE with Emacs on Windows or Mac OS
+      X</a>&quot;.</b></pre> <ul>
+      <li>Q7. Alternatives to Emacs for CL programming</li> </ul> <pre><b>Q7 I've tried out Emacs and I just can't get
+      used to it. What other Lisp-friendly alternative are there?</b></pre> <p></p> <pre><b>A7 The <a
+      href="http://www.franz.com/">Franz</a>, <a href="http://www.lispworks.com/">LispWorks</a>, <a
+      href="http://www.cormanlisp.com/">Corman</a>, and <a href="http://www.digitool.com/">Digitool</a> commercial Lisp
+      offerings all have Lisp-aware editors.
 
-</html>
+      CMUCL has <a href="http://www.cons.org/cmucl/hemlock/index.html">Hemlock</a>, which is also <a
+      href="http://www.stud.uni-karlsruhe.de/~unk6/hemlock/">being adapted for other Lisps</a>.
+
+      <a href="http://www.xemacs.org/">XEmacs</a> is an alternative to GNU Emacs that works with many of the same Elisp
+      libraries. Some people prefer it to GNU Emacs.
+
+      Vim can be used to edit Lisp code. An <a href="http://lisp-p.org/15-vim/">article</a> by Larry Clapp gives some
+      pointers on how to use Vim with Lisp.
+
+      <a href="http://jabberwocky.sourceforge.net/">Jabberwocky</a> is a Lisp editor/debugger written in Java.
+
+      Lastly, for true masochists, notepad on Windows or ed on UNIX® can also be used. ;-)</b></pre>
+
+    </body>
+
+  </html>

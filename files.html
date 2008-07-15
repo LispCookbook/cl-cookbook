@@ -25,6 +25,7 @@ SOON NOW</a>.
 <li><a href="#strings">Using Strings instead of Files</a>
 <li><a href="#line">Reading a File one Line at a Time</a>
 <li><a href="#char">Reading a File one Character at a Time</a>
+<li><a href="#string">Reading a File into String</a>
 <li><a href="#ahead">Looking one Character ahead</a>
 <li><a href="#random">Random Access to a File</a>
   </ul>
@@ -111,6 +112,30 @@ You can also supply a third argument which will be used instead of NIL to signal
         ((null char))
       (print char)))
 </pre>
+
+<a name="string"><h3>Reading a File into String</h3></a>
+
+It's quite common to need to access the contents of a file in string form. While
+this can be achieved by using <code>READ-LINE</code> or <code>READ-CHAR</code>
+functions, that probably won't be the best solution. File might not be divided
+into multiple lines or reading one character at a time might bring significant
+performance problems. To solve this problems, you can read files using buckets
+of specific sizes.
+
+<pre>
+(with-output-to-string (out)
+  (with-open-file (in "/path/to/big/file")
+    (loop with buffer = (make-array 8192 :element-type 'character)
+          for n-characters = (read-sequence buffer in)
+          while (< 0 n-characters)
+          do (write-sequence buffer out :start 0 :end n-characters)))))
+</pre>
+
+Furthermore, you're free to change the format of the read/written data, instead
+of using elements of type character everytime. For instance, you can
+set <code>:ELEMENT-TYPE</code> type argument of <code>WITH-OUTPUT-TO-STRING</code>,
+<code>WITH-OPEN-FILE</code> and <code>MAKE-ARRAY</code> functions
+to <code>'(UNSIGNED-BYTE 8)</code> to read data in octets.
 
 <a name="ahead"><h3>Looking one Character ahead</h3></a>
 
