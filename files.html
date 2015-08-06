@@ -1,15 +1,6 @@
-<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
-<!-- 	$Header$	 -->
-<html> <head>
-    <title>The Common Lisp Cookbook - Files and Directories</title>
-    <style type="text/css">
-      pre { margin-left:20px; background-color:#e0e0e0 }
-    </style>
-
-  </head>
-
-  <body bgcolor=white>
-    <h1><a href="index.html">The Common Lisp Cookbook</a> - Files and Directories</h1>
+---
+title: Files and Directories
+---
 
     Note: In this chapter, we use mainly <a
 					    href="http://www.lispworks.com/documentation/HyperSpec/Body/19_aa.htm">namestrings</a> to <a href="http://www.lispworks.com/documentation/HyperSpec/Body/19_.htm">specify
@@ -148,15 +139,15 @@ You can 'look at' the next character of a stream without actually removing it fr
   (print (read-char stream))
   (values))
 
-  #\I 
-  #\' 
+  #\I
+  #\'
   #\'
 </PRE>
 
 If the first argument is <code>T</code>, PEEK-CHAR will skip <a href="http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_w.htm#whitespace">whitespace</a> characters, i.e. it will return the next non-whitespace character that's waiting on the stream. The whitespace characters will vanish from the stream as if they had been read by READ-CHAR:
 
 <PRE>
-  * (with-input-from-string (stream "I'm 
+  * (with-input-from-string (stream "I'm
   not amused")
   (print (read-char stream))
   (print (read-char stream))
@@ -165,11 +156,11 @@ If the first argument is <code>T</code>, PEEK-CHAR will skip <a href="http://www
   (print (read-char stream))
   (print (read-char stream))
   (values))
-  #\I 
-  #\' 
-  #\m 
-  #\n 
-  #\n 
+  #\I
+  #\'
+  #\m
+  #\n
+  #\n
   #\o
 </PRE>
 
@@ -182,10 +173,10 @@ If the first argument to PEEK-CHAR is a character, the function will skip all ch
   (print (read-char stream))
   (print (read-char stream))
   (values))
-  #\I 
-  #\a 
-  #\a 
-  #\m 
+  #\I
+  #\a
+  #\a
+  #\m
 </PRE>
 
 Note that PEEK-CHAR has further optional arguments to control its behaviour on end-of-file similar to those for READ-LINE and READ-CHAR (and it will signal an error by default):
@@ -197,9 +188,9 @@ Note that PEEK-CHAR has further optional arguments to control its behaviour on e
   (print (read-char stream))
   (print (peek-char nil stream nil 'the-end))
   (values))
-  #\I 
-  #\d 
-  #\d 
+  #\I
+  #\d
+  #\d
   THE-END
 </PRE>
 
@@ -212,11 +203,11 @@ You can also put one character back onto the stream with the function <a href="h
   (unread-char c stream)
   (print (read-char stream))
   (values)))
-  #\I 
+  #\I
   #\I
 </PRE>
 
-Note that the front of a stream doesn't behave like a stack: You can only put back exactly <em>one</em> character onto the stream. Also, you <em>must</em> put back the same character that has been read previously, and you can't unread a character if none has been read before. 
+Note that the front of a stream doesn't behave like a stack: You can only put back exactly <em>one</em> character onto the stream. Also, you <em>must</em> put back the same character that has been read previously, and you can't unread a character if none has been read before.
 
 <a name="random"><h3>Random Access to a File</h3></a>
 
@@ -232,16 +223,10 @@ Use the function <a href="http://www.lispworks.com/documentation/HyperSpec/Body/
   (print (read-char stream))
   (print (file-position stream))
   (values))
-  0 
-  #\I 
-  1 
+  0
+  #\I
+  1
   4
-  #\n 
+  #\n
   5
 </PRE>
-
-<hr>
-<a href="license.html">Copyright</a> &copy; 2002-2007 The Common Lisp Cookbook Project
-<address>http://cl-cookbook.sourceforge.net/</address>
-<br>$Header$
-</body> </html>

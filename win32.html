@@ -1,21 +1,6 @@
-<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
-
-<html> 
-
-  <head>
-
-    <title>The Common Lisp Cookbook - Using the Win32 API</title>
-
-    <style type="text/css">
-      pre { margin-left:20px; background-color:#e0e0e0 }
-    </style>
-
-  </head>
-
-  <body bgcolor=white>
-
-    <h1><a href="index.html">The Common Lisp Cookbook</a> - Using the Win32 API</h1>
-
+---
+title: Using the Win32 API
+---
     <h2>Contents</h2>
 
     <ul>
@@ -113,10 +98,10 @@
     The Cookbook welcomes contributions broadening coverage in these (and
     other) areas.
 
-    <p>Anyone programming for the Win32 API should be familiar with 
+    <p>Anyone programming for the Win32 API should be familiar with
       <a href="http://www.charlespetzold.com/pw5/index.html">
 	Programming Windows, The Definitive Guide to the Win32 API</a> by
-      Charles Petzold, or a comparable book.  
+      Charles Petzold, or a comparable book.
 
     <p>The code presented here has been tested only with Lispworks for
       Windows 4.2.7 Professional Edition under Windows XP.
@@ -161,7 +146,7 @@
       deliverable while C/C++ starts with a little and adds what's needed
       during the link phase.  A freshly-run Lisp begins with a REPL, a
       read-eval-print loop, with the full power of Lisp available
-      interactively and ready for use.)  
+      interactively and ready for use.)
 
     <p>Seeing the gory details of Lispwork's Foreign Language Interface,
       or FLI, may seem strange at first.  The OS is written in C/C++, so OS
@@ -173,7 +158,7 @@
       <a name="apioverview"></a>
       <h3>A (Very) Brief Overview of a Win32 Program's Life</h3>
 
-      The OS treats a Win32 GUI program as a set of subroutines, or functions.  
+      The OS treats a Win32 GUI program as a set of subroutines, or functions.
 
       <ul>
 
@@ -191,11 +176,11 @@
 	  and, depending upon the parameters passed to CreateWindowEx, is visible.
 
 	<li>The OS begins queueing messages relating to the newly-created
-	  window.  The queue is saved for delivery to WinMain. 
+	  window.  The queue is saved for delivery to WinMain.
 
 	<li>WinMain accesses the message queue in a loop referred to as a
 	  <i>message pump</i>. The message pump loop calls GetMessage,
-	  TranslateMessage, and DispatchMessage. 
+	  TranslateMessage, and DispatchMessage.
 
 	<li>GetMessage retrieves one message from the queue. There is some
 	  method or dependability to the sequence in which messages are
@@ -282,7 +267,7 @@
     <p><code><pre>
 	  (fli:define-foreign-function
 	  (TextOut "TextOut" :dbcs :calling-convention :stdcall)
-	  ((HDC (:unsigned :long)) (nXStart (:unsigned :int)) (nYStart (:unsigned :int)) 
+	  ((HDC (:unsigned :long)) (nXStart (:unsigned :int)) (nYStart (:unsigned :int))
 	  (lpString :pointer) (cbString (:unsigned :int)))
 	  :result-type (:unsigned :long))
       </pre></code>
@@ -292,7 +277,7 @@
     <p><code><pre>
 	  (fli:define-foreign-function
 	  (TextOut "TextOutW" :calling-convention :stdcall)
-	  ((HDC (:unsigned :long)) (nXStart (:unsigned :int)) (nYStart (:unsigned :int)) 
+	  ((HDC (:unsigned :long)) (nXStart (:unsigned :int)) (nYStart (:unsigned :int))
 	  (lpString :pointer) (cbString (:unsigned :int)))
 	  :result-type (:unsigned :long))
       </pre></code>
@@ -312,7 +297,7 @@
 
 
     <p><code><pre>
-	  CL-USER 9 > (fli:define-foreign-function 
+	  CL-USER 9 > (fli:define-foreign-function
           (TextOut-1 "TextOut" :dbcs :calling-convention :stdcall)
 	  () :result-type :int)
 	  TEXTOUT-1
@@ -320,7 +305,7 @@
 	  CL-USER 10 > (textout-1)
 	  1
 
-	  CL-USER 11 > (fli:define-foreign-function 
+	  CL-USER 11 > (fli:define-foreign-function
           (TextOut-2 "TextOut" :dbcs :calling-convention :stdcall)
 	  () :result-type :int)
 	  TEXTOUT-2
@@ -336,7 +321,7 @@
       function.
 
     <p><code><pre>
-	  CL-USER 13 > (fli:define-foreign-function 
+	  CL-USER 13 > (fli:define-foreign-function
           (TextOut-3 "TextOutW" :dbcs :calling-convention :stdcall)
 	  () :result-type :int)
 
@@ -344,7 +329,7 @@
 
 	  CL-USER 14 > (textout-3)
 
-	  Error: Foreign function TEXTOUT-3 trying to call to unresolved 
+	  Error: Foreign function TEXTOUT-3 trying to call to unresolved
 	  external function "TextOutWW".
 
 	  1 (abort) Return to level 0.
@@ -356,7 +341,7 @@
 
 	    CL-USER 15 : 1 > :top
 
-	    CL-USER 16 > (fli:define-foreign-function 
+	    CL-USER 16 > (fli:define-foreign-function
             (TextOut-4 "TextOutW" :calling-convention :stdcall)
 	    () :result-type :int)
 
@@ -365,7 +350,7 @@
 	    CL-USER 17 > (textout-4)
 	    1
 
-	    CL-USER 18 > (fli:define-foreign-function 
+	    CL-USER 18 > (fli:define-foreign-function
             (TextOut-5 "TextOutA" :calling-convention :stdcall)
 	    () :result-type :int)
 	    TEXTOUT-5
@@ -373,7 +358,7 @@
 	    CL-USER 19 > (textout-5)
 	    0
 
-	    CL-USER 20 > 
+	    CL-USER 20 >
       </pre></code>
 
       <br>I elided a warning Lispworks gives after multiple definitions of a
@@ -408,9 +393,9 @@
 	  :ascii))
 
 	  (defun display-format-used ()
-	  (fli:with-foreign-string 
+	  (fli:with-foreign-string
 	  (unicode-p u-ec u-bc :external-format (external-format)) "Unicode"
-	  (fli:with-foreign-string 
+	  (fli:with-foreign-string
 	  (ascii-p a-ec a-bc :external-format (external-format)) "Ascii"
 	  (fli:with-foreign-string
 	  (title-p t-ec t-bc :external-format (external-format)) "External Format"
@@ -441,7 +426,7 @@
       comprising the API.  These definitions must be available to the Lisp
       program.  I find it most straightforward to do this conversion by
       hand.  Although there are automated methods, doing it manually does
-      not take long on a per-function basis.  
+      not take long on a per-function basis.
 
     <p>In C/C++, the <code>#define</code>s exist in the preprocessor.
       Only those <code>define</code>s used by the program are included in
@@ -489,7 +474,7 @@
       have to worry about deallocations. I pass the address of the allocated
       structure using <code>fli:pointer-address</code> (unboxing the pointer
       value) and define the field in the foreign function's parameter list
-      as an unsigned long. 
+      as an unsigned long.
 
     <p>The FLI allows things to be defined such that Lispworks will try
       automatic coercion (unboxing).  Try defining the parameter type as
@@ -508,7 +493,7 @@
 
     <p><code><pre>
 	  (defun interior-copy (to-struct-ptr byte-offset src-ptr)
-	  (let ((ptr (fli:make-pointer 
+	  (let ((ptr (fli:make-pointer
           :address (fli:pointer-address to-struct-ptr :type :char))))
 	  (fli:incf-pointer ptr byte-offset)
 	  (wcscpy (fli:pointer-address ptr) (fli:pointer-address src-ptr))))
@@ -601,7 +586,7 @@
 
 	<p><code><pre>
 	      ; LoadCursor
-	      (fli:define-foreign-function 
+	      (fli:define-foreign-function
 	      (LoadCursor "LoadCursor" :dbcs :calling-convention :stdcall)
 	      ((hInstance handle) (param ulong))
 	      :result-type handle)
@@ -623,11 +608,11 @@
 
 	<p><code><pre>
 	      ; WndProc -- Window procedure for the window we will create
-	      (fli:define-foreign-callable 
+	      (fli:define-foreign-callable
 	      (wndproc :result-type :long :calling-convention :stdcall)
-	      ((hwnd hwnd) (msg ulong) 
+	      ((hwnd hwnd) (msg ulong)
 	      (wparam ulong) (lparam ulong))
-	      (case msg 
+	      (case msg
 	      (#.WM_PAINT (wndproc-paint hwnd msg wparam lparam))
 	      #+console (#.WM_DESTROY (PostQuitMessage 0) 0)
 	      (t (DefWindowProc hwnd msg wparam lparam))))
@@ -636,12 +621,12 @@
 	<p>This wndproc function is the message dispatcher.  The OS calls
 	  wndproc once for every message sent to the program. Wndproc is
 	  responsible for understanding the message and calling the appropriate
-	  function. 
+	  function.
 
 	<p>The #. reader macro returns the value of <code>WM_PAINT</code> and
 	  <code>WM_DESTROY</code> at compile-time, allowing <code>case</code> to
 	  work. #+console means "include the next form only if :console is a
-	  member of *features*".  
+	  member of *features*".
 
 	<p>The example Win32 Lisp program in Appendix A
 	  may be run either from the Lispworks IDE or from console mode, such as
@@ -677,13 +662,13 @@
 	<p>When running under the IDE, Lispworks provides the message pump.
 	  When running under Emacs/ILISP (or in console mode, as would happen in
 	  a delivered application), the Lisp program itself must provide the
-	  message pump.  
+	  message pump.
 
 	<p>Thus in the example program in Appendix A, the function
 	  <code>create-toplevel-window</code> ensures multiprocessing is running
 	  when in console mode. The function
 	  <code>create-toplevel-window-run</code> performs the message pump
-	  operation in console mode but not otherwise. 
+	  operation in console mode but not otherwise.
 
 	<p>The program in Appendix A makes a call to register-class when the file is
 	  loaded. The call needs to be made only once and so I make the call
@@ -787,7 +772,7 @@
 	  DLLs which must be explicitly loaded.  Third-party or custom-built
 	  DLLs also require explicit loading.
 
-	<p>Make a def file, such as avicap32.def, named after the desired DLL: 
+	<p>Make a def file, such as avicap32.def, named after the desired DLL:
 
 	<p><code><pre>
 	      exports capCreateCaptureWindow=capCreateCaptureWindowW
@@ -823,7 +808,7 @@
 	  which a C++ object acquires an operating system resource, perhaps an
 	  open file, in the constructor and releases the resource in the
 	  object's destructor. These objects may have dynamic or indefinite
-	  extent.  
+	  extent.
 
 	<p>Objects with dynamic extent are declared local at the
 	  beginning of a C++ function and the object's destructor is called when
@@ -836,7 +821,7 @@
 	  called explicity, with <code>delete</code> or <code>delete []</code>.
 	  The destructor tears down the object, first releasing any acquired
 	  resources via explicitly-programmed C++ code, then releasing the
-	  object's memory via compiler-generated code as the destructor exits. 
+	  object's memory via compiler-generated code as the destructor exits.
 
 	<p>Lisp is garbage collected, which means that Lisp is responsible for
 	  freeing the object's memory. However, that may not happen for a very
@@ -905,7 +890,7 @@
 	  over.  Then think, sooner rather than later, "it's time for a macro or
 	  a function."  Notice the repetitive coding even when you're writing
 	  macros. Macros can be built upon macros, and macros can generate
-	  macros. 
+	  macros.
 
 	<p>Knowing whether to choose a macro or a function is partly a
 	  function of code bloat.  Macros are evaluated in place and cause new
@@ -926,7 +911,7 @@
 	  the object in question.
 
 	<p>Be aware that functions can be declaimed inline and can be passed
-	  as parameters, while macros cannot.  
+	  as parameters, while macros cannot.
 
 	<p>Many of the macros defined in <a
 					    href="www.paulgraham.com/books.html">On Lisp</a> are very useful in
@@ -1044,9 +1029,9 @@
 	      (defconstant WS_THICKFRAME       #x00040000)
 	      (defconstant WS_VISIBLE          #x10000000)
 
-	      ; Aggregates 
+	      ; Aggregates
 	      (defconstant WS_POPUPWINDOW (logior ws_popup ws_border ws_sysmenu))
-	      (defconstant WS_OVERLAPPEDWINDOW (logior ws_overlapped ws_caption 
+	      (defconstant WS_OVERLAPPEDWINDOW (logior ws_overlapped ws_caption
               ws_sysmenu ws_thickframe
               ws_minimizebox ws_maximizebox))
 
@@ -1102,7 +1087,7 @@
 	      (fli:define-c-typedef PAINTSTRUCT sPAINTSTRUCT)
 
 	      ; WndClass
-	      (fli:define-c-struct sWNDCLASS 
+	      (fli:define-c-struct sWNDCLASS
 	      (style uint)
 	      (lpfnWndProc lpfn)
 	      (cbClsExtra int)
@@ -1125,7 +1110,7 @@
 	      :result-type hdc)
 
 	      ; CreateWindowEx
-	      (fli:define-foreign-function 
+	      (fli:define-foreign-function
 	      (CreateWindowEx "CreateWindowEx" :dbcs :calling-convention :stdcall)
 	      ((dwExStyle dword) (lpClassName lpctstr) (lpWindowName lpctstr)
 	      (dwStyle dword) (x uint) (y uint) (nWidth uint) (nHeight uint)
@@ -1133,7 +1118,7 @@
 	      :result-type hwnd)
 
 	      ; DefWindowProc
-	      (fli:define-foreign-function 
+	      (fli:define-foreign-function
 	      (DefWindowProc "DefWindowProc" :dbcs :calling-convenction :stdcall)
 	      ((hwnd ulong) (msg ulong) (wparam ulong) (lparam ulong))
 	      :result-type ulong)
@@ -1151,7 +1136,7 @@
 	      :result-type bool)
 
 	      ; GetLastError
-	      (fli:define-foreign-function 
+	      (fli:define-foreign-function
 	      (GetLastError "GetLastError" :calling-convention :stdcall)
 	      ()
 	      :result-type dword)
@@ -1163,8 +1148,8 @@
 	      :result-type bool)
 
 	      ; GetModuleHandle - with no module name specified; pass this a zero i.e. NULL
-	      (fli:define-foreign-function 
-	      (GetModuleHandle-current "GetModuleHandle" 
+	      (fli:define-foreign-function
+	      (GetModuleHandle-current "GetModuleHandle"
               :dbcs :calling-convenction :stdcall)
 	      ((lpModuleName :long))
 	      :result-type handle)
@@ -1174,25 +1159,25 @@
 	      `(GetModuleHandle-current 0))
 
 	      ; GetModuleHandle - pass this a foreign string naming the desired module
-	      (fli:define-foreign-function 
+	      (fli:define-foreign-function
 	      (GetModuleHandle "GetModuleHandle" :dbcs :calling-convenction :stdcall)
 	      ((lpModuleName lpctstr))
 	      :result-type handle)
 
 	      ; LoadCursor
-	      (fli:define-foreign-function 
+	      (fli:define-foreign-function
 	      (LoadCursor "LoadCursor" :dbcs)
 	      ((hInstance handle) (param (:unsigned :long)))
 	      :result-type handle)
 
 	      ; PostQuitMessage
-	      (fli:define-foreign-function 
+	      (fli:define-foreign-function
 	      (PostQuitMessage "PostQuitMessage" :calling-convention :stdcall)
 	      ((nExitCode :int))
 	      :result-type :void)
 
 	      ; RegisterClass
-	      (fli:define-foreign-function 
+	      (fli:define-foreign-function
 	      (RegisterClass "RegisterClass" :dbcs :calling-convention :stdcall)
 	      ((WndClass ptr))
 	      :result-type bool)
@@ -1200,7 +1185,7 @@
 	      ; TextOut
 	      (fli:define-foreign-function
 	      (TextOut "TextOut" :dbcs :calling-convention :stdcall)
-	      ((HDC hdc) (nXStart uint) (nYStart uint) 
+	      ((HDC hdc) (nXStart uint) (nYStart uint)
 	      (lpString lpctstr) (cbString uint))
 	      :result-type bool)
 
@@ -1219,11 +1204,11 @@
 	      ;--- Win32 SDK Callbacks
 
 	      ; WndProc -- Window procedure for the window we will create
-	      (fli:define-foreign-callable 
+	      (fli:define-foreign-callable
 	      (wndproc :result-type :long :calling-convention :stdcall)
-	      ((hwnd hwnd) (msg (:unsigned :long)) 
+	      ((hwnd hwnd) (msg (:unsigned :long))
 	      (wparam (:unsigned :long)) (lparam (:unsigned :long)))
-	      (case msg 
+	      (case msg
 	      (#.WM_PAINT (wndproc-paint hwnd msg wparam lparam))
 	      #+console (#.WM_DESTROY (PostQuitMessage 0) 0)
 	      (t (DefWindowProc hwnd msg wparam lparam))))
@@ -1252,7 +1237,7 @@
 	      (wc-p (fli:allocate-foreign-object :type 'wndclass))
 	      (wp-p (fli:make-pointer :symbol-name "wndproc")))
 	      (unwind-protect
-	      (progn 
+	      (progn
 	      (setf (fli:foreign-slot-value wc-p 'style) (logior cs_hredraw cs_vredraw))
 	      (setf (fli:foreign-slot-value wc-p 'lpfnWndProc)
 	      (fli:pointer-address wp-p))
@@ -1269,7 +1254,7 @@
               (fli:free-foreign-object wc-p)
               (if (/= rslt 0)
               rslt
-              (error (format nil "~&RegisterClass failed in reg-class. Error: ~a" 
+              (error (format nil "~&RegisterClass failed in reg-class. Error: ~a"
               (GetLastError))))))))
 
 	      (defvar *reg-class-atom* (register-class))
@@ -1281,13 +1266,13 @@
 	      (cn-p ec bc :external-format (external-format)) *class-name*
 	      (fli:with-foreign-string ;; window name pointer
               (wn-p ec bc :external-format (external-format)) window-name
-	      (let ((hwnd (createwindowex 0 cn-p wn-p 
+	      (let ((hwnd (createwindowex 0 cn-p wn-p
               (logior ws_visible ws_overlappedwindow)
               cw_usedefault cw_usedefault cw_usedefault cw_usedefault
               ;0 0 640 480
               0 0 (GetModuleHandle-current 0) 0)))
               (when (zerop hwnd)
-              (error (format nil "CreateWindow failed. GetLastError is ~a" 
+              (error (format nil "CreateWindow failed. GetLastError is ~a"
               (GetLastError))))
               #-console hwnd ;; Should return wParam in thread, what about here?
               #+console ;; Message pump the thread
@@ -1360,15 +1345,15 @@
 	      ;  from the base MsgMap. Others could inherit from this one...
 	      (DefMsgHandler appendix-c-proc MsgMap (:hbrbackground (1+ color_btnface))
 	      (WM_CREATE
-	      
+
 	      (DefGroupBox hwndGroupBox "Wish List" 25 30 300 70) ;; left top width height
-	      
+
 	      (DefPushButton hwndB1 "More Money" 30 48 90 40
 	      ((mMessageBox "Quit buying Lisp books." "You requested more money.")))
-	      
+
 	      (DefPushButton hwndB2 "Youth" 121 48 90 40
 	      ((mMessageBox "Sorry, not even Lisp can help you there." "You requested Youth.")))
-	      
+
 	      (DefPushButton hwndB3 "Better Lisp Skills" 212 48 90 40
 	      ((mMessageBox "Keep practising." "You requested better Lisp skills.")))
 
@@ -1386,7 +1371,7 @@
 	      (col "Author" 150)))
 
 	      (DefEdit hwndEdit "Learning Lisp is fun" 40 372 160 20 ())
-	      
+
 	      (DefAutoCheckBox hwndCheckBox "I like it" 210 372 70 20
 	      ((if (IsChecked *hwndCheckBox*)
 	      (mMessageBox "I'm glad you like it" "Atta boy!")
@@ -1416,10 +1401,10 @@
 
 
 	  <code><pre>
-	      Here's an example that creates a windows class (in C) and gets invoked and 
-	      handled from LWW.  It is similar to the "Hello" example in Petzhold, except 
-	      that it hooks to the LWW mainloop instead of creating its own.  Probably it 
-	      ain't as pretty as it might be, due to my rustiness with Win32 (and my lack 
+	      Here's an example that creates a windows class (in C) and gets invoked and
+	      handled from LWW.  It is similar to the "Hello" example in Petzhold, except
+	      that it hooks to the LWW mainloop instead of creating its own.  Probably it
+	      ain't as pretty as it might be, due to my rustiness with Win32 (and my lack
 	      of patience with it :-).
 
 	      To use:
@@ -1429,21 +1414,21 @@
 	      3) copy the run.lisp file into the project directory (so that the Debug
 	      directory is a subdirectory)
 	      4) Build the C project.
-	      5) Set Project>>Settings>>Debug>>Executable for debug session to point 
-	      to the 
+	      5) Set Project>>Settings>>Debug>>Executable for debug session to point
+	      to the
 	      lispworksxxx.exe.
 	      6) Run the project - this should bring up lispworks.
 	      7) Open run.lisp, compile and load it.
 	      8) In the listener, type "(run)".
 	      9) You should then see a window with "hello" in the middle of it.
 
-	      The example window class is built and initialized in C (called from the lisp 
-	      mainline).  The windows callbacks to this window are handled in lisp (eg. the 
-	      WM_PAINT message) - windows has been given a pointer to a lisp function 
-	      (Lisp_WndProc) and has been told to use it for callbacks.  The lisp code 
-	      makes direct Win32 calls that display the "hello" text.  Lisp uses FLI 
-	      foreign functions and foreign variables to set this up.  [If one were doing 
-	      this on a real project, a less contrived flow of control would be chosen, but 
+	      The example window class is built and initialized in C (called from the lisp
+	      mainline).  The windows callbacks to this window are handled in lisp (eg. the
+	      WM_PAINT message) - windows has been given a pointer to a lisp function
+	      (Lisp_WndProc) and has been told to use it for callbacks.  The lisp code
+	      makes direct Win32 calls that display the "hello" text.  Lisp uses FLI
+	      foreign functions and foreign variables to set this up.  [If one were doing
+	      this on a real project, a less contrived flow of control would be chosen, but
 	      this one appears to exercise the FLI calls that you were asking about].
 
 	      [I welcome comments from anyone, re. style, simplification, etc.]
@@ -1479,8 +1464,8 @@
 	      #include <windows.h>
 		#include <stdio.h>
 
-		  BOOL APIENTRY DllMain( HANDLE hModule, 
-                  DWORD  ul_reason_for_call, 
+		  BOOL APIENTRY DllMain( HANDLE hModule,
+                  DWORD  ul_reason_for_call,
                   LPVOID lpReserved )
 		  {
 		  return TRUE;
@@ -1496,15 +1481,15 @@
 		  // Lisp must set this function pointer before calling
 		  // C_CreateClass.  This variable is exported from
 		  // the dll, allowing lisp to see it and to put a value
-		  // into it.  
+		  // into it.
 		  //
 		  // [Obviously, we could do this in other ways, for
-		  // example, we could pass the pointer to C_CreateClass as 
+		  // example, we could pass the pointer to C_CreateClass as
 		  // a parameter.  Choosing to use a pointer variable shows
 		  // off more of the FLI - the fact that lisp can manipulate
 		  // C variables which reside in the DLL itself.]
 		  //
-		  __declspec(dllexport) LRESULT (CALLBACK *Lisp_WndProc)(HWND window, 
+		  __declspec(dllexport) LRESULT (CALLBACK *Lisp_WndProc)(HWND window,
 		  UINT eventType, UINT wParam, LONG lParam);
 
 		  //
@@ -1515,7 +1500,7 @@
 		  WNDCLASS wClass;
 
 		  /* setup the window class data and register the class */
-		  
+
 		  wClass.style = CS_HREDRAW | CS_VREDRAW;
 		  wClass.lpfnWndProc = Lisp_WndProc;
 		  wClass.cbClsExtra = wClass.cbWndExtra = 0;
@@ -1543,7 +1528,7 @@
                   CW_USEDEFAULT, // initial y extent
                   NULL, //(HWND)parent, // parent window
                   NULL, // menu handle
-                  GetModuleHandle (NULL), // program instance 
+                  GetModuleHandle (NULL), // program instance
 		  handle
                   NULL); // creation parameters
 		  if (NULL == mainWindow) {
@@ -1574,7 +1559,7 @@
 		  (fli:define-c-typedef HDC (:pointer :void))
 		  (fli:define-c-typedef BOOL :int)
 		  (fli:define-c-typedef wBYTE (:unsigned :char))
-		  (fli:define-c-struct sRECT 
+		  (fli:define-c-struct sRECT
 		  (left :LONG)
 		  (top  :LONG)
 		  (right :LONG)
@@ -1640,7 +1625,7 @@
 		  ; Exports from the DLL
 		  ;
 		  ; definition of pointer variable exported from the DLL
-		  (fli:define-foreign-variable (Lisp_WndProc "Lisp_WndProc") :type 
+		  (fli:define-foreign-variable (Lisp_WndProc "Lisp_WndProc") :type
 		  :pointer)
 
 		  ; definition of routines exported from the DLL
@@ -1663,13 +1648,13 @@
 		  ; (nb: we don't care what the name is - we use
 		  ; a pointer to this function)
 		  (fli:define-foreign-callable
-		  ("func_Lisp_WndProc" :result-type :long 
+		  ("func_Lisp_WndProc" :result-type :long
                   :calling-convention :stdcall)
 		  ((window HWND) (message (:unsigned :int))
 		  (wParam (:unsigned :int)) (lParam (:unsigned :int)))
 
 		  (case message
-		  
+
 		  (#.WM_PAINT
 		  (fli:with-dynamic-foreign-objects ((hdc HDC)
                   (ps PAINTSTRUCT)
@@ -1685,10 +1670,10 @@
                   (logior DT_SINGLELINE DT_CENTER DT_VCENTER))
 		  (EndPaint window p-ps)
 		  0)))))
-		  
-		  (#.WM_DESTROY 0)  ;; if we use PostQuitMessage here, LWW will also 
+
+		  (#.WM_DESTROY 0)  ;; if we use PostQuitMessage here, LWW will also
 		  exit
-		  
+
 		  (otherwise (DefWindowProc window message wParam lParam))))
 
 		  (defun ext-format ()
@@ -1705,7 +1690,7 @@
 		  (fli:register-module "debug/wintest.dll")
 
 		  ; poke the function pointer for the lisp windows proc
-		  (setf (Lisp_WndProc) 
+		  (setf (Lisp_WndProc)
 		  (fli:make-pointer :symbol-name "func_Lisp_WndProc"))
 
 		  ; create the Windows class for ExWindow
@@ -1719,14 +1704,3 @@
 		  ; using GetWindowHandle(0) in the C code.
 		  )
 	  </pre></code>
-
-
-	  <hr>
-	  Windows is a trademark of Microsoft Corporation.  Lispworks is a
-	  trademark of LispWorks Ltd.
-
-	<p><a href="license.html">Copyright</a> &copy; 2002-2007 The Common Lisp Cookbook Project
-	  <address>http://cl-cookbook.sourceforge.net/</address>
-
-	  <br>$Header$
-</body> </html>

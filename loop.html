@@ -1,15 +1,6 @@
-<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
-<html> <head>
-    <title>The Common Lisp Cookbook - The Powerful 'loop' Macro</title>
-    <style type="text/css">
-      pre { margin-left:20px; background-color:#e0e0e0 }
-    </style>
-
-  </head>
-
-  <body bgcolor=white>
-    <h1><a href="index.html">The Common Lisp Cookbook</a> - The Loop Macro</h1>
-
+---
+title: Loop
+---
     <h2>Contents</h2>
 
     <ul>
@@ -54,11 +45,11 @@
       * (loop for x in '(a b c d e)
       do (print x) )
 
-      A 
-      B 
-      C 
-      D 
-      E 
+      A
+      B
+      C
+      D
+      E
       NIL
     </pre>
 
@@ -97,7 +88,7 @@
 
       do (format t "~A" x)
       )
-      
+
       A, B, C, D, E
       NIL
     </pre>
@@ -112,7 +103,7 @@
       do (format t ", ~A" x)
       else do (format t "~A" x)
       )
-      
+
       A, B, C, D, E
       NIL
     </pre>
@@ -142,15 +133,15 @@
 
 	       collect y)
 
-	       5 
-	       10 
-	       15 
-	       20 
-	       25 
-	       30 
-	       35 
-	       40 
-	       45 
+	       5
+	       10
+	       15
+	       20
+	       25
+	       30
+	       35
+	       40
+	       45
 	       (10 20 30 40 50 60 70 80 90)
 	       </pre>
 
@@ -158,7 +149,7 @@
 
     <pre>
       * (loop for x from 1 to 10
-      collect (loop for y from 1 to x 
+      collect (loop for y from 1 to x
       collect y) )
 
       ((1) (1 2) (1 2 3) (1 2 3 4) (1 2 3 4 5) (1 2 3 4 5 6) (1 2 3 4 5 6 7)
@@ -190,24 +181,19 @@
     Several actions provide shorthands for combinations of when/return
 
     <pre>
-      * (loop for x in '(foo 2) 
+      * (loop for x in '(foo 2)
       thereis (numberp x))
       T
     </pre>
 
     <pre>
-      * (loop for x in '(foo 2) 
+      * (loop for x in '(foo 2)
       never (numberp x))
       NIL
     </pre>
 
     <pre>
-      * (loop for x in '(foo 2) 
+      * (loop for x in '(foo 2)
       always (numberp x))
       NIL
     </pre>
-
-    <hr>
-    <address></address>
-    <!-- hhmts start --> Last modified: Thu Feb  1 13:51:44 SAST 2007 <!-- hhmts end -->
-</body> </html>

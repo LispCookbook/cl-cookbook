@@ -1,16 +1,6 @@
-<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
-<!-- 	$Header$	 -->
-<html> <head>
-    <title>The Common Lisp Cookbook - Input/Output</title>
-    <style type="text/css">
-      pre { margin-left:20px; background-color:#e0e0e0 }
-    </style>
-
-  </head>
-
-  <body bgcolor=white>
-    <h1><a href="index.html">The Common Lisp Cookbook</a> - Input/Output</h1>
-
+---
+title: Input/Output
+---
 
     <h2>Contents</h2>
     <ul>
@@ -52,9 +42,9 @@
         :if-exists :supersede)
 	<em>...</em>)
       </pre>
-      
+
       <a href="http://www.lispworks.com/documentation/HyperSpec/Body/m_w_open.htm"><code>WITH-OPEN-FILE</code></a>
-      opens the file - creating it if necessary - binds 
+      opens the file - creating it if necessary - binds
       <code>*STANDARD-OUTPUT*</code>, executes its body, closes the file,
       and restores <code>*STANDARD-OUTPUT*</code> to its former value. It
       doesn't get more comfortable than this!
@@ -70,7 +60,7 @@
 
       It does <em>not</em> require that the characters &auml;, &szlig;, or &thorn; must
       have their <a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_char_c.htm"><code>CHAR-CODE</code></a>
-      in the range 0..255 - the implementation is free 
+      in the range 0..255 - the implementation is free
       to use any code. But it does require that no <code>#\Newline</code> to CRLF translation takes place, among
       others.
     <p>
@@ -79,7 +69,7 @@
       (binary) I/O, e.g. <a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_rd_by.htm"><code>READ-BYTE</code></a>
       and <a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_rd_cha.htm"><code>READ-CHAR</code></a>
       are in the standard. Some implementations let both functions be called
-      interchangeably. Others allow either one or the other. 
+      interchangeably. Others allow either one or the other.
       (The <a href="http://ww.telent.net/cliki/simple-stream">simple stream proposal</a>
       defines the notion of a <em>bivalent stream</em> where both are
       possible.)
@@ -195,9 +185,3 @@
         while (plusp pos)
         do (write-sequence buf output-stream :end pos))))
       </pre>
-      
-      <hr>
-      <a href="license.html">Copyright</a> &copy; 2002-2007 The Common Lisp Cookbook Project
-      <address>http://cl-cookbook.sourceforge.net/</address>
-      <br>$Header$
-</body> </html>

@@ -1,18 +1,6 @@
-<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
-<!-- 	$Header$	 -->
-<html> <head>
-    <title>The Common Lisp Cookbook - Macros and Backquote</title>
-    <style type="text/css">
-      pre { margin-left:20px; background-color:#e0e0e0 }
-    </style>
-
-  </head>
-
-  <body bgcolor=white>
-
-    <h1><a href="index.html">The Common Lisp Cookbook</a> - Macros and Backquote</h1>
-
-
+---
+title: Macros
+---
     <h2>Contents</h2>
     <ul>
       <li><a href="#LtohTOCentry-1">How Macros Work</a>
@@ -156,14 +144,14 @@
 	(defmacro foo (x &amp;optional y &amp;key (cxt 'null)) ...)
       </pre>
 
-      then 
+      then
       <table>
 	<TR> <TD align=left> <EM>If we call it thus ...</EM> </TD> <TD align=left> <EM>The parameters' values are
 	      ...</EM> </TD></TR>
 	<TR> <TD align=left> <code>(foo a)</code> </TD> <TD align=left> <code>x<i>=</i>a, y<i>=</i>nil, cxt<i>=</i>null</code> </TD></TR>
 	<TR> <TD align=left> <code>(foo (+ a 1) (- y 1))</code> </TD> <TD align=left> <code>x<i>=</i>(+ a 1), y<i>=</i>(- y 1),
 	      cxt<i>=</i>null</code> </TD></TR>
-	<TR> <TD align=left> <code>(foo a b :cxt (zap zip))</code> </TD> <TD align=left> <code>x<i>=</i>a, y<i>=</i>b, cxt<i>=</i>(zap zip)</code> 
+	<TR> <TD align=left> <code>(foo a b :cxt (zap zip))</code> </TD> <TD align=left> <code>x<i>=</i>a, y<i>=</i>b, cxt<i>=</i>(zap zip)</code>
       </table>
 
     <p>Note that the values of the variables are the actual expressions <code>(+ a 1)</code> and <code>(zap zip)</code>.  There is no requirement that these
@@ -175,7 +163,7 @@
 
       <pre>
 	(defmacro setq-reversible (e1 e2 d)
-	(case d 
+	(case d
 	(:normal (list 'setq e1 e2))
 	(:backward (list 'setq e2 e1))
 	(t (error ...))))
@@ -188,7 +176,7 @@
       notation that is indispensable to defining macros, even though
       technically it is quite independent of macros.  This is the <EM>backquote facility</EM>.  As we saw above, the main job of a macro, when
       all is said and done, is to define a piece of Lisp code, and that
-      means evaluating expressions such as <code>(list 
+      means evaluating expressions such as <code>(list
 	'prog (list 'setq ...) ...)</code>.  As these expressions grow in
       complexity, it becomes hard to read them and write them.  What we find
       ourselves wanting is a notation that provides the skeleton of an
@@ -203,7 +191,7 @@
       The backquote (<code><b>`</b></code>) character signals that in the expression that
       follows, every subexpression <EM>not</EM> preceded by a comma is to be
       quoted, and every subexpression preceded by a comma is to be
-      evaluated.  
+      evaluated.
 
     <p>That's mostly all there is to backquote.  There are just two extra
       items to point out.  First, if you write &quot;<code>,@<i>e</i></code>&quot; instead of
@@ -212,7 +200,7 @@
 	(oh boy))</code>.  The second occurrence of <code>v</code> is replaced by its
       value.  The first is replaced by the elements of its value.  If <code>v</code> had had value <code>()</code>, it would have disappeared entirely: the
       value of <code>(zap ,@v ,v)</code> would have been <code>(zap ())</code>, which is the same as
-      <code>(zap nil)</code>.  
+      <code>(zap nil)</code>.
 
     <p>Second, one might wonder what happens if a backquote expression occurs
       inside another backquote.  The answer is that the backquote becomes
@@ -244,7 +232,7 @@
       close analysis will show that they must be fresh, but in general
       backquote is not obligated to return a fresh list every time (whether
       it does or not is implementation-dependent).  If the example above got
-      changed to 
+      changed to
 
       <pre>
 	(mapcan (lambda (x)
@@ -287,7 +275,7 @@
     <p>My personal preference is to use backquote <EM>only</EM> to build
       S-expressions, that is, hierarchical expressions that consist of
       symbols, numbers, and strings, and that are not conceptualized as
-      changing in length.  For instance, I would never write 
+      changing in length.  For instance, I would never write
 
       <pre>
 	(setq sk <b>`</b>(,x ,@sk))
@@ -302,7 +290,7 @@
       I said in <a href="#LtohTOCentry-1">the first section</a> that my definition of <code>setq2</code> wasn't quite right, and now it's time to fix it.
 
     <p>Suppose we write <code>(setq2 x y (+ x 3))</code>, when <code>x</code><i>=8</i>.  Then
-      according to the definition given above, this form will expand into 
+      according to the definition given above, this form will expand into
       <code>(progn (setq x (+ x 3)) (setq y (+ x 3)))</code>, so that <code>x</code> will
       have value 11 and <code>y</code> will have value 14.  Chances are that isn't
       what the macro is expected to do (although you never know).  Another
@@ -319,11 +307,11 @@
 	(defmacro setq2 (v1 v2 e)
 	(let ((tempvar (gensym)))
 	<b>`</b>(let ((,tempvar ,e))
-        (progn (setq ,v1 ,tempvar) 
+        (progn (setq ,v1 ,tempvar)
         (setq ,v2 ,tempvar)))))
       </pre>
 
-      Now <code>(setq2 x y (+ x 3))</code> expands to 
+      Now <code>(setq2 x y (+ x 3))</code> expands to
 
       <pre>
 	(let ((#:g2003 (+ x 3)))
@@ -333,7 +321,7 @@
       Here <code>gensym</code> has returned the symbol <code>#:g2003</code>, which prints
       in this funny way because it won't be recognized by the reader.  (Nor
       is there any need for the reader to recognize it, since it exists only
-      long enough for the code that contains it to be compiled.)  
+      long enough for the code that contains it to be compiled.)
 
     <p>Exercise: Verify that this new version works correctly for the case
       <code>(setq2 x y (pop l1))</code>.
@@ -383,7 +371,7 @@
 	<b>`</b>(let ((y (+ ,x 1))) (* y y)))
       </pre>
 
-      So that <code>(sqone (* z 13))</code> might expand into 
+      So that <code>(sqone (* z 13))</code> might expand into
 
       <pre>
 	(let ((y (+ (* z 13) 1)))
@@ -396,12 +384,12 @@
 	sqone))</code> before <code>sqone</code> is defined (although the compiler is not
       obligated to honor this declaration).  For another, once <code>sqone</code>
       is defined as a macro, it becomes impossible to write <code>(mapcar
-	#'sqone ll)</code>, or 
-      to do anything else with it except call it.  
+	#'sqone ll)</code>, or
+      to do anything else with it except call it.
 
     <p>But macros have a thousand and one legitimate uses.  Why write <code>(lambda (x) ...)</code> when you can write <code>(<tt>\</tt><tt>\</tt> (x) ...)</code>?  Just
       define <tt>\</tt><tt>\</tt> as a macro: <code>(defmacro <tt>\</tt><tt>\</tt> (&amp;rest l) <b>`</b>(lambda
-	,@l))</code>. 
+	,@l))</code>.
 
     <p>Many people find <code>mapcar</code> and <code>mapcan</code> a bit too obscure,
       especially when used with large <code>lambda</code> expressions.  Rather than
@@ -411,20 +399,20 @@
 	(mapcar (lambda (x)
         (let ((y (hairy-fun1 x)) (z (hairy-fun2 x)))
         (dolist (y1 y)
-        (dolist (z1 z) 
+        (dolist (z1 z)
         <EM>... and further meaningless</EM>
         <EM>space-filling nonsense...</EM>
         ))))
         l)
       </pre>
 
-      we might prefer to write 
+      we might prefer to write
 
       <pre>
 	(for (x :in l)
 	(let ((y (hairy-fun1 x)) (z (hairy-fun2 x)))
 	(dolist (y1 y)
-        (dolist (z1 z) 
+        (dolist (z1 z)
         <EM>... and further meaningless</EM>
         <EM>space-filling nonsense...</EM>
         ))))
@@ -445,7 +433,7 @@
 
       (This is a simplified version of a macro by Chris Riesbeck.)
 
-    <p>It's worth stopping for a second to discuss the role 
+    <p>It's worth stopping for a second to discuss the role
       the keyword <code>:in</code> plays in this macro.  It serves as a sort of
       &quot;local syntax marker,&quot; in that it has no meaning as far as Lisp is
       concerned, but does serve as a syntactic guidepost for  the macro
@@ -460,7 +448,7 @@
       on.  A form like <code>(for ((x in (foobar a b 'oof))) (something-hairy
 	x (list x)))</code> looks a bit wrong already, because of the double
       parentheses before the <code>x</code>.  But using &quot;<code>:in</code>&quot; makes it more
-      obvious.  
+      obvious.
 
     <p>Second, notice that I wrote <code>(eq (cadr listspec) ':in)</code> in the
       macro definition to check for the presence of the guide symbol.  If I
@@ -470,7 +458,7 @@
 
       <pre>
 	(and (symbolp (cadr listspec))
-	(eq (intern (symbol-name (cadr listspec)) 
+	(eq (intern (symbol-name (cadr listspec))
         :keyword)
         ':in))
       </pre>
@@ -486,7 +474,7 @@
       neither of which is particularly clear or aesthetic.
       The keyword package is there to provide a home for
       symbols whose home is not per se relevant to anything; you might as
-      well use it. (Note: In ANSI Lisp, 
+      well use it. (Note: In ANSI Lisp,
       I could have written <code>"IN"</code> instead of <code>(symbol-name 'in)</code>, but there are Lisp implementations that do not
       convert symbols' names to uppercase.  Since I think the whole
       uppercase conversion idea is an embarrassing relic, I try to write
@@ -500,15 +488,15 @@
       <blockquote>
 	<code>(build-symbol [(:package <i>p</i>)] <EM>-pieces-</EM>)</code> builds a
 	symbol by concatenating the given <EM>pieces</EM> and interns it as
-	specified by <i>p</i>.  For each element 
-	of <EM>pieces</EM>, if it is a ... 
+	specified by <i>p</i>.  For each element
+	of <EM>pieces</EM>, if it is a ...
 	<UL>
 	  <li><strong></strong> ... string: The string is added to the new symbol's name.
 	  <li><strong></strong> ... symbol: The name of the symbol is added to the new symbol's
 	    name.
 	  <li><strong></strong> ... expression of the form <code>(:&lt; <i>e</i>)</code>: <i>e</i> should evaluate
 	    to a string, symbol, or number; the characters of the value of <i>e</i> (as
-	    printed by 
+	    printed by
 	    <code>princ</code>) are concatenated into the new symbol's name.
 	  <li><strong></strong> ... expression of the form <code>(:++ <i>p</i>)</code>: <i>p</i> should be a place expression (i.e.,
 	    appropriate as the first argument to <code>setf</code>), whose value is an
@@ -520,11 +508,11 @@
 	Otherwise, it should evaluate to a package designator (usually, a
 	keyword whose name is the same of a package).
       </blockquote>
-      For example, <code>(build-symbol (:&lt; x) "-" (:++ *x-num*))</code>, when <code>x</code> = <code>foo</code> and 
-      <code>*x-num*</code> = 8, sets <code>*x-num*</code> to 9 and 
+      For example, <code>(build-symbol (:&lt; x) "-" (:++ *x-num*))</code>, when <code>x</code> = <code>foo</code> and
+      <code>*x-num*</code> = 8, sets <code>*x-num*</code> to 9 and
       evaluates to
       <code>FOO-9</code>.  If evaluated again, the result will be <code>FOO-10</code>, and so
-      forth.  
+      forth.
 
     <p>Obviously, <code>build-symbol</code> can't be implemented as a function; it
       has to be a macro.  Here is an implementation:
@@ -601,14 +589,14 @@
 
       <pre>
 	(defmacro odd-define (name buildargs)
-	<b>`</b>(progn (defun ,(build-symbol make-a- (:&lt; name)) 
+	<b>`</b>(progn (defun ,(build-symbol make-a- (:&lt; name))
         ,buildargs
         (vector ,(length buildargs) ',name ,@buildargs))
         (defun ,(build-symbol test-whether- (:&lt; name)) (x)
         (and (vectorp x) (eq (aref x 1) ',name))
-        (defun ,(build-symbol (:&lt; name) -copy) (x) 
+        (defun ,(build-symbol (:&lt; name) -copy) (x)
         ...)
-        (defun ,(build-symbol (:&lt; name) -deactivate) (x) 
+        (defun ,(build-symbol (:&lt; name) -deactivate) (x)
         ...))))
 
 	<p>(odd-define zip (y z))
@@ -621,15 +609,15 @@
 
     <p><pre>
 	(macrolet ((odd-define (name buildargs)
-        <b>`</b>(progn (defun ,(build-symbol make-a- (:&lt; name)) 
+        <b>`</b>(progn (defun ,(build-symbol make-a- (:&lt; name))
         ,buildargs
-        (vector ,(length buildargs) 
+        (vector ,(length buildargs)
         ',name
         ,@buildargs))
-        (defun ,(build-symbol test-whether- (:&lt; name)) 
+        (defun ,(build-symbol test-whether- (:&lt; name))
         (x)
         (and (vectorp x) (eq (aref x 1) ',name))
-        (defun ,(build-symbol (:&lt; name) -copy) (x) 
+        (defun ,(build-symbol (:&lt; name) -copy) (x)
         ...)
         (defun ,(build-symbol (:&lt; name) -deactivate) (x)
         ...)))))
@@ -643,11 +631,11 @@
       interacting with Lisp's read-eval-print loop.  A short name is useful
       and possible because we want it to be easy to type and we don't care
       much whether the name clashes some other command; if two command
-      names clash, we can change one of them.  
+      names clash, we can change one of them.
 
     <p>As an example, let's define a little command language for debugging
       macros.  (You may actually find this useful.)  There are just two
-      commands, <code>ex</code> and <code>fi</code>. 
+      commands, <code>ex</code> and <code>fi</code>.
       They keep track of a &quot;current form,&quot; the thing to be macro-expanded
       or the result of such an expansion:
       <OL>
@@ -671,7 +659,7 @@
 	&gt; (fi odd-define)
 	(ODD-DEFINE ZIP (U V W))
 	&gt; (ex)
-	(PROGN (DEFUN MAKE-A-ZIP (U V W) ...)        
+	(PROGN (DEFUN MAKE-A-ZIP (U V W) ...)
 	...)
       </pre>
 
@@ -680,14 +668,14 @@
       were willing to type a quote before their arguments.  But using
       &quot;quote&quot; often seems inappropriate in commands.  For one thing,
       having to type it is a nuisance in a context where we are trying to
-      save keystrokes, especially if the argument in question is 
+      save keystrokes, especially if the argument in question is
       always quoted.
       For another, in many cases it just seems
-      inappropriate.  If we 
+      inappropriate.  If we
       had a command that took a symbol as one of its arguments and set it to
       a value, it would just be strange to write <code>(<EM>command</EM> 'x
 	...)</code> instead of <code>(<EM>command</EM> x ...)</code>, because we want to
-      think of the command as a variant of <code>setq</code>.  
+      think of the command as a variant of <code>setq</code>.
 
     <p>Here is how <code>ex</code> and <code>fi </code> might be defined:
 
@@ -718,7 +706,7 @@
       using <code>ex</code> and <code>fi</code> at a read-eval-print loop, any value
       returned by their expansions will be printed.  Here the expansion is
       executed for side effect, so we arrange to return no values at all by
-      having the expansion return <code>(values)</code>.  
+      having the expansion return <code>(values)</code>.
 
     <p>In some Lisp
       implementations, read-eval-print loops routinely print results using
@@ -726,23 +714,17 @@
       <code>fi</code> by having them print nothing, but just return the value of <code>*current-form*</code>, which the read-eval-print loop will then print prettily.
       Use your judgment.
 
-    <p>I leave the definition of <code>find-nth-occurrence</code> as an exercise.  
+    <p>I leave the definition of <code>find-nth-occurrence</code> as an exercise.
       You might also want to define a command that just sets and prints the
-      current form: <code>(cf <i>e</i>)</code>.  
+      current form: <code>(cf <i>e</i>)</code>.
 
     <p>One caution: In general, command languages
       will consist of a mixture of macros and functions, with convenience
       for their definer (and usually sole user) being the main
       consideration.  If a command seems to &quot;want&quot; to evaluate some of its
       arguments sometimes, you have to decide whether to define two (or
-      more) versions 
+      more) versions
       of it, or just one, a function whose arguments must be quoted to
       prevent their being evaluated.  For the <code>cf</code> command mentioned in
       the prevous paragraph, some users might prefer <code>cf</code> to  be a
       function, some a macro.
-
-      <hr>
-      <a href="license.html">Copyright</a> &copy; 2002-2007 The Common Lisp Cookbook Project
-      <address>http://cl-cookbook.sourceforge.net/</address>
-      <br>$Header$
-</body> </html>
