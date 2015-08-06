@@ -1,0 +1,7 @@
+title: Common Lisp Cookbook
+description: A collection of examples of using Common Lisp
+baseurl: "/cl-cookbook"
+
+markdown: kramdown
+sass:
+  style: :compressed
