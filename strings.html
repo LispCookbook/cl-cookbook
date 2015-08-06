@@ -1,18 +1,6 @@
-<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
-<!-- 	$Header$	 -->
-<html> <head>
-    <title>The Common Lisp Cookbook - Strings</title>
-    <style type="text/css">
-      pre { margin-left:20px; background-color:#e0e0e0 }
-    </style>
-
-  </head>
-
-  <body bgcolor=white>
-
-    <h1><a href="index.html">The Common Lisp Cookbook</a> - Strings</h1>
-
-
+---
+title: Strings
+---
     <h2>Contents</h2>
     <ul>
       <li><a href="#substrings">Accessing Substrings</a>
@@ -44,13 +32,13 @@
     <a name="substrings"></a>
     <h3>Accessing Substrings</h3>
 
-    As a string is a sequence, you can access substrings with the 
+    As a string is a sequence, you can access substrings with the
     <a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_subseq.htm"><code>SUBSEQ</code></a>
     function. The index into the string is, as always, zero-based. The
     third, optional, argument is the index of the first character which is
     not a part of the substring, it is <em>not</em> the length of the
-    substring. 
-    
+    substring.
+
     <pre>
       * (defparameter *my-string* (string "Groucho Marx"))
       *MY-STRING*
@@ -61,10 +49,10 @@
       * (subseq *my-string* 1 5)
       "rouc"
     </pre>
-    
+
     You can also manipulate the substring if you use <code>SUBSEQ</code>
     together with <a href="http://www.lispworks.com/documentation/HyperSpec/Body/m_setf_.htm"><code>SETF</code></A>.
-    
+
     <pre>
       * (defparameter *my-string* (string "Harpo Marx"))
       *MY-STRING*
@@ -75,13 +63,13 @@
       * *my-string*
       "Chico Marx"
     </pre>
-    
+
     But note that the string isn't &quot;stretchable&quot;. To cite from the
     <a href="http://www.lispworks.com/documentation/HyperSpec/index.html">HyperSpec</a>:
-    &quot;If the subsequence and the new sequence are not of 
+    &quot;If the subsequence and the new sequence are not of
     equal length, the shorter length determines the number of elements
     that are replaced.&quot; For example:
-    
+
     <pre>
       * (defparameter *my-string* (string "Karl Marx"))
       *MY-STRING*
@@ -106,7 +94,7 @@
     You can use the function <a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_char_.htm"><code>CHAR</code></a>
     to access individual characters of a string. <code>CHAR</code> can
     also be used in conjunction with <code>SETF</code>.
-    
+
     <pre>
       * (defparameter *my-string* (string "Groucho Marx"))
       *MY-STRING*
@@ -123,7 +111,7 @@
     </pre>
 
     Note that there's also <a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_char_.htm"><code>SCHAR</code></A>.
-    If efficiency is important, <code>SCHAR</code> can be a bit faster 
+    If efficiency is important, <code>SCHAR</code> can be a bit faster
     where appropriate.
     <p>
 
@@ -131,7 +119,7 @@
       generic functions <a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_aref.htm"><code>AREF</code></a>
       and <a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_elt.htm"><code>ELT</code></a>
       (which are more general while <code>CHAR</code> might be implemented
-      more efficiently). 
+      more efficiently).
 
       <pre>
 	* (defparameter *my-string* (string "Groucho Marx"))
@@ -203,8 +191,8 @@
 
       Another function that can be frequently used (but not part of the ANSI standard)
       is <code>replace-all</code>. This function provides an easy functionality
-      for search/replace operations on a string, by returning a new string 
-      in which all the occurences of the 'part' in string is replaced with 
+      for search/replace operations on a string, by returning a new string
+      in which all the occurences of the 'part' in string is replaced with
       'replacement'".
 
       <pre>
@@ -216,7 +204,7 @@
 
 <pre>
   (defun replace-all (string part replacement &key (test #'char=))
-  "Returns a new string in which all the occurences of the part 
+  "Returns a new string in which all the occurences of the part
   is replaced with replacement."
   (with-output-to-string (out)
   (loop with part-length = (length part)
@@ -228,12 +216,12 @@
   :start old-pos
   :end (or pos (length string)))
   when pos do (write-string replacement out)
-  while pos))) 
+  while pos)))
 </pre>
 
 However, bear in mind that the above code is not optimized for
 long strings; if you intend to perform such an operation on very
-long strings, files, etc. please consider using 
+long strings, files, etc. please consider using
 <a href="http://www.weitz.de/cl-ppcre/">cl-ppcre</a> regular expressions
 and string processing library which is heavily optimized.
 
@@ -305,7 +293,7 @@ emulate <code>CONCATENATE</code>.
 <code>FORMAT</code> can do a lot more processing but it has a
 relatively arcane syntax. After this last example, you can find the
 details in <a href="http://www.lispworks.com/documentation/HyperSpec/Body/22_c.htm">the
-  CLHS section about formatted output</a>. 
+  CLHS section about formatted output</a>.
 
 <pre>
   * (format nil "The Marx brothers are:~{ ~A~^,~}."
@@ -317,7 +305,7 @@ Another way to create a string out of the printed representation of
 various object is using <a href="http://www.lispworks.com/documentation/HyperSpec/Body/m_w_out_.htm"><code>WITH-OUTPUT-TO-STRING</code></a>.
 The value of this handy macro is a string containing everything that
 was output to the string stream within the body to the macro. This
-means you also have the full power of 
+means you also have the full power of
 <a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_format.htm"><code>FORMAT</code></a>
 at your disposal, should you need it.
 
@@ -340,18 +328,18 @@ function to process a string one character at a time.
   * (defparameter *my-string* (string "Groucho Marx"))
   *MY-STRING*
   * (map 'string #'(lambda (c) (print c)) *my-string*)
-  #\G 
-  #\r 
-  #\o 
-  #\u 
-  #\c 
-  #\h 
-  #\o 
-  #\Space 
-  #\M 
-  #\a 
-  #\r 
-  #\x 
+  #\G
+  #\r
+  #\o
+  #\u
+  #\c
+  #\h
+  #\o
+  #\Space
+  #\M
+  #\a
+  #\r
+  #\x
   "Groucho Marx"
 </pre>
 
@@ -367,7 +355,7 @@ Or do it with <a href="http://www.lispworks.com/documentation/HyperSpec/Body/06_
 <a name="reverse"></a>
 <h3>Reversing a String by Word or Character</h3>
 
-Reversing a string by character is easy using the built-in 
+Reversing a string by character is easy using the built-in
 <a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_revers.htm"><code>REVERSE</code></a>
 function (or its <a href="http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_d.htm#destructive">destructive</a> counterpart <code>NREVERSE</code>).
 
@@ -555,7 +543,7 @@ value of this function. See <a
     :EXTERNAL
   </pre>
 
-  To do the opposite, convert from a symbol to a string, use 
+  To do the opposite, convert from a symbol to a string, use
   <a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_symb_2.htm">SYMBOL-NAME</a> or <a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_string.htm"><code>STRING</code></a>.
 
   <pre>
@@ -577,10 +565,10 @@ value of this function. See <a
   to convert a string of length 1 to a character. You can also use
   <code>COERCE</code> to convert any sequence of characters into a
   string. You can <em>not</em> use <code>COERCE</code> to convert a
-  character to a string, though - you'll have to use 
+  character to a string, though - you'll have to use
   <a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_string.htm"><code>STRING</code></a>
   instead.
-  
+
   <pre>
     * (coerce "a" 'character)
     #\a
@@ -707,7 +695,7 @@ value of this function. See <a
 
   <code>PARSE-INTEGER</code> doesn't understand radix specifiers like
   <code>#X</code>, nor is there a built-in function to parse other
-  numeric types. You could use 
+  numeric types. You could use
   <a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_rd_fro.htm"><code>READ-FROM-STRING</code></a>
   in this case, but be aware that the full <a href="http://www.lispworks.com/documentation/HyperSpec/Body/02_b.htm">reader</a>
   is in effect if you're using this function.
@@ -762,7 +750,7 @@ value of this function. See <a
     "2000"
     * (write-to-string (/ 1 3))
     "1/3"
-    * 
+    *
   </pre>
 
   <a name="compare"></a>
@@ -774,14 +762,14 @@ value of this function. See <a
   can be used to test whether two strings are equal. The strings are
   compared element-by-element, either in a case-sensitive manner
   (<code>EQUAL</code>) or not (<code>EQUALP</code>). There's also a
-  bunch of <a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_stgeq_.htm">string-specific 
+  bunch of <a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_stgeq_.htm">string-specific
     comparison functions</a>. You'll want to use these if you're deploying
   <em>implementation-defined</em> attributes of characters. Check your
   vendor's documentation in this case.
 <p>
 
   Here are a few examples. Note that all functions that test for
-  inequality return the position of the first mismatch as a 
+  inequality return the position of the first mismatch as a
   <a href="http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_g.htm#generalized_boolean">generalized
     boolean</a>. You can also use the generic sequence function <a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_mismat.htm"><code>MISMATCH</code></a>
   if you need more versatility.
@@ -802,10 +790,3 @@ value of this function. See <a
 			  * (mismatch "Harpo Marx" "Zeppo Marx" :from-end t :test #'char=)
 			  3
 			  </pre>
-
-
-  <hr>
-  <a href="license.html">Copyright</a> &copy; 2002-2007 The Common Lisp Cookbook Project
-  <address>http://cl-cookbook.sourceforge.net/</address>
-  <br>$Header$
-</body> </html>
