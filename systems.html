@@ -1,16 +1,6 @@
-<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
-<!-- 	$Header$	 -->
-<html> <head>
-    <title>The Common Lisp Cookbook</title>
-    <style type="text/css">
-      pre { margin-left:20px; background-color:#e0e0e0 }
-    </style>
-  </head>
-
-  <body bgcolor="white">
-
-    <h1><a href="index.html">The Common Lisp Cookbook</a> - Defining Systems</h1>
-
+---
+title: Defining Systems
+---
     <H2>Contents</H2>
     <ul>
       <LI><A href="#example">An example</A></LI>
@@ -55,14 +45,14 @@
     <P>The above form defines a system whose name is the symbol
       <code>:html</code>. After the system name comes a list
       containing optional information: in this case, we specified a
-      human-readable name for the package, and the directory where the 
+      human-readable name for the package, and the directory where the
       source files are located. Finally, the three files that compose
       the system are listed, with the <code>:serial</code> keyword
       indicating that they should be compiled and loaded in the
       specified order (possibly because each one depends on
       definitions in the previous ones).</P>
 
-    <P>Having defined a system like the above, you can then operate on 
+    <P>Having defined a system like the above, you can then operate on
       it. For example, calling:
 
       <PRE>
@@ -70,11 +60,11 @@
 	(load-system :html :compile t)
 
       </PRE>
-      
+
       will cause the three files in the system to be compiled (if
       needed) and loaded.</P>
 
-    <P>Note that a system can include other systems as components, and 
+    <P>Note that a system can include other systems as components, and
       the included systems will be recursively compiled and
       loaded. For example, if we wanted the definitions in the
       <code>:util</code> system to be available to the
@@ -92,18 +82,18 @@
         "library"))
       </PRE>
 
-      
+
       <A name="cross"></A>
-      <H3>Cross-platform defsystems</H3> 
+      <H3>Cross-platform defsystems</H3>
 
     <P>The most advanced attempt at building a cross-platform system
-      definition tool is probably <b>MK-DEFSYSTEM</B>, available from 
+      definition tool is probably <b>MK-DEFSYSTEM</B>, available from
       <A href="http://sourceforge.net/projects/clocc">CLOCC</A>. Please
       refer to that site for more details on how to install it and use
       it.</P>
 
     <A name="begin"></A>
-    <H3>System construction for beginners</H3> 
+    <H3>System construction for beginners</H3>
 
     <P>Organizing a large Lisp system is not trivial: managing the
       interdependencies among a large number of source files and the
@@ -123,7 +113,7 @@
 
     <OL>
       <LI>Put the following in your Lisp initialization file:
-	
+
 	<pre>
 
 	  (eval-when (:load-toplevel :execute)
@@ -143,7 +133,7 @@
 	for the defsystem you are using.</LI><br>
 
       <LI>Write your code so that it creates its own package, and
-	exports all public symbols from it. Using the <code>:html</code> 
+	exports all public symbols from it. Using the <code>:html</code>
 	system defined above as an example:
 	<pre>
 
@@ -159,8 +149,8 @@
 	<code>DEFSYSTEM</code> form for <code>:html</code> at the
 	beginning of this chapter).</LI>
     </OL>
-    
-    <P>Now you can simply call 
+
+    <P>Now you can simply call
       <pre>
 
 	* (require :html)
@@ -176,9 +166,3 @@
       the <code>import</code> statement in Java: it allows you to easily
       access the functionality provided by a Lisp package with a single
       command.</P>
-
-    <hr>
-    <a href="license.html">Copyright</a> &copy; 2002-2007 The Common Lisp Cookbook Project
-    <address>http://cl-cookbook.sourceforge.net/</address>
-    <br>$Header$
-</body> </html>

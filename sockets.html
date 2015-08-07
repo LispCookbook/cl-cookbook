@@ -1,18 +1,6 @@
-<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
-<!-- 	$Header$	 -->
-<html> <head>
-    <title>The Common Lisp Cookbook - Sockets</title>
-    <style type="text/css">
-      pre { margin-left:20px; background-color:#e0e0e0 }
-    </style>
-
-  </head>
-
-  <body bgcolor=white>
-
-    <h1><a href="index.html">The Common Lisp Cookbook</a> - Sockets</h1>
-
-
+---
+title: Sockets
+---
     <h2>Contents</h2>
 
     <ul>
@@ -40,8 +28,8 @@
     Common Lisp implementations (Allegro, Lispworks, CLISP, CMU
     CL, SBCL, GCL).  Therefore, this section does not contain
     pointers to the Common Lisp HyperSpec. We refer you to the
-    documentation of the PORT package for more information. Even 
-    if you do not use port, the concepts described here will most 
+    documentation of the PORT package for more information. Even
+    if you do not use port, the concepts described here will most
     likely apply to your Lisp implementation, and it should not
     be hard to find out what the equivalent functions are in it.
 
@@ -63,7 +51,7 @@
       computer, the address of the server computer and the port on the
       server computer. This particular way of using sockets is referred to
       as the "Internet" address family. Under Unix, there is also an
-      alternative address family ("Unix") that uses local files as sockets. 
+      alternative address family ("Unix") that uses local files as sockets.
       In the following we will describe how to implement both TCP clients
       and servers in Common Lisp. Of course, nothing prevents you from using
       a CL client to connect to a server written in a different language,
@@ -83,23 +71,23 @@
       humans use hostnames that are easier to memorize and type; software
       uses IP addresses that are stored as ipaddrs but are usually printed
       in dotted notation.</p>
-    
+
     <p>Ports are represented as integer numbers in the range
       1-65535. In general, ports can be chosen arbitrarily (except that
       some ports might only be available to privileged users on Unix and
       similar operating systems), but two processes that need to
       communicate through sockets should have a way of knowing which
-      port to use. Let's look at how sockets are normally used, in order 
-      to make this point clear. 
+      port to use. Let's look at how sockets are normally used, in order
+      to make this point clear.
       <ol>
 	<li>A process on computer A (the server) <b>opens</b> TCP port X
 	  and prepares to <b>accept</b> connections.</li>
-	<li>A process on computer B (the client) <b>creates</b> a socket 
+	<li>A process on computer B (the client) <b>creates</b> a socket
 	  connecting port Y on B to port X on A. (Note that B needs to
 	  know that A opened port X, but A does not need to know that
 	  the socket originates from port Y on B. Y is usually chosen
 	  randomly by the TCP implementation.)</li>
-	<li>The server process accepts the socket connection, and spawns 
+	<li>The server process accepts the socket connection, and spawns
 	  a thread or a sub-process to <b>handle</b> it.</li>
 	<li>A and B can freely exchange data over the socket, until
 	  either the client or the server closes it.</li>
@@ -111,7 +99,7 @@
 
     <p>A prerequisite for working with sockets is the ability to
       convert hostnames to IP addresses and vice versa. The function
-      RESOLVE-HOST-IPADDR takes a hostname as its argument and returns 
+      RESOLVE-HOST-IPADDR takes a hostname as its argument and returns
       a HOSTENT structure. For example:
 
       <pre>
@@ -127,7 +115,7 @@
       hostname is mapped to more than one IP address for load-balancing
       purposes, but not all implementations return the additional
       addresses). You can also use this function to perform the reverse
-      mapping: 
+      mapping:
 
       <pre>
 	&gt; (resolve-host-ipaddr "128.18.65.4")
@@ -155,7 +143,7 @@
       returns an object representing the open socket port. There
       are two ways that things could go wrong at this stage:
       either your process does not have sufficient privileges to
-      open the desired port (for example, you are trying to open a 
+      open the desired port (for example, you are trying to open a
       port below 1024 without being root under unix), or the
       port you have chosen has already been opened by another
       process. In both cases, Lisp will signal an error.
@@ -193,7 +181,7 @@
 
 	;; Listen for incoming connections
 	(let ((socket (socket-accept server)))
-	
+
 	;; Spawn a process to handle the connection
 	(make-process "Connection handler"
         #'handle-connection
@@ -210,15 +198,15 @@
       stream as its only argument and operates on it. After
       handing the connection to the subprocess, the main process
       immediately returns to the SOCKET-ACCEPT call to wait for
-      another incoming connection. This basic structure could be 
+      another incoming connection. This basic structure could be
       extended to limit the number of concurrent processes,
       to perform load balancing, request logging, etc.
-      
+
 
       <a name="client"></a>
       <h3>Client sockets</h3>
 
-    <p>Let's now look at the other side of the story. On the client 
+    <p>Let's now look at the other side of the story. On the client
       machine, the Lisp process should call OPEN-SOCKET,
       specifying both the host to connect to and the port
       number. The host can be specified in any of the formats we
@@ -226,11 +214,11 @@
       scenarios are possible now:
 
       <ul>
-	<li>The destination port is open and the server process is 
+	<li>The destination port is open and the server process is
 	  listening. In this case the connection is established,
 	  and OPEN-SOCKET returns a &quot;socket-stream&quot;
 	  structure.</li>
-	<li>The destination port was opened but the server process 
+	<li>The destination port was opened but the server process
 	  did not call SOCKET-ACCEPT. In this case the connection
 	  will be established and put in a backlog queue by the operating
 	  system (provided there is still room in the queue), until the
@@ -281,7 +269,7 @@
     &gt; (read-line server-stream)
     "Username: user1"
   </pre>
-  
+
   Note that since socket streams are usually buffered, the
   data is actually sent over the network only when the buffer
   is full, when the stream is closed or when you call
@@ -311,7 +299,7 @@
   In this section we will implement a very simple HTTP/0.9
   server and client. HTTP/0.9 is a primitive version of the
   HTTP protocol currently used by all Web servers and
-  clients. It is a very simple query-response protocol whose 
+  clients. It is a very simple query-response protocol whose
   only purpose is to allow a client to retrieve a document
   from a server. The client sends a request line with the
   following format:
@@ -320,7 +308,7 @@
     GET /pathname/to/file HTTP/0.9
   </pre>
 
-  followed by a blank line, and the server replies with the 
+  followed by a blank line, and the server replies with the
   contents of the specified file. Here is the code:
 
   <pre>
@@ -350,7 +338,7 @@
     root)
     ;; Close connection when done
     (close socket))))
-    
+
     ;; Close server before exiting
     (socket-server-close server))))
 
@@ -361,7 +349,7 @@
     GET /filename HTTP/0.9
 
     Returns the filename, or NIL if the request is incorrect."
-    
+
     (let ((request (read-line socket nil nil)))
     (when request
     (let ((p1 (position #\Space request))
@@ -380,7 +368,7 @@
     (concatenate 'string root filename))
     ;; Incorrect request, return error
     (http-send-line socket "HTTP/0.9 400 Invalid HTTP Request."))
-    
+
     ;; Make sure the client sees the output - not really
     ;; necessary since we close the socket right after this.
     (force-output socket))
@@ -389,7 +377,7 @@
     "Write the contents of the file `pathname' to `socket'."
     ;; Does file exist?
     (if (probe-file pathname)
-    
+
     ;; Yes, write it out to the socket
     (with-open-file (in pathname)
     (format t "&gt; Serving file ~a...~%" pathname)
@@ -397,7 +385,7 @@
     (let ((line (read-line in nil nil)))
     (unless line (return))
     (http-send-line socket line))))
-    
+
     ;; No, return error
     (format socket "HTTP/0.9 401 Not found.~%")))
 
@@ -415,14 +403,14 @@
     ;; Send request
     (http-send-line socket (format nil "GET ~a HTTP/0.9~%~%" path))
     (force-output socket)
-    
+
     ;; Read response and output it
     (format t "&gt; Received response:~%")
     (loop
     (let ((line (read-line socket nil nil)))
     (unless line (return))
     (format t "~a~%" line))))
-    
+
     ;; Close socket before exiting.
     (close socket))))
     --------------------------cut here------------------------------------
@@ -447,16 +435,10 @@
   </pre>
 
   and you should see the contents of your /etc/hosts file
-  printed to standard output. In this case we used "localhost" 
+  printed to standard output. In this case we used "localhost"
   as the server's hostname because we are running both the
   client and the server on the same machine for simplicity,
   but of course they could be on two different machines. Note
   that the server runs forever, you will have to interrupt it
   manually after you have finished trying it.
 <p>
-
-  <hr>
-  <a href="license.html">Copyright</a> &copy; 2002-2007 The Common Lisp Cookbook Project
-  <address>http://cl-cookbook.sourceforge.net/</address>
-  <br>$Header$
-</body> </html>

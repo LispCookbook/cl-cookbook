@@ -1,16 +1,6 @@
-<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
-<!-- 	$Header$	 -->
-<html> <head>
-    <title>The Common Lisp Cookbook - Functions</title>
-    <style type="text/css">
-      pre { margin-left:20px; background-color:#e0e0e0 }
-    </style>
-
-  </head>
-
-  <body bgcolor=white>
-    <h1><a href="index.html">The Common Lisp Cookbook</a> - Functions</h1>
-
+---
+title: Functions
+---
 
     <h2>Contents</h2>
 
@@ -150,7 +140,7 @@
       marked with <em>***</em> above. If a <em>compound form</em>, i.e. a
       <em>cons</em>, is evaluated and its <em>car</em> is a symbol, then the
       function cell of this symbol is used - see the line marked
-      <em>+++</em> above. 
+      <em>+++</em> above.
     <p>
 
       In Common Lisp, as opposed to Scheme, it is <em>not</em> possible that
@@ -232,7 +222,7 @@
       Note that the argument to <code>FUNCALL</code> (and
       <code>APPLY</code>) can either be the function itself,
       i.e. <code>#'+</code>, or a symbol which has the function in its
-      function cell (is fbound to the function), i.e. <code>'+</code>. 
+      function cell (is fbound to the function), i.e. <code>'+</code>.
     <p>
 
       All of the above is <em>extremely simplified</em> - we haven't even
@@ -248,7 +238,7 @@
       <a href="http://www.cs.jhu.edu/~scott/pl/lectures/caml-intro.html#higherorder"><em>currying</em></a>
       which you might be familiar with if you're coming from a functional
       language. After we've read the last section that's rather easy to
-      implement: 
+      implement:
 
       <pre>
 	* (declaim (ftype (function (function &rest t) function) curry)
@@ -273,9 +263,3 @@
       efficient code if it so wishes. Leaving it out won't change the
       semantics of the function.
     <p>
-
-      <hr>
-      <a href="license.html">Copyright</a> &copy; 2002-2007 The Common Lisp Cookbook Project
-      <address>http://cl-cookbook.sourceforge.net/</address>
-      <br>$Header$
-</body> </html>

@@ -1,17 +1,6 @@
-<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
-<!-- 	$Header$	 -->
-<html> <head>
-    <title>The Common Lisp Cookbook - Interfacing with your OS</title>
-    <style type="text/css">
-      pre { margin-left:20px; background-color:#e0e0e0 }
-    </style>
-
-  </head>
-
-  <body bgcolor=white>
-    <h1><a href="index.html">The Common Lisp Cookbook</a> - Interfacing with your OS</h1>
-
-
+---
+title: Interfacing with your OS
+---
     <h2>Contents</h2>
 
     <ul>
@@ -78,7 +67,7 @@
     <pre>* *posix-argv*
 
       ("sbcl" "my-command-line-arg")
-      * 
+      *
     </pre>
 
     More on using this to write standalone Lisp scripts can be found in the <a
@@ -100,8 +89,8 @@
 
     <pre>
       (defun my-command-line ()
-      (or 
-      #+SBCL *posix-argv*  
+      (or
+      #+SBCL *posix-argv*
       #+LISPWORKS system:*line-arguments-list*
       #+CMU extensions:*command-line-words*
       nil))
@@ -155,9 +144,3 @@
       ((not f))
       (load (compile-file-pathname (car f))))))
     </pre>
-
-    <hr>
-    <a href="license.html">Copyright</a> &copy; 2002-2007 The Common Lisp Cookbook Project
-    <address>http://cl-cookbook.sourceforge.net/</address>
-    <br>$Header$
-</body> </html>

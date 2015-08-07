@@ -1,18 +1,6 @@
-<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
-<!-- 	$Header$	 -->
-<html> <head>
-    <title>The Common Lisp Cookbook - Miscellaneous</title>
-    <style type="text/css">
-      pre { margin-left:20px; background-color:#e0e0e0 }
-    </style>
-
-  </head>
-
-  <body bgcolor=white>
-
-    <h1><a href="index.html">The Common Lisp Cookbook</a> - Miscellaneous</h1>
-
-
+---
+title: Miscellaneous
+---
     <h2>Contents</h2>
     <ul>
       <li><a href="#opt">Re-using complex data structures</a>
@@ -69,16 +57,16 @@
 	;; ... compute storing the results in RESULT
 	result)
       </pre>
-      
+
       Now you have it both ways.  You can still &quot;make up results&quot;
       on the fly as in:
-      
+
       <pre>
 	(setq some-matrix (complex-matrix-stuff A B))
       </pre>
 
       But you can also (destructively) re-use previously allocated matrices:
-      
+
       <pre>
 	(complex-matrix-stuff A B some-appropriate-matrix-I-built-before)
       </pre>
@@ -91,7 +79,7 @@
       </pre>
 
       in which case you'll end up with:
-      
+
       <pre>
 	* (eq some-other-matrix some-appropriate-matrix-I-built-before)
 
@@ -137,7 +125,7 @@
         :displaced-to ""
         :displaced-index-offset 0)))
 	;; more code
-	(gethash 
+	(gethash
 	(adjust-array substring (- to from)
         :displaced-to original-string
         :displaced-index-offset from)
@@ -145,9 +133,3 @@
 	;; even more code
 	)
       </pre>
-
-      <hr>
-      <a href="license.html">Copyright</a> &copy; 2002-2007 The Common Lisp Cookbook Project
-      <address>http://cl-cookbook.sourceforge.net/</address>
-      <br>$Header$
-</body> </html>

@@ -1,16 +1,6 @@
-<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
-<!-- 	$Header$	 -->
-<html> 
-
-  <head>
-    <title>The Common Lisp Cookbook - Hash Tables</title>
-    <style type="text/css">
-      pre { margin-left:20px; background-color:#e0e0e0 }
-    </style>
-  </head>
-
-  <body bgcolor=white>
-    <h1><a href="index.html">The Common Lisp Cookbook</a> - Hash Tables</h1>
+---
+title: Hash Tables
+---
 
     <h2>Contents</h2>
     <ul>
@@ -29,18 +19,18 @@
     <a name="intro"></a>
     <h3>Introduction</h3>
 
-    Hash Tables are a powerful data structure, associating 
-    keys with values in a very efficient way. Hash Tables 
-    are often preferred over association lists whenever 
-    performance is an issue, but they introduce a little 
-    overhead that makes assoc lists better if there are 
-    only a few key-value pairs to maintain. 
+    Hash Tables are a powerful data structure, associating
+    keys with values in a very efficient way. Hash Tables
+    are often preferred over association lists whenever
+    performance is an issue, but they introduce a little
+    overhead that makes assoc lists better if there are
+    only a few key-value pairs to maintain.
 
 
     <a name="create"></a>
-    <h3>Creating a Hash Table</h3> 
+    <h3>Creating a Hash Table</h3>
 
-    Hash Tables are created using the function 
+    Hash Tables are created using the function
     <a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_mk_has.htm"><code>MAKE-HASH-TABLE</code></a>.
     It has no required argument. Its most used optional keyword argument
     is <code>:TEST</code>, specifying the function used to test the
@@ -48,27 +38,27 @@
 
 
     <a name="get"></a>
-    <h3>Getting a value from a Hash Table</h3> 
+    <h3>Getting a value from a Hash Table</h3>
 
-    The function 
+    The function
     <a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_gethas.htm"><code>GETHASH</code></a>
-    takes two required arguments: a 
-    key and a hash table. It returns two values: the value 
-    corresponding to the key in the hash table (or NIL if 
-    not found), and a boolean indicating whether the key 
-    was found in the table. That second value is necessary 
-    since NIL is a valid value in a key-value pair, so 
-    getting NIL as first value from <code>GETHASH</code> does not 
-    necessarily mean that the key was not found in the 
-    table.   
+    takes two required arguments: a
+    key and a hash table. It returns two values: the value
+    corresponding to the key in the hash table (or NIL if
+    not found), and a boolean indicating whether the key
+    was found in the table. That second value is necessary
+    since NIL is a valid value in a key-value pair, so
+    getting NIL as first value from <code>GETHASH</code> does not
+    necessarily mean that the key was not found in the
+    table.
 
 
     <a name="add"></a>
     <h3>Adding an Element to a Hash Table</h3>
 
-    If you want to add an element to a hash table, you can use 
+    If you want to add an element to a hash table, you can use
     <code>GETHASH</code>, the function to retrieve elements from the hash
-    table, in conjunction with 
+    table, in conjunction with
     <a href="http://www.lispworks.com/documentation/HyperSpec/Body/m_setf_.htm"><code>SETF</code></a>.
 
     <pre>
@@ -126,7 +116,7 @@
 
     In this case you'll have to check the <em>second</em> return value of GETHASH
     which will always return NIL if no value is found and T otherwise.
-    
+
     <pre>
       ;;; continued from above
       * (if (nth-value 1 (gethash 'another-entry *my-hash*))
@@ -137,7 +127,7 @@
       "Key exists"
       "Key does not exist")
       "Key does not exist"
-    </pre>  
+    </pre>
 
 
     <a name="del"></a>
@@ -179,7 +169,7 @@
     pair) in a hash table, you have several options:
     <p>
 
-      You can use <a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_maphas.htm"><code>MAPHASH</code></a> 
+      You can use <a href="http://www.lispworks.com/documentation/HyperSpec/Body/f_maphas.htm"><code>MAPHASH</code></a>
       which iterates over all entries in the hash table. Its first argument
       must be a function which accepts <em>two</em> arguments, the key and
       the value of each entry. Note that due to the nature of hash tables
@@ -245,10 +235,10 @@
 	;;; same hash-table as above
 	* (loop for key being the hash-keys of *my-hash*
         do (print key))
-	FIRST-KEY 
-	SECOND-KEY 
-	THIRD-KEY 
-	NIL 
+	FIRST-KEY
+	SECOND-KEY
+	THIRD-KEY
+	NIL
 	NIL
 	* (loop for key being the hash-keys of *my-hash*
         using (hash-value value)
@@ -260,10 +250,10 @@
 	NIL
 	* (loop for value being the hash-values of *my-hash*
         do (print value))
-	ONE 
-	TWO 
-	NIL 
-	NIL-VALUE 
+	ONE
+	TWO
+	NIL
+	NIL-VALUE
 	NIL
 	* (loop for value being the hash-values of *my-hash*
         using (hash-key key)
@@ -325,8 +315,8 @@
 	* (hash-table-rehash-size *my-hash*)
 	1.5
 	* (time (dotimes (n 100000) (setf (gethash n *my-hash*) n)))
-	Compiling LAMBDA NIL: 
-	Compiling Top-Level Form: 
+	Compiling LAMBDA NIL:
+	Compiling Top-Level Form:
 
 	Evaluation took:
 	0.27 seconds of real time
@@ -336,8 +326,8 @@
 	8754768 bytes consed.
 	NIL
 	* (time (dotimes (n 100000) (setf (gethash n *my-hash*) n)))
-	Compiling LAMBDA NIL: 
-	Compiling Top-Level Form: 
+	Compiling LAMBDA NIL:
+	Compiling Top-Level Form:
 
 	Evaluation took:
 	0.05 seconds of real time
@@ -359,26 +349,26 @@
 	* (log (/ 100000 65) 1.5)
 	18.099062
 	* (let ((size 65)) (dotimes (n 20) (print (list n size)) (setq size (* 1.5 size))))
-	(0 65) 
-	(1 97.5) 
-	(2 146.25) 
-	(3 219.375) 
-	(4 329.0625) 
-	(5 493.59375) 
-	(6 740.3906) 
-	(7 1110.5859) 
-	(8 1665.8789) 
-	(9 2498.8184) 
-	(10 3748.2275) 
-	(11 5622.3413) 
-	(12 8433.512) 
-	(13 12650.268) 
-	(14 18975.402) 
-	(15 28463.104) 
-	(16 42694.656) 
-	(17 64041.984) 
-	(18 96062.98) 
-	(19 144094.47) 
+	(0 65)
+	(1 97.5)
+	(2 146.25)
+	(3 219.375)
+	(4 329.0625)
+	(5 493.59375)
+	(6 740.3906)
+	(7 1110.5859)
+	(8 1665.8789)
+	(9 2498.8184)
+	(10 3748.2275)
+	(11 5622.3413)
+	(12 8433.512)
+	(13 12650.268)
+	(14 18975.402)
+	(15 28463.104)
+	(16 42694.656)
+	(17 64041.984)
+	(18 96062.98)
+	(19 144094.47)
 	NIL
       </pre>
 
@@ -397,8 +387,8 @@
 	* (hash-table-size *my-hash*)
 	100000
 	* (time (dotimes (n 100000) (setf (gethash n *my-hash*) n)))
-	Compiling LAMBDA NIL: 
-	Compiling Top-Level Form: 
+	Compiling LAMBDA NIL:
+	Compiling Top-Level Form:
 
 	Evaluation took:
 	0.04 seconds of real time
@@ -424,8 +414,8 @@
 	* (hash-table-rehash-size *my-hash*)
 	100000
 	* (time (dotimes (n 100000) (setf (gethash n *my-hash*) n)))
-	Compiling LAMBDA NIL: 
-	Compiling Top-Level Form: 
+	Compiling LAMBDA NIL:
+	Compiling Top-Level Form:
 
 	Evaluation took:
 	0.07 seconds of real time
@@ -446,12 +436,3 @@
       allowed to <em>completely ignore</em> the values provided for
       <code>REHASH-SIZE</code> and <code>REHASH-THRESHOLD</code>...
     <p>
-
-      <hr>
-      <a href="license.html">Copyright</a> &copy; 2002-2007 The Common Lisp Cookbook Project
-      <address>http://cl-cookbook.sourceforge.net/</address>
-      <br>$Header$
-
-  </body>
-
-</html>
