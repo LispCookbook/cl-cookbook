@@ -13,11 +13,7 @@ Hash Tables are a powerful data structure, associating keys with values in a ver
 
 ##Creating a Hash Table
 
-Hash Tables are created using the function [`MAKE-HASH-TABLE`](http://www.lispworks.com/documentation/HyperSpec/Body/f_mk_has.htm) 
-
-It has no required argument. Its most used optional keyword argument
-is `:TEST`, specifying the function used to test the
-equality of keys.
+Hash Tables are created using the function [`MAKE-HASH-TABLE`](http://www.lispworks.com/documentation/HyperSpec/Body/f_mk_has.htm). It has no required argument. Its most used optional keyword argument is `:TEST`, specifying the function used to test the equality of keys.
 
 
 <a name="get"></a>
@@ -33,7 +29,7 @@ necessarily mean that the key was not found in the table.
 
 ##Adding an Element to a Hash Table
 
-If you want to add an element to a hash table, you can use `GETHASH`, the function to retrieve elements from the hash table, in conjunction with [`SETF`](http://www.lispworks.com/documentation/HyperSpec/Body/m_setf_.htm)
+If you want to add an element to a hash table, you can use `GETHASH`, the function to retrieve elements from the hash table, in conjunction with [`SETF`](http://www.lispworks.com/documentation/HyperSpec/Body/m_setf_.htm).
 
 ~~~lisp
 * (defparameter *my-hash* (make-hash-table))
@@ -63,12 +59,12 @@ The first value returned by GETHASH is the object in the hash table that's assoc
 * (setf (gethash 'one-entry *my-hash*) "one")
 "one"
 * (if (gethash 'one-entry *my-hash*)
-"Key exists"
-"Key does not exist")
+    "Key exists"
+    "Key does not exist")
 "Key exists"
 * (if (gethash 'another-entry *my-hash*)
-"Key exists"
-"Key does not exist")
+    "Key exists"
+    "Key does not exist")
 "Key does not exist"
 ~~~
 
@@ -79,8 +75,8 @@ But note that this does _not_ work if NIL is amongst the values that you want to
 * (setf (gethash 'another-entry *my-hash*) nil)
 NIL
 * (if (gethash 'another-entry *my-hash*)
-"Key exists"
-"Key does not exist")
+    "Key exists"
+    "Key does not exist")
 "Key does not exist"
 ~~~
 
@@ -89,12 +85,12 @@ In this case you'll have to check the _second_ return value of GETHASH which wil
 ~~~lisp
 ;;; continued from above
 * (if (nth-value 1 (gethash 'another-entry *my-hash*))
-"Key exists"
-"Key does not exist")
+    "Key exists"
+    "Key does not exist")
 "Key exists"
 * (if (nth-value 1 (gethash 'no-entry *my-hash*))
-"Key exists"
-"Key does not exist")
+    "Key exists"
+    "Key does not exist")
 "Key does not exist"
 ~~~
 
@@ -149,7 +145,7 @@ NIL
 * (setf (gethash nil *my-hash*) 'nil-value)
 NIL-VALUE
 * (defun print-hash-entry (key value)
-(format t "The value associated with the key ~S is ~S~%" key value))
+    (format t "The value associated with the key ~S is ~S~%" key value))
 PRINT-HASH-ENTRY
 * (maphash #'print-hash-entry *my-hash*)
 The value associated with the key FIRST-KEY is ONE
@@ -163,12 +159,12 @@ You can also use [`WITH-HASH-TABLE-ITERATOR`](http://www.lispworks.com/documenta
 ~~~lisp
 ;;; same hash-table as above
 * (with-hash-table-iterator (my-iterator *my-hash*)
-                            (loop
-                             (multiple-value-bind (entry-p key value)
-                                 (my-iterator)
-                               (if entry-p
-                                   (print-hash-entry key value)
-                                 (return)))))
+    (loop
+       (multiple-value-bind (entry-p key value)
+           (my-iterator)
+         (if entry-p
+             (print-hash-entry key value)
+             (return)))))
 The value associated with the key FIRST-KEY is ONE
 The value associated with the key SECOND-KEY is TWO
 The value associated with the key THIRD-KEY is NIL
@@ -264,22 +260,22 @@ Compiling LAMBDA NIL:
 Compiling Top-Level Form:
 
 Evaluation took:
-0.27 seconds of real time
-0.25 seconds of user run time
-0.02 seconds of system run time
-0 page faults and
-8754768 bytes consed.
+  0.27 seconds of real time
+  0.25 seconds of user run time
+  0.02 seconds of system run time
+  0 page faults and
+  8754768 bytes consed.
 NIL
 * (time (dotimes (n 100000) (setf (gethash n *my-hash*) n)))
 Compiling LAMBDA NIL:
 Compiling Top-Level Form:
 
 Evaluation took:
-0.05 seconds of real time
-0.05 seconds of user run time
-0.0 seconds of system run time
-0 page faults and
-0 bytes consed.
+  0.05 seconds of real time
+  0.05 seconds of user run time
+  0.0 seconds of system run time
+  0 page faults and
+  0 bytes consed.
 NIL
 ~~~
 
@@ -327,11 +323,11 @@ Compiling LAMBDA NIL:
 Compiling Top-Level Form:
 
 Evaluation took:
-0.04 seconds of real time
-0.04 seconds of user run time
-0.0 seconds of system run time
-0 page faults and
-0 bytes consed.
+  0.04 seconds of real time
+  0.04 seconds of user run time
+  0.0 seconds of system run time
+  0 page faults and
+  0 bytes consed.
 NIL
 ~~~
 
@@ -349,11 +345,11 @@ Compiling LAMBDA NIL:
 Compiling Top-Level Form:
 
 Evaluation took:
-0.07 seconds of real time
-0.05 seconds of user run time
-0.01 seconds of system run time
-0 page faults and
-2001360 bytes consed.
+  0.07 seconds of real time
+  0.05 seconds of user run time
+  0.01 seconds of system run time
+  0 page faults and
+  2001360 bytes consed.
 NIL
 ~~~
 
