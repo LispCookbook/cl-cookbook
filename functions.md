@@ -55,7 +55,7 @@ No matter how we write it, `adder` will now return a function whenever we call i
 
 * ((adder 3) 5)
 In: (ADDER 3) 5
-((ADDER 3) 5)
+  ((ADDER 3) 5)
 Error: Illegal function call.
 ~~~
 
@@ -89,7 +89,7 @@ T
 * #'foo
 #<Interpreted Function FOO {48523CC1}>
 * (let ((+ 3))
-(+ + +))
+    (+ + +))
 6
 ~~~
 
@@ -123,7 +123,7 @@ This explains the error message we got above - `(adder 3)` is neither a symbol n
 8
 * (*my-fun* 5)
 Warning: This function is undefined:
-*MY-FUN*
+  *MY-FUN*
 ~~~
 
 Note that in the last example the function object returned by `(adder 3)` is stored in the _value cell_ of `*my-fun*` - thus the error message. If we want to be able to use the symbol `*my-fun*` in the car of a compound form, we have to explicitely store something in its _function cell_ (which is normally done for us by the macro [`defun`](http://www.lispworks.com/documentation/HyperSpec/Body/m_defun.htm)):
@@ -178,7 +178,7 @@ A related concept is that of _[currying](<a href="http://www.cs.jhu.edu/~scott/p
 
 ~~~lisp
 * (declaim (ftype (function (function &rest t) function) curry)
-    (inline curry))
+           (inline curry))
 NIL
 * (defun curry (function &rest args)
     (lambda (&rest more-args)
