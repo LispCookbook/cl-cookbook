@@ -20,7 +20,7 @@ Hash Tables are created using the function [`make-hash-table`](http://www.lispwo
 
 ##Getting a value from a Hash Table
 
-The function [`gethash`](http://www.lispworks.com/documentation/HyperSpec/Body/f_gethas.htm) takes two required arguments: a key and a hash table. It returns two values: the value corresponding to the key in the hash table (or NIL if not found), and a boolean indicating whether the key was found in the table. That second value is necessary since NIL is a valid value in a key-value pair, so getting NIL as first value from `gethash` does not necessarily mean that the key was not found in the table.
+The function [`gethash`](http://www.lispworks.com/documentation/HyperSpec/Body/f_gethas.htm) takes two required arguments: a key and a hash table. It returns two values: the value corresponding to the key in the hash table (or `nil` if not found), and a boolean indicating whether the key was found in the table. That second value is necessary since `nil` is a valid value in a key-value pair, so getting `nil` as first value from `gethash` does not necessarily mean that the key was not found in the table.
 
 
 <a name="add"></a>
@@ -49,7 +49,7 @@ T
 
 ##Testing for the Presence of a Key in a Hash Table
 
-The first value returned by `gethash` is the object in the hash table that's associated with the key you provided as an argument to `gethash` or NIL if no value exists for this key. This value can act as a [generalized boolean](http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_g.htm#generalized_boolean">generalized boolean) if you want to test for the presence of keys.
+The first value returned by `gethash` is the object in the hash table that's associated with the key you provided as an argument to `gethash` or `nil` if no value exists for this key. This value can act as a [generalized boolean](http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_g.htm#generalized_boolean">generalized boolean) if you want to test for the presence of keys.
 
 ~~~lisp
 * (defparameter *my-hash* (make-hash-table))
@@ -66,7 +66,7 @@ The first value returned by `gethash` is the object in the hash table that's ass
 "Key does not exist"
 ~~~
 
-But note that this does _not_ work if NIL is amongst the values that you want to store in the hash.
+But note that this does _not_ work if `nil` is amongst the values that you want to store in the hash.
 
 ~~~lisp
 ;;; continued from above
@@ -78,7 +78,7 @@ NIL
 "Key does not exist"
 ~~~
 
-In this case you'll have to check the _second_ return value of `gethash` which will always return NIL if no value is found and T otherwise.
+In this case you'll have to check the _second_ return value of `gethash` which will always return `nil` if no value is found and T otherwise.
 
 ~~~lisp
 ;;; continued from above
@@ -97,7 +97,7 @@ In this case you'll have to check the _second_ return value of `gethash` which w
 
 ##Deleting from a Hash Table
 
-Use [`remhash`](http://www.lispworks.com/documentation/HyperSpec/Body/f_remhas.htm) to delete a hash entry. Both the key and its associated value will be removed from the hash table. `remhash` returns T if there was such an entry, NIL otherwise.
+Use [`remhash`](http://www.lispworks.com/documentation/HyperSpec/Body/f_remhas.htm) to delete a hash entry. Both the key and its associated value will be removed from the hash table. `remhash` returns T if there was such an entry, `nil` otherwise.
 
 ~~~lisp
 * (defparameter *my-hash* (make-hash-table))
@@ -129,7 +129,7 @@ NIL
 
 If you want to perform an action on each entry (i.e., each key-value pair) in a hash table, you have several options:
 
-You can use [`maphash`](http://www.lispworks.com/documentation/HyperSpec/Body/f_maphas.htm) which iterates over all entries in the hash table. Its first argument must be a function which accepts _two_ arguments, the key and the value of each entry. Note that due to the nature of hash tables you _can't_ control the order in which the entries are provided by `maphash` (or other traversing constructs). `maphash` always returns NIL.
+You can use [`maphash`](http://www.lispworks.com/documentation/HyperSpec/Body/f_maphas.htm) which iterates over all entries in the hash table. Its first argument must be a function which accepts _two_ arguments, the key and the value of each entry. Note that due to the nature of hash tables you _can't_ control the order in which the entries are provided by `maphash` (or other traversing constructs). `maphash` always returns `nil`.
 
 ~~~lisp
 * (defparameter *my-hash* (make-hash-table))
@@ -152,7 +152,7 @@ The value associated with the key THIRD-KEY is NIL
 The value associated with the key NIL is NIL-VALUE
 ~~~
 
-You can also use [`with-hash-table-iterator`](http://www.lispworks.com/documentation/HyperSpec/Body/m_w_hash.htm), a macro which turns (via [`macrolet`](http://www.lispworks.com/documentation/HyperSpec/Body/s_flet_.htm)) its first argument into an iterator that on each invocation returns three values per hash table entry - a generalized boolean that's true if an entry is returned, the key of the entry, and the value of the entry. If there are no more entries, only one value is returned - NIL.
+You can also use [`with-hash-table-iterator`](http://www.lispworks.com/documentation/HyperSpec/Body/m_w_hash.htm), a macro which turns (via [`macrolet`](http://www.lispworks.com/documentation/HyperSpec/Body/s_flet_.htm)) its first argument into an iterator that on each invocation returns three values per hash table entry - a generalized boolean that's true if an entry is returned, the key of the entry, and the value of the entry. If there are no more entries, only one value is returned - `nil`.
 
 ~~~lisp
 ;;; same hash-table as above
