@@ -163,12 +163,12 @@ You can also use [`WITH-HASH-TABLE-ITERATOR`](http://www.lispworks.com/documenta
 ~~~lisp
 ;;; same hash-table as above
 * (with-hash-table-iterator (my-iterator *my-hash*)
-(loop
-(multiple-value-bind (entry-p key value)
-	(my-iterator)
-	(if entry-p
-	(print-hash-entry key value)
-	(return)))))
+                            (loop
+                             (multiple-value-bind (entry-p key value)
+                                 (my-iterator)
+                               (if entry-p
+                                   (print-hash-entry key value)
+                                 (return)))))
 The value associated with the key FIRST-KEY is ONE
 The value associated with the key SECOND-KEY is TWO
 The value associated with the key THIRD-KEY is NIL
@@ -184,30 +184,30 @@ And there's always [`LOOP`](http://www.lispworks.com/documentation/HyperSpec/Bod
 ~~~lisp
 ;;; same hash-table as above
 * (loop for key being the hash-keys of *my-hash*
-	do (print key))
+        do (print key))
 FIRST-KEY
 SECOND-KEY
 THIRD-KEY
 NIL
 NIL
 * (loop for key being the hash-keys of *my-hash*
-	using (hash-value value)
-	do (format t "The value associated with the key ~S is ~S~%" key value))
+        using (hash-value value)
+        do (format t "The value associated with the key ~S is ~S~%" key value))
 The value associated with the key FIRST-KEY is ONE
 The value associated with the key SECOND-KEY is TWO
 The value associated with the key THIRD-KEY is NIL
 The value associated with the key NIL is NIL-VALUE
 NIL
 * (loop for value being the hash-values of *my-hash*
-	do (print value))
+        do (print value))
 ONE
 TWO
 NIL
 NIL-VALUE
 NIL
 * (loop for value being the hash-values of *my-hash*
-	using (hash-key key)
-	do (format t "~&~A -> ~A" key value))
+        using (hash-key key)
+        do (format t "~&~A -> ~A" key value))
 FIRST-KEY -> ONE
 SECOND-KEY -> TWO
 THIRD-KEY -> NIL
