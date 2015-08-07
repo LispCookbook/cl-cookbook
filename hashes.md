@@ -13,23 +13,21 @@ Hash Tables are a powerful data structure, associating keys with values in a ver
 
 ##Creating a Hash Table
 
-Hash Tables are created using the function [`MAKE-HASH-TABLE`](http://www.lispworks.com/documentation/HyperSpec/Body/f_mk_has.htm). It has no required argument. Its most used optional keyword argument is `:TEST`, specifying the function used to test the equality of keys.
+Hash Tables are created using the function [`make-hash-table`](http://www.lispworks.com/documentation/HyperSpec/Body/f_mk_has.htm). It has no required argument. Its most used optional keyword argument is `:test`, specifying the function used to test the equality of keys.
 
 
 <a name="get"></a>
 
 ##Getting a value from a Hash Table
 
-The function [`GETHASH`](http://www.lispworks.com/documentation/HyperSpec/Body/f_gethas.htm) takes two required arguments: a key and a hash table. It returns two values: the value corresponding to the key in the hash table (or NIL if not found), and a boolean indicating whether the key was found in the table. That second value is necessary
-since NIL is a valid value in a key-value pair, so getting NIL as first value from <code>GETHASH</code> does not
-necessarily mean that the key was not found in the table.
+The function [`gethash`](http://www.lispworks.com/documentation/HyperSpec/Body/f_gethas.htm) takes two required arguments: a key and a hash table. It returns two values: the value corresponding to the key in the hash table (or NIL if not found), and a boolean indicating whether the key was found in the table. That second value is necessary since NIL is a valid value in a key-value pair, so getting NIL as first value from `gethash` does not necessarily mean that the key was not found in the table.
 
 
 <a name="add"></a>
 
 ##Adding an Element to a Hash Table
 
-If you want to add an element to a hash table, you can use `GETHASH`, the function to retrieve elements from the hash table, in conjunction with [`SETF`](http://www.lispworks.com/documentation/HyperSpec/Body/m_setf_.htm).
+If you want to add an element to a hash table, you can use `gethash`, the function to retrieve elements from the hash table, in conjunction with [`setf`](http://www.lispworks.com/documentation/HyperSpec/Body/m_setf_.htm).
 
 ~~~lisp
 * (defparameter *my-hash* (make-hash-table))
@@ -51,7 +49,7 @@ T
 
 ##Testing for the Presence of a Key in a Hash Table
 
-The first value returned by GETHASH is the object in the hash table that's associated with the key you provided as an argument to GETHASH or NIL if no value exists for this key. This value can act as a [generalized boolean](http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_g.htm#generalized_boolean">generalized boolean) if you want to test for the presence of keys.
+The first value returned by `gethash` is the object in the hash table that's associated with the key you provided as an argument to `gethash` or NIL if no value exists for this key. This value can act as a [generalized boolean](http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_g.htm#generalized_boolean">generalized boolean) if you want to test for the presence of keys.
 
 ~~~lisp
 * (defparameter *my-hash* (make-hash-table))
@@ -80,7 +78,7 @@ NIL
 "Key does not exist"
 ~~~
 
-In this case you'll have to check the _second_ return value of GETHASH which will always return NIL if no value is found and T otherwise.
+In this case you'll have to check the _second_ return value of `gethash` which will always return NIL if no value is found and T otherwise.
 
 ~~~lisp
 ;;; continued from above
@@ -99,7 +97,7 @@ In this case you'll have to check the _second_ return value of GETHASH which wil
 
 ##Deleting from a Hash Table
 
-Use [`REMHASH`](http://www.lispworks.com/documentation/HyperSpec/Body/f_remhas.htm) to delete a hash entry. Both the key and its associated value will be removed from the hash table. REMHASH returns T if there was such an entry, NIL otherwise.
+Use [`remhash`](http://www.lispworks.com/documentation/HyperSpec/Body/f_remhas.htm) to delete a hash entry. Both the key and its associated value will be removed from the hash table. `remhash` returns T if there was such an entry, NIL otherwise.
 
 ~~~lisp
 * (defparameter *my-hash* (make-hash-table))
@@ -131,7 +129,7 @@ NIL
 
 If you want to perform an action on each entry (i.e., each key-value pair) in a hash table, you have several options:
 
-You can use [`MAPHASH`](http://www.lispworks.com/documentation/HyperSpec/Body/f_maphas.htm) which iterates over all entries in the hash table. Its first argument must be a function which accepts _two_ arguments, the key and the value of each entry. Note that due to the nature of hash tables you _can't_ control the order in which the entries are provided by MAPHASH (or other traversing constructs). MAPHASH always returns NIL.
+You can use [`maphash`](http://www.lispworks.com/documentation/HyperSpec/Body/f_maphas.htm) which iterates over all entries in the hash table. Its first argument must be a function which accepts _two_ arguments, the key and the value of each entry. Note that due to the nature of hash tables you _can't_ control the order in which the entries are provided by `maphash` (or other traversing constructs). `maphash` always returns NIL.
 
 ~~~lisp
 * (defparameter *my-hash* (make-hash-table))
@@ -154,7 +152,7 @@ The value associated with the key THIRD-KEY is NIL
 The value associated with the key NIL is NIL-VALUE
 ~~~
 
-You can also use [`WITH-HASH-TABLE-ITERATOR`](http://www.lispworks.com/documentation/HyperSpec/Body/m_w_hash.htm), a macro which turns (via [`MACROLET`](http://www.lispworks.com/documentation/HyperSpec/Body/s_flet_.htm)) its first argument into an iterator that on each invocation returns three values per hash table entry - a generalized boolean that's true if an entry is returned, the key of the entry, and the value of the entry. If there are no more entries, only one value is returned - NIL.
+You can also use [`with-hash-table-iterator`](http://www.lispworks.com/documentation/HyperSpec/Body/m_w_hash.htm), a macro which turns (via [`macrolet`](http://www.lispworks.com/documentation/HyperSpec/Body/s_flet_.htm)) its first argument into an iterator that on each invocation returns three values per hash table entry - a generalized boolean that's true if an entry is returned, the key of the entry, and the value of the entry. If there are no more entries, only one value is returned - NIL.
 
 ~~~lisp
 ;;; same hash-table as above
@@ -172,10 +170,10 @@ The value associated with the key NIL is NIL-VALUE
 NIL
 ~~~
 
-Note the following caveat from the HyperSpec: "It is unspecified what happens if any of the implicit interior state of an iteration is returned outside the dynamic extent of the `WITH-HASH-TABLE-ITERATOR` form such as by returning some closure over the invocation form."
+Note the following caveat from the HyperSpec: "It is unspecified what happens if any of the implicit interior state of an iteration is returned outside the dynamic extent of the `with-hash-table-iterator` form such as by returning some closure over the invocation form."
 
 
-And there's always [`LOOP`](http://www.lispworks.com/documentation/HyperSpec/Body/06_a.htm):
+And there's always [`loop`](http://www.lispworks.com/documentation/HyperSpec/Body/06_a.htm):
 
 ~~~lisp
 ;;; same hash-table as above
@@ -216,7 +214,7 @@ NIL
 
 ##Counting the Entries in a Hash Table
 
-No need to use your fingers - Common Lisp has a built-in function to do it for you: [`HASH-TABLE-COUNT`](http://www.lispworks.com/documentation/HyperSpec/Body/f_hash_1.htm).
+No need to use your fingers - Common Lisp has a built-in function to do it for you: [`hash-table-count`](http://www.lispworks.com/documentation/HyperSpec/Body/f_hash_1.htm).
 
 ~~~lisp
 * (defparameter *my-hash* (make-hash-table))
@@ -246,7 +244,7 @@ TWO
 
 ##Performance Issues: The Size of your Hash Table
 
-The `MAKE-HASH-TABLE` function has a couple of optional parameters which control the initial size of your hash table and how it'll grow if it needs to grow. This can be an important performance issue if you're working with large hash tables. Here's an (admittedly not very scientific) example with [CMUCL](http://www.cons.org/cmucl) pre-18d on Linux:
+The `make-hash-table` function has a couple of optional parameters which control the initial size of your hash table and how it'll grow if it needs to grow. This can be an important performance issue if you're working with large hash tables. Here's an (admittedly not very scientific) example with [CMUCL](http://www.cons.org/cmucl) pre-18d on Linux:
 
 ~~~lisp
 * (defparameter *my-hash* (make-hash-table))
@@ -279,7 +277,7 @@ Evaluation took:
 NIL
 ~~~
 
-The values for [`HASH-TABLE-SIZE`](http://www.lispworks.com/documentation/HyperSpec/Body/f_hash_4.htm) and [`HASH-TABLE-REHASH-SIZE`](http://www.lispworks.com/documentation/HyperSpec/Body/f_hash_2.htm) are implementation-dependent. In our case, CMUCL chooses and initial size of 65, and it will increase the size of the hash by 50 percent whenever it needs to grow. Let's see how often we have to re-size the hash until we reach the final size...
+The values for [`hash-table-size`](http://www.lispworks.com/documentation/HyperSpec/Body/f_hash_4.htm) and [`hash-table-rehash-size`](http://www.lispworks.com/documentation/HyperSpec/Body/f_hash_2.htm) are implementation-dependent. In our case, CMUCL chooses and initial size of 65, and it will increase the size of the hash by 50 percent whenever it needs to grow. Let's see how often we have to re-size the hash until we reach the final size...
 
 ~~~lisp
 * (log (/ 100000 65) 1.5)
@@ -331,7 +329,7 @@ Evaluation took:
 NIL
 ~~~
 
-That's obviously much faster. And there was no consing involved because we didn't have to re-size at all. If we don't know the final size in advance but can guess the growth behaviour of our hash table we can also provide this value to `MAKE-HASH-TABLE`. We can provide an integer to specify absolute growth or a float to specify relative growth.
+That's obviously much faster. And there was no consing involved because we didn't have to re-size at all. If we don't know the final size in advance but can guess the growth behaviour of our hash table we can also provide this value to `make-hash-table`. We can provide an integer to specify absolute growth or a float to specify relative growth.
 
 ~~~lisp
 * (defparameter *my-hash* (make-hash-table :rehash-size 100000))
@@ -355,4 +353,4 @@ NIL
 
 Also rather fast (we only needed one re-size) but much more consing because almost the whole hash table (minus 65 initial elements) had to be built during the loop.
 
-Note that you can also specify the `REHASH-THRESHOLD` while creating a new hash table. One final remark: Your implementation is allowed to _completely ignore_ the values provided for `REHASH-SIZE` and `REHASH-THRESHOLD`...
+Note that you can also specify the `rehash-threshold` while creating a new hash table. One final remark: Your implementation is allowed to _completely ignore_ the values provided for `rehash-size` and `rehash-threshold`...
