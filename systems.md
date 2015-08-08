@@ -13,7 +13,7 @@ This example shows how to use the defsystem facility available in Allegro Common
 ~~~lisp
 (defsystem :html
     (:pretty-name "HTML generation library"
-                  :default-pathname #P"/code/lisp/html/")
+     :default-pathname #P"/code/lisp/html/")
   (:serial "top"
            "html"
            "library"))
@@ -34,7 +34,7 @@ Note that a system can include other systems as components, and the included sys
 ~~~lisp
 (defsystem :html
     (:pretty-name "HTML generation library"
-                  :default-pathname #P"/code/lisp/html/")
+     :default-pathname #P"/code/lisp/html/")
   (:serial :util
            "top"
            "html"
@@ -53,31 +53,31 @@ The most advanced attempt at building a cross-platform system definition tool is
 
 Organizing a large Lisp system is not trivial: managing the interdependencies among a large number of source files and the interactions between multiple packages can easily turn into a complex undertaking that requires careful planning. Combine this with the fact that ANSI CL provides an alternative, although much more limited, way of managing code ([`provide`](http://www.lispworks.com/documentation/HyperSpec/Body/f_provid.htm) and [`require`](http://www.lispworks.com/documentation/HyperSpec/Body/f_provid.htm)), and the whole issue can quickly become a nightmare for beginners. So here is a suggestion on a possible way to organize your code, one that works best for small, self-contained packages with a well-defined API, and that provide functions that might be useful to other parts of a larger program. Just follow these three easy steps...
 
-1.  Put the following in your Lisp initialization file:
+1. Put the following in your Lisp initialization file:
 
-~~~lisp
-(eval-when (:load-toplevel :execute)
-  (shadow 'cl:require))
+   ~~~lisp
+   (eval-when (:load-toplevel :execute)
+	 (shadow 'cl:require))
 
-(defun require (system)
-  (excl:load-system system :compile t)  ; *** ACL specific
-  (unless (member system *modules*)
-    (push system *modules*)
-    (when (find-package system)
-      (use-package system))))
-~~~
+   (defun require (system)
+	 (excl:load-system system :compile t)  ; *** ACL specific
+	 (unless (member system *modules*)
+	   (push system *modules*)
+	   (when (find-package system)
+		 (use-package system))))
+   ~~~
 
-The `load-system` call is specific to ACL's defsystem, so you should replace it with the equivalent call for the defsystem you are using.
+   The `load-system` call is specific to ACL's defsystem, so you should replace it with the equivalent call for the defsystem you are using.
 
-3.  Write your code so that it creates its own package, and exports all public symbols from it. Using the `:html` system defined above as an example:
+2. Write your code so that it creates its own package, and exports all public symbols from it. Using the `:html` system defined above as an example:
 
-~~~lisp
-(defpackage :html
-  (:use :lisp)
-  (:export "ANCHOR" "HEADER" ...))
-~~~
+   ~~~lisp
+   (defpackage :html
+	 (:use :lisp)
+	 (:export "ANCHOR" "HEADER" ...))
+   ~~~
 
-5.  Write a system definition for your code, giving the system the same name you used for the package (like the `defsystem` form for `:html` at the beginning of this chapter).
+3. Write a system definition for your code, giving the system the same name you used for the package (like the `defsystem` form for `:html` at the beginning of this chapter).
 
 Now you can simply call
 
