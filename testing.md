@@ -51,7 +51,7 @@ CL-USER> (rt:do-test 'test-subseq-one-index)
 TEST-SUBSEQ-ONE-INDEX
 ~~~
 
-We have RT test our assertion for how `subseq` should behave. The test passes, so no errors are reported. do-test simply returns the name of the test. In the next example we will see how RT behaves with failing tests.
+We have RT test our assertion for how `subseq` should behave. The test passes, so no errors are reported. `do-test` simply returns the name of the test. In the next example we will see how RT behaves with failing tests.
 
 Tests can be run one at a time with `do-test` as you incrementally build up your system, or they can be run all at once with `do-tests`. For our second test, let's define and run a failing test.
 
@@ -73,7 +73,7 @@ The great value of test code is running it automatically and frequently to find 
 ~~~lisp
 CL-USER> (rt:do-tests)
 Doing 2 pending tests of 2 tests total.
-TEST-SUBSEQ-ONE-INDEX
+ TEST-SUBSEQ-ONE-INDEX
 Test TEST-SUBSEQ-TWO-INDICIES failed
 Form: (SUBSEQ *MY-STRING* 0 7)
 Expected value: "Xroucho"
