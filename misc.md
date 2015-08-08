@@ -32,7 +32,7 @@ But why not write it like so:
 (defun complex-matrix-stuff (m1 m2
                              &optional
                              (result
-                               (make-appropriate-result-matrix-for m1 m2)))
+                              (make-appropriate-result-matrix-for m1 m2)))
   ;; ... compute storing the results in RESULT
   result)
 ~~~
