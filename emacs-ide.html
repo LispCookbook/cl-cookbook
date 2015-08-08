@@ -90,7 +90,7 @@ title: Using Emacs as an IDE
 	</ul>
       </li>
     </ul>
-    <h2><a name="Slide-5">Lisp Modes in Emacs - Inferior Lisp Mode</a></h2>
+    <h2><a name="Slide-5">Inferior Lisp Mode</a></h2>
     <ul>
       <li>Pros:
 	<ul>
@@ -116,7 +116,7 @@ title: Using Emacs as an IDE
 	</ul>
       </li>
     </ul>
-    <h2><a name="slide-6">Lisp Modes in Emacs - ILISP</a></h2>
+    <h2><a name="slide-6">ILISP</a></h2>
     <ul>
       <li>Pros:
 	<ul>
@@ -138,14 +138,13 @@ title: Using Emacs as an IDE
 	<ul>
 	  <li>A basic installation involves downloading the ILISP package from the web
 	    building it and configuring it</li>
-	
 	  <li>Customization can be complex, useful to use instructions on
 	    <a href="http://cl-cookbook.sourceforge.net/windows.html" target="refer-window">
 	      CL Cookbook</a> to get started</li>
 	</ul>
       </li>
     </ul>
-    <h2><a name="Slide-7">Lisp Modes in Emacs - ELI (Emacs-Lisp Interface)</a></h2>
+    <h2><a name="Slide-7">ELI: Emacs-Lisp Interface</a></h2>
     <ul>
       <li>Pros:
 	<ul>
@@ -168,6 +167,38 @@ title: Using Emacs as an IDE
       <li>Setup:
 	<ul>
 	  <li>Basic ELI setup is very straight-forward for ACL</li>
+	</ul>
+      </li>
+    </ul>
+    <h2><a name="Slide-slime">SLIME: Superior Lisp Interaction Mode for Emacs</a></h2>
+    <ul>
+      <li>Pros:
+	<ul>
+	  <li>Provides REPL which is hooked to implementation directly in Emacs</li>
+	  <li>Has integrated Common Lisp debugger with Emacs interface</li>
+	  <li>Interactive object-inspector in Emacs buffer</li>
+	  <li>Has own minor mode which enhances lisp-mode in many ways</li>
+	  <li>Supports every common Common Lisp implementation</li>
+	  <li>Readily available from MELPA</li>
+	  <li>Actively maintained</li>
+	  <li>Symbol completion</li>
+	  <li>Cross-referencing</li>
+	  <li>Can perform macroexpansions</li>
+	</ul>
+      </li>
+    </ul>
+    <ul>
+      <li>Cons:
+	<ul>
+	  <li>Installing SLIME without MELPA can be tricky</li>
+	</ul>
+      </li>
+    </ul>
+    <ul>
+      <li>Setup:
+	<ul>
+	  <li>Installing it from MELPA is straightforward. Search package-list-packages for 'slime' and click to install. If MELPA is configured correctly, it will install itself and all dependencies.</li>
+	  <li>Run slime with M-x slime</li>
 	</ul>
       </li>
     </ul>
