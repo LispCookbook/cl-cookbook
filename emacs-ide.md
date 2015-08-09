@@ -36,7 +36,7 @@ This page is meant to provide an introduction to using Emacs as a Lisp IDE. The 
     *   Incomplete implementation of CLOS (with the add-on EIEIO package)
     *   Not all of CL is supported
     *   No numerical tower support
-
+    
 *   Some good Emacs Lisp learning resources:
     *   [An Introduction to Programming in Emacs Lisp](http://www.gnu.org/manual/emacs-lisp-intro/emacs-lisp-intro.html)
     *   [Writing GNU Emacs Extensions](http://www.oreilly.com/catalog/gnuext/)
@@ -145,11 +145,8 @@ This page is meant to provide an introduction to using Emacs as a Lisp IDE. The 
 ## Working with Lisp Code
 
 *   Lisp Editing
-
 *   Evaluating and Compiling Lisp
-
 *   Searching Lisp Code
-
 *   Note: Example code assumes you are using a setup similar to what is defined in the [.emacs file](https://github.com/LispCookbook/cl-cookbook/blob/master/.emacs) from the [CL Cookbook](windows.html) site
 
 
@@ -157,7 +154,7 @@ This page is meant to provide an introduction to using Emacs as a Lisp IDE. The 
 
 ## Working with Lisp Code - Editing
 
-*   Forward/Backward/Up/Down movement and selection by s-expressions ( [s1.lisp](s1.lisp) )
+### Forward/Backward/Up/Down movement and selection by s-expressions ( [s1.lisp](s1.lisp) )
 
 ~~~lisp
 ;; Put the cursor on the open parens of "(defvar.." and press "C-M-f"
@@ -190,7 +187,7 @@ This page is meant to provide an introduction to using Emacs as a Lisp IDE. The 
   (+ 3 3))
 ~~~
 
-*   Deleting s-expressions ( [s2.lisp](s2.lisp) )
+### Deleting s-expressions ( [s2.lisp](s2.lisp) )
 
 ~~~lisp
 ;; Put the cursor on the open parens of "(progn .." and press "C-M-k"
@@ -208,7 +205,7 @@ This page is meant to provide an introduction to using Emacs as a Lisp IDE. The 
             (+ 4 4)))
 ~~~
 
-*   Indenting s-expressions ( [s3.lisp](s3.lisp) )
+### Indenting s-expressions ( [s3.lisp](s3.lisp) )
 
 ~~~lisp
 ;; Put the cursor on the open parens of "(defun ..." and press "C-M-q"
@@ -241,7 +238,7 @@ do (print j))
                (print z))))))
 ~~~
 
-*   Support for parenthesis ( [s4.lisp](s4.lisp) )
+### Support for parenthesis ( [s4.lisp](s4.lisp) )
 
 ~~~lisp
 ;; Placing the cursor on a "(" or after a ")" highlights the matching
@@ -291,7 +288,7 @@ do (print j))
     (+ 3 3)))
 ~~~
 
-*   Automatic code indentation (CL vs Elisp) ( [s5.lisp](s5.lisp) )
+### Automatic code indentation (CL vs Elisp) ( [s5.lisp](s5.lisp) )
 
 ~~~lisp
 ;; Indentation is automatic for Lisp forms. Example: Put the cursor
@@ -319,7 +316,7 @@ do (print j))
      'common-lisp-indent-function)
 ~~~
 
-*   Close all parenthesis ( [s6.lisp](s6.lisp) )
+### Close all parenthesis ( [s6.lisp](s6.lisp) )
 
 ~~~lisp
 ;; Press "C-c ]" (in ELI) or "C-C C-v C-]" (in ILISP) to close all
@@ -329,7 +326,7 @@ do (print j))
 (progn (if nil (progn (+ 3 (- 2 1
 ~~~
 
-*   Code completion ( [s7.lisp](s7.lisp) )
+### Code completion ( [s7.lisp](s7.lisp) )
 
 ~~~lisp
 ;; Type the following and press "C-c TAB" (both ELI & ILISP) to get an
@@ -355,7 +352,7 @@ do (print j))
 (setq x "c:/pro
 ~~~
 
-*   Hiding/showing code ( [s8.lisp](s8.lisp) )
+### Hiding/showing code ( [s8.lisp](s8.lisp) )
 
 ~~~lisp
 ;; Highlight the middle "(if ..." block and press "C-x n n" to hide
@@ -383,7 +380,7 @@ do (print j))
   (+ 3 3))
 ~~~
 
-* Comments ( [s9.lisp](s9.lisp) )
+### Comments ( [s9.lisp](s9.lisp) )
 
 ~~~lisp
 ;; Put the cursor on the following sexp and press "M-;" to get a
@@ -487,7 +484,7 @@ do (print j))
 
 ## Working with Lisp Code - Searching Lisp Code
 
-* Standard Emacs text search (isearch forward/backward, regexp searches, search/replace) ( [s12.lisp](s12.lisp) )
+### Standard Emacs text search (isearch forward/backward, regexp searches, search/replace) ( [s12.lisp](s12.lisp) )
 
 ~~~lisp
 ;; "C-s" does an incremental search forward (e.g. - as each key is
@@ -509,7 +506,7 @@ do (print j))
 ;; expression search/replace
 ~~~
 
-*   Finding occurances (occur, grep) ( [s13.lisp](s13.lisp) )
+### Finding occurances (occur, grep) ( [s13.lisp](s13.lisp) )
 
 ~~~lisp
 ;; Use the Emacs "occur" function to find all occurances of a string
@@ -539,7 +536,7 @@ do (print j))
 ;; definitions in lisp files in the current directory.
 ~~~
 
-*   Lisp symbols in current source (imenu) ( [s14.lisp](s14.lisp) )
+### Lisp symbols in current source (imenu) ( [s14.lisp](s14.lisp) )
 
 ~~~lisp
 ;; Open a lisp source file and press the middle mouse button for a
@@ -547,7 +544,7 @@ do (print j))
 ;; source file.
 ~~~
 
-*   Lisp symbols using Lisp ( [s15.lisp](s15.lisp) )
+### Lisp symbols using Lisp ( [s15.lisp](s15.lisp) )
 
 ~~~lisp
 ;; Use the source location maintained by the CL implementation to
@@ -559,7 +556,7 @@ do (print j))
 (setq x aa)
 ~~~
 
-*   Lisp symbols in multiple source files (etags) ( [s16.lisp](s16.lisp) )
+### Lisp symbols in multiple source files (etags) ( [s16.lisp](s16.lisp) )
 
 ~~~lisp
 ;; Enter "M-x shell" to bring up a shell window in the current
@@ -573,7 +570,7 @@ do (print j))
 (setq x aa)
 ~~~
 
-*   Lisp symbols using [ECB](http://ecb.sourceforge.net/) ( [s17.lisp](s17.lisp) )
+### Lisp symbols using [ECB](http://ecb.sourceforge.net/) ( [s17.lisp](s17.lisp) )
 
 ~~~lisp
 ;; Press "M-x ecb-activate" to start up ECB. Load a lisp file by
@@ -589,7 +586,7 @@ do (print j))
 
 ## Lisp Documentation in Emacs - Learning About Lisp Symbols
 
-*   Argument lists ( [s18.lisp](s18.lisp) )
+### Argument lists ( [s18.lisp](s18.lisp) )
 
 ~~~lisp
 ;; For ILISP/ELI, type in "(set" and press SPACE to get the arglist in
@@ -599,7 +596,7 @@ do (print j))
 ;; pasted into the current buffer.
 ~~~
 
-*   Documentation ( [s19.lisp](s19.lisp) )
+### Documentation ( [s19.lisp](s19.lisp) )
 
 ~~~lisp
 ;; Enter and evaluate the following definitions, then put the cursor
@@ -615,7 +612,7 @@ do (print j))
 (xx)
 ~~~
 
-*   Describe ( [s20.lisp](s20.lisp) )
+### Describe ( [s20.lisp](s20.lisp) )
 
 ~~~lisp
 ;; Enter and evaluate the following definitions, then put the cursor
@@ -631,7 +628,7 @@ do (print j))
 (xx)
 ~~~
 
-*   Inspect ( [s21.lisp](s21.lisp) )
+### Inspect ( [s21.lisp](s21.lisp) )
 
 ~~~lisp
 ;; Enter and evaluate the following definitions, then put the cursor
@@ -648,7 +645,7 @@ do (print j))
 (xx)
 ~~~
 
-*   Macroexpand ( [s22.lisp](s22.lisp) )
+### Macroexpand ( [s22.lisp](s22.lisp) )
 
 ~~~lisp
 ;; Enter the following function definition, then put the cursor on the
@@ -697,7 +694,7 @@ do (print j))
 
 ## Miscellaneous
 
-*   Lisp Listener ( [s24.lisp](s24.lisp) )
+### Lisp Listener ( [s24.lisp](s24.lisp) )
 
 ~~~lisp
 ;; With the cursor on the "let", press "C-c x" (ELI or ILISP) to
@@ -718,12 +715,14 @@ do (print j))
 ;; listener.**
 ~~~
 
-*   Project Management
-    *   [asdf](http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/cclan/asdf/)
-    *   [mk-defsystem](http://sourceforge.net/projects/clocc)
-*   Debugging
-    *   ILISP has a standarized set of key bindings for debugging across implementations ("C-c C-b C-h" for a list of them).
-*   Comparing versions of code ( [s10.lisp](s10.lisp) , [s10a.lisp](s10a.lisp) , [s10b.lisp](s10b.lisp) )
+### Project Management
+  * [asdf](http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/cclan/asdf/)
+  * [mk-defsystem](http://sourceforge.net/projects/clocc)
+  
+### Debugging
+  * ILISP has a standarized set of key bindings for debugging across implementations ("C-c C-b C-h" for a list of them).
+
+### Comparing versions of code ( [s10.lisp](s10.lisp) , [s10a.lisp](s10a.lisp) , [s10b.lisp](s10b.lisp) )
 
 ~~~lisp
 ;; Start the ediff utility by entering "M-x ediff". Enter s10a.lisp as
@@ -737,119 +736,122 @@ do (print j))
 
 ## Questions/Answers
 
-1. Controlling evaluation output
+### Controlling evaluation output
 
-    **I get irritated by ELI's switching to an output buffer when I
-      evaluate a sexp in a Lisp source buffer.**
+*I get irritated by ELI's switching to an output buffer when I
+ evaluate a sexp in a Lisp source buffer.*
 
-    *You can control where ELI output goes to by setting the
-fi:pop-up-temp-window-behavior variable. Alternatively, you can use my
-copy-eval-dwim-lisp function (bound to "C-c x"). It copies Lisp code
-from the source buffer to the listener buffer and evaluates it
+You can control where ELI output goes to by setting the
+`fi:pop-up-temp-window-behavior` variable. Alternatively, you can use
+my copy-eval-dwim-lisp function (bound to "C-c x"). It copies Lisp
+code from the source buffer to the listener buffer and evaluates it
 there. Both buffers stay visible and focus remains in the source
-buffer. The code works for ILISP, ELI and Emacs Lisp.*
+buffer. The code works for ILISP, ELI and Emacs Lisp.
 
-2. Viewing HyperSpec from within Emacs
+### Viewing HyperSpec from within Emacs
 
-    **I like having access to the HyperSpec when I'm in Emacs, but
-why does it have to use an external browser? Why can't I just see the
-HyperSpec in Emacs?**
+*I like having access to the HyperSpec when I'm in Emacs, but why does
+it have to use an external browser? Why can't I just see the HyperSpec
+in Emacs?*
 
-    *If you use the Emacs add-on package W3 (or W3M which provides
+If you use the Emacs add-on package W3 (or W3M which provides
 similar functionality), you can display HTML pages inside of
 Emacs. Once you have W3 and the HyperSpec both installed, use code
 similar to the following to access the HyperSpec from the Shift-F1
-key:*
+key:
 
-    <pre><code class="language-lisp">
-    (global-set-key [(shift f1)]
-                    '(lambda ()
-                      (interactive)
-                      (let ((browse-url-browser-function
-                             'browse-url-w3)
-                            (common-lisp-hyperspec-root
-                             "file://c:/home/docs/Hyperspec/")
-                            (common-lisp-hyperspec-symbol-table
-                             (concat common-lisp-hyperspec-root
-                                     "Data/Map_Sym.txt"))
-                            (hyperspec-prog
-                             "c:/home/site/ilisp/extra/hyperspec"))
-                        (load-library hyperspec-prog)
-                        (common-lisp-hyperspec
-                         (thing-at-point 'symbol)))))
-    </code></pre>
+~~~lisp
+(global-set-key [(shift f1)]
+                '(lambda ()
+                  (interactive)
+                  (let ((browse-url-browser-function
+                         'browse-url-w3)
+                        (common-lisp-hyperspec-root
+                         "file://c:/home/docs/Hyperspec/")
+                        (common-lisp-hyperspec-symbol-table
+                         (concat common-lisp-hyperspec-root
+                                 "Data/Map_Sym.txt"))
+                        (hyperspec-prog
+                         "c:/home/site/ilisp/extra/hyperspec"))
+                    (load-library hyperspec-prog)
+                    (common-lisp-hyperspec
+                     (thing-at-point 'symbol)))))
+~~~
 
-    *Note that the "let" in the above code sets the
-    browse-url-browser-function to W3 for just the HyperSpec. You can
-    either set the variable globally (if you want to always use W3 or
-    some other specific browser) or locally (if you want to use a
-    specific browser and not the default one).*
+Note that the "let" in the above code sets the
+browse-url-browser-function to W3 for just the HyperSpec. You can
+either set the variable globally (if you want to always use W3 or some
+other specific browser) or locally (if you want to use a specific
+browser and not the default one).
 
 
-3. Standard shell
+### Standard shell
 
-    **I switch between UNIX® and Windows environments and, although
+*I switch between UNIX® and Windows environments and, although
 Emacs makes this switch a lot easier, I find it inconvenient having to
-use different Shell environments on different operating systems.**
+use different Shell environments on different operating systems.*
 
-    *On Windows, the [Cygwin tools](http://www.cygwin.com/) provide a
+On Windows, the [Cygwin tools](http://www.cygwin.com/) provide a
 lot of the same tools that are available under UNIX® as well as a BASH
 shell. Alternatively, you might want to consider using eshell, a shell
 written in Emacs Lisp that comes as a standard feature in later
-releases of Emacs. You can access eshell by pressing "F12".*
+releases of Emacs. You can access eshell by pressing "F12".
 
-4. Using ACL tools with Emacs
 
-    **I would like to use Emacs with Franz's ACL but find
-that I use the Franz tools so much that I can't afford to not load their IDE.**
+### Using ACL tools with Emacs
 
-    *It doesn't have to be an either/or decision. On Windows, Franz
+*I would like to use Emacs with Franz's ACL but find that I use the
+Franz tools so much that I can't afford to not load their IDE.*
+
+It doesn't have to be an either/or decision. On Windows, Franz
 allows you to specify (under Options) that Emacs is to be the default
 editor in place of their built-in editor. On UNIX®, Emacs also works
 very well together with the Franz tools.*
 
-5. Windows-style cut/copy/paste
+### Windows-style cut/copy/paste
 
-    **I want to use Emacs on a Windows machine. Unfortunately, I have
+*I want to use Emacs on a Windows machine. Unfortunately, I have
 the Windows cut/copy/paste key bindings burned into my fingertips and
 would find it very difficult to switch back and forth between the
-Windows standard for these shortcut keys and the Emacs standard.** ~~~
+Windows standard for these shortcut keys and the Emacs standard.*
 
-    *Luckily, you don't have to! Download [cua.el](http://www.emacswiki.org/cgi-bin/wiki.pl?CuaMode) and you can continue to use the Windows
+Luckily, you don't have to! Download [cua.el](http://www.emacswiki.org/cgi-bin/wiki.pl?CuaMode) and you can continue to use the Windows
 defaults. In fact, you may find that the following commands in your .emacs file will make Emacs more
-Windows-like:*
+Windows-like:
 
-    <pre><code class="language-lisp">
-    ;; Windows-like mouse/arrow movement & selection (pc-selection-mode)
-    (delete-selection-mode t)
-    ;; C-z=Undo, C-c=Copy, C-x=Cut, C-v=Paste (needs cua.el)
-    (require 'cua) (CUA-mode t)
-    </code></pre>
+~~~lisp
+;; Windows-like mouse/arrow movement & selection (pc-selection-mode)
+(delete-selection-mode t)
+;; C-z=Undo, C-c=Copy, C-x=Cut, C-v=Paste (needs cua.el)
+(require 'cua) (CUA-mode t)
+~~~
 
-6. Simplified Emacs setup
 
-    **There was a lot of Emacs Lisp code presented in this paper. Do I
+### Simplified Emacs setup
+
+*There was a lot of Emacs Lisp code presented in this paper. Do I
 really have to type in all this stuff to get started with Emacs and
-Lisp?**
+Lisp?*
 
-    *No, there is a
+No, there is a
 [sample .emacs file](https://github.com/LispCookbook/cl-cookbook/blob/master/.emacs)
 that can be used to get started. It contains all of the configurations
 that have been described in this page and (hopefully) should work with
 some minor tweaking. See the
 [CL-Cookbook](http://lispcookbook.github.io/cl-cookbook/) page on
-"[Setting up an IDE with Emacs on Windows or Mac OS X](windows.html)".*
+"[Setting up an IDE with Emacs on Windows or Mac OS X](windows.html)".
 
-7. Alternatives to Emacs for CL programming
 
-    **I've tried out Emacs and I just can't get used to it. What other
-Lisp-friendly alternative are there?**
+### Alternatives to Emacs for CL programming
 
-    * The [Franz](http://www.franz.com/), [LispWorks](http://www.lispworks.com/), [Corman](http://www.cormanlisp.com/), and [Digitool](http://www.digitool.com/) commercial Lisp
+*I've tried out Emacs and I just can't get used to it. What other
+Lisp-friendly alternative are there?*
+
+  * The [Franz](http://www.franz.com/), [LispWorks](http://www.lispworks.com/), [Corman](http://www.cormanlisp.com/), and [Digitool](http://www.digitool.com/) commercial Lisp
 offerings all have Lisp-aware editors.
-    * CMUCL has [Hemlock](http://www.cons.org/cmucl/hemlock/index.html), which is also [being adapted for other Lisps](http://www.stud.uni-karlsruhe.de/~unk6/hemlock/).
-    * [XEmacs](http://www.xemacs.org/) is an alternative to GNU Emacs that works with many of the same Elisp libraries. Some people prefer it to GNU Emacs.
-    * Vim can be used to edit Lisp code. An [article](http://lisp-p.org/15-vim/) by Larry Clapp gives some
+  * CMUCL has [Hemlock](http://www.cons.org/cmucl/hemlock/index.html), which is also [being adapted for other Lisps](http://www.stud.uni-karlsruhe.de/~unk6/hemlock/).
+  * [XEmacs](http://www.xemacs.org/) is an alternative to GNU Emacs that works with many of the same Elisp libraries. Some people prefer it to GNU Emacs.
+  * Vim can be used to edit Lisp code. An [article](http://lisp-p.org/15-vim/) by Larry Clapp gives some
     pointers on how to use Vim with Lisp.
-    * [Jabberwocky](http://jabberwocky.sourceforge.net/) is a Lisp editor/debugger written in Java.
-    * Lastly, for true masochists, notepad on Windows or ed on UNIX® can also be used. ;-)
+  * [Jabberwocky](http://jabberwocky.sourceforge.net/) is a Lisp editor/debugger written in Java.
+  * Lastly, for true masochists, notepad on Windows or ed on UNIX® can also be used. ;-)
