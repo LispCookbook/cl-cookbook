@@ -13,4 +13,4 @@
 ;; rules. Make certain you have the following code in a lisp mode hook
 ;; in your .emacs file:
 (set (make-local-variable lisp-indent-function)
-		 'common-lisp-indent-function)
+     'common-lisp-indent-function)

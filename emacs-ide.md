@@ -160,7 +160,7 @@ This page is meant to provide an introduction to using Emacs as a Lisp IDE. The 
 *   Forward/Backward/Up/Down movement and selection by s-expressions ( [s1.lisp](s1.lisp) )
 
 ~~~lisp
-**;; Put the cursor on the open parens of "(defvar.." and press "C-M-f"
+;; Put the cursor on the open parens of "(defvar.." and press "C-M-f"
 ;; and "C-M-b" a few times to see how you move in units of sexps. Put
 ;; the cursor on the second additon in the "(progn" statement and
 ;; press "C-M-t" to swap the first addition sexp and the second
@@ -168,50 +168,50 @@ This page is meant to provide an introduction to using Emacs as a Lisp IDE. The 
 ;; press "C-M-@" to highlight the entire sexp. Then press "C-M-u" to
 ;; expand the selection "upwards" to the enclosing "(let". Pressing
 ;; "C-M-d" moves to the next enclosed sexp or (if you are at the
-;; beginning of a line) to the enclosed sexp on the line:**
+;; beginning of a line) to the enclosed sexp on the line:
 
 (defvar a "a variable")
 
 (defun b ()
-"a function"
-(+ 2 2))
+  "a function"
+  (+ 2 2))
 
 (defun c ()
-"another function"
-(let ((x 42))
-(+ x
-(+ 2 2)
-(+ 3 3)
-(+ 4 4))))
+  "another function"
+  (let ((x 42))
+    (+ x
+       (+ 2 2)
+       (+ 3 3)
+       (+ 4 4))))
 
 (progn
-(+ 1 1)
-(+ 2 2)
-(+ 3 3))
+  (+ 1 1)
+  (+ 2 2)
+  (+ 3 3))
 ~~~
 
 *   Deleting s-expressions ( [s2.lisp](s2.lisp) )
 
 ~~~lisp
-**;; Put the cursor on the open parens of "(progn .." and press "C-M-k"
+;; Put the cursor on the open parens of "(progn .." and press "C-M-k"
 ;; to delete it. Then press "C-M-backspace" to delete the sexp before
 ;; the cursor:** 
 (defun d ()
-(if t
-(+ 3 3)
-(progn
-(+ 1 1)
-(if t
-(+ 2 2)
-(+ 3 3)))
-(+ 4 4)))
+  (if t
+      (+ 3 3)
+      (progn
+        (+ 1 1)
+        (if t
+            (+ 2 2)
+            (+ 3 3)))
+            (+ 4 4)))
 ~~~
 
 *   Indenting s-expressions ( [s3.lisp](s3.lisp) )
 
 ~~~lisp
-**;; Put the cursor on the open parens of "(defun ..." and press "C-M-q"
-;; to indent the code:** 
+;; Put the cursor on the open parens of "(defun ..." and press "C-M-q"
+;; to indent the code:
 (defun e ()
 "A badly indented function."
 (let ((x 20))
@@ -225,163 +225,179 @@ do (print j))
 ~~~
 
 ~~~lisp
-**;; This is the result:** 
 (defun e ()
-"A badly indented function."
-(let ((x 20))
-(loop for i from 0 to x
-do (loop for j from 0 below 10
-do (print j))
-(if (< i 10)
-(let ((z nil) )
-(setq z (format t "x=~d" i))
-(print z))))))
+  "A badly indented function."
+  (let ((x 20))
+    (loop for i from 0 to x 
+       do (loop for j from 0 below 10 
+             do (print j)) 
+         (if (< i 10)
+             (let ((z nil) )
+               (setq z (format t "x=~d" i))
+               (print z))))))
 ~~~
 
 *   Support for parenthesis ( [s4.lisp](s4.lisp) )
 
-~~~lisp**
+~~~lisp
 ;; Placing the cursor on a "(" or after a ")" highlights the matching
-;; parens:** 
+;; parens:
 (progn (+ 3 3) (- 2 2))
 ~~~
 
 ~~~lisp
-**;; A mismatched parens is highlighted in a different color (put cursor
-;; after last parens and enter a ")" to see this:** 
+;; A mismatched parens is highlighted in a different color (put cursor
+;; after last parens and enter a ")" to see this:
 (- 2 2)
 ~~~
 
 ~~~lisp
-**;; You can also type "M-x check-parens" to locate mismatched parens in
-;; a buffer**
+;; You can also type "M-x check-parens" to locate mismatched parens in
+;; a buffer
 ~~~
 
 ~~~lisp
-**;; Press "M-(" and you will get:** ()
-**;; with the cursor placed on the closing parens, ready to enter the
-;; function name.**
+;; Press "M-(" and you will get:
+()
+
+;; with the cursor placed on the closing parens, ready to enter the
+;; function name.
 ~~~
 
 ~~~lisp
-**;; Put the cursor on the open parens of the "(+ 2 2)" sexp below and
+;; Put the cursor on the open parens of the "(+ 2 2)" sexp below and
 ;; press "C-u 2 M-(" to enclose the next 2 sexps with parens - then
-;; type "+ 1" to add "1" to the result of the following 2 sexps:** (progn (+ 2 2) (+ 3 3))
+;; type "+ 1" to add "1" to the result of the following 2 sexps:
+(progn (+ 2 2) (+ 3 3))
 ~~~
 
+
 ~~~lisp
-**;; To delete the enclosing "progn" below, put the cursor on the open
+;; To delete the enclosing "progn" below, put the cursor on the open
 ;; parens of the "(+ 1 1)" and press the following sequence of keys:
-;; "C-M-k C-M-k C-M-k C-M-u C-M-k C-y M-y C-M-a C-M-q":** (defun a ()
-(progn
-(+ 1 1)
-(+ 2 2)
-(+ 3 3)))
+;; "C-M-k C-M-k C-M-k C-M-u C-M-k C-y M-y C-M-a C-M-q":
+(defun a ()
+  (progn
+    (+ 1 1)
+    (+ 2 2)
+    (+ 3 3)))
 ~~~
 
 *   Automatic code indentation (CL vs Elisp) ( [s5.lisp](s5.lisp) )
 
 ~~~lisp
-**;; Indentation is automatic for Lisp forms. Example: Put the cursor
-;; after the first addition form and press Enter:** (progn
-(+ 3 3)
-(- 2 2))
+;; Indentation is automatic for Lisp forms. Example: Put the cursor
+;; after the first addition form and press Enter:
+(progn
+  (+ 3 3)
+  (- 2 2))
 ~~~
 
 ~~~lisp
-**;; Pressing TAB will indent incorrectly indented code. Example: Put
-;; the cursor at the beginning of the "(+ 3 3)" form and press TAB:** (progn
+;; Pressing TAB will indent incorrectly indented code. Example: Put
+;; the cursor at the beginning of the "(+ 3 3)" form and press TAB:
+(progn
 (+ 3 3))
 ~~~
 
 ~~~lisp
-**;; CL indentation rules are different from Emacs Lisp indentation
+;; CL indentation rules are different from Emacs Lisp indentation
 ;; rules. Make certain you have the following code in a lisp mode hook
-;; in your .emacs file:** (set (make-local-variable lisp-indent-function)
-'common-lisp-indent-function)
+;; in your .emacs file:
+(set (make-local-variable lisp-indent-function)
+     'common-lisp-indent-function)
 ~~~
 
 *   Close all parenthesis ( [s6.lisp](s6.lisp) )
 
 ~~~lisp
-**;; Press "C-c ]" (in ELI) or "C-C C-v C-]" (in ILISP) to close all
+;; Press "C-c ]" (in ELI) or "C-C C-v C-]" (in ILISP) to close all
 ;; parens. Example: Put cursor at end of following form and press the
-;; appropriate key sequence:** (progn (if nil (progn (+ 3 (- 2 1
+;; appropriate key sequence:
+(progn (if nil (progn (+ 3 (- 2 1
 ~~~
 
 *   Code completion ( [s7.lisp](s7.lisp) )
 
 ~~~lisp
-**;; Type the following and press "C-c TAB" (both ELI & ILISP) to get an
-;; automatic completion for defvar:** (defv
+;; Type the following and press "C-c TAB" (both ELI & ILISP) to get an
+;; automatic completion for defvar:
+(defv
 ~~~
 
 ~~~lisp
-**;; Typing in the following and pressing "C-c TAB" results in a list of
-;; altermatives:** (def
+;; Typing in the following and pressing "C-c TAB" results in a list of
+;; altermatives:
+(def
 ~~~
 
 ~~~lisp
-**;; The Emacs hippie-expand command will expand both lisp symbols
+;; The Emacs hippie-expand command will expand both lisp symbols
 ;; (however, it only works off of lisp symbol information that is
 ;; either available in the buffers or a standard CL symbol) and
 ;; directories. For example, type in the following and press "C-c /"
-;; to get a directory completion:** (setq x "c:/pro
+;; to get a directory completion:
+(setq x "c:/pro
 ~~~
 
 *   Hiding/showing code ( [s8.lisp](s8.lisp) )
 
 ~~~lisp
-**;; Highlight the middle "(if ..." block and press "C-x n n" to hide
-;; everything but that block ("C-x n w" restores the other code):** (if a
-(+ 1 1))
+;; Highlight the middle "(if ..." block and press "C-x n n" to hide
+;; everything but that block ("C-x n w" restores the other code):
+(if a
+    (+ 1 1))
 (if b
-(+ 2 2))
+    (+ 2 2))
 (if c
-(+ 3 3))
+    (+ 3 3))
 ~~~
 
 ~~~lisp
-**;; Put the cursor on "(defun b ..." and press "C-x n d" to narrow to
-;; just defun b (("C-x n w" restores the other code):** (defun a ()
-(+ 1 1))
+;; Put the cursor on "(defun b ..." and press "C-x n d" to narrow to
+;; just defun b (("C-x n w" restores the other code):
+(defun a ()
+  (+ 1 1))
 
 (defun b ()
-(+ 2 2))
+  (+ 2 2))
 
 (defun c ()
-(+ 3 3))
+  (+ 3 3))
 ~~~
 
 *   Comments ( [s9.lisp](s9.lisp) )
 
 ~~~lisp
-**;; Put the cursor on the following sexp and press "M-;" to get a
-;; code line comment (right-hand comment):** (setq x 1)
+;; Put the cursor on the following sexp and press "M-;" to get a
+;; code line comment (right-hand comment):
+(setq x 1)
 ~~~
 
 ~~~lisp
-**;; Highlight the 2nd & 3rd lines and press "M-;" to comment out those
+;; Highlight the 2nd & 3rd lines and press "M-;" to comment out those
 ;; lines (highlighting them a 2nd time and pressing "M-;" removes the
-;; comment):** (+ 1 1)
+;; comment):
+(+ 1 1)
 (+ 2 2)
 (+ 3 3)
 ~~~
 
 ~~~lisp
-**;; Using Paul Foley's comment functions allows you to selectively
+;; Using Paul Foley's comment functions allows you to selectively
 ;; comment out embedded sexps. Example: Put the cursor on the "(+ 4
 ;; 4)" sexp and press "C-c ;" to comment out that sexp. Pressing "C-c
 ;; ;" comments out the enclosing sexp (and on upwards). Pressing "C-c
-;; :" removes the comment:** (+ 1 (+ 2 (+ 3 (+ 4 4))))
+;; :" removes the comment:
+(+ 1 (+ 2 (+ 3 (+ 4 4))))
 ~~~
 
 ~~~lisp
-**;; Emacs knows how to wrap comment text intelligently. For example, this comment line spans
+;; Emacs knows how to wrap comment text intelligently. For example, this comment line spans
 ;; muliple lines but is not aligned consitently
 ;; with the rest of the comments/code in the file (everything else
 ;; ends at
-;; column 68\. Pressing "M-q" adjusts the comments appropriately.**
+;; column 68\. Pressing "M-q" adjusts the comments appropriately.
 ~~~
 
 
@@ -397,7 +413,7 @@ do (print j))
 *   Example code ( [s11.lisp](s11.lisp) )
 
 ~~~lisp
-**;; Compile the entire buffer by pressing "C-c C-b" (ELI) or "C-c C-k
+;; Compile the entire buffer by pressing "C-c C-b" (ELI) or "C-c C-k
 ;; C-b" (ILISP).
 
 ;; Compile a region by selecting the first 2 forms in test-all and
@@ -428,20 +444,20 @@ do (print j))
 ;; parenthesis for the defun/top-level commands.  Press "C-c d" (ELI)
 ;; or "C-c C-j C-j" (ILISP).** (defun test (n)
 (loop for i from 0 below n
-do (print i)))
+   do (print i)))
 
 (defun test-format ()
-(format t "This is a test.~%"))
+  (format t "This is a test.~%"))
 
 (defun test-format-loop (n)
-(loop for i from 0 below n
-do (test-format)
-(sleep 1)))
+  (loop for i from 0 below n
+     do (test-format)
+       (sleep 1)))
 
 (defun test-all ()
-(test 5)
-(test-format)
-(test-format-loop 5))
+  (test 5)
+  (test-format)
+  (test-format-loop 5))
 ~~~
 
 
@@ -452,7 +468,7 @@ do (test-format)
 * Standard Emacs text search (isearch forward/backward, regexp searches, search/replace) ( [s12.lisp](s12.lisp) )
 
 ~~~lisp
-**;; "C-s" does an incremental search forward (e.g. - as each key is
+;; "C-s" does an incremental search forward (e.g. - as each key is
 ;; the search string is entered, the source file is searched for the
 ;; first match. This can make finding specific text much quicker as
 ;; you only need to type in the unique characters. Repeat searches
@@ -468,76 +484,80 @@ do (test-format)
 ;; and backward respectively)
 
 ;; "M-%" does a search/replace while "C-M-%" does a regular
-;; expression search/replace**
+;; expression search/replace
 ~~~
 
 *   Finding occurances (occur, grep) ( [s13.lisp](s13.lisp) )
 
-~~~lisp**
+~~~lisp
 ;; Use the Emacs "occur" function to find all occurances of a string
 ;; (or regexp) in a buffer. Example: Enter "M-x occur" and enter the
 ;; string "defun" to get a list of all the occurances of the
-;; characters "defun" in the current buffer.** (defvar aa "a" "a variable")
+;; characters "defun" in the current buffer.
+
+(defvar aa "a" "a variable")
 
 (defun b ()
-"a function"
-(+ 2 2))
+  "a function"
+  (+ 2 2))
 
 (defun c ()
-"another function"
-(+ 3 3))
+  "another function"
+  (+ 3 3))
 
 (defmacro d (x)
-"a macro"
-`(list ,x))
+  "a macro"
+  `(list ,x))
 ~~~
 
 ~~~lisp
-**;; Use the Emacs "grep" function to find all occurances of a string
+;; Use the Emacs "grep" function to find all occurances of a string
 ;; (or regexp) in a multiple files. Example: Enter "M-x grep" and
 ;; enter the string "defun *.lisp" to get a list of all the function
-;; definitions in lisp files in the current directory.**
+;; definitions in lisp files in the current directory.
 ~~~
 
 *   Lisp symbols in current source (imenu) ( [s14.lisp](s14.lisp) )
 
 ~~~lisp
-**;; Open a lisp source file and press the middle mouse button for a
+;; Open a lisp source file and press the middle mouse button for a
 ;; pop-up window listing all variables and functions in the lisp
-;; source file.**
+;; source file.
 ~~~
 
 *   Lisp symbols using Lisp ( [s15.lisp](s15.lisp) )
 
 ~~~lisp
-**;; Use the source location maintained by the CL implementation to
+;; Use the source location maintained by the CL implementation to
 ;; locate source definitions.  First load this file and the s13.lisp
 ;; file.  Then put the cursor on the "aa" variable in the following
 ;; form and press "C-c ."  (ELI) or "M-." (ILISP) to locate the
-;; definition.** (setq x aa)
+;; definition.
+(setq x aa)
 ~~~
 
 *   Lisp symbols in multiple source files (etags) ( [s16.lisp](s16.lisp) )
 
 ~~~lisp
-**;; Enter "M-x shell" to bring up a shell window in the current
+;; Enter "M-x shell" to bring up a shell window in the current
 ;; directory. Then run "etags *.lisp" to create a TAG file containing
 ;; all symbols in lisp files in the current directory. Then run "etags
 ;; -a subdir/*.lisp" to add to the TAG file symbols from all lisp
 ;; files in another directory. Locate the definition of the "aa"
 ;; variable is the s13.lisp file by putting the cursor on the "aa" in
-;; the following form and pressing "M-.".** (setq x aa)
+;; the following form and pressing "M-.".
+(setq x aa)
 ~~~
 
 *   Lisp symbols using [ECB](http://ecb.sourceforge.net/) ( [s17.lisp](s17.lisp) )
 
 ~~~lisp
-**;; Press "M-x ecb-activate" to start up ECB. Load a lisp file by
+;; Press "M-x ecb-activate" to start up ECB. Load a lisp file by
 ;; pressing the middle mouse button (or the Enter key) on any file
 ;; name in the ECB mini-window. Pressing the middle mouse button (or
 ;; the Enter key) on any definition in the ECB symbol mini-window
 ;; takes you to that definition. Press "C-F7" to toggle between full
-;; screen and ECB views.**
+;; screen and ECB views.
 ~~~
 
 
@@ -548,21 +568,22 @@ do (test-format)
 *   Argument lists ( [s18.lisp](s18.lisp) )
 
 ~~~lisp
-**;; For ILISP/ELI, type in "(set" and press SPACE to get the arglist in
+;; For ILISP/ELI, type in "(set" and press SPACE to get the arglist in
 ;; the minibuffer.  For ILISP, type in "(set" and press "C-c C-q C-a"
 ;; to get the arglist in the listener buffer.  For ILISP, type in
 ;; "(set " and press "C-u C-c C-q C-a" to get the arguments for "set"
-;; pasted into the current buffer.** ~~~
+;; pasted into the current buffer.
+~~~
 
 *   Documentation ( [s19.lisp](s19.lisp) )
 
 ~~~lisp
-**;; Enter and evaluate the following definitions, then put the cursor
+;; Enter and evaluate the following definitions, then put the cursor
 ;; on "(xx)" and press "C-c C-f" (ELI) or "C-c C-q C-o" (ILISP) to get
-;; the function documentation.**
+;; the function documentation.
 (defun xx ()
-"A do-nothing function"
-nil)
+  "A do-nothing function"
+  nil)
 
 (setf (documentation 'xx 'function) "A function that does nil.")
 
@@ -572,11 +593,12 @@ nil)
 *   Describe ( [s20.lisp](s20.lisp) )
 
 ~~~lisp
-**;; Enter and evaluate the following definitions, then put the cursor
+;; Enter and evaluate the following definitions, then put the cursor
 ;; on "(xx)" and press "C-c C-q C-d" (ILISP) to get a description of
-;; the function.** (defun xx ()
-"A do-nothing function"
-nil)
+;; the function.
+(defun xx ()
+  "A do-nothing function"
+  nil)
 
 (setf (documentation 'xx 'function) "A function that does nil.")
 
@@ -586,12 +608,13 @@ nil)
 *   Inspect ( [s21.lisp](s21.lisp) )
 
 ~~~lisp
-**;; Enter and evaluate the following definitions, then put the cursor
+;; Enter and evaluate the following definitions, then put the cursor
 ;; on "(xx)" and press "C-c C-q C-i" (ILISP) to execute "inspect" on
 ;; the "xx" function. Entering ":h" gives a list of help commands and
-;; ":q" exits "inspect".** (defun xx ()
-"A do-nothing function"
-nil)
+;; ":q" exits "inspect".
+(defun xx ()
+  "A do-nothing function"
+  nil)
 
 (setf (documentation 'xx 'function) "A function that does nil.")
 
@@ -601,12 +624,13 @@ nil)
 *   Macroexpand ( [s22.lisp](s22.lisp) )
 
 ~~~lisp
-**;; Enter the following function definition, then put the cursor on the
+;; Enter the following function definition, then put the cursor on the
 ;; open parens of "(defun ..." and press "C-c RET" (ELI) or "C-c C-b
 ;; k" (ILISP) to get a macroexpand-1\. Then press "C-c (" (ELI) or "C-c
-;; C-b C-k" (ILISP) to get a recursive macroexpansion.** (defun test (n)
-(loop for i from 0 below n
-do (print i)))
+;; C-b C-k" (ILISP) to get a recursive macroexpansion.
+(defun test (n)
+  (loop for i from 0 below n
+     do (print i)))
 ~~~
 
 
@@ -620,14 +644,15 @@ do (print i)))
 *   Example code ( [s23.lisp](s23.lisp) )
 
 ~~~lisp
-**;; Put the cursor on the "(format" below and press "F1" to get the
+;; Put the cursor on the "(format" below and press "F1" to get the
 ;; Hyperspec page for "format". Put the cursor on the "d" in the
 ;; format string and press "C-u F1" to get the Hyperspec page
-;; describing the "Tilde D: Decimal" format character.** (format t "One = ~d" 1)
+;; describing the "Tilde D: Decimal" format character.
+(format t "One = ~d" 1)
 ~~~
 
 ~~~lisp
-**;; Note: Depending on the documentation packages that have been
+;; Note: Depending on the documentation packages that have been
 ;; loaded, and the browser that you wish to use, the following keys
 ;; may be used:
 ;;            Default    W3
@@ -636,7 +661,7 @@ do (print i)))
 ;; Hyperspec    F1      S-F1    C-u F1      C-u S-F1
 ;; CLtL2       M-F1    M-S-F1
 ;; ACL docs    C-F1    C-S-F1
-;; Info docs                                           C-M-F1**
+;; Info docs                                           C-M-F1
 ~~~
 
 
@@ -647,14 +672,15 @@ do (print i)))
 *   Lisp Listener ( [s24.lisp](s24.lisp) )
 
 ~~~lisp
-**;; With the cursor on the "let", press "C-c x" (ELI or ILISP) to
-;; evaluate a lisp form by copying it into the listener.** (let ((n 20))
-(loop for i from 0 below n
-do (print i)))
+;; With the cursor on the "let", press "C-c x" (ELI or ILISP) to
+;; evaluate a lisp form by copying it into the listener.
+(let ((n 20))
+  (loop for i from 0 below n
+     do (print i)))
 ~~~
 
 ~~~lisp
-**;; In ILISP, most of the eval & compile functions have an "and go"
+;; In ILISP, most of the eval & compile functions have an "and go"
 ;; equivalent that transfers the focus to the listener after
 ;; execution. Their key bindings are the same as the normal
 ;; eval/compile functions except that the final key does not have a
@@ -672,10 +698,10 @@ do (print i)))
 *   Comparing versions of code ( [s10.lisp](s10.lisp) , [s10a.lisp](s10a.lisp) , [s10b.lisp](s10b.lisp) )
 
 ~~~lisp
-**;; Start the ediff utility by entering "M-x ediff". Enter s10a.lisp as
+;; Start the ediff utility by entering "M-x ediff". Enter s10a.lisp as
 ;; the first file name and s10b.lisp as the second file name. Press
 ;; the space bar to step through the changes. When finished, press "q"
-;; to exit.**
+;; to exit.
 ~~~
 
 
