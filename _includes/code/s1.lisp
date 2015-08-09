@@ -7,6 +7,7 @@
 ;; expand the selection "upwards" to the enclosing "(let". Pressing
 ;; "C-M-d" moves to the next enclosed sexp or (if you are at the
 ;; beginning of a line) to the enclosed sexp on the line: 
+
 (defvar a "a variable")
 
 (defun b ()

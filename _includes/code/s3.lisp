@@ -1,5 +1,6 @@
 ;; Put the cursor on the open parens of "(defun ..." and press "C-M-q"
 ;; to indent the code:
+
 (defun e ()
 "A badly indented function."
 (let ((x 20))
@@ -12,6 +13,7 @@ do (print j))
 (print z))))))
 
 ;; This is the result:
+
 (defun e ()
   "A badly indented function."
   (let ((x 20))

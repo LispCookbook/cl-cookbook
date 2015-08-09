@@ -5,4 +5,5 @@
 ;; files in another directory. Locate the definition of the "aa"
 ;; variable is the s13.lisp file by putting the cursor on the "aa" in
 ;; the following form and pressing "M-.".
+
 (setq x aa)
