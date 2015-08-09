@@ -195,7 +195,8 @@ This page is meant to provide an introduction to using Emacs as a Lisp IDE. The 
 ~~~lisp
 ;; Put the cursor on the open parens of "(progn .." and press "C-M-k"
 ;; to delete it. Then press "C-M-backspace" to delete the sexp before
-;; the cursor:** 
+;; the cursor:
+
 (defun d ()
   (if t
       (+ 3 3)
@@ -212,6 +213,7 @@ This page is meant to provide an introduction to using Emacs as a Lisp IDE. The 
 ~~~lisp
 ;; Put the cursor on the open parens of "(defun ..." and press "C-M-q"
 ;; to indent the code:
+
 (defun e ()
 "A badly indented function."
 (let ((x 20))
@@ -225,6 +227,8 @@ do (print j))
 ~~~
 
 ~~~lisp
+;; This is the result:
+
 (defun e ()
   "A badly indented function."
   (let ((x 20))
@@ -242,12 +246,14 @@ do (print j))
 ~~~lisp
 ;; Placing the cursor on a "(" or after a ")" highlights the matching
 ;; parens:
+
 (progn (+ 3 3) (- 2 2))
 ~~~
 
 ~~~lisp
 ;; A mismatched parens is highlighted in a different color (put cursor
 ;; after last parens and enter a ")" to see this:
+
 (- 2 2)
 ~~~
 
@@ -258,8 +264,8 @@ do (print j))
 
 ~~~lisp
 ;; Press "M-(" and you will get:
-()
 
+()
 ;; with the cursor placed on the closing parens, ready to enter the
 ;; function name.
 ~~~
@@ -268,6 +274,7 @@ do (print j))
 ;; Put the cursor on the open parens of the "(+ 2 2)" sexp below and
 ;; press "C-u 2 M-(" to enclose the next 2 sexps with parens - then
 ;; type "+ 1" to add "1" to the result of the following 2 sexps:
+
 (progn (+ 2 2) (+ 3 3))
 ~~~
 
@@ -276,6 +283,7 @@ do (print j))
 ;; To delete the enclosing "progn" below, put the cursor on the open
 ;; parens of the "(+ 1 1)" and press the following sequence of keys:
 ;; "C-M-k C-M-k C-M-k C-M-u C-M-k C-y M-y C-M-a C-M-q":
+
 (defun a ()
   (progn
     (+ 1 1)
@@ -288,6 +296,7 @@ do (print j))
 ~~~lisp
 ;; Indentation is automatic for Lisp forms. Example: Put the cursor
 ;; after the first addition form and press Enter:
+
 (progn
   (+ 3 3)
   (- 2 2))
@@ -296,6 +305,7 @@ do (print j))
 ~~~lisp
 ;; Pressing TAB will indent incorrectly indented code. Example: Put
 ;; the cursor at the beginning of the "(+ 3 3)" form and press TAB:
+
 (progn
 (+ 3 3))
 ~~~
@@ -304,6 +314,7 @@ do (print j))
 ;; CL indentation rules are different from Emacs Lisp indentation
 ;; rules. Make certain you have the following code in a lisp mode hook
 ;; in your .emacs file:
+
 (set (make-local-variable lisp-indent-function)
      'common-lisp-indent-function)
 ~~~
@@ -314,6 +325,7 @@ do (print j))
 ;; Press "C-c ]" (in ELI) or "C-C C-v C-]" (in ILISP) to close all
 ;; parens. Example: Put cursor at end of following form and press the
 ;; appropriate key sequence:
+
 (progn (if nil (progn (+ 3 (- 2 1
 ~~~
 
@@ -322,12 +334,14 @@ do (print j))
 ~~~lisp
 ;; Type the following and press "C-c TAB" (both ELI & ILISP) to get an
 ;; automatic completion for defvar:
+
 (defv
 ~~~
 
 ~~~lisp
 ;; Typing in the following and pressing "C-c TAB" results in a list of
 ;; altermatives:
+
 (def
 ~~~
 
@@ -337,6 +351,7 @@ do (print j))
 ;; either available in the buffers or a standard CL symbol) and
 ;; directories. For example, type in the following and press "C-c /"
 ;; to get a directory completion:
+
 (setq x "c:/pro
 ~~~
 
@@ -345,6 +360,7 @@ do (print j))
 ~~~lisp
 ;; Highlight the middle "(if ..." block and press "C-x n n" to hide
 ;; everything but that block ("C-x n w" restores the other code):
+
 (if a
     (+ 1 1))
 (if b
@@ -356,6 +372,7 @@ do (print j))
 ~~~lisp
 ;; Put the cursor on "(defun b ..." and press "C-x n d" to narrow to
 ;; just defun b (("C-x n w" restores the other code):
+
 (defun a ()
   (+ 1 1))
 
@@ -366,11 +383,12 @@ do (print j))
   (+ 3 3))
 ~~~
 
-*   Comments ( [s9.lisp](s9.lisp) )
+* Comments ( [s9.lisp](s9.lisp) )
 
 ~~~lisp
 ;; Put the cursor on the following sexp and press "M-;" to get a
 ;; code line comment (right-hand comment):
+
 (setq x 1)
 ~~~
 
@@ -378,6 +396,7 @@ do (print j))
 ;; Highlight the 2nd & 3rd lines and press "M-;" to comment out those
 ;; lines (highlighting them a 2nd time and pressing "M-;" removes the
 ;; comment):
+
 (+ 1 1)
 (+ 2 2)
 (+ 3 3)
@@ -389,6 +408,7 @@ do (print j))
 ;; 4)" sexp and press "C-c ;" to comment out that sexp. Pressing "C-c
 ;; ;" comments out the enclosing sexp (and on upwards). Pressing "C-c
 ;; :" removes the comment:
+
 (+ 1 (+ 2 (+ 3 (+ 4 4))))
 ~~~
 
@@ -442,9 +462,11 @@ do (print j))
 ;; ambiguity), make certain that the cursor is either on a parenthesis
 ;; (for the last/next commands or not directly before/after/on a
 ;; parenthesis for the defun/top-level commands.  Press "C-c d" (ELI)
-;; or "C-c C-j C-j" (ILISP).** (defun test (n)
-(loop for i from 0 below n
-   do (print i)))
+;; or "C-c C-j C-j" (ILISP).
+
+(defun test (n)
+  (loop for i from 0 below n
+     do (print i)))
 
 (defun test-format ()
   (format t "This is a test.~%"))
@@ -533,6 +555,7 @@ do (print j))
 ;; file.  Then put the cursor on the "aa" variable in the following
 ;; form and press "C-c ."  (ELI) or "M-." (ILISP) to locate the
 ;; definition.
+
 (setq x aa)
 ~~~
 
@@ -546,6 +569,7 @@ do (print j))
 ;; files in another directory. Locate the definition of the "aa"
 ;; variable is the s13.lisp file by putting the cursor on the "aa" in
 ;; the following form and pressing "M-.".
+
 (setq x aa)
 ~~~
 
@@ -581,6 +605,7 @@ do (print j))
 ;; Enter and evaluate the following definitions, then put the cursor
 ;; on "(xx)" and press "C-c C-f" (ELI) or "C-c C-q C-o" (ILISP) to get
 ;; the function documentation.
+
 (defun xx ()
   "A do-nothing function"
   nil)
@@ -596,6 +621,7 @@ do (print j))
 ;; Enter and evaluate the following definitions, then put the cursor
 ;; on "(xx)" and press "C-c C-q C-d" (ILISP) to get a description of
 ;; the function.
+
 (defun xx ()
   "A do-nothing function"
   nil)
@@ -612,6 +638,7 @@ do (print j))
 ;; on "(xx)" and press "C-c C-q C-i" (ILISP) to execute "inspect" on
 ;; the "xx" function. Entering ":h" gives a list of help commands and
 ;; ":q" exits "inspect".
+
 (defun xx ()
   "A do-nothing function"
   nil)
@@ -628,6 +655,7 @@ do (print j))
 ;; open parens of "(defun ..." and press "C-c RET" (ELI) or "C-c C-b
 ;; k" (ILISP) to get a macroexpand-1\. Then press "C-c (" (ELI) or "C-c
 ;; C-b C-k" (ILISP) to get a recursive macroexpansion.
+
 (defun test (n)
   (loop for i from 0 below n
      do (print i)))
