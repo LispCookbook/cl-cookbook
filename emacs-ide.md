@@ -4,7 +4,7 @@ title: Using Emacs as an IDE
 
 The material on this page was originally presented at the [ILC 2003 conference](http://www.international-lisp-conference.org/index.html). A paper with more in-depth coverage of some of the material on this page can be found on [Bill Clementson's ILC2003](http://home.comcast.net/~b.clementson/ilc_2003.htm) page.
 
-This page is meant to provide an introduction to using Emacs as a Lisp IDE. The key bindings used in the example code snippets assume an Emacs configuration similar to that provided by the [.emacs](http://cl-cookbook.sourceforge.net/.emacs) file that is included as part of the [Setting up an IDE with Emacs on Windows or Mac OS X](http://cl-cookbook.sourceforge.net/windows.html) page. If you use ILISP, the key bindings reflect the bindings that are present in the current CVS version of ILISP.
+This page is meant to provide an introduction to using Emacs as a Lisp IDE. The key bindings used in the example code snippets assume an Emacs configuration similar to that provided by the [.emacs](https://github.com/LispCookbook/cl-cookbook/blob/master/.emacs) file that is included as part of the [Setting up an IDE with Emacs on Windows or Mac OS X](windows.html) page. If you use ILISP, the key bindings reflect the bindings that are present in the current CVS version of ILISP.
 
 
 <a name="Slide-2"></a>
@@ -85,7 +85,7 @@ This page is meant to provide an introduction to using Emacs as a Lisp IDE. The 
 
 *   Setup:
     *   A basic installation involves downloading the ILISP package from the web building it and configuring it
-    *   Customization can be complex, useful to use instructions on [CL Cookbook](http://cl-cookbook.sourceforge.net/windows.html) to get started
+    *   Customization can be complex, useful to use instructions on [CL Cookbook](windows.html) to get started
 
 
 <a name="Slide-7"></a>
@@ -150,7 +150,7 @@ This page is meant to provide an introduction to using Emacs as a Lisp IDE. The 
 
 *   Searching Lisp Code
 
-*   Note: Example code assumes you are using a setup similar to what is defined in the [.emacs file](http://cl-cookbook.sourceforge.net/.emacs) from the [CL Cookbook](http://cl-cookbook.sourceforge.net/windows.html) site
+*   Note: Example code assumes you are using a setup similar to what is defined in the [.emacs file](https://github.com/LispCookbook/cl-cookbook/blob/master/.emacs) from the [CL Cookbook](windows.html) site
 
 
 <a name="Slide-10"></a>
@@ -794,10 +794,10 @@ paper. Do I really have to type in all this stuff to get started with Emacs and 
 
 ~~~lisp
 **A6
-No, there is a [sample .emacs file](http://cl-cookbook.sourceforge.net/.emacs) that can be used to get
+No, there is a [sample .emacs file](https://github.com/LispCookbook/cl-cookbook/blob/master/.emacs) that can be used to get
 started. It contains all of the configurations that have been described in this page and (hopefully) should work
-with some minor tweaking. See the [CL-Cookbook](http://cl-cookbook.sourceforge.net/) page on "[Setting up an IDE with Emacs on Windows or Mac OS
-X](http://cl-cookbook.sourceforge.net/windows.html)".**
+with some minor tweaking. See the [CL-Cookbook](http://lispcookbook.github.io/cl-cookbook/) page on "[Setting up an IDE with Emacs on Windows or Mac OS
+X](windows.html)".**
 ~~~
 
 *   Q7\. Alternatives to Emacs for CL programming
