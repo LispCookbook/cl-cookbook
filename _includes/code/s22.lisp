@@ -4,4 +4,4 @@
 ;; C-b C-k" (ILISP) to get a recursive macroexpansion.
 (defun test (n)
   (loop for i from 0 below n
-	do (print i)))
+     do (print i)))

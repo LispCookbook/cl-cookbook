@@ -2,7 +2,7 @@
 ;; evaluate a lisp form by copying it into the listener.
 (let ((n 20))
   (loop for i from 0 below n
-      do (print i)))
+     do (print i)))
 
 ;; In ILISP, most of the eval & compile functions have an "and go"
 ;; equivalent that transfers the focus to the listener after
