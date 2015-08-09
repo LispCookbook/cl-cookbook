@@ -733,7 +733,7 @@ Emacs. Once you have W3 and the HyperSpec both installed, use code
 similar to the following to access the HyperSpec from the Shift-F1
 key:*
 
-    ~~~lisp
+    <pre><code class="language-lisp">
     (global-set-key [(shift f1)]
                     '(lambda ()
                       (interactive)
@@ -749,7 +749,7 @@ key:*
                         (load-library hyperspec-prog)
                         (common-lisp-hyperspec
                          (thing-at-point 'symbol)))))
-    ~~~
+    </code></pre>
 
     *Note that the "let" in the above code sets the
     browse-url-browser-function to W3 for just the HyperSpec. You can
@@ -791,12 +791,12 @@ Windows standard for these shortcut keys and the Emacs standard.** ~~~
 defaults. In fact, you may find that the following commands in your .emacs file will make Emacs more
 Windows-like:*
 
-    ~~~lisp
+    <pre><code class="language-lisp">
     ;; Windows-like mouse/arrow movement & selection (pc-selection-mode)
     (delete-selection-mode t)
     ;; C-z=Undo, C-c=Copy, C-x=Cut, C-v=Paste (needs cua.el)
     (require 'cua) (CUA-mode t)
-    ~~~
+    </code></pre>
 
 6. Simplified Emacs setup
 
