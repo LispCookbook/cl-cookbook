@@ -464,6 +464,6 @@ offerings all have Lisp-aware editors.
 
 
 
-##Disclaimer
+## Disclaimer
 
-The material on this page was originally presented at the [ILC 2003 conference](http://www.international-lisp-conference.org/index.html). A paper with more in-depth coverage of some of the material on this page can be found on [Bill Clementson's ILC2003](http://home.comcast.net/~b.clementson/ilc_2003.htm) page.
+The original material on this page was originally presented at the [ILC 2003 conference](http://www.international-lisp-conference.org/index.html). A paper with more in-depth coverage of some of the material on this page can be found on [Bill Clementson's ILC2003](http://home.comcast.net/~b.clementson/ilc_2003.htm) page.
