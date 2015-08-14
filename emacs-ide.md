@@ -2,14 +2,12 @@
 title: Using Emacs as an IDE
 ---
 
-The material on this page was originally presented at the [ILC 2003 conference](http://www.international-lisp-conference.org/index.html). A paper with more in-depth coverage of some of the material on this page can be found on [Bill Clementson's ILC2003](http://home.comcast.net/~b.clementson/ilc_2003.htm) page.
-
 This page is meant to provide an introduction to using Emacs as a Lisp IDE. The key bindings used in the example code snippets assume an Emacs configuration similar to that provided by the [.emacs](https://github.com/LispCookbook/cl-cookbook/blob/master/.emacs) file that is included as part of the [Setting up an IDE with Emacs on Windows or Mac OS X](windows.html) page. If you use ILISP, the key bindings reflect the bindings that are present in the current CVS version of ILISP.
 
 
 <a name="Slide-2"></a>
 
-##Why Use Emacs?
+## Why Use Emacs?
 
 *   Emacs has fantastic support for working with Lisp code
 *   Not tying yourself into a single CL vendor's editor
@@ -463,3 +461,9 @@ offerings all have Lisp-aware editors.
     pointers on how to use Vim with Lisp.
   * [Jabberwocky](http://jabberwocky.sourceforge.net/) is a Lisp editor/debugger written in Java.
   * Lastly, for true masochists, notepad on Windows or ed on UNIX® can also be used. ;-)
+
+
+
+##Disclaimer
+
+The material on this page was originally presented at the [ILC 2003 conference](http://www.international-lisp-conference.org/index.html). A paper with more in-depth coverage of some of the material on this page can be found on [Bill Clementson's ILC2003](http://home.comcast.net/~b.clementson/ilc_2003.htm) page.
