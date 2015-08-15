@@ -16,7 +16,7 @@ Universal time is represented as the number of seconds that have elapsed since
 returns the current universal time:
 
 ~~~lisp
-* (get-universal-time)
+CL-USER> (get-universal-time)
 3220993326
 ~~~
 
@@ -25,7 +25,7 @@ Of course this value is not very readable, so you can use the function
 to turn it into a "calendar time" representation:
 
 ~~~lisp
-* (decode-universal-time 3220993326)
+CL-USER> (decode-universal-time 3220993326)
 6
 22
 19
@@ -50,36 +50,36 @@ zone you are in and the DST flag). As a shortcut, you can use
 to get the calendar time representation of the current time directly:
 
 ~~~lisp
-* (get-decoded-time)
+CL-USER> (get-decoded-time)
 ~~~
 
 is equivalent to
 
 ~~~lisp
-* (decode-universal-time (get-universal-time))
+CL-USER> (decode-universal-time (get-universal-time))
 ~~~
 
 Here is an example of how to use these functions in a program:
 
 ~~~lisp
-* (defconstant *day-names*
-    '("Monday" "Tuesday" "Wednesday"
-      "Thursday" "Friday" "Saturday"
-      "Sunday"))
+CL-USER> (defconstant *day-names*
+	   '("Monday" "Tuesday" "Wednesday"
+	     "Thursday" "Friday" "Saturday"
+	     "Sunday"))
 *DAY-NAMES*
 
-* (multiple-value-bind
-	(second minute hour date month year day-of-week dst-p tz)
-	(get-decoded-time)
-    (format t "It is now ~2,'0d:~2,'0d:~2,'0d of ~a, ~d/~2,'0d/~d (GMT~@d)"
-	      hour
-	      minute
-	      second
-	      (nth day-of-week *day-names*)
-	      month
-	      date
-	      year
-	      (- tz)))
+CL-USER> (multiple-value-bind
+	    (second minute hour date month year day-of-week dst-p tz)
+		   (get-decoded-time)
+	       (format t "It is now ~2,'0d:~2,'0d:~2,'0d of ~a, ~d/~2,'0d/~d (GMT~@d)"
+			 hour
+			 minute
+			 second
+			 (nth day-of-week *day-names*)
+			 month
+			 date
+			 year
+			 (- tz)))
 It is now 17:07:17 of Saturday, 1/26/2002 (GMT-5)
 ~~~
 
@@ -92,7 +92,7 @@ function takes six mandatory arguments (seconds, minutes, hours, date, month and
 year) and one optional argument (the time zone) and it returns a universal time:
 
 ~~~lisp
-* (encode-universal-time 6 22 19 25 1 2002)
+CL-USER> (encode-universal-time 6 22 19 25 1 2002)
 3220993326
 ~~~
 
@@ -101,13 +101,13 @@ Note that the result is automatically adjusted for daylight savings time if the 
 Since universal times are simply numbers, they are easier and safer to manipulate than calendar times. Dates and times should always be stored as universal times if possibile, and only converted to string representations for output purposes. For example, it is straightforward to know which of two dates came before the other, by simply comparing the two corresponding universal times with <. Another typical problem is how to compute the "temporal distance" between two given dates. Let's see how to do this with an example: specifically, we will calculate the temporal distance between the first landing on the moon (4:17pm EDT, July 20 1969) and the last takeoff of the space shuttle Challenger (11:38 a.m. EST, January 28, 1986).
 
 ~~~lisp
-* (setq *moon* (encode-universal-time 0 17 16 20 7 1969 4))
+CL-USER> (setq *moon* (encode-universal-time 0 17 16 20 7 1969 4))
 2194805820
 
-* (setq *takeoff* (encode-universal-time 0 38 11 28 1 1986 5))
+CL-USER> (setq *takeoff* (encode-universal-time 0 38 11 28 1 1986 5))
 2716303080
 
-* (- *takeoff* *moon*)
+CL-USER> (- *takeoff* *moon*)
 521497260
 ~~~
 
@@ -122,48 +122,48 @@ To sum up, we have seen how to turn a universal time into a calendar time and vi
 Internal time is the time as measured by your Lisp environment, using your computer's clock. It differs from universal time in three important respects. First, internal time is not measured starting from a specified point in time: it could be measured from the instant you started your Lisp, from the instant you booted your machine, or from any other arbitrary time point in the past. As we will see shortly, the absolute value of an internal time is almost always meaningless; only differences between internal times are useful. The second difference is that internal time is not measured in seconds, but in a (usually smaller) unit whose value can be deduced from [`INTERNAL-TIME-UNITS-PER-SECOND`](http://www.lispworks.com/documentation/HyperSpec/Body/v_intern.htm):
 
 ~~~lisp
-* internal-time-units-per-second
+CL-USER> internal-time-units-per-second
 1000
 ~~~
 
 This means that in the Lisp environment used in this example, internal time is measured in milliseconds. Finally, what is being measured by the "internal time" clock? There are actually two different internal time clocks in your Lisp: one of them meaures the passage of "real" time (the same time that universal time measures, but in different units), and the other one measures the passage of CPU time, that is, the time your CPU spends doing actual computation for the current Lisp process. On most modern computers these two times will be different, since your CPU will never be entirely dedicated to your program (even on single-user machines, the CPU has to devote part of its time to processing interrupts, performing I/O, etc). The two functions used to retrieve internal times are called [`GET-INTERNAL-REAL-TIME`](http://www.lispworks.com/documentation/HyperSpec/Body/f_get_in.htm) and [`GET-INTERNAL-RUN-TIME`](http://www.lispworks.com/documentation/HyperSpec/Body/f_get__1.htm) respectively. Using them, we can solve the above problem about measuring a function's run time:
 
 ~~~lisp
-* (let ((real1 (get-internal-real-time))
-        (run1 (get-internal-run-time)))
-    (... your call here ...)
-    (let ((run2 (get-internal-run-time))
-	    (real2 (get-internal-real-time)))
-	(format t "Computation took:~%")
-	(format t "  ~f seconds of real time~%"
-		(/ (- real2 real1) internal-time-units-per-second))
-	(format t "  ~f seconds of run time~%"
-		(/ (- run2 run1) internal-time-units-per-second))))
+CL-USER> (let ((real1 (get-internal-real-time))
+	       (run1 (get-internal-run-time)))
+	   (... your call here ...)
+	   (let ((run2 (get-internal-run-time))
+		   (real2 (get-internal-real-time)))
+	       (format t "Computation took:~%")
+	       (format t "  ~f seconds of real time~%"
+		       (/ (- real2 real1) internal-time-units-per-second))
+	       (format t "  ~f seconds of run time~%"
+		       (/ (- run2 run1) internal-time-units-per-second))))
 ~~~
 
 A good way to see the difference between real time and run time is to test the above code using a call such as `(SLEEP 3)`. The [`SLEEP`](http://www.lispworks.com/documentation/HyperSpec/Body/f_sleep.htm) function suspends the execution of your code for the specified number of seconds. You should therefore see a real time very close to the argument of `SLEEP` and a run time very close to zero. Let's turn the above code into a macro in order to make it more general:
 
 ~~~lisp
-* (defmacro timing (&body forms)
-    (let ((real1 (gensym))
-	    (real2 (gensym))
-	    (run1 (gensym))
-	    (run2 (gensym))
-	    (result (gensym)))
-    `(let* ((,real1 (get-internal-real-time))
-	      (,run1 (get-internal-run-time))
-	      (,result (progn ,@forms))
-	      (,run2 (get-internal-run-time))
-	      (,real2 (get-internal-real-time)))
-	 (format *debug-io* ";;; Computation took:~%")
-	 (format *debug-io* ";;;  ~f seconds of real time~%"
-		 (/ (- ,real2 ,real1) internal-time-units-per-second))
-	 (format t ";;;  ~f seconds of run time~%"
-		 (/ (- ,run2 ,run1) internal-time-units-per-second))
-	 ,result)))
+CL-USER> (defmacro timing (&body forms)
+	   (let ((real1 (gensym))
+		   (real2 (gensym))
+		   (run1 (gensym))
+		   (run2 (gensym))
+		   (result (gensym)))
+	   `(letCL-USER> ((,real1 (get-internal-real-time))
+		     (,run1 (get-internal-run-time))
+		     (,result (progn ,@forms))
+		     (,run2 (get-internal-run-time))
+		     (,real2 (get-internal-real-time)))
+		(format *debug-io* ";;; Computation took:~%")
+		(format *debug-io* ";;;  ~f seconds of real time~%"
+			(/ (- ,real2 ,real1) internal-time-units-per-second))
+		(format t ";;;  ~f seconds of run time~%"
+			(/ (- ,run2 ,run1) internal-time-units-per-second))
+		,result)))
 TIMING
 
-* (timing (sleep 1))
+CL-USER> (timing (sleep 1))
 ;;; Computation took: 0.994 seconds of real time 0.0 seconds of run
 ;;; time
 NIL
@@ -172,8 +172,8 @@ NIL
 The built-in macro [`TIME`](http://www.lispworks.com/documentation/HyperSpec/Body/m_time.htm) does roughly the same as the above macro (it executes a form and prints timing information at the end), but it also usually provides information about memory usage, time spent in garbage collection, page faults, etc. The format of the output is implementation-dependent, but in general it's pretty useful and informative. This is an example under Allegro Common Lisp 6.0: we generate a list of 100 real numbers and we measure the time it takes to sort them in ascending order.
 
 ~~~lisp
-* (let ((numbers (loop for i from 1 to 100 collect (random 1.0))))
-    (time (sort numbers #'<)))
+CL-USER> (let ((numbers (loop for i from 1 to 100 collect (random 1.0))))
+           (time (sort numbers #'<)))
 ; cpu time (non-gc) 0 msec user, 10 msec system
 ; cpu time (gc)     0 msec user, 0 msec system
 ; cpu time (total)  0 msec user, 10 msec system
@@ -189,20 +189,19 @@ The built-in macro [`TIME`](http://www.lispworks.com/documentation/HyperSpec/Bod
 In the section about [Universal Time](#univ) we've learned enough to write a small function that computes the day of the week. Unfortunately, by definition, this function won't work for dates before January 1, 1900.
 
 ~~~lisp
-* (defun day-of-week (day month year)
-    "Returns the day of the week as an integer.
-Monday is 0."
-    (nth-value
-     6
-     (decode-universal-time
-      (encode-universal-time 0 0 0 day month year 0)
-      0)))
+CL-USER> (defun day-of-week (day month year)
+	   "Returns the day of the week as an integer. Monday is 0."
+	   (nth-value
+	    6
+	    (decode-universal-time
+	     (encode-universal-time 0 0 0 day month year 0)
+	     0)))
 DAY-OF-WEEK
-* (day-of-week 23 12 1965)
+CL-USER> (day-of-week 23 12 1965)
 3
-* (day-of-week 1 1 1900)
+CL-USER> (day-of-week 1 1 1900)
 0
-* (day-of-week 31 12 1899)
+CL-USER> (day-of-week 31 12 1899)
 
 Type-error in KERNEL::OBJECT-NOT-TYPE-ERROR-HANDLER:
    1899 is not of type (OR (MOD 100) (INTEGER 1900))
@@ -212,8 +211,7 @@ If this is a problem for you, here's a small function by Gerald Doussot (adapted
 
 ~~~lisp
 (defun day-of-week (day month year)
-  "Returns the day of the week as an integer.
-Sunday is 0. Works for years after 1752."
+  "Returns the day of the week as an integer. Sunday is 0. Works for years after 1752."
   (let ((offset '(0 3 2 5 0 3 5 1 4 6 2 4)))
     (when (< month 3)
       (decf year 1))
