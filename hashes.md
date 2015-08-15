@@ -30,16 +30,16 @@ The function [`gethash`](http://www.lispworks.com/documentation/HyperSpec/Body/f
 If you want to add an element to a hash table, you can use `gethash`, the function to retrieve elements from the hash table, in conjunction with [`setf`](http://www.lispworks.com/documentation/HyperSpec/Body/m_setf_.htm).
 
 ~~~lisp
-* (defparameter *my-hash* (make-hash-table))
+CL-USER> (defparameter *my-hashCL-USER> (make-hash-table))
 *MY-HASH*
-* (setf (gethash 'one-entry *my-hash*) "one")
+CL-USER> (setf (gethash 'one-entry *my-hash*) "one")
 "one"
-* (setf (gethash 'another-entry *my-hash*) 2/4)
+CL-USER> (setf (gethash 'another-entry *my-hash*) 2/4)
 1/2
-* (gethash 'one-entry *my-hash*)
+CL-USER> (gethash 'one-entry *my-hash*)
 "one"
 T
-* (gethash 'another-entry *my-hash*)
+CL-USER> (gethash 'another-entry *my-hash*)
 1/2
 T
 ~~~
@@ -52,43 +52,41 @@ T
 The first value returned by `gethash` is the object in the hash table that's associated with the key you provided as an argument to `gethash` or `nil` if no value exists for this key. This value can act as a [generalized boolean](http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_g.htm#generalized_boolean">generalized boolean) if you want to test for the presence of keys.
 
 ~~~lisp
-* (defparameter *my-hash* (make-hash-table))
+CL-USER> (defparameter *my-hash* (make-hash-table))
 *MY-HASH*
-* (setf (gethash 'one-entry *my-hash*) "one")
+CL-USER> (setf (gethash 'one-entry *my-hash*) "one")
 "one"
-* (if (gethash 'one-entry *my-hash*)
-    "Key exists"
-    "Key does not exist")
+CL-USER> (if (gethash 'one-entry *my-hash*)
+           "Key exists"
+           "Key does not exist")
 "Key exists"
-* (if (gethash 'another-entry *my-hash*)
-    "Key exists"
-    "Key does not exist")
+CL-USER> (if (gethash 'another-entry *my-hash*)
+           "Key exists"
+           "Key does not exist")
 "Key does not exist"
 ~~~
 
 But note that this does _not_ work if `nil` is amongst the values that you want to store in the hash.
 
 ~~~lisp
-;;; continued from above
-* (setf (gethash 'another-entry *my-hash*) nil)
+CL-USER> (setf (gethash 'another-entry *my-hash*) nil)
 NIL
-* (if (gethash 'another-entry *my-hash*)
-    "Key exists"
-    "Key does not exist")
+CL-USER> (if (gethash 'another-entry *my-hash*)
+           "Key exists"
+           "Key does not exist")
 "Key does not exist"
 ~~~
 
 In this case you'll have to check the _second_ return value of `gethash` which will always return `nil` if no value is found and T otherwise.
 
 ~~~lisp
-;;; continued from above
-* (if (nth-value 1 (gethash 'another-entry *my-hash*))
-    "Key exists"
-    "Key does not exist")
+CL-USER> (if (nth-value 1 (gethash 'another-entry *my-hash*))
+           "Key exists"
+           "Key does not exist")
 "Key exists"
-* (if (nth-value 1 (gethash 'no-entry *my-hash*))
-    "Key exists"
-    "Key does not exist")
+CL-USER> (if (nth-value 1 (gethash 'no-entry *my-hash*))
+           "Key exists"
+           "Key does not exist")
 "Key does not exist"
 ~~~
 
@@ -100,24 +98,24 @@ In this case you'll have to check the _second_ return value of `gethash` which w
 Use [`remhash`](http://www.lispworks.com/documentation/HyperSpec/Body/f_remhas.htm) to delete a hash entry. Both the key and its associated value will be removed from the hash table. `remhash` returns T if there was such an entry, `nil` otherwise.
 
 ~~~lisp
-* (defparameter *my-hash* (make-hash-table))
+CL-USER> (defparameter *my-hashCL-USER> (make-hash-table))
 *MY-HASH*
-* (setf (gethash 'first-key *my-hash*) 'one)
+CL-USER> (setf (gethash 'first-key *my-hash*) 'one)
 ONE
-* (gethash 'first-key *my-hash*)
+CL-USER> (gethash 'first-key *my-hash*)
 ONE
 T
-* (remhash 'first-key *my-hash*)
+CL-USER> (remhash 'first-key *my-hash*)
 T
-* (gethash 'first-key *my-hash*)
+CL-USER> (gethash 'first-key *my-hash*)
 NIL
 NIL
-* (gethash 'no-entry *my-hash*)
+CL-USER> (gethash 'no-entry *my-hash*)
 NIL
 NIL
-* (remhash 'no-entry *my-hash*)
+CL-USER> (remhash 'no-entry *my-hash*)
 NIL
-* (gethash 'no-entry *my-hash*)
+CL-USER> (gethash 'no-entry *my-hash*)
 NIL
 NIL
 ~~~
@@ -132,20 +130,20 @@ If you want to perform an action on each entry (i.e., each key-value pair) in a 
 You can use [`maphash`](http://www.lispworks.com/documentation/HyperSpec/Body/f_maphas.htm) which iterates over all entries in the hash table. Its first argument must be a function which accepts _two_ arguments, the key and the value of each entry. Note that due to the nature of hash tables you _can't_ control the order in which the entries are provided by `maphash` (or other traversing constructs). `maphash` always returns `nil`.
 
 ~~~lisp
-* (defparameter *my-hash* (make-hash-table))
+CL-USER> (defparameter *my-hash* (make-hash-table))
 *MY-HASH*
-* (setf (gethash 'first-key *my-hash*) 'one)
+CL-USER> (setf (gethash 'first-key *my-hash*) 'one)
 ONE
-* (setf (gethash 'second-key *my-hash*) 'two)
+CL-USER> (setf (gethash 'second-key *my-hash*) 'two)
 TWO
-* (setf (gethash 'third-key *my-hash*) nil)
+CL-USER> (setf (gethash 'third-key *my-hash*) nil)
 NIL
-* (setf (gethash nil *my-hash*) 'nil-value)
+CL-USER> (setf (gethash nil *my-hash*) 'nil-value)
 NIL-VALUE
-* (defun print-hash-entry (key value)
+CL-USER> (defun print-hash-entry (key value)
     (format t "The value associated with the key ~S is ~S~%" key value))
 PRINT-HASH-ENTRY
-* (maphash #'print-hash-entry *my-hash*)
+CL-USER> (maphash #'print-hash-entry *my-hash*)
 The value associated with the key FIRST-KEY is ONE
 The value associated with the key SECOND-KEY is TWO
 The value associated with the key THIRD-KEY is NIL
@@ -156,13 +154,13 @@ You can also use [`with-hash-table-iterator`](http://www.lispworks.com/documenta
 
 ~~~lisp
 ;;; same hash-table as above
-* (with-hash-table-iterator (my-iterator *my-hash*)
-    (loop
-       (multiple-value-bind (entry-p key value)
-           (my-iterator)
-         (if entry-p
-             (print-hash-entry key value)
-             (return)))))
+CL-USER> (with-hash-table-iterator (my-iterator *my-hash*)
+           (loop
+              (multiple-value-bind (entry-p key value)
+                  (my-iterator)
+                (if entry-p
+                    (print-hash-entry key value)
+                    (return)))))
 The value associated with the key FIRST-KEY is ONE
 The value associated with the key SECOND-KEY is TWO
 The value associated with the key THIRD-KEY is NIL
@@ -177,31 +175,31 @@ And there's always [`loop`](http://www.lispworks.com/documentation/HyperSpec/Bod
 
 ~~~lisp
 ;;; same hash-table as above
-* (loop for key being the hash-keys of *my-hash*
-        do (print key))
+CL-USER> (loop for key being the hash-keys of *my-hash* 
+           do (print key))
 FIRST-KEY
 SECOND-KEY
 THIRD-KEY
 NIL
 NIL
-* (loop for key being the hash-keys of *my-hash*
-        using (hash-value value)
-        do (format t "The value associated with the key ~S is ~S~%" key value))
+CL-USER> (loop for key being the hash-keys of *my-hash*
+           using (hash-value value)
+           do (format t "The value associated with the key ~S is ~S~%" key value))
 The value associated with the key FIRST-KEY is ONE
 The value associated with the key SECOND-KEY is TWO
 The value associated with the key THIRD-KEY is NIL
 The value associated with the key NIL is NIL-VALUE
 NIL
-* (loop for value being the hash-values of *my-hash*
-        do (print value))
+CL-USER> (loop for value being the hash-values of *my-hash*
+           do (print value))
 ONE
 TWO
 NIL
 NIL-VALUE
 NIL
-* (loop for value being the hash-values of *my-hash*
-        using (hash-key key)
-        do (format t "~&~A -> ~A" key value))
+CL-USER> (loop for value being the hash-values of *my-hash*
+           using (hash-key key)
+           do (format t "~&~A -> ~A" key value))
 FIRST-KEY -> ONE
 SECOND-KEY -> TWO
 THIRD-KEY -> NIL
@@ -217,25 +215,25 @@ NIL
 No need to use your fingers - Common Lisp has a built-in function to do it for you: [`hash-table-count`](http://www.lispworks.com/documentation/HyperSpec/Body/f_hash_1.htm).
 
 ~~~lisp
-* (defparameter *my-hash* (make-hash-table))
+CL-USER> (defparameter *my-hash* (make-hash-table))
 *MY-HASH*
-* (hash-table-count *my-hash*)
+CL-USER> (hash-table-count *my-hash*)
 0
-* (setf (gethash 'first *my-hash*) 1)
+CL-USER> (setf (gethash 'first *my-hash*) 1)
 1
-* (setf (gethash 'second *my-hash*) 2)
+CL-USER> (setf (gethash 'second *my-hash*) 2)
 2
-* (setf (gethash 'third *my-hash*) 3)
+CL-USER> (setf (gethash 'third *my-hash*) 3)
 3
-* (hash-table-count *my-hash*)
+CL-USER> (hash-table-count *my-hash*)
 3
-* (setf (gethash 'second *my-hash*) 'two)
+CL-USER> (setf (gethash 'second *my-hash*) 'two)
 TWO
-* (hash-table-count *my-hash*)
+CL-USER> (hash-table-count *my-hash*)
 3
-* (clrhash *my-hash*)
+CL-USER> (clrhash *my-hash*)
 #<EQL hash table, 0 entries {48205F35}>
-* (hash-table-count *my-hash*)
+CL-USER> (hash-table-count *my-hash*)
 0
 ~~~
 
@@ -247,13 +245,13 @@ TWO
 The `make-hash-table` function has a couple of optional parameters which control the initial size of your hash table and how it'll grow if it needs to grow. This can be an important performance issue if you're working with large hash tables. Here's an (admittedly not very scientific) example with [CMUCL](http://www.cons.org/cmucl) pre-18d on Linux:
 
 ~~~lisp
-* (defparameter *my-hash* (make-hash-table))
+CL-USER> (defparameter *my-hash* (make-hash-table))
 *MY-HASH*
-* (hash-table-size *my-hash*)
+CL-USER> (hash-table-size *my-hash*)
 65
-* (hash-table-rehash-size *my-hash*)
+CL-USER> (hash-table-rehash-size *my-hash*)
 1.5
-* (time (dotimes (n 100000) (setf (gethash n *my-hash*) n)))
+CL-USER> (time (dotimes (n 100000) (setf (gethash n *my-hash*) n)))
 Compiling LAMBDA NIL:
 Compiling Top-Level Form:
 
@@ -264,7 +262,7 @@ Evaluation took:
   0 page faults and
   8754768 bytes consed.
 NIL
-* (time (dotimes (n 100000) (setf (gethash n *my-hash*) n)))
+CL-USER> (time (dotimes (n 100000) (setf (gethash n *my-hash*) n)))
 Compiling LAMBDA NIL:
 Compiling Top-Level Form:
 
@@ -280,9 +278,9 @@ NIL
 The values for [`hash-table-size`](http://www.lispworks.com/documentation/HyperSpec/Body/f_hash_4.htm) and [`hash-table-rehash-size`](http://www.lispworks.com/documentation/HyperSpec/Body/f_hash_2.htm) are implementation-dependent. In our case, CMUCL chooses and initial size of 65, and it will increase the size of the hash by 50 percent whenever it needs to grow. Let's see how often we have to re-size the hash until we reach the final size...
 
 ~~~lisp
-* (log (/ 100000 65) 1.5)
+CL-USER> (log (/ 100000 65) 1.5)
 18.099062
-* (let ((size 65)) (dotimes (n 20) (print (list n size)) (setq size (* 1.5 size))))
+CL-USER> (let ((size 65)) (dotimes (n 20) (print (list n size)) (setq size (* 1.5 size))))
 (0 65)
 (1 97.5)
 (2 146.25)
@@ -312,11 +310,11 @@ Here's a faster way to do it:
 If we know in advance how big our hash will be, we can start with the right size:
 
 ~~~lisp
-* (defparameter *my-hash* (make-hash-table :size 100000))
+CL-USER> (defparameter *my-hash* (make-hash-table :size 100000))
 *MY-HASH*
-* (hash-table-size *my-hash*)
+CL-USER> (hash-table-size *my-hash*)
 100000
-* (time (dotimes (n 100000) (setf (gethash n *my-hash*) n)))
+CL-USER> (time (dotimes (n 100000) (setf (gethash n *my-hash*) n)))
 Compiling LAMBDA NIL:
 Compiling Top-Level Form:
 
@@ -332,13 +330,13 @@ NIL
 That's obviously much faster. And there was no consing involved because we didn't have to re-size at all. If we don't know the final size in advance but can guess the growth behaviour of our hash table we can also provide this value to `make-hash-table`. We can provide an integer to specify absolute growth or a float to specify relative growth.
 
 ~~~lisp
-* (defparameter *my-hash* (make-hash-table :rehash-size 100000))
+CL-USER> (defparameter *my-hash* (make-hash-table :rehash-size 100000))
 *MY-HASH*
-* (hash-table-size *my-hash*)
+CL-USER> (hash-table-size *my-hash*)
 65
-* (hash-table-rehash-size *my-hash*)
+CL-USER> (hash-table-rehash-size *my-hash*)
 100000
-* (time (dotimes (n 100000) (setf (gethash n *my-hash*) n)))
+CL-USER> (time (dotimes (n 100000) (setf (gethash n *my-hash*) n)))
 Compiling LAMBDA NIL:
 Compiling Top-Level Form:
 

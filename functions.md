@@ -25,71 +25,66 @@ doubler
 This can of course be done in Common Lisp, but the syntax and the semantics are different. The first step, creating a function that returns a function, looks very similar apart from minor syntactical conventions, but what happens behind the scenes is different:
 
 ~~~lisp
-* (defun adder (n)
-    (lambda (x) (+ x n)))
+CL-USER> (defun adder (n) (lambda (x) (+ x n)))
 ADDER
 ~~~
 
 Here we have defined the function `adder` which returns an _object_ of _type_ [`function`](http://www.lispworks.com/documentation/HyperSpec/Body/t_fn.htm). To create such an object you'll have to use the special operator [`function`](<a href="http://www.lispworks.com/documentation/HyperSpec/Body/s_fn.htm) and apply it to a _lambda expression_. `(function` _form_`)` may be abbreviated as `#'`_form_. In our example above we used a shorthand notation provided by the macro [`lambda`](http://www.lispworks.com/documentation/HyperSpec/Body/m_lambda.htm). Without this little bit of syntactical sugar we would have to write it as
 
 ~~~lisp
-* (defun adder (n)
-    #'(lambda (x) (+ x n)))
+CL-USER> (defun adder (n) #'(lambda (x) (+ x n)))
 ADDER
 ~~~
 
 or
 
 ~~~lisp
-* (defun adder (n)
-    (function (lambda (x) (+ x n))))
+CL-USER> (defun adder (n) (function (lambda (x) (+ x n))))
 ADDER
 ~~~
 
 No matter how we write it, `adder` will now return a function whenever we call it. But we _can't_ use it in the same way we would use it in Scheme:
 
 ~~~lisp
-;;; continued from above
-* (adder 3)
+CL-USER> (adder 3)
 #<Interpreted Function "LAMBDA (N)" {485FFE81}>
 
-* ((adder 3) 5)
+CL-USER> ((adder 3) 5)
 In: (ADDER 3) 5
-  ((ADDER 3) 5)
+    ((ADDER 3) 5)
 Error: Illegal function call.
 ~~~
 
 Here is why: CL has different _namespaces_ for functions and variables, i.e. the same _name_ can refer to different things depending on it's position in a form that's evaluated:
 
 ~~~lisp
-* (boundp 'foo)
+CL-USER> (boundp 'foo)
 NIL
-* (fboundp 'foo)
+CL-USER> (fboundp 'foo)
 NIL
-* (defparameter foo 42)
+CL-USER> (defparameter foo 42)
 FOO
 * foo
 42
-* (boundp 'foo)
+CL-USER> (boundp 'foo)
 T
-* (fboundp 'foo)
+CL-USER> (fboundp 'foo)
 NIL
-* (defun foo (x) (* x x))
+CL-USER> (defun foo (x) (* x x))
 FOO
-* (fboundp 'foo)
+CL-USER> (fboundp 'foo)
 T
 * foo            ;;; ***
 42
-* (foo 3)        ;;; +++
+CL-USER> (foo 3)        ;;; +++
 9
-* (foo foo)
+CL-USER> (foo foo)
 1764
-* (function foo)
+CL-USER> (function foo)
 #<Interpreted Function FOO {48523CC1}>
 * #'foo
 #<Interpreted Function FOO {48523CC1}>
-* (let ((+ 3))
-    (+ + +))
+CL-USER> (let ((+ 3)) (+ + +))
 6
 ~~~
 
@@ -111,17 +106,17 @@ This explains the error message we got above - `(adder 3)` is neither a symbol n
 
 ~~~lisp
 ;;; continued from above
-* (funcall (adder 3) 5)
+CL-USER> (funcall (adder 3) 5)
 8
-* (apply (adder 3) '(5))
+CL-USER> (apply (adder 3) '(5))
 8
-* (defparameter *my-fun* (adder 3))
+CL-USER> (defparameter *my-funCL-USER> (adder 3))
 *MY-FUN*
 * *my-fun*
 #<Interpreted Function "LAMBDA (N)" {486468C9}>
-* (funcall *my-fun* 5)
+CL-USER> (funcall *my-fun* 5)
 8
-* (*my-fun* 5)
+CL-USER> (*my-fun* 5)
 Warning: This function is undefined:
   *MY-FUN*
 ~~~
@@ -130,37 +125,37 @@ Note that in the last example the function object returned by `(adder 3)` is sto
 
 ~~~lisp
 ;;; continued from above
-* (fboundp '*my-fun*)
+CL-USER> (fboundp '*my-fun*)
 NIL
-* (setf (symbol-function '*my-fun*) (adder 3))
+CL-USER> (setf (symbol-function '*my-fun*) (adder 3))
 #<Interpreted Function "LAMBDA (N)" {4869FA19}>
-* (fboundp '*my-fun*)
+CL-USER> (fboundp '*my-fun*)
 T
-* (*my-fun* 5)
+CL-USER> (*my-fun* 5)
 8
 ~~~
 
 Now we are ready do define `doubler` as well:
 
 ~~~lisp
-* (defun doubler (f)
+CL-USER> (defun doubler (f)
     (lambda (x) (funcall f x x)))
 DOUBLER
-* (doubler #'+)
+CL-USER> (doubler #'+)
 #<Interpreted Function "LAMBDA (F)" {48675791}>
-* (doubler '+)
+CL-USER> (doubler '+)
 #<Interpreted Function "LAMBDA (F)" {486761B1}>
-* (funcall (doubler #'+) 4)
+CL-USER> (funcall (doubler #'+) 4)
 8
-* (funcall (doubler '+) 4)
+CL-USER> (funcall (doubler '+) 4)
 8
-* (defparameter *my-plus* '+)
+CL-USER> (defparameter *my-plus* '+)
 *MY-PLUS*
-* (funcall (doubler *my-plus*) 4)
+CL-USER> (funcall (doubler *my-plus*) 4)
 8
-* (defparameter *my-fun* (doubler '+))
+CL-USER> (defparameter *my-funCL-USER> (doubler '+))
 *MY-FUN*
-* (funcall *my-fun* 4)
+CL-USER> (funcall *my-fun* 4)
 8
 ~~~
 
@@ -177,20 +172,19 @@ All of the above is _extremely simplified_ - we haven't even mentioned macros, s
 A related concept is that of _[currying](<a href="http://www.cs.jhu.edu/~scott/pl/lectures/caml-intro.html#higherorder)_ which you might be familiar with if you're coming from a functional language. After we've read the last section that's rather easy to implement:
 
 ~~~lisp
-* (declaim (ftype (function (function &rest t) function) curry)
-           (inline curry))
+CL-USER> (declaim (ftype (function (function &rest t) function) curry) (inline curry))
 NIL
-* (defun curry (function &rest args)
-    (lambda (&rest more-args)
-	  (apply function (append args more-args))))
+CL-USER> (defun curry (function &rest args)
+           (lambda (&rest more-args)
+	           (apply function (append args more-args))))
 CURRY
-* (funcall (curry #'+ 3) 5)
+CL-USER> (funcall (curry #'+ 3) 5)
 8
-* (funcall (curry #'+ 3) 6)
+CL-USER> (funcall (curry #'+ 3) 6)
 9
-* (setf (symbol-function 'power-of-ten) (curry #'expt 10))
+CL-USER> (setf (symbol-function 'power-of-ten) (curry #'expt 10))
 #<Interpreted Function "LAMBDA (FUNCTION &REST ARGS)" {482DB969}>
-* (power-of-ten 3)
+CL-USER> (power-of-ten 3)
 1000
 ~~~
 

@@ -22,25 +22,25 @@ either `NIL` if the file doesn't exists, or its
 (which might be different from the argument you supplied).
 
 ~~~lisp
-      edi@bird:/tmp> ln -s /etc/passwd foo
-      edi@bird:/tmp> cmucl
-      ; Loading #p"/home/edi/.cmucl-init".
-      CMU Common Lisp 18d-pre, level-1 built 2002-01-15 on maftia1, running on bird
-      Send questions to cmucl-help@cons.org. and bug reports to cmucl-imp@cons.org.
-      Loaded subsystems:
-      Python native code compiler, target Intel x86
-      CLOS based on PCL version:  September 16 92 PCL (f)
-      Gray Streams Protocol Support
-      CLX X Library MIT R5.02
-      * (probe-file "/etc/passwd")
+edi@bird:/tmp> ln -s /etc/passwd foo
+edi@bird:/tmp> cmucl
+; Loading #p"/home/edi/.cmucl-init".
+CMU Common Lisp 18d-pre, level-1 built 2002-01-15 on maftia1, running on bird
+Send questions to cmucl-help@cons.org. and bug reports to cmucl-imp@cons.org.
+Loaded subsystems:
+Python native code compiler, target Intel x86
+CLOS based on PCL version:  September 16 92 PCL (f)
+Gray Streams Protocol Support
+CLX X Library MIT R5.02
+(probe-file "/etc/passwd")
 
-      #p"/etc/passwd"
-      * (probe-file "foo")
+#p"/etc/passwd"
+(probe-file "foo")
 
-      #p"/etc/passwd"
-      * (probe-file "bar")
+#p"/etc/passwd"
+(probe-file "bar")
 
-      NIL
+NIL
 ~~~
 
 ### Opening a File
@@ -59,11 +59,11 @@ as by a use of
 typical use of WITH-OPEN-FILE looks like this:
 
 ~~~lisp
-  (with-open-file (str <_file-spec_>
-  :direction <_direction_>
-  :if-exists <_if-exists_>
-  :if-does-not-exist <_if-does-not-exist_>)
-  <_your code here_>)
+(with-open-file (str <_file-spec_>
+:direction <_direction_>
+:if-exists <_if-exists_>
+:if-does-not-exist <_if-does-not-exist_>)
+<_your code here_>)
 ~~~
 
 *   `STR` is a variable which'll be bound to the stream which is created by
@@ -106,21 +106,21 @@ reached. You can inhibit this by supplying NIL as the second argument. If you do
 this, READ-LINE will return NIL if it reaches the end of the file.
 
 ~~~lisp
-  * (with-open-file (stream "/etc/passwd")
+(with-open-file (stream "/etc/passwd")
   (do ((line (read-line stream nil)
-  (read-line stream nil)))
-  ((null line))
-  (print line)))
+       (read-line stream nil)))
+       ((null line))
+       (print line)))
 ~~~
 
 You can also supply a third argument which will be used instead of NIL to signal
 the end of the file:
 
 ~~~lisp
-  * (with-open-file (stream "/etc/passwd")
+(with-open-file (stream "/etc/passwd")
   (loop for line = (read-line stream nil 'foo)
-  until (eq line 'foo)
-  do (print line)))
+   until (eq line 'foo)
+   do (print line)))
 ~~~
 
 ### Reading a File one Character at a Time
@@ -131,11 +131,11 @@ line. Of course, newline characters aren't treated differently from other
 characters by this function.
 
 ~~~lisp
-  * (with-open-file (stream "/etc/passwd")
+(with-open-file (stream "/etc/passwd")
   (do ((char (read-char stream nil)
-  (read-char stream nil)))
-  ((null char))
-  (print char)))
+       (read-char stream nil)))
+       ((null char))
+       (print char)))
 ~~~
 
 ### Reading a File into String
@@ -148,12 +148,12 @@ performance problems. To solve this problems, you can read files using buckets
 of specific sizes.
 
 ~~~lisp
-  (with-output-to-string (out)
+(with-output-to-string (out)
   (with-open-file (in "/path/to/big/file")
-  (loop with buffer = (make-array 8192 :element-type 'character)
-  for n-characters = (read-sequence buffer in)
-  while (< 0 n-characters)
-           do (write-sequence buffer out :start 0 :end n-characters)))))
+    (loop with buffer = (make-array 8192 :element-type 'character)
+     for n-characters = (read-sequence buffer in)
+     while (< 0 n-characters)
+     do (write-sequence buffer out :start 0 :end n-characters)))))
 ~~~
 
 Furthermore, you're free to change the format of the read/written data, instead
@@ -172,15 +172,15 @@ first argument is `NIL`, PEEK-CHAR will just return the next character that's
 waiting on the stream:
 
 ~~~lisp
-  * (with-input-from-string (stream "I'm not amused")
+(with-input-from-string (stream "I'm not amused")
   (print (read-char stream))
   (print (peek-char nil stream))
   (print (read-char stream))
   (values))
 
-  #\I
-  #\'
-  #\'
+#\I
+#\'
+#\'
 ~~~
 
 If the first argument is `T`, PEEK-CHAR will skip
@@ -190,8 +190,7 @@ on the stream. The whitespace characters will vanish from the stream as if they
 had been read by READ-CHAR:
 
 ~~~lisp
-  * (with-input-from-string (stream "I'm
-  not amused")
+(with-input-from-string (stream "I'm not amused")
   (print (read-char stream))
   (print (read-char stream))
   (print (read-char stream))
@@ -199,28 +198,30 @@ had been read by READ-CHAR:
   (print (read-char stream))
   (print (read-char stream))
   (values))
-  #\I
-  #\'
-  #\m
-  #\n
-  #\n
-  #\o
+
+#\I
+#\'
+#\m
+#\n
+#\n
+#\o
 ~~~
 
 If the first argument to PEEK-CHAR is a character, the function will skip all
 characters until that particular character is found:
 
 ~~~lisp
-  * (with-input-from-string (stream "I'm not amused")
+(with-input-from-string (stream "I'm not amused")
   (print (read-char stream))
   (print (peek-char #\a stream))
   (print (read-char stream))
   (print (read-char stream))
   (values))
-  #\I
-  #\a
-  #\a
-  #\m
+  
+#\I
+#\a
+#\a
+#\m
 ~~~
 
 Note that PEEK-CHAR has further optional arguments to control its behaviour on
@@ -228,16 +229,17 @@ end-of-file similar to those for READ-LINE and READ-CHAR (and it will signal an
 error by default):
 
 ~~~lisp
-  * (with-input-from-string (stream "I'm not amused")
+(with-input-from-string (stream "I'm not amused")
   (print (read-char stream))
   (print (peek-char #\d stream))
   (print (read-char stream))
   (print (peek-char nil stream nil 'the-end))
   (values))
-  #\I
-  #\d
-  #\d
-  THE-END
+  
+#\I
+#\d
+#\d
+THE-END
 ~~~
 
 You can also put one character back onto the stream with the function
@@ -246,14 +248,15 @@ can use it as if, _after_ you have read a character, you decide that you'd
 better used PEEK-CHAR instead of READ-CHAR:
 
 ~~~lisp
-  * (with-input-from-string (stream "I'm not amused")
+(with-input-from-string (stream "I'm not amused")
   (let ((c (read-char stream)))
-  (print c)
-  (unread-char c stream)
-  (print (read-char stream))
-  (values)))
-  #\I
-  #\I
+    (print c)
+    (unread-char c stream)
+    (print (read-char stream))
+    (values)))
+    
+#\I
+#\I
 ~~~
 
 Note that the front of a stream doesn't behave like a stack: You can only put
@@ -272,7 +275,7 @@ with two arguments (see below), it will actually change the
 in the stream.
 
 ~~~lisp
-  * (with-input-from-string (stream "I'm not amused")
+(with-input-from-string (stream "I'm not amused")
   (print (file-position stream))
   (print (read-char stream))
   (print (file-position stream))
@@ -281,10 +284,11 @@ in the stream.
   (print (read-char stream))
   (print (file-position stream))
   (values))
-  0
-  #\I
-  1
-  4
-  #\n
-  5
+  
+0
+#\I
+1
+4
+#\n
+5
 ~~~
