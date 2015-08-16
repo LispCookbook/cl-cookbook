@@ -63,13 +63,13 @@ Here is an example of how to use these functions in a program:
 
 ~~~lisp
 CL-USER> (defconstant *day-names*
-	   '("Monday" "Tuesday" "Wednesday"
-	     "Thursday" "Friday" "Saturday"
-	     "Sunday"))
+	      '("Monday" "Tuesday" "Wednesday"
+	        "Thursday" "Friday" "Saturday"
+	        "Sunday"))
 *DAY-NAMES*
 
 CL-USER> (multiple-value-bind
-	    (second minute hour date month year day-of-week dst-p tz)
+	       (second minute hour date month year day-of-week dst-p tz)
 		   (get-decoded-time)
 	       (format t "It is now ~2,'0d:~2,'0d:~2,'0d of ~a, ~d/~2,'0d/~d (GMT~@d)"
 			 hour
@@ -130,14 +130,14 @@ This means that in the Lisp environment used in this example, internal time is m
 
 ~~~lisp
 CL-USER> (let ((real1 (get-internal-real-time))
-	       (run1 (get-internal-run-time)))
-	   (... your call here ...)
-	   (let ((run2 (get-internal-run-time))
-		   (real2 (get-internal-real-time)))
-	       (format t "Computation took:~%")
-	       (format t "  ~f seconds of real time~%"
+	           (run1 (get-internal-run-time)))
+	       (... your call here ...)
+	       (let ((run2 (get-internal-run-time))
+		         (real2 (get-internal-real-time)))
+	         (format t "Computation took:~%")
+	         (format t "  ~f seconds of real time~%"
 		       (/ (- real2 real1) internal-time-units-per-second))
-	       (format t "  ~f seconds of run time~%"
+	         (format t "  ~f seconds of run time~%"
 		       (/ (- run2 run1) internal-time-units-per-second))))
 ~~~
 
@@ -145,21 +145,21 @@ A good way to see the difference between real time and run time is to test the a
 
 ~~~lisp
 CL-USER> (defmacro timing (&body forms)
-	   (let ((real1 (gensym))
-		   (real2 (gensym))
-		   (run1 (gensym))
-		   (run2 (gensym))
-		   (result (gensym)))
-	   `(letCL-USER> ((,real1 (get-internal-real-time))
-		     (,run1 (get-internal-run-time))
-		     (,result (progn ,@forms))
-		     (,run2 (get-internal-run-time))
-		     (,real2 (get-internal-real-time)))
-		(format *debug-io* ";;; Computation took:~%")
-		(format *debug-io* ";;;  ~f seconds of real time~%"
-			(/ (- ,real2 ,real1) internal-time-units-per-second))
-		(format t ";;;  ~f seconds of run time~%"
-			(/ (- ,run2 ,run1) internal-time-units-per-second))
+	       (let ((real1 (gensym))
+		         (real2 (gensym))
+		         (run1 (gensym))
+		         (run2 (gensym))
+		         (result (gensym)))
+	         `(let* ((,real1 (get-internal-real-time))
+		             (,run1 (get-internal-run-time))
+		             (,result (progn ,@forms))
+		             (,run2 (get-internal-run-time))
+		             (,real2 (get-internal-real-time)))
+		       (format *debug-io* ";;; Computation took:~%")
+	       	   (format *debug-io* ";;;  ~f seconds of real time~%"
+			     (/ (- ,real2 ,real1) internal-time-units-per-second))
+		       (format t ";;;  ~f seconds of run time~%"
+			     (/ (- ,run2 ,run1) internal-time-units-per-second))
 		,result)))
 TIMING
 
@@ -190,11 +190,11 @@ In the section about [Universal Time](#univ) we've learned enough to write a sma
 
 ~~~lisp
 CL-USER> (defun day-of-week (day month year)
-	   "Returns the day of the week as an integer. Monday is 0."
-	   (nth-value
-	    6
-	    (decode-universal-time
-	     (encode-universal-time 0 0 0 day month year 0)
+           "Returns the day of the week as an integer. Monday is 0."
+	       (nth-value
+	         6
+	         (decode-universal-time
+	           (encode-universal-time 0 0 0 day month year 0)
 	     0)))
 DAY-OF-WEEK
 CL-USER> (day-of-week 23 12 1965)

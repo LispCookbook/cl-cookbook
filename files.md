@@ -32,13 +32,13 @@ Python native code compiler, target Intel x86
 CLOS based on PCL version:  September 16 92 PCL (f)
 Gray Streams Protocol Support
 CLX X Library MIT R5.02
-(probe-file "/etc/passwd")
+* (probe-file "/etc/passwd")
 
 #p"/etc/passwd"
-(probe-file "foo")
+* (probe-file "foo")
 
 #p"/etc/passwd"
-(probe-file "bar")
+* (probe-file "bar")
 
 NIL
 ~~~
@@ -151,9 +151,9 @@ of specific sizes.
 (with-output-to-string (out)
   (with-open-file (in "/path/to/big/file")
     (loop with buffer = (make-array 8192 :element-type 'character)
-     for n-characters = (read-sequence buffer in)
-     while (< 0 n-characters)
-     do (write-sequence buffer out :start 0 :end n-characters)))))
+          for n-characters = (read-sequence buffer in)
+          while (< 0 n-characters)
+          do (write-sequence buffer out :start 0 :end n-characters)))))
 ~~~
 
 Furthermore, you're free to change the format of the read/written data, instead
@@ -172,11 +172,11 @@ first argument is `NIL`, PEEK-CHAR will just return the next character that's
 waiting on the stream:
 
 ~~~lisp
-(with-input-from-string (stream "I'm not amused")
-  (print (read-char stream))
-  (print (peek-char nil stream))
-  (print (read-char stream))
-  (values))
+CL-USER> (with-input-from-string (stream "I'm not amused")
+           (print (read-char stream))
+           (print (peek-char nil stream))
+           (print (read-char stream))
+           (values))
 
 #\I
 #\'
@@ -190,14 +190,14 @@ on the stream. The whitespace characters will vanish from the stream as if they
 had been read by READ-CHAR:
 
 ~~~lisp
-(with-input-from-string (stream "I'm not amused")
-  (print (read-char stream))
-  (print (read-char stream))
-  (print (read-char stream))
-  (print (peek-char t stream))
-  (print (read-char stream))
-  (print (read-char stream))
-  (values))
+CL-USER> (with-input-from-string (stream "I'm not amused")
+           (print (read-char stream))
+           (print (read-char stream))
+           (print (read-char stream))
+           (print (peek-char t stream))
+           (print (read-char stream))
+           (print (read-char stream))
+           (values))
 
 #\I
 #\'
@@ -211,12 +211,12 @@ If the first argument to PEEK-CHAR is a character, the function will skip all
 characters until that particular character is found:
 
 ~~~lisp
-(with-input-from-string (stream "I'm not amused")
-  (print (read-char stream))
-  (print (peek-char #\a stream))
-  (print (read-char stream))
-  (print (read-char stream))
-  (values))
+CL-USER> (with-input-from-string (stream "I'm not amused")
+           (print (read-char stream))
+           (print (peek-char #\a stream))
+           (print (read-char stream))
+           (print (read-char stream))
+           (values))
   
 #\I
 #\a
@@ -229,12 +229,12 @@ end-of-file similar to those for READ-LINE and READ-CHAR (and it will signal an
 error by default):
 
 ~~~lisp
-(with-input-from-string (stream "I'm not amused")
-  (print (read-char stream))
-  (print (peek-char #\d stream))
-  (print (read-char stream))
-  (print (peek-char nil stream nil 'the-end))
-  (values))
+CL-USER> (with-input-from-string (stream "I'm not amused")
+           (print (read-char stream))
+           (print (peek-char #\d stream))
+           (print (read-char stream))
+           (print (peek-char nil stream nil 'the-end))
+           (values))
   
 #\I
 #\d
@@ -248,12 +248,12 @@ can use it as if, _after_ you have read a character, you decide that you'd
 better used PEEK-CHAR instead of READ-CHAR:
 
 ~~~lisp
-(with-input-from-string (stream "I'm not amused")
-  (let ((c (read-char stream)))
-    (print c)
-    (unread-char c stream)
-    (print (read-char stream))
-    (values)))
+CL-USER> (with-input-from-string (stream "I'm not amused")
+           (let ((c (read-char stream)))
+             (print c)
+             (unread-char c stream)
+             (print (read-char stream))
+             (values)))
     
 #\I
 #\I
@@ -275,15 +275,15 @@ with two arguments (see below), it will actually change the
 in the stream.
 
 ~~~lisp
-(with-input-from-string (stream "I'm not amused")
-  (print (file-position stream))
-  (print (read-char stream))
-  (print (file-position stream))
-  (file-position stream 4)
-  (print (file-position stream))
-  (print (read-char stream))
-  (print (file-position stream))
-  (values))
+CL-USER> (with-input-from-string (stream "I'm not amused")
+           (print (file-position stream))
+           (print (read-char stream))
+           (print (file-position stream))
+           (file-position stream 4)
+           (print (file-position stream))
+           (print (read-char stream))
+           (print (file-position stream))
+           (values))
   
 0
 #\I

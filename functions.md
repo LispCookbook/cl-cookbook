@@ -110,7 +110,7 @@ CL-USER> (funcall (adder 3) 5)
 8
 CL-USER> (apply (adder 3) '(5))
 8
-CL-USER> (defparameter *my-funCL-USER> (adder 3))
+CL-USER> (defparameter *my-fun* (adder 3))
 *MY-FUN*
 * *my-fun*
 #<Interpreted Function "LAMBDA (N)" {486468C9}>
@@ -153,7 +153,7 @@ CL-USER> (defparameter *my-plus* '+)
 *MY-PLUS*
 CL-USER> (funcall (doubler *my-plus*) 4)
 8
-CL-USER> (defparameter *my-funCL-USER> (doubler '+))
+CL-USER> (defparameter *my-fun* (doubler '+))
 *MY-FUN*
 CL-USER> (funcall *my-fun* 4)
 8

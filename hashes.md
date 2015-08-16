@@ -30,7 +30,7 @@ The function [`gethash`](http://www.lispworks.com/documentation/HyperSpec/Body/f
 If you want to add an element to a hash table, you can use `gethash`, the function to retrieve elements from the hash table, in conjunction with [`setf`](http://www.lispworks.com/documentation/HyperSpec/Body/m_setf_.htm).
 
 ~~~lisp
-CL-USER> (defparameter *my-hashCL-USER> (make-hash-table))
+CL-USER> (defparameter *my-hash* (make-hash-table))
 *MY-HASH*
 CL-USER> (setf (gethash 'one-entry *my-hash*) "one")
 "one"
@@ -98,7 +98,7 @@ CL-USER> (if (nth-value 1 (gethash 'no-entry *my-hash*))
 Use [`remhash`](http://www.lispworks.com/documentation/HyperSpec/Body/f_remhas.htm) to delete a hash entry. Both the key and its associated value will be removed from the hash table. `remhash` returns T if there was such an entry, `nil` otherwise.
 
 ~~~lisp
-CL-USER> (defparameter *my-hashCL-USER> (make-hash-table))
+CL-USER> (defparameter *my-hash* (make-hash-table))
 *MY-HASH*
 CL-USER> (setf (gethash 'first-key *my-hash*) 'one)
 ONE
