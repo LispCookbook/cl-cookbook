@@ -63,23 +63,23 @@ Here is an example of how to use these functions in a program:
 
 ~~~lisp
 CL-USER> (defconstant *day-names*
-	      '("Monday" "Tuesday" "Wednesday"
-	        "Thursday" "Friday" "Saturday"
-	        "Sunday"))
+           '("Monday" "Tuesday" "Wednesday"
+	         "Thursday" "Friday" "Saturday"
+	         "Sunday"))
 *DAY-NAMES*
 
 CL-USER> (multiple-value-bind
-	       (second minute hour date month year day-of-week dst-p tz)
-		   (get-decoded-time)
-	       (format t "It is now ~2,'0d:~2,'0d:~2,'0d of ~a, ~d/~2,'0d/~d (GMT~@d)"
-			 hour
-			 minute
-			 second
-			 (nth day-of-week *day-names*)
-			 month
-			 date
-			 year
-			 (- tz)))
+           (second minute hour date month year day-of-week dst-p tz)
+    	   (get-decoded-time)
+           (format t "It is now ~2,'0d:~2,'0d:~2,'0d of ~a, ~d/~2,'0d/~d (GMT~@d)"
+	    	 hour
+	    	 minute
+	    	 second
+	    	 (nth day-of-week *day-names*)
+	    	 month
+	    	 date
+	    	 year
+	    	 (- tz)))
 It is now 17:07:17 of Saturday, 1/26/2002 (GMT-5)
 ~~~
 
