@@ -9,6 +9,8 @@ particular string function, make sure you've also searched for the more general
 array or sequence functions. We'll only cover a fraction of what can be done
 with and to strings here.
 
+__Note__: see also [cl-string](https://github.com/diogoalexandrefranco/cl-strings), with functions such as split, join, replace, insert, change case,…
+
 # Accessing Substrings
 
 As a string is a sequence, you can access substrings with the SUBSEQ
