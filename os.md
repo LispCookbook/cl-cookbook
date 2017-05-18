@@ -10,22 +10,29 @@ The ANSI Common Lisp standard doesn't mention this topic. (Keep in mind that it 
 
 ## Accessing Environment variables
 
-Here's a function that'll allow you to look at Unix/Linux environment variables on a lot of different CL implementations:
+ASDF comes with a function that'll allow you to look at Unix/Linux environment variables on a lot of different CL implementations:
+
+~~~lisp
+(uipo:get-env "HOME")
+"/home/edi"
+~~~
+
+Below is an example implementation:
 
 ~~~lisp
 * (defun my-getenv (name &optional default)
-    #+CMU
-    (let ((x (assoc name ext:*environment-list*
-                    :test #'string=)))
-      (if x (cdr x) default))
-    #-CMU
-    (or
-    #+Allegro (sys:getenv name)
-    #+CLISP (ext:getenv name)
-    #+ECL (si:getenv name)
-    #+SBCL (sb-unix::posix-getenv name)
-    #+LISPWORKS (lispworks:environment-variable name)
-    default))
+  "Obtains the current value of the POSIX environment variable NAME."
+  (declare (type (or string symbol) name))
+  (let ((name (string name)))
+    (or #+abcl (ext:getenv name)
+        #+ccl (ccl:getenv name)
+        #+clisp (ext:getenv name)
+        #+cmu (unix:unix-getenv name) ; since CMUCL 20b
+        #+ecl (si:getenv name)
+        #+gcl (si:getenv name)
+        #+mkcl (mkcl:getenv name)
+        #+sbcl (sb-ext:posix-getenv name)
+        default)))
 MY-GETENV
 * (my-getenv "HOME")
 "/home/edi"
@@ -37,6 +44,10 @@ NIL
 
 You should also note that some of these implementations also provide the ability to _set_ these variables. These include ECL (`si:setenv`) and AllegroCL, LispWorks, and CLISP where you can use the functions from above together with [`setf`](http://www.lispworks.com/documentation/HyperSpec/Body/m_setf_.htm). This feature might be important if you want to start subprocesses from your Lisp environment.
 
+Also note that the
+[Osicat](https://www.common-lisp.net/project/osicat/manual/osicat.html#Environment)
+library has the method `(environment-variable "name")`, on POSIX-like
+systems including Windows. It is also `fset`-able.
 
 <a name="accessing-command-line"></a>
 
