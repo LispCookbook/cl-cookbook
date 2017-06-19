@@ -1,6 +1,5 @@
-2015-08-05
-  Indent all HTML as per Emacs html-mode indent-region command (otjura).
-	
+After August 2nd, 2015, this repository has lived in Git. Please see `git log` for further details.
+
 2007-11-01
   Changed Alberto's address
   Updated link section
@@ -218,10 +217,10 @@
   .emacs & windows.html: mods for CLISP 2.28 (new version) and changes suggested by Luke Crook
 
 2002-03-28
-  Corrections in "faithful output" entry (also by Jörg)
+  Corrections in "faithful output" entry (also by JÃ¶rg)
 
 2002-03-21
-  Added "faithful output" entry (by Jörg-Cyril Höhle) in IO chapter
+  Added "faithful output" entry (by JÃ¶rg-Cyril HÃ¶hle) in IO chapter
 
 2002-03-08
   .emacs & windows.html: added support for LispWorks 
@@ -276,9 +275,9 @@
       currently one entry about listing all symbols by Frederic Brunel
     - chapter about OS interfacing,
       currently one entry about accessing environment variables
-      by Paul Foley with additons by Jörg-Cyril Höhle and Edi Weitz
+      by Paul Foley with additons by JÃ¶rg-Cyril HÃ¶hle and Edi Weitz
     - chapter about foreign function interfaces,
-      gethostname CLISP example by Jörg-Cyril Höhle
+      gethostname CLISP example by JÃ¶rg-Cyril HÃ¶hle
       with additions by Reini Urban,
       gethostname ACL example by Alberto Riva
     - starting page (index.html) including the list of contributors
