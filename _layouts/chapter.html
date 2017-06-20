@@ -8,6 +8,17 @@ layout: default
 
 <ul id="toc"></ul>
 
-{{ content }}
+<div id="content"
+  {{ content }}
+</div>
 
-<script type="text/javascript">$("#toc").toc({headings: "h2,h3,h4"});</script>
+<script type="text/javascript">
+
+ // Don't write the TOC on the index.
+ if (window.location.pathname != "/cl-cookbook/") {
+   $("#toc").toc({
+     content: "#content",  // will ignore the first h1 with the site+page title.
+     headings: "h1,h2,h3,h4"});
+ }
+
+</script>
