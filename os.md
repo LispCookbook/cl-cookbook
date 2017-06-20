@@ -13,8 +13,8 @@ The ANSI Common Lisp standard doesn't mention this topic. (Keep in mind that it 
 ASDF comes with a function that'll allow you to look at Unix/Linux environment variables on a lot of different CL implementations:
 
 ~~~lisp
-(uipo:get-env "HOME")
-"/home/edi"
+* (uiop:getenv "HOME")
+  "/home/edi"
 ~~~
 
 Below is an example implementation:
