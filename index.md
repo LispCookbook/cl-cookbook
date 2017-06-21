@@ -1,5 +1,5 @@
 ---
-title: Common Lisp Cookbook
+title:
 ---
 
 This is a collaborative project that aims to provide for Common Lisp something
