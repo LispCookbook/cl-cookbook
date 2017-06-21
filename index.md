@@ -83,7 +83,7 @@ The pages here on Github are kept up to date. You can also download a
 
 * [The Common Lisp HyperSpec](http://www.lispworks.com/documentation/HyperSpec/Front/index.htm) by Kent M. Pitman
 * [Practical Common Lisp](http://www.gigamonkeys.com/book/) by Peter Seibel
-* [Programming:Common Lisp](http://en.wikibooks.org/wiki/Programming:Common_Lisp) from Wikibooks
+* [Common Lisp](https://en.wikibooks.org/wiki/Common_Lisp) on Wikibooks
 * Daniel Barlow's [CLiki](http://ww.telent.net/cliki)
 * [The new comp.lang.lisp FAQ](http://www-jcsu.jesus.cam.ac.uk/~csr21/lispfaq.html) by Christophe Rhodes
 * [The old comp.lang.lisp FAQ](http://www-2.cs.cmu.edu/Groups//AI/html/faqs/lang/lisp/top.html) by Mark Kantrowitz
