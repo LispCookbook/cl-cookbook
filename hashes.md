@@ -4,28 +4,28 @@ title: Hash Tables
 
 <a name="intro"></a>
 
-##Introduction
+## Introduction
 
 Hash Tables are a powerful data structure, associating keys with values in a very efficient way. Hash Tables are often preferred over association lists whenever performance is an issue, but they introduce a little overhead that makes assoc lists better if there are only a few key-value pairs to maintain.
 
 
 <a name="create"></a>
 
-##Creating a Hash Table
+## Creating a Hash Table
 
 Hash Tables are created using the function [`make-hash-table`](http://www.lispworks.com/documentation/HyperSpec/Body/f_mk_has.htm). It has no required argument. Its most used optional keyword argument is `:test`, specifying the function used to test the equality of keys.
 
 
 <a name="get"></a>
 
-##Getting a value from a Hash Table
+## Getting a value from a Hash Table
 
 The function [`gethash`](http://www.lispworks.com/documentation/HyperSpec/Body/f_gethas.htm) takes two required arguments: a key and a hash table. It returns two values: the value corresponding to the key in the hash table (or `nil` if not found), and a boolean indicating whether the key was found in the table. That second value is necessary since `nil` is a valid value in a key-value pair, so getting `nil` as first value from `gethash` does not necessarily mean that the key was not found in the table.
 
 
 <a name="add"></a>
 
-##Adding an Element to a Hash Table
+## Adding an Element to a Hash Table
 
 If you want to add an element to a hash table, you can use `gethash`, the function to retrieve elements from the hash table, in conjunction with [`setf`](http://www.lispworks.com/documentation/HyperSpec/Body/m_setf_.htm).
 
@@ -47,7 +47,7 @@ T
 
 <a name="test"></a>
 
-##Testing for the Presence of a Key in a Hash Table
+## Testing for the Presence of a Key in a Hash Table
 
 The first value returned by `gethash` is the object in the hash table that's associated with the key you provided as an argument to `gethash` or `nil` if no value exists for this key. This value can act as a [generalized boolean](http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_g.htm#generalized_boolean">generalized boolean) if you want to test for the presence of keys.
 
@@ -93,7 +93,7 @@ CL-USER> (if (nth-value 1 (gethash 'no-entry *my-hash*))
 
 <a name="del"></a>
 
-##Deleting from a Hash Table
+## Deleting from a Hash Table
 
 Use [`remhash`](http://www.lispworks.com/documentation/HyperSpec/Body/f_remhas.htm) to delete a hash entry. Both the key and its associated value will be removed from the hash table. `remhash` returns T if there was such an entry, `nil` otherwise.
 
@@ -123,7 +123,7 @@ NIL
 
 <a name="traverse"></a>
 
-##Traversing a Hash Table
+## Traversing a Hash Table
 
 If you want to perform an action on each entry (i.e., each key-value pair) in a hash table, you have several options:
 
@@ -175,7 +175,7 @@ And there's always [`loop`](http://www.lispworks.com/documentation/HyperSpec/Bod
 
 ~~~lisp
 ;;; same hash-table as above
-CL-USER> (loop for key being the hash-keys of *my-hash* 
+CL-USER> (loop for key being the hash-keys of *my-hash*
            do (print key))
 FIRST-KEY
 SECOND-KEY
@@ -210,7 +210,7 @@ NIL
 
 <a name="count"></a>
 
-##Counting the Entries in a Hash Table
+## Counting the Entries in a Hash Table
 
 No need to use your fingers - Common Lisp has a built-in function to do it for you: [`hash-table-count`](http://www.lispworks.com/documentation/HyperSpec/Body/f_hash_1.htm).
 
@@ -240,7 +240,7 @@ CL-USER> (hash-table-count *my-hash*)
 
 <a name="size"></a>
 
-##Performance Issues: The Size of your Hash Table
+## Performance Issues: The Size of your Hash Table
 
 The `make-hash-table` function has a couple of optional parameters which control the initial size of your hash table and how it'll grow if it needs to grow. This can be an important performance issue if you're working with large hash tables. Here's an (admittedly not very scientific) example with [CMUCL](http://www.cons.org/cmucl) pre-18d on Linux:
 

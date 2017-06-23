@@ -4,7 +4,7 @@ title: Functions
 
 <a name="return"></a>
 
-##Functions that return functions
+## Functions that return functions
 
 "How do I write a function that returns a function?" is a typical question asked by people who have learned Scheme before they started with Common Lisp. In Scheme, they were accustomed to be able to do things like this:
 
@@ -167,7 +167,7 @@ All of the above is _extremely simplified_ - we haven't even mentioned macros, s
 
 <a name="curry"></a>
 
-##Currying functions
+## Currying functions
 
 A related concept is that of _[currying](<a href="http://www.cs.jhu.edu/~scott/pl/lectures/caml-intro.html#higherorder)_ which you might be familiar with if you're coming from a functional language. After we've read the last section that's rather easy to implement:
 
