@@ -2,7 +2,16 @@
 title: Setting up Emacs on Windows or Mac
 ---
 
-Emacs is the preferred Lisp source code editor for most CL developers; however, it is not easy for an Emacs neophyte to get an Emacs environment set up and configured properly for Lisp development. The problem is compounded if the development platform is Microsoft Windows since Unix (and variants) is the more common platform used by experienced Lisp developers. In order to help a Lisp beginner set up an Emacs Common Lisp development environment on a Microsoft Windows PC, this chapter will lay out step-by-step instructions for installing all the necessary components for each of the most popular Common Lisp implementations on Windows:
+Emacs is the preferred Lisp source code editor for most CL developers;
+however, it is not easy for an Emacs neophyte to get an Emacs
+environment set up and configured properly for Lisp development. The
+problem is compounded if the development platform is Microsoft Windows
+since Unix (and variants) is the more common platform used by
+experienced Lisp developers. In order to help a Lisp beginner set up
+an Emacs Common Lisp development environment on a Microsoft Windows
+PC, this chapter will lay out step-by-step instructions for installing
+all the necessary components for each of the most popular Common Lisp
+implementations on Windows:
 
 * **Allegro Common Lisp (ACL):** Franz's own "ELI" will be used in Emacs.
 * **CLISP:** ILISP and Emacs Inferior Lisp Mode will be two alternative environments that can be used with CLISP.
