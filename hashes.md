@@ -15,6 +15,17 @@ Hash Tables are a powerful data structure, associating keys with values in a ver
 
 Hash Tables are created using the function [`make-hash-table`](http://www.lispworks.com/documentation/HyperSpec/Body/f_mk_has.htm). It has no required argument. Its most used optional keyword argument is `:test`, specifying the function used to test the equality of keys.
 
+In [cl21](http://cl21.org/), we use the new `#H` reader syntax:
+
+~~~lisp
+(defvar *hash* #H(:name "Eitaro Fukamachi"))
+~~~
+then we access an element with
+
+~~~lisp
+(getf *hash* :name)
+~~~
+
 
 <a name="get"></a>
 
