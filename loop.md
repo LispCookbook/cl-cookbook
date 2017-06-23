@@ -2,7 +2,9 @@
 title: Loop
 ---
 
-# Background
+<a name="return"></a>
+
+## Background
 
 The Loop Macro is one of the most valuable, and least documented of the
 operations in Common Lisp.  It is valuable because it is more powerful, more
@@ -29,7 +31,7 @@ and appears here by permission of [Peter Karp][karp].
 [source]: http://www.ai.sri.com/~pkarp/loop.html
 [karp]: mailto:pkarp@ai.sri.com
 
-# Examples
+## Examples
 
 Iterate through a list, and print each element.
 
