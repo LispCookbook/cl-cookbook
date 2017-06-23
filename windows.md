@@ -2,7 +2,26 @@
 title: Setting up Emacs on Windows or Mac
 ---
 
-Emacs is the preferred Lisp source code editor for most CL developers; however, it is not easy for an Emacs neophyte to get an Emacs environment set up and configured properly for Lisp development. The problem is compounded if the development platform is Microsoft Windows since Unix (and variants) is the more common platform used by experienced Lisp developers. In order to help a Lisp beginner set up an Emacs Common Lisp development environment on a Microsoft Windows PC, this chapter will lay out step-by-step instructions for installing all the necessary components for each of the most popular Common Lisp implementations on Windows:
+Emacs is the preferred Lisp source code editor for most CL developers.
+
+If you want to get going easily, get
+[Portacle](https://shinmera.github.io/portacle/), a **portable** and
+**multiplatform** CL development environment. You get:
+
+- Emacs25, sligthly customized,
+- Slime,
+- SBCL,
+- Quicklisp,
+- Git.
+
+You only need to download Portacle and double-click to run it. If you
+want to install your environment manually, read on.
+
+In order to help a Lisp beginner set up
+an Emacs Common Lisp development environment on a Microsoft Windows
+PC, this chapter will lay out step-by-step instructions for installing
+all the necessary components for each of the most popular Common Lisp
+implementations on Windows:
 
 * **Allegro Common Lisp (ACL):** Franz's own "ELI" will be used in Emacs.
 * **CLISP:** ILISP and Emacs Inferior Lisp Mode will be two alternative environments that can be used with CLISP.
@@ -17,8 +36,8 @@ By exactly following the installation instructions, the user will wind up with a
 * Configures Emacs with a number of custom configuration settings that are commonly used.
 
 
-There is also a short appendix describing the sample .emacs file and brief Mac OS X setup instructions:  
-A. [Sample .emacs file](#Sample .emacs file)  
+There is also a short appendix describing the sample .emacs file and brief Mac OS X setup instructions:
+A. [Sample .emacs file](#Sample .emacs file)
 B. [Mac OS X Setup Instructions](#Mac OS X Setup Instructions)
 
 For each installation, an installation directory is suggested. It is recommended that you install in the suggested directory since, if you use the suggested directory names, the provided Emacs start-up file (.emacs) will work "out-of-the-box". Please note the following:
@@ -56,9 +75,9 @@ For each installation, an installation directory is suggested. It is recommended
       set EMACSDIR=c:\bin\emacs-21.3
       set ILISPDIR=c:\home\site\ilisp
       </pre>
-    
+
     * From a command line, enter the following commands:
-      
+
       <pre>
       ren c:\home\site\ilisp-5.12.0 c:\home\site\ilisp
       cd c:\home\site\ilisp
@@ -128,7 +147,7 @@ For each installation, an installation directory is suggested. It is recommended
     cd c:\bin\lispworks-4.2
     lispworks-4200 -init c:\home\lisp\console.lisp
     </pre>
- 
+
  This will result in the lw42-console.exe file being created in the c:\bin\lispworks-4.2 directory.
 
 
