@@ -5,6 +5,11 @@ title: Using Emacs as an IDE
 This page is meant to provide an introduction to using Emacs as a Lisp IDE. The key bindings used in the example code snippets assume an Emacs configuration similar to that provided by the [.emacs](https://github.com/LispCookbook/cl-cookbook/blob/master/.emacs) file that is included as part of the [Setting up an IDE with Emacs on Windows or Mac OS X](windows.html) page. If you use ILISP, the key bindings reflect the bindings that are present in the current CVS version of ILISP.
 
 
+**Note**: [Portacle](https://shinmera.github.io/portacle/) is a
+portable and multiplatform CL development environment, a
+straightforward way to get going.
+
+
 <a name="Slide-2"></a>
 
 ## Why Use Emacs?
