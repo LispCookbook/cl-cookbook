@@ -34,7 +34,7 @@ This page is meant to provide an introduction to using Emacs as a Lisp IDE. The 
     *   Incomplete implementation of CLOS (with the add-on EIEIO package)
     *   Not all of CL is supported
     *   No numerical tower support
-    
+
 *   Some good Emacs Lisp learning resources:
     *   [An Introduction to Programming in Emacs Lisp](http://www.gnu.org/manual/emacs-lisp-intro/emacs-lisp-intro.html)
     *   [Writing GNU Emacs Extensions](http://www.oreilly.com/catalog/gnuext/)
@@ -53,7 +53,7 @@ This page is meant to provide an introduction to using Emacs as a Lisp IDE. The 
 
 <a name="Slide-5"></a>
 
-## Inferior Lisp Mode
+### Inferior Lisp Mode
 
 *   Pros:
     *   Comes with Emacs
@@ -71,7 +71,7 @@ This page is meant to provide an introduction to using Emacs as a Lisp IDE. The 
 
 <a name="slide-6"></a>
 
-## ILISP
+### ILISP
 
 *   Pros:
     *   Vastly superior to Inferior Lisp Mode in functionality
@@ -88,7 +88,7 @@ This page is meant to provide an introduction to using Emacs as a Lisp IDE. The 
 
 <a name="Slide-7"></a>
 
-## ELI: Emacs-Lisp Interface
+### ELI: Emacs-Lisp Interface
 
 *   Pros:
     *   Supports multiprocessing (this is a big pro)
@@ -106,7 +106,7 @@ This page is meant to provide an introduction to using Emacs as a Lisp IDE. The 
 
 <a name="Slide-slime"></a>
 
-## SLIME: Superior Lisp Interaction Mode for Emacs
+### SLIME: Superior Lisp Interaction Mode for Emacs
 
 *   Pros:
     *   Provides REPL which is hooked to implementation directly in Emacs
@@ -130,7 +130,7 @@ This page is meant to provide an introduction to using Emacs as a Lisp IDE. The 
 
 <a name="Slide-8"></a>
 
-## Lisp Modes in Emacs - Which One to Choose?
+### Lisp Modes in Emacs - Which One to Choose?
 
 *   My Recommendation:
     *   Inferior Lisp Mode for casual CL programming only
@@ -327,7 +327,7 @@ This page is meant to provide an introduction to using Emacs as a Lisp IDE. The 
 ### Project Management
   * [asdf](http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/cclan/asdf/)
   * [mk-defsystem](http://sourceforge.net/projects/clocc)
-  
+
 ### Debugging
   * ILISP has a standarized set of key bindings for debugging across implementations ("C-c C-b C-h" for a list of them).
 
