@@ -85,7 +85,8 @@ The pages here on Github are kept up to date. You can also download a
 * The [Awesome-cl](https://github.com/CodyReichert/awesome-cl)'s list
 * [The Common Lisp HyperSpec](http://www.lispworks.com/documentation/HyperSpec/Front/index.htm) by Kent M. Pitman
 * [Practical Common Lisp](http://www.gigamonkeys.com/book/) by Peter Seibel
-* [CLiki](http://www.cliki.net/), Common Lisp's wiki
+* [Common Lisp Recipes](http://weitz.de/cl-recipes/) by Edmund Weitz, published in 2016,
+* [Cliki](http://www.cliki.net/), Common Lisp's wiki
 * [Common Lisp](https://en.wikibooks.org/wiki/Common_Lisp) on Wikibooks
 * [The old comp.lang.lisp FAQ](http://www-2.cs.cmu.edu/Groups//AI/html/faqs/lang/lisp/top.html) by Mark Kantrowitz
 * [Common Lisp: A Gentle Introduction to Symbolic Computation](http://www-2.cs.cmu.edu/~dst/LispBook/) by David S. Touretzky
