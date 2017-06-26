@@ -88,6 +88,7 @@ The pages here on Github are kept up to date. You can also download a
 * [Practical Common Lisp](http://www.gigamonkeys.com/book/) by Peter Seibel
 * [Common Lisp Recipes](http://weitz.de/cl-recipes/) by Edmund Weitz, published in 2016,
 * [Cliki](http://www.cliki.net/), Common Lisp's wiki
+* [Articulate Common Lisp](http://articulate-lisp.com/), an initiation manual for the uninitiated
 * [Common Lisp](https://en.wikibooks.org/wiki/Common_Lisp) on Wikibooks
 * [The old comp.lang.lisp FAQ](http://www-2.cs.cmu.edu/Groups//AI/html/faqs/lang/lisp/top.html) by Mark Kantrowitz
 * [Common Lisp: A Gentle Introduction to Symbolic Computation](http://www-2.cs.cmu.edu/~dst/LispBook/) by David S. Touretzky
