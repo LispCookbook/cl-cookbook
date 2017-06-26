@@ -111,4 +111,4 @@ The pages here on Github are kept up to date. You can also download a
 [toc]: http://www.oreilly.com/catalog/cookbook/toc.html
 [zip]: https://github.com/LispCookbook/cl-cookbook/archive/master.zip
 [gh]: https://github.com/LispCookbook/cl-cookbook
-[clog]: http://localhost:4000/cl-cookbook/CHANGELOG
+[clog]: https://github.com/can3p/cl-cookbook/blob/master/CHANGELOG
