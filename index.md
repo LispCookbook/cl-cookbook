@@ -1,34 +1,15 @@
 ---
-title:
+title: Home
 ---
 
-This is a collaborative project that aims to provide for Common Lisp something
-similar to the [Perl Cookbook][perl] published by O'Reilly. More details about
-what it is and what it isn't can be found in this [thread][thread] from
-[comp.lang.lisp][cll].
+> Cookbook, n.
+> a book containing recipes and other information about the preparation and cooking of food.
 
-The credit for finally giving birth to the project probably goes to
-"dj_special_ed" who posted [this message][msg] to [comp.lang.lisp][cll].
+*now with extra Lisp*
 
-If you want to contribute to the CL Cookbook, please send a pull request in or
-file a ticket!
-
-Yes, we're talking to you! We need contributors - write a chapter that's missing
-and add it, find an open question and provide an answer, find bugs and report
-them, (If you have no idea what might be missing but would like to help, take a
-look at the [table of contents][toc] of the Perl Cookbook.) Don't worry about
-the formatting, just send plain text if you like - we'll take care about that
-later.
-
-Thanks in advance for your help!
-
-The pages here on Github are kept up to date. You can also download a
-[up to date zip file][zip] for offline browsing. More info can be found at the
-[Github project page][gh]. There's also a [CHANGELOG][clog] available.
 
 # Content
 
-* [License](license.html)
 * [Strings](strings.html)
 * [Dates and Times](dates_and_times.html)
 * [Hash Tables](hashes.html)
@@ -50,6 +31,30 @@ The pages here on Github are kept up to date. You can also download a
 * [Using the Win32 API](win32.html)
 * [Testing](testing.html)
 * [Miscellaneous](misc.html)
+* [License](license.html)
+
+## Further remarks
+
+This is a collaborative project that aims to provide for Common Lisp something
+similar to the [Perl Cookbook][perl] published by O'Reilly. More details about
+what it is and what it isn't can be found in this [thread][thread] from
+[comp.lang.lisp][cll].
+
+If you want to contribute to the CL Cookbook, please send a pull request in or
+file a ticket!
+
+Yes, we're talking to you! We need contributors - write a chapter that's missing
+and add it, find an open question and provide an answer, find bugs and report
+them, (If you have no idea what might be missing but would like to help, take a
+look at the [table of contents][toc] of the Perl Cookbook.) Don't worry about
+the formatting, just send plain text if you like - we'll take care about that
+later.
+
+Thanks in advance for your help!
+
+The pages here on Github are kept up to date. You can also download a
+[up to date zip file][zip] for offline browsing. More info can be found at the
+[Github project page][gh]. 
 
 ## Contributors
 
@@ -63,7 +68,7 @@ The pages here on Github are kept up to date. You can also download a
 * Martin Cracauer
 * [Gerald Doussot](mailto:gdoussot@yahoo.com)
 * [Paul Foley](mailto:mycroft@actrix.gen.nz)
-* JÃ¶rg-Cyril HÃ¶hle
+* Jörg-Cyril Höhle
 * [Nick Levine](mailto:ndl@ravenbrook.com)
 * [Austin King](mailto:shout@ozten.com)
 * [Lieven Marchand](mailto:mal@wyrd.be)
@@ -71,13 +76,16 @@ The pages here on Github are kept up to date. You can also download a
 * [Kalman Reti](mailto:reti@ai.mit.edu)
 * [Alberto Riva](mailto:alb@chip.org)
 * [Rudi Schlatte](mailto:rschlatte@ist.tu-graz.ac.at)
-* [Emre SevinÃ§](mailto:emres@bilgi.edu.tr)
+* [Emre Sevinç](mailto:emres@bilgi.edu.tr)
 * Paul Tarvydas
 * Kenny Tilton
 * [Reini Urban](mailto:rurban@x-ray.at)
 * [Matthieu Villeneuve](mailto:matthieu@matthieu-villeneuve.net)
 * [Edi Weitz](mailto:edi@agharta.de)
 * Fernando Borretti
+
+Finally, the credit for finally giving birth to the project probably goes to
+"dj_special_ed" who posted [this message][msg] to [comp.lang.lisp][cll].
 
 ## Other CL Resources
 
