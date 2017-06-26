@@ -82,8 +82,9 @@ The pages here on Github are kept up to date. You can also download a
 ## Other CL Resources
 
 * [lisp-lang.org](http://lisp-lang.org/)
-* The [Awesome-cl](https://github.com/CodyReichert/awesome-cl)'s list
+* The [Awesome-cl](https://github.com/CodyReichert/awesome-cl) list
 * [The Common Lisp HyperSpec](http://www.lispworks.com/documentation/HyperSpec/Front/index.htm) by Kent M. Pitman
+* [The Common Lisp UltraSpec](http://phoe.tymoon.eu/clus/doku.php)
 * [Practical Common Lisp](http://www.gigamonkeys.com/book/) by Peter Seibel
 * [Common Lisp Recipes](http://weitz.de/cl-recipes/) by Edmund Weitz, published in 2016,
 * [Cliki](http://www.cliki.net/), Common Lisp's wiki
