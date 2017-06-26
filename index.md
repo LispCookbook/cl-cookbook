@@ -29,6 +29,7 @@ The pages here on Github are kept up to date. You can also download a
 # Content
 
 * [License](license.html)
+* [Editors support](editors-support.html)
 * [Strings](strings.html)
 * [Dates and Times](dates_and_times.html)
 * [Hash Tables](hashes.html)
@@ -45,8 +46,6 @@ The pages here on Github are kept up to date. You can also download a
 * [Foreign Function Interfaces](ffi.html)
 * [Threads](process.html)
 * [Defining Systems](systems.html)
-* [Setting up an IDE with Emacs on Windows or Mac OS X](windows.html)
-* [Using Emacs as a Lisp IDE](emacs-ide.html)
 * [Using the Win32 API](win32.html)
 * [Testing](testing.html)
 * [Miscellaneous](misc.html)
