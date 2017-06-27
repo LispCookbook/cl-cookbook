@@ -169,6 +169,8 @@ All of the above is _extremely simplified_ - we haven't even mentioned macros, s
 
 ## Currying functions
 
+### Concept
+
 A related concept is that of _[currying](<a href="http://www.cs.jhu.edu/~scott/pl/lectures/caml-intro.html#higherorder)_ which you might be familiar with if you're coming from a functional language. After we've read the last section that's rather easy to implement:
 
 ~~~lisp
@@ -189,3 +191,25 @@ CL-USER> (power-of-ten 3)
 ~~~
 
 Note that the [`declaim`](http://www.lispworks.com/documentation/HyperSpec/Body/m_declai.htm) statement above is just a hint for the compiler so it can produce more efficient code if it so wishes. Leaving it out won't change the semantics of the function.
+
+### With the Alexandria library
+
+Now that you know how to do it, you may appreciate to use the
+implementation of the
+[Alexandria](https://common-lisp.net/project/alexandria/draft/alexandria.html#Data-and-Control-Flow)
+library (in Quicklisp).
+
+~~~lisp
+(ql:quickload :alexandria)
+
+(defun adder (foo bar)
+  "Add the two arguments."
+  (+ foo bar))
+
+(defvar add-one (alexandria:curry #'adder 1) "Add 1 to the argument.")
+
+(funcall add-one 10)  ;; => 11
+
+(setf (symbol-function 'add-one) add-one)
+(add-one 10)  ;; => 11
+~~~
