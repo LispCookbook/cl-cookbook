@@ -194,7 +194,7 @@ Note that the [`declaim`](http://www.lispworks.com/documentation/HyperSpec/Body/
 
 ### With the Alexandria library
 
-Now that you know how to do it, you may appreciate to use the
+Now that you know how to do it, you may appreciate using the
 implementation of the
 [Alexandria](https://common-lisp.net/project/alexandria/draft/alexandria.html#Data-and-Control-Flow)
 library (in Quicklisp).
