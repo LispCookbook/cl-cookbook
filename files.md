@@ -292,3 +292,21 @@ CL-USER> (with-input-from-string (stream "I'm not amused")
 #\n
 5
 ~~~
+
+### Getting file attributes (size, access time,...), with the Osicat library
+
+[Osicat](https://www.common-lisp.net/project/osicat/) (in Quicklisp)
+is a lightweight operating system interface for Common Lisp on
+POSIX-like systems, including Windows. With Osicat we can get and set
+**environment variables**, manipulate **files and directories**,
+**pathnames** and a bit more.
+
+Once it is installed, Osicat also defines the `osicat-posix` system,
+which permits us to get file attributes.
+
+~~~lisp
+(ql:quickload :osicat)
+
+(let ((stat (osicat-posix:stat #P"./files.md")))
+  (osicat-posix:stat-size stat))  ;; => 10629
+~~~
