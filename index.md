@@ -89,28 +89,29 @@ Finally, the credit for finally giving birth to the project probably goes to
 
 ## Other CL Resources
 
+* [lisp-lang.org](http://lisp-lang.org/)
+* The [Awesome-cl](https://github.com/CodyReichert/awesome-cl) list
 * [The Common Lisp HyperSpec](http://www.lispworks.com/documentation/HyperSpec/Front/index.htm) by Kent M. Pitman
+* [The Common Lisp UltraSpec](http://phoe.tymoon.eu/clus/doku.php)
 * [Practical Common Lisp](http://www.gigamonkeys.com/book/) by Peter Seibel
+* [Common Lisp Recipes](http://weitz.de/cl-recipes/) by Edmund Weitz, published in 2016,
+* [Cliki](http://www.cliki.net/), Common Lisp's wiki
+* [Articulate Common Lisp](http://articulate-lisp.com/), an initiation manual for the uninitiated
 * [Common Lisp](https://en.wikibooks.org/wiki/Common_Lisp) on Wikibooks
-* Daniel Barlow's [CLiki](http://ww.telent.net/cliki)
-* [The new comp.lang.lisp FAQ](http://www-jcsu.jesus.cam.ac.uk/~csr21/lispfaq.html) by Christophe Rhodes
 * [The old comp.lang.lisp FAQ](http://www-2.cs.cmu.edu/Groups//AI/html/faqs/lang/lisp/top.html) by Mark Kantrowitz
-* [The Association of Lisp Users](http://www.lisp.org/)
 * [Common Lisp: A Gentle Introduction to Symbolic Computation](http://www-2.cs.cmu.edu/~dst/LispBook/) by David S. Touretzky
 * [Successful Lisp: How to Understand and Use Common Lisp](http://www.psg.com/~dlamkins/sl/cover.html) by David B. Lamkins
 * [On Lisp](http://www.paulgraham.com/onlisptext.html) by Paul Graham
 * [Common Lisp the Language, 2nd Edition](http://www-2.cs.cmu.edu/Groups/AI/html/cltl/cltl2.html) by Guy L. Steele
-* [An Introduction and Tutorial for Common Lisp](http://www.apl.jhu.edu/~hall/lisp.html) by Marty Hall
 * [Common Lisp Hints](http://www.n-a-n-o.com/lisp/cmucl-tutorials/LISP-tutorial.html) by Geoffrey J. Gordon
 * [A Guide to CLOS](http://www.aiai.ed.ac.uk/~jeff/clos-guide.html) by Jeff Dalton
 * [Common Lisp Pitfalls](http://www.aiai.ed.ac.uk/~jeff/lisp/cl-pitfalls) by Jeff Dalton
 * [Tutorial for the Common Lisp Loop Macro](http://www.ai.sri.com/~pkarp/loop.html) by Peter D. Karp
-* [Portable Utilities for Common Lisp](http://iris.usc.edu/home/raycharles/price/lisp/doc/lisp-utilities.ps) by Mark Kantrowitz
-* [A Guide to Good Lisp Style](http://www.cc.gatech.edu/computing/classes/cs2360/ghall/style/Good-Lisp-Style.ps) by Peter Norvig and Kent M. Pitman
+* [A Tutorial on Good Lisp Style](https://www.cs.umd.edu/%7Enau/cmsc421/norvig-lisp-style.pdf) by Peter Norvig and Kent Pitman
 * [Lisp and Elements of Style](http://www.nicklevine.org/declarative/lectures/) by Nick Levine
 * Pascal Costanza's [Highly Opinionated Guide to Lisp](http://www.p-cos.net/lisp/guide.html)
-* [Loving Lisp - the Savy Programmer's Secret Weapon](http://www.markwatson.com/opencontent/lisp_lic.htm) by Mark Watson
-* [The Dynamic Learning Center](http://www.dynamiclearningcenter.com/)
+* [Loving Lisp - the Savy Programmer's Secret Weapon](https://leanpub.com/lovinglisp/) by Mark Watson
+* [FranzInc](https://franz.com/), a company selling Common Lisp and Graph Database solutions.
 
 [perl]: http://www.oreilly.com/catalog/cookbook/
 [thread]: http://groups.google.com/groups?threadm=m3it9soz3m.fsf%40bird.agharta.de
