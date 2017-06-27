@@ -99,6 +99,7 @@ The pages here on Github are kept up to date. You can also download a
 * [A Guide to CLOS](http://www.aiai.ed.ac.uk/~jeff/clos-guide.html) by Jeff Dalton
 * [Common Lisp Pitfalls](http://www.aiai.ed.ac.uk/~jeff/lisp/cl-pitfalls) by Jeff Dalton
 * [Tutorial for the Common Lisp Loop Macro](http://www.ai.sri.com/~pkarp/loop.html) by Peter D. Karp
+* [A Tutorial on Good Lisp Style](https://www.cs.umd.edu/%7Enau/cmsc421/norvig-lisp-style.pdf) by Peter Norvig and Kent Pitman
 * [Lisp and Elements of Style](http://www.nicklevine.org/declarative/lectures/) by Nick Levine
 * Pascal Costanza's [Highly Opinionated Guide to Lisp](http://www.p-cos.net/lisp/guide.html)
 * [Loving Lisp - the Savy Programmer's Secret Weapon](https://leanpub.com/lovinglisp/) by Mark Watson
