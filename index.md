@@ -10,6 +10,8 @@ title: Home
 
 # Content
 
+* [License](license.html)
+* [Editor support](editor-support.html)
 * [Strings](strings.html)
 * [Dates and Times](dates_and_times.html)
 * [Hash Tables](hashes.html)
@@ -26,8 +28,6 @@ title: Home
 * [Foreign Function Interfaces](ffi.html)
 * [Threads](process.html)
 * [Defining Systems](systems.html)
-* [Setting up an IDE with Emacs on Windows or Mac OS X](windows.html)
-* [Using Emacs as a Lisp IDE](emacs-ide.html)
 * [Using the Win32 API](win32.html)
 * [Testing](testing.html)
 * [Miscellaneous](misc.html)
