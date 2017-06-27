@@ -217,7 +217,7 @@ CL-USER> (with-input-from-string (stream "I'm not amused")
            (print (read-char stream))
            (print (read-char stream))
            (values))
-  
+
 #\I
 #\a
 #\a
@@ -235,7 +235,7 @@ CL-USER> (with-input-from-string (stream "I'm not amused")
            (print (read-char stream))
            (print (peek-char nil stream nil 'the-end))
            (values))
-  
+
 #\I
 #\d
 #\d
@@ -254,7 +254,7 @@ CL-USER> (with-input-from-string (stream "I'm not amused")
              (unread-char c stream)
              (print (read-char stream))
              (values)))
-    
+
 #\I
 #\I
 ~~~
@@ -284,11 +284,47 @@ CL-USER> (with-input-from-string (stream "I'm not amused")
            (print (read-char stream))
            (print (file-position stream))
            (values))
-  
+
 0
 #\I
 1
 4
 #\n
 5
+~~~
+
+### Getting file attributes (size, access time,...), with the Osicat library
+
+[Osicat](https://www.common-lisp.net/project/osicat/) (in Quicklisp)
+is a lightweight operating system interface for Common Lisp on
+POSIX-like systems, including Windows. With Osicat we can get and set
+**environment variables**, manipulate **files and directories**,
+**pathnames** and a bit more.
+
+Once it is installed, Osicat also defines the `osicat-posix` system,
+which permits us to get file attributes.
+
+~~~lisp
+(ql:quickload :osicat)
+
+(let ((stat (osicat-posix:stat #P"./files.md")))
+  (osicat-posix:stat-size stat))  ;; => 10629
+~~~
+
+We can get the other attributes with the following methods:
+
+~~~
+osicat-posix:stat-dev
+osicat-posix:stat-gid
+osicat-posix:stat-ino
+osicat-posix:stat-uid
+osicat-posix:stat-mode
+osicat-posix:stat-rdev
+osicat-posix:stat-size
+osicat-posix:stat-atime
+osicat-posix:stat-ctime
+osicat-posix:stat-mtime
+osicat-posix:stat-nlink
+osicat-posix:stat-blocks
+osicat-posix:stat-blksize
 ~~~
