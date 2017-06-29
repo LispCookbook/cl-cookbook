@@ -30,6 +30,7 @@ title: Home
 * [Defining Systems](systems.html)
 * [Using the Win32 API](win32.html)
 * [Testing](testing.html)
+* [Web Scraping](web-scraping.html)
 * [Miscellaneous](misc.html)
 * [License](license.html)
 
