@@ -113,9 +113,9 @@ Before we introduce the first of our two defining macros, let's review its non
 
 ~~~lisp
 (defstruct point
-x
-y
-z)
+  x
+  y
+  z)
 ~~~
 
 The form is roughly equivalent to a struct declaration in C. It
@@ -154,49 +154,49 @@ In this example, **note** the form in which structures
 
 
 ~~~lisp
-CL-USER 1 &gt; (defstruct point
-    x
-    y
-    z)
+CL-USER 1 > (defstruct point
+              x
+              y
+              z)
 POINT
 
-CL-USER 2 &gt; (defun distance-from-origin (point)
-    (let* ((x (point-x point))
-    (y (point-y point))
-    (z (point-z point)))
-    (sqrt (+ (* x x) (* y y) (* z z)))))
+CL-USER 2 > (defun distance-from-origin (point)
+              (let* ((x (point-x point))
+                     (y (point-y point))
+                     (z (point-z point)))
+                (sqrt (+ (* x x) (* y y) (* z z)))))
 DISTANCE-FROM-ORIGIN
 
-CL-USER 3 &gt; (defun reflect-in-y-axis (point)
-    (setf (point-y point)
-    (- (point-y point))))
+CL-USER 3 > (defun reflect-in-y-axis (point)
+              (setf (point-y point)
+                    (- (point-y point))))
 REFLECT-IN-Y-AXIS
 
-CL-USER 4 &gt; (setf my-point (make-point :x 3 :y 4 :z 12))
+CL-USER 4 > (setf my-point (make-point :x 3 :y 4 :z 12))
 #S(POINT X 3 Y 4 Z 12)
 
-CL-USER 5 &gt; (type-of my-point)
+CL-USER 5 > (type-of my-point)
 POINT
 
-CL-USER 6 &gt; (distance-from-origin my-point)
+CL-USER 6 > (distance-from-origin my-point)
 13.0
 
-CL-USER 7 &gt; (reflect-in-y-axis my-point)
+CL-USER 7 > (reflect-in-y-axis my-point)
 -4
 
-CL-USER 8 &gt; my-point
+CL-USER 8 > my-point
 #S(POINT X 3 Y -4 Z 12)
 
-CL-USER 9 &gt; (setf a-similar-point #s(point :x 3 :y -4 :z 12))
+CL-USER 9 > (setf a-similar-point #s(point :x 3 :y -4 :z 12))
 #S(POINT X 3 Y -4 Z 12)
 
-CL-USER 10 &gt; (equal my-point a-similar-point)
+CL-USER 10 > (equal my-point a-similar-point)
 NIL
 
-CL-USER 11 &gt; (equalp my-point a-similar-point)
+CL-USER 11 > (equalp my-point a-similar-point)
 T
 
-CL-USER 12 &gt;
+CL-USER 12 >
 ~~~
 
 **Note** that `defstruct` has a number of
@@ -211,9 +211,9 @@ The macro used for defining new data types in CLOS is
 
 ~~~lisp
 (defclass point ()
-(x
-y
-z))
+  (x
+   y
+   z))
 ~~~
 
 **Note** but ignore the empty parentheses for
@@ -246,40 +246,40 @@ z))
     type:
 
 ~~~lisp
-CL-USER 12 &gt; (unintern 'point)
+CL-USER 12 > (unintern 'point)
 T
 
-CL-USER 13 &gt; (defclass point ()
-    (x
-    y
-    z))
-#&lt;STANDARD-CLASS POINT 2060C12C&gt;
+CL-USER 13 > (defclass point ()
+               (x
+                y
+                z))
+#<STANDARD-CLASS POINT 2060C12C>
 
-CL-USER 14 &gt; (setf my-point (make-instance 'point))
-#&lt;POINT 205FA53C&gt;
+CL-USER 14 > (setf my-point (make-instance 'point))
+#<POINT 205FA53C>
 
-CL-USER 15 &gt; (type-of my-point)
+CL-USER 15 > (type-of my-point)
 POINT
 
-CL-USER 16 &gt; (defun set-point-values (point x y z)
-    (setf (slot-value point 'x) x
-    (slot-value point 'y) y
-    (slot-value point 'z) z))
+CL-USER 16 > (defun set-point-values (point x y z)
+               (setf (slot-value point 'x) x
+                     (slot-value point 'y) y
+                     (slot-value point 'z) z))
 SET-POINT-VALUES
 
-CL-USER 17 &gt; (set-point-values my-point 3 4 12)
+CL-USER 17 > (set-point-values my-point 3 4 12)
 12
 
-CL-USER 18 &gt; (defun distance-from-origin (point)
-    (with-slots (x y z)
-    point
-    (sqrt (+ (* x x) (* y y) (* z z)))))
+CL-USER 18 > (defun distance-from-origin (point)
+               (with-slots (x y z)
+                   point
+                 (sqrt (+ (* x x) (* y y) (* z z)))))
 DISTANCE-FROM-ORIGIN
 
-CL-USER 19 &gt; (distance-from-origin my-point)
+CL-USER 19 > (distance-from-origin my-point)
 13.0
 
-CL-USER 20 &gt;
+CL-USER 20 >
 ~~~
 
 **Note** the following:
@@ -322,8 +322,8 @@ CL-USER 20 &gt;
 Compare the values returned from the example calls to
     `defstruct` (line 1 above) and `defclass` (line
     13). The former doesn't return anything useful, but the latter has
-    returned a lisp object of some sort: `#&lt;STANDARD-CLASS POINT
-275B78DC&gt;`. This object <u>is</u> the class named
+    returned a lisp object of some sort: `#<STANDARD-CLASS POINT
+275B78DC>`. This object <u>is</u> the class named
     `point`. It's a first class object within lisp: an
     embodiment of a CLOS type. In fact it can be passed as the type
     argument to `typep` and `subtypep`. It's also a
@@ -331,22 +331,22 @@ Compare the values returned from the example calls to
     we can find out what that class is, as in the example below.
 
 ~~~lisp
-CL-USER 20 &gt; (find-class 'point)
-#&lt;STANDARD-CLASS POINT 275B78DC&gt;
+CL-USER 20 > (find-class 'point)
+#<STANDARD-CLASS POINT 275B78DC>
 
-CL-USER 21 &gt; (class-name (find-class 'point))
+CL-USER 21 > (class-name (find-class 'point))
 POINT
 
-CL-USER 22 &gt; (class-of my-point)
-#&lt;STANDARD-CLASS POINT 275B78DC&gt;
+CL-USER 22 > (class-of my-point)
+#<STANDARD-CLASS POINT 275B78DC>
 
-CL-USER 23 &gt; (typep my-point (class-of my-point))
+CL-USER 23 > (typep my-point (class-of my-point))
 T
 
-CL-USER 24 &gt; (class-of (class-of my-point))
-#&lt;STANDARD-CLASS STANDARD-CLASS 20306534&gt;
+CL-USER 24 > (class-of (class-of my-point))
+#<STANDARD-CLASS STANDARD-CLASS 20306534>
 
-CL-USER 25 &gt;
+CL-USER 25 >
 ~~~
 
 The last of these looks a little scary at first. The object
@@ -369,17 +369,17 @@ Generously, the functions introduced in the last section also work
     on lisp objects which are <u>not</u> CLOS instances:
 
 ~~~lisp
-CL-USER 25 &gt; (let ((the-symbol-class (find-class 'symbol)))
-    (values the-symbol-class
-(class-name the-symbol-class)
-    (eq the-symbol-class (class-of 'symbol))
-(class-of the-symbol-class)))
-#&lt;BUILT-IN-CLASS SYMBOL 20306474&gt;
+CL-USER 25 > (let ((the-symbol-class (find-class 'symbol)))
+               (values the-symbol-class
+                       (class-name the-symbol-class)
+                       (eq the-symbol-class (class-of 'symbol))
+                       (class-of the-symbol-class)))
+#<BUILT-IN-CLASS SYMBOL 20306474>
 SYMBOL
 T
-#&lt;STANDARD-CLASS BUILT-IN-CLASS 20306414&gt;
+#<STANDARD-CLASS BUILT-IN-CLASS 20306414>
 
-CL-USER 26 &gt;
+CL-USER 26 >
 ~~~
 
 Postponing to [section 4.5][section-45] the question
@@ -422,23 +422,23 @@ The presence of `t` is interesting. Just as every lisp
     in some detail later ([section 3.6][section-36]).
 
 ~~~lisp
-CL-USER 26 &gt; (find-class t)
-#&lt;BUILT-IN-CLASS T 20305AEC&gt;
+CL-USER 26 > (find-class t)
+#<BUILT-IN-CLASS T 20305AEC>
 
-CL-USER 27 &gt;
+CL-USER 27 >
 ~~~
 
 In addition to classes corresponding to lisp types, there is also a
     CLOS class for every structure type you define:
 
 ~~~lisp
-CL-USER 27 &gt; (defstruct foo)
+CL-USER 27 > (defstruct foo)
 FOO
 
-CL-USER 28 &gt; (class-of (make-foo))
-#&lt;STRUCTURE-CLASS FOO 21DE8714&gt;
+CL-USER 28 > (class-of (make-foo))
+#<STRUCTURE-CLASS FOO 21DE8714>
 
-CL-USER 29 &gt;
+CL-USER 29 >
 ~~~
 
 The metaclass of a `structure-object` is the class
@@ -531,34 +531,34 @@ In the following example, **note** the following:
     (`daft-y`) and `slot-value`.
 
 ~~~lisp
-CL-USER 29 &gt; (defclass daft-point ()
-    ((x :accessor daft-x :initarg :x)
-    (y :accessor daft-y :initform 3.14159)
-    (z :reader daft-z :allocation :class)))
-#&lt;STANDARD-CLASS DAFT-POINT 21DF867C&gt;
+CL-USER 29 > (defclass daft-point ()
+               ((x :accessor daft-x :initarg :x)
+                (y :accessor daft-y :initform 3.14159)
+                (z :reader daft-z :allocation :class)))
+#<STANDARD-CLASS DAFT-POINT 21DF867C>
 
-CL-USER 30 &gt; (setf (slot-value (make-instance 'daft-point) 'z) 42)
+CL-USER 30 > (setf (slot-value (make-instance 'daft-point) 'z) 42)
 42
 
-CL-USER 31 &gt; (setf my-daft-point (make-instance 'daft-point :x 19))
-#&lt;DAFT-POINT 205F264C&gt;
+CL-USER 31 > (setf my-daft-point (make-instance 'daft-point :x 19))
+#<DAFT-POINT 205F264C>
 
-CL-USER 32 &gt; (list (daft-x my-daft-point)
-    (daft-y my-daft-point)
-    (daft-z my-daft-point))
+CL-USER 32 > (list (daft-x my-daft-point)
+                   (daft-y my-daft-point)
+                   (daft-z my-daft-point))
 (19 3.14159 42)
 
-CL-USER 33 &gt; (let ((temp (make-instance 'daft-point)))
-    (setf (daft-y temp) 999
-(slot-value temp 'z) 0))
+CL-USER 33 > (let ((temp (make-instance 'daft-point)))
+               (setf (daft-y temp) 999
+                     (slot-value temp 'z) 0))
 0
 
-CL-USER 34 &gt; (list (daft-x my-daft-point)
-    (daft-y my-daft-point)
-    (daft-z my-daft-point))
+CL-USER 34 > (list (daft-x my-daft-point)
+                   (daft-y my-daft-point)
+                   (daft-z my-daft-point))
 (19 3.14159 0)
 
-CL-USER 35 &gt;
+CL-USER 35 >
 ~~~
 
 **Exercise:** Find a `defstruct` form and
@@ -577,20 +577,20 @@ Suppose we want two classes to share behaviour, in the sense that
 For example:
 
 ~~~lisp
-CL-USER 35 &gt; (defclass animal ()
-    ((legs :reader leg-count :initarg :legs)
-    (comes-from :reader comes-from :initarg :comes-from)))
-#&lt;STANDARD-CLASS ANIMAL 2150BA0C&gt;
+CL-USER 35 > (defclass animal ()
+               ((legs :reader leg-count :initarg :legs)
+                (comes-from :reader comes-from :initarg :comes-from)))
+#<STANDARD-CLASS ANIMAL 2150BA0C>
 
-CL-USER 36 &gt; (defclass mammal (animal)
-    ((diet :initform 'antelopes :initarg :diet)))
-#&lt;STANDARD-CLASS MAMMAL 2150A894&gt;
+CL-USER 36 > (defclass mammal (animal)
+               ((diet :initform 'antelopes :initarg :diet)))
+#<STANDARD-CLASS MAMMAL 2150A894>
 
-CL-USER 37 &gt; (defclass aardvark (mammal)
-    ((cute-p :accessor cute-p :initform nil)))
-#&lt;STANDARD-CLASS AARDVARK 2150A5D4&gt;
+CL-USER 37 > (defclass aardvark (mammal)
+               ((cute-p :accessor cute-p :initform nil)))
+#<STANDARD-CLASS AARDVARK 2150A5D4>
 
-CL-USER 38 &gt;
+CL-USER 38 >
 ~~~
 
 In this example, `mammal` is defined (by line 36) to be
@@ -626,15 +626,15 @@ note:** these two functions are not part of Common Lisp. In
     precedence list.) 
 
 ~~~lisp
-CL-USER 38 &gt; (class-direct-superclasses (find-class 'aardvark))
-(#&lt;STANDARD-CLASS MAMMAL 2150A894&gt;)
+CL-USER 38 > (class-direct-superclasses (find-class 'aardvark))
+(#<STANDARD-CLASS MAMMAL 2150A894>)
 
-CL-USER 39 &gt; (class-precedence-list (find-class 'aardvark))
-(#&lt;STANDARD-CLASS AARDVARK 2150A5D4&gt; #&lt;STANDARD-CLASS MAMMAL 2150A894&gt;
-#&lt;STANDARD-CLASS ANIMAL 2150BA0C&gt; #&lt;STANDARD-CLASS STANDARD-OBJECT 20305B4C&gt;
-#&lt;BUILT-IN-CLASS T 20305AEC&gt;)
+CL-USER 39 > (class-precedence-list (find-class 'aardvark))
+(#<STANDARD-CLASS AARDVARK 2150A5D4> #<STANDARD-CLASS MAMMAL 2150A894>
+                  #<STANDARD-CLASS ANIMAL 2150BA0C> #<STANDARD-CLASS STANDARD-OBJECT 20305B4C>
+                  #<BUILT-IN-CLASS T 20305AEC>)
 
-CL-USER 40 &gt;
+CL-USER 40 >
 ~~~
 
 The `class-precedence-list` of a class is a list which
@@ -661,17 +661,17 @@ The `class-precedence-list` of a class is a list which
 Now consider this:
 
 ~~~lisp
-CL-USER 40 &gt; (defclass figurine ()
-    ((potter :accessor made-by :initarg :made-by)
-    (comes-from :initarg :made-in)))
-#&lt;STANDARD-CLASS FIGURINE 205FBD1C&gt;
+CL-USER 40 > (defclass figurine ()
+               ((potter :accessor made-by :initarg :made-by)
+                (comes-from :initarg :made-in)))
+#<STANDARD-CLASS FIGURINE 205FBD1C>
 
-CL-USER 41 &gt; (defclass figurine-aardvark (aardvark figurine)
-    ((name :reader aardvark-name :initarg :aardvark-name)
-    (diet :initform nil)))
-#&lt;STANDARD-CLASS FIGURINE-AARDVARK 205FF354&gt;
+CL-USER 41 > (defclass figurine-aardvark (aardvark figurine)
+               ((name :reader aardvark-name :initarg :aardvark-name)
+                (diet :initform nil)))
+#<STANDARD-CLASS FIGURINE-AARDVARK 205FF354>
 
-CL-USER 42 &gt;
+CL-USER 42 >
 ~~~
 
 The class `figurine-aardvark` here inherits its
@@ -702,13 +702,13 @@ This is called <cite>multiple inheritance</cite>. It's a terribly
     superclasses.
 
 ~~~lisp
-CL-USER 42 &gt; (class-precedence-list (find-class 'figurine-aardvark))
-(#&lt;STANDARD-CLASS FIGURINE-AARDVARK 2150938C&gt; #&lt;STANDARD-CLASS AARDVARK 2150A5D4&gt;
-#&lt;STANDARD-CLASS MAMMAL 2150A894&gt; #&lt;STANDARD-CLASS ANIMAL 2150BA0C&gt;
-#&lt;STANDARD-CLASS FIGURINE 2150A06C&gt; #&lt;STANDARD-CLASS STANDARD-OBJECT 20305B4C&gt;
-#&lt;BUILT-IN-CLASS T 20305AEC&gt;)
+CL-USER 42 > (class-precedence-list (find-class 'figurine-aardvark))
+(#<STANDARD-CLASS FIGURINE-AARDVARK 2150938C> #<STANDARD-CLASS AARDVARK 2150A5D4>
+                  #<STANDARD-CLASS MAMMAL 2150A894> #<STANDARD-CLASS ANIMAL 2150BA0C>
+                  #<STANDARD-CLASS FIGURINE 2150A06C> #<STANDARD-CLASS STANDARD-OBJECT 20305B4C>
+                  #<BUILT-IN-CLASS T 20305AEC>)
 
-CL-USER 43 &gt;
+CL-USER 43 >
 ~~~
 
 
@@ -758,20 +758,20 @@ What happens if a slot with some given name appears more than once
 Example:
 
 ~~~lisp
-CL-USER 43 &gt; (setf Eric (make-instance 'figurine-aardvark
-    :legs 4
-    :made-by "Jen"
-    :made-in "Brittany"
-    :aardvark-name "Eric"))
-#&lt;FIGURINE-AARDVARK 206108BC&gt;
+CL-USER 43 > (setf Eric (make-instance 'figurine-aardvark
+                                       :legs 4
+                                       :made-by "Jen"
+                                       :made-in "Brittany"
+                                       :aardvark-name "Eric"))
+#<FIGURINE-AARDVARK 206108BC>
 
-CL-USER 44 &gt; (shiftf (cute-p Eric) t)
+CL-USER 44 > (shiftf (cute-p Eric) t)
 NIL
 
-CL-USER 45 &gt; (slot-value Eric 'diet)
+CL-USER 45 > (slot-value Eric 'diet)
 NIL
 
-CL-USER 46 &gt;
+CL-USER 46 >
 ~~~
 
 Be warned that inheritance is fairly easy to misuse, and multiple
@@ -790,7 +790,7 @@ For instance, suppose your application wants to draw a picture of a
     pointing to each instance's `traffic-light`. Mixing the
     classes together with this flashy multiple inheritance stuff will just
     lead to <a
-        href="http://www.cogsci.princeton.edu/cgi-bin/webwn1.7.1?stage=1&amp;word=spaghetti">spaghetti</a>.
+        href="http://www.cogsci.princeton.edu/cgi-bin/webwn1.7.1?stage=1&word=spaghetti">spaghetti</a>.
     If following your code depends on an intimate understanding of how
     topological sorting works, or detailed examination of many classes to
     figure out why you didn't get the `:initform` you wanted,
@@ -823,23 +823,23 @@ To redefine a class, simply evaluate a new `defclass`
     definition. For example:
 
 ~~~lisp
-CL-USER 46 &gt; (list Eric (class-of Eric) (slot-exists-p Eric 'has-tail-p))
-(#&lt;FIGURINE-AARDVARK 2112B44C&gt;
-#&lt;STANDARD-CLASS FIGURINE-AARDVARK 2150938C&gt;
-NIL)
+CL-USER 46 > (list Eric (class-of Eric) (slot-exists-p Eric 'has-tail-p))
+(#<FIGURINE-AARDVARK 2112B44C>
+                     #<STANDARD-CLASS FIGURINE-AARDVARK 2150938C>
+                     NIL)
 
-CL-USER 47 &gt; (defclass animal ()
-    ((legs :reader leg-count :initarg :legs)
-    (has-tail-p :reader has-tail-p :initform t)
-    (comes-from :reader comes-from :initarg :comes-from)))
-#&lt;STANDARD-CLASS ANIMAL 2150BA0C&gt;
+CL-USER 47 > (defclass animal ()
+               ((legs :reader leg-count :initarg :legs)
+                (has-tail-p :reader has-tail-p :initform t)
+                (comes-from :reader comes-from :initarg :comes-from)))
+#<STANDARD-CLASS ANIMAL 2150BA0C>
 
-CL-USER 48 &gt; (list Eric (class-of Eric) (slot-value Eric 'has-tail-p))
-(#&lt;FIGURINE-AARDVARK 2112B44C&gt;
-#&lt;STANDARD-CLASS FIGURINE-AARDVARK 2150938C&gt;
-T)
+CL-USER 48 > (list Eric (class-of Eric) (slot-value Eric 'has-tail-p))
+(#<FIGURINE-AARDVARK 2112B44C>
+                     #<STANDARD-CLASS FIGURINE-AARDVARK 2150938C>
+                     T)
 
-CL-USER 49 &gt;
+CL-USER 49 >
 ~~~
 
 You can redefine classes while an application is running, in just
@@ -854,18 +854,18 @@ To change the class of an instance, use
     `change-class`:
 
 ~~~lisp
-CL-USER 49 &gt; (defclass antelope (mammal)
-    ((diet :reader munched-by)))
-#&lt;STANDARD-CLASS ANTELOPE 2061A14C&gt;
+CL-USER 49 > (defclass antelope (mammal)
+               ((diet :reader munched-by)))
+#<STANDARD-CLASS ANTELOPE 2061A14C>
 
-CL-USER 50 &gt; (change-class Eric 'antelope
-    :diet 'greens)
-#&lt;ANTELOPE 2112B44C&gt;
+CL-USER 50 > (change-class Eric 'antelope
+                           :diet 'greens)
+#<ANTELOPE 2112B44C>
 
-CL-USER 51 &gt; (list (slot-exists-p Eric 'potter) (munched-by Eric))
+CL-USER 51 > (list (slot-exists-p Eric 'potter) (munched-by Eric))
 (NIL GREENS)
 
-CL-USER 52 &gt;
+CL-USER 52 >
 ~~~
 
 In the above example, a ceramic aardvark has become a graceful Old
@@ -906,10 +906,10 @@ We can define `class-of` like this.
 
 ~~~lisp
 (defun class-of (object)
-(if (built-in-object-p object)
-(built-in-class-of object)
-;; structures wrappers are similar enough to CLOS instances
-(wrapper-class (instance-wrapper object))))
+  (if (built-in-object-p object)
+      (built-in-class-of object)
+      ;; structures wrappers are similar enough to CLOS instances
+      (wrapper-class (instance-wrapper object))))
 ~~~
 
 The wrapper has the following slots (**note** the
@@ -935,11 +935,11 @@ The wrapper has the following slots (**note** the
     it's in the `EXCL` package.)
 
 ~~~lisp
-CL-USER 52 &gt; (clos::wrapper-of Eric)
-#&lt;record 1513 (LEGS HAS-TAIL-P COMES-FROM DIET) NIL
-#&lt;STANDARD-CLASS ANTELOPE 2115243C&gt;&gt;
+CL-USER 52 > (clos::wrapper-of Eric)
+#<record 1513 (LEGS HAS-TAIL-P COMES-FROM DIET) NIL
+#<STANDARD-CLASS ANTELOPE 2115243C>>
 
-CL-USER 53 &gt;
+CL-USER 53 >
 ~~~
 
 An implementation of `slot-value` might take the
@@ -949,25 +949,25 @@ An implementation of `slot-value` might take the
 
 ~~~lisp
 (defun slot-value (instance slot-name)
-(validate-instance instance)                   ; See below
-(let* ((wrapper (instance-wrapper instance))
-    (local-slot-names (wrapper-local-slot-names wrapper))
-    (local-position (position slot-name local-slot-names))
-    (value (if local-position
-    ;; It's a local slot.
-    (let ((local-slots (instance-slots instance)))
-    (svref local-slots local-position))
-    (let* ((shared-slots (wrapper-shared-slots wrapper))
-    (shared-slot (assoc slot-name shared-slots)))
-    (if shared-slot
-    ;; It's a class slot.
-    (cdr shared-slot)
-;; It's not a slot of this instance.
-    (slot-missing-error instance slot-name))))))
-(if (eq value (the-unbound-slot-value))
-    ;; The slot-value has not yet been set. Always an error in CLOS.
-    (slot-unbound-error instance slot-name)
-value)))
+  (validate-instance instance)                   ; See below
+  (let* ((wrapper (instance-wrapper instance))
+         (local-slot-names (wrapper-local-slot-names wrapper))
+         (local-position (position slot-name local-slot-names))
+         (value (if local-position
+                    ;; It's a local slot.
+                    (let ((local-slots (instance-slots instance)))
+                      (svref local-slots local-position))
+                    (let* ((shared-slots (wrapper-shared-slots wrapper))
+                           (shared-slot (assoc slot-name shared-slots)))
+                      (if shared-slot
+                          ;; It's a class slot.
+                          (cdr shared-slot)
+                          ;; It's not a slot of this instance.
+                          (slot-missing-error instance slot-name))))))
+    (if (eq value (the-unbound-slot-value))
+        ;; The slot-value has not yet been set. Always an error in CLOS.
+        (slot-unbound-error instance slot-name)
+        value)))
 ~~~
 
 If a class is redefined it gets a new wrapper with a new
@@ -991,10 +991,10 @@ Every time the application accesses an instance - for example in
 
 ~~~lisp
 (defun validate-instance (instance)
-(let ((wrapper (instance-wrapper instance)))
-(when (zerop (wrapper-cache-number wrapper))
-;; Instance needs revalidation
-(revalidate-instance instance))))
+  (let ((wrapper (instance-wrapper instance)))
+    (when (zerop (wrapper-cache-number wrapper))
+      ;; Instance needs revalidation
+      (revalidate-instance instance))))
 ~~~
 
 Revalidation is a laborious process, but the general plan is clear
@@ -1031,37 +1031,37 @@ Suppose we want to implement our own - simplified - version of
     `describe`:
 
 ~~~lisp
-CL-USER 53 &gt; (defun my-describe (thing)
-    (typecase thing
-    (cons   (describe-cons thing))
-    (symbol (describe-symbol thing))
-    (array  (describe-array thing))
-    (number (describe-number thing))
-    ;; [ etc etc etc ]
-    (t      (describe-whatever thing))))
+CL-USER 53 > (defun my-describe (thing)
+               (typecase thing
+                 (cons   (describe-cons thing))
+                 (symbol (describe-symbol thing))
+                 (array  (describe-array thing))
+                 (number (describe-number thing))
+                 ;; [ etc etc etc ]
+                 (t      (describe-whatever thing))))
 MY-DESCRIBE
 
-CL-USER 54 &gt; (defun describe-symbol (symbol)
-    (let ((package (symbol-package symbol))
-    (boundp (boundp symbol)))
-    (format t
-    "~s is a symbol. ~
+CL-USER 54 > (defun describe-symbol (symbol)
+               (let ((package (symbol-package symbol))
+                     (boundp (boundp symbol)))
+                 (format t
+                         "~s is a symbol. ~
 It ~:[~*does not have a home~;is in the ~s~] package. ~
 Its value is ~:[unbound~;~s~]."
-    symbol
-    package (when package (package-name package))
-    boundp (when boundp (symbol-value symbol)))))
+                         symbol
+                         package (when package (package-name package))
+                         boundp (when boundp (symbol-value symbol)))))
 DESCRIBE-SYMBOL
 
-CL-USER 55 &gt; (my-describe :foo)
+CL-USER 55 > (my-describe :foo)
 :FOO is a symbol. It is in the "KEYWORD" package. Its value is :FOO.
 NIL
 
-CL-USER 56 &gt; (my-describe '#:foo)
+CL-USER 56 > (my-describe '#:foo)
 #:FOO is a symbol. It does not have a home package. Its value is unbound.
 NIL
 
-CL-USER 57 &gt;
+CL-USER 57 >
 ~~~
 
 There are a number of problems with this:
@@ -1084,13 +1084,13 @@ There are a number of problems with this:
 
 ~~~lisp
 (typecase (cons thing stream)
-((cons array non-scrollable-io)
-(describe-array-non-scrollable array stream))
-((cons array scrollable-io)
-(describe-array-scrollable array stream))
-((cons array output-stream)
-(describe-array-general-stream array stream))
-...)
+  ((cons array non-scrollable-io)
+   (describe-array-non-scrollable array stream))
+  ((cons array scrollable-io)
+   (describe-array-scrollable array stream))
+  ((cons array output-stream)
+   (describe-array-general-stream array stream))
+  ...)
 ~~~
 
 *   As we keep on thinking up cases, the definition of
@@ -1107,33 +1107,33 @@ The defining macro for controlling type-based discrimination in
     CLOS is `defmethod`. An example:
 
 ~~~lisp
-CL-USER 57 &gt; (fmakunbound 'my-describe)
+CL-USER 57 > (fmakunbound 'my-describe)
 MY-DESCRIBE
 
-CL-USER 58 &gt; (defmethod my-describe (thing)
-    (format t
-    "~s could be anything, for all I care."
-    thing))
-#&lt;STANDARD-METHOD MY-DESCRIBE NIL (T) 205EA9E4&gt;
+CL-USER 58 > (defmethod my-describe (thing)
+               (format t
+                       "~s could be anything, for all I care."
+                       thing))
+#<STANDARD-METHOD MY-DESCRIBE NIL (T) 205EA9E4>
 
-CL-USER 59 &gt; (defmethod my-describe ((animal animal))
-    (format t
-    "~s is an animal. It has ~d leg~:p ~
+CL-USER 59 > (defmethod my-describe ((animal animal))
+               (format t
+                       "~s is an animal. It has ~d leg~:p ~
     and comes from ~a."
-    animal
-    (leg-count animal)
-    (comes-from animal)))
-#&lt;STANDARD-METHOD MY-DESCRIBE NIL (ANIMAL) 205F476C&gt;
+                       animal
+                       (leg-count animal)
+                       (comes-from animal)))
+#<STANDARD-METHOD MY-DESCRIBE NIL (ANIMAL) 205F476C>
 
-CL-USER 60 &gt; (my-describe Eric)
-#&lt;ANTELOPE 2112B44C&gt; is an animal. It has 4 legs and comes from Brittany.
+CL-USER 60 > (my-describe Eric)
+#<ANTELOPE 2112B44C> is an animal. It has 4 legs and comes from Brittany.
 NIL
 
-CL-USER 61 &gt; (my-describe (make-instance 'figurine))
-#&lt;FIGURINE 205FFD14&gt; could be anything, for all I care.
+CL-USER 61 > (my-describe (make-instance 'figurine))
+#<FIGURINE 205FFD14> could be anything, for all I care.
 NIL
 
-CL-USER 62 &gt;
+CL-USER 62 >
 ~~~
 
 The `defmethod` form looks like - and is similar to - a
@@ -1178,11 +1178,11 @@ In line 60 we describe an `animal`. Both methods are
     applicable. How does the system choose which one to invoke?
 
 ~~~lisp
-CL-USER 62 &gt; (mapcar 'class-name
-    (class-precedence-list (class-of Eric)))
+CL-USER 62 > (mapcar 'class-name
+                     (class-precedence-list (class-of Eric)))
 (ANTELOPE MAMMAL ANIMAL STANDARD-OBJECT T)
 
-CL-USER 63 &gt;
+CL-USER 63 >
 ~~~
 
 The specialized method is more <cite>specific</cite> because its
@@ -1244,10 +1244,10 @@ stream)`. Define methods for printing `aardvark`s and
 (defclass frob (standard-object) ())
 
 (defmethod foo ((baz frob))
-(loop initially (mangle)
-while baz do
-    (etypecase baz
-    (frob (setf baz (bar baz)))))))
+  (loop initially (mangle)
+        while baz do
+          (etypecase baz
+            (frob (setf baz (bar baz)))))))
 ~~~
 
 ### 4.3. Generic functions and next methods
@@ -1270,17 +1270,17 @@ The first time we defined a method on `my-describe`, we
     `ACLMOP`.)
 
 ~~~lisp
-CL-USER 63 &gt; #'my-describe
-#&lt;STANDARD-GENERIC-FUNCTION MY-DESCRIBE 21111C2A&gt;
+CL-USER 63 > #'my-describe
+#<STANDARD-GENERIC-FUNCTION MY-DESCRIBE 21111C2A>
 
-CL-USER 64 &gt; (generic-function-methods #'my-describe)
-(#&lt;STANDARD-METHOD MY-DESCRIBE NIL (T) 2110B544&gt;
-#&lt;STANDARD-METHOD MY-DESCRIBE NIL (ANIMAL) 21111BF4&gt;)
+CL-USER 64 > (generic-function-methods #'my-describe)
+(#<STANDARD-METHOD MY-DESCRIBE NIL (T) 2110B544>
+                   #<STANDARD-METHOD MY-DESCRIBE NIL (ANIMAL) 21111BF4>)
 
-CL-USER 65 &gt; (method-generic-function (car *))
-#&lt;STANDARD-GENERIC-FUNCTION MY-DESCRIBE 21111C2A&gt;
+CL-USER 65 > (method-generic-function (car *))
+#<STANDARD-GENERIC-FUNCTION MY-DESCRIBE 21111C2A>
 
-CL-USER 66 &gt;
+CL-USER 66 >
 ~~~
 
 **Some notes:**
@@ -1291,7 +1291,7 @@ CL-USER 66 &gt;
     be a generic function, then this will dispatch to (i.e. invoke) the
     most applicable method.
 
-*   Methods can have optional, keyword and `&amp;rest`
+*   Methods can have optional, keyword and `&rest`
     arguments. These must be compatible (<cite>congruent
     lambda lists</cite>) between every method of each generic
     function. For example, if there existed an optional
@@ -1331,23 +1331,23 @@ Calling `call-next-method` when there is no next method
     has lexical scope and indefinite extent).
 
 ~~~lisp
-CL-USER 66 &gt; (defmethod my-describe ((antelope antelope))
-    (if (string= (slot-value antelope 'comes-from)
-    "Brittany")
-    (format t "Eric? Is that you?")
-    (call-next-method)))
-#&lt;STANDARD-METHOD MY-DESCRIBE NIL (ANTELOPE) 20603594&gt;
+CL-USER 66 > (defmethod my-describe ((antelope antelope))
+               (if (string= (slot-value antelope 'comes-from)
+                            "Brittany")
+                   (format t "Eric? Is that you?")
+                   (call-next-method)))
+#<STANDARD-METHOD MY-DESCRIBE NIL (ANTELOPE) 20603594>
 
-CL-USER 67 &gt; (my-describe
-    (make-instance 'antelope :comes-from 'nowhere :legs 4))
-#&lt;ANTELOPE 205ECB64&gt; is an animal. It has 4 legs and comes from NOWHERE.
+CL-USER 67 > (my-describe
+              (make-instance 'antelope :comes-from 'nowhere :legs 4))
+#<ANTELOPE 205ECB64> is an animal. It has 4 legs and comes from NOWHERE.
 NIL
 
-CL-USER 68 &gt; (my-describe Eric)
+CL-USER 68 > (my-describe Eric)
 Eric? Is that you?
 NIL
 
-CL-USER 69 &gt;
+CL-USER 69 >
 ~~~
 
 **Note** finally that the body of every method
@@ -1390,7 +1390,7 @@ Hand in hand with the title of this section comes the notion of
     syntax to reflect that:
 
 ~~~lisp
-Eric&lt;-(my-describe)
+Eric<-(my-describe)
 ~~~
 
 You'd read that as <cite>send the message</cite>
@@ -1450,24 +1450,24 @@ The examples of methods shown so far all specialize on
     [section 3.4][section-34], or any structure class.
 
 ~~~lisp
-CL-USER 69 &gt; (defmethod my-describe ((self structure-object))
-    (format t "~s is a structure object."
-    self))
-#&lt;STANDARD-METHOD MY-DESCRIBE NIL (STRUCTURE-OBJECT) 205F5744&gt;
+CL-USER 69 > (defmethod my-describe ((self structure-object))
+               (format t "~s is a structure object."
+                       self))
+#<STANDARD-METHOD MY-DESCRIBE NIL (STRUCTURE-OBJECT) 205F5744>
 
-CL-USER 70 &gt; (my-describe (make-foo))
+CL-USER 70 > (my-describe (make-foo))
 #S(FOO) is a structure object.
 NIL
 
-CL-USER 71 &gt; (defmethod my-describe ((self foo))
-    (format t "bar"))
-#&lt;STANDARD-METHOD MY-DESCRIBE NIL (FOO) 205F3ADC&gt;
+CL-USER 71 > (defmethod my-describe ((self foo))
+               (format t "bar"))
+#<STANDARD-METHOD MY-DESCRIBE NIL (FOO) 205F3ADC>
 
-CL-USER 72 &gt; (my-describe (make-foo))
+CL-USER 72 > (my-describe (make-foo))
 bar
 NIL
 
-CL-USER 73 &gt;
+CL-USER 73 >
 ~~~
 
 You can use methods in your code without ever defining a CLOS
@@ -1486,19 +1486,19 @@ Another form of specializer, which will occasionally be useful, is
     specializing on classes.
 
 ~~~lisp
-CL-USER 73 &gt; (defmethod my-describe ((self (eql pi)))
-    (format t "approximately 22/7"))
-#&lt;STANDARD-METHOD MY-DESCRIBE NIL ((EQL 3.141592653589793)) 2060E57C&gt;
+CL-USER 73 > (defmethod my-describe ((self (eql pi)))
+               (format t "approximately 22/7"))
+#<STANDARD-METHOD MY-DESCRIBE NIL ((EQL 3.141592653589793)) 2060E57C>
 
-CL-USER 74 &gt; (defmethod my-describe ((self float))
-    (format t "some float"))
-#&lt;STANDARD-METHOD MY-DESCRIBE NIL (FLOAT) 2061EEF4&gt;
+CL-USER 74 > (defmethod my-describe ((self float))
+               (format t "some float"))
+#<STANDARD-METHOD MY-DESCRIBE NIL (FLOAT) 2061EEF4>
 
-CL-USER 75 &gt; (my-describe pi)
+CL-USER 75 > (my-describe pi)
 approximately 22/7
 NIL
 
-CL-USER 76 &gt;
+CL-USER 76 >
 ~~~
 
 
@@ -1517,7 +1517,7 @@ CL-USER 76 &gt;
 Let's start with a word of warning. Reckless use of method
     combination can - like an unfettered hand with multiple inheritance -
     <a
-    href="http://www.cogsci.princeton.edu/cgi-bin/webwn1.7.1?stage=1&amp;word=spaghetti">tangle</a>
+    href="http://www.cogsci.princeton.edu/cgi-bin/webwn1.7.1?stage=1&word=spaghetti">tangle</a>
     your code beyond recognition.
 
 The full syntax for `defmethod` is:
@@ -1584,13 +1584,14 @@ If you think all this looks insanely complicated, you're probably
     `:after` methods like this:
 
 ~~~lisp
-(defmethod spong :before-and-after (&amp;rest args)
-(let ((before (find-method #'spong '(:before) args))
-    (after  (find-method #'spong '(:after) args)))
-(when before (invoke-method before args))
-(multiple-value-prog1
-    (call-next-before-and-after-method)
-(when after (invoke-method after args)))))
+(defmethod spong :before-and-after
+    (&rest args)
+     (let ((before (find-method #'spong '(:before) args))
+           (after  (find-method #'spong '(:after) args)))
+       (when before (invoke-method before args))
+       (multiple-value-prog1
+           (call-next-before-and-after-method)
+         (when after (invoke-method after args)))))
 ~~~
 
 **Note** how this gives us a reversed order for
@@ -1601,15 +1602,15 @@ In real life (you hope) the situation won't get that complicated. A
     simple example: `my-describe` suppressing return values.
 
 ~~~lisp
-CL-USER 76 &gt; (defmethod my-describe :around (self)
-    (call-next-method)
-    (values))
-#&lt;STANDARD-METHOD MY-DESCRIBE (:AROUND) (T) 20605A34&gt;
+CL-USER 76 > (defmethod my-describe :around (self)
+               (call-next-method)
+               (values))
+#<STANDARD-METHOD MY-DESCRIBE (:AROUND) (T) 20605A34>
 
-CL-USER 77 &gt; (my-describe Eric)
+CL-USER 77 > (my-describe Eric)
 Eric? Is that you?
 
-CL-USER 78 &gt;
+CL-USER 78 >
 ~~~
 
 Another example: The CLOS implementation of
@@ -1628,7 +1629,7 @@ Another example: The CLOS implementation of
     for `initialize-instance` is:
 
 ~~~
-**initialize-instance** <cite>instance</cite> &amp;rest <cite>initargs</cite> &amp;key &amp;allow-other-keys
+**initialize-instance** <cite>instance</cite> &rest <cite>initargs</cite> &key &allow-other-keys
 ~~~
 
 **Exercise:** Add an `:after` method to
