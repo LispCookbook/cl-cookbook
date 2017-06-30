@@ -6,10 +6,20 @@ The most important thing to know about strings in Common Lisp is probably that
 they are arrays and thus also sequences. This implies that all concepts that are
 applicable to arrays and sequences also apply to strings. If you can't find a
 particular string function, make sure you've also searched for the more general
-array or sequence functions. We'll only cover a fraction of what can be done
+[array or sequence functions](http://www.gigamonkeys.com/book/collections.html). We'll only cover a fraction of what can be done
 with and to strings here.
 
-__Note__: see also [cl-string](https://github.com/diogoalexandrefranco/cl-strings), with functions such as split, join, replace, insert, change case,…
+Some external libraries available on Quicklisp bring some more
+functionality or some shorter ways to do.
+
+- [cl-string](https://github.com/diogoalexandrefranco/cl-strings)
+  defines functions such as `split`, `join`, `replace`, `insert`,
+  `starts-with`, `ends-with`, functions to change case,…
+- [str](https://github.com/vindarel/cl-str) defines `trim`, `words`,
+  `unwords`, `lines`, `unlines`, `concat`, `blankp`,…
+- [cl-change-case](https://github.com/rudolfochrist/cl-change-case)
+  has functions to convert strings between camelCase, param-case,
+  snake_case and more.
 
 # Accessing Substrings
 
