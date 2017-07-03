@@ -19,10 +19,10 @@ We'll use the following libraries:
   library, to extract content from our Plump result,
 - [lparallel](https://lparallel.org/pmap-family/) -  a library for parallel programming,
 
-Before starting we let you install those libraries with Quicklisp, like so:
+Before starting we let's install those libraries with Quicklisp:
 
 ~~~lisp
-(ql:quickload :dexador)
+(ql:quickload '(:dexador :plump :lquery :lparallel))
 ~~~
 
 ## HTTP Requests
@@ -65,7 +65,7 @@ content. They have nice documentation:
 ~~~lisp
 (defvar *parsed-content* (plump:parse *request*))
 ;; => *PARSED-CONTENT**
-*PARSED-CONTENT**
+*parsed-content**
 ;; => #<PLUMP-DOM:ROOT {1009EE5FE3}>
 ~~~
 
@@ -82,7 +82,7 @@ So the links I want to extract are in a page with an `id` of value
 Let's try something:
 
 ~~~lisp
-(lquery:$  *PARSED-CONTENT* "#content li")
+(lquery:$  *parsed-content* "#content li")
 ;; => #(#<PLUMP-DOM:ELEMENT li {100B3263A3}> #<PLUMP-DOM:ELEMENT li {100B3263E3}>
 ;;  #<PLUMP-DOM:ELEMENT li {100B326423}> #<PLUMP-DOM:ELEMENT li {100B326463}>
 ;;  #<PLUMP-DOM:ELEMENT li {100B3264A3}> #<PLUMP-DOM:ELEMENT li {100B3264E3}>
@@ -101,7 +101,7 @@ But I'd like to easily check what those elements are. To see their textual
 content we can append `(text)` to our lquery form:
 
 ~~~lisp
-(lquery:$  *PARSED-CONTENT* "#content" (text))
+(lquery:$  *parsed-content* "#content" (text))
 #("License" "Editor support" "Strings" "Dates and Times" "Hash Tables"
   "Pattern Matching / Regular Expressions" "Functions" "Loop" "Input/Output"
   "Files and Directories" "Packages" "Macros and Backquote"
@@ -128,7 +128,7 @@ Allright, so we see we are manipulating what we want. Now to get their
 href, a quick look at lquery's doc and:
 
 ~~~lisp
-(lquery:$  *PARSED-CONTENT* "#content li a" (attr :href))
+(lquery:$  *parsed-content* "#content li a" (attr :href))
 ;; => #("license.html" "editor-support.html" "strings.html" "dates_and_times.html"
 ;;  "hashes.html" "pattern_matching.html" "functions.html" "loop.html" "io.html"
 ;;  "files.html" "packages.html" "macros.html"
@@ -168,14 +168,14 @@ that was doable in the CSS selector ?).
 We put the vector of urls in a variable:
 
 ~~~lisp
-(defvar *urls* (lquery:$  *PARSED-CONTENT* "#content li a" (attr :href)))
+(defvar *urls* (lquery:$  *parsed-content* "#content li a" (attr :href)))
 ~~~
 
 We remove the elements that start with "mailto:": (a quick look at the
 [strings](strings.htlml) page will help)
 
 ~~~lisp
-(remove-if (lambda (it) (string= it "mailto:" :start1 0 :end1 (length "mailto:"))) *URLS*)
+(remove-if (lambda (it) (string= it "mailto:" :start1 0 :end1 (length "mailto:"))) *urls*)
 ;; => #("license.html" "editor-support.html" "strings.html" "dates_and_times.html"
 ;;  […]
 ;;  "process.html" "systems.html" "win32.html" "testing.html" "misc.html"
@@ -195,7 +195,7 @@ As a side note, there is a handy `starts-with` function in
 available in Quicklisp. So we could do:
 
 ~~~lisp
-(map 'vector (lambda (it) (cl-strings:starts-with it "mailto:")) *URLS*)
+(map 'vector (lambda (it) (cl-strings:starts-with it "mailto:")) *urls*)
 ~~~
 
 it also has an option to ignore or respect the case.
@@ -221,7 +221,7 @@ that) or return an error code.
 To be in real conditions we'll add a link that times out in our list:
 
 ~~~lisp
-(setf (aref *FILTERED-URLS* 0) "http://lisp.org")  ;; too bad indeed
+(setf (aref *filtered-urls* 0) "http://lisp.org")  ;; too bad indeed
 ~~~
 
 We'll take the simple approach to ignore errors and return `nil` in
@@ -245,7 +245,7 @@ return the element it comes from. We get to our ends though.*)
     (multiple-value-bind
       (body status headers uri stream) (dex:get it)
     status)))  ;; we return the status for now, later we return the url.
-  *FILTERED-URLS*)
+  *filtered-urls*)
 ~~~
 
 we get:
@@ -302,7 +302,7 @@ want. And it's only a one word edit. Let's try:
 (time (lparallel:pmap 'vector
   (lambda (it)
     (ignore-errors (multiple-value-bind (body status headers uri stream) (dex:get it) status)))
-  *FILTERED-URLS*))
+  *filtered-urls*))
 ;;  Evaluation took:
 ;;  11.584 seconds of real time
 ;;  0.156000 seconds of total run time (0.136000 user, 0.020000 system)
@@ -339,8 +339,8 @@ simply treat them as sets and compute their difference. This will show
 us the bad ones. We must transform our vectors to lists for that.
 
 ~~~lisp
-(set-difference (map 'list #'identity *FILTERED-URLS*)
-                (map 'list #'identity *VALID-URLS*))
+(set-difference (coerce *filtered-urls* 'list)
+                (coerce *valid-urls* 'list))
 ;; => ("http://lisp-lang.org/" "http://www.psg.com/~dlamkins/sl/cover.html")
 ~~~
 
