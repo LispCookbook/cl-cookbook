@@ -171,7 +171,7 @@ We put the vector of urls in a variable:
 ~~~
 
 We remove the elements that start with "mailto:": (a quick look at the
-[strings](strings.htlml) page will help)
+[strings](strings.html) page will help)
 
 ~~~lisp
 (remove-if (lambda (it) (string= it "mailto:" :start1 0 :end1 (length "mailto:"))) *urls*)
