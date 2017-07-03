@@ -2,13 +2,12 @@
 title: Web Scraping
 ---
 
-Web Scraping in Common Lisp has all what we need. In this short
-tutorial we'll see how to make http requests, parse html, extract
-content and do asynchronous requests.
+The set of tools to do web scraping in Common Lisp is pretty complete
+and pleasant. In this short tutorial we'll see how to make http
+requests, parse html, extract content and do asynchronous requests.
 
 Our simple task will be to extract the list of links on the CL
-Cookbook's index page (https://lispcookbook.github.io/cl-cookbook/)
-and check if they are reachable.
+Cookbook's index page and check if they are reachable.
 
 We'll use the following libraries:
 
@@ -229,50 +228,28 @@ that case. If all goes well, we return the return code, that should be
 200.
 
 As we saw at the beginning, `dex:get` returns many values, including
-the return code. We'll bind them to variables, and use
-`ignore-errors`, that does what we want. We could also use
-`handler-case` and catch specific error types as showed in dexador's
-documentation or (better yet ?) use `handler-bind` to catch any
-`condition`.
+the return code. We'll catch only this one with `nth-value` (instead
+of all of them with `multiple-value-bind`) and we'll use
+`ignore-errors`, that returns nil in case of an error. We could also
+use `handler-case` and catch specific error types (see examples in
+dexador's documentation) or (better yet ?) use `handler-bind` to catch
+any `condition`.
 
 (*ignore-errors has the caveat that when there's an error, we can not
-return the element it comes from. We get to our ends though.*)
+return the element it comes from. We'll get to our ends though.*)
 
 
 ~~~lisp
 (map 'vector (lambda (it)
   (ignore-errors
-    (multiple-value-bind
-      (body status headers uri stream) (dex:get it)
-    status)))  ;; we return the status for now, later we return the url.
+    (let ((status (nth-value 1 (dex:get it))))
+      status)))
   *filtered-urls*)
 ~~~
 
 we get:
 
 ```
- in: MAP 'VECTOR
-     (MULTIPLE-VALUE-BIND (BODY STATUS HEADERS URI STREAM) (DEXADOR:GET IT) STATUS)
- --> MULTIPLE-VALUE-CALL
- ==>
-   #'(LAMBDA (&OPTIONAL (BODY) (STATUS) (HEADERS) (URI) (STREAM) &REST #:G5)
-       (DECLARE (IGNORE #:G5))
-       STATUS)
-
- caught STYLE-WARNING:
-   The variable BODY is defined but never used.
-
- caught STYLE-WARNING:
-   The variable HEADERS is defined but never used.
-
- caught STYLE-WARNING:
-   The variable URI is defined but never used.
-
- caught STYLE-WARNING:
-   The variable STREAM is defined but never used.
-
- compilation unit finished
-   caught 4 STYLE-WARNING conditions
 #(NIL 200 200 200 200 200 200 200 200 200 200 NIL 200 200 200 200 200 200 200
   200 200 200 200)
 ```
@@ -301,8 +278,8 @@ want. And it's only a one word edit. Let's try:
 ~~~lisp
 (time (lparallel:pmap 'vector
   (lambda (it)
-    (ignore-errors (multiple-value-bind (body status headers uri stream) (dex:get it) status)))
-  *filtered-urls*))
+    (ignore-errors (let ((status (nth-value 1 (dex:get it)))) status)))
+  *filtered-urls*)
 ;;  Evaluation took:
 ;;  11.584 seconds of real time
 ;;  0.156000 seconds of total run time (0.136000 user, 0.020000 system)
@@ -347,7 +324,9 @@ us the bad ones. We must transform our vectors to lists for that.
 Gotcha !
 
 BTW it takes 8.280 seconds of real time to me to check the list of
-valid urls synchronously, and **2.857 seconds async**.
+valid urls synchronously, and 2.857 seconds async.
+
+Have fun doing web scraping in CL !
 
 
 More helpful libraries:
@@ -360,4 +339,4 @@ More helpful libraries:
   network, parallelism and concurrency libraries to see on the
   [awesome-cl](https://github.com/CodyReichert/awesome-cl) list,
   [Cliki](http://www.cliki.net/) or
-  [Quickdocs](http://quickdocs.org/).
+  [Quickdocs](http://quickdocs.org/search?q=web).
