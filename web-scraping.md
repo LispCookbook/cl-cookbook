@@ -18,7 +18,7 @@ We'll use the following libraries:
   library, to extract content from our Plump result,
 - [lparallel](https://lparallel.org/pmap-family/) -  a library for parallel programming,
 
-Before starting we let's install those libraries with Quicklisp:
+Before starting let's install those libraries with Quicklisp:
 
 ~~~lisp
 (ql:quickload '(:dexador :plump :lquery :lparallel))
