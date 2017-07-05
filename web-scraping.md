@@ -242,8 +242,7 @@ return the element it comes from. We'll get to our ends though.*)
 ~~~lisp
 (map 'vector (lambda (it)
   (ignore-errors
-    (let ((status (nth-value 1 (dex:get it))))
-      status)))
+    (nth-value 1 (dex:get it))))
   *filtered-urls*)
 ~~~
 
@@ -254,8 +253,8 @@ we get:
   200 200 200 200)
 ```
 
-it works, but it prints a few warnings and most of all *it took a very
-long time*. How much time precisely ? with `(time …)`:
+it works, but *it took a very long time*. How much time precisely ?
+with `(time …)`:
 
 ```
 Evaluation took:
