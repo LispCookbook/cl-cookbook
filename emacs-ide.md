@@ -104,7 +104,7 @@ go up the list. See explanations on
 
 <a name="Slide-10"></a>
 
-### Working with Lisp Code - Editing
+### Editing
 
 #### Forward/Backward/Up/Down movement and selection by s-expressions ([s1.lisp](s1.lisp) )
 
@@ -165,7 +165,7 @@ See also [code folding](http://wikemacs.org/wiki/Folding).
 
 <a name="Slide-11"></a>
 
-### Working with Lisp Code - Evaluating and Compiling Lisp
+### Evaluating and Compiling Lisp
 
 *   buffer
 *   region
@@ -181,7 +181,7 @@ See also [code folding](http://wikemacs.org/wiki/Folding).
 
 <a name="Slide-12"></a>
 
-### Working with Lisp Code - Searching Lisp Code
+### Searching Lisp Code
 
 #### Standard Emacs text search (isearch forward/backward, regexp searches, search/replace) ( [s12.lisp](s12.lisp) )
 
