@@ -17,31 +17,3 @@
 ;; prefix (e.g. -- use "C-c C-j C-d" to evaluate a defun instead of
 ;; "C-c C-k C-d" to compile the defun)
 
-;; The "Do What I Mean" evaluation/compilation functions work on the
-;; following basis: If a region is selected, process the region.  If
-;; the cursor is on or immediately after a ')', process the last sexp.
-;; If the cursor is on or immediately before a '(', process the next
-;; sexp. If the cursor is inside a defun, process the defun. If the
-;; cursor is inside a top-level sexp, process the top-level
-;; sexp. Tests are done in the order specified, so (if there is any
-;; ambiguity), make certain that the cursor is either on a parenthesis
-;; (for the last/next commands or not directly before/after/on a
-;; parenthesis for the defun/top-level commands.  Press "C-c d" (ELI)
-;; or "C-c C-j C-j" (ILISP).
-
-(defun test (n)
-  (loop for i from 0 below n
-     do (print i)))
-
-(defun test-format ()
-  (format t "This is a test.~%"))
-
-(defun test-format-loop (n)
-  (loop for i from 0 below n
-     do (test-format)
-       (sleep 1)))
-
-(defun test-all ()
-  (test 5)
-  (test-format)
-  (test-format-loop 5))
