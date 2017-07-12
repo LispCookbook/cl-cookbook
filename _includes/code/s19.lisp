@@ -1,6 +1,5 @@
 ;; Enter and evaluate the following definitions, then put the cursor
-;; on "(xx)" and press "C-c C-f" (ELI) or "C-c C-q C-o" (ILISP) to get
-;; the function documentation.
+;; on "(xx)" and press "C-c C-d d" to get the function documentation.
 
 (defun xx ()
   "A do-nothing function"
