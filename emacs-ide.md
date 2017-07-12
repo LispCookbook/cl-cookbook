@@ -69,28 +69,37 @@ for CL programming.
     *   Installing SLIME without MELPA can be tricky
 
 *   Setup:
-    *   Installing it from MELPA is straightforward. Search package-list-packages for 'slime' and click to install. If MELPA is configured correctly, it will install itself and all dependencies.
-    *   Run slime with M-x slime
-
-
-<a name="Slide-8"></a>
-
-### Lisp Modes in Emacs - Which One to Choose?
-
-*   My Recommendation:
-    *   Inferior Lisp Mode for casual CL programming only
-    *   ELI if you use ACL
-    *   SLIME otherwise
+    *   Installing it from [MELPA](http://wikemacs.org/wiki/Melpa) is straightforward. Search package-list-packages for 'slime' and click to install. If MELPA is configured correctly, it will install itself and all dependencies.
+    *   Run slime with `M-x slime`.
 
 
 <a name="Slide-9"></a>
 
 ## Working with Lisp Code
 
-*   Lisp Editing
-*   Evaluating and Compiling Lisp
-*   Searching Lisp Code
-*   Note: Example code assumes you are using a setup similar to what is defined in the [.emacs file](https://github.com/LispCookbook/cl-cookbook/blob/master/.emacs) from the [CL Cookbook](windows.html) site
+In this short tutorial we'll see how to:
+
+*   edit Lisp code
+*   evaluate and compile Lisp code
+*   search Lisp code
+*   Note: Example code assumes you are using a setup similar to what is defined in the [.emacs file](https://github.com/LispCookbook/cl-cookbook/blob/master/.emacs) from the [CL Cookbook](windows.html) site.
+
+In addition to the built-in Emacs commands, you have several packages
+that will help to keep the parens and/or the indentation balanced to
+choose from. The list below is somewhat sorted by age of the
+extension, according to the
+[history of Lisp editing](https://github.com/shaunlebron/history-of-lisp-editing):
+
+- [Paredit](https://www.emacswiki.org/emacs/ParEdit)
+  ([visual tutorial](http://danmidwood.com/content/2014/11/21/animated-paredit.html))
+- [Smartparens](https://github.com/Fuco1/smartparens)
+- [Lispy](https://github.com/abo-abo/lispy)
+- [Paxedit](https://github.com/promethial/paxedit)
+- [Parinfer](http://shaunlebron.github.io/parinfer/)
+
+We personnaly advice to try Parinfer and the famous Paredit, then to
+go up the list. See explanations on
+[Wikemacs](http://wikemacs.org/wiki/Lisp_editing).
 
 
 <a name="Slide-10"></a>
