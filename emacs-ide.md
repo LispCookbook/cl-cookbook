@@ -188,11 +188,8 @@ straightforward way to get going.
 {% include code/s5.lisp %}
 ~~~
 
-### Close all parenthesis ( [s6.lisp](s6.lisp) )
+<!-- close all parenthesis example ? -->
 
-~~~lisp
-{% include code/s6.lisp %}
-~~~
 
 ### Code completion ( [s7.lisp](s7.lisp) )
 
