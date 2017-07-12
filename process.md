@@ -15,6 +15,12 @@ The ANSI Common Lisp standard doesn't mention this topic. So almost everything t
 
 Speaking of implementations, the following discussion currently refers only to [LispWorks](http://www.lispworks.com/). It has been tested on LispWorks for Windows Professional version 4.2.6 running on Windows NT (SP 6). All the examples below (apart from those few which require resaving the lisp image) should work without difficulty on the (free) Personal edition running under either Linux or Windows.
 
+__Note__: the
+[Bordeaux Threads](https://github.com/sionescu/bordeaux-threads)
+library (in Quicklisp) supports all major Common Lisp
+implementations. See also this
+[comprehensive blog post](https://z0ltan.wordpress.com/2016/09/02/basic-concurrency-and-parallelism-in-common-lisp-part-3-concurrency-using-bordeaux-and-sbcl-threads/).
+
 Your mileage may vary. I will add "support" for other implementations and operating systems to this page later, if I have the time and access to the appropriate materials.
 
 In any case, read the manual! In this instance, the manual concerned is the chapter on "The MP Package" in the "LispWorks Reference Manual".
