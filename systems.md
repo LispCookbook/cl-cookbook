@@ -21,7 +21,7 @@ _"the Utilities for Implementation- and OS- Portability"_. You can read
 
 ### Loading a System
 
-The most trivial use of ASDF is by calling `(asdf:load-system :foobar)`
+The most trivial use of ASDF is by calling `(asdf:make :foobar)` (or `load-system`)
 to load your library.
 Then you can use it.
 For instance, if it exports a function `some-fun` in its package `foobar`,
@@ -47,7 +47,7 @@ The convention is that an error SHOULD be signalled if tests are unsuccessful.
 The proper way to designate a system in a program is with lower-case
 strings, not symbols, as in:
 
-    (asdf:load-system "foobar")
+    (asdf:make "foobar")
     (asdf:test-system "foobar")
 
 ### Trivial System Definition
@@ -84,10 +84,9 @@ As for contents of that file, they would look like this:
 
 #### Using the system you defined
 
-Assuming your system is installed under the `~/common-lisp/` hierarchy
-or some other filesystem hierarchy already configured for ASDF,
-you can load it with: `(asdf:load-system "foobar")`,
-or shorter `(asdf:make :foobar)`
+Assuming your system is installed under `~/common-lisp/`,
+`~/quicklisp/local-projects/` or some other filesystem hierarchy
+already configured for ASDF, you can load it with: `(asdf:make "foobar")`.
 
 If your Lisp was already started when you created that file,
 you may have to `(asdf:clear-configuration)` to re-process the configuration.
