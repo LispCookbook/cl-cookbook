@@ -1,7 +1,8 @@
-;; Put the cursor on the "(format" below and press "F1" to get the
-;; Hyperspec page for "format". Put the cursor on the "d" in the
-;; format string and press "C-u F1" to get the Hyperspec page
-;; describing the "Tilde D: Decimal" format character.
+;; Put the cursor on the "(format" below and press "C-c C-d d" or "F1"
+;; with the example emacs configuration to get the Hyperspec page for
+;; "format". Put the cursor on the "d" in the format string and press
+;; "C-u F1" to get the Hyperspec page describing the "Tilde D:
+;; Decimal" format character.
 
 (format t "One = ~d" 1)
 
@@ -12,6 +13,6 @@
 ;; Package    Browser  Browser  Format-Dft  Format-W3  Info
 ;; =========  =======  =======  ==========  =========  ====
 ;; Hyperspec    F1      S-F1    C-u F1      C-u S-F1
-;; CLtL2       M-F1    M-S-F1   
+;; CLtL2       M-F1    M-S-F1
 ;; ACL docs    C-F1    C-S-F1
 ;; Info docs                                           C-M-F1
