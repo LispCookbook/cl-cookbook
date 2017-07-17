@@ -10,6 +10,8 @@ title: Home
 
 # Content
 
+<p id="two-cols"></p>
+
 * [License](license.html)
 * [Editor support](editor-support.html)
 * [Strings](strings.html)
@@ -57,6 +59,8 @@ The pages here on Github are kept up to date. You can also download a
 [Github project page][gh]. 
 
 ## Contributors
+
+<p id="contributors"></p>
 
 * Marco Antoniotti
 * [Zach Beane](mailto:xach@xach.com)
