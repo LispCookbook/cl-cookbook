@@ -14,6 +14,7 @@ title: Home
 
 * [License](license.html)
 * [Editor support](editor-support.html)
+* [Modern Common Lisp: CL21](cl21.html)
 * [Strings](strings.html)
 * [Dates and Times](dates_and_times.html)
 * [Hash Tables](hashes.html)
@@ -56,7 +57,7 @@ Thanks in advance for your help!
 
 The pages here on Github are kept up to date. You can also download a
 [up to date zip file][zip] for offline browsing. More info can be found at the
-[Github project page][gh]. 
+[Github project page][gh].
 
 ## Contributors
 
