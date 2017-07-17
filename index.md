@@ -23,7 +23,6 @@ title: Home
 * [Packages](packages.html)
 * [Macros and Backquote](macros.html)
 * [CLOS (the Common Lisp Object System)](clos.html)
-* [Sockets](sockets.html)
 * [Interfacing with your OS](os.html)
 * [Foreign Function Interfaces](ffi.html)
 * [Threads](process.html)
