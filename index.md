@@ -14,7 +14,7 @@ title: Home
 
 * [License](license.html)
 * [Editor support](editor-support.html)
-* [Modern Common Lisp: CL21](cl21.html)
+* [Experimental CL21](cl21.html)
 * [Strings](strings.html)
 * [Dates and Times](dates_and_times.html)
 * [Hash Tables](hashes.html)
