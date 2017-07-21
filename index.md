@@ -34,7 +34,6 @@ title: Home
 * [Testing](testing.html)
 * [Web Scraping](web-scraping.html)
 * [Miscellaneous](misc.html)
-* [License](license.html)
 
 ## Further remarks
 
