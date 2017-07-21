@@ -27,18 +27,24 @@ Then you can use it.
 For instance, if it exports a function `some-fun` in its package `foobar`,
 then you will be able to call it with `(foobar:some-fun ...)` or with:
 
-    (in-package :foobar)
-    (some-fun ...)
+~~~lisp
+(in-package :foobar)
+(some-fun ...)
+~~~
 
 You can also use Quicklisp:
 
-    (ql:quickload :foobar)
+~~~lisp
+(ql:quickload :foobar)
+~~~
 
 ### Testing a System
 
 To run the tests for a system, you may use:
 
-    (asdf:test-system :foobar)
+~~~lisp
+(asdf:test-system :foobar)
+~~~
 
 The convention is that an error SHOULD be signalled if tests are unsuccessful.
 
@@ -47,8 +53,10 @@ The convention is that an error SHOULD be signalled if tests are unsuccessful.
 The proper way to designate a system in a program is with lower-case
 strings, not symbols, as in:
 
-    (asdf:make "foobar")
-    (asdf:test-system "foobar")
+~~~lisp
+(asdf:make "foobar")
+(asdf:test-system "foobar")
+~~~
 
 ### Trivial System Definition
 
@@ -60,27 +68,33 @@ To make this system buildable using ASDF,
 you create a system definition file called `foobar.asd`,
 with the following contents:
 
-    (defsystem "foobar"
-      :depends-on ("alexandria" "trivia")
-      :components ((:file "foobar")))
+~~~lisp
+(defsystem "foobar"
+  :depends-on ("alexandria" "trivia")
+  :components ((:file "foobar")))
+~~~
+
 
 Note how the type `lisp` of `foobar.lisp`
 is implicit in the name of the file above.
 As for contents of that file, they would look like this:
 
-    (defpackage :foobar
-      (:use :common-lisp :alexandria :trivia)
-      (:export
-       #:some-function
-       #:another-function
-       #:call-with-foobar
-       #:with-foobar))
+~~~lisp
+(defpackage :foobar
+    (:use :common-lisp :alexandria :trivia)
+    (:export
+    #:some-function
+    #:another-function
+    #:call-with-foobar
+    #:with-foobar))
 
-    (in-package :foobar)
+(in-package :foobar)
 
-    (defun some-function (...)
-      ...)
-    ...
+(defun some-function (...)
+    ...)
+...
+~~~
+
 
 #### Using the system you defined
 
@@ -102,15 +116,17 @@ Tests are also a good way to document expected behavior.
 The simplest way to write tests is to have a file `foobar-tests.lisp`
 and modify the above `foobar.asd` as follows:
 
-    (defsystem "foobar"
-      :depends-on ("alexandria" "trivia")
-      :components ((:file "foobar"))
-      :in-order-to ((test-op (test-op "foobar/tests"))))
+~~~lisp
+(defsystem "foobar"
+    :depends-on ("alexandria" "trivia")
+    :components ((:file "foobar"))
+    :in-order-to ((test-op (test-op "foobar/tests"))))
 
-    (defsystem "foobar/tests"
-      :depends-on ("foobar" "fiveam")
-      :components ((:file "foobar-tests"))
-      :perform (test-op (o c) (symbol-call :fiveam '#:run! :foobar)))
+(defsystem "foobar/tests"
+    :depends-on ("foobar" "fiveam")
+    :components ((:file "foobar-tests"))
+    :perform (test-op (o c) (symbol-call :fiveam '#:run! :foobar)))
+~~~
 
 The `:in-order-to` clause in the first system
 allows you to use `(asdf:test-system :foobar)`
