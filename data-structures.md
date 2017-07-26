@@ -335,6 +335,10 @@ their `:end[1,2]`.
 
 ### Functions
 
+See also sequence functions defined in
+[Alexandria](https://common-lisp.net/project/alexandria/draft/alexandria.html#Sequences):
+`starts-with`, `ends-with`, `ends-with-subseq`, `length=`, `emptyp`,…
+
 #### length (sequence)
 
 #### member (elt, sequence)
@@ -506,6 +510,10 @@ Remove the elements that are in both lists:
 
 and their recycling "n" counterpart (`nintersection`,…).
 
+See also functions in
+[Alexandria](https://common-lisp.net/project/alexandria/draft/alexandria.html#Conses):
+`setp`, `set-equal`,…
+
 ## Fset - immutable data structure
 
 You may want to have a look at this library:
@@ -631,7 +639,7 @@ different roles,
 
 ### Hash tables: make-hash-table, gethash, remhash, maphash, #H
 
-We create one with `make-hash-table` and access a key with
+We **create** one with `make-hash-table` and access a key with
 `gethash`. Keys are `setf`able:
 
 ~~~lisp
@@ -643,7 +651,15 @@ We create one with `make-hash-table` and access a key with
 ;;     T          ;; two values are returned.
 ~~~
 
-Accessing a key that doesn't exist, with a default:
+[cl21](cl21.html#hash-table) provides the `#H` reader macro to create
+hash tables (and more):
+
+~~~lisp
+#H(:name "Eitaro Fukamachi" :living "Japan")
+;=> #H(:LIVING "Japan" :NAME "Eitaro Fukamachi")
+~~~
+
+**Accessing** a key that doesn't exist, with a default:
 
 ~~~lisp
 (gethash 'bar *hash* "default-bar")
@@ -651,18 +667,19 @@ Accessing a key that doesn't exist, with a default:
 ;;     NIL
 ~~~
 
-To remove an element: `remhash`.
+**Get all keys**: that's done more easily with `hash-table-keys` from
+the
+[Alexandria](https://common-lisp.net/project/alexandria/draft/alexandria.html)
+library (in Quicklisp).
 
-To map over a hash-table: `maphash`.
+To **remove** an element: `remhash`.
 
-_Note: [cl21](cl21.html#hash-table) provides the `#H` reader macro to create hash tables (and more):_
+To **map** over a hash-table: `maphash`.
 
-~~~lisp
-#H(:name "Eitaro Fukamachi" :living "Japan")
-;=> #H(:LIVING "Japan" :NAME "Eitaro Fukamachi")
-~~~
+To **map over keys or values**: `maphash-keys` and `maphash-values`
+from Alexandria or cl21's `(doeach ((key val) *hash*) …)`.
 
-Number of keys: `hash-table-count`.
+Get the **number of keys**: `hash-table-count`.
 
 There are more, see the specs !
 
@@ -732,6 +749,10 @@ Remove only one element with `:count`:
 (remove 'bar my-alist :key 'car)
 ;; => ((TEAM . "team") (FOO . "foo")) ;; no more 'bar
 ~~~
+
+In the
+[Alexandria](https://common-lisp.net/project/alexandria/draft/alexandria.html#Conses)
+library, see some functions like `remove-from-plist`, `alist-plist`,…
 
 
 ### plist
