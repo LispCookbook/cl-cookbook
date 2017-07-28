@@ -12,6 +12,17 @@ association lists whenever performance is an issue, but they introduce
 a little overhead that makes assoc lists better if there are only a
 few key-value pairs to maintain.
 
+Alists can be used sometimes differently though:
+
+- they can be ordered
+- we can push cons cells that have the same key, remove the one in
+  front and we have a stack
+- they have a human-readable printed representation
+- they can be easily (de)serialized
+- because of RASSOC, keys and values in alists are essentially
+interchangeable; whereas in hash tables, keys and values play very
+different roles (as usual, see CL Recipes for more).
+
 
 <a name="create"></a>
 
@@ -23,15 +34,16 @@ has no required argument. Its most used optional keyword argument is
 `:test`, specifying the function used to test the equality of keys.
 
 If we are using the [cl21](http://cl21.org/) extension library, we can
-create a hash table with the new `#H` reader syntax:
+create a hash table and add elements in the same time with the new
+`#H` reader syntax:
 
 ~~~lisp
-(defvar *hash* #H(:name "Eitaro Fukamachi"))
+(defparameter *my-hash* #H(:name "Eitaro Fukamachi"))
 ~~~
 then we access an element with
 
 ~~~lisp
-(getf *hash* :name)
+(getf *my-hash* :name)
 ~~~
 
 
@@ -48,6 +60,29 @@ the table. That second value is necessary since `nil` is a valid value
 in a key-value pair, so getting `nil` as first value from `gethash`
 does not necessarily mean that the key was not found in the table.
 
+### Getting a key that does not exist with a default value
+
+`gethash` has an optional third argument:
+
+~~~lisp
+(gethash 'bar *my-hash* "default-bar")
+;; => "default-bar"
+;;     NIL
+~~~
+
+### Getting all keys or all values of a hash table
+
+The
+[Alexandria](https://common-lisp.net/project/alexandria/draft/alexandria.html)
+library (in Quicklisp) has the functions `hash-table-keys` and
+`hash-table-values` for that.
+
+~~~lisp
+(ql:quickload :alexandria)
+;; […]
+(alexandria:hash-table-keys *my-hash*)
+;; => (BAR)
+~~~
 
 <a name="add"></a>
 
@@ -264,6 +299,13 @@ THIRD-KEY -> NIL
 NIL -> NIL-VALUE
 NIL
 ~~~
+
+Last, we also have [cl21](cl21.htm)'s `(doeach ((key val) *hash*) …)`.
+
+### Traversign keys or values
+
+To map over keys or values we can again rely on Alexandria with
+`maphash-keys` and `maphash-values`.
 
 
 <a name="count"></a>
