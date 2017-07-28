@@ -5,7 +5,7 @@ title: Data structures
 We hope to give here a clear reference of the common data
 structures. To really learn the language, you should take the time to
 read other resources. The following resources, which we relied upon,
-also have many more detail:
+also have many more details:
 
 - [Practical CL](http://gigamonkeys.com/book/they-called-it-lisp-for-a-reason-list-processing.html), by Peter Seibel
 - [CL Recipes](http://weitz.de/cl-recipes/), by E. Weitz, full of explanations and tips,
@@ -13,7 +13,7 @@ also have many more detail:
   [CL standard](http://cvberry.com/tech_writings/notes/common_lisp_standard_draft.html)
   with a nice TOC, functions reference, extensive descriptions, more
   examples and warnings (i.e: everything).
-- Common Lisp quick reference: http://clqr.boundp.org/
+- a [Common Lisp quick reference](http://clqr.boundp.org/)
 
 
 ## Lists
@@ -516,9 +516,9 @@ See also functions in
 
 ## Fset - immutable data structure
 
-You may want to have a look at this library:
-
-https://common-lisp.net/project/fset/Site/FSet-Tutorial.html
+You may want to have a look at the
+[FSet](https://common-lisp.net/project/fset/Site/FSet-Tutorial.html )
+library (in Quicklisp).
 
 
 ## Arrays and vectors
