@@ -22,7 +22,7 @@ also have many more details:
 
 _A list is also a sequence, so we can use the functions shown below._
 
-The list basic element is the cons sell. We build lists by assembling
+The list basic element is the cons cell. We build lists by assembling
 cons cells.
 
 ~~~lisp
@@ -55,22 +55,24 @@ It looks like this:
 ```
 (ascii art by [draw-cons-tree](https://github.com/cbaggers/draw-cons-tree)).
 
-See that the representation is not a dotted pair ? The lisp printer
+See that the representation is not a dotted pair ? The Lisp printer
 understands the convention.
 
-Finally we can simply use `list`:
+Finally we can simply build a literal list with `list`:
 
 ~~~lisp
 (list 1 2)
 ;; => (1 2)
 ~~~
 
-and its quote shortcut:
+or by calling quote:
 
 ~~~lisp
 '(1 2)
 ;; => (1 2)
 ~~~
+
+which is shorthand notation for the function call `(quote (1 2))`.
 
 
 ### car/cdr or first/rest (and second... to tenth)
@@ -101,14 +103,25 @@ return the last cons cell in a list (or the nth last cons cells).
 
 ### reverse, nreverse
 
-`reverse` returns a new list.
+`reverse` and `nreverse` return a new sequence.
 
-`nreverse` is destructive. The N stands for **non-consing**, meaning it
-doesn't need to allocate any new cons cells. It is equivalent to:
+`nreverse` is destructive. The N stands for **non-consing**, meaning
+it doesn't need to allocate any new cons cells. It *might* (but in
+practice, does) reuse and modify the original sequence:
 
 ~~~lisp
-(setf *list* (reverse *list*))
+(defparameter mylist '(1 2 3))
+;; => (1 2 3)
+(reverse mylist)
+;; => (3 2 1)
+mylist
+;; => (1 2 3)
+(nreverse mylist)
+;; => (3 2 1)
+mylist
+;; => (1) in SBCL but implementation dependant.
 ~~~
+
 
 ### append
 
@@ -129,9 +142,10 @@ its abstract-sequence).
 
 `nconc` is the recycling equivalent.
 
-### push
+### push (item, place)
 
-`push` adds a given element to the head of a given list.
+`push` prepends *item* to the list that is stored in *place*, stores
+the resulting list in *place*, and returns the list.
 
 ~~~lisp
 (defparameter mylist '(1 2 3))
@@ -139,6 +153,18 @@ its abstract-sequence).
 ;; => (0 1 2 3)
 ~~~
 
+~~~lisp
+(defparameter x ’(a (b c) d))
+;; => (A (B C) D)
+(push 5 (cadr x))
+;; => (5 B C)
+x
+;; => (A (5 B C) D)
+~~~
+
+`push` is equivalent to `(setf place (cons item place ))` except that
+the subforms of *place* are evaluated only once, and *item* is evaluated
+before *place*.
 
 There is no built-in function to **add to the end of a list**. It is a
 more costly operation (have to traverse the whole list). So if you
@@ -168,7 +194,7 @@ They make sense when applied to lists containing other lists.
 ### destructuring-bind (parameter*, list)
 
 It binds the parameter values to the list elements. We can destructure
-trees, plits and even provide defaults.
+trees, plists and even provide defaults.
 
 Simple matching:
 
