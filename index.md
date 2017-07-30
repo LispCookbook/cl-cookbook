@@ -30,7 +30,7 @@ title: Home
 * [Threads](process.html)
 * [Defining Systems](systems.html)
 * [Using the Win32 API](win32.html)
-* [Testing](testing.html)
+* [Testing and Continuous Integration](testing.html)
 * [Web Scraping](web-scraping.html)
 * [Experimental CL21](cl21.html)
 * [Miscellaneous](misc.html)
