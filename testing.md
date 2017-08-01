@@ -65,6 +65,11 @@ We get an output like:
 <img src="assets/prove-report.png"
      style="max-width: 800px"/>
 
+### Run one test
+
+You can directly run one test by compiling it. With Slime, use the
+usual `C-c C-c`.
+
 
 ### More about Prove
 
@@ -113,13 +118,13 @@ optimization quality set to 3.
 (asdf:oos 'asdf:load-op :cl-ppcre-test :force t)
 
 ;;; Run the test suite.
-(cl-ppcre-test:test)
+(prove:run :yoursystem-test)
 ~~~
 
 Produce a coverage report, set the output directory:
 
 ~~~lisp
-(sb-cover:report "/tmp/report/")
+(sb-cover:report "coverage/")
 ~~~
 
 Finally, turn off instrumentation:
@@ -128,7 +133,9 @@ Finally, turn off instrumentation:
 (declaim (optimize (sb-cover:store-coverage-data 0)))
 ~~~
 
-This produces something like the capture above or
+You can open your browser at
+`../yourproject/t/coverage/cover-index.html` to see the report like
+the capture above or like
 [this code coverage of cl-ppcre](https://www.snellman.net/sbcl/cover/cl-ppcre-report-3/cover-index.html).
 
 
