@@ -2324,6 +2324,12 @@ storing information about people. Then we create a list of 7 people
 with randomly generated ages (between 20 and 39). Finally, we sort
 them by age in non-decreasing order.
 
+### Error handling
+
+To see how lparallel handles error handling (hint: with
+`lparallel:task-handler-bind`), please read
+[https://z0ltan.wordpress.com/2016/09/10/basic-concurrency-and-parallelism-in-common-lisp-part-4b-parallelism-using-lparallel-error-handling/](https://z0ltan.wordpress.com/2016/09/10/basic-concurrency-and-parallelism-in-common-lisp-part-4b-parallelism-using-lparallel-error-handling/).
+
 ### References
 
 There are, of course, a lot more functions, objects, and idiomatic
