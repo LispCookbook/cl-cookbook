@@ -215,7 +215,7 @@ To do this, let us work our way through a number of simple examples:
 -    Modify a shared resource from multiple threads — fixed using locks
 -    Modify a shared resource from multiple threads — using atomic operations
 -    Joining on a thread, destroying a thread example
-###  Basics — list current thread, list all threads, get thread name
+### Basics — list current thread, list all threads, get thread name
 
 ~~~lisp
     ;;; Print the current thread, all the threads, and the current thread's name
@@ -249,7 +249,7 @@ And the output:
     NIL
 ~~~
 
-    Update a global variable from a thread:
+Update a global variable from a thread:
 
 ~~~lisp
     (defparameter *counter* 0)
@@ -262,7 +262,7 @@ And the output:
       *counter*)
 ~~~
 
-We create a new thread using bt:make-thread, which takes a lambda
+We create a new thread using `bt:make-thread`, which takes a lambda
 abstraction as a parameter. Note that this lambda abstraction cannot
 take any parameters.
 
@@ -281,7 +281,9 @@ The output:
     1
 ~~~
 
-As we can see, because the main thread returned immediately, the initial value of *counter* is 0, and then around a second later, it gets updated to 1 by the anonymous thread.
+As we can see, because the main thread returned immediately, the
+initial value of `*counter*` is 0, and then around a second later, it
+gets updated to 1 by the anonymous thread.
 
 ### Print a message onto the top-level using a thread
 
@@ -372,13 +374,12 @@ eval-when controls when evaluation of Lisp expressions takes place. We
 can have three targets — :compile-toplevel, :load-toplevel, and
 :execute.
 
-The `#.` symbol is what is called a “Reader macro”. (I will be posting
-a whole post (or maybe a series of posts!) on reader macros in the
-future). A reader (or read) macro is called so because it has special
-meaning to the Common Lisp Reader, which is the component that is
-responsible for reading in Common Lisp expressions and making sense
-out of them. This specific reader macro ensures that the binding of
-`*standard-output*` is done at read time.
+The `#.` symbol is what is called a “Reader macro”. A reader (or read)
+macro is called so because it has special meaning to the Common Lisp
+Reader, which is the component that is responsible for reading in
+Common Lisp expressions and making sense out of them. This specific
+reader macro ensures that the binding of `*standard-output*` is done
+at read time.
 
 Binding the value at read-time ensures that the original value of
 `*standard-output*` is maintained when the thread is run, and the output
@@ -415,7 +416,6 @@ Note that if the same code had been run on the REPL directly, there
 would be no problem since the resolution of all the symbols would be
 done correctly by the REPL thread.
 
-I have already posted a comprehensive post on eval-when and other advanced Common Lisp constructs. You can find them with a simple search in my blog (use the search box).
 
 ### Modify a shared resource from multiple threads
 
@@ -560,9 +560,9 @@ demo to the SBCL section.
 
 ### Joining on a thread, destroying a thread
 
-To join on a thread, we use the bt:join-thread function, and for
+To join on a thread, we use the `bt:join-thread` function, and for
 destroying a thread (not a recommended operation), we can use the
-bt:destroy-thread function.
+`bt:destroy-thread` function.
 
 A simple demo:
 
@@ -632,7 +632,7 @@ true. The rest of the code is pretty much self-explanatory — the main
 thread waits for the joiner-thread to finish, but it immediately
 destroys the destroyer-thread.
 
-Again, it is not recommended to use bt:destroy-thread. Any conceivable
+Again, it is not recommended to use `bt:destroy-thread`. Any conceivable
 situation which requires this function can probably be done better
 with another approach.
 
@@ -660,7 +660,7 @@ cover most of the basic programming scenarios:
 
 ## SBCL threads
 
-SBCL provides support for native threads via its **sb-thread**
+SBCL provides support for native threads via its [sb-thread](http://www.sbcl.org/manual/index.html#Threading)
 package. These are very low-level functions, but we can build our own
 abstractions on top of these as shown in the demo examples.
 
@@ -962,7 +962,7 @@ and
 The interesting bit is that the “place” parameter must be any of the
 following (as per the documentation):
 
-- a defstruct slot with declared type (unsigned-byte 64) or aref of a (simple-array (unsigned-byte 64) (*)) The type sb-ext:word can be used for these purposes.
+- a defstruct slot with declared type (unsigned-byte 64) or aref of a (simple-array (unsigned-byte 64) (*)) The type `sb-ext:word` can be used for these purposes.
 - car or cdr (respectively first or REST) of a cons.
 - a variable defined using defglobal with a proclaimed type of fixnum.
 
