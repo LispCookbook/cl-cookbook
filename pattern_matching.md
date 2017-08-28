@@ -16,5 +16,5 @@ See also the respective
 
 Note that some CL implementations include regexp facilities, notably
 [CLISP](http://clisp.sourceforge.net/impnotes.html#regexp) and
-[ALLEGRO CL](http://www.franz.com/support/documentation/6.1/doc/regexp.htm). If
+[ALLEGRO CL](https://franz.com/support/documentation/current/doc/regexp.htm). If
 in doubt, check your manual or ask your vendor.
