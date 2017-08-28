@@ -277,7 +277,7 @@ in the minibuffer.
 
 *   [CL HyperSpec](ftp://ftp.lispworks.com/pub/software_tools/documentation/HyperSpec-7-0.tar.gz)
 *   [CLtL2](http://www-2.cs.cmu.edu/afs/cs.cmu.edu/project/ai-repository/ai/lang/lisp/doc/cltl/cltl_ht.tgz)
-*   [ACL Documenation](http://www.franz.com/support/documentation/)
+*   [ACL Documenation](https://franz.com/support/documentation/)
 *   Example code ( [s23.lisp](s23.lisp) )
 
 ~~~lisp
@@ -386,7 +386,7 @@ Lisp-friendly alternative are there?*
   * Vim can be used to edit Lisp code. See some
     [vim plugins](https://github.com/CodyReichert/awesome-cl#vim).
   * There is an [Atom package](https://atom.io/packages/atom-slime).
-  * The [Franz](http://www.franz.com/), [LispWorks](http://www.lispworks.com/), [Corman](http://www.cormanlisp.com/), and [Digitool](http://www.digitool.com/) commercial Lisp
+  * The [Franz](https://franz.com/), [LispWorks](http://www.lispworks.com/), [Corman](http://www.cormanlisp.com/), and [Digitool](http://www.digitool.com/) commercial Lisp
 offerings all have Lisp-aware editors.
   * Lastly, for true masochists, notepad on Windows or ed on UNIX® can also be used. ;-)
 
