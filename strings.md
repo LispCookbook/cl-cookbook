@@ -16,7 +16,8 @@ functionality or some shorter ways to do.
   defines functions such as `split`, `join`, `replace`, `insert`,
   `starts-with`, `ends-with`, functions to change case,…
 - [str](https://github.com/vindarel/cl-str) defines `trim`, `words`,
-  `unwords`, `lines`, `unlines`, `concat`, `blankp`,…
+  `unwords`, `lines`, `unlines`, `concat`, `split`, `repeat`,
+  `replace-all`, `starts-with?`, `ends-with?`, `blankp`, `emptyp`, …
 - [cl-change-case](https://github.com/rudolfochrist/cl-change-case)
   has functions to convert strings between camelCase, param-case,
   snake_case and more.
