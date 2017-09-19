@@ -161,6 +161,16 @@ of using elements of type character everytime. For instance, you can set
 `:ELEMENT-TYPE` type argument of `WITH-OUTPUT-TO-STRING`, `WITH-OPEN-FILE` and
 `MAKE-ARRAY` functions to `'(UNSIGNED-BYTE 8)` to read data in octets.
 
+### Reading with an UTF-8 encoding
+
+To avoid an `ASCII stream decoding error` you might want to specify an UTF-8 encoding:
+
+~~~lisp
+(with-open-file (in "/path/to/big/file"
+                     :external-format :utf-8)
+                 ...
+~~~
+
 ### Looking one Character ahead
 
 You can 'look at' the next character of a stream without actually removing it
