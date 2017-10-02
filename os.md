@@ -53,7 +53,11 @@ systems including Windows. It is also `fset`-able.
 
 ## Accessing the command line arguments
 
-Accessing command line arguments is implementation-specific but it appears most implementations have a way of getting at them. [SBCL](http://www.sbcl.org) has the special variable `*posix-argv*`
+Accessing command line arguments is implementation-specific but it
+appears most implementations have a way of getting at
+them. [Roswell](https://github.com/roswell/roswell/wiki) makes it portable.
+
+[SBCL](http://www.sbcl.org) has the special variable `sb-ext:*posix-argv*`
 
 ~~~lisp
 $ sbcl my-command-line-arg
@@ -62,13 +66,13 @@ $ sbcl my-command-line-arg
 ....
 
 ~~~lisp
-* *posix-argv*
+* sb-ext:*posix-argv*
 
 ("sbcl" "my-command-line-arg")
 *
 ~~~
 
-More on using this to write standalone Lisp scripts can be found in the [SBCL Manual](http://www.sbcl.org/manual/Unix_002dstyle-Command-Line-Protocol.html)
+More on using this to write standalone Lisp scripts can be found in the [SBCL Manual](http://www.sbcl.org/manual/index.html#Command_002dline-arguments)
 
 [LispWorks](http://www.lispworks.com) has `system:*line-arguments-list*`
 
