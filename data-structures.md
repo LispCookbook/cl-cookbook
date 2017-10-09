@@ -452,6 +452,13 @@ _Note: cl21's `map` is a generic `mapcar` for lists and vectors._
 
 **Filter** is here called `remove-if-not`.
 
+### Flatten a list (Alexandria)
+
+With
+[Alexandria](https://common-lisp.net/project/alexandria/draft/alexandria.html),
+we have the `flatten` function.
+
+
 ### Creating lists with variables
 
 That's one use of the `backquote`:
