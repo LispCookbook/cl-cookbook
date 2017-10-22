@@ -102,7 +102,7 @@ return the last cons cell in a list (or the nth last cons cells).
 
 In
 [Alexandria](https://common-lisp.net/project/alexandria/draft/alexandria.html#Conses),
-`lastcar` is the equivalent of `(firts (last …))`:
+`lastcar` is the equivalent of `(first (last …))`:
 
 ~~~lisp
 (alexandria:lastcar '(1 2 3))
