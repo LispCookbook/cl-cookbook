@@ -94,10 +94,17 @@ return the last cons cell in a list (or the nth last cons cells).
 ~~~lisp
 (last '(1 2 3))
 ;; => (3)
-(car (last '(1 2 3)) )
+(car (last '(1 2 3)) ) ;; or (first (last …))
 ;; => 3
 (butlast '(1 2 3))
 ;; => (1 2)
+~~~
+
+In [Alexandria](https://common-lisp.net/project/alexandria/draft/alexandria.html#Conses), `lastcar` is equivalent of `(first (last …))`:
+
+~~~lisp
+(alexandria:lastcar '(1 2 3))
+;; => 3
 ~~~
 
 
