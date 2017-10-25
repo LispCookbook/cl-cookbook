@@ -9,7 +9,7 @@ The editor of choice is still Emacs, but it is not the only one.
 [SLIME](https://github.com/slime/slime/) is the Superior Lisp
 Interaction Mode for Emacs. It has support for interacting with a
 running Common Lisp process for compilation, debugging, documentation
-lookup, and so on.
+lookup, and so on. It works with many implementations.
 
 [Portacle](https://shinmera.github.io/portacle/) is a portable and
 multiplatform Common Lisp environment. It ships Emacs25, SBCL,
@@ -17,6 +17,20 @@ Quicklisp, Slime and Git.
 
 <img src="assets/portacle.png"
      style="width: 800px"/>
+
+### Installing Slime
+
+Slime is in the official GNU Elpa repository of Emacs Lisp packages
+(in Emacs24 and forward). Install with:
+
+    M-x package-install RET slime RET
+
+Now you can run Slime with `M-x slime`.
+
+See also:
+
+* http://wikemacs.org/wiki/SLIME - configuration examples and extensions.
+
 
 ### Using Emacs as an IDE
 

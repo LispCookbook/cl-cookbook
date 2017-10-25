@@ -13,6 +13,7 @@ title: Home
 <p id="two-cols"></p>
 
 * [License](license.html)
+* [Getting started](getting-started.html)
 * [Editor support](editor-support.html)
 * [Data Structures](data-structures.html)
 * [Strings](strings.html)
