@@ -37,6 +37,7 @@ See also
 
 * [ABCL](http://abcl.org/) (for the JVM),
 * [ClozureCL](https://ccl.clozure.com/)
+* [CLASP](https://github.com/drmeister/clasp) (C++ and LLVM)
 * [AllegroCL](https://franz.com/products/allegrocl/) (proprietary)
 * [LispWorks](http://www.lispworks.com/) (proprietary)
 
