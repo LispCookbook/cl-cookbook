@@ -84,21 +84,31 @@ In this short tutorial we'll see how to:
 *   search Lisp code
 *   Note: Example code assumes you are using a setup similar to what is defined in the [.emacs file](https://github.com/LispCookbook/cl-cookbook/blob/master/.emacs) from the [CL Cookbook](windows.html) site.
 
-In addition to the built-in Emacs commands, you have several packages
-that will help to keep the parens and/or the indentation balanced to
-choose from. The list below is somewhat sorted by age of the
+In addition to the built-in Emacs commands, you have several packages at your disposal
+that will help to keep the parens and/or the indentation balanced.
+The list below is somewhat sorted by age of the
 extension, according to the
 [history of Lisp editing](https://github.com/shaunlebron/history-of-lisp-editing):
 
-- [Paredit](https://www.emacswiki.org/emacs/ParEdit)
+- [Paredit](https://www.emacswiki.org/emacs/ParEdit) - Paredit is a
+  classic. It defines the must-have commands (move, kill, split, join
+  a sexp,…).
   ([visual tutorial](http://danmidwood.com/content/2014/11/21/animated-paredit.html))
-- [Smartparens](https://github.com/Fuco1/smartparens)
-- [Lispy](https://github.com/abo-abo/lispy)
-- [Paxedit](https://github.com/promethial/paxedit)
-- [Parinfer](http://shaunlebron.github.io/parinfer/)
+- [Smartparens](https://github.com/Fuco1/smartparens) - Smartparens
+  not only deals with parens but with everything that comes in pairs
+  (html tags,…) and thus has features for non-lispy languages.
+- [Lispy](https://github.com/abo-abo/lispy) - Lispy reimagines Paredit
+  with the goal to have the shortest bindings (mostly one key) that
+  only act depending on the point position.
+- [Paxedit](https://github.com/promethial/paxedit) - Paxedit adds
+  commands based on the context (in a symbol, a sexp,… ) and puts
+  efforts on whitespace cleanup and context refactoring.
+- [Parinfer](http://shaunlebron.github.io/parinfer/) - Parinfer
+  automatically fixes the parens depending on the indentation, or the
+  other way round (or both !).
 
 We personnaly advice to try Parinfer and the famous Paredit, then to
-go up the list. See explanations on
+go up the list. See explanations and even more on
 [Wikemacs](http://wikemacs.org/wiki/Lisp_editing).
 
 
@@ -267,7 +277,7 @@ in the minibuffer.
 
 *   [CL HyperSpec](ftp://ftp.lispworks.com/pub/software_tools/documentation/HyperSpec-7-0.tar.gz)
 *   [CLtL2](http://www-2.cs.cmu.edu/afs/cs.cmu.edu/project/ai-repository/ai/lang/lisp/doc/cltl/cltl_ht.tgz)
-*   [ACL Documenation](http://www.franz.com/support/documentation/)
+*   [ACL Documenation](https://franz.com/support/documentation/)
 *   Example code ( [s23.lisp](s23.lisp) )
 
 ~~~lisp
@@ -376,7 +386,7 @@ Lisp-friendly alternative are there?*
   * Vim can be used to edit Lisp code. See some
     [vim plugins](https://github.com/CodyReichert/awesome-cl#vim).
   * There is an [Atom package](https://atom.io/packages/atom-slime).
-  * The [Franz](http://www.franz.com/), [LispWorks](http://www.lispworks.com/), [Corman](http://www.cormanlisp.com/), and [Digitool](http://www.digitool.com/) commercial Lisp
+  * The [Franz](https://franz.com/), [LispWorks](http://www.lispworks.com/), [Corman](http://www.cormanlisp.com/), and [Digitool](http://www.digitool.com/) commercial Lisp
 offerings all have Lisp-aware editors.
   * Lastly, for true masochists, notepad on Windows or ed on UNIX® can also be used. ;-)
 

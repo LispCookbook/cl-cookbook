@@ -69,7 +69,7 @@ CL-USER> (defconstant *day-names*
 *DAY-NAMES*
 
 CL-USER> (multiple-value-bind
-           (second minute hour date month year day-of-week dst-p tz)
+           (second minute hour day month year day-of-week dst-p tz)
     	   (get-decoded-time)
            (format t "It is now ~2,'0d:~2,'0d:~2,'0d of ~a, ~d/~2,'0d/~d (GMT~@d)"
 	    	 hour
@@ -77,7 +77,7 @@ CL-USER> (multiple-value-bind
 	    	 second
 	    	 (nth day-of-week *day-names*)
 	    	 month
-	    	 date
+	    	 day
 	    	 year
 	    	 (- tz)))
 It is now 17:07:17 of Saturday, 1/26/2002 (GMT-5)
@@ -88,7 +88,7 @@ Of course the call to `GET-DECODED-TIME` above could be replaced by
 arbitrary date. You can also go the other way around: the function
 [`ENCODE-UNIVERSAL-TIME`](http://www.lispworks.com/documentation/HyperSpec/Body/f_encode.htm)
 lets you encode a calendar time into the corresponding universal time. This
-function takes six mandatory arguments (seconds, minutes, hours, date, month and
+function takes six mandatory arguments (seconds, minutes, hours, day, month and
 year) and one optional argument (the time zone) and it returns a universal time:
 
 ~~~lisp

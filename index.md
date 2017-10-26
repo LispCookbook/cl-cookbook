@@ -10,11 +10,13 @@ title: Home
 
 # Content
 
+<p id="two-cols"></p>
+
 * [License](license.html)
 * [Editor support](editor-support.html)
+* [Data Structures](data-structures.html)
 * [Strings](strings.html)
 * [Dates and Times](dates_and_times.html)
-* [Hash Tables](hashes.html)
 * [Pattern Matching / Regular Expressions](pattern_matching.html)
 * [Functions](functions.html)
 * [Loop](loop.html)
@@ -23,16 +25,15 @@ title: Home
 * [Packages](packages.html)
 * [Macros and Backquote](macros.html)
 * [CLOS (the Common Lisp Object System)](clos.html)
-* [Sockets](sockets.html)
 * [Interfacing with your OS](os.html)
 * [Foreign Function Interfaces](ffi.html)
 * [Threads](process.html)
 * [Defining Systems](systems.html)
 * [Using the Win32 API](win32.html)
-* [Testing](testing.html)
+* [Testing and Continuous Integration](testing.html)
 * [Web Scraping](web-scraping.html)
+* [Experimental CL21](cl21.html)
 * [Miscellaneous](misc.html)
-* [License](license.html)
 
 ## Further remarks
 
@@ -55,9 +56,11 @@ Thanks in advance for your help!
 
 The pages here on Github are kept up to date. You can also download a
 [up to date zip file][zip] for offline browsing. More info can be found at the
-[Github project page][gh]. 
+[Github project page][gh].
 
 ## Contributors
+
+<p id="contributors"></p>
 
 * Marco Antoniotti
 * [Zach Beane](mailto:xach@xach.com)

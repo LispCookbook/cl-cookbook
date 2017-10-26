@@ -16,7 +16,7 @@ We'll use the following libraries:
 - [Plump](https://shinmera.github.io/plump/) - a markup parser, that works on malformed HTML,
 - [Lquery](https://shinmera.github.io/lquery/) - a DOM manipulation
   library, to extract content from our Plump result,
-- [lparallel](https://lparallel.org/pmap-family/) -  a library for parallel programming,
+- [lparallel](https://lparallel.org/pmap-family/) -  a library for parallel programming (read more in the [process section](process.html)).
 
 Before starting let's install those libraries with Quicklisp:
 

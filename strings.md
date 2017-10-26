@@ -16,7 +16,8 @@ functionality or some shorter ways to do.
   defines functions such as `split`, `join`, `replace`, `insert`,
   `starts-with`, `ends-with`, functions to change case,…
 - [str](https://github.com/vindarel/cl-str) defines `trim`, `words`,
-  `unwords`, `lines`, `unlines`, `concat`, `blankp`,…
+  `unwords`, `lines`, `unlines`, `concat`, `split`, `repeat`,
+  `replace-all`, `starts-with?`, `ends-with?`, `blankp`, `emptyp`, …
 - [cl-change-case](https://github.com/rudolfochrist/cl-change-case)
   has functions to convert strings between camelCase, param-case,
   snake_case and more.
@@ -421,6 +422,45 @@ the following example is implementation-dependent - it may either be "BIG" or
 "BIG"
 ~~~
 
+## With the format function
+
+The format function has directives to change the case of words:
+
+### To lower case: ~( ~)
+
+~~~lisp
+(format t "~(~a~)" "HELLO WORLD")
+;; => hello world
+~~~
+
+
+### Capitalize every word: ~:( ~)
+
+~~~lisp
+(format t "~:(~a~)" "HELLO WORLD")
+Hello World
+NIL
+~~~
+
+### Capitalize the first word: ~@( ~)
+
+~~~lisp
+(format t "~@(~a~)" "hello world")
+Hello world
+NIL
+~~~
+
+### To upper case: ~@:( ~)
+
+Where we re-use the colon and the @:
+
+~~~lisp
+(format t "~@:(~a~)" "hello world")
+HELLO WORLD
+NIL
+~~~
+
+
 # Trimming Blanks from the Ends of a String
 
 Not only can you trim blanks, but you can get rid of arbitary characters. The
@@ -699,3 +739,148 @@ NIL
 * (mismatch "Harpo Marx" "Zeppo Marx" :from-end t :test #'char=)
 3
 ~~~
+
+# String formatting
+
+The `format` function has a lot of directives to print strings,
+numbers, lists, going recursively, even calling Lisp functions,
+etc. We'll focus here on a few things to print and format strings.
+
+See the documentation (like this
+[quick reference](http://clqr.boundp.org/)) for more details.
+
+The need of our examples arise when we want to print many strings and
+justify them. Let's work with this list of movies:
+
+~~~lisp
+(defparameter movies '(
+    (1 "Matrix" 5)
+    (10 "Matrix Trilogy swe sub" 3.3)
+    ))
+~~~
+
+We want an aligned and justified result like this:
+
+```
+ 1 Matrix                  5
+10 Matrix Trilogy swe sub  3.3
+```
+
+We'll use `mapcar` to iterate over our movies and experiment with the
+format constructs.
+
+~~~lisp
+(mapcar (lambda (it)
+          (format t "~a ~a ~a~%" (first it) (second it) (third it)))
+        movies)
+~~~
+
+which prints:
+
+```
+1 fooo baaar 5
+10 last 3.3
+```
+
+
+## Structure of format
+
+Format directives start with `~`. A final character like `A` or `a`
+(they are case insensitive) defines the directive. In between, it can
+accept coma-separated options and parameters.
+
+Print a tilde with `~~`, or 10 with `~10~`.
+
+Other directives include:
+
+- `R`: Roman (e.g., prints in english): `(format t "~R" 20)` => "twenty".
+- `$`: monetary: `(format t "~$" 21982)` => 21982.00
+- `D`, `B`, `O`, `X`: Decimal, Binary, Octal, Hexadecimal.
+- `F`: fixed-format Floating point.
+
+## Basic primitive: ~A or ~a (Aesthetics)
+
+`(format t "~a" movies)` is the most basic primitive.
+
+~~~lisp
+(format nil "~a" movies)
+;; => "((1 Matrix 5) (10 Matrix Trilogy swe sub 3.3))"
+~~~
+
+## Newlines: ~% and ~&
+
+`~%` is the newline character. `~10%` prints 10 newlines.
+
+`~&` does not print a newline if the output stream is already at one.
+
+## Tabs
+
+with `~T`. Also `~10T` works.
+
+Also `i` for indentation.
+
+
+## Justifying text
+
+With a number as parameter, like `~2a`:
+
+~~~lisp
+(mapcar (lambda (it)
+           (format t "~2a ~a ~a~%" (first it) (second it) (third it)))
+         movies)
+~~~
+
+```
+1  Matrix 5
+10 Matrix Trilogy swe sub 3.3
+```
+
+So, expanding:
+
+~~~lisp
+(mapcar (lambda (it)
+          (format t "~2a ~25a ~2a~%" (first it) (second it) (third it)))
+        movies)
+~~~
+
+```
+1  Matrix                    5
+10 Matrix Trilogy swe sub    3.3
+```
+
+text is justified on the right (this would be with option `:`).
+
+### justify on the left: @
+
+with an `@` as in `~2@A`:
+
+~~~lisp
+(mapcar (lambda (it)
+           (format nil "~2@a ~25@a ~2a~%" (first it) (second it) (third it)))
+        movies)
+~~~
+
+```
+ 1                    Matrix 5
+10    Matrix Trilogy swe sub 3.3
+```
+
+## Justifying decimals
+
+In `~,2F`, 2 is the number of decimals and F the floats diretive:
+`(format t "~,2F" 20.1)` => "20.10".
+
+With `~2,2f`:
+
+~~~lisp
+(mapcar (lambda (it)
+          (format t "~2@a ~25a ~2,2f~%" (first it) (second it) (third it)))
+        movies)
+~~~
+
+```
+ 1 Matrix                    5.00
+10 Matrix Trilogy swe sub    3.30
+```
+
+And we're happy with this result.

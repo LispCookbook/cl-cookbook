@@ -111,7 +111,7 @@ For each installation, an installation directory is suggested. It is recommended
 
 ## <a name="Installing ACL">5\. Installing ACL</a> (optional)
 
-* Download the trial version of [Franz's ACL](http://www.franz.com/) for Windows from: [http://www.franz.com/downloads/index.lhtml#acl](http://www.franz.com/downloads/index.lhtml#acl)  
+* Download the trial version of [Franz's ACL](https://franz.com/) for Windows from: [https://franz.com/downloads/](https://franz.com/downloads/)  
 * (Note: you will need to agree to their license and provide an email address. Franz will send you an email with instructions on how to download the temporary license key. The key works for 60 days and a new one can be downloaded before that one expires).
 * Run the downloaded installation program (acl62_trial.exe) and install ACL into the c:\bin\acl-6.2 directory.
 * Install the license key as per the instructions that you received from Franz.
@@ -126,7 +126,7 @@ For each installation, an installation directory is suggested. It is recommended
     </code></pre>
 
 * A non-IDE Lisp image & exe (alisp.exe) will be created in the ACL directory to be used with Emacs. Exit the ACL IDE.
-* OPTIONAL: Download the [Franz documentation](http://www.franz.com/support/documentation/) from [http://www.franz.com/ftp/pub/acl62/acl62doc.zip](http://www.franz.com/ftp/pub/acl62/acl62doc.zip) and use Winzip to unpack the files into the c:\bin\acl-6.2 directory. [Larry Hunter](http://compbio.uchsc.edu/Hunter/) wrote the [acldoc.el](http://compbio.uchsc.edu/Hunter/acldoc.el) utility that allows you to use the Franz documentation. Download it from [http://compbio.uchsc.edu/Hunter/acldoc.el](http://compbio.uchsc.edu/Hunter/acldoc.el) and put it into the c:\home\site directory.
+* OPTIONAL: Download the [Franz documentation](https://franz.com/support/documentation/) from [https://franz.com/ftp/pub/acl10.1/acl10.1doc.zip](https://franz.com/ftp/pub/acl10.1/acl10.1doc.zip) and use Winzip to unpack the files into the c:\bin\acl-6.2 directory. [Larry Hunter](http://compbio.uchsc.edu/Hunter/) wrote the [acldoc.el](http://compbio.uchsc.edu/Hunter/acldoc.el) utility that allows you to use the Franz documentation. Download it from [http://compbio.uchsc.edu/Hunter/acldoc.el](http://compbio.uchsc.edu/Hunter/acldoc.el) and put it into the c:\home\site directory.
 
 
 ## <a name="Installing LispWorks">6\. Installing LispWorks</a> (optional)
@@ -302,7 +302,7 @@ You should now have a working Windows/Emacs setup that supports a number of diff
 * The .[emacs](.emacs) file that is supplied will work unchanged with either a Windows installation or a Mac OS X installation. For a Mac install, the assumed directory locations are listed below.
 * The following Lisp installations are supported by the .[emacs](.emacs) file. I am not providing full build instructions for them as was provided for the Windows installation. The things that you need to know to use these installations with the .[emacs](.emacs) file are:
     * CLISP version 2.29: Installed and built with [Fink](http://fink.sourceforge.net/pdb/package.php/clisp). (Note: in order to build CLISP with Fink, you will need the [Apple December 2002 Development Tools](http://developer.apple.com/tools/download/)). The resulting clisp executable should be installed in the /sw/bin/ directory. This is the only source code based install, all the other Lisp installs are binary; therefore, the CLISP installation takes the longest and is the most complicated to do.
-    * ACL version 6.2: Installed from [Franz's download page](http://www.franz.com/downloads/index.lhtml). After installation, you need to run (sys:update-allegro) in the ACL Lisp listener to download some needed fixes for it to run properly on OS X. ACL should be installed in the ~/bin/acl-6.2/ directory.
+    * ACL version 10.1: Installed from [Franz's download page](https://franz.com/downloads/).
     * OpenMCL version 0.13: The [binary distribution](http://openmcl.clozure.com/Distributions) was downloaded and installed in the ~/bin/ directory. The OpenMCL executable should be at ~/bin/ccl/scripts/openmcl.
     * SBCL version 0.8.2.8: The [binary distribution](http://www-jcsu.jesus.cam.ac.uk/~csr21/sbcl-darwin-binary.tar.gz) was downloaded and unpacked. The files src/runtime/sbcl and output/sbcl.core were moved to the ~/bin/ directory.
     * LispWorks 4.3: I was not able to get a trial version of LispWorks to try out on Mac OS X; however, I have made the changes to the .emacs file that I think will be necessary to support it. The LispWorks executable should be at ~/bin/lispworks-4.3/lw43-console.
