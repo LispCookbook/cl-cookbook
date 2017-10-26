@@ -48,6 +48,18 @@ Atom into a full-featured Lisp IDE.
 <img src="assets/atom-slime.png"
      style="width: 800px"/>
 
+## Sublime Text
+
+[Sublime Text](http://www.sublimetext.com/3) supports running a Lisp
+REPL and evaluating code in it.
+
+You need to install the "SublimeREPL" package and then see the options
+in Tools/SublimeREPL to choose your CL implementation, and `eval` what
+you want.
+
+<img src="assets/editor-sublime.png"
+     style="width: 800px"/>
+
 
 ## More
 
