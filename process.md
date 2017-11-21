@@ -570,10 +570,11 @@ A simple demo:
     (defmacro until (condition &body body)
       (let ((block-name (gensym)))
         `(block ,block-name
-           (if ,condition
-               (return-from ,block-name nil)
-               (progn
-                 ,@body)))))
+           (loop
+               (if ,condition
+                   (return-from ,block-name nil)
+                   (progn
+                       ,@body))))))
 
     (defun join-destroy-thread ()
       (let* ((s *standard-output*)
