@@ -43,6 +43,19 @@ CLX X Library MIT R5.02
 NIL
 ~~~
 
+### Creating directories
+
+The function
+[ensure-directories-exist](http://www.lispworks.com/documentation/HyperSpec/Body/f_ensu_1.htm)
+creates the directories if they do not exist:
+
+~~~lisp
+(ensure-directories-exist "foo/bar/baz/")
+~~~
+
+This may create `foo`, `bar` and `baz`. Don't forget the trailing slash.
+
+
 ### Opening a File
 
 Common Lisp has
