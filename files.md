@@ -14,10 +14,10 @@ will be the topic of separate chapter
 ### Testing whether a File Exists
 
 Use the function
-[`PROBE-FILE`](http://www.lispworks.com/documentation/HyperSpec/Body/f_probe_.htm)
+[`probe-file`](http://www.lispworks.com/documentation/HyperSpec/Body/f_probe_.htm)
 which will return a
 [generalized boolean](http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_g.htm#generalized_boolean) -
-either `NIL` if the file doesn't exists, or its
+either `nil` if the file doesn't exists, or its
 [truename](http://www.lispworks.com/documentation/HyperSpec/Body/20_ac.htm)
 (which might be different from the argument you supplied).
 
@@ -43,20 +43,33 @@ CLX X Library MIT R5.02
 NIL
 ~~~
 
+### Creating directories
+
+The function
+[ensure-directories-exist](http://www.lispworks.com/documentation/HyperSpec/Body/f_ensu_1.htm)
+creates the directories if they do not exist:
+
+~~~lisp
+(ensure-directories-exist "foo/bar/baz/")
+~~~
+
+This may create `foo`, `bar` and `baz`. Don't forget the trailing slash.
+
+
 ### Opening a File
 
 Common Lisp has
-[`OPEN`](http://www.lispworks.com/documentation/HyperSpec/Body/f_open.htm) and
-[`CLOSE`](http://www.lispworks.com/documentation/HyperSpec/Body/f_close.htm)
+[`open`](http://www.lispworks.com/documentation/HyperSpec/Body/f_open.htm) and
+[`close`](http://www.lispworks.com/documentation/HyperSpec/Body/f_close.htm)
 functions which resemble the functions of the same denominator from other
 programming languages you're probably familiar with. However, it is almost
 always recommendable to use the macro
-[`WITH-OPEN-FILE`](http://www.lispworks.com/documentation/HyperSpec/Body/m_w_open.htm)
+[`with-open-file`](http://www.lispworks.com/documentation/HyperSpec/Body/m_w_open.htm)
 instead. Not only will this macro open the file for you and close it when you're
 done, it'll also take care of it if your code leaves the body abnormally (such
 as by a use of
-[THROW](http://www.lispworks.com/documentation/HyperSpec/Body/s_throw.htm)). A
-typical use of WITH-OPEN-FILE looks like this:
+[throw](http://www.lispworks.com/documentation/HyperSpec/Body/s_throw.htm)). A
+typical use of `with-open-file` looks like this:
 
 ~~~lisp
 (with-open-file (str <_file-spec_>
@@ -66,27 +79,27 @@ typical use of WITH-OPEN-FILE looks like this:
 <_your code here_>)
 ~~~
 
-*   `STR` is a variable which'll be bound to the stream which is created by
+*   `str` is a variable which'll be bound to the stream which is created by
     opening the file.
-*   <_file-spec_> will be a truename or a pathname.
-*   <_direction_> is usually `:INPUT` (meaning you want to read from the file),
-    `:OUTPUT` (meaning you want to write to the file) or `:IO` (which is for
-    reading _and_ writing at the same time) - the default is `:INPUT`.
-*   <_if-exists_> specifies what to do if you want to open a file for writing
+*   `<_file-spec_>` will be a truename or a pathname.
+*   `<_direction_>` is usually `:input` (meaning you want to read from the file),
+    `:output` (meaning you want to write to the file) or `:io` (which is for
+    reading _and_ writing at the same time) - the default is `:input`.
+*   `<_if-exists_>` specifies what to do if you want to open a file for writing
     and a file with that name already exists - this option is ignored if you
-    just want to read from the file. The default is `:ERROR` which means that an
-    error is signalled. Other useful options are `:SUPERSEDE` (meaning that the
-    new file will replace the old one), `NIL` (the stream variable will be bound
-    to `NIL`), and `:RENAME` (i.e. the old file is renamed).
-*   <_if-does-not-exist_> specifies what to do if the file you want to open does
-    not exist. It is one of `:ERROR` for signalling an error, `:CREATE` for
-    creating an empty file, or `NIL` for binding the stream variable to
-    `NIL`. The default is, to be brief, to do the right thing depending on the
+    just want to read from the file. The default is `:error` which means that an
+    error is signalled. Other useful options are `:supersede` (meaning that the
+    new file will replace the old one), `nil` (the stream variable will be bound
+    to `nil`), and `:rename` (i.e. the old file is renamed).
+*   `<_if-does-not-exist_>` specifies what to do if the file you want to open does
+    not exist. It is one of `:error` for signalling an error, `:create` for
+    creating an empty file, or `nil` for binding the stream variable to
+    `nil`. The default is, to be brief, to do the right thing depending on the
     other options you provided. See the CLHS for details.
 
-Note that there are a lot more options to WITH-OPEN-FILE. See
-[the CLHS entry for `OPEN`](http://www.lispworks.com/documentation/HyperSpec/Body/f_open.htm)
-for all the details. You'll find some examples on how to use WITH-OPEN-FILE
+Note that there are a lot more options to `with-open-file`. See
+[the CLHS entry for `open`](http://www.lispworks.com/documentation/HyperSpec/Body/f_open.htm)
+for all the details. You'll find some examples on how to use `with-open-file`
 below. Also note that you usually don't need to provide any keyword arguments if
 you just want to open an existing file for reading.<a name="strings">
 
@@ -94,16 +107,16 @@ you just want to open an existing file for reading.<a name="strings">
 
 ### Reading a File one Line at a Time
 
-[`READ-LINE`](http://www.lispworks.com/documentation/HyperSpec/Body/f_rd_lin.htm)
+[`read-line`](http://www.lispworks.com/documentation/HyperSpec/Body/f_rd_lin.htm)
 will read one line from a stream (which defaults to
 [_standard input_](http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_s.htm#standard_input))
 the end of which is determined by either a newline character or the end of the
 file. It will return this line as a string _without_ the trailing newline
-character. (Note that READ-LINE has a second return value which is true if there
+character. (Note that `read-line` has a second return value which is true if there
 was no trailing newline, i.e. if the line was terminated by the end of the
-file.) READ-LINE will by default signal an error if the end of the file is
+file.) `read-line` will by default signal an error if the end of the file is
 reached. You can inhibit this by supplying NIL as the second argument. If you do
-this, READ-LINE will return NIL if it reaches the end of the file.
+this, `read-line` will return `nil` if it reaches the end of the file.
 
 ~~~lisp
 (with-open-file (stream "/etc/passwd")
@@ -113,7 +126,7 @@ this, READ-LINE will return NIL if it reaches the end of the file.
        (print line)))
 ~~~
 
-You can also supply a third argument which will be used instead of NIL to signal
+You can also supply a third argument which will be used instead of `nil` to signal
 the end of the file:
 
 ~~~lisp
@@ -125,8 +138,8 @@ the end of the file:
 
 ### Reading a File one Character at a Time
 
-[`READ-CHAR`](http://www.lispworks.com/documentation/HyperSpec/Body/f_rd_cha.htm)
-is similar to READ-LINE, but it only reads one character as opposed to one
+[`read-char`](http://www.lispworks.com/documentation/HyperSpec/Body/f_rd_cha.htm)
+is similar to `read-line`, but it only reads one character as opposed to one
 line. Of course, newline characters aren't treated differently from other
 characters by this function.
 
@@ -141,7 +154,7 @@ characters by this function.
 ### Reading a File into String
 
 It's quite common to need to access the contents of a file in string
-form. While this can be achieved by using `READ-LINE` or `READ-CHAR` functions,
+form. While this can be achieved by using `read-line` or `read-char` functions,
 that probably won't be the best solution. File might not be divided into
 multiple lines or reading one character at a time might bring significant
 performance problems. To solve this problems, you can read files using buckets
@@ -158,8 +171,8 @@ of specific sizes.
 
 Furthermore, you're free to change the format of the read/written data, instead
 of using elements of type character everytime. For instance, you can set
-`:ELEMENT-TYPE` type argument of `WITH-OUTPUT-TO-STRING`, `WITH-OPEN-FILE` and
-`MAKE-ARRAY` functions to `'(UNSIGNED-BYTE 8)` to read data in octets.
+`:element-type` type argument of `with-output-to-string`, `with-open-file` and
+`make-array` functions to `'(unsigned-byte 8)` to read data in octets.
 
 ### Reading with an UTF-8 encoding
 
@@ -175,10 +188,10 @@ To avoid an `ASCII stream decoding error` you might want to specify an UTF-8 enc
 
 You can 'look at' the next character of a stream without actually removing it
 from there - this is what the function
-[`PEEK-CHAR`](http://www.lispworks.com/documentation/HyperSpec/Body/f_peek_c.htm)
+[`peek-char`](http://www.lispworks.com/documentation/HyperSpec/Body/f_peek_c.htm)
 is for. It can be used for three different purposes depending on its first
 (optional) argument (the second one being the stream it reads from): If the
-first argument is `NIL`, PEEK-CHAR will just return the next character that's
+first argument is `nil`, `peek-char` will just return the next character that's
 waiting on the stream:
 
 ~~~lisp
@@ -193,11 +206,11 @@ CL-USER> (with-input-from-string (stream "I'm not amused")
 #\'
 ~~~
 
-If the first argument is `T`, PEEK-CHAR will skip
+If the first argument is `T`, `peek-char` will skip
 [whitespace](http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_w.htm#whitespace)
 characters, i.e. it will return the next non-whitespace character that's waiting
 on the stream. The whitespace characters will vanish from the stream as if they
-had been read by READ-CHAR:
+had been read by `read-char`:
 
 ~~~lisp
 CL-USER> (with-input-from-string (stream "I'm not amused")
@@ -217,7 +230,7 @@ CL-USER> (with-input-from-string (stream "I'm not amused")
 #\o
 ~~~
 
-If the first argument to PEEK-CHAR is a character, the function will skip all
+If the first argument to `peek-char` is a character, the function will skip all
 characters until that particular character is found:
 
 ~~~lisp
@@ -234,8 +247,8 @@ CL-USER> (with-input-from-string (stream "I'm not amused")
 #\m
 ~~~
 
-Note that PEEK-CHAR has further optional arguments to control its behaviour on
-end-of-file similar to those for READ-LINE and READ-CHAR (and it will signal an
+Note that `peek-char` has further optional arguments to control its behaviour on
+end-of-file similar to those for `read-line` and `read-char` (and it will signal an
 error by default):
 
 ~~~lisp
@@ -253,9 +266,9 @@ THE-END
 ~~~
 
 You can also put one character back onto the stream with the function
-[`UNREAD-CHAR`](http://www.lispworks.com/documentation/HyperSpec/Body/f_unrd_c.htm). You
+[`unread-char`](http://www.lispworks.com/documentation/HyperSpec/Body/f_unrd_c.htm). You
 can use it as if, _after_ you have read a character, you decide that you'd
-better used PEEK-CHAR instead of READ-CHAR:
+better used `peek-char` instead of `read-char`:
 
 ~~~lisp
 CL-USER> (with-input-from-string (stream "I'm not amused")
@@ -277,7 +290,7 @@ none has been read before.
 ### Random Access to a File
 
 Use the function
-[`FILE-POSITION`](http://www.lispworks.com/documentation/HyperSpec/Body/f_file_p.htm)
+[`file-position`](http://www.lispworks.com/documentation/HyperSpec/Body/f_file_p.htm)
 for random access to a file. If this function is used with one argument (a
 stream), it will return the current position within the stream. If it's used
 with two arguments (see below), it will actually change the
