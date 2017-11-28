@@ -1164,6 +1164,15 @@ looks like this:
 FOO
 ```
 
+We can construct an alist like its representation:
+
+
+~~~lisp
+(setf my-alist '((:foo . "foo")
+                 (:bar . "bar")))
+~~~
+
+
 The constructor `pairlis` associates a list of keys and a list of values:
 
 ~~~lisp
@@ -1174,8 +1183,18 @@ The constructor `pairlis` associates a list of keys and a list of values:
 
 To get a key, we have `assoc` (use `:test 'equal` when your keys are
 strings, as usual). It returns the whole cons cell, so you may want to
-use `cdr` or `second` to get the value. There is `assoc-if`, and
-`rassoc` to get a cons cell by its value.
+use `cdr` or `second` to get the value or even better `assoc-value list key` from `Alexandria`.
+
+
+~~~lisp
+(alexandria:assoc-value my-alist :foo)
+;; it actually returns 2 values
+;; "foo"
+;; (:FOO . "FOO")
+~~~
+
+
+There is `assoc-if`, and `rassoc` to get a cons cell by its value.
 
 To add a key, we `push` another cons cell:
 
@@ -1207,7 +1226,7 @@ Remove only one element with `:count`:
 
 In the
 [Alexandria](https://common-lisp.net/project/alexandria/draft/alexandria.html#Conses)
-library, see some functions like `remove-from-plist`, `alist-plist`,…
+library, see more functions like `remove-from-plist`, `alist-plist`,…
 
 
 ## Plist
