@@ -4,6 +4,7 @@
     <title>{{ page.title }} &ndash; the Common Lisp Cookbook</title>
     <meta charset="utf-8">
     <meta name="description" content="{{ site.description }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{{ site.baseurl }}/assets/style.css">
     <script type="text/javascript" src="{{ site.baseurl }}/assets/highlight-lisp.js"></script>
     <script type="text/javascript" src="{{ site.baseurl }}/assets/jquery-3.2.1.min.js"></script>
@@ -14,13 +15,13 @@
   <body class="container-fluid">
 
     <div class="row">
-      <div class="col-lg-3" style="position: fixed;">
+      <div id="logo" class="col-lg-3">
         <a href="{{ site.baseurl }}/">
           <img src="{{ site.baseurl }}/assets/cl-logo-blue.png" height="70" style="margin: 15px"/>
         </a>
       </div>
 
-      <div class="col-lg-8" style="margin-left: 25%;">
+      <div id="page-title" class="col-lg-8">
         {% if page.title %}
         {% assign dash = "&ndash;" %}
         {% endif %}
@@ -40,7 +41,7 @@
         <ul id="toc" class="list-unstyled"></ul>
       </div>
 
-      <div class="col-lg-8" style="margin-left: 25%">
+      <div id="content-container" class="col-lg-8">
         {{ content }}
 
         <div>
