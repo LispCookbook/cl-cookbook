@@ -1,4 +1,4 @@
-some notes on contribution.
+# Some notes on contribution
 
 1. If filing a new article, please check the bug tracker and,
    if the issue is not already there, please file a bug before
