@@ -58,8 +58,32 @@ and  this [Debian package for Clozure CL](http://mr.gy/blog/clozure-cl-deb.html)
   Integration platforms),
 * a building utility (to build images and executables in a portable way).
 
-You'll several ways of installation on its wiki (Debian package,
+You'll find several ways of installation on its wiki (Debian package,
 Windows installer, Brew/Linux Brew,…).
+
+
+### With Docker
+
+If you already know [Docker](https://docs.docker.com), you can get
+started with Common Lisp pretty quickly. The
+[daewok/lisp-devel-docker](https://github.com/daewok/lisp-devel-docker)
+image comes with recent versions of SBCL, CCL, ECL and ABCL, plus
+Quicklisp installed in the home (`/home/lisp`) so than we can
+`ql:quickload` libraries straight away.
+
+It works on GNU/Linux, Mac and Windows.
+
+The following command will download the required image (around 400MB), put your
+local sources inside the Docker image where indicated and drop you
+into an SBCL REPL:
+
+    docker run --rm -it -v /path/to/local/code:/usr/local/share/common-lisp/source daewok/lisp-devel:base sbcl
+
+But we still want to develop from our Emacs and Slime, so we need to
+connect Slime to the Lisp inside Docker. See
+[slime-docker](https://github.com/daewok/slime-docker) for a library
+that helps on setting that up.
+
 
 ## Start a REPL
 
