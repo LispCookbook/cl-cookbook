@@ -17,3 +17,24 @@ footer {
     color: darkgrey;
     margin: 20px 0px 20px;
 }
+
+#logo {
+    position: fixed;
+}
+
+#page-title, #content-container {
+    margin-left: 25%;
+}
+
+/* On small screens we remove left column to make text more readable */
+@media screen and (max-width: 40em) {
+    #toc {
+        display: none;
+    }
+    #logo {
+        display: none;
+    }
+    #page-title, #content-container {
+        margin-left: 0;
+    }
+}
