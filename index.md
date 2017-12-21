@@ -23,6 +23,7 @@ title: Home
 * [Loop](loop.html)
 * [Input/Output](io.html)
 * [Files and Directories](files.html)
+* [Error and condition handling](error_handling.html)
 * [Packages](packages.html)
 * [Macros and Backquote](macros.html)
 * [CLOS (the Common Lisp Object System)](clos.html)
