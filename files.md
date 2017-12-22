@@ -151,10 +151,15 @@ characters by this function.
        (print char)))
 ~~~
 
-### Reading a File into String
+### Reading a File into a String
 
 It's quite common to need to access the contents of a file in string
-form. While this can be achieved by using `read-line` or `read-char` functions,
+form.
+
+Alexandria offers this function: [read-file-into-string](https://common-lisp.net/project/alexandria/draft/alexandria.html#IO). It accepts an `:external-format` argument (that can be bound to `:utf-8`). It is included in [cl21](cl21.html).
+
+
+Without Alexandria, this can be achieved by using `read-line` or `read-char` functions,
 that probably won't be the best solution. File might not be divided into
 multiple lines or reading one character at a time might bring significant
 performance problems. To solve this problems, you can read files using buckets
