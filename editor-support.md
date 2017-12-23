@@ -34,11 +34,11 @@ See also:
 
 ### Using Emacs as an IDE
 
-See ["Using Emacs as an IDE"](emacs-ide.html).
+See ["Using Emacs as an IDE"](emacs-ide.md).
 
 ### Setting up Emacs on Windows or Mac
 
-See ["Setting up Emacs on Windows or Mac"](windows.html).
+See ["Setting up Emacs on Windows or Mac"](windows.md).
 
 
 ## Vim
