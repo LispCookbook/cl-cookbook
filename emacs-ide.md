@@ -2,7 +2,7 @@
 title: Using Emacs as an IDE
 ---
 
-This page is meant to provide an introduction to using Emacs as a Lisp IDE. The key bindings used in the example code snippets assume an Emacs configuration similar to that provided by the [.emacs](https://github.com/LispCookbook/cl-cookbook/blob/master/.emacs) file that is included as part of the [Setting up an IDE with Emacs on Windows or Mac OS X](windows.html) page.
+This page is meant to provide an introduction to using Emacs as a Lisp IDE. The key bindings used in the example code snippets assume an Emacs configuration similar to that provided by the [.emacs](https://github.com/LispCookbook/cl-cookbook/blob/master/.emacs) file that is included as part of the [Setting up an IDE with Emacs on Windows or Mac OS X](windows.md) page.
 
 
 **Note**: [Portacle](https://shinmera.github.io/portacle/) is a
@@ -82,7 +82,7 @@ In this short tutorial we'll see how to:
 *   edit Lisp code
 *   evaluate and compile Lisp code
 *   search Lisp code
-*   Note: Example code assumes you are using a setup similar to what is defined in the [.emacs file](https://github.com/LispCookbook/cl-cookbook/blob/master/.emacs) from the [CL Cookbook](windows.html) site.
+*   Note: Example code assumes you are using a setup similar to what is defined in the [.emacs file](https://github.com/LispCookbook/cl-cookbook/blob/master/.emacs) from the [CL Cookbook](windows.md) site.
 
 In addition to the built-in Emacs commands, you have several packages at your disposal
 that will help to keep the parens and/or the indentation balanced.
@@ -374,7 +374,7 @@ that can be used to get started. It contains all of the configurations
 that have been described in this page and (hopefully) should work with
 some minor tweaking. See the
 [CL-Cookbook](http://lispcookbook.github.io/cl-cookbook/) page on
-"[Setting up an IDE with Emacs on Windows or Mac OS X](windows.html)".
+"[Setting up an IDE with Emacs on Windows or Mac OS X](windows.md)".
 
 
 
