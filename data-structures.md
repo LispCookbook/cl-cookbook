@@ -508,7 +508,7 @@ We can use sets functions.
 
 ## Set
 
-`intersection`
+### `intersection` of lists
 
 What elements are both in list-a and list-b ?
 
@@ -519,9 +519,9 @@ What elements are both in list-a and list-b ?
 ;; => (2 0)
 ~~~
 
-`set-difference`
+### Remove the elements of list-b from list-a
 
-Remove the elements of list-b from list-a:
+`set-difference`
 
 ~~~lisp
 (set-difference list-a list-b)
@@ -530,18 +530,18 @@ Remove the elements of list-b from list-a:
 ;; => (4)
 ~~~
 
-`union`
+### Join two lists
 
-join the two lists:
+`union`
 
 ~~~lisp
 (union list-a list-b)
 ;; => (3 1 0 2 4) ;; order can be different in your lisp
 ~~~
 
-`set-exclusive-or`
+### Remove elements that are in both lists
 
-Remove the elements that are in both lists:
+`set-exclusive-or`
 
 ~~~lisp
 (set-exclusive-or list-a list-b)
