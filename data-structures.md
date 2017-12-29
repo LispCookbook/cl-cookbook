@@ -1145,7 +1145,7 @@ An association list is a list of cons cells.
 This simple example:
 
 ~~~lisp
-(defparameter my-alist (list (cons 'foo "foo")
+(defparameter *my-alist* (list (cons 'foo "foo")
                              (cons 'bar "bar")))
 ;; => ((FOO . "foo") (BAR . "bar"))
 ~~~
@@ -1168,7 +1168,7 @@ We can construct an alist like its representation:
 
 
 ~~~lisp
-(setf my-alist '((:foo . "foo")
+(setf *my-alist* '((:foo . "foo")
                  (:bar . "bar")))
 ~~~
 
@@ -1187,7 +1187,7 @@ use `cdr` or `second` to get the value or even better `assoc-value list key` fro
 
 
 ~~~lisp
-(alexandria:assoc-value my-alist :foo)
+(alexandria:assoc-value *my-alist* :foo)
 ;; it actually returns 2 values
 ;; "foo"
 ;; (:FOO . "FOO")
@@ -1199,28 +1199,28 @@ There is `assoc-if`, and `rassoc` to get a cons cell by its value.
 To add a key, we `push` another cons cell:
 
 ~~~lisp
-(push (cons 'team "team") my-alist)
+(push (cons 'team "team") *my-alist*)
 ;; => ((TEAM . "team") (FOO . "foo") (BAR . "bar"))
 ~~~
 
 We can use `pop` and other functions that operate on lists, like `remove`:
 
 ~~~lisp
-(remove :team my-alist)
+(remove :team *my-alist*)
 ;; => ((:TEAM . "team") (FOO . "foo") (BAR . "bar")) ;; didn't remove anything
-(remove :team my-alist :key 'car)
+(remove :team *my-alist* :key 'car)
 ;; => ((FOO . "foo") (BAR . "bar")) ;; returns a copy
 ~~~
 
 Remove only one element with `:count`:
 
 ~~~lisp
-(push (cons 'bar "bar2") my-alist)
+(push (cons 'bar "bar2") *my-alist*)
 ;; => ((BAR . "bar2") (TEAM . "team") (FOO . "foo") (BAR . "bar")) ;; twice the 'bar key
-(remove 'bar my-alist :key 'car :count 1)
+(remove 'bar *my-alist* :key 'car :count 1)
 ;; => ((TEAM . "team") (FOO . "foo") (BAR . "bar"))
 ;; because otherwise:
-(remove 'bar my-alist :key 'car)
+(remove 'bar *my-alist* :key 'car)
 ;; => ((TEAM . "team") (FOO . "foo")) ;; no more 'bar
 ~~~
 
