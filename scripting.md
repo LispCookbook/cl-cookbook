@@ -127,10 +127,10 @@ can do something like this:
 (defun main ()
   (start-app :port 9003) ;; our start-app, for example clack:clack-up
   ;; let the webserver run.
-  ;; warning: hardcoded "hunchentoot" and SBCL's "sb-thread".
-  (handler-case (sb-thread:join-thread (find-if (lambda (th)
-                                                  (search "hunchentoot" (sb-thread:thread-name th)))
-                                                  (sb-thread:list-all-threads)))
+  ;; warning: hardcoded "hunchentoot".
+  (handler-case (bt:join-thread (find-if (lambda (th)
+                                            (search "hunchentoot" (bt:thread-name th)))
+                                         (bt:all-threads)))
     ;; Catch a user's C-c
     (#+sbcl sb-sys:interactive-interrupt
       #+ccl  ccl:interrupt-signal-condition
@@ -140,9 +140,14 @@ can do something like this:
       () (progn
            (format *error-output* "Aborting.~&")
            (clack:stop *server*)
-           (exit)))
+           (uiop:quit)))
     (error (c) (format t "Woops, an unknown error occured:~&~a~&" c))))
 ~~~
+
+We used the `bordeaux-threads` library (`(ql:quickload
+"bordeaux-threads")`, alias `bt`) and `uiop`, which is part of ASDF so
+already loaded, in order to exit in a portable way (`uiop:quit`, with
+an optional return code, instead of `sb-ext:quit`).
 
 
 ## Size and startup times of executables per implementation
