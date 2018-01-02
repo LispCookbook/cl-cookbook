@@ -508,7 +508,7 @@ We can use sets functions.
 
 ## Set
 
-`intersection`
+### `intersection` of lists
 
 What elements are both in list-a and list-b ?
 
@@ -519,9 +519,9 @@ What elements are both in list-a and list-b ?
 ;; => (2 0)
 ~~~
 
-`set-difference`
+### Remove the elements of list-b from list-a
 
-Remove the elements of list-b from list-a:
+`set-difference`
 
 ~~~lisp
 (set-difference list-a list-b)
@@ -530,18 +530,18 @@ Remove the elements of list-b from list-a:
 ;; => (4)
 ~~~
 
-`union`
+### Join two lists
 
-join the two lists:
+`union`
 
 ~~~lisp
 (union list-a list-b)
 ;; => (3 1 0 2 4) ;; order can be different in your lisp
 ~~~
 
-`set-exclusive-or`
+### Remove elements that are in both lists
 
-Remove the elements that are in both lists:
+`set-exclusive-or`
 
 ~~~lisp
 (set-exclusive-or list-a list-b)
@@ -1145,7 +1145,7 @@ An association list is a list of cons cells.
 This simple example:
 
 ~~~lisp
-(defparameter my-alist (list (cons 'foo "foo")
+(defparameter *my-alist* (list (cons 'foo "foo")
                              (cons 'bar "bar")))
 ;; => ((FOO . "foo") (BAR . "bar"))
 ~~~
@@ -1168,7 +1168,7 @@ We can construct an alist like its representation:
 
 
 ~~~lisp
-(setf my-alist '((:foo . "foo")
+(setf *my-alist* '((:foo . "foo")
                  (:bar . "bar")))
 ~~~
 
@@ -1187,7 +1187,7 @@ use `cdr` or `second` to get the value or even better `assoc-value list key` fro
 
 
 ~~~lisp
-(alexandria:assoc-value my-alist :foo)
+(alexandria:assoc-value *my-alist* :foo)
 ;; it actually returns 2 values
 ;; "foo"
 ;; (:FOO . "FOO")
@@ -1199,28 +1199,28 @@ There is `assoc-if`, and `rassoc` to get a cons cell by its value.
 To add a key, we `push` another cons cell:
 
 ~~~lisp
-(push (cons 'team "team") my-alist)
+(push (cons 'team "team") *my-alist*)
 ;; => ((TEAM . "team") (FOO . "foo") (BAR . "bar"))
 ~~~
 
 We can use `pop` and other functions that operate on lists, like `remove`:
 
 ~~~lisp
-(remove :team my-alist)
+(remove :team *my-alist*)
 ;; => ((:TEAM . "team") (FOO . "foo") (BAR . "bar")) ;; didn't remove anything
-(remove :team my-alist :key 'car)
+(remove :team *my-alist* :key 'car)
 ;; => ((FOO . "foo") (BAR . "bar")) ;; returns a copy
 ~~~
 
 Remove only one element with `:count`:
 
 ~~~lisp
-(push (cons 'bar "bar2") my-alist)
+(push (cons 'bar "bar2") *my-alist*)
 ;; => ((BAR . "bar2") (TEAM . "team") (FOO . "foo") (BAR . "bar")) ;; twice the 'bar key
-(remove 'bar my-alist :key 'car :count 1)
+(remove 'bar *my-alist* :key 'car :count 1)
 ;; => ((TEAM . "team") (FOO . "foo") (BAR . "bar"))
 ;; because otherwise:
-(remove 'bar my-alist :key 'car)
+(remove 'bar *my-alist* :key 'car)
 ;; => ((TEAM . "team") (FOO . "foo")) ;; no more 'bar
 ~~~
 
@@ -1264,6 +1264,182 @@ we remove an element with `remf`.
 ;; => "foo!!!"
 ~~~
 
+## Structures
+
+Structures offer a way to store data in named slots. They support
+single inheritance.
+
+They can be considered superceded by classes of the Common Lisp
+Object System (CLOS), that don't have their limitations (see below).
+
+### Creation
+
+`defstruct`
+
+~~~lisp
+(defstruct person
+   id name age)
+~~~
+
+At creation slots are optional and default to `nil`.
+
+To set a default value:
+
+~~~lisp
+(defstruct person
+   id
+   (name "john doe")
+   age)
+~~~
+
+Also specify the type after the default value:
+
+~~~lisp
+(defstruct person
+  id
+  (name "john doe" :type string)
+  age)
+~~~
+
+We create an instance with the generated constructor `make-` +
+`<structure-name>`, so `make-person` (and *not* "make-instance" ;) ):
+
+~~~lisp
+(defparameter *me* (make-person))
+*me*
+#S(PERSON :ID NIL :NAME "john doe" :AGE NIL)
+~~~
+
+note that printed representations can be read back by the reader.
+
+With a bad name type:
+
+~~~lisp
+(defparameter *bad-name* (make-person :name 123))
+~~~
+
+```
+Invalid initialization argument:
+  :NAME
+in call for class #<STRUCTURE-CLASS PERSON>.
+   [Condition of type SB-PCL::INITARG-ERROR]
+```
+
+We can set the structure's constructor so as to create the structure
+without using keyword arguments, which can be more convenient
+sometimes. We give it a name and the order of the arguments:
+
+~~~lisp
+(defstruct (person (:constructor create-person (id name age)))
+     id
+     name
+     age)
+~~~
+
+Our new constructor is `create-person`:
+
+~~~lisp
+(create-person 1 "me" 7)
+#S(PERSON :ID 1 :NAME "me" :AGE 7)
+~~~
+
+However, the default `make-person` does *not* work any more:
+
+~~~lisp
+(make-person :name "me")
+;; debugger:
+obsolete structure error for a structure of type PERSON
+[Condition of type SB-PCL::OBSOLETE-STRUCTURE]
+~~~
+
+
+
+### Slot access
+
+We access the slots with accessors created by `<name-of-the-struct>-` + `slot-name`:
+
+~~~lisp
+(person-name *me*)
+;; "john doe"
+~~~
+
+we then also have `person-age` and `person-id`.
+
+### Setting
+
+Slots are `setf`-able:
+
+~~~lisp
+(setf (person-name *me*) "Cookbook author")
+(person-name *me*)
+;; "Cookbook author"
+~~~
+
+### Predicate
+
+~~~lisp
+(person-p *me*)
+T
+~~~
+
+### Single inheritance
+
+With the `:include <struct>` argument:
+
+~~~lisp
+(defstruct (female (:include person))
+     (gender "female" :type string))
+(make-female :name "Lilie")
+;; #S(FEMALE :ID NIL :NAME "Lilie" :AGE NIL :GENDER "female")
+~~~
+
+### Limitations
+
+After a change, instances are not updated.
+
+If we try to add a slot (`email` below), we have the choice to loose
+all instances, or to continue using the new definition of
+`person`. But the effects of redefining a structure are undefined by
+the standards, so it is best to re-compile and re-run the changed
+code.
+
+~~~lisp
+(defstruct person
+       id
+       (name "john doe" :type string)
+       age
+       email)
+
+attempt to redefine the STRUCTURE-OBJECT class PERSON
+incompatibly with the current definition
+   [Condition of type SIMPLE-ERROR]
+
+Restarts:
+ 0: [CONTINUE] Use the new definition of PERSON, invalidating already-loaded code and instances.
+ 1: [RECKLESSLY-CONTINUE] Use the new definition of PERSON as if it were compatible, allowing old accessors to use new instances and allowing new accessors to use old instances.
+ 2: [CLOBBER-IT] (deprecated synonym for RECKLESSLY-CONTINUE)
+ 3: [RETRY] Retry SLIME REPL evaluation request.
+ 4: [*ABORT] Return to SLIME's top level.
+ 5: [ABORT] abort thread (#<THREAD "repl-thread" RUNNING {1002A0FFA3}>)
+~~~
+
+If we choose restart `0`, to use the new definition, we loose access to `*me*`:
+
+~~~lisp
+*me*
+obsolete structure error for a structure of type PERSON
+   [Condition of type SB-PCL::OBSOLETE-STRUCTURE]
+~~~
+
+There is also very little introspection. Portable Common Lisp does not
+tell super/sub-strucures of a structure in an easy way, nor does it
+tell the slots of a structure.
+
+The Common Lisp Object System (which came after into the language)
+doesn't have such limitations. See the [CLOS section](clos.html).
+
+* [structures on the hyperspec](http://www.lispworks.com/documentation/HyperSpec/Body/08_.htm)
+* David B. Lamkins, ["Successful Lisp, How to Undertsand and Use Common Lisp"](http://www.communitypicks.com/r/lisp/s/17592186045679-successful-lisp-how-to-understand-and-use-common).
 
 ## Tree
 
