@@ -10,10 +10,11 @@ The main goal is making the Cookbook more modern and more accessible in addition
 
 When adding a new content, ensure, it renders propertly. To do this, install [Jekyll][jekyll] and run `jekyll serve` in a folder where this repository was checked out.
 
-Also, refer to a CONTRIBUTING.md file.
+Also, refer to a [CONTRIBUTING.md][contributing] file.
 
 [sf]: http://cl-cookbook.sourceforge.net/
 [ql]: https://www.quicklisp.org/
 [hs]: http://www.lispworks.com/documentation/HyperSpec/Front/X_Master.htm
 [pcl]: http://www.gigamonkeys.com/book/
 [jekyll]: https://jekyllrb.com/docs/installation/
+[contributing]: CONTRIBUTING.md
