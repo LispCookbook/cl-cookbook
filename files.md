@@ -8,8 +8,7 @@ to
 [specify filenames](http://www.lispworks.com/documentation/HyperSpec/Body/19_.htm). The
 issue of
 [pathnames](http://www.lispworks.com/documentation/HyperSpec/Body/19_ab.htm)
-will be the topic of separate chapter
-[REAL SOON NOW](http://www.tuxedo.org/~esr/jargon/html/entry/Real-Soon-Now.html).
+needs to be covered separately.
 
 ### Testing whether a File Exists
 
