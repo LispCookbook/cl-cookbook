@@ -8,7 +8,43 @@ The main goal is making the Cookbook more modern and more accessible in addition
 
 ## Contributing
 
-When adding a new content, ensure, it renders propertly. To do this, install [Jekyll][jekyll] and run `jekyll serve` in a folder where this repository was checked out.
+When adding a new content, ensure, it renders propertly.
+
+There are two ways to do this:
+
+First option is to install [Jekyll][jekyll] and run `jekyll serve` in a folder where this repository was checked out.
+
+Another option is to use github gem provided with the repo. To do this do the following:
+
+1. Ensure that bundler is installed (`gem install bundler` should do)
+2. `bundle install --path vendor/bundle`
+3. `bundle exec jekyll serve`
+
+### Troubleshooting
+
+It can happen that you have older version of ruby installed in the system and
+bundler will fail with install. To fix this you need to update ruby. Sometimes
+system update is not an option, in this case consider instaling [rbenv][rbenv].
+
+~~~ sh
+    # Check rbenv homepage for install instructions on systems other than Mac OS X
+    brew install rbenv ruby-build
+
+    # Add rbenv to bash so that it loads every time you open a terminal
+    echo 'if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi' >> ~/.bash_profile
+    source ~/.bash_profile
+
+    # Install Ruby
+    rbenv install 2.5.0
+    rbenv global 2.5.0
+    ruby -v
+~~~
+
+After this you can proceed as usual:
+
+1. `gem install bundler`
+2. `bundle install --path vendor/bundle`
+3. `bundle exec jekyll serve`
 
 Also, refer to a [CONTRIBUTING.md][contributing] file.
 
@@ -17,4 +53,5 @@ Also, refer to a [CONTRIBUTING.md][contributing] file.
 [hs]: http://www.lispworks.com/documentation/HyperSpec/Front/X_Master.htm
 [pcl]: http://www.gigamonkeys.com/book/
 [jekyll]: https://jekyllrb.com/docs/installation/
+[rbenv]: https://github.com/rbenv/rbenv
 [contributing]: CONTRIBUTING.md
