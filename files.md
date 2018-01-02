@@ -189,6 +189,18 @@ To avoid an `ASCII stream decoding error` you might want to specify an UTF-8 enc
                  ...
 ~~~
 
+### Set SBCL's default encoding format to utf-8
+
+Sometimes you don't control the internals of a library, so you'd
+better set the default encoding to utf-8.  Add this line to your
+`~/.sbclrc`:
+
+    (setf sb-impl::*default-external-format* :utf-8)
+
+and optionnally
+
+    (setf sb-alien::*default-c-string-external-format* :utf-8)
+
 ### Looking one Character ahead
 
 You can 'look at' the next character of a stream without actually removing it

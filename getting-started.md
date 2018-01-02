@@ -361,6 +361,14 @@ and since ASDF is integrated into Quicklisp, we can `quickload` our project.
 Happy hacking !
 
 
+## More settings
+
+You might want to set SBCL's default encoding format to utf-8:
+
+    (setf sb-impl::*default-external-format* :utf-8)
+
+You can add this to your `~/.sbclrc`.
+
 ## Read more
 
 * Source code organization, libraries and packages:  [https://lispmethods.com/libraries.html](https://lispmethods.com/libraries.html)
