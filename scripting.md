@@ -73,15 +73,46 @@ build:
          --eval "(sb-ext:save-lisp-and-die #p\"my-app\" :toplevel #my-app:main :executable t)"
 ```
 
-## With Buildapp or Roswell
+## With ASDF
 
-We might  like a more  shell-friendly way to build  our executable,
-and while  we're at it  a portable one, so  we would have  the same
-command to work with various implementations.
+Now that we'seen the basics, we need a portable method. Since its
+version 3.1, ASDF allows to do that. It introduces the [`make` command](https://common-lisp.net/project/asdf/asdf.html#Convenience-Functions),
+that reads parameters from the .asd. Add this to your .asd declaration:
 
-[Buildapp](http://www.xach.com/lisp/buildapp/) is a battle-tested
-"application for SBCL or CCL that configures and saves an executable
-Common Lisp image".
+~~~
+:build-operation "program-op" ;; leave as is
+:build-pathname "<binary-name>"
+:entry-point "<my-package:main-function>"
+~~~
+
+and call `asdf:make :my-package`.
+
+So, in a Makefile:
+
+~~~lisp
+LISP ?= sbcl
+
+build:
+    $(LISP) --load my-app.asd \
+    	--eval '(ql:quickload :my-app)' \
+		--eval '(asdf:make :my-app)' \
+		--eval '(quit)'
+~~~
+
+
+## With Roswell or Buildapp
+
+[Roswell](https://roswell.github.io), an implementation manager and much
+more, also has the `ros build` command, that should work for many
+implementations.
+
+We can also make our app installable with Roswell by a `ros install
+my-app`. See its documentation.
+
+We'll finish with a word on
+[Buildapp](http://www.xach.com/lisp/buildapp/), a battle-tested and
+still popular "application for SBCL or CCL that configures and saves
+an executable Common Lisp image".
 
 Example usage:
 
@@ -94,15 +125,8 @@ buildapp --output myapp \
 ~~~
 
 Many applications use it (for example,
-[pgloader](https://github.com/dimitri/pgloader)).  It is available on
-Debian: `apt install buildapp`.
-
-[Roswell](https://roswell.github.io), an implementation manager and much
-more, also has the `ros build` command, that should work for more
-implementations than Buildapp.
-
-We can also make our app installable with Roswell by a `ros install
-my-app`. See its documentation
+[pgloader](https://github.com/dimitri/pgloader)),  it is available on
+Debian: `apt install buildapp`, but you shouldn't need it now with asdf:make or Roswell.
 
 
 ## For web apps
