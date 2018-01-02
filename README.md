@@ -46,7 +46,7 @@ After this you can proceed as usual:
 2. `bundle install --path vendor/bundle`
 3. `bundle exec jekyll serve`
 
-Also, refer to a CONTRIBUTING.md file.
+Also, refer to a [CONTRIBUTING.md][contributing] file.
 
 [sf]: http://cl-cookbook.sourceforge.net/
 [ql]: https://www.quicklisp.org/
@@ -54,3 +54,4 @@ Also, refer to a CONTRIBUTING.md file.
 [pcl]: http://www.gigamonkeys.com/book/
 [jekyll]: https://jekyllrb.com/docs/installation/
 [rbenv]: https://github.com/rbenv/rbenv
+[contributing]: CONTRIBUTING.md
