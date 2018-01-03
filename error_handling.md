@@ -311,7 +311,7 @@ particular option."))
   ()
   (:report (lambda (c s) (format s "unknown option: ~s" (option c))))
   (:documentation "This condition is thrown when parser encounters
-unknown (not previously defined with `define-opts') option."))
+unknown (not previously defined with `define-opts`) option."))
 ~~~
 
 
@@ -323,7 +323,7 @@ We can use `error`, like we did above, in two ways:
 - `(error 'my-error :message "We did this and this and it didn't work.")`
 
 Throwing these conditions will enter the interactive debugger,
-where a few options will be presented by default. If we want to signal conditions without entering the debugger if no user code has been written to handle the condition then we can use `signal'.
+where the user may select a restart. Use `signal` if you do not want to enter the debugger if your program failed to handle the condition.
 
 Simple example from `unix-opts`: it adds information into the `option` slot:
 
