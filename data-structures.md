@@ -1269,8 +1269,7 @@ we remove an element with `remf`.
 Structures offer a way to store data in named slots. They support
 single inheritance.
 
-They can be considered superceded by classes of the Common Lisp
-Object System (CLOS), that don't have their limitations (see below).
+Classes provided by the Common Lisp Object System (CLOS) are more flexible however structures may offer better performance (see for example the SBCL manual).
 
 ### Creation
 
@@ -1302,7 +1301,7 @@ Also specify the type after the default value:
 ~~~
 
 We create an instance with the generated constructor `make-` +
-`<structure-name>`, so `make-person` (and *not* "make-instance" ;) ):
+`<structure-name>`, so `make-person`:
 
 ~~~lisp
 (defparameter *me* (make-person))
@@ -1397,10 +1396,10 @@ With the `:include <struct>` argument:
 
 After a change, instances are not updated.
 
-If we try to add a slot (`email` below), we have the choice to loose
+If we try to add a slot (`email` below), we have the choice to lose
 all instances, or to continue using the new definition of
 `person`. But the effects of redefining a structure are undefined by
-the standards, so it is best to re-compile and re-run the changed
+the standard, so it is best to re-compile and re-run the changed
 code.
 
 ~~~lisp
@@ -1423,7 +1422,7 @@ Restarts:
  5: [ABORT] abort thread (#<THREAD "repl-thread" RUNNING {1002A0FFA3}>)
 ~~~
 
-If we choose restart `0`, to use the new definition, we loose access to `*me*`:
+If we choose restart `0`, to use the new definition, we lose access to `*me*`:
 
 ~~~lisp
 *me*
@@ -1431,9 +1430,8 @@ obsolete structure error for a structure of type PERSON
    [Condition of type SB-PCL::OBSOLETE-STRUCTURE]
 ~~~
 
-There is also very little introspection. Portable Common Lisp does not
-tell super/sub-strucures of a structure in an easy way, nor does it
-tell the slots of a structure.
+There is also very little introspection.
+Portable Common Lisp does not define ways of finding out defined super/sub-structures nor what slots a structure has.
 
 The Common Lisp Object System (which came after into the language)
 doesn't have such limitations. See the [CLOS section](clos.html).
