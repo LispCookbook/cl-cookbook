@@ -26,6 +26,13 @@ footer {
     margin-left: 25%;
 }
 
+.page-source {
+    background-color: #add8e6;
+    padding: 1em;
+    text-align: center;
+    opacity: 0.9;
+}
+
 /* On small screens we remove left column to make text more readable */
 @media screen and (max-width: 40em) {
     #toc {
