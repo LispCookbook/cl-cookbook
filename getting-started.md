@@ -325,6 +325,8 @@ and `src/my-project.lisp` this:
 (in-package :footest)
 ~~~
 
+- ASDF documentation: [defining a system with defsystem](https://common-lisp.net/project/asdf/asdf.html#Defining-systems-with-defsystem)
+
 ### How to load an existing project
 
 You have created a new project, or you have an existing one, and you
