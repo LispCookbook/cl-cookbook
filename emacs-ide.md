@@ -59,7 +59,7 @@ for CL programming.
     *   Provides REPL which is hooked to implementation directly in Emacs
     *   Has integrated Common Lisp debugger with Emacs interface
     *   Interactive object-inspector in Emacs buffer
-    *   Has own minor mode which enhances lisp-mode in many ways
+    *   Has its own minor mode which enhances lisp-mode in many ways
     *   Supports every common Common Lisp implementation
     *   Readily available from MELPA
     *   Actively maintained
@@ -73,6 +73,9 @@ for CL programming.
 *   Setup:
     *   Installing it from [MELPA](http://wikemacs.org/wiki/Melpa) is straightforward. Search package-list-packages for 'slime' and click to install. If MELPA is configured correctly, it will install itself and all dependencies.
     *   Run slime with `M-x slime`.
+
+Check out this **[video tutorial](https://www.youtube.com/watch?v=sBcPNr1CKKw)** ! (and the author's channel, full of great stuff)
+
 
 ### SLY: Sylvester the Cat's Common Lisp IDE
 
