@@ -17,7 +17,7 @@ straightforward way to get going.
 *   Emacs has fantastic support for working with Lisp code
 *   Not tying yourself into a single CL vendor's editor
 *   Runs on virtually every OS and CL implementation
-*   Extensible
+*   Extensible: [awesome-emacs](https://github.com/emacs-tw/awesome-emacs).
 *   Can be customized to do many common tasks
 *   Built-in support for different source code version control systems
 *   Vast number of add-on packages
@@ -25,6 +25,8 @@ straightforward way to get going.
 *   Emacs works well either with a mouse or without a mouse
 *   Emacs has a large user base with multiple newsgroups
 *   Benefits of using Emacs far outweigh the effort spent in learning it
+*   [org-mode](http://orgmode.org)
+*   Because [Emacs Rocks !](http://emacsrocks.com)
 
 
 <a name="Slide-3"></a>
@@ -96,6 +98,8 @@ In this short tutorial we'll see how to:
 *   search Lisp code
 *   Note: Example code assumes you are using a setup similar to what is defined in the [.emacs file](https://github.com/LispCookbook/cl-cookbook/blob/master/.emacs) from the [CL Cookbook](windows.html) site.
 
+### Packages for structured editing
+
 In addition to the built-in Emacs commands, you have several packages at your disposal
 that will help to keep the parens and/or the indentation balanced.
 The list below is somewhat sorted by age of the
@@ -128,32 +132,38 @@ go up the list. See explanations and even more on
 
 ### Editing
 
-#### Forward/Backward/Up/Down movement and selection by s-expressions ([s1.lisp](s1.lisp) )
+#### Forward/Backward/Up/Down movement and selection by s-expressions
 
 ~~~lisp
 {% include code/s1.lisp %}
 ~~~
 
-#### Deleting s-expressions ( [s2.lisp](s2.lisp) )
+#### Deleting s-expressions
+
+With `C-M-k` and `C-M-backspace` (which may restart the system on gnu/linux):
 
 ~~~lisp
 {% include code/s2.lisp %}
 ~~~
 
-#### Indenting s-expressions ( [s3.lisp](s3.lisp) )
+#### Indenting s-expressions
+
+With `C-M-q`:
 
 ~~~lisp
 {% include code/s3.lisp %}
 ~~~
 
 
-#### Support for parenthesis ( [s4.lisp](s4.lisp) )
+#### Support for parenthesis
+
+`M-(` insets a pair, `M-x check-parens` to spot malformed sexps, `C-u <n> M-(` to enclose sexps with parens:
 
 ~~~lisp
 {% include code/s4.lisp %}
 ~~~
 
-#### Automatic code indentation (CL vs Elisp) ( [s5.lisp](s5.lisp) )
+#### Automatic code indentation
 
 ~~~lisp
 {% include code/s5.lisp %}
@@ -161,16 +171,18 @@ go up the list. See explanations and even more on
 
 <!-- close all parenthesis example ? s6.lisp -->
 
-#### Code completion ( [s7.lisp](s7.lisp) )
+#### Code completion
 
-Use the built-in `C-c TAB` to complete symbols. You can get tooltips
+Use the built-in `C-c TAB` to complete symbols in Slime. You can get tooltips
 with [company-mode](http://wikemacs.org/wiki/Company-mode).
 
 ~~~lisp
 {% include code/s7.lisp %}
 ~~~
 
-#### Hiding/showing code ( [s8.lisp](s8.lisp) )
+#### Hiding/showing code
+
+With `C-x n n` (narrow) and `C-x n w` to widen back.
 
 See also [code folding](http://wikemacs.org/wiki/Folding).
 
@@ -178,7 +190,9 @@ See also [code folding](http://wikemacs.org/wiki/Folding).
 {% include code/s8.lisp %}
 ~~~
 
-#### Comments ( [s9.lisp](s9.lisp) )
+#### Comments
+
+Insert a comment, comment a region with `M-;`, adjust text with `M-q`.
 
 ~~~lisp
 {% include code/s9.lisp %}
@@ -187,31 +201,53 @@ See also [code folding](http://wikemacs.org/wiki/Folding).
 
 <a name="Slide-11"></a>
 
-### Evaluating and Compiling Lisp
+### Evaluating and Compiling Lisp in Slime
 
-*   buffer
-*   region
-*   defun
-*   sexp (previous/next)
-*   DWIM
-*   Example code ( [s11.lisp](s11.lisp) )
+Compile the entire **buffer** by pressing `C-c C-k`.
 
-~~~lisp
-{% include code/s11.lisp %}
-~~~
+Compile a **region** by selecting the first 2 forms in test-all and
+running `M-x slime-compile-region`.
 
+Compile a **defun** by putting the cursor inside the "test-format"
+defun and pressing `C-c C-e`.
+
+Compile the **sexp** before the point by putting the cursor after the
+closing paren of `(test-format)` and pressing `C-c C-e`.
+
+To **evaluate** rather than compile:
+- evaluate a region with `C-c C-r`,
+- evaluate a defun with `C-M-x`,
+- evaluate the sexp before the point with `C-x C-e`.
+See also other commands in the menu.
 
 <a name="Slide-12"></a>
 
 ### Searching Lisp Code
 
-#### Standard Emacs text search (isearch forward/backward, regexp searches, search/replace) ( [s12.lisp](s12.lisp) )
+#### Standard Emacs text search (isearch forward/backward, regexp searches, search/replace)
 
-~~~lisp
-{% include code/s12.lisp %}
-~~~
+`C-s` does an incremental search forward (e.g. - as each key is
+the search string is entered, the source file is searched for the
+first match. This can make finding specific text much quicker as
+you only need to type in the unique characters. Repeat searches
+(using the same search characters) can be done by repeatedly
+pressing `C-s`
 
-#### Finding occurances (occur, grep) ( [s13.lisp](s13.lisp) )
+`C-r` does an incremental search backward
+
+`C-s RET` and `C-r RET` both do conventional string searches
+(forward and backward respectively)
+
+`C-M-s` and `C-M-r` both do regular expression searches (forward
+and backward respectively)
+
+`M-%` does a search/replace while `C-M-%` does a regular
+expression search/replace
+
+
+#### Finding occurences (occur, grep)
+
+With `M-x grep`, `rgrep`, `occur`,…
 
 ~~~lisp
 {% include code/s13.lisp %}
@@ -221,7 +257,7 @@ See also interactive versions with
 [helm-swoop](http://wikemacs.org/wiki/Helm-swoop), helm-occur,
 [ag.el](https://github.com/Wilfred/ag.el).
 
-#### Lisp symbols in current source (imenu) ( [s14.lisp](s14.lisp) )
+#### Lisp symbols in current source (imenu)
 
 ~~~lisp
 {% include code/s14.lisp %}
@@ -231,8 +267,8 @@ See also helm-imenu and [imenu-anywhere](https://github.com/vspinu/imenu-anywher
 
 #### Go to definition
 
-Put the cursor on any symbol and press "M-." to go to its
-definition. Press "M-," to come back.
+Put the cursor on any symbol and press `M-.` to go to its
+definition. Press `M-,` to come back.
 
 #### Find who's calling, referencing, setting a symbol
 
@@ -240,7 +276,7 @@ See Slime's help menu. You can search and list "who" is *calling*,
 *referencing*, *setting*, *binding*, *macroexpanding* symbols, and
 more.
 
-#### Lisp symbols in multiple source files (etags) ( [s16.lisp](s16.lisp) )
+#### Lisp symbols in multiple source files (etags)
 
 ~~~lisp
 {% include code/s16.lisp %}
@@ -263,20 +299,20 @@ When you put the cursor on a function, Slime will show its signature
 in the minibuffer.
 
 
-### Documentation ( [s19.lisp](s19.lisp) )
+### Documentation
 
 ~~~lisp
 {% include code/s19.lisp %}
 ~~~
 
 
-### Inspect ( [s21.lisp](s21.lisp) )
+### Inspect
 
 ~~~lisp
 {% include code/s21.lisp %}
 ~~~
 
-### Macroexpand ( [s22.lisp](s22.lisp) )
+### Macroexpand
 
 ~~~lisp
 {% include code/s22.lisp %}
@@ -301,7 +337,7 @@ in the minibuffer.
 
 ## Miscellaneous
 
-### Send to the REPL ( [s24.lisp](s24.lisp) )
+### Send to the REPL
 
 ~~~lisp
 {% include code/s24.lisp %}
@@ -316,12 +352,13 @@ ASDF is the de-facto build facility. It is shipped in most Common Lisp implement
   * [ASDF](https://common-lisp.net/project/asdf/)
   * [ASDF best practices](https://gitlab.common-lisp.net/asdf/asdf/blob/master/doc/best_practices.md)
 
-### Comparing versions of code ( [s10.lisp](s10.lisp) , [s10a.lisp](s10a.lisp) , [s10b.lisp](s10b.lisp) )
+### Comparing versions of code (ediff)
 
-~~~lisp
-{% include code/s10.lisp %}
-~~~
+Start the ediff utility by entering `M-x ediff`. Enter two file names, press
+the space bar to step through the changes, and `q`
+to exit.
 
+Of course, see also [magit](https://magit.vc/) for a wonderful git integration into Emacs.
 
 <a name="Slide-16"></a>
 
