@@ -33,7 +33,6 @@ straightforward way to get going.
 
 *   Learning Emacs Lisp is useful and similar (but different from CL):
     *   Dynamic scope is everywhere
-    *   No package system
     *   There are no reader (or reader-related) functions
     *   Does not support all the types that are supported in CL
     *   Incomplete implementation of CLOS (with the add-on EIEIO package)
@@ -314,6 +313,27 @@ ASDF is the de-facto build facility. It is shipped in most Common Lisp implement
 <a name="Slide-16"></a>
 
 ## Questions/Answers
+
+### utf-8 encoding
+
+You might want to set this to your init file:
+
+~~~lisp
+(set-language-environment "UTF-8")
+(setenv "LC_CTYPE" "en_US.UTF-8")
+~~~
+
+and for Sly:
+
+~~~lisp
+(setq sly-lisp-implementations
+          '((sbcl ("/usr/local/bin/sbcl") :coding-system utf-8-unix)
+            ))
+~~~
+
+This will avoid getting `ascii stream decoding error`s when you have
+non-ascii characters in files you evaluate with Slime.
+
 
 ### Standard shell
 
