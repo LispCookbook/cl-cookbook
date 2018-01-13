@@ -72,6 +72,18 @@ for CL programming.
     *   Installing it from [MELPA](http://wikemacs.org/wiki/Melpa) is straightforward. Search package-list-packages for 'slime' and click to install. If MELPA is configured correctly, it will install itself and all dependencies.
     *   Run slime with `M-x slime`.
 
+### SLY: Sylvester the Cat's Common Lisp IDE
+
+[SLY](https://github.com/joaotavora/sly) is a Slime fork that contains
+the following improvements:
+
+* Completely redesigned REPL based on Emacs's own full-featured comint.el
+* Live code annotations via a new [sly-stickers](https://joaotavora.github.io/sly/#Stickers) contrib
+* Consistent interactive button interface. Everything can be copied to the REPL.
+* Multiple inspectors with independent history
+* Regexp-capable M-x sly-apropos
+* Contribs are first class SLY citizens, enabled by default, loaded with ASDF on demand.
+* Support for [NAMED-READTABLES](https://github.com/joaotavora/sly-named-readtables), [macrostep.el](https://github.com/joaotavora/sly-macrostep) and [quicklisp](https://github.com/joaotavora/sly-quicklisp).
 
 <a name="Slide-9"></a>
 
