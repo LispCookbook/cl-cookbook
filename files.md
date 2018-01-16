@@ -72,10 +72,10 @@ typical use of `with-open-file` looks like this:
 
 ~~~lisp
 (with-open-file (str <_file-spec_>
-:direction <_direction_>
-:if-exists <_if-exists_>
-:if-does-not-exist <_if-does-not-exist_>)
-<_your code here_>)
+    :direction <_direction_>
+    :if-exists <_if-exists_>
+    :if-does-not-exist <_if-does-not-exist_>)
+  <_your code here_>)
 ~~~
 
 *   `str` is a variable which'll be bound to the stream which is created by
@@ -102,7 +102,6 @@ for all the details. You'll find some examples on how to use `with-open-file`
 below. Also note that you usually don't need to provide any keyword arguments if
 you just want to open an existing file for reading.<a name="strings">
 
-### Using Strings instead of Files
 
 ### Reading a File one Line at a Time
 
@@ -150,15 +149,28 @@ characters by this function.
        (print char)))
 ~~~
 
-### Reading a File into a String
+### Reading a File into a String or a List of Lines
 
 It's quite common to need to access the contents of a file in string
-form.
+form, or to get a list of lines.
 
-Alexandria offers this function: [read-file-into-string](https://common-lisp.net/project/alexandria/draft/alexandria.html#IO). It accepts an `:external-format` argument (that can be bound to `:utf-8`). It is included in [cl21](cl21.html).
+`[uiop](https://github.com/fare/asdf/blob/master/uiop/stream.lisp#L445)` is included in ASDF (there is no extra library to install or
+system to load) and has the following function:
 
 
-Without Alexandria, this can be achieved by using `read-line` or `read-char` functions,
+~~~lisp
+(uiop:read-file-string "file.txt")
+~~~
+
+and
+
+~~~lisp
+(uiop:read-file-lines "file.txt")
+~~~
+
+
+
+**Otherwise**, this can be achieved by using `read-line` or `read-char` functions,
 that probably won't be the best solution. File might not be divided into
 multiple lines or reading one character at a time might bring significant
 performance problems. To solve this problems, you can read files using buckets
@@ -178,7 +190,7 @@ of using elements of type character everytime. For instance, you can set
 `:element-type` type argument of `with-output-to-string`, `with-open-file` and
 `make-array` functions to `'(unsigned-byte 8)` to read data in octets.
 
-### Reading with an UTF-8 encoding
+#### Reading with an UTF-8 encoding
 
 To avoid an `ASCII stream decoding error` you might want to specify an UTF-8 encoding:
 
@@ -188,7 +200,7 @@ To avoid an `ASCII stream decoding error` you might want to specify an UTF-8 enc
                  ...
 ~~~
 
-### Set SBCL's default encoding format to utf-8
+#### Set SBCL's default encoding format to utf-8
 
 Sometimes you don't control the internals of a library, so you'd
 better set the default encoding to utf-8.  Add this line to your
