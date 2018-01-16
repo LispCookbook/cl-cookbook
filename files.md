@@ -103,59 +103,13 @@ below. Also note that you usually don't need to provide any keyword arguments if
 you just want to open an existing file for reading.<a name="strings">
 
 
-### Reading a File one Line at a Time
-
-[`read-line`](http://www.lispworks.com/documentation/HyperSpec/Body/f_rd_lin.htm)
-will read one line from a stream (which defaults to
-[_standard input_](http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_s.htm#standard_input))
-the end of which is determined by either a newline character or the end of the
-file. It will return this line as a string _without_ the trailing newline
-character. (Note that `read-line` has a second return value which is true if there
-was no trailing newline, i.e. if the line was terminated by the end of the
-file.) `read-line` will by default signal an error if the end of the file is
-reached. You can inhibit this by supplying NIL as the second argument. If you do
-this, `read-line` will return `nil` if it reaches the end of the file.
-
-~~~lisp
-(with-open-file (stream "/etc/passwd")
-  (do ((line (read-line stream nil)
-       (read-line stream nil)))
-       ((null line))
-       (print line)))
-~~~
-
-You can also supply a third argument which will be used instead of `nil` to signal
-the end of the file:
-
-~~~lisp
-(with-open-file (stream "/etc/passwd")
-  (loop for line = (read-line stream nil 'foo)
-   until (eq line 'foo)
-   do (print line)))
-~~~
-
-### Reading a File one Character at a Time
-
-[`read-char`](http://www.lispworks.com/documentation/HyperSpec/Body/f_rd_cha.htm)
-is similar to `read-line`, but it only reads one character as opposed to one
-line. Of course, newline characters aren't treated differently from other
-characters by this function.
-
-~~~lisp
-(with-open-file (stream "/etc/passwd")
-  (do ((char (read-char stream nil)
-       (read-char stream nil)))
-       ((null char))
-       (print char)))
-~~~
-
 ### Reading a File into a String or a List of Lines
 
 It's quite common to need to access the contents of a file in string
 form, or to get a list of lines.
 
-`[uiop](https://github.com/fare/asdf/blob/master/uiop/stream.lisp#L445)` is included in ASDF (there is no extra library to install or
-system to load) and has the following function:
+[uiop](https://github.com/fare/asdf/blob/master/uiop/stream.lisp#L445) is included in ASDF (there is no extra library to install or
+system to load) and has the following functions:
 
 
 ~~~lisp
@@ -211,6 +165,52 @@ better set the default encoding to utf-8.  Add this line to your
 and optionnally
 
     (setf sb-alien::*default-c-string-external-format* :utf-8)
+
+### Reading a File one Line at a Time
+
+[`read-line`](http://www.lispworks.com/documentation/HyperSpec/Body/f_rd_lin.htm)
+will read one line from a stream (which defaults to
+[_standard input_](http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_s.htm#standard_input))
+the end of which is determined by either a newline character or the end of the
+file. It will return this line as a string _without_ the trailing newline
+character. (Note that `read-line` has a second return value which is true if there
+was no trailing newline, i.e. if the line was terminated by the end of the
+file.) `read-line` will by default signal an error if the end of the file is
+reached. You can inhibit this by supplying NIL as the second argument. If you do
+this, `read-line` will return `nil` if it reaches the end of the file.
+
+~~~lisp
+(with-open-file (stream "/etc/passwd")
+  (do ((line (read-line stream nil)
+       (read-line stream nil)))
+       ((null line))
+       (print line)))
+~~~
+
+You can also supply a third argument which will be used instead of `nil` to signal
+the end of the file:
+
+~~~lisp
+(with-open-file (stream "/etc/passwd")
+  (loop for line = (read-line stream nil 'foo)
+   until (eq line 'foo)
+   do (print line)))
+~~~
+
+### Reading a File one Character at a Time
+
+[`read-char`](http://www.lispworks.com/documentation/HyperSpec/Body/f_rd_cha.htm)
+is similar to `read-line`, but it only reads one character as opposed to one
+line. Of course, newline characters aren't treated differently from other
+characters by this function.
+
+~~~lisp
+(with-open-file (stream "/etc/passwd")
+  (do ((char (read-char stream nil)
+       (read-char stream nil)))
+       ((null char))
+       (print char)))
+~~~
 
 ### Looking one Character ahead
 
