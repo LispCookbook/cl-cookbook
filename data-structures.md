@@ -15,6 +15,10 @@ also have many more details:
   examples and warnings (i.e: everything).
 - a [Common Lisp quick reference](http://clqr.boundp.org/)
 
+Don't miss the appendix and when you need more data structures, have a
+look at the
+[awesome-cl](https://github.com/CodyReichert/awesome-cl#data-structures)
+list and [Quickdocs](http://quickdocs.org/search?q=data+structure).
 
 ## Lists
 
@@ -1457,4 +1461,22 @@ Features:
 * Purely functional [pairing heaps](http://en.wikipedia.org/wiki/Pairing_heap)
 * Purely functional amortized queue.
 
-See more in other resources !
+
+## Appendix A - generic access of alists, plists, hash-tables and CLOS slots
+
+The solutions presented below might help you getting started, but keep
+in mind that they'll have a performance impact and that error messages
+will be less explicit.
+
+* [CL21](cl21.html) has a generic `getf` (as well as others generic functions),
+* [rutils](https://github.com/vseloved/rutils) as a generic `generic-elt` or `?`,
+* the [access](https://github.com/AccelerationNet/access) library (battle tested, used by the Djula templating system) has a generic `(access my-var :elt)` ([blog post](https://lisp-journey.gitlab.io/blog/generice-consistent-access-of-data-structures-dotted-path/)).
+
+## Appendix B - accessing nested data structures
+
+Sometimes we work with nested data structures, and we might want an
+easier way to access a nested element than intricated "getf" and
+"assoc" and all. Also, we might want to just be returned a `nil` when
+an intermediary key doesn't exist.
+
+The `access` library given above provides this, with `(accesses var key1 key2…)`.
