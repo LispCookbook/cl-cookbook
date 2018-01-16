@@ -344,6 +344,29 @@ CL-USER> (with-input-from-string (stream "I'm not amused")
 5
 ~~~
 
+### Writing content to a file
+
+With `with-open-file`, specify `:direction :output` and use `write-sequence` inside:
+
+~~~lisp
+(with-open-file (f <pathname> :direction :output
+                              :if-exists :supersede
+                              :if-does-not-exist :create)
+    (write-sequence s f)))
+~~~
+
+If the file exists, you can also `:append` content to it.
+
+If it doesn't exist, you can `:error` out. See the standard for more details.
+
+
+The library [str](https://github.com/vindarel/cl-str) has a shortcut:
+
+~~~lisp
+(str:to-file "file.txt" content) ;; with optional options
+~~~
+
+
 ### Getting file attributes (size, access time,...), with the Osicat library
 
 [Osicat](https://www.common-lisp.net/project/osicat/) (in Quicklisp)
