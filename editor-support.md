@@ -53,6 +53,16 @@ for Vim.
 <img src="assets/slimv.jpg"
      style="width: 800px"/>
 
+## Lem
+
+Lem is an editor tailored for Common Lisp development. Once you
+install it, you can start developing. Its interface ressembles Emacs
+and Slime (same shortcuts). It comes with an ncurses and an Electron
+frontend.
+
+<img src="https://github.com/cxxxr/lem/raw/master/screenshots/terminal.png"
+     style="width: 800px"/>
+
 ## Atom
 
 See [Atom-Slime](https://atom.io/packages/atom-slime). This package
@@ -74,8 +84,29 @@ you want.
 <img src="assets/editor-sublime.png"
      style="width: 800px"/>
 
+## Notebooks
 
-## More
+[cl-jupyter](https://github.com/fredokun/cl-jupyter) is a Common Lisp
+kernel for Jupyter notebooks.
+
+
+[Darkmatter](https://github.com/tamamu/darkmatter) is a notebook-style
+Common Lisp environment.
+
+
+<img src="https://github.com/tamamu/darkmatter/raw/master/screenshots/screenshot.png"
+     style="width: 800px"/>
+
+
+## REPLs
+
+[cl-repl](https://github.com/koji-kojiro/cl-repl) is an ipython-like REPL. It supports symbol completion, magic and shell commands, editing command in a file and a simple debugger.
+
+<img src="https://github.com/koji-kojiro/cl-repl/raw/master/image/cl-repl.gif"
+     style="width: 500px"/>
+
+
+## Others
 
 For reviews of plugins for more editors, including free versions of
 proprietary ones (LispWorks, Allegro), see
