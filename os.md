@@ -183,6 +183,185 @@ use in the terminal (ansi colors, printing tables and progress bars,
 interfaces to readline,…).
 
 
+## Running external programs
+
+`uiop` has us covered.
+
+### Synchronously
+
+`uiop:run-program` either takes a string as argument, denoting the
+name of the executable to run, or a list of strings, for the program and its arguments:
+
+~~~lisp
+(uiop:run-program "firefox")
+~~~
+
+or
+
+~~~lisp
+(uiop:run-program '("firefox" "http:url"))
+~~~
+
+This will process the program output as specified and return the
+processing results when the program and its output processing are
+complete.
+
+
+This function has the following optional arguments (the documentation is [in the source](https://gitlab.common-lisp.net/asdf/asdf/blob/master/uiop/run-program.lisp#L539)):
+
+~~~lisp
+run-program (command &rest keys &key
+                         ignore-error-status
+                         (force-shell nil force-shell-suppliedp)
+                         input
+                         (if-input-does-not-exist :error)
+                         output
+                         (if-output-exists :supersede)
+                         error-output
+                         (if-error-output-exists :supersede)
+                         (element-type #-clozure *default-stream-element-type* #+clozure 'character)
+                         (external-format *utf-8-external-format*)
+                       &allow-other-keys)
+~~~
+
+It will always call a shell (rather than directly executing the command when possible)
+if `force-shell` is specified.  Similarly, it will never call a shell if `force-shell` is
+specified to be `nil`.
+
+Signal a continuable `subprocess-error` if the process wasn't successful (exit-code 0),
+unless `ignore-error-status` is specified.
+
+If `output` is a pathname, a string designating a pathname, or `nil` (the default)
+designating the null device, the file at that path is used as output.
+If it's `:interactive`, output is inherited from the current process;
+beware that this may be different from your `*standard-output*`,
+and under `slime` will be on your `*inferior-lisp*` buffer.
+If it's `t`, output goes to your current `*standard-output*` stream.
+Otherwise, `output` should be a value that is a suitable first argument to
+`slurp-input-stream` (qv.), or a list of such a value and keyword arguments.
+In this case, `run-program` will create a temporary stream for the program output;
+the program output, in that stream, will be processed by a call to `slurp-input-stream`,
+using `output` as the first argument (or the first element of `output`, and the rest as keywords).
+The primary value resulting from that call (or `nil` if no call was needed)
+will be the first value returned by `run-program.`
+E.g., using `:output :string` will have it return the entire output stream as a string.
+And using `:output '(:string :stripped t`) will have it return the same string
+stripped of any ending newline.
+
+`if-output-exists`, which is only meaningful if `output` is a string or a
+pathname, can take the values `:error`, `:append`, and `:supersede` (the
+default). The meaning of these values and their effect on the case
+where `output` does not exist, is analogous to the `if-exists` parameter
+to `open` with `:direction` `:output`.
+
+`error-output` is similar to `output`, except that the resulting value is returned
+as the second value of `run-program`. t designates the `*error-output*`.
+Also `:output` means redirecting the error output to the output stream,
+in which case `nil` is returned.
+
+`if-error-output-exists` is similar to `if-output-exist`, except that it
+affects `error-output` rather than `output`.
+
+`input` is similar to `output`, except that `vomit-output-stream` is used,
+no value is returned, and T designates the `*standard-input*`.
+
+`if-input-does-not-exist`, which is only meaningful if `input` is a string
+or a pathname, can take the values `:create` and `:error` (the
+default). The meaning of these values is analogous to the
+`if-does-not-exist` parameter to `open` with `:direction :input`.
+
+`element-type` and `external-format` are passed on
+to your Lisp implementation, when applicable, for creation of the output stream.
+
+One and only one of the stream slurping or vomiting may or may not happen
+in parallel in parallel with the subprocess,
+depending on options and implementation,
+and with priority being given to output processing.
+Other streams are completely produced or consumed
+before or after the subprocess is spawned, using temporary files.
+
+`run-program` returns 3 values:
+
+* the result of the `output` slurping if any, or `nil`
+* the result of the `error-output` slurping if any, or `nil`
+* either 0 if the subprocess exited with success status, or an
+  indication of failure via the `exit-code` of the process
+
+
+### Asynchronously
+
+With
+
+~~~lisp
+uiop:launch-program
+~~~
+
+Its signature is the following:
+
+~~~lisp
+launch-program (command &rest keys
+                         &key
+                           input
+                           (if-input-does-not-exist :error)
+                           output
+                           (if-output-exists :supersede)
+                           error-output
+                           (if-error-output-exists :supersede)
+                           (element-type #-clozure *default-stream-element-type*
+                                         #+clozure 'character)
+                           (external-format *utf-8-external-format*)
+                           directory
+                           #+allegro separate-streams
+                           &allow-other-keys)
+~~~
+
+If `output` is a pathname, a string designating a pathname, or `nil` (the
+default) designating the null device, the file at that path is used as
+output.
+If it's `:interactive`, output is inherited from the current process;
+beware that this may be different from your `*standard-output*`, and
+under Slime will be on your `*inferior-lisp*` buffer.  If it's T, output
+goes to your current `*standard-output*` stream.  If it's `:stream`, a new
+stream will be made available that can be accessed via
+`process-info-output` and read from. Otherwise, `output` should be a value
+that the underlying lisp implementation knows how to handle.
+
+`if-output-exists`, which is only meaningful if `output` is a string or a
+pathname, can take the values `:error`, `:append`, and `:supersede` (the
+default). The meaning of these values and their effect on the case
+where `output` does not exist, is analogous to the `if-exists` parameter
+to `open` with `:DIRECTION :output`.
+
+`error-output` is similar to `output`. T designates the `*error-output*`,
+`:output` means redirecting the error output to the output stream,
+and `:stream` causes a stream to be made available via
+`process-info-error-output`.
+
+`launch-program` returns a `process-info` object, which look like the following ([source](https://gitlab.common-lisp.net/asdf/asdf/blob/master/uiop/launch-program.lisp#L205)):
+
+
+~~~lisp
+(defclass process-info ()
+    (
+     ;; The advantage of dealing with streams instead of PID is the
+     ;; availability of functions like `sys:pipe-kill-process`.
+     (process :initform nil)
+     (input-stream :initform nil)
+     (output-stream :initform nil)
+     (bidir-stream :initform nil)
+     (error-output-stream :initform nil)
+     ;; For backward-compatibility, to maintain the property (zerop
+     ;; exit-code) <-> success, an exit in response to a signal is
+     ;; encoded as 128+signum.
+     (exit-code :initform nil)
+     ;; If the platform allows it, distinguish exiting with a code
+     ;; >128 from exiting in response to a signal by setting this code
+     (signal-code :initform nil)))
+~~~
+
+See the [docstrings](https://gitlab.common-lisp.net/asdf/asdf/blob/master/uiop/launch-program.lisp#L508).
+
+
 <a name="fork-cmucl"></a>
 
 ## Forking with CMUCL
