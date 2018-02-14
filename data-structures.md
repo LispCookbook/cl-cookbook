@@ -399,6 +399,10 @@ length of the one to replace.
 
 #### sort, stable-sort (sequence, test [, key function])
 
+These sort functions are destructive, so one may prefer to copy the sequence before sorting:
+
+    (sort (copy-seq seq) :test #'string<)
+
 #### find, position (foo, sequence)
 
 also `find-if`, `find-if-not`, `position-if`, `position-if-not` *(test
