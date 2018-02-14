@@ -876,8 +876,39 @@ In the above example, a ceramic aardvark has become a graceful Old
     this is a powerful feature of CLOS although probably one which you
     won't use very often.
 
+### 3.8. Pretty printing
 
-### 3.8. Implementation notes: object wrappers
+Remember the `daft-point` above. Creating an instance prints it like so:
+
+    #<STANDARD-CLASS DAFT-POINT 21DF867C>
+
+What if we want to show more information ? Something like
+
+    #<DAFT-POINT x: 10 y: -2>
+
+Pretty print it is done by writing a `print-object` method for this class:
+
+~~~lisp
+(defmethod print-object ((daft-point daft-point) stream)
+      (print-unreadable-object (daft-point stream :type t)
+        (with-accessors ((daft-x daft-x)
+                         (daft-y daft-y))
+            daft-point
+          (format stream "x: ~a, y: ~a" daft-x daft-y))))
+~~~
+
+`print-unreadable-object` prints the `#<...>`, that says to the reader
+that this object can not be read back in.
+
+For reference, the following reproduces the default behaviour:
+
+~~~lisp
+(defmethod print-object ((object foo) stream)
+  (print-unreadable-object (object stream :type t :identity t)))
+~~~
+
+
+### 3.9. Implementation notes: object wrappers
 
 We'll conclude this part of the tutorial by looking at a possible
     implementation for instances, covering:
