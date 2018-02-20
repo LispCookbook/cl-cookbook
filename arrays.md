@@ -72,7 +72,7 @@ array, and then iterating over the elements to fill in the values (see
 section below on element access). 
 
 The `array-operations` library provides `generate`, a convenient
-function  for creating arrays which wraps this iteration.
+function for creating arrays which wraps this iteration.
 
 ~~~lisp
 * (ql:quickload :array-operations)
@@ -383,15 +383,28 @@ and combined with `cmu-infix`
 The `reduce` function operates on sequences, including vectors (1D
 arrays), but not on multidimensional arrays. To get around this,
 multidimensional arrays can be displaced to create a 1D vector. 
+Displaced arrays share storage with the original array, so this is a
+fast operation which does not require copying data:
+~~~lisp
+* (reduce #'max (make-array (array-total-size a) :displaced-to a))
+~~~
 
+The `array-operations` package contains `flatten`, which returns a
+displaced array i.e doesn't copy data:
+~~~lisp
+* (reduce #'max (aops:flatten a))
+~~~
 
-An SBCL extension, `array-storage-vector` provides a more direct way:
+An SBCL extension, `array-storage-vector` provides another way:
 ~~~lisp
 * (defparameter a #2A((1 2) (3 4)))
 A
 * (reduce #'max (array-storage-vector a))
 4
 ~~~
+
+# Slicing and joining
+
 
 
 # Linear algebra
