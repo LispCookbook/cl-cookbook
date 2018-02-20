@@ -29,7 +29,7 @@ CL-USER> (defun adder (n) (lambda (x) (+ x n)))
 ADDER
 ~~~
 
-Here we have defined the function `adder` which returns an _object_ of _type_ [`function`](http://www.lispworks.com/documentation/HyperSpec/Body/t_fn.htm). To create such an object you'll have to use the special operator [`function`](<a href="http://www.lispworks.com/documentation/HyperSpec/Body/s_fn.htm) and apply it to a _lambda expression_. `(function` _form_`)` may be abbreviated as `#'`_form_. In our example above we used a shorthand notation provided by the macro [`lambda`](http://www.lispworks.com/documentation/HyperSpec/Body/m_lambda.htm). Without this little bit of syntactical sugar we would have to write it as
+Here we have defined the function `adder` which returns an _object_ of _type_ [`function`](http://www.lispworks.com/documentation/HyperSpec/Body/t_fn.htm). To create such an object you'll have to use the special operator [`function`](http://www.lispworks.com/documentation/HyperSpec/Body/s_fn.htm) and apply it to a _lambda expression_. `(function` _form_`)` may be abbreviated as `#'`_form_. In our example above we used a shorthand notation provided by the macro [`lambda`](http://www.lispworks.com/documentation/HyperSpec/Body/m_lambda.htm). Without this little bit of syntactical sugar we would have to write it as
 
 ~~~lisp
 CL-USER> (defun adder (n) #'(lambda (x) (+ x n)))
@@ -171,7 +171,7 @@ All of the above is _extremely simplified_ - we haven't even mentioned macros, s
 
 ### Concept
 
-A related concept is that of _[currying](<a href="http://www.cs.jhu.edu/~scott/pl/lectures/caml-intro.html#higherorder)_ which you might be familiar with if you're coming from a functional language. After we've read the last section that's rather easy to implement:
+A related concept is that of _[currying](https://en.wikipedia.org/wiki/Currying)_ which you might be familiar with if you're coming from a functional language. After we've read the last section that's rather easy to implement:
 
 ~~~lisp
 CL-USER> (declaim (ftype (function (function &rest t) function) curry) (inline curry))
