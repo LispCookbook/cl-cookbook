@@ -171,7 +171,7 @@ All of the above is _extremely simplified_ - we haven't even mentioned macros, s
 
 ### Concept
 
-A related concept is that of _[currying](http://www.cs.jhu.edu/~scott/pl/lectures/caml-intro.html#higherorder)_ which you might be familiar with if you're coming from a functional language. After we've read the last section that's rather easy to implement:
+A related concept is that of _[currying](https://en.wikipedia.org/wiki/Currying)_ which you might be familiar with if you're coming from a functional language. After we've read the last section that's rather easy to implement:
 
 ~~~lisp
 CL-USER> (declaim (ftype (function (function &rest t) function) curry) (inline curry))
