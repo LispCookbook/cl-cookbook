@@ -376,9 +376,9 @@ This means that the built-in mathematical functions can be used:
 
 ~~~lisp
 * (defparameter a #(1 2 3 4))
-*A*
+A
 * (defparameter b #(2 3 4 5))
-*B*
+B
 * (vectorize (a b) (* a (sin b)))
 #(0.9092974 0.28224 -2.2704074 -3.8356972)
 ~~~
@@ -417,6 +417,77 @@ A
 4
 ~~~
 
+More complex reductions are sometimes needed, for example finding the
+maximum absolute difference between two arrays. Using the above
+methods we could do:
+
+~~~lisp
+* (defparameter a #2A((1 2) (3 4)))
+A
+* (defparameter b #2A((1 3) (5 4)))
+B
+* (reduce #'max (aops:flatten 
+                  (aops:each 
+                    (lambda (a b) (abs (- a b))) a b)))
+2
+~~~
+
+This involves allocating an array to hold the intermediate result,
+which for large arrays could be inefficient. Similarly to `vectorize`
+defined above, a macro which does not allocate can be defined as:
+
+~~~lisp
+(defmacro vectorize-reduce (fn variables &body body)
+  "Performs a reduction using FN over all elements in a vectorized expression
+   on array VARIABLES. 
+  
+   VARIABLES must be a list of symbols bound to arrays.
+   Each array must have the same dimensions. These are
+   checked at compile and run-time respectively.
+  "
+  ;; Check that variables is a list of only symbols
+  (dolist (var variables)
+    (if (not (symbolp var))
+        (error "~S is not a symbol" var)))
+  
+  (let ((size (gensym)) ; Total array size (same for all variables)
+        (result (gensym)) ; Returned value
+        (indx (gensym)))  ; Index inside loop from 0 to size
+    
+    ;; Get the size of the first variable
+    `(let ((,size (array-total-size ,(first variables))))
+       ;; Check that all variables have the same size
+       ,@(mapcar (lambda (var) `(if (not (equal (array-dimensions ,(first variables))
+                                                (array-dimensions ,var)))
+                                    (error "~S and ~S have different dimensions" ',(first variables) ',var)))
+              (rest variables)) 
+       
+       ;; Apply FN with the first two elements (or fewer if size < 2)
+       (let ((,result (apply ,fn (loop for ,indx below (min ,size 2) collecting
+                                      (let ,(map 'list (lambda (var) (list var `(row-major-aref ,var ,indx))) variables)
+                                        (progn ,@body))))))
+         
+         ;; Loop over the remaining indices
+         (loop for ,indx from 2 below ,size do
+            ;; Locally redefine variables to be scalars at a given index
+              (let ,(mapcar (lambda (var) (list var `(row-major-aref ,var ,indx))) variables)
+                ;; User-supplied function body now evaluated for each index in turn
+                (setf ,result (funcall ,fn ,result (progn ,@body)))))
+         ,result))))
+
+~~~
+
+
+Using this macro, the maximum value in an array A (of any shape) is:
+~~~lisp
+* (vectorize-reduce #'max (a) a)
+~~~
+
+The maximum absolute difference between two arrays A and B, of any
+shape as long as they have the same shape, is:
+~~~lisp
+* (vectorize-reduce #'max (a b) (abs (- a b)))
+~~~
 
 # Linear algebra
 
