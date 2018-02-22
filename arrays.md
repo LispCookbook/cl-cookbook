@@ -182,8 +182,25 @@ dimension queried:
 3
 ~~~
 
-To loop over an array nested loops can be used. A utility macro for
-multiple dimensions is `nested-loop`:
+To loop over an array nested loops can be used, such as
+~~~lisp
+* (defparameter a #2A((1 2 3) (4 5 6)))
+A
+* (destructuring-bind (n m) (array-dimensions a)
+    (loop for i from 0 below n do
+      (loop for j from 0 below m do
+        (format t "a[~a ~a] = ~a~%" i j (aref a i j)))))
+        
+a[0 0] = 1
+a[0 1] = 2
+a[0 2] = 3
+a[1 0] = 4
+a[1 1] = 5
+a[1 2] = 6
+NIL
+~~~
+
+A utility macro which does this for multiple dimensions is `nested-loop`:
 
 ~~~lisp
 (defmacro nested-loop (syms dimensions &body body)
@@ -192,34 +209,37 @@ multiple dimensions is `nested-loop`:
    SYMS must be a list of symbols, with the first symbol
    corresponding to the outermost loop. 
    
-   DIMENSIONS will be evaluated, and must evaluate to a list of 
+   DIMENSIONS will be evaluated, and must be a list of 
    dimension sizes, of the same length as SYMS.
 
    Example:
     (nested-loop (i j) '(10 20) (format t '~a ~a~%' i j))
 
-   expands to:
-
-    (loop for i from 0 below 10 do
-        (loop for j from 0 below 20 do
-            (format t '~a ~a~%' i j)))
   "
-  (if syms
-      ;; Evaluate DIMENSIONS
-      (let ((dimensions (eval dimensions)))
-        (unless (listp dimensions) (error "Dimensions must evaluate to a list, but got ~S" dimensions))
-        
-        ;; Take the first symbol and the first dimension
-        (let ((sym (first syms))
-              (size (first dimensions)))
-          (unless (symbolp sym) (error "~S is not a symbol. First argument to nested-loop must be a list of symbols" sym))
-          (unless (integerp size) (error "Dimensions must be integers: ~S" size))
-          `(loop for ,sym from 0 below ,size do
-                (nested-loop ,(rest syms) ',(rest dimensions) ,@body))))
-      ;; No symbols
-      (if (eval dimensions)
-          (error "More dimensions than symbols: ~s" dimensions)
-          `(progn ,@body))))
+  (unless syms (return-from nested-loop `(progn ,@body))) ; No symbols
+  
+  ;; Generate gensyms for dimension sizes
+  (let* ((rank (length syms))
+         (syms-rev (reverse syms)) ; Reverse, since starting with innermost
+         (dims-rev (loop for i from 0 below rank collecting (gensym))) ; innermost dimension first
+         (result `(progn ,@body))) ; Start with innermost expression
+    ;; Wrap previous result inside a loop for each dimension
+    (dotimes (i rank)
+      (let ((sym (nth i syms-rev))
+            (dim (nth i dims-rev)))
+        (unless (symbolp sym) (error "~S is not a symbol. First argument to nested-loop must be a list of symbols" sym))
+        (setf result
+              `(loop for ,sym from 0 below ,dim do
+                    ,result))))
+    ;; Add checking of rank and dimension types, and get dimensions into gensym list
+    (let ((dims (gensym)))
+      `(let ((,dims ,dimensions))
+         (unless (= (length ,dims) ,rank) (error "Incorrect number of dimensions: Expected ~a but got ~a" ,rank (length ,dims)))
+         (dolist (dim ,dims)
+           (unless (integerp dim) (error "Dimensions must be integers: ~S" dim)))
+         (destructuring-bind ,(reverse dims-rev) ,dims ; Dimensions reversed so that innermost is last
+           ,result)))))
+           
 ~~~
 
 so that the contents of a 2D array can be printed using
@@ -227,13 +247,14 @@ so that the contents of a 2D array can be printed using
 * (defparameter a #2A((1 2 3) (4 5 6)))
 A
 * (nested-loop (i j) (array-dimensions a)
-      (format t "~a ~a = ~a~%" i j (aref a i j)))
-0 0 = 1
-0 1 = 2
-0 2 = 3
-1 0 = 4
-1 1 = 5
-1 2 = 6
+      (format t "a[~a ~a] = ~a~%" i j (aref a i j)))
+      
+a[0 0] = 1
+a[0 1] = 2
+a[0 2] = 3
+a[1 0] = 4
+a[1 1] = 5
+a[1 2] = 6
 NIL
 ~~~
 
