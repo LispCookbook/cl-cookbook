@@ -380,7 +380,16 @@ See also sequence functions defined in
 
 #### member (elt, sequence)
 
-#### elt (sequence, index)
+Returns the tail of `sequence` beginning with the first element satisfying `eql`ity.
+
+Accepts `:test`, `:test-not`, `:key` (functions or symbols).
+
+~~~lisp
+(member 2 '(1 2 3))
+;; (2 3)
+~~~
+
+#### elt (sequence, index) - find by index
 
 beware, here the sequence comes first.
 
@@ -403,10 +412,17 @@ These sort functions are destructive, so one may prefer to copy the sequence bef
 
     (sort (copy-seq seq) :test #'string<)
 
-#### find, position (foo, sequence)
+#### find, position (foo, sequence) - get index
 
 also `find-if`, `find-if-not`, `position-if`, `position-if-not` *(test
 sequence)*. See `:key` and `:test` parameters.
+
+~~~lisp
+(find 20 '(10 20 30))
+;; 20
+(position 20 '(10 20 30))
+;; 1
+~~~
 
 #### search (sequence-a, sequence-b)
 
