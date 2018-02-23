@@ -18,12 +18,37 @@ Some libraries available on [Quicklisp](https://www.quicklisp.org/beta/) for man
 - [array-operations](https://github.com/tpapp/array-operations) defines
   functions `generate`, `permute`, `displace`, `flatten`, `split`,
   `combine`, `reshape`. It also defines `each`, for element-wise
-  operations. 
+  operations. This library is not maintained by the original author,
+  but there is an [actively maintained fork](https://github.com/bendudson/array-operations).
 - [cmu-infix](https://github.com/rigetticomputing/cmu-infix) includes
   array indexing syntax for multidimensional arrays.
 - [lla](https://github.com/tpapp/lla) is a library for linear algebra, calling BLAS and LAPACK
-  libraries. It differs from most CL packages in using intuitive function
-  names, and in operating on native arrays rather than CLOS objects.
+  libraries. It differs from most CL linear algebra packages in using
+  intuitive function names, and can operate on native arrays as well as
+  CLOS objects.
+  
+  
+A relatively new but actively developed package is
+[MAGICL](https://github.com/rigetticomputing/magicl), which provides
+wrappers around BLAS and LAPACK libraries. At the time of writing this
+package is not on Quicklisp, and only works under SBCL and CCL. It
+seems to be particularly focussed on complex arrays, but not
+exclusively.
+To install, clone the repository in your quicklisp `local-projects`
+directory e.g. under Linux/Unix:
+
+~~~bash
+$ cd ~/quicklisp/local-projects
+$ git clone https://github.com/rigetticomputing/magicl.git
+~~~
+
+Instructions for installing dependencies (BLAS, LAPACK and Expokit)
+are given on the [github web pages](https://github.com/rigetticomputing/magicl).
+Low-level routines wrap foreign functions, so have the Fortran names
+e.g `magicl.lapack-cffi::%zgetrf`. Higher-level interfaces to some of
+these functions also exist, see the 
+[source code](https://github.com/rigetticomputing/magicl/blob/master/high-level.lisp). 
+
 
 This page covers what can be done with the built-in multidimensional
 arrays, but there are limitations. In particular:
@@ -55,6 +80,11 @@ At the time of writing the most widely used and supported of these are:
 * [Maxima](http://maxima.sourceforge.net/documentation.html)
 * [Axiom](https://github.com/daly/axiom)
 
+[CLASP](https://github.com/drmeister/clasp) is a more recent project,
+which aims to ease interoperability of Common Lisp with other
+languages (particularly C++) by using [LLVM](http://llvm.org/).
+One of the main applications of this project is to numerical/scientific
+computing.
 
 # Creating
 
@@ -258,6 +288,9 @@ a[1 2] = 6
 NIL
 ~~~
 
+[Note: This macro is available in [this fork](https://github.com/bendudson/array-operations) of array-operations, but
+not Quicklisp]
+
 ## Row major indexing
 
 In some cases, particularly element-wise operations, the number of
@@ -383,6 +416,10 @@ macro to iterate over all elements of an array:
        result))
 ~~~
 
+[Note: Expanded versions of this macro are available in [this
+fork](https://github.com/bendudson/array-operations) of array-operations, but
+not Quicklisp]
+
 This can be used as:
 ~~~lisp
 * (defparameter *a* #(1 2 3 4))
@@ -409,6 +446,21 @@ and combined with `cmu-infix`
 * (vectorize (a b) #i(a * sin(b)) )
 #(0.9092974 0.28224 -2.2704074 -3.8356972)
 ~~~
+
+## Calling BLAS
+
+Several packages provide wrappers around BLAS, for fast matrix manipulation.
+
+The [lla](https://github.com/tpapp/lla) package in quicklisp includes calls to:
+
+**Scale an array** by a factor:
+~~~lisp
+* (defparameter a #(1 2 3))
+* (lla:scal! 2.0 a)
+* a
+#(2.0d0 4.0d0 6.0d0)
+~~~
+
 
 ## Reductions
 
@@ -497,7 +549,8 @@ defined above, a macro which does not allocate can be defined as:
          ,result))))
 
 ~~~
-
+[Note: This macro isavailable in [this fork](https://github.com/bendudson/array-operations) 
+of array-operations, but not Quicklisp]
 
 Using this macro, the maximum value in an array A (of any shape) is:
 ~~~lisp
