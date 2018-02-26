@@ -1796,14 +1796,7 @@ The assumption behind the fast-lookup cache is that any given call
 [Steele 1990]
 : "Common Lisp the Language, 2nd edition"; Guy L. Steele Jr.; Digital Press; 1990; ISBN 1555580416. Available online at [http://www-2.cs.cmu.edu/Groups/AI/html/cltl/cltl2.html](http://www-2.cs.cmu.edu/Groups/AI/html/cltl/cltl2.html)
 
-## B. Document History
-
-|2003-07-15| <a href="mailto:ndl@ravenbrook.com">NDL</a> | Placeholder document created. |
-|2003-08-13| <a href="mailto:ndl@ravenbrook.com">NDL</a> | Drafting started. |
-|2003-08-26| <a href="mailto:ndl@ravenbrook.com">NDL</a> | First draft complete. |
-|2003-09-01| <a href="mailto:ndl@ravenbrook.com">NDL</a> | Corrections following review. |
-
-## C. Partial class hierarchy
+## B. Partial class hierarchy
 
 | <a id="figure-6" name="figure-6">![Partial class hierarchy.](assets/clos/images/fig-6.gif) |
 | Figure 6. Partial class hierarchy. The arrows denote the <cite>superclass</cite> relationship. All classes are instances of `standard-class`, apart from `t` and `function` which are instances of `built-in-class` and `generic-function` which is an instance of `funcallable-standard-class.` |
