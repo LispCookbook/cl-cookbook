@@ -10,7 +10,17 @@ issue of
 [pathnames](http://www.lispworks.com/documentation/HyperSpec/Body/19_ab.htm)
 needs to be covered separately.
 
-### Testing whether a File Exists
+Many functions will come from uiop, so we suggest you have a look directly at it:
+
+* [filesystem](https://gitlab.common-lisp.net/asdf/asdf/blob/master/uiop/filesystem.lisp).
+* [pathname](https://gitlab.common-lisp.net/asdf/asdf/blob/master/uiop/pathname.lisp)
+
+Of course, do not miss:
+
+* http://gigamonkeys.com/book/files-and-file-io.htmls
+
+
+### Testing whether a file exists
 
 Use the function
 [`probe-file`](http://www.lispworks.com/documentation/HyperSpec/Body/f_probe_.htm)
@@ -55,7 +65,7 @@ creates the directories if they do not exist:
 This may create `foo`, `bar` and `baz`. Don't forget the trailing slash.
 
 
-### Opening a File
+### Opening a file
 
 Common Lisp has
 [`open`](http://www.lispworks.com/documentation/HyperSpec/Body/f_open.htm) and
@@ -103,7 +113,7 @@ below. Also note that you usually don't need to provide any keyword arguments if
 you just want to open an existing file for reading.<a name="strings">
 
 
-### Reading a File into a String or a List of Lines
+### Reading a file into a string or a list of lines
 
 It's quite common to need to access the contents of a file in string
 form, or to get a list of lines.
@@ -144,7 +154,7 @@ of using elements of type character everytime. For instance, you can set
 `:element-type` type argument of `with-output-to-string`, `with-open-file` and
 `make-array` functions to `'(unsigned-byte 8)` to read data in octets.
 
-#### Reading with an UTF-8 encoding
+#### Reading with an utf-8 encoding
 
 To avoid an `ASCII stream decoding error` you might want to specify an UTF-8 encoding:
 
@@ -166,7 +176,7 @@ and optionnally
 
     (setf sb-alien::*default-c-string-external-format* :utf-8)
 
-### Reading a File one Line at a Time
+### Reading a file one line at a time
 
 [`read-line`](http://www.lispworks.com/documentation/HyperSpec/Body/f_rd_lin.htm)
 will read one line from a stream (which defaults to
@@ -197,7 +207,7 @@ the end of the file:
    do (print line)))
 ~~~
 
-### Reading a File one Character at a Time
+### Reading a file one character at a time
 
 [`read-char`](http://www.lispworks.com/documentation/HyperSpec/Body/f_rd_cha.htm)
 is similar to `read-line`, but it only reads one character as opposed to one
@@ -212,7 +222,7 @@ characters by this function.
        (print char)))
 ~~~
 
-### Looking one Character ahead
+### Looking one character ahead
 
 You can 'look at' the next character of a stream without actually removing it
 from there - this is what the function
@@ -315,7 +325,7 @@ back exactly _one_ character onto the stream. Also, you _must_ put back the same
 character that has been read previously, and you can't unread a character if
 none has been read before.
 
-### Random Access to a File
+### Random access to a File
 
 Use the function
 [`file-position`](http://www.lispworks.com/documentation/HyperSpec/Body/f_file_p.htm)
@@ -402,3 +412,106 @@ osicat-posix:stat-nlink
 osicat-posix:stat-blocks
 osicat-posix:stat-blksize
 ~~~
+
+### Listing files and directories
+
+Some functions below return pathnames, so you might need the following:
+
+~~~lisp
+(namestring #p"/foo/bar/baz.txt")           ==> "/foo/bar/baz.txt"
+(directory-namestring #p"/foo/bar/baz.txt") ==> "/foo/bar/"
+(file-namestring #p"/foo/bar/baz.txt")      ==> "baz.txt"
+~~~
+
+
+#### Listing files in a directory
+
+~~~lisp
+(uiop:directory-files "./")
+~~~
+
+Returns a list of pathnames:
+
+```
+(#P"/home/vince/projects/cl-cookbook/.emacs"
+ #P"/home/vince/projects/cl-cookbook/.gitignore"
+ #P"/home/vince/projects/cl-cookbook/AppendixA.jpg"
+ #P"/home/vince/projects/cl-cookbook/AppendixB.jpg"
+ #P"/home/vince/projects/cl-cookbook/AppendixC.jpg"
+ #P"/home/vince/projects/cl-cookbook/CHANGELOG"
+ #P"/home/vince/projects/cl-cookbook/CONTRIBUTING.md"
+ […]
+```
+
+#### Listing sub-directories
+
+~~~lisp
+(uiop:subdirectories "./")
+~~~
+
+```
+(#P"/home/vince/projects/cl-cookbook/.git/"
+ #P"/home/vince/projects/cl-cookbook/.sass-cache/"
+ #P"/home/vince/projects/cl-cookbook/_includes/"
+ #P"/home/vince/projects/cl-cookbook/_layouts/"
+ #P"/home/vince/projects/cl-cookbook/_site/"
+ #P"/home/vince/projects/cl-cookbook/assets/")
+```
+
+#### Finding files matching a pattern
+
+Below we simply list files of a directory and check that their name
+contains a given string.
+
+~~~lisp
+(remove-if-not (lambda (it)
+                   (search "App" (namestring it)))
+               (uiop:directory-files "./"))
+~~~
+
+```
+(#P"/home/vince/projects/cl-cookbook/AppendixA.jpg"
+ #P"/home/vince/projects/cl-cookbook/AppendixB.jpg"
+ #P"/home/vince/projects/cl-cookbook/AppendixC.jpg")
+```
+
+We used `namestring` to convert a `pathname` to a string, thus a
+sequence that `search` can deal with.
+
+
+#### Finding files with a wildcard
+
+We can not transpose unix wildcards to portable Common Lisp.
+
+In pathname strings we can use `*` and `**` as wildcards. This works
+in absolute and relative pathnames.
+
+~~~lisp
+(directory #P"*.jpg")
+~~~
+
+~~~lisp
+(directory #P"**/*.png")
+~~~
+
+
+#### Change the default pathname
+
+The concept of `.` denoting the current directory does not exist in
+portable Common Lisp. This may exist in specific filesystems and
+specific implementations.
+
+Also `~` to denote the home directory does not exist. They may be
+recognized by some implementations as non-portable extensions.
+
+
+`*default-pathname-defaults*`provides a default for some pathname
+operations.
+
+~~~lisp
+(let ((*default-pathname-defaults* (pathname "/bin/")))
+          (directory "*sh"))
+(#P"/bin/zsh" #P"/bin/tcsh" #P"/bin/sh" #P"/bin/ksh" #P"/bin/csh" #P"/bin/bash")
+~~~
+
+See also `(user-homedir-pathname)`.
