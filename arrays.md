@@ -756,3 +756,143 @@ functions:
     (-0.9318994611765425d0 -0.02422116311440764d0 0.3619070730398283d0))
 ~~~
 
+
+# Matlisp
+
+The [Matlisp](https://github.com/matlisp/matlisp) scientific
+computation library provides high performance operations on arrays,
+including wrappers around BLAS and LAPACK functions. It is not yet on
+Quicklisp, but can be installed with the following commands if you
+already have Quicklisp installed:
+~~~bash
+$ cd ~/quicklisp/local-projects
+$ git clone https://github.com/matlisp/matlisp.git
+~~~
+
+Then load using quicklisp:
+
+~~~lisp
+* (ql:quickload :matlisp)
+~~~
+
+To avoid typing `matlisp:` in front of each symbol, you can use
+the package or for an interactive session run:
+~~~lisp
+* (in-package :matlisp)
+~~~
+and to use the `#i` infix reader (note the same name as for
+`cmu-infix`), run:
+~~~lisp
+* (named-readtables:in-readtable :infix-dispatch-table)
+~~~
+
+## Creating tensors
+
+~~~lisp
+* (matlisp:zeros '(2 2))
+#<|<BLAS-MIXIN SIMPLE-DENSE-TENSOR: DOUBLE-FLOAT>| #(2 2)
+  0.000    0.000   
+  0.000    0.000
+>
+~~~
+
+Note that by default matrix storage types are `double-float`. 
+To create a complex array using `zeros`, `ones` and `eye`, specify the type:
+
+~~~lisp
+* (matlisp:zeros '(2 2) '((complex double-float)))
+#<|<BLAS-MIXIN SIMPLE-DENSE-TENSOR: (COMPLEX DOUBLE-FLOAT)>| #(2 2)
+  0.000    0.000 
+  0.000    0.000 
+>
+~~~
+
+As well as `zeros` and `ones` there is `eye` which creates an identity
+matrix:
+~~~lisp
+* (matlisp:eye '(3 3) '((complex double-float)))
+#<|<BLAS-MIXIN SIMPLE-DENSE-TENSOR: (COMPLEX DOUBLE-FLOAT)>| #(3 3)
+  1.000    0.000    0.000   
+  0.000    1.000    0.000   
+  0.000    0.000    1.000   
+>
+~~~
+
+### Ranges
+
+To generate 1D arrays there are the `range` and `linspace` functions:
+
+~~~lisp
+* (matlisp:range 1 10)
+#<|<SIMPLE-DENSE-TENSOR: (INTEGER 0 4611686018427387903)>| #(9)
+ 1   2   3   4   5   6   7   8   9 
+>
+~~~
+
+The `range` function rounds down it's final argument to an integer:
+~~~lisp
+* (matlisp:range 1 -3.5)
+#<|<BLAS-MIXIN SIMPLE-DENSE-TENSOR: SINGLE-FLOAT>| #(5)
+ 1.000   0.000   -1.000  -2.000  -3.000
+>
+* (matlisp:range 1 3.3)
+#<|<BLAS-MIXIN SIMPLE-DENSE-TENSOR: SINGLE-FLOAT>| #(3)
+ 1.000   2.000   3.000 
+>
+~~~
+
+Linspace is a bit more general, and the values returned include the
+end point.
+
+~~~lisp
+* (matlisp:linspace 1 10)
+#<|<SIMPLE-DENSE-TENSOR: (INTEGER 0 4611686018427387903)>| #(10)
+ 1   2   3   4   5   6   7   8   9   10
+>
+~~~
+
+~~~lisp
+* (matlisp:linspace 1 (* 2 pi) 5)
+#<|<BLAS-MIXIN SIMPLE-DENSE-TENSOR: DOUBLE-FLOAT>| #(5)
+ 1.000   2.321   3.642   4.962   6.283
+>
+~~~
+
+Currently `linspace` requires real inputs, and doesn't work with complex numbers.
+
+### Random numbers
+
+~~~lisp
+* (matlisp:random-uniform '(2 2))
+#<|<BLAS-MIXIN SIMPLE-DENSE-TENSOR: DOUBLE-FLOAT>| #(2 2)
+  0.7287       0.9480
+  2.6703E-2    0.1834
+>
+~~~
+
+~~~lisp
+(matlisp:random-normal '(2 2))
+#<|<BLAS-MIXIN SIMPLE-DENSE-TENSOR: DOUBLE-FLOAT>| #(2 2)
+  0.3536    -1.291    
+ -0.3877    -1.371    
+>
+~~~
+There are functions for other distributions, including
+`random-exponential`, `random-beta`, `random-gamma` and
+`random-pareto`.
+
+## Element access
+
+The `ref` function is the equivalent of `aref` for standard CL
+arrays, and is also setf-able:
+~~~lisp
+* (defparameter a (matlisp:ones '(2 3)))
+
+* (setf (ref a 1 1) 2.0)
+2.0d0
+* a
+#<|<BLAS-MIXIN SIMPLE-DENSE-TENSOR: DOUBLE-FLOAT>| #(2 3)
+  1.000    1.000    1.000   
+  1.000    2.000    1.000   
+>
+~~~
