@@ -360,7 +360,7 @@ matrix-multiply implementations.
 # Element-wise operations
 
 To multiply two arrays of numbers of the same size, pass a function
-to `each` in the [array-operations]((https://github.com/tpapp/array-operations) library:
+to `each` in the [array-operations](https://github.com/tpapp/array-operations) library:
 
 ~~~lisp
 * (aops:each #'* #(1 2 3) #(2 3 4))
@@ -451,7 +451,8 @@ and combined with `cmu-infix`
 
 Several packages provide wrappers around BLAS, for fast matrix manipulation.
 
-The [lla](https://github.com/tpapp/lla) package in quicklisp includes calls to:
+The [lla](https://github.com/tpapp/lla) package in quicklisp includes
+calls to some functions:
 
 **Scale an array** by a factor:
 ~~~lisp
@@ -461,6 +462,45 @@ The [lla](https://github.com/tpapp/lla) package in quicklisp includes calls to:
 #(2.0d0 4.0d0 6.0d0)
 ~~~
 
+**AXPY**:
+
+This calculates `a * x + y` where `a` is a constant, `x` and `y` are arrays.
+The `lla:axpy!` function is destructive, modifying the last argument (`y`).
+~~~lisp
+* (defparameter x #(1 2 3))
+A
+* (defparameter y #(2 3 4))
+B
+* (lla:axpy! 0.5 x y)
+#(2.5d0 4.0d0 5.5d0)
+* x
+#(1.0d0 2.0d0 3.0d0)
+* y
+#(2.5d0 4.0d0 5.5d0)
+~~~
+If the `y` array is complex, then this operation calls the complex
+number versions of these operators:
+
+~~~lisp
+* (defparameter x #(1 2 3))
+* (defparameter y (make-array 3 :element-type '(complex double-float) 
+                                :initial-element #C(1d0 1d0)))
+* y
+#(#C(1.0d0 1.0d0) #C(1.0d0 1.0d0) #C(1.0d0 1.0d0))
+
+* (lla:axpy! #C(0.5 0.5) a b)
+#(#C(1.5d0 1.5d0) #C(2.0d0 2.0d0) #C(2.5d0 2.5d0))
+~~~
+
+**Dot** product:
+
+The dot product of two vectors:
+~~~lisp
+* (defparameter x #(1 2 3))
+* (defparameter y #(2 3 4))
+* (lla:dot x y)
+20.0d0
+~~~
 
 ## Reductions
 
@@ -472,7 +512,10 @@ a 1D vector.
 Displaced arrays share storage with the original array, so this is a
 fast operation which does not require copying data:
 ~~~lisp
+* (defparameter a #2A((1 2) (3 4)))
+A
 * (reduce #'max (make-array (array-total-size a) :displaced-to a))
+4
 ~~~
 
 The `array-operations` package contains `flatten`, which returns a
@@ -484,8 +527,6 @@ displaced array i.e doesn't copy data:
 An SBCL extension, `array-storage-vector` provides an efficient but
 not portable way to achieve the same thing:
 ~~~lisp
-* (defparameter a #2A((1 2) (3 4)))
-A
 * (reduce #'max (array-storage-vector a))
 4
 ~~~
@@ -591,21 +632,23 @@ The [lla](https://github.com/tpapp/lla) function `mm` performs
 vector-vector, matrix-vector and matrix-matrix 
 multiplication. 
 
-**Vector dot product**: Note that one vector is treated as a row
-vector, and the other as column:
+### Vector dot product
+
+Note that one vector is treated as a row vector, and the other as
+column:
 ~~~lisp
 * (lla:mm #(1 2 3) #(2 3 4))
 20
 ~~~
 
-**Matrix-vector product**:
+### Matrix-vector product
 ~~~lisp
 * (lla:mm #2A((1 1 1) (2 2 2) (3 3 3))  #(2 3 4))
 #(9.0d0 18.0d0 27.0d0)
 ~~~
 which has performed the sum over `j` of `A[i j] * x[j]`
 
-**Matrix-matrix multiply**:
+### Matrix-matrix multiply
 ~~~lisp
 * (lla:mm #2A((1 2 3) (1 2 3) (1 2 3))  #2A((2 3 4) (2 3 4) (2 3 4)))
 #2A((12.0d0 18.0d0 24.0d0) (12.0d0 18.0d0 24.0d0) (12.0d0 18.0d0 24.0d0))
@@ -618,6 +661,25 @@ specialised to element type `double-float`
 * (type-of (lla:mm #2A((1 0 0) (0 1 0) (0 0 1)) #(1 2 3)))
 (SIMPLE-ARRAY DOUBLE-FLOAT (3))
 ~~~
+
+### Outer product
+
+The [array-operations](https://github.com/tpapp/array-operations)
+package contains a generalised outer product function:
+~~~lisp
+* (ql:quickload :array-operations)
+To load "array-operations":
+  Load 1 ASDF system:
+    array-operations
+; Loading "array-operations"
+
+(:ARRAY-OPERATIONS)
+* (aops:outer #'* #(1 2 3) #(2 3 4))
+#2A((2 3 4) (4 6 8) (6 9 12))
+~~~
+which has created a new 2D array `A[i j] = B[i] * C[j]`. This `outer`
+function can take an arbitrary number of inputs, and inputs with
+multiple dimensions.
 
 ## Matrix inverse
 
