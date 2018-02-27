@@ -881,6 +881,20 @@ There are functions for other distributions, including
 `random-exponential`, `random-beta`, `random-gamma` and
 `random-pareto`.
 
+### From arrays
+
+Common lisp arrays can be converted to Matlisp tensors by copying:
+
+~~~lisp
+* (copy #2A((1 2 3)
+            (4 5 6))
+        '#.(tensor 'double-float))
+#<|<BLAS-MIXIN SIMPLE-DENSE-TENSOR: DOUBLE-FLOAT>| #(2 3)
+  1.000    2.000    3.000   
+  4.000    5.000    6.000   
+>
+~~~
+
 ## Element access
 
 The `ref` function is the equivalent of `aref` for standard CL
