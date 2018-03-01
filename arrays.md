@@ -65,12 +65,13 @@ Some libraries available through
 [quicklisp](https://www.quicklisp.org/beta/) which take this approach 
 are: 
 
+* [matlisp](https://github.com/matlisp/matlisp), which is described in
+  sections below.
 * [MGL-MAT](https://github.com/melisgl/mgl-mat), which has a manual
   and provides bindings to BLAS and CUDA. This is used in a machine
   learning library [MGL](https://github.com/melisgl/mgl).
 * [cl-ana](https://github.com/ghollisjr/cl-ana/wiki), a data analysis
   package with a manual, which includes operations on arrays.
-* [matlisp](https://github.com/matlisp/matlisp)
 * [Antik](https://www.common-lisp.net/project/antik/)
 
 Taking this further, domain specific languages have been built on Common
@@ -454,7 +455,9 @@ Several packages provide wrappers around BLAS, for fast matrix manipulation.
 The [lla](https://github.com/tpapp/lla) package in quicklisp includes
 calls to some functions:
 
-**Scale an array** by a factor:
+### Scale an array
+
+scaling by a constant factor:
 ~~~lisp
 * (defparameter a #(1 2 3))
 * (lla:scal! 2.0 a)
@@ -462,7 +465,7 @@ calls to some functions:
 #(2.0d0 4.0d0 6.0d0)
 ~~~
 
-**AXPY**:
+### AXPY
 
 This calculates `a * x + y` where `a` is a constant, `x` and `y` are arrays.
 The `lla:axpy!` function is destructive, modifying the last argument (`y`).
@@ -492,7 +495,7 @@ number versions of these operators:
 #(#C(1.5d0 1.5d0) #C(2.0d0 2.0d0) #C(2.5d0 2.5d0))
 ~~~
 
-**Dot** product:
+### Dot product
 
 The dot product of two vectors:
 ~~~lisp
@@ -769,7 +772,7 @@ $ cd ~/quicklisp/local-projects
 $ git clone https://github.com/matlisp/matlisp.git
 ~~~
 
-Then load using quicklisp:
+Then loaded using quicklisp:
 
 ~~~lisp
 * (ql:quickload :matlisp)
@@ -881,6 +884,25 @@ There are functions for other distributions, including
 `random-exponential`, `random-beta`, `random-gamma` and
 `random-pareto`.
 
+### Reader macros
+
+The `#d` and `#e` reader macros provide a way to create `double-float`
+and `single-float` tensors:
+
+~~~lisp
+* #d[1,2,3]
+#<|<BLAS-MIXIN SIMPLE-DENSE-TENSOR: DOUBLE-FLOAT>| #(3)
+ 1.000   2.000   3.000   
+>
+
+* #d[[1,2,3],[4,5,6]]
+#<|<BLAS-MIXIN SIMPLE-DENSE-TENSOR: DOUBLE-FLOAT>| #(2 3)
+  1.000    2.000    3.000   
+  4.000    5.000    6.000   
+>
+~~~
+Note that the comma separators are needed.
+
 ### From arrays
 
 Common lisp arrays can be converted to Matlisp tensors by copying:
@@ -910,3 +932,4 @@ arrays, and is also setf-able:
   1.000    2.000    1.000   
 >
 ~~~
+
