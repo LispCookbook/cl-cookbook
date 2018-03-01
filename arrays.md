@@ -65,12 +65,13 @@ Some libraries available through
 [quicklisp](https://www.quicklisp.org/beta/) which take this approach 
 are: 
 
+* [matlisp](https://github.com/matlisp/matlisp), which is described in
+  sections below.
 * [MGL-MAT](https://github.com/melisgl/mgl-mat), which has a manual
   and provides bindings to BLAS and CUDA. This is used in a machine
   learning library [MGL](https://github.com/melisgl/mgl).
 * [cl-ana](https://github.com/ghollisjr/cl-ana/wiki), a data analysis
   package with a manual, which includes operations on arrays.
-* [matlisp](https://github.com/matlisp/matlisp)
 * [Antik](https://www.common-lisp.net/project/antik/)
 
 Taking this further, domain specific languages have been built on Common
@@ -360,7 +361,7 @@ matrix-multiply implementations.
 # Element-wise operations
 
 To multiply two arrays of numbers of the same size, pass a function
-to `each` in the [array-operations]((https://github.com/tpapp/array-operations) library:
+to `each` in the [array-operations](https://github.com/tpapp/array-operations) library:
 
 ~~~lisp
 * (aops:each #'* #(1 2 3) #(2 3 4))
@@ -451,9 +452,12 @@ and combined with `cmu-infix`
 
 Several packages provide wrappers around BLAS, for fast matrix manipulation.
 
-The [lla](https://github.com/tpapp/lla) package in quicklisp includes calls to:
+The [lla](https://github.com/tpapp/lla) package in quicklisp includes
+calls to some functions:
 
-**Scale an array** by a factor:
+### Scale an array
+
+scaling by a constant factor:
 ~~~lisp
 * (defparameter a #(1 2 3))
 * (lla:scal! 2.0 a)
@@ -461,6 +465,45 @@ The [lla](https://github.com/tpapp/lla) package in quicklisp includes calls to:
 #(2.0d0 4.0d0 6.0d0)
 ~~~
 
+### AXPY
+
+This calculates `a * x + y` where `a` is a constant, `x` and `y` are arrays.
+The `lla:axpy!` function is destructive, modifying the last argument (`y`).
+~~~lisp
+* (defparameter x #(1 2 3))
+A
+* (defparameter y #(2 3 4))
+B
+* (lla:axpy! 0.5 x y)
+#(2.5d0 4.0d0 5.5d0)
+* x
+#(1.0d0 2.0d0 3.0d0)
+* y
+#(2.5d0 4.0d0 5.5d0)
+~~~
+If the `y` array is complex, then this operation calls the complex
+number versions of these operators:
+
+~~~lisp
+* (defparameter x #(1 2 3))
+* (defparameter y (make-array 3 :element-type '(complex double-float) 
+                                :initial-element #C(1d0 1d0)))
+* y
+#(#C(1.0d0 1.0d0) #C(1.0d0 1.0d0) #C(1.0d0 1.0d0))
+
+* (lla:axpy! #C(0.5 0.5) a b)
+#(#C(1.5d0 1.5d0) #C(2.0d0 2.0d0) #C(2.5d0 2.5d0))
+~~~
+
+### Dot product
+
+The dot product of two vectors:
+~~~lisp
+* (defparameter x #(1 2 3))
+* (defparameter y #(2 3 4))
+* (lla:dot x y)
+20.0d0
+~~~
 
 ## Reductions
 
@@ -472,7 +515,10 @@ a 1D vector.
 Displaced arrays share storage with the original array, so this is a
 fast operation which does not require copying data:
 ~~~lisp
+* (defparameter a #2A((1 2) (3 4)))
+A
 * (reduce #'max (make-array (array-total-size a) :displaced-to a))
+4
 ~~~
 
 The `array-operations` package contains `flatten`, which returns a
@@ -484,8 +530,6 @@ displaced array i.e doesn't copy data:
 An SBCL extension, `array-storage-vector` provides an efficient but
 not portable way to achieve the same thing:
 ~~~lisp
-* (defparameter a #2A((1 2) (3 4)))
-A
 * (reduce #'max (array-storage-vector a))
 4
 ~~~
@@ -591,21 +635,23 @@ The [lla](https://github.com/tpapp/lla) function `mm` performs
 vector-vector, matrix-vector and matrix-matrix 
 multiplication. 
 
-**Vector dot product**: Note that one vector is treated as a row
-vector, and the other as column:
+### Vector dot product
+
+Note that one vector is treated as a row vector, and the other as
+column:
 ~~~lisp
 * (lla:mm #(1 2 3) #(2 3 4))
 20
 ~~~
 
-**Matrix-vector product**:
+### Matrix-vector product
 ~~~lisp
 * (lla:mm #2A((1 1 1) (2 2 2) (3 3 3))  #(2 3 4))
 #(9.0d0 18.0d0 27.0d0)
 ~~~
 which has performed the sum over `j` of `A[i j] * x[j]`
 
-**Matrix-matrix multiply**:
+### Matrix-matrix multiply
 ~~~lisp
 * (lla:mm #2A((1 2 3) (1 2 3) (1 2 3))  #2A((2 3 4) (2 3 4) (2 3 4)))
 #2A((12.0d0 18.0d0 24.0d0) (12.0d0 18.0d0 24.0d0) (12.0d0 18.0d0 24.0d0))
@@ -618,6 +664,25 @@ specialised to element type `double-float`
 * (type-of (lla:mm #2A((1 0 0) (0 1 0) (0 0 1)) #(1 2 3)))
 (SIMPLE-ARRAY DOUBLE-FLOAT (3))
 ~~~
+
+### Outer product
+
+The [array-operations](https://github.com/tpapp/array-operations)
+package contains a generalised outer product function:
+~~~lisp
+* (ql:quickload :array-operations)
+To load "array-operations":
+  Load 1 ASDF system:
+    array-operations
+; Loading "array-operations"
+
+(:ARRAY-OPERATIONS)
+* (aops:outer #'* #(1 2 3) #(2 3 4))
+#2A((2 3 4) (4 6 8) (6 9 12))
+~~~
+which has created a new 2D array `A[i j] = B[i] * C[j]`. This `outer`
+function can take an arbitrary number of inputs, and inputs with
+multiple dimensions.
 
 ## Matrix inverse
 
@@ -692,5 +757,179 @@ functions:
 #2A((-0.2344460799312531d0 -0.7211054639318696d0 -0.6519524104506949d0)
     (0.2767642134809678d0 -0.6924017945853318d0 0.6663192365460215d0)
     (-0.9318994611765425d0 -0.02422116311440764d0 0.3619070730398283d0))
+~~~
+
+
+# Matlisp
+
+The [Matlisp](https://github.com/matlisp/matlisp) scientific
+computation library provides high performance operations on arrays,
+including wrappers around BLAS and LAPACK functions. It is not yet on
+Quicklisp, but can be installed with the following commands if you
+already have Quicklisp installed:
+~~~bash
+$ cd ~/quicklisp/local-projects
+$ git clone https://github.com/matlisp/matlisp.git
+~~~
+
+Then loaded using quicklisp:
+
+~~~lisp
+* (ql:quickload :matlisp)
+~~~
+
+To avoid typing `matlisp:` in front of each symbol, you can use
+the package or for an interactive session run:
+~~~lisp
+* (in-package :matlisp)
+~~~
+and to use the `#i` infix reader (note the same name as for
+`cmu-infix`), run:
+~~~lisp
+* (named-readtables:in-readtable :infix-dispatch-table)
+~~~
+
+## Creating tensors
+
+~~~lisp
+* (matlisp:zeros '(2 2))
+#<|<BLAS-MIXIN SIMPLE-DENSE-TENSOR: DOUBLE-FLOAT>| #(2 2)
+  0.000    0.000   
+  0.000    0.000
+>
+~~~
+
+Note that by default matrix storage types are `double-float`. 
+To create a complex array using `zeros`, `ones` and `eye`, specify the type:
+
+~~~lisp
+* (matlisp:zeros '(2 2) '((complex double-float)))
+#<|<BLAS-MIXIN SIMPLE-DENSE-TENSOR: (COMPLEX DOUBLE-FLOAT)>| #(2 2)
+  0.000    0.000 
+  0.000    0.000 
+>
+~~~
+
+As well as `zeros` and `ones` there is `eye` which creates an identity
+matrix:
+~~~lisp
+* (matlisp:eye '(3 3) '((complex double-float)))
+#<|<BLAS-MIXIN SIMPLE-DENSE-TENSOR: (COMPLEX DOUBLE-FLOAT)>| #(3 3)
+  1.000    0.000    0.000   
+  0.000    1.000    0.000   
+  0.000    0.000    1.000   
+>
+~~~
+
+### Ranges
+
+To generate 1D arrays there are the `range` and `linspace` functions:
+
+~~~lisp
+* (matlisp:range 1 10)
+#<|<SIMPLE-DENSE-TENSOR: (INTEGER 0 4611686018427387903)>| #(9)
+ 1   2   3   4   5   6   7   8   9 
+>
+~~~
+
+The `range` function rounds down it's final argument to an integer:
+~~~lisp
+* (matlisp:range 1 -3.5)
+#<|<BLAS-MIXIN SIMPLE-DENSE-TENSOR: SINGLE-FLOAT>| #(5)
+ 1.000   0.000   -1.000  -2.000  -3.000
+>
+* (matlisp:range 1 3.3)
+#<|<BLAS-MIXIN SIMPLE-DENSE-TENSOR: SINGLE-FLOAT>| #(3)
+ 1.000   2.000   3.000 
+>
+~~~
+
+Linspace is a bit more general, and the values returned include the
+end point.
+
+~~~lisp
+* (matlisp:linspace 1 10)
+#<|<SIMPLE-DENSE-TENSOR: (INTEGER 0 4611686018427387903)>| #(10)
+ 1   2   3   4   5   6   7   8   9   10
+>
+~~~
+
+~~~lisp
+* (matlisp:linspace 1 (* 2 pi) 5)
+#<|<BLAS-MIXIN SIMPLE-DENSE-TENSOR: DOUBLE-FLOAT>| #(5)
+ 1.000   2.321   3.642   4.962   6.283
+>
+~~~
+
+Currently `linspace` requires real inputs, and doesn't work with complex numbers.
+
+### Random numbers
+
+~~~lisp
+* (matlisp:random-uniform '(2 2))
+#<|<BLAS-MIXIN SIMPLE-DENSE-TENSOR: DOUBLE-FLOAT>| #(2 2)
+  0.7287       0.9480
+  2.6703E-2    0.1834
+>
+~~~
+
+~~~lisp
+(matlisp:random-normal '(2 2))
+#<|<BLAS-MIXIN SIMPLE-DENSE-TENSOR: DOUBLE-FLOAT>| #(2 2)
+  0.3536    -1.291    
+ -0.3877    -1.371    
+>
+~~~
+There are functions for other distributions, including
+`random-exponential`, `random-beta`, `random-gamma` and
+`random-pareto`.
+
+### Reader macros
+
+The `#d` and `#e` reader macros provide a way to create `double-float`
+and `single-float` tensors:
+
+~~~lisp
+* #d[1,2,3]
+#<|<BLAS-MIXIN SIMPLE-DENSE-TENSOR: DOUBLE-FLOAT>| #(3)
+ 1.000   2.000   3.000   
+>
+
+* #d[[1,2,3],[4,5,6]]
+#<|<BLAS-MIXIN SIMPLE-DENSE-TENSOR: DOUBLE-FLOAT>| #(2 3)
+  1.000    2.000    3.000   
+  4.000    5.000    6.000   
+>
+~~~
+Note that the comma separators are needed.
+
+### From arrays
+
+Common lisp arrays can be converted to Matlisp tensors by copying:
+
+~~~lisp
+* (copy #2A((1 2 3)
+            (4 5 6))
+        '#.(tensor 'double-float))
+#<|<BLAS-MIXIN SIMPLE-DENSE-TENSOR: DOUBLE-FLOAT>| #(2 3)
+  1.000    2.000    3.000   
+  4.000    5.000    6.000   
+>
+~~~
+
+## Element access
+
+The `ref` function is the equivalent of `aref` for standard CL
+arrays, and is also setf-able:
+~~~lisp
+* (defparameter a (matlisp:ones '(2 3)))
+
+* (setf (ref a 1 1) 2.0)
+2.0d0
+* a
+#<|<BLAS-MIXIN SIMPLE-DENSE-TENSOR: DOUBLE-FLOAT>| #(2 3)
+  1.000    1.000    1.000   
+  1.000    2.000    1.000   
+>
 ~~~
 
