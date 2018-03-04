@@ -847,9 +847,9 @@ end point.
 ~~~
 
 ~~~lisp
-* (matlisp:linspace 1 (* 2 pi) 5)
+* (matlisp:linspace 0 (* 2 pi) 5)
 #<|<BLAS-MIXIN SIMPLE-DENSE-TENSOR: DOUBLE-FLOAT>| #(5)
- 1.000   2.321   3.642   4.962   6.283
+ 0.000   1.571   3.142   4.712   6.283
 >
 ~~~
 
@@ -924,18 +924,32 @@ For example, to create a `double-float` type tensor:
 
 The array store can be accessed using slots:
 ~~~lisp
-* (defparameter vec (m:range 5))
+* (defparameter vec (m:range 0 5))
 * vec
 #<|<SIMPLE-DENSE-TENSOR: (INTEGER 0 4611686018427387903)>| #(5)
  0   1   2   3   4   
 >
-* (slot-value vec 'store)
+* (slot-value vec 'm:store)
 #(0 1 2 3 4)
 ~~~
 
 Multidimensional tensors are also stored in 1D arrays, and are stored
 in column-major order rather than the row-major ordering used for
-common lisp arrays. 
+common lisp arrays. A displaced array will therefore be
+transposed.
+
+The contents of a tensor can be copied into an array
+~~~lisp
+* (let ((tens (m:ones '(2 3))))
+    (m:copy tens 'array))
+#2A((1.0d0 1.0d0 1.0d0) (1.0d0 1.0d0 1.0d0))
+~~~
+
+or a list:
+~~~lisp
+* (m:copy (m:ones '(2 3)) 'cons)
+((1.0d0 1.0d0 1.0d0) (1.0d0 1.0d0 1.0d0))
+~~~
 
 ## Element access
 
@@ -953,3 +967,34 @@ arrays, and is also setf-able:
 >
 ~~~
 
+## Element-wise operations
+
+The `matlisp-user` package, loaded when `matlisp` is loaded, contains
+functions for operating element-wise on tensors.
+~~~lisp
+* (matlisp-user:* 2 (ones '(2 3)))
+#<|<BLAS-MIXIN SIMPLE-DENSE-TENSOR: DOUBLE-FLOAT>| #(2 3)
+  2.000    2.000    2.000   
+  2.000    2.000    2.000   
+>
+~~~
+
+This includes arithmetic operators '+', '-', '*', '/' and 'expt', but
+also `sqrt`,`sin`,`cos`,`tan`, hyperbolic functions, and their inverses.
+The `#i` reader macro recognises many of these, and uses the
+`matlisp-user` functions:
+
+~~~lisp
+* (let ((a (ones '(2 2)))
+        (b (random-normal '(2 2))))
+     #i( 2 * a + b ))
+#<|<BLAS-MIXIN SIMPLE-DENSE-TENSOR: DOUBLE-FLOAT>| #(2 2)
+  0.9684    3.250   
+  1.593     1.508   
+>
+
+* (let ((a (ones '(2 2)))
+        (b (random-normal '(2 2))))
+     (macroexpand-1 '#i( 2 * a + b )))
+(MATLISP-USER:+ (MATLISP-USER:* 2 A) B)
+~~~
