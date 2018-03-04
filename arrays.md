@@ -255,13 +255,11 @@ A utility macro which does this for multiple dimensions is `nested-loop`:
          (dims-rev (loop for i from 0 below rank collecting (gensym))) ; innermost dimension first
          (result `(progn ,@body))) ; Start with innermost expression
     ;; Wrap previous result inside a loop for each dimension
-    (dotimes (i rank)
-      (let ((sym (nth i syms-rev))
-            (dim (nth i dims-rev)))
-        (unless (symbolp sym) (error "~S is not a symbol. First argument to nested-loop must be a list of symbols" sym))
-        (setf result
-              `(loop for ,sym from 0 below ,dim do
-                    ,result))))
+    (loop for sym in syms-rev for dim in dims-rev do
+         (unless (symbolp sym) (error "~S is not a symbol. First argument to nested-loop must be a list of symbols" sym))
+         (setf result
+               `(loop for ,sym from 0 below ,dim do
+                     ,result)))
     ;; Add checking of rank and dimension types, and get dimensions into gensym list
     (let ((dims (gensym)))
       `(let ((,dims ,dimensions))
@@ -764,21 +762,15 @@ functions:
 
 The [Matlisp](https://github.com/matlisp/matlisp) scientific
 computation library provides high performance operations on arrays,
-including wrappers around BLAS and LAPACK functions. It is not yet on
-Quicklisp, but can be installed with the following commands if you
-already have Quicklisp installed:
-~~~bash
-$ cd ~/quicklisp/local-projects
-$ git clone https://github.com/matlisp/matlisp.git
-~~~
-
-Then loaded using quicklisp:
+including wrappers around BLAS and LAPACK functions. 
+It can be loaded using quicklisp:
 
 ~~~lisp
 * (ql:quickload :matlisp)
 ~~~
 
-To avoid typing `matlisp:` in front of each symbol, you can use
+The nickname for `matlisp` is `m`, but to avoid typing `matlisp:` or
+`m:` in front of each symbol, you can use
 the package or for an interactive session run:
 ~~~lisp
 * (in-package :matlisp)
@@ -903,7 +895,7 @@ and `single-float` tensors:
 ~~~
 Note that the comma separators are needed.
 
-### From arrays
+### Tensors from arrays
 
 Common lisp arrays can be converted to Matlisp tensors by copying:
 
@@ -916,6 +908,34 @@ Common lisp arrays can be converted to Matlisp tensors by copying:
   4.000    5.000    6.000   
 >
 ~~~
+
+Instances of the `tensor` class can also be created, specifying the
+dimensions. The internal storage of `tensor` objects is a 1D array
+(`simple-vector`) in a slot `store`. 
+
+For example, to create a `double-float` type tensor:
+~~~lisp
+(make-instance (tensor 'double-float) 
+    :dimensions  (coerce '(2) '(simple-array index-type (*)))
+    :store (make-array 2 :element-type 'double-float))
+~~~
+
+### Arrays from tensors
+
+The array store can be accessed using slots:
+~~~lisp
+* (defparameter vec (m:range 5))
+* vec
+#<|<SIMPLE-DENSE-TENSOR: (INTEGER 0 4611686018427387903)>| #(5)
+ 0   1   2   3   4   
+>
+* (slot-value vec 'store)
+#(0 1 2 3 4)
+~~~
+
+Multidimensional tensors are also stored in 1D arrays, and are stored
+in column-major order rather than the row-major ordering used for
+common lisp arrays. 
 
 ## Element access
 
