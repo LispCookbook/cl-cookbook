@@ -26,8 +26,33 @@ Some libraries available on [Quicklisp](https://www.quicklisp.org/beta/) for man
   libraries. It differs from most CL linear algebra packages in using
   intuitive function names, and can operate on native arrays as well as
   CLOS objects.
-  
-  
+
+This page covers what can be done with the built-in multidimensional
+arrays, but there are limitations. In particular:
+
+* Interoperabiltiy with foreign language arrays, for example when
+  calling libraries such as BLAS, LAPACK or GSL. 
+* Extending arithmetic and other mathematical operators to handle
+  arrays, for example so that `(+ a b)` works 
+  when `a` and/or `b` are arrays. 
+
+Both of these problems can be solved by using CLOS to define an
+extended array class, with native arrays as a special case. 
+Some libraries available through
+[quicklisp](https://www.quicklisp.org/beta/) which take this approach 
+are: 
+
+* [matlisp](https://github.com/matlisp/matlisp), some of which is
+  described in sections below.
+* [MGL-MAT](https://github.com/melisgl/mgl-mat), which has a manual
+  and provides bindings to BLAS and CUDA. This is used in a machine
+  learning library [MGL](https://github.com/melisgl/mgl).
+* [cl-ana](https://github.com/ghollisjr/cl-ana/wiki), a data analysis
+  package with a manual, which includes operations on arrays.
+* [Antik](https://www.common-lisp.net/project/antik/), used in 
+  [GSLL](https://common-lisp.net/project/gsll/), a binding to the GNU
+  Scientific Library.
+
 A relatively new but actively developed package is
 [MAGICL](https://github.com/rigetticomputing/magicl), which provides
 wrappers around BLAS and LAPACK libraries. At the time of writing this
@@ -49,31 +74,6 @@ e.g `magicl.lapack-cffi::%zgetrf`. Higher-level interfaces to some of
 these functions also exist, see the 
 [source code](https://github.com/rigetticomputing/magicl/blob/master/high-level.lisp). 
 
-
-This page covers what can be done with the built-in multidimensional
-arrays, but there are limitations. In particular:
-
-* Interoperabiltiy with foreign language arrays, for example when
-  calling libraries such as BLAS, LAPACK or GSL. 
-* Extending arithmetic and other mathematical operators to handle
-  arrays, for example so that `(+ a b)` works 
-  when `a` and/or `b` are arrays. 
-
-Both of these problems can be solved by using CLOS to define an
-extended array class, with native arrays as a special case. 
-Some libraries available through
-[quicklisp](https://www.quicklisp.org/beta/) which take this approach 
-are: 
-
-* [matlisp](https://github.com/matlisp/matlisp), which is described in
-  sections below.
-* [MGL-MAT](https://github.com/melisgl/mgl-mat), which has a manual
-  and provides bindings to BLAS and CUDA. This is used in a machine
-  learning library [MGL](https://github.com/melisgl/mgl).
-* [cl-ana](https://github.com/ghollisjr/cl-ana/wiki), a data analysis
-  package with a manual, which includes operations on arrays.
-* [Antik](https://www.common-lisp.net/project/antik/)
-
 Taking this further, domain specific languages have been built on Common
 Lisp, which can be used for numerical calculations with arrays.
 At the time of writing the most widely used and supported of these are:
@@ -81,9 +81,10 @@ At the time of writing the most widely used and supported of these are:
 * [Maxima](http://maxima.sourceforge.net/documentation.html)
 * [Axiom](https://github.com/daly/axiom)
 
-[CLASP](https://github.com/drmeister/clasp) is a more recent project,
+
+[CLASP](https://github.com/drmeister/clasp) is a project
 which aims to ease interoperability of Common Lisp with other
-languages (particularly C++) by using [LLVM](http://llvm.org/).
+languages (particularly C++), by using [LLVM](http://llvm.org/).
 One of the main applications of this project is to numerical/scientific
 computing.
 
@@ -525,8 +526,9 @@ displaced array i.e doesn't copy data:
 * (reduce #'max (aops:flatten a))
 ~~~
 
-An SBCL extension, `array-storage-vector` provides an efficient but
-not portable way to achieve the same thing:
+An SBCL extension,
+[array-storage-vector](http://www.sbcl.org/manual/#index-array_002dstorage_002dvector)
+provides an efficient but not portable way to achieve the same thing:
 ~~~lisp
 * (reduce #'max (array-storage-vector a))
 4
@@ -591,7 +593,7 @@ defined above, a macro which does not allocate can be defined as:
          ,result))))
 
 ~~~
-[Note: This macro isavailable in [this fork](https://github.com/bendudson/array-operations) 
+[Note: This macro is available in [this fork](https://github.com/bendudson/array-operations) 
 of array-operations, but not Quicklisp]
 
 Using this macro, the maximum value in an array A (of any shape) is:
@@ -666,7 +668,8 @@ specialised to element type `double-float`
 ### Outer product
 
 The [array-operations](https://github.com/tpapp/array-operations)
-package contains a generalised outer product function:
+package contains a generalised [outer product](https://en.wikipedia.org/wiki/Outer_product)
+function:
 ~~~lisp
 * (ql:quickload :array-operations)
 To load "array-operations":
@@ -683,7 +686,6 @@ function can take an arbitrary number of inputs, and inputs with
 multiple dimensions.
 
 ## Matrix inverse
-
 
 The direct inverse of a dense matrix can be calculated with `invert`
 ~~~lisp
@@ -703,7 +705,8 @@ B
 ~~~
 
 Calculating the direct inverse is generally not advisable,
-particularly for large matrices. Instead the LU decomposition can be
+particularly for large matrices. Instead the 
+[LU decomposition](https://en.wikipedia.org/wiki/LU_decomposition) can be
 calculated and used for multiple inversions.
 
 ~~~lisp
@@ -717,8 +720,8 @@ B
 
 ## Singular value decomposition
 
-The `svd` function calculates the singular value decomposition of a given
-matrix, returning an object with slots for the three returned
+The `svd` function calculates the [singular value decomposition](https://en.wikipedia.org/wiki/Singular-value_decomposition) 
+of a given matrix, returning an object with slots for the three returned
 matrices:
 
 ~~~lisp
@@ -769,11 +772,16 @@ It can be loaded using quicklisp:
 * (ql:quickload :matlisp)
 ~~~
 
-The nickname for `matlisp` is `m`, but to avoid typing `matlisp:` or
-`m:` in front of each symbol, you can use
-the package or for an interactive session run:
+The nickname for `matlisp` is `m`. To avoid typing `matlisp:` or
+`m:` in front of each symbol, you can define your own package which 
+uses matlisp
+(See the [PCL section on packages](http://www.gigamonkeys.com/book/programming-in-the-large-packages-and-symbols.html)):
 ~~~lisp
-* (in-package :matlisp)
+* (defpackage :my-new-code
+     (:use :common-lisp :matlisp))
+#<PACKAGE "MY-NEW-CODE">
+
+* (in-package :my-new-code)
 ~~~
 and to use the `#i` infix reader (note the same name as for
 `cmu-infix`), run:
