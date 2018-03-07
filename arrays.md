@@ -26,8 +26,33 @@ Some libraries available on [Quicklisp](https://www.quicklisp.org/beta/) for man
   libraries. It differs from most CL linear algebra packages in using
   intuitive function names, and can operate on native arrays as well as
   CLOS objects.
-  
-  
+
+This page covers what can be done with the built-in multidimensional
+arrays, but there are limitations. In particular:
+
+* Interoperabiltiy with foreign language arrays, for example when
+  calling libraries such as BLAS, LAPACK or GSL. 
+* Extending arithmetic and other mathematical operators to handle
+  arrays, for example so that `(+ a b)` works 
+  when `a` and/or `b` are arrays. 
+
+Both of these problems can be solved by using CLOS to define an
+extended array class, with native arrays as a special case. 
+Some libraries available through
+[quicklisp](https://www.quicklisp.org/beta/) which take this approach 
+are: 
+
+* [matlisp](https://github.com/matlisp/matlisp), some of which is
+  described in sections below.
+* [MGL-MAT](https://github.com/melisgl/mgl-mat), which has a manual
+  and provides bindings to BLAS and CUDA. This is used in a machine
+  learning library [MGL](https://github.com/melisgl/mgl).
+* [cl-ana](https://github.com/ghollisjr/cl-ana/wiki), a data analysis
+  package with a manual, which includes operations on arrays.
+* [Antik](https://www.common-lisp.net/project/antik/), used in 
+  [GSLL](https://common-lisp.net/project/gsll/), a binding to the GNU
+  Scientific Library.
+
 A relatively new but actively developed package is
 [MAGICL](https://github.com/rigetticomputing/magicl), which provides
 wrappers around BLAS and LAPACK libraries. At the time of writing this
@@ -49,31 +74,6 @@ e.g `magicl.lapack-cffi::%zgetrf`. Higher-level interfaces to some of
 these functions also exist, see the 
 [source code](https://github.com/rigetticomputing/magicl/blob/master/high-level.lisp). 
 
-
-This page covers what can be done with the built-in multidimensional
-arrays, but there are limitations. In particular:
-
-* Interoperabiltiy with foreign language arrays, for example when
-  calling libraries such as BLAS, LAPACK or GSL. 
-* Extending arithmetic and other mathematical operators to handle
-  arrays, for example so that `(+ a b)` works 
-  when `a` and/or `b` are arrays. 
-
-Both of these problems can be solved by using CLOS to define an
-extended array class, with native arrays as a special case. 
-Some libraries available through
-[quicklisp](https://www.quicklisp.org/beta/) which take this approach 
-are: 
-
-* [matlisp](https://github.com/matlisp/matlisp), which is described in
-  sections below.
-* [MGL-MAT](https://github.com/melisgl/mgl-mat), which has a manual
-  and provides bindings to BLAS and CUDA. This is used in a machine
-  learning library [MGL](https://github.com/melisgl/mgl).
-* [cl-ana](https://github.com/ghollisjr/cl-ana/wiki), a data analysis
-  package with a manual, which includes operations on arrays.
-* [Antik](https://www.common-lisp.net/project/antik/)
-
 Taking this further, domain specific languages have been built on Common
 Lisp, which can be used for numerical calculations with arrays.
 At the time of writing the most widely used and supported of these are:
@@ -81,9 +81,10 @@ At the time of writing the most widely used and supported of these are:
 * [Maxima](http://maxima.sourceforge.net/documentation.html)
 * [Axiom](https://github.com/daly/axiom)
 
-[CLASP](https://github.com/drmeister/clasp) is a more recent project,
+
+[CLASP](https://github.com/drmeister/clasp) is a project
 which aims to ease interoperability of Common Lisp with other
-languages (particularly C++) by using [LLVM](http://llvm.org/).
+languages (particularly C++), by using [LLVM](http://llvm.org/).
 One of the main applications of this project is to numerical/scientific
 computing.
 
@@ -255,13 +256,11 @@ A utility macro which does this for multiple dimensions is `nested-loop`:
          (dims-rev (loop for i from 0 below rank collecting (gensym))) ; innermost dimension first
          (result `(progn ,@body))) ; Start with innermost expression
     ;; Wrap previous result inside a loop for each dimension
-    (dotimes (i rank)
-      (let ((sym (nth i syms-rev))
-            (dim (nth i dims-rev)))
-        (unless (symbolp sym) (error "~S is not a symbol. First argument to nested-loop must be a list of symbols" sym))
-        (setf result
-              `(loop for ,sym from 0 below ,dim do
-                    ,result))))
+    (loop for sym in syms-rev for dim in dims-rev do
+         (unless (symbolp sym) (error "~S is not a symbol. First argument to nested-loop must be a list of symbols" sym))
+         (setf result
+               `(loop for ,sym from 0 below ,dim do
+                     ,result)))
     ;; Add checking of rank and dimension types, and get dimensions into gensym list
     (let ((dims (gensym)))
       `(let ((,dims ,dimensions))
@@ -527,8 +526,9 @@ displaced array i.e doesn't copy data:
 * (reduce #'max (aops:flatten a))
 ~~~
 
-An SBCL extension, `array-storage-vector` provides an efficient but
-not portable way to achieve the same thing:
+An SBCL extension,
+[array-storage-vector](http://www.sbcl.org/manual/#index-array_002dstorage_002dvector)
+provides an efficient but not portable way to achieve the same thing:
 ~~~lisp
 * (reduce #'max (array-storage-vector a))
 4
@@ -593,7 +593,7 @@ defined above, a macro which does not allocate can be defined as:
          ,result))))
 
 ~~~
-[Note: This macro isavailable in [this fork](https://github.com/bendudson/array-operations) 
+[Note: This macro is available in [this fork](https://github.com/bendudson/array-operations) 
 of array-operations, but not Quicklisp]
 
 Using this macro, the maximum value in an array A (of any shape) is:
@@ -668,7 +668,8 @@ specialised to element type `double-float`
 ### Outer product
 
 The [array-operations](https://github.com/tpapp/array-operations)
-package contains a generalised outer product function:
+package contains a generalised [outer product](https://en.wikipedia.org/wiki/Outer_product)
+function:
 ~~~lisp
 * (ql:quickload :array-operations)
 To load "array-operations":
@@ -685,7 +686,6 @@ function can take an arbitrary number of inputs, and inputs with
 multiple dimensions.
 
 ## Matrix inverse
-
 
 The direct inverse of a dense matrix can be calculated with `invert`
 ~~~lisp
@@ -705,7 +705,8 @@ B
 ~~~
 
 Calculating the direct inverse is generally not advisable,
-particularly for large matrices. Instead the LU decomposition can be
+particularly for large matrices. Instead the 
+[LU decomposition](https://en.wikipedia.org/wiki/LU_decomposition) can be
 calculated and used for multiple inversions.
 
 ~~~lisp
@@ -719,8 +720,8 @@ B
 
 ## Singular value decomposition
 
-The `svd` function calculates the singular value decomposition of a given
-matrix, returning an object with slots for the three returned
+The `svd` function calculates the [singular value decomposition](https://en.wikipedia.org/wiki/Singular-value_decomposition) 
+of a given matrix, returning an object with slots for the three returned
 matrices:
 
 ~~~lisp
@@ -764,24 +765,23 @@ functions:
 
 The [Matlisp](https://github.com/matlisp/matlisp) scientific
 computation library provides high performance operations on arrays,
-including wrappers around BLAS and LAPACK functions. It is not yet on
-Quicklisp, but can be installed with the following commands if you
-already have Quicklisp installed:
-~~~bash
-$ cd ~/quicklisp/local-projects
-$ git clone https://github.com/matlisp/matlisp.git
-~~~
-
-Then loaded using quicklisp:
+including wrappers around BLAS and LAPACK functions. 
+It can be loaded using quicklisp:
 
 ~~~lisp
 * (ql:quickload :matlisp)
 ~~~
 
-To avoid typing `matlisp:` in front of each symbol, you can use
-the package or for an interactive session run:
+The nickname for `matlisp` is `m`. To avoid typing `matlisp:` or
+`m:` in front of each symbol, you can define your own package which 
+uses matlisp
+(See the [PCL section on packages](http://www.gigamonkeys.com/book/programming-in-the-large-packages-and-symbols.html)):
 ~~~lisp
-* (in-package :matlisp)
+* (defpackage :my-new-code
+     (:use :common-lisp :matlisp))
+#<PACKAGE "MY-NEW-CODE">
+
+* (in-package :my-new-code)
 ~~~
 and to use the `#i` infix reader (note the same name as for
 `cmu-infix`), run:
@@ -855,9 +855,9 @@ end point.
 ~~~
 
 ~~~lisp
-* (matlisp:linspace 1 (* 2 pi) 5)
+* (matlisp:linspace 0 (* 2 pi) 5)
 #<|<BLAS-MIXIN SIMPLE-DENSE-TENSOR: DOUBLE-FLOAT>| #(5)
- 1.000   2.321   3.642   4.962   6.283
+ 0.000   1.571   3.142   4.712   6.283
 >
 ~~~
 
@@ -903,7 +903,7 @@ and `single-float` tensors:
 ~~~
 Note that the comma separators are needed.
 
-### From arrays
+### Tensors from arrays
 
 Common lisp arrays can be converted to Matlisp tensors by copying:
 
@@ -915,6 +915,48 @@ Common lisp arrays can be converted to Matlisp tensors by copying:
   1.000    2.000    3.000   
   4.000    5.000    6.000   
 >
+~~~
+
+Instances of the `tensor` class can also be created, specifying the
+dimensions. The internal storage of `tensor` objects is a 1D array
+(`simple-vector`) in a slot `store`. 
+
+For example, to create a `double-float` type tensor:
+~~~lisp
+(make-instance (tensor 'double-float) 
+    :dimensions  (coerce '(2) '(simple-array index-type (*)))
+    :store (make-array 2 :element-type 'double-float))
+~~~
+
+### Arrays from tensors
+
+The array store can be accessed using slots:
+~~~lisp
+* (defparameter vec (m:range 0 5))
+* vec
+#<|<SIMPLE-DENSE-TENSOR: (INTEGER 0 4611686018427387903)>| #(5)
+ 0   1   2   3   4   
+>
+* (slot-value vec 'm:store)
+#(0 1 2 3 4)
+~~~
+
+Multidimensional tensors are also stored in 1D arrays, and are stored
+in column-major order rather than the row-major ordering used for
+common lisp arrays. A displaced array will therefore be
+transposed.
+
+The contents of a tensor can be copied into an array
+~~~lisp
+* (let ((tens (m:ones '(2 3))))
+    (m:copy tens 'array))
+#2A((1.0d0 1.0d0 1.0d0) (1.0d0 1.0d0 1.0d0))
+~~~
+
+or a list:
+~~~lisp
+* (m:copy (m:ones '(2 3)) 'cons)
+((1.0d0 1.0d0 1.0d0) (1.0d0 1.0d0 1.0d0))
 ~~~
 
 ## Element access
@@ -933,3 +975,34 @@ arrays, and is also setf-able:
 >
 ~~~
 
+## Element-wise operations
+
+The `matlisp-user` package, loaded when `matlisp` is loaded, contains
+functions for operating element-wise on tensors.
+~~~lisp
+* (matlisp-user:* 2 (ones '(2 3)))
+#<|<BLAS-MIXIN SIMPLE-DENSE-TENSOR: DOUBLE-FLOAT>| #(2 3)
+  2.000    2.000    2.000   
+  2.000    2.000    2.000   
+>
+~~~
+
+This includes arithmetic operators '+', '-', '*', '/' and 'expt', but
+also `sqrt`,`sin`,`cos`,`tan`, hyperbolic functions, and their inverses.
+The `#i` reader macro recognises many of these, and uses the
+`matlisp-user` functions:
+
+~~~lisp
+* (let ((a (ones '(2 2)))
+        (b (random-normal '(2 2))))
+     #i( 2 * a + b ))
+#<|<BLAS-MIXIN SIMPLE-DENSE-TENSOR: DOUBLE-FLOAT>| #(2 2)
+  0.9684    3.250   
+  1.593     1.508   
+>
+
+* (let ((a (ones '(2 2)))
+        (b (random-normal '(2 2))))
+     (macroexpand-1 '#i( 2 * a + b )))
+(MATLISP-USER:+ (MATLISP-USER:* 2 A) B)
+~~~
