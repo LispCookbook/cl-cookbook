@@ -126,7 +126,7 @@ Finally, the credit for finally giving birth to the project probably goes to
 [thread]: http://groups.google.com/groups?threadm=m3it9soz3m.fsf%40bird.agharta.de
 [cll]: news:comp.lang.lisp
 [msg]: http://groups.google.com/groups?selm=76be8851.0201222259.70ecbcb1%40posting.google.com
-[toc]: http://www.oreilly.com/catalog/cookbook/toc.html
+[toc]: http://www.oreilly.com/catalog/cookbook/
 [zip]: https://github.com/LispCookbook/cl-cookbook/archive/master.zip
 [gh]: https://github.com/LispCookbook/cl-cookbook
 [clog]: https://github.com/can3p/cl-cookbook/blob/master/CHANGELOG
