@@ -102,7 +102,7 @@ Common Lisp environment.
 
 [cl-repl](https://github.com/koji-kojiro/cl-repl) is an ipython-like REPL. It supports symbol completion, magic and shell commands, editing command in a file and a simple debugger.
 
-<img src="https://github.com/koji-kojiro/cl-repl/raw/master/image/cl-repl.gif"
+<img src="assets/cl-repl.png"
      style="width: 500px"/>
 
 
