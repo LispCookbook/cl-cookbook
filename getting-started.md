@@ -123,6 +123,12 @@ and:
 But we'll setup our editor to offer a better experience instead of
 working in this REPL. See [editor-support](editor-support.html).
 
+
+Lisp is interactive by nature, so in case of an error we enter the
+debugger. This can be annoying in certain cases so you might want to
+use SBCL's `--disable-debugger` option.
+
+
 ## Libraries
 
 Common Lisp has hundreds of libraries available under a free software licence. See:
