@@ -7,7 +7,36 @@ title: Numbers
 Common Lisp has a rich set of numerical types, including integer,
 rational, floating point, and complex. 
 
+Some sources:
+
+* [Numbers](https://www.cs.cmu.edu/Groups/AI/html/cltl/clm/node16.html#SECTION00610000000000000000)
+ in Common Lisp the Language, 2nd Edition
+* [Numbers, Characters and Strings](http://www.gigamonkeys.com/book/numbers-characters-and-strings.html) 
+ in Practical Common Lisp
+
+
 ### Integer types
+
+Common Lisp provides a true integer type, called `bignum`s, limited only by the total
+memory available (not the machine word size). For example this would
+overflow a 64 bit integer by some way:
+
+~~~lisp
+* (expt 2 200)
+1606938044258990275541962092341162602522202993782792835301376
+~~~
+
+For efficiency, integers can be limited to a fixed number of bits,
+called a `fixnum` type. The range of integers which can be represented
+is given by:
+
+~~~lisp
+* most-positive-fixnum
+4611686018427387903
+* most-negative-fixnum
+-4611686018427387904
+~~~
+
 
 ### Rational types
 
@@ -21,6 +50,48 @@ internal representation. If you are working with floating point
 numbers then reading [What Every Computer Scientist Should Know About
 Floating-Point Arithmetic](https://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html) 
 is highly recommended.
+
+#### Floating point errors 
+
+If the result of a floating point calculation is too large then a
+floating point overflow occurs. By default in
+[SBCL](http://www.sbcl.org/) (and other implementations) this results
+in an error condition:
+
+~~~lisp
+* (exp 1000)
+; Evaluation aborted on #<FLOATING-POINT-OVERFLOW {10041720B3}>.
+~~~
+
+The error can be caught and handled, or this behaviour can be
+changed, to return `+infinity`. In SBCL this is:
+
+~~~lisp
+* (sb-int:set-floating-point-modes :traps '(:INVALID :DIVIDE-BY-ZERO))
+
+* (exp 1000)
+#.SB-EXT:SINGLE-FLOAT-POSITIVE-INFINITY
+
+* (/ 1 (exp 1000))
+0.0
+~~~
+
+The calculation now silently continues, without an error condition. 
+
+A similar functionality exists in [CCL](https://ccl.clozure.com/):
+~~~lisp
+* (set-fpu-mode :overflow nil)
+~~~
+
+In SBCL the floating point modes can be inspected:
+
+~~~lisp
+* (sb-int:get-floating-point-modes)
+(:TRAPS (:OVERFLOW :INVALID :DIVIDE-BY-ZERO) :ROUNDING-MODE :NEAREST
+ :CURRENT-EXCEPTIONS NIL :ACCRUED-EXCEPTIONS NIL :FAST-MODE NIL)
+~~~
+
+#### Arbitrary precision
 
 For arbitrary high precision calculations there is the
 [computable-reals](http://quickdocs.org/computable-reals/) library on
@@ -62,6 +133,9 @@ SINGLE-FLOAT
 DOUBLE-FLOAT
 ~~~
 
+Other suffixes are `s` (short), `f` (single float), `d` (double
+float), `l` (long float) and `e` (default; usually single float).
+
 The default type can be changed, but note that this may break packages
 which assume `single-float` type. 
 
@@ -72,8 +146,23 @@ DOUBLE-FLOAT
 ~~~
 
 
+Note that unlike in some languages, appending a single decimal point
+to the end of a number does not make it a float:
+~~~lisp
+* (type-of 10.)
+(INTEGER 0 4611686018427387903)
+
+* (type-of 10.0)
+SINGLE-FLOAT
+~~~
+
 
 ## Converting numbers
+
+The `coerce` function converts objects from one type to another,
+including numeric types.
+
+
 
 ### Convert to rational
 
@@ -96,6 +185,18 @@ floating point or rational numbers to integers.
 
 ## Working with Roman numerals
 
+The `format` function can convert numbers to roman numerals with the
+`~@r` directive:
+
+~~~lisp
+* (format nil "~@r" 42)
+"XLII"
+~~~
+
+There is a [gist by tormaroe](https://gist.github.com/tormaroe/90ddd9dc7cc191040be4) for
+reading roman numerals.
+
+
 ## Generating random numbers
 
 ## Trigonometric functions
@@ -103,3 +204,18 @@ floating point or rational numbers to integers.
 ## Taking logarithms
 
 ## Using complex numbers
+
+Common Lisp's mathematical functions generally handle complex numbers,
+and return complex numbers when this is the true result. For example:
+
+~~~lisp
+* (sqrt -1)
+#C(0.0 1.0)
+
+* (exp #C(0.0 0.5))
+#C(0.87758255 0.47942555)
+~~~
+
+There are 5 types of complex number: The real and imaginary parts must
+be of the same type, and can be rational, or one of the floating point
+types (short, single, double or long). 
