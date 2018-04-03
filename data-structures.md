@@ -78,6 +78,55 @@ or by calling quote:
 
 which is shorthand notation for the function call `(quote (1 2))`.
 
+### Circular lists
+
+A cons cell car or cdr can refer to other objects, including itself or
+other cells in the same list. They can therefore be used to define
+self-referential structures such as circular lists.
+
+Before working with circular lists, tell the printer to recognise them
+and not try to print the whole list by setting
+[\*print-circle\*](http://clhs.lisp.se/Body/v_pr_cir.htm)
+to `T`:
+~~~lisp
+(setf *print-circle* t)
+~~~
+
+A function which modifies a list, so that the last `cdr` points to the
+start of the list is:
+~~~lisp
+(defun circular! (items)
+  "Modifies the last cdr of list ITEMS, returning a circular list"
+  (setf (cdr (last items)) items))
+
+(circular! (list 1 2 3)) 
+;; => #1=(1 2 3 . #1#)
+
+(fifth (circular! (list 1 2 3))) 
+;; => 2
+~~~
+
+The [list-length](http://www.lispworks.com/documentation/HyperSpec/Body/f_list_l.htm#list-length)
+function recognises circular lists, returning `nil`.
+
+The reader can also create circular lists, using 
+[Sharpsign Equal-Sign](http://www.lispworks.com/documentation/HyperSpec/Body/02_dho.htm)
+notation. An object (like a list) can be prefixed with `#n=` where `n`
+is an unsigned decimal integer (one or more digits). The
+label `#n#` can be used to refer to the object later in the 
+expression:
+
+~~~lisp
+'#42=(1 2 3 . #42#)
+;; => #1=(1 2 3 . #1#)
+~~~
+Note that the label given to the reader (`n=42`) is discarded after
+reading, and the printer defines a new label (`n=1`).
+
+Further reading
+
+* [Let over Lambda](https://letoverlambda.com/index.cl/guest/chap4.html#sec_5) section on cyclic expressions
+
 
 ### car/cdr or first/rest (and second... to tenth)
 
