@@ -199,6 +199,30 @@ reading roman numerals.
 
 ## Generating random numbers
 
+The [random](http://clhs.lisp.se/Body/f_random.htm#random) function
+generates either integer or floating point random numbers, depending on
+the type of its argument. 
+
+~~~lisp
+* (random 10)
+7
+
+* (type-of (random 10))
+(INTEGER 0 4611686018427387903)
+* (type-of (random 10.0))
+SINGLE-FLOAT
+* (type-of (random 10d0))
+DOUBLE-FLOAT
+~~~
+
+In SBCL a [Mersenne Twister](https://en.wikipedia.org/wiki/Mersenne_Twister)
+ pseudo-random number generator is used. See section 
+[7.13 of the SBCL manual](http://www.sbcl.org/manual/#Random-Number-Generation) for details.
+ 
+The random seed is stored in [*random-state*](http://clhs.lisp.se/Body/v_rnd_st.htm#STrandom-stateST) 
+whose internal representation is implementation dependent. 
+
+
 ## Trigonometric functions
 
 ## Taking logarithms
