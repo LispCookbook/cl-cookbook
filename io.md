@@ -178,8 +178,8 @@ and
 [`WRITE-SEQUENCE`](http://www.lispworks.com/documentation/HyperSpec/Body/f_wr_seq.htm):
 
 ~~~lisp
-(let ((buf (make-array 4096 :element-type (stream-element-type input-stream)))
-  (loop for pos = (read-sequence input-stream)
+(let ((buf (make-array 4096 :element-type (stream-element-type input-stream))))
+  (loop for pos = (read-sequence buf input-stream)
         while (plusp pos)
-        do (write-sequence buf output-stream :end pos))))
+        do (write-sequence buf output-stream :end pos)))
 ~~~
