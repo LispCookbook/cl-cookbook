@@ -39,6 +39,11 @@ listener during the tutorial.
 This document is not confidential. Original version is available at
 [http://www.nicklevine.org/ilc2003/](http://www.nicklevine.org/ilc2003/).
 
+Other resources:
+
+- the [CLOS Meta Object Protocol specifications](https://clos-mop.hexstreamsoft.com/)
+- [A Guide to CLOS](http://www.aiai.ed.ac.uk/~jeff/clos-guide.html) by Jeff Dalton
+
 
 ## 2. Background
 
@@ -487,8 +492,8 @@ Each <cite>slot-option</cite> consists of a keyword followed by a
 
     *   you are rewarded for using them by having code that's simpler and
             more compact.
-    
-    
+
+
 
 `:reader`
 : Defines a single method for reading the slot; a read-only
@@ -498,7 +503,7 @@ Each <cite>slot-option</cite> consists of a keyword followed by a
 : Specifies a keyword which can be used to pass an initial value
     for this slot to `make-instance` (an <cite>initialization
         argument</cite>).
-    
+
 `:initform`
 :   Specifies a default value for this slot, to be used if no
     initial value was specified explicitly. This form is evaluated each
@@ -623,7 +628,7 @@ note:** these two functions are not part of Common Lisp. In
     `package-use-list`, in Allegro they're exported from
     `ACLMOP`. Also in Allegro, you have to have made an
     instance of `aardvark` before you can interrogate its
-    precedence list.) 
+    precedence list.)
 
 ~~~lisp
 CL-USER 38 > (class-direct-superclasses (find-class 'aardvark))
@@ -1536,7 +1541,7 @@ CL-USER 76 >
 
 
 **Exercise:** Write a method on
-    `my-describe` for lists. 
+    `my-describe` for lists.
 
 **Exercise:** Write a method on
     `print-object` for `Eric` the antelope. Change
@@ -1684,7 +1689,7 @@ Computing, sorting and executing a list of applicable methods are
     cache its results and reuse them as often - but as cheaply - as
     possible. An implementor once told me that his aim was to make "best
     case" generic function dispatch no more than three times slower than
-    calling an ordinary function. 
+    calling an ordinary function.
 
 The method cache cannot be calculated in advance, because (a) we
     typically don't know what arguments might be passed to the generic
@@ -1700,7 +1705,7 @@ The following strategies might be useful:
     the latter.
 
 *   Implement method execution (steps 4 though 6 in the "full
-    dispatch mechanism" described in [section 4.6][section-46] above) 
+    dispatch mechanism" described in [section 4.6][section-46] above)
     by closing pre-compiled templates over sorted lists of
     applicable methods, thus generating <cite>combined methods</cite>. A
     combined method is a funcallable object which takes the same arguments
