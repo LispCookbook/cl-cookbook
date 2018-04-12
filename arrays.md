@@ -90,7 +90,7 @@ computing.
 
 # Creating
 
-The function [CHLS: make-array](http://clhs.lisp.se/Body/f_mk_ar.htm)
+The function [CLHS: make-array](http://clhs.lisp.se/Body/f_mk_ar.htm)
 can create arrays filled with a single value
 
 ~~~lisp
