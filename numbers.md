@@ -17,7 +17,7 @@ Some sources:
 
 ### Integer types
 
-Common Lisp provides a true integer type, called `bignum`s, limited only by the total
+Common Lisp provides a true integer type, called `bignum`, limited only by the total
 memory available (not the machine word size). For example this would
 overflow a 64 bit integer by some way:
 
@@ -37,19 +37,73 @@ is given by:
 -4611686018427387904
 ~~~
 
+Functions which operate on or evaluate to integers include:
+
+* [isqrt](http://clhs.lisp.se/Body/f_sqrt_.htm), which returns the greatest 
+  integer less than or equal to the exact positive square root of natural.
+
+~~~lisp
+* (isqrt 10)
+3
+* (isqrt 4)
+2
+~~~
+
+* [gcd](http://clhs.lisp.se/Body/f_gcd.htm) to find the Greatest Common Denominator
+* [lcm](http://clhs.lisp.se/Body/f_lcm.htm#lcm) for the Least Common Multiple.
+
 
 ### Rational types
+
+
 
 ### Floating point types
 
 Floating point types attempt to represent the continuous real numbers
 using a finite number of bits. This means that many real numbers
-cannot be represented, but are approximated. This can cause some nasty
+cannot be represented, but are approximated. This can lead to some nasty
 surprises, particularly when converting between base-10 and the base-2
 internal representation. If you are working with floating point
 numbers then reading [What Every Computer Scientist Should Know About
 Floating-Point Arithmetic](https://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html) 
 is highly recommended.
+
+#### Floating point literals
+
+When reading floating point numbers, the default type is set by the
+special variable `*read-default-float-format*`. By default this is
+`SINGLE-FLOAT`, so if you want to ensure that a number is read as
+double precision then put a `d0` suffix at the end
+
+~~~lisp
+* (type-of 1.24)
+SINGLE-FLOAT
+
+* (type-of 1.24d0)
+DOUBLE-FLOAT
+~~~
+
+Other suffixes are `s` (short), `f` (single float), `d` (double
+float), `l` (long float) and `e` (default; usually single float).
+
+The default type can be changed, but note that this may break packages
+which assume `single-float` type. 
+
+~~~lisp
+* (setq *read-default-float-format* 'double-float)
+* (type-of 1.24)
+DOUBLE-FLOAT
+~~~
+
+Note that unlike in some languages, appending a single decimal point
+to the end of a number does not make it a float:
+~~~lisp
+* (type-of 10.)
+(INTEGER 0 4611686018427387903)
+
+* (type-of 10.0)
+SINGLE-FLOAT
+~~~
 
 #### Floating point errors 
 
@@ -78,7 +132,8 @@ changed, to return `+infinity`. In SBCL this is:
 
 The calculation now silently continues, without an error condition. 
 
-A similar functionality exists in [CCL](https://ccl.clozure.com/):
+A similar functionality to disable floating overflow errors 
+exists in [CCL](https://ccl.clozure.com/):
 ~~~lisp
 * (set-fpu-mode :overflow nil)
 ~~~
@@ -117,45 +172,55 @@ The precision to print is set by `*PRINT-PREC*`, by default 20
 
 ### Complex types
 
-## Reading numbers
+There are 5 types of complex number: The real and imaginary parts must
+be of the same type, and can be rational, or one of the floating point
+types (short, single, double or long). 
 
-When reading floating point numbers, the default type is set by the
-special variable `*read-default-float-format*`. By default this is
-`SINGLE-FLOAT`, so if you want to ensure that a number is read as
-double precision then put a `d0` suffix at the end
-
-
-~~~lisp
-* (type-of 1.24)
-SINGLE-FLOAT
-
-* (type-of 1.24d0)
-DOUBLE-FLOAT
-~~~
-
-Other suffixes are `s` (short), `f` (single float), `d` (double
-float), `l` (long float) and `e` (default; usually single float).
-
-The default type can be changed, but note that this may break packages
-which assume `single-float` type. 
+Complex values can be created using the `#C` reader macro or the
+[complex](http://clhs.lisp.se/Body/f_comp_2.htm#complex). The reader
+macro does not allow the use of expressions as real and imaginary parts:
 
 ~~~lisp
-* (setq *read-default-float-format* 'double-float)
-* (type-of 1.24)
-DOUBLE-FLOAT
+* #C(1 1)
+#C(1 1)
+
+* #C((+ 1 2) 5)
+; Evaluation aborted on #<TYPE-ERROR expected-type: REAL datum: (+ 1 2)>.
+
+* (complex (+ 1 2) 5)
+#C(3 5)
 ~~~
 
+If constructed with mixed types then the higher precision type will be used for both parts. 
 
-Note that unlike in some languages, appending a single decimal point
-to the end of a number does not make it a float:
 ~~~lisp
-* (type-of 10.)
-(INTEGER 0 4611686018427387903)
+* (type-of #C(1 1))
+(COMPLEX (INTEGER 1 1))
 
-* (type-of 10.0)
-SINGLE-FLOAT
+* (type-of #C(1.0 1))
+(COMPLEX (SINGLE-FLOAT 1.0 1.0))
+
+* (type-of #C(1.0 1d0))
+(COMPLEX (DOUBLE-FLOAT 1.0d0 1.0d0))
 ~~~
 
+The real and imaginary parts of a complex number can be extracted using
+[realpart and imagpart](http://clhs.lisp.se/Body/f_realpa.htm):
+
+~~~lisp
+* (realpart #C(7 9))
+7
+* (imagpart #C(4.2 9.5))
+9.5
+~~~
+
+## Reading numbers from strings
+
+The [parse-integer](http://clhs.lisp.se/Body/f_parse_.htm) function reads an integer
+from a string.
+
+See the [strings section](https://lispcookbook.github.io/cl-cookbook/strings.html#converting-a-string-to-a-number)
+on converting between strings and numbers.
 
 ## Converting numbers
 
@@ -164,7 +229,8 @@ including numeric types.
 
 
 
-### Convert to rational
+
+### Convert float to rational
 
 The `rational` and `rationalize` functions convert a real numeric
 argument into a rational. `rational` assumes that floating point
@@ -172,16 +238,41 @@ arguments are exact; `rationalize` expoits the fact that floating
 point numbers are only exact to their precision, so can often find a
 simpler rational number.
 
-## Comparing numbers
+### Convert rational to integer
 
-The `=` predicate returns `T` if all arguments are numerically equal. 
+If the result of a calculation is a rational number where the numerator
+is a multiple of the denominator, then it is automatically converted
+to an integer:
+
+~~~lisp
+* (type-of (* 1/2 4))
+(INTEGER 0 4611686018427387903)
+~~~
 
 ## Rounding floating-point numbers
 
 The `ceiling`, `floor`, `round` and `truncate` functions convert
 floating point or rational numbers to integers.
 
-## Operating on a series of integers
+## Comparing numbers
+
+The `=` predicate returns `T` if all arguments are numerically equal. 
+
+
+## Operating on a series of numbers
+
+Many Common Lisp functions operate on sequences, which can be either lists
+or vectors (1D arrays). See the section on 
+[mapping](https://lispcookbook.github.io/cl-cookbook/data-structures.html#mapping-map-mapcar-remove-if-not).
+
+Operations on multidimensional arrays are discussed in 
+[this section](https://lispcookbook.github.io/cl-cookbook/arrays.html).
+
+Libraries are available for defining and operating on lazy sequences,
+including "infinite" sequences of numbers. For example 
+
+* [Clazy](https://common-lisp.net/project/clazy/) which is on QuickLisp
+* [lazy-seq](https://github.com/fredokun/lisp-lazy-seq)
 
 ## Working with Roman numerals
 
@@ -222,6 +313,10 @@ In SBCL a [Mersenne Twister](https://en.wikipedia.org/wiki/Mersenne_Twister)
 The random seed is stored in [*random-state*](http://clhs.lisp.se/Body/v_rnd_st.htm#STrandom-stateST) 
 whose internal representation is implementation dependent. 
 
+Other resources:
+
+* The [random-state](http://quickdocs.org/random-state/) package is available on QuickLisp,
+  and provides a number of portable random number generators.
 
 ## Trigonometric functions
 
@@ -238,8 +333,8 @@ and return complex numbers when this is the true result. For example:
 
 * (exp #C(0.0 0.5))
 #C(0.87758255 0.47942555)
+
+* (sin #C(1.0 1.0))
+#C(1.2984576 0.63496387)
 ~~~
 
-There are 5 types of complex number: The real and imaginary parts must
-be of the same type, and can be rational, or one of the floating point
-types (short, single, double or long). 
