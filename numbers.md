@@ -52,12 +52,24 @@ Functions which operate on or evaluate to integers include:
 * [gcd](http://clhs.lisp.se/Body/f_gcd.htm) to find the Greatest Common Denominator
 * [lcm](http://clhs.lisp.se/Body/f_lcm.htm#lcm) for the Least Common Multiple.
 
-
 ### Rational types
 
+Rational numbers of type [RATIO](http://clhs.lisp.se/Body/t_ratio.htm)
+consist of two `bignum`s, the numerator and denominator. Both can
+therefore be arbitrarily large: 
 
+~~~lisp
+* (/ (1+ (expt 2 100)) (expt 2 100))
+1267650600228229401496703205377/1267650600228229401496703205376
+~~~
+
+It is a subtype of the
+[rational](http://clhs.lisp.se/Body/t_ration.htm#rational) class,
+along with [integer](http://clhs.lisp.se/Body/t_intege.htm#integer). 
 
 ### Floating point types
+
+See [Common Lisp the Language, 2nd Edition, section 2.1.3](https://www.cs.cmu.edu/Groups/AI/html/cltl/clm/node19.html).
 
 Floating point types attempt to represent the continuous real numbers
 using a finite number of bits. This means that many real numbers
@@ -68,11 +80,23 @@ numbers then reading [What Every Computer Scientist Should Know About
 Floating-Point Arithmetic](https://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html) 
 is highly recommended.
 
+The Common Lisp standard allows for several floating point types. In
+order of increasing precision these are: `short-float`,
+`single-float`, `double-float`, and `long-float`. Their precisions are
+implementation dependent, and it is possible for an implementation to
+have only one floating point precision for all types. 
+
+The constants [short-float-epsilon, single-float-epsilon,
+double-float-epsilon and long-float-epsilon](http://clhs.lisp.se/Body/v_short_.htm) give
+a measure of the precision of the floating point types, and are
+implementation dependent. 
+
 #### Floating point literals
 
 When reading floating point numbers, the default type is set by the
-special variable `*read-default-float-format*`. By default this is
-`SINGLE-FLOAT`, so if you want to ensure that a number is read as
+special variable
+[*read-default-float-format*](http://clhs.lisp.se/Body/v_rd_def.htm).
+By default this is `SINGLE-FLOAT`, so if you want to ensure that a number is read as
 double precision then put a `d0` suffix at the end
 
 ~~~lisp
@@ -219,20 +243,33 @@ The real and imaginary parts of a complex number can be extracted using
 The [parse-integer](http://clhs.lisp.se/Body/f_parse_.htm) function reads an integer
 from a string.
 
+The [parse-float](https://github.com/soemraws/parse-float/blob/master/parse-float.lisp)
+library provides a parser which cannot evaluate arbitrary expressions,
+so should be safer to use on untrusted input:
+
+~~~lisp
+* (ql:quickload :parse-float)
+* (use-package :parse-float)
+
+* (parse-float "23.4e2" :type 'double-float)
+2340.0d0
+6
+~~~
+
 See the [strings section](https://lispcookbook.github.io/cl-cookbook/strings.html#converting-a-string-to-a-number)
 on converting between strings and numbers.
 
 ## Converting numbers
 
+Most numerical functions automatically convert types as needed.
 The `coerce` function converts objects from one type to another,
 including numeric types.
 
-
-
+See [Common Lisp the Language, 2nd Edition, section 12.6](https://www.cs.cmu.edu/Groups/AI/html/cltl/clm/node130.html)
 
 ### Convert float to rational
 
-The `rational` and `rationalize` functions convert a real numeric
+The [rational and rationalize functions](http://clhs.lisp.se/Body/f_ration.htm) convert a real numeric
 argument into a rational. `rational` assumes that floating point
 arguments are exact; `rationalize` expoits the fact that floating
 point numbers are only exact to their precision, so can often find a
@@ -249,15 +286,117 @@ to an integer:
 (INTEGER 0 4611686018427387903)
 ~~~
 
-## Rounding floating-point numbers
+## Rounding floating-point and rational numbers
 
-The `ceiling`, `floor`, `round` and `truncate` functions convert
-floating point or rational numbers to integers.
+The [ceiling, floor, round and truncate](http://www.lispworks.com/documentation/HyperSpec/Body/f_floorc.htm)
+functions convert floating point or rational numbers to integers. 
+The difference between the result and the input is returned as the
+second value, so that the input is the sum of the two outputs.
+
+~~~lisp
+* (ceiling 1.42)
+2
+-0.58000004
+
+* (floor 1.42)
+1
+0.41999996
+
+* (round 1.42)
+1
+0.41999996
+
+* (truncate 1.42)
+1
+0.41999996
+~~~
+
+There is a difference between `floor` and `truncate` for negative
+numbers:
+
+~~~lisp
+* (truncate -1.42)
+-1
+-0.41999996
+
+* (floor -1.42)
+-2
+0.58000004
+
+* (ceiling -1.42)
+-1
+-0.41999996
+~~~
+
+Similar functions `fceiling`, `ffloor`, `fround` and `ftruncate`
+return the result as floating point, of the same type as their
+argument:
+
+~~~lisp
+* (ftruncate 1.3)
+1.0
+0.29999995
+
+* (type-of (ftruncate 1.3))
+SINGLE-FLOAT
+
+* (type-of (ftruncate 1.3d0))
+DOUBLE-FLOAT
+~~~
 
 ## Comparing numbers
 
-The `=` predicate returns `T` if all arguments are numerically equal. 
+See [Common Lisp the Language, 2nd Edition, Section 12.3](https://www.cs.cmu.edu/Groups/AI/html/cltl/clm/node124.html).
 
+The `=` predicate returns `T` if all arguments are numerically equal. 
+Note that comparison of floating point numbers includes some margin
+for error, due to the fact that they cannot represent all real
+numbers and accumulate errors. 
+
+The constant
+[single-float-epsilon](http://clhs.lisp.se/Body/v_short_.htm) is the
+smallest number which will cause an `=` comparison to fail, if it is
+added to 1.0:
+
+~~~lisp
+* (= (+ 1s0 5e-8) 1s0)
+T
+* (= (+ 1s0 6e-8) 1s0)
+NIL
+~~~
+
+Note that this does not mean that a `single-float` is always precise
+to within `6e-8`:
+
+~~~lisp
+* (= (+ 10s0 4e-7) 10s0)
+T
+* (= (+ 10s0 5e-7) 10s0)
+NIL
+~~~
+
+Instead this means that `single-float` is precise to approximately
+seven digits. If a sequence of calculations are performed, then error
+can accumulate and a larger error margin may be needed. In this case
+the absolute difference can be compared:
+
+~~~lisp
+* (< (abs (- (+ 10s0 5e-7) 
+             10s0))
+     1s-6)
+T
+~~~
+
+When comparing numbers with `=` mixed types are allowed. To test both
+numerical value and type use `eql`:
+
+~~~lisp
+* (= 3 3.0)
+T
+
+* (eql 3 3.0)
+NIL
+~~~
 
 ## Operating on a series of numbers
 
@@ -272,7 +411,11 @@ Libraries are available for defining and operating on lazy sequences,
 including "infinite" sequences of numbers. For example 
 
 * [Clazy](https://common-lisp.net/project/clazy/) which is on QuickLisp
-* [lazy-seq](https://github.com/fredokun/lisp-lazy-seq)
+* [folio2](https://github.com/mikelevins/folio2) on
+  QuickLisp. Includes an interface to the
+  [Series](https://github.com/tokenrove/series/wiki/Documentation)
+  package for efficient sequences.
+* [lazy-seq](https://github.com/fredokun/lisp-lazy-seq) 
 
 ## Working with Roman numerals
 
@@ -286,7 +429,6 @@ The `format` function can convert numbers to roman numerals with the
 
 There is a [gist by tormaroe](https://gist.github.com/tormaroe/90ddd9dc7cc191040be4) for
 reading roman numerals.
-
 
 ## Generating random numbers
 
@@ -311,16 +453,32 @@ In SBCL a [Mersenne Twister](https://en.wikipedia.org/wiki/Mersenne_Twister)
 [7.13 of the SBCL manual](http://www.sbcl.org/manual/#Random-Number-Generation) for details.
  
 The random seed is stored in [*random-state*](http://clhs.lisp.se/Body/v_rnd_st.htm#STrandom-stateST) 
-whose internal representation is implementation dependent. 
+whose internal representation is implementation dependent. The
+function [make-random-state](http://clhs.lisp.se/Body/f_mk_rnd.htm)
+can be used to make new random states, or copy existing states. 
+
+To use the same set of random numbers multiple times, 
+`(make-random-state nil)` makes a copy of the current `*random-state*`:
+
+~~~lisp
+* (dotimes (i 3)
+    (let ((*random-state* (make-random-state nil)))
+      (format t "~a~%" 
+              (loop for i from 0 below 10 collecting (random 10)))))
+              
+(8 3 9 2 1 8 0 0 4 1)
+(8 3 9 2 1 8 0 0 4 1)
+(8 3 9 2 1 8 0 0 4 1)
+~~~
+
+This generates 10 random numbers in a loop, but each time the sequence
+is the same because the `*random-state*` special variable is dynamically
+bound to a copy of its state before the `let` form.
 
 Other resources:
 
 * The [random-state](http://quickdocs.org/random-state/) package is available on QuickLisp,
   and provides a number of portable random number generators.
-
-## Trigonometric functions
-
-## Taking logarithms
 
 ## Using complex numbers
 
