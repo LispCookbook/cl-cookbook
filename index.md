@@ -17,6 +17,7 @@ title: Home
 * [Editor support](editor-support.html)
 * [Data Structures](data-structures.html)
 * [Strings](strings.html)
+* [Numbers](numbers.html)
 * [Multidimensional Arrays](arrays.html)
 * [Dates and Times](dates_and_times.html)
 * [Pattern Matching](pattern_matching.html)
