@@ -17,7 +17,7 @@ Many functions will come from uiop, so we suggest you have a look directly at it
 
 Of course, do not miss:
 
-* http://gigamonkeys.com/book/files-and-file-io.htmls
+* [Files and File I/O in Practical Common Lisp](http://gigamonkeys.com/book/files-and-file-io.html)
 
 
 ### Testing whether a file exists
