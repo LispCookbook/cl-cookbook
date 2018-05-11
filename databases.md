@@ -684,6 +684,51 @@ Options:
     --dry-run                       List SQL expressions to migrate
 ~~~
 
+## Introspection
+
+Mito provides some functions for introspection.
+
+We can access the information of **columns** with the functions in
+`(mito.class.column:...)`:
+
+- `table-column-[class, name, info, not-null-p,...]`
+- `primary-key-p`
+
+and likewise for **tables** with `(mito.class.table:...)`.
+
+Given we get a list of slots of our class:
+
+~~~lisp
+(ql:quickload "closer-mop")
+
+(closer-mop:class-direct-slots (find-class 'user))
+;; (#<MITO.DAO.COLUMN:DAO-TABLE-COLUMN-CLASS NAME>
+;;  #<MITO.DAO.COLUMN:DAO-TABLE-COLUMN-CLASS EMAIL>)
+
+(defparameter user-slots *)
+~~~
+
+We can answer the following questions:
+
+### What is the type of this column ?
+
+~~~lisp
+(mito.class.column:table-column-type (first user-slots))
+;; (:VARCHAR 64)
+~~~
+
+### Is this column nullable ?
+
+~~~lisp
+(mito.class.column:table-column-not-null-p
+  (first user-slots))
+;; T
+(mito.class.column:table-column-not-null-p
+  (second user-slots))
+;; NIL
+~~~
+
+
 ## Testing
 
 We don't want to test DB operations against the production one. We
