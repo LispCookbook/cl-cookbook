@@ -242,6 +242,86 @@ Now you can create or retrieve a `TWEET` by a `USER` object, not a `USER-ID`.
 
 Mito doesn't add foreign key constraints for refering tables.
 
+#### One-to-one
+
+A one-to-one relationship is simply represented with a simple foreign
+key on a slot (as `:col-type user` in the `tweet` class). Besides, we
+can add a unicity constraint, as with `(:unique-keys email)`.
+
+#### One-to-many, many-to-one
+
+The tweet example above shows a one-to-many relationship between a user and
+his tweets: a user can write many tweets, and a tweet belongs to only
+one user.
+
+The relationship is defined with a foreign key on the "many" side
+linking back to the "one" side. Here the `tweet` class defines a
+`user` foreign key, so a tweet can only have one user. You didn't need
+to edit the `user` class.
+
+A many-to-one relationship is actually the contraty of a one-to-many.
+You have to put the foreign key on the approriate side.
+
+#### Many-to-many
+
+A many-to-many relationship needs an intermediate table, which will be
+the "many" side for the two tables it is the intermediary of.
+
+And, thanks to the join table, we can store more information about the relationship.
+
+Let's define a `book` class:
+
+~~~lisp
+(defclass book ()
+    ((title
+       :col-type (:varchar 128)
+       :initarg :title
+       :accessor title)
+     (ean
+       :col-type (or (:varchar 128) :null)
+       :initarg :ean
+       :accessor ean))
+    (:metaclass mito:dao-table-class))
+~~~
+
+A user can have many books, and a book (as the title, not the physical
+copy) is likely to be in many people's library. Here's the
+intermediate class:
+
+~~~lisp
+(defclass user-books ()
+    ((user
+      :col-type user
+      :initarg :user)
+    (book
+      :col-type book
+      :initarg :book))
+    (:metaclass mito:dao-table-class))
+~~~
+
+Each time we want to add a book to a user's collection (say in
+a `add-book` function), we create a new `user-books` object.
+
+But someone may very well own many copies of one book. This is an
+information we can store in the join table:
+
+~~~lisp
+(defclass user-books ()
+    ((user
+      :col-type user
+      :initarg :user)
+    (book
+      :col-type book
+      :initarg :book)
+    ;; Set the quantity, 1 by default:
+    (quantity
+      :col-type :integer
+      :initarg :quantity
+      :initform 1
+      :accessor quantity))
+    (:metaclass mito:dao-table-class))
+~~~
+
 
 ### Inheritance and mixin
 
