@@ -43,6 +43,7 @@ Other resources:
 
 - the [CLOS Meta Object Protocol specifications](https://clos-mop.hexstreamsoft.com/)
 - [A Guide to CLOS](http://www.aiai.ed.ac.uk/~jeff/clos-guide.html) by Jeff Dalton
+- the book [Object-Oriented Programming in Common Lisp: a Programmer's Guide to CLOS](http://www.communitypicks.com/r/lisp/s/17592186046723-object-oriented-programming-in-common-lisp-a-programmer)
 
 
 ## 2. Background
