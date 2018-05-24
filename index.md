@@ -37,6 +37,7 @@ title: Home
 * [Using the Win32 API](win32.html)
 * [Scripting. Building executables](scripting.html)
 * [Testing and Continuous Integration](testing.html)
+* [Databases](databases.html)
 * [Web Scraping](web-scraping.html)
 * [Experimental CL21](cl21.html)
 * [Miscellaneous](misc.html)
