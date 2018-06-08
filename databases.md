@@ -818,6 +818,18 @@ The macro below creates a temporary DB with a random name, creates the
 tables, runs the code and connects back to the original DB connection.
 
 ~~~lisp
+(defpackage my-test.utils
+  (:use :cl)
+  (:import-from :my.models
+                :*db*
+                :*db-name*
+                :connect
+                :ensure-tables-exist
+                :migrate-all)
+  (:export :with-empty-db))
+
+(in-package my-test.utils)
+
 (defun random-string (length)
   ;; thanks 40ants/hacrm.
   (let ((chars "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"))
@@ -826,21 +838,25 @@ tables, runs the code and connects back to the original DB connection.
             'string)))
 
 (defmacro with-empty-db (&body body)
-  "Run `body` with a new temporary DB.
-  "
+  "Run `body` with a new temporary DB."
   `(let* ((*random-state* (make-random-state t))
           (prefix (concatenate 'string
                                (random-string 8)
                                "/"))
-          (connection mito:*connection*))
+          ;; *db* is your db connection, may be nil but a bound variable.
+          (connection *db*))
      (uiop:with-temporary-file (:pathname name :prefix prefix)
-       (let* ((*db-name* name)
-              (*db* (connect)))
-         (ensure-tables-exist)
-         (migrate-all)
-         ,@body
-         (setf mito:*connection* connection)
-         (connect)))))
+       (let* ((*db-name* name))
+         (connect)
+         ;; catch anything to always re-connect to our real db.
+         (handler-case
+             (progn
+               (ensure-tables-exist)
+               (migrate-all)
+               ,@body)
+           (t () nil))
+
+         (setf mito.connection:*connection* connection)))))
 ~~~
 
 Use it like this:
