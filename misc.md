@@ -87,7 +87,7 @@ However, sometimes it looks like you can't avoid creating new data. Consider a h
 
 ~~~lisp
 (gethash (subseq original-string from to)
-         has-table)
+         hash-table)
 ~~~
 
 But you don't have to. You can create _one_ [displaced](http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_d.htm#displaced_array) string and reuse it multiple times with [`adjust-array`](http://www.lispworks.com/documentation/HyperSpec/Body/f_adjust.htm):
