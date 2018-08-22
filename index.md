@@ -31,6 +31,7 @@ title: Home
 * [Macros and Backquote](macros.html)
 * [CLOS (the Common Lisp Object System)](clos.html)
 * [Type System](type.html)
+* [Sockets](sockets.html)
 * [Interfacing with your OS](os.html)
 * [Foreign Function Interfaces](ffi.html)
 * [Threads](process.html)
