@@ -46,7 +46,7 @@ title: Home
 
 * [lisp-lang.org](http://lisp-lang.org/)
 * The [Awesome-cl](https://github.com/CodyReichert/awesome-cl) list
-* [The Common Lisp HyperSpec](http://www.lispworks.com/documentation/HyperSpec/Front/index.htm) by Kent M. Pitman
+* [The Common Lisp HyperSpec](http://www.lispworks.com/documentation/HyperSpec/Front/index.htm) by Kent M. Pitman (also available in [Dash](https://kapeli.com/dash), [Zeal](https://zealdocs.org/) and [Velocity](https://velocity.silverlakesoftware.com/))
 * [The Common Lisp UltraSpec](http://phoe.tymoon.eu/clus/doku.php)
 * [Practical Common Lisp](http://www.gigamonkeys.com/book/) by Peter Seibel
 * [Common Lisp Recipes](http://weitz.de/cl-recipes/) by Edmund Weitz, published in 2016,
