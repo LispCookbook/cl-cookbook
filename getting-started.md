@@ -377,6 +377,11 @@ You might want to set SBCL's default encoding format to utf-8:
 
 You can add this to your `~/.sbclrc`.
 
+If you dislike the REPL to print all symbols upcase, add this:
+
+    (setf *print-case* :downcase)
+
+
 ## Read more
 
 * Source code organization, libraries and packages:  [https://lispmethods.com/libraries.html](https://lispmethods.com/libraries.html)
