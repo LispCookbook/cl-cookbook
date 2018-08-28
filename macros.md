@@ -429,3 +429,16 @@ In some Lisp implementations, read-eval-print loops routinely print results usin
 I leave the definition of `find-nth-occurrence` as an exercise. You might also want to define a command that just sets and prints the current form: <code>(cf <em>e</em>)</code>.
 
 One caution: In general, command languages will consist of a mixture of macros and functions, with convenience for their definer (and usually sole user) being the main consideration. If a command seems to "want" to evaluate some of its arguments sometimes, you have to decide whether to define two (or more) versions of it, or just one, a function whose arguments must be quoted to prevent their being evaluated. For the `cf` command mentioned in the prevous paragraph, some users might prefer `cf` to be a function, some a macro.
+
+
+## Screencast
+
+The following video, from the serie
+["Little bits of Lisp"](https://www.youtube.com/user/CBaggers/playlists)
+by [cbaggers](https://github.com/cbaggers/), is a two hours long talk
+on macros, showing simple to advanced concepts such as compiler
+macros:
+[https://www.youtube.com/watch?v=ygKXeLKhiTI](https://www.youtube.com/watch?v=ygKXeLKhiTI)
+It also shows how to manipulate macros (and their expansion) in Emacs.
+
+[![video](http://img.youtube.com/vi/ygKXeLKhiTI/0.jpg)](https://www.youtube.com/watch?v=ygKXeLKhiTI)
