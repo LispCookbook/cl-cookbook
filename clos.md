@@ -2,212 +2,108 @@
 title: Fundamentals of CLOS
 ---
 
-[Ravenbrook](http://www.ravenbrook.com/) / [ILC 2003](http://www.international-lisp-conference.org/)
 
-[Nick Levine](mailto:ndl@ravenbrook.com), [Ravenbrook Limited](http://www.ravenbrook.com/), 2003-07-15
+# Introduction
 
+*CLOS* is the "Common Lisp Object System". The functionality belonging to
+this name was added to the Common Lisp language between the publication of
+Steele's first edition of "Common Lisp, the Language" in 1984 and the
+formalization of the language as an ANSI standard ten years later.
 
-## 1. Introduction
+<!-- todo -->
 
-This document was written for presentation during a tutorial session at the
-[International Lisp Conference](http://www.international-lisp-conference.org/)
-held in New York City in October 2003.
+Features:
 
-The intended audience for the tutorial is anybody with a basic
-knowledge of lisp or scheme, who wants to know something about how to
-use the "Common Lisp Object System" (CLOS). However, in an attempt to
-provide something for everyone, the tutorial will cover:
-
-* an introduction to the 10% of CLOS which you need to get you
-through 90% of use cases;
-* a number of opinionated statements, for instance about the
-differences between CLOS and other object systems;
-* a brief look "under the hood" at how some of the more dynamic
-features of CLOS might be implemented;
-* some exercises.
-
-The [author](http://www.nicklevine.org/) worked on the LispWorks project at
-Harlequin for ten years. Since then he has [taught
-lisp](http://www.nicklevine.org/declarative/lectures/) to undergraduates and
-written an [open-source search engine](http://www.nicklevine.org/FastIndex/).
+* polymorphism, generic dispatch
+* live manipulation: changing a class also changes its current
+  instances. For example, adding a slot will add it to the existing
+  objects. Mechanism we can control (MOP).
+* excellent introspection
+* MOP
 
 The examples in this tutorial are available in a separate file
 [examples.lisp](assets/clos/examples.lisp). I hope to use the code in
 [present.lisp](assets/clos/present.lisp) to squirt them into a lisp
 listener during the tutorial.
 
-This document is not confidential. Original version is available at
-[http://www.nicklevine.org/ilc2003/](http://www.nicklevine.org/ilc2003/).
+You can learn more about CLOS in those resources:
 
-Other resources:
-
-- the [CLOS Meta Object Protocol specifications](https://clos-mop.hexstreamsoft.com/)
 - [A Guide to CLOS](http://www.aiai.ed.ac.uk/~jeff/clos-guide.html) by Jeff Dalton
 - the book [Object-Oriented Programming in Common Lisp: a Programmer's Guide to CLOS](http://www.communitypicks.com/r/lisp/s/17592186046723-object-oriented-programming-in-common-lisp-a-programmer)
+- the book "the Art of the Metaobject Protocol", by Gregor Kiczales, Jim des Rivières et al.
+- the [CLOS Meta Object Protocol specifications](https://clos-mop.hexstreamsoft.com/)
 
 
-## 2. Background
+#  Classes and instances
 
-<cite>CLOS</cite> (either one syllable rhyming with "dross", or two syllables as in
-"see-loss") is the "Common Lisp Object System". The functionality belonging to
-this name was added to the Common Lisp language between the publication of
-Steele's first edition of "Common Lisp, the Language" in 1984 and the
-formalization of the language as an ANSI standard ten years later.
+### Diving in
 
-The source material for CLOS was a report written in three chapters. The first
-two, consisting of "Programmer Interface Concepts" and "Functions in the
-Programmer Interface", will now be found as the two halves of chapter 28 in
-[Steele 1990] and were the basis for relevant parts of the ANSI
-specification when it later appeared. The third chapter, on the Metaobject
-protocol, was regarded (by its authors, I believe) as incomplete and never
-published.
-
-This tutorial is also incomplete, but in a different sense: I have deliberately
-omitted as much as I could. CLOS offers many alternate styles of working, as
-well as - in some considerable detail - a number of opportunities for
-applications to extend and reconfigure CLOS itself. (Some of this detail will
-be covered in the following tutorial, on the "Metaobject Protocol".) The
-intention of this tutorial is to provide a sufficient grounding in the (say)
-10% of CLOS which covers 90% of use cases - enough to get a novice off the
-ground. We will access this 10% by examining in some (but not full!) detail two
-defining macros: [`defclass`] [section-3] and [`defmethod`] [section-4].
-
-As to what an <cite>object system</cite> is: I can only say that by the end of
-this tutorial you should have some idea of what CLOS has to offer. (Is it just
-a collection of 33 functions, 8 macros and some interesting new types? Or is it
-something more profound?) Historically, and implementationally, all the
-concepts here are strongly related. However, when you come to use them yourself
-you'll find that in an application the relation is not so strong, and you can
-pick and choose what's useful to you and leave alone what isn't.
-
-
-### 2.1. References
-
-These are listed in [appendix A][section-A] at the end of this document. [Keene
-1989] is a very easy introduction and more thorough than the single chapter in
-[Graham 1995], but it will obviously take you longer to read. [Steele 1990,
-otherwise known as "CLtl2"] is a handy reference guide, but do take a little
-care because it predates the ANSI specification - for which see the "hyperspec"
-[Pitman 1996] - and differs in some important respects (for a list of which see
-the end of appendix C in [Graham 1995). A (note: not "the") metaobject protocol,
-described in [Kiczales et al 1991, otherwise known as "AMOP"], gives many hints
-about configuration and implementation.
-
-
-
-### 2.2. Getting started
-
-Theoretically this should not be an issue in any fully enabled Common Lisp,
-    because CLOS is part of the language. However, some implementations might
-    expect you to `(require "clos")` or similar. Check your manual.
-
-Most of the examples in this tutorial should work fine in any package which
-    "uses" `COMMON-LISP`, and they should port to any conforming implementation.
-    The exceptions are marked as such. I have tested the examples in LispWorks
-    (version 4.2.7, used to generate all the examples below) and Allegro CL
-    (version 6.2).
-
-
-## 3. Classes and instances
-
-### 3.1. Review - the non-OO approach
-
-Before we introduce the first of our two defining macros, let's review its non
-    object-oriented equivalent: `defstruct`. The language provides you with a
-    number of specialized data types (`cons`, `string`, `hash-table`, etc.)
-    along with this mechanism for defining your own structures. An example:
+Let's dive in with an example showing class definition, creation of
+objects, slot access, methods specialized for a given class, and
+inheritance.
 
 ~~~lisp
-(defstruct point
-  x
-  y
-  z)
+(defclass person ()
+  ((name
+    :initarg :name
+    :accessor name)
+   (lisper
+    :initform nil
+    :accessor lisper)))
+
+;; => #<STANDARD-CLASS PERSON>
+
+(defvar p1 (make-instance 'person :name "me" ))
+;;                                 ^^^^ initarg
+;; => #<PERSON {1006234593}>
+
+(name p1)
+;;^^^ accessor
+;; => "me"
+
+(lisper p1)
+;; => nil
+;;    ^^ initform
+
+(setf (lisper p1) t)
 ~~~
 
-The form is roughly equivalent to a struct declaration in C. It
-    defines a new type, called `point`, with three
-    <cite>slots</cite> (or <cite>fields</cite> if that's a word you're
-    happier with) called `x`, `y` and
-    `z`.
+We create objects with `make-instance`, and we can give values to the `:initarg`s:
 
-Compactly, the above invocation of `defstruct` gives us
-    all of the following:
+And we access the *slots* values with the `accessors`:
 
-*   A <cite>constructor</cite> function `make-point`,
-    which takes keyword arguments `:x` `:y` and
-    `:z` (all defaulting to `nil` if not
-    supplied). Every time you call this function a new `point`
-    is allocated and returned.
 
-*   Any object returned by `make-point` will be of type
-    `point`, and will respond enthusiastically to the
-    <cite>predicate</cite> `point-p`.
+An `:iniform` is a default value:
 
-*   Setfable <cite>accessors</cite> `point-x`,
-    `point-y` and `point-z` can be used to read and
-    modify the slots of any `point` object.
 
-*    A shallow <cite>copier</cite>,
-    `copy-point`.
+Accessors are `setf`-able:
 
-Structures can have any number of slots, from zero up (to some
-    implementation-defined limit, e.g. 254 in LispWorks for Windows) and -
-    as with lists and general vectors - the slots can hold any values.
 
-In this example, **note** the form in which structures
-    are printed by default, and which can be parsed by the lisp
-    reader.
-
+And we create methods for the class `person`
 
 ~~~lisp
-CL-USER 1 > (defstruct point
-              x
-              y
-              z)
-POINT
-
-CL-USER 2 > (defun distance-from-origin (point)
-              (let* ((x (point-x point))
-                     (y (point-y point))
-                     (z (point-z point)))
-                (sqrt (+ (* x x) (* y y) (* z z)))))
-DISTANCE-FROM-ORIGIN
-
-CL-USER 3 > (defun reflect-in-y-axis (point)
-              (setf (point-y point)
-                    (- (point-y point))))
-REFLECT-IN-Y-AXIS
-
-CL-USER 4 > (setf my-point (make-point :x 3 :y 4 :z 12))
-#S(POINT X 3 Y 4 Z 12)
-
-CL-USER 5 > (type-of my-point)
-POINT
-
-CL-USER 6 > (distance-from-origin my-point)
-13.0
-
-CL-USER 7 > (reflect-in-y-axis my-point)
--4
-
-CL-USER 8 > my-point
-#S(POINT X 3 Y -4 Z 12)
-
-CL-USER 9 > (setf a-similar-point #s(point :x 3 :y -4 :z 12))
-#S(POINT X 3 Y -4 Z 12)
-
-CL-USER 10 > (equal my-point a-similar-point)
-NIL
-
-CL-USER 11 > (equalp my-point a-similar-point)
-T
-
-CL-USER 12 >
+(defmethod babyp ((obj person))
+   (< (age obj) 3))
+;; STYLE-WARNING: Implicitly creating new generic function COMMON-LISP-USER::BABYP.
+;; #<STANDARD-METHOD BABYP (PERSON) {1006514AC3}>
 ~~~
 
-**Note** that `defstruct` has a number of
-    options (which we won't cover here), for describing inheritance,
-    printing behaviour, slot types and defaults, and so on.
+<!-- We *specialize* the generic method `print-object` to pretty-print our `person` objects: -->
+
+<!-- ~~~lisp -->
+<!-- (defmethod print-object ((obj person) stream) -->
+<!--    (print-unreadable-object (obj stream :type t) -->
+<!--      (format stream "name: ~a" (slot-value obj 'name)))) -->
+<!-- #<STANDARD-METHOD PRINT-OBJECT (PERSON T) {1006BB64B3}> -->
+<!-- ~~~ -->
+
+<!-- ~~~lisp -->
+<!-- p1 -->
+<!-- #<PERSON name: me> -->
+<!-- ~~~ -->
+
+
+You're ready to go !
 
 
 ### 3.2. Introducing the macro `defclass`
@@ -306,21 +202,6 @@ CL-USER 20 >
     `progn`. Lexically during the evaluation of the body, an
     access to any of these names as a variable is equivalent to accessing
     the corresponding slot of the CLOS instance.
-
-**Exercise:** Rewrite `set-point-values`
-    using `with-slots`.
-
-**Exercise:** Use `symbol-macrolet` to
-    implement `with-slots`. Note that each name listed in the
-    first argument to `symbol-macrolet` can be replaced by the
-    pair <cite>(variable-name slot-name)</cite>.
-
-**Exercise:** Write a macro `defclass-plus`
-    which expands into a `defclass` plus some or all of the
-    following, in the spirit of `defstruct`: constructor,
-    predicate, accessors and copier. This may get tedious, in which case
-    convince yourself that you know what you're doing and then stop.
-
 
 
 ### 3.3. Classes are instances too
@@ -1056,7 +937,7 @@ Revalidation is a laborious process, but the general plan is clear
     through dynamic redefinition, and lazy modification, all at a low
     overhead.
 
-## 4. Methods
+# Methods
 
 
 ### 4.1. Review - the non-OO approach
@@ -1784,25 +1665,7 @@ The assumption behind the fast-lookup cache is that any given call
     modified to take account of `eql` methods?
 
 
-## A. References
-
-
-[Graham 1995]
-: "ANSI Common Lisp"; [Paul Graham](mailto:pg@paulgraham.com); Prentice Hall; 1995; ISBN 0133708756. See [http://www.paulgraham.com/acl.html](http://www.paulgraham.com/acl.html)
-
-[Keene 1989]
-: "Object-Oriented Programming in Common Lisp"; Sonya E. Keene; Addison-Wesley; 1989; ISBN 0201175894.
-
-[Kiczales et al 1991]
-: "The Art of the Metaobject Protocol"; Gregor Kiczales, Jim des Rivi&egrave;res, Daniel G. Bobrow; MIT Press; 1991; ISBN 0262610744.
-
-[Pitman 1996]
-: "The Common Lisp Hyperspec"; [Kent M. Pitman](mailto:pitman@nhplace.com) (editor); 1996. Available online at [http://www.lispworks.com/reference/HyperSpec/Front/index.htm](http://www.lispworks.com/reference/HyperSpec/Front/index.htm)
-
-[Steele 1990]
-: "Common Lisp the Language, 2nd edition"; Guy L. Steele Jr.; Digital Press; 1990; ISBN 1555580416. Available online at [http://www-2.cs.cmu.edu/Groups/AI/html/cltl/cltl2.html](http://www-2.cs.cmu.edu/Groups/AI/html/cltl/cltl2.html)
-
-## B. Partial class hierarchy
+# Partial class hierarchy
 
 | <a id="figure-6" name="figure-6">![Partial class hierarchy.](assets/clos/images/fig-6.gif) |
 | Figure 6. Partial class hierarchy. The arrows denote the <cite>superclass</cite> relationship. All classes are instances of `standard-class`, apart from `t` and `function` which are instances of `built-in-class` and `generic-function` which is an instance of `funcallable-standard-class.` |
