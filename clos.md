@@ -29,7 +29,7 @@ listener during the tutorial.
 You can learn more about CLOS in those resources:
 
 - [A Guide to CLOS](http://www.aiai.ed.ac.uk/~jeff/clos-guide.html) by Jeff Dalton
-- the book [Object-Oriented Programming in Common Lisp: a Programmer's Guide to CLOS](http://www.communitypicks.com/r/lisp/s/17592186046723-object-oriented-programming-in-common-lisp-a-programmer)
+- the book [Object-Oriented Programming in Common Lisp: a Programmer's Guide to CLOS](http://www.communitypicks.com/r/lisp/s/17592186046723-object-oriented-programming-in-common-lisp-a-programmer), Keene
 - the book "the Art of the Metaobject Protocol", by Gregor Kiczales, Jim des Rivières et al.
 - the [CLOS Meta Object Protocol specifications](https://clos-mop.hexstreamsoft.com/)
 
@@ -63,9 +63,30 @@ inheritance.
 
 (lisper p1)
 ;; => nil
-;;    ^^ initform
+;;    ^^ initform (slot unbound by default)
 
 (setf (lisper p1) t)
+
+(defmethod greet (obj)
+  (format t "Hello ~a !~&" (name obj)))
+;; style-warning: Implicitly creating new generic function common-lisp-user::greet.
+;; #<STANDARD-METHOD GREET (t) {1008EE4603}>
+
+(greet p1) ;; => "Hello me !"
+
+(defclass child (person)
+  ())
+;; #<STANDARD-CLASS CHILD>
+
+(defmethod greet ((obj child))
+  (format t "ur so cute"))
+;; #<STANDARD-METHOD GREET (CHILD) {1008F3C1C3}>
+
+(defvar c1 (make-instance 'child :name "Alice"))
+
+(greet c1)
+;; ur so cute
+;; nil
 ~~~
 
 We create objects with `make-instance`, and we can give values to the `:initarg`s:
@@ -106,105 +127,215 @@ And we create methods for the class `person`
 You're ready to go !
 
 
-### 3.2. Introducing the macro `defclass`
+### Defining classes - `defclass`
 
-The macro used for defining new data types in CLOS is
-    `defclass`. An example:
+The macro used for defining new data types in CLOS is `defclass`.
+
+We used it like this:
+
+~~~lisp
+(defclass person ()
+  ((name
+    :initarg :name
+    :accessor name)
+   (lisper
+    :initform nil
+    :accessor lisper)))
+~~~
+
+This gives us a CLOS type (or class) called `person` and two slots,
+named `name` and `lisper`.
+
+TODO: move in "predicates" ?
+
+~~~lisp
+(class-of p1)
+#<STANDARD-CLASS PERSON>
+
+(type-of p1)
+PERSON
+~~~
+
+
+The general form of `defclass` is:
+
+```
+(defclass <class-name> (list of super classes)
+  ((slot-1
+     :slot-option slot-argument)
+   (slot-2, etc))
+  (:optional-class-option
+   :another-optional-class-option))
+```
+
+So, our `person` class doesn't explicitely inherit from another class
+(it gets the empty parentheses `()`). However it still inherits by default from
+the class `t` and from `standard-object`. See below under
+"inheritance".
+
+We could write a minimal class definition without slots options like this:
 
 ~~~lisp
 (defclass point ()
-  (x
-   y
-   z))
+  (x y z))
 ~~~
 
-**Note** but ignore the empty parentheses for
-    now. **Note** also the parentheses around the set of slot
-    names (unlike `defstruct`). The above invocation gives us
-    the following (and no more):
+or even without slots specificiers: `(defclass point () ())`.
 
-*    A CLOS type (or <cite>class</cite>) named `point`.
-*   Three slots in this class, again named `x`,
-    `y` and `z`.
+## Creating objects - make-instance
 
-**Note** that - unlike `defstruct` above -
-    `defclass` gives us <u>none</u> of the following:
-    constructor, predicate, accessors (unless we ask for them explicitly -
-    see [section 3.5][section-35] below), copier,
-    `#s` `print` / `read` syntax. You can
-    generate similar functionality in CLOS, but it doesn't come
-    automatically the way it did with structures. Quite often, you'll find
-    that you don't need the power of CLOS and that `defstruct`
-    is more than enough to meet your needs, not to mention being more
-    convenient. When I'm writing an application, I typically start by
-    defining my types with `defstruct`, and only change them to
-    `defclass` when it becomes necessary to do so.
-
-**Note** next that if a type has previously been
-    defined as a structure, then you can't redefine it as a class. (On the
-    other hand, "the consequences of redefining a defstruct structure are
-    undefined" so we shouldn't feel we're losing out.) We'll sneak around
-    that in this session by `unintern`ing the name of the old
-    type:
+We create instances of a class with `make-instance`:
 
 ~~~lisp
-CL-USER 12 > (unintern 'point)
-T
-
-CL-USER 13 > (defclass point ()
-               (x
-                y
-                z))
-#<STANDARD-CLASS POINT 2060C12C>
-
-CL-USER 14 > (setf my-point (make-instance 'point))
-#<POINT 205FA53C>
-
-CL-USER 15 > (type-of my-point)
-POINT
-
-CL-USER 16 > (defun set-point-values (point x y z)
-               (setf (slot-value point 'x) x
-                     (slot-value point 'y) y
-                     (slot-value point 'z) z))
-SET-POINT-VALUES
-
-CL-USER 17 > (set-point-values my-point 3 4 12)
-12
-
-CL-USER 18 > (defun distance-from-origin (point)
-               (with-slots (x y z)
-                   point
-                 (sqrt (+ (* x x) (* y y) (* z z)))))
-DISTANCE-FROM-ORIGIN
-
-CL-USER 19 > (distance-from-origin my-point)
-13.0
-
-CL-USER 20 >
+(defvar p1 (make-instance 'person :name "me" ))
 ~~~
 
-**Note** the following:
+It is generally good practice to define a constructor:
 
-*   The use of `make-instance` to allocate an
-    <cite>instance</cite> of our new class.
+~~~lisp
+(defun make-person (name &key lisper)
+  (make-instance 'person :name name :lisper lisper))
+~~~
 
-*   The "unreadable" printed representation of
-    `my-point` in line 14.
+This has the direct advantage that you can control the required
+arguments. You should now export the constructor from your package and
+not the class itself.
 
-*   The setfable function `slot-value` used to access
-    values in an instance's slots.
+## Slots
 
-*   The macro `with-slots`, for abbreviating calls to
-    `slot-value`. The first argument is a list of slot
-    names. The second argument evaluates to a CLOS instance; this is
-    followed by optional declarations and an implicit
-    `progn`. Lexically during the evaluation of the body, an
-    access to any of these names as a variable is equivalent to accessing
-    the corresponding slot of the CLOS instance.
+### A method that always works - slot-value
+
+First of all: the default method to access any slot is `slot-value <object> <slot-name>`.
+
+Given our `point` class above:
+
+
+```
+(defvar pt (make-instance 'point))
+
+(inspect pt)
+
+The object is a STANDARD-OBJECT of type POINT.
+0. X: "unbound"
+1. Y: "unbound"
+2. Z: "unbound"
+```
+
+We got an object of type `POINT`, but **slots are unbound by
+default**: trying to access them will raise an `UNBOUND-SLOT`
+condition:
+
+    (slot-value pt 'x) ;; => condition: the slot is unbound
+
+
+`slot-value` is `setf`-able:
+
+    (setf (slot-value pt 'x) 1)
+    (slot-value pt 'x) ;; => 1
+
+
+TODO: with-accessors
+
+
+### Initial value (initarg, initform)
+
+- `:initarg :foo` is the keyword we can pass to `make-instance` to
+  give a value to this slot:
+
+~~~lisp
+(make-instance 'person :name "me")
+~~~
+
+(again: slots are unbound by default)
+
+- `:initform <val>` is the *default value* in case we didn't specify an initarg.
+
+
+### Getters and setters (:accessor :reader :writter)
+
+- `:accessor foo`: an accessor is both a **getter** and a
+  **setter**. Its argument is a name that will become a *generic
+  function*.
+
+~~~lisp
+(name p1) ;; => "me"
+
+(type-of #'name)
+STANDARD-GENERIC-FUNCTION
+~~~
+
+- `:reader` and `:setter` do what you expect.
+
+If you don't specify any of these, you can use `slot-value`.
+
+The keywords`:accessor`, `:reader` and `:initarg` may appear
+more than once for each slot, if you like.
+
+
+We introduce two macros to access slots.
+
+`with-slots` allows to abbreviate several calls to slot-value. The
+first argument is a list of slot names. The second argument evaluates
+to a CLOS instance; this is followed by optional declarations and an
+implicit `progn`. Lexically during the evaluation of the body, an
+access to any of these names as a variable is equivalent to accessing
+the corresponding slot of the CLOS instance.
+
+
+~~~lisp
+(defun distance-from-origin (point)
+    (with-slots (x y z)
+        point
+      (sqrt (+ (* x x) (* y y) (* z z)))))
+~~~
+
+
+TODO: with-accessors
+
+~~~lisp
+(with-accessors ((daft-x daft-x)
+                         (daft-y daft-y))
+            daft-point
+          (format stream "x: ~a, y: ~a" daft-x daft-y))))
+~~~
+
+### Class VS instance slots
+
+TODO example
+
+- `:allocation` specifies whether this slot is *local* or *shared*.
+
+* local means it can be different for each instance of the class: this
+    is the default.  `:allocation :instance`.
+
+* a shared slot will always be equal for all instances of the
+    class. We set it with `:allocation :class`.
+
+
+~~~lisp
+;; example taken from the Keene book.
+cl-user> (defclass triangle ()
+           ((side-a
+             :accessor side-a
+             :initarg :a)
+            (side-b
+             :accessor side-b
+             :initarg b)
+            (side-c
+             :accessor side-c
+             :initarg c)
+            (number-of-sides
+             :accessor number-of-sides
+             :initform 3
+             :allocation :class))) ;; <-- :allocation
+~~~
+
+
+## Introspection
 
 
 ### 3.3. Classes are instances too
+
 
 Compare the values returned from the example calls to
     `defstruct` (line 1 above) and `defclass` (line
@@ -341,116 +472,46 @@ The metaclass of a `structure-object` is the class
 
 ### 3.5. Slots
 
-The full syntax for `defclass` is:
-
-> `**defclass**` <cite>class-name ({superclass-name}*) ({slot-specifier}*) [[class-option]]</cite>
-
-We'll discuss the second argument in [section 3.6][section-36] below. <cite>Class-options</cite> are outside the scope of
-    this tutorial. In this section, we'll take a look at the
-    <cite>slot-specifiers</cite>.
-
-In the class definition of `point` above, each slot was
-    specified simply by its name. We can instead specify a slot thus:
-
-> <cite>(slot-name [[slot-option]])</cite>
-
-Each <cite>slot-option</cite> consists of a keyword followed by a
-    value. Among the keywords available are the following; you can specify
-    as many or few as you need. Three of these keywords
-    (`:accessor`, `:reader` and
-    `:initarg`) may appear more than once for each slot, if you
-    like.
-
-`:accessor`
-: Defines <cite>methods</cite> (see [section 4][section-4] below, think of them as functions for the time being), named by
-    the given value, for reading and modifying the slot. For example,
-    `:accessor point-x` defines the functions
-    `point-x` and `(setf point-x)`. Using accessors
-    is a Good Idea, because:
-
-    *       you can use them as part of a documented interface without
-            committing yourself to implementing the interface by means of a
-            `slot-value` access in future;
-
-    *   you are rewarded for using them by having code that's simpler and
-            more compact.
-
-
-
-`:reader`
-: Defines a single method for reading the slot; a read-only
-    counterpart to `:accessors`.
-
-`:initarg`
-: Specifies a keyword which can be used to pass an initial value
-    for this slot to `make-instance` (an <cite>initialization
-        argument</cite>).
-
 `:initform`
 :   Specifies a default value for this slot, to be used if no
     initial value was specified explicitly. This form is evaluated each
     time it's needed, in the lexical environment of the
     `defclass`.
 
-`:allocation`
-:   Specifies whether the value of this slot:
 
-    *   can be different for each instance of the class (`:allocation
-        :instance` - the default - resulting in a <cite>local
-        slot</cite>); or
-
-    *   is shared between all instances of the class (`:allocation
-        :class` - resulting in a <cite>class slot</cite>).
-
-
-In the following example, **note** the following:
-
-*   the specification and use of the `:x` initialization
-    argument for the slot `x`;
-
-*   the default value for the slot `y`;
-
-*   how changing the value of the class slot `z` - but
-    not the local slots - affects all instances of the class (whether or
-    not those instances exist yet);
-
-*   the stylistic difference in line 33 between using an accessor
-    (`daft-y`) and `slot-value`.
+In the following example, note how changing the value of the class
+slot `species` of `p2` affects affects all instances of the
+class (whether or not those instances exist yet).
 
 ~~~lisp
-CL-USER 29 > (defclass daft-point ()
-               ((x :accessor daft-x :initarg :x)
-                (y :accessor daft-y :initform 3.14159)
-                (z :reader daft-z :allocation :class)))
-#<STANDARD-CLASS DAFT-POINT 21DF867C>
+(defclass person ()
+  ((name :initarg :name :accessor name)
+   (species
+      :initform 'homo-sapiens
+      :accessor species
+      :allocation :class)))
 
-CL-USER 30 > (setf (slot-value (make-instance 'daft-point) 'z) 42)
-42
+(defvar p2 (make-instance 'person))
 
-CL-USER 31 > (setf my-daft-point (make-instance 'daft-point :x 19))
-#<DAFT-POINT 205F264C>
+(species p1)
+(species p2)
+;; HOMO-SAPIENS
 
-CL-USER 32 > (list (daft-x my-daft-point)
-                   (daft-y my-daft-point)
-                   (daft-z my-daft-point))
-(19 3.14159 42)
+(setf (species p2) 'homo-numericus)
+;; HOMO-NUMERICUS
 
-CL-USER 33 > (let ((temp (make-instance 'daft-point)))
-               (setf (daft-y temp) 999
-                     (slot-value temp 'z) 0))
-0
+(species p1)
+;; HOMO-NUMERICUS
 
-CL-USER 34 > (list (daft-x my-daft-point)
-                   (daft-y my-daft-point)
-                   (daft-z my-daft-point))
-(19 3.14159 0)
+(species (make-instance 'person))
+;; HOMO-NUMERICUS
 
-CL-USER 35 >
+(let ((temp (make-instance 'person)))
+    (setf (species temp) 'lisper))
+;; LISPER
+(species (make-instance 'person))
+;; LISPER
 ~~~
-
-**Exercise:** Find a `defstruct` form and
-    "port to CLOS" one of its slot options (or more if they're
-    interesting).
 
 
 ### 3.6. Subclasses and inheritance
