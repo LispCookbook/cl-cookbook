@@ -21,17 +21,16 @@ Features:
 * excellent introspection
 * MOP
 
-The examples in this tutorial are available in a separate file
-[examples.lisp](assets/clos/examples.lisp). I hope to use the code in
-[present.lisp](assets/clos/present.lisp) to squirt them into a lisp
-listener during the tutorial.
 
-You can learn more about CLOS in those resources:
+You may enjoy other introductions to the CLOS:
 
 - [A Guide to CLOS](http://www.aiai.ed.ac.uk/~jeff/clos-guide.html) by Jeff Dalton
-- the book [Object-Oriented Programming in Common Lisp: a Programmer's Guide to CLOS](http://www.communitypicks.com/r/lisp/s/17592186046723-object-oriented-programming-in-common-lisp-a-programmer), Keene
-- the book "the Art of the Metaobject Protocol", by Gregor Kiczales, Jim des Rivières et al.
-- the [CLOS Meta Object Protocol specifications](https://clos-mop.hexstreamsoft.com/)
+
+But in the end, to learn the subject in depth, you will need these two books:
+
+- [Object-Oriented Programming in Common Lisp: a Programmer's Guide to CLOS](http://www.communitypicks.com/r/lisp/s/17592186046723-object-oriented-programming-in-common-lisp-a-programmer), Keene,
+- ["the Art of the Metaobject Protocol"](http://www.communitypicks.com/r/lisp/s/17592186045709-the-art-of-the-metaobject-protocol), by Gregor Kiczales, Jim des Rivières et al,
+- and for reference, the complete [CLOS-MOP specifications](https://clos-mop.hexstreamsoft.com/)
 
 
 #  Classes and instances
