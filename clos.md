@@ -25,10 +25,11 @@ Features:
 You may enjoy other introductions to the CLOS:
 
 - [A Guide to CLOS](http://www.aiai.ed.ac.uk/~jeff/clos-guide.html) by Jeff Dalton
+- http://cs.northwestern.edu/academics/courses/325/readings/clos.php
 
 But in the end, to learn the subject in depth, you will need these two books:
 
-- [Object-Oriented Programming in Common Lisp: a Programmer's Guide to CLOS](http://www.communitypicks.com/r/lisp/s/17592186046723-object-oriented-programming-in-common-lisp-a-programmer), Keene,
+- [Object-Oriented Programming in Common Lisp: a Programmer's Guide to CLOS](http://www.communitypicks.com/r/lisp/s/17592186046723-object-oriented-programming-in-common-lisp-a-programmer), Sonya Keene,
 - ["the Art of the Metaobject Protocol"](http://www.communitypicks.com/r/lisp/s/17592186045709-the-art-of-the-metaobject-protocol), by Gregor Kiczales, Jim des Rivières et al,
 - and for reference, the complete [CLOS-MOP specifications](https://clos-mop.hexstreamsoft.com/)
 
@@ -66,65 +67,25 @@ inheritance.
 
 (setf (lisper p1) t)
 
-(defmethod greet (obj)
-  (format t "Hello ~a !~&" (name obj)))
-;; style-warning: Implicitly creating new generic function common-lisp-user::greet.
-;; #<STANDARD-METHOD GREET (t) {1008EE4603}>
-
-(greet p1) ;; => "Hello me !"
 
 (defclass child (person)
   ())
 ;; #<STANDARD-CLASS CHILD>
 
-(defmethod greet ((obj child))
-  (format t "ur so cute"))
-;; #<STANDARD-METHOD GREET (CHILD) {1008F3C1C3}>
+(type-of c1)
+;; CHILD
 
-(defvar c1 (make-instance 'child :name "Alice"))
+(subtypep (type-of c1) 'person)
+;; T
 
-(greet c1)
-;; ur so cute
-;; nil
+(ql:quickload "closer-mop")
+;; ...
+
+(closer-mop:subclassp (class-of c1) 'person)
+;; T
 ~~~
 
-We create objects with `make-instance`, and we can give values to the `:initarg`s:
-
-And we access the *slots* values with the `accessors`:
-
-
-An `:iniform` is a default value:
-
-
-Accessors are `setf`-able:
-
-
-And we create methods for the class `person`
-
-~~~lisp
-(defmethod babyp ((obj person))
-   (< (age obj) 3))
-;; STYLE-WARNING: Implicitly creating new generic function COMMON-LISP-USER::BABYP.
-;; #<STANDARD-METHOD BABYP (PERSON) {1006514AC3}>
-~~~
-
-<!-- We *specialize* the generic method `print-object` to pretty-print our `person` objects: -->
-
-<!-- ~~~lisp -->
-<!-- (defmethod print-object ((obj person) stream) -->
-<!--    (print-unreadable-object (obj stream :type t) -->
-<!--      (format stream "name: ~a" (slot-value obj 'name)))) -->
-<!-- #<STANDARD-METHOD PRINT-OBJECT (PERSON T) {1006BB64B3}> -->
-<!-- ~~~ -->
-
-<!-- ~~~lisp -->
-<!-- p1 -->
-<!-- #<PERSON name: me> -->
-<!-- ~~~ -->
-
-
-You're ready to go !
-
+TODO: inheritance with slots
 
 ## Defining classes - `defclass`
 
@@ -204,16 +165,15 @@ not the class itself.
 
 ### A method that always works - slot-value
 
-First of all: the default method to access any slot is `slot-value <object> <slot-name>`.
+The default method to access any slot is `(slot-value <object> <slot-name>)`.
 
-Given our `point` class above:
+Given our `point` class above, which didn't define any slot accessors:
 
 
-```
+```lisp
 (defvar pt (make-instance 'point))
 
 (inspect pt)
-
 The object is a STANDARD-OBJECT of type POINT.
 0. X: "unbound"
 1. Y: "unbound"
@@ -224,17 +184,17 @@ We got an object of type `POINT`, but **slots are unbound by
 default**: trying to access them will raise an `UNBOUND-SLOT`
 condition:
 
-    (slot-value pt 'x) ;; => condition: the slot is unbound
+~~~lisp
+(slot-value pt 'x) ;; => condition: the slot is unbound
+~~~
 
 
 `slot-value` is `setf`-able:
 
-    (setf (slot-value pt 'x) 1)
-    (slot-value pt 'x) ;; => 1
-
-
-TODO: with-accessors
-
+~~~lisp
+(setf (slot-value pt 'x) 1)
+(slot-value pt 'x) ;; => 1
+~~~
 
 ### Initial and default values (initarg, initform)
 
@@ -264,7 +224,7 @@ Sometimes we see the following trick to clearly require a slot:
 ~~~
 
 
-### Getters and setters (:accessor :reader :writter)
+### Getters and setters (accessor, reader, writer)
 
 - `:accessor foo`: an accessor is both a **getter** and a
   **setter**. Its argument is a name that will become a *generic
@@ -277,12 +237,11 @@ Sometimes we see the following trick to clearly require a slot:
 STANDARD-GENERIC-FUNCTION
 ~~~
 
-- `:reader` and `:setter` do what you expect.
+- `:reader` and `:writer` do what you expect. Only the `:writer` is `setf`-able.
 
-If you don't specify any of these, you can use `slot-value`.
+If you don't specify any of these, you can still use `slot-value`.
 
-The keywords`:accessor`, `:reader` and `:initarg` may appear
-more than once for each slot, if you like.
+You can give a slot more than one `:accessor`, `:reader` or `:initarg`.
 
 
 We introduce two macros to access slots.
@@ -307,21 +266,18 @@ TODO: with-accessors
 
 ~~~lisp
 (with-accessors ((daft-x daft-x)
-                         (daft-y daft-y))
+                 (daft-y daft-y))
             daft-point
           (format stream "x: ~a, y: ~a" daft-x daft-y))))
 ~~~
 
 ### Class VS instance slots
 
-TODO example
-
 `:allocation` specifies whether this slot is *local* or *shared*.
 
-* local means it can be different for each instance of the class: this
-    is the default.  `:allocation :instance`.
+* a slot is *local* by default, that means it can be different for each instance of the class. In that case `:allocation` equals `:instance`.
 
-* a shared slot will always be equal for all instances of the
+* a *shared* slot will always be equal for all instances of the
     class. We set it with `:allocation :class`.
 
 In the following example, note how changing the value of the class
@@ -365,15 +321,23 @@ class (whether or not those instances exist yet).
 ;; HOMO-LISPER
 ~~~
 
+### Slot documentation
+
+Each slot accepts one `:documentation` option.
+
 ### Slot type
 
-`:type` TODO
+The `:type` slot option may not do the job you expect it does. If you
+are new to the CLOS, we suggest you skip this section and use your own
+constructors to manually check slot types.
 
-### See also
+Indeed, whether slot types are being checked or not is undefined. See the [Hyperspec](http://www.lispworks.com/documentation/HyperSpec/Body/m_defcla.htm#defclass).
 
-#### defclass-std
+Few implementations will do it. Clozure CL does it, SBCL does it when
+safety is high (`(declaim (optimize safety))`).
 
-TODO ?
+To do it otherwise, see [this Stack-Overflow answer](https://stackoverflow.com/questions/51723992/how-to-force-slots-type-to-be-checked-during-make-instance), and see also [quid-pro-quo](https://github.com/sellout/quid-pro-quo), a contract programming library.
+
 
 ## find-class, class-name, class-of
 
@@ -486,7 +450,7 @@ CL-USER 29 >
 The metaclass of a `structure-object` is the class
     `structure-class`. It is implementation-dependent whether
     the metaclass of a "traditional" lisp object is
-    `standard-class` (as in [section 3.3][section-33]), `structure-class`, or
+    `standard-class`, `structure-class`, or
     `built-in-class`. Restrictions:
 
 |`built-in-class`| May not use `make-instance`, may not use `slot-value`, may not use `defclass` to modify, may not create subclasses.|
