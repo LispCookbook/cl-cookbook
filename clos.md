@@ -944,42 +944,147 @@ Revalidation is a laborious process, but the general plan is clear
 
 ## Introspection
 
+## See also
+
+### defclass-std
+
+TODO ?
+
 # Methods
 
-### 4.2. Introducing the macro `defmethod`
+## Diving in
 
-The defining macro for controlling type-based discrimination in
-    CLOS is `defmethod`. An example:
+Recalling our `person` and `child` classes from the beginning:
 
 ~~~lisp
-(fmakunbound 'my-describe)
-MY-DESCRIBE
+(defclass person ()
+  ((name
+    :initarg :name
+    :accessor name)))
+;; => #<STANDARD-CLASS PERSON>
 
-(defmethod my-describe (thing)
-               (format t
-                       "~s could be anything, for all I care."
-                       thing))
-;; #<STANDARD-METHOD MY-DESCRIBE NIL (T) 205EA9E4>
+(defclass child (person)
+  ())
+;; #<STANDARD-CLASS CHILD>
 
-(defmethod my-describe ((animal animal))
-               (format t
-                       "~s is an animal. It has ~d leg~:p ~
-    and comes from ~a."
-                       animal
-                       (leg-count animal)
-                       (comes-from animal)))
-;; #<STANDARD-METHOD MY-DESCRIBE NIL (ANIMAL) 205F476C>
-
-(my-describe Eric)
-;; #<ANTELOPE 2112B44C> is an animal. It has 4 legs and comes from Brittany.
-NIL
-
-(my-describe (make-instance 'figurine))
-;; #<FIGURINE 205FFD14> could be anything, for all I care.
-NIL
-
-CL-USER 62 >
+(defvar p1 (make-instance 'person :name "me"))
+(defvar c1 (make-instance 'child :name "Alice"))
 ~~~
+
+Below we create methods, we specialize them, we use method combination
+(before, after, around), and we use qualifiers.
+
+~~~lisp
+(defmethod greet (anything)
+  (format t "Are you a person ?"))
+
+(greet :anything)
+;; Are you a person ?
+;; NIL
+(greet p1) ;; => same
+
+(defmethod greet ((obj person))
+  (format t "Hello ~a !~&" (name obj)))
+;; style-warning: Implicitly creating new generic function common-lisp-user::greet.
+;; #<STANDARD-METHOD GREET (t) {1008EE4603}>
+
+(greet p1) ;; => "Hello me !"
+
+(defmethod greet ((obj child))
+  (format t "ur so cute~&"))
+;; #<STANDARD-METHOD GREET (CHILD) {1008F3C1C3}>
+
+(greet c1)
+;; ur so cute
+;; nil
+
+;;;;;;;;;;;;;;;;;;;;;;;
+;;; Method combination: before, after, around.
+;;;;;;;;;;;;;;;;;;;;;;;
+
+(defmethod greet :before ((obj child))
+  (format t "-- before child~&"))
+;; #<STANDARD-METHOD GREET :BEFORE (CHILD) {100AD32A43}>
+(greet c1)
+;; -- before child
+;; ur so cute
+
+(defmethod greet :after ((obj child))
+  (format t "-- after child~&"))
+;; #<STANDARD-METHOD GREET :AFTER (CHILD) {10075B71F3}>
+(greet c1)
+;; -- before child
+;; ur so cute
+;; -- after child
+
+(defmethod greet :around ((obj child))
+  (format t "Hello my dear~&"))
+;; #<STANDARD-METHOD GREET :AROUND (CHILD) {10076658E3}>
+(greet c1) ;; Hello my dear
+
+
+;; call-next-method
+
+(defmethod greet :around ((obj child))
+  (format t "Hello my dear~&")
+  (when (next-method-p)
+    (call-next-method)))
+;; #<standard-method greet :around (child) {100AF76863}>
+
+(greet c1)
+;; Hello my dear
+;; -- before child
+;; ur so cute
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Specializers / qualifiers TODO: both terms ?
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; In order to add "&keys" to our generic method, we need to remove its definition first.
+(fmakunbound 'greet)  ;; with Slime: C-c C-u (slime-undefine-function)
+
+(defmethod greet ((obj person) &key talkative)
+  (format t "Hello ~a~&" (name obj))
+  (when talkative
+    (format t "blah")))
+
+(greet p1 :talkative t)
+;; Hello me
+;; blah
+
+(defmethod cook (obj &key (time 0))
+  (format t "cooking ~a for ~a min.~&" obj time))
+
+(defmethod cook (obj &key (time (eql 0)))
+    (declare (ignore time))
+    (format t "no, we need some time.~&"))
+; in: DEFMETHOD COOK (T)
+;     (EQL 0)
+;
+; caught WARNING:
+;   The function was called with one argument, but wants exactly two.
+;
+; compilation unit finished
+;   caught 1 WARNING condition
+;; STYLE-WARNING: redefining COOK (#<SB-PCL:SYSTEM-CLASS T>) in DEFMETHOD
+;; #<STANDARD-METHOD COOK (T) {1008095843}>
+
+(cook c1 :time 0)
+;; no, we need some time.
+
+(defmethod cook ((obj (eql c1)) &key time)
+    (declare (ignore time))
+    (format t "no, not Alice !~&"))
+;; STYLE-WARNING:
+;;  redefining COOK (#<SB-MOP:EQL-SPECIALIZER {100811EF13}>) in DEFMETHOD
+;; #<STANDARD-METHOD COOK ((EQL #<CHILD {100B886823}>)) {100848D9F3}>
+
+(cook c1)
+;; no, not Alice !
+~~~
+
+
+## Generic methods - defgeneric, defmethod
 
 The `defmethod` form looks like - and is similar to - a
     `defun`. It associates a body of code with the function
@@ -1287,7 +1392,9 @@ Do whatever makes your code clearer.
 
 
 
-### 4.5. Other specializers (you still don't need CLOS objects to use CLOS)
+### Dispatching on specific objects - the eql specializer
+
+For specific objects, rather than whole classes.
 
 The examples of methods shown so far all specialize on
     `standard-class`es. That isn't necessary. You can specialize on any CLOS
@@ -1490,6 +1597,19 @@ Another example: The CLOS implementation of
     `initialize-instance` as a souped-up analogue of the
     <cite>constructors</cite> offered by other OO systems. But CLOS
     doesn't offer a <cite>destructor.</cite> Should this matter?
+
+## Redifining methods: adding or removing REST or KEY arguments
+
+TODO:
+
+```
+attempt to add the method
+  #<STANDARD-METHOD NIL (#<STANDARD-CLASS CHILD>) {1009504233}>
+to the generic function
+  #<STANDARD-GENERIC-FUNCTION GREET (2)>;
+but the method and generic function differ in whether they accept
+&REST or &KEY arguments.
+```
 
 ### 4.7. Implementation notes: generic function dispatch
 
