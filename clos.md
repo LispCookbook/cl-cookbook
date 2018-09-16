@@ -70,18 +70,14 @@ inheritance.
 
 (defclass child (person)
   ())
+
+(defclass child (person)
+  ((can-walk-p
+     :accessor can-walk-p
+     :initform t)))
 ;; #<STANDARD-CLASS CHILD>
 
-(type-of c1)
-;; CHILD
-
-(subtypep (type-of c1) 'person)
-;; T
-
-(ql:quickload "closer-mop")
-;; ...
-
-(closer-mop:subclassp (class-of c1) 'person)
+(can-walk-p (make-instance 'child))
 ;; T
 ~~~
 
@@ -458,247 +454,99 @@ The metaclass of a `structure-object` is the class
 |`standard-class`|None of these restrictions.|
 
 
-## 3.6. Subclasses and inheritance
+## Subclasses and inheritance
 
-Suppose we want two classes to share behaviour, in the sense that
-    one of them (the <cite>subclass</cite>) is defined in terms of the
-    other (the <cite>superclass</cite>). This leads us to the notion of
-    <cite>inheritance</cite>, common in some form to all object
-    systems.
+As illustrated above, `child` is a subclass of `person`.
 
-For example:
+All objects inherit from the class `standard-object` and `t`.
+
+Every child instance is also an instance of `person`.
 
 ~~~lisp
-(defclass animal ()
-               ((legs :reader leg-count :initarg :legs)
-                (comes-from :reader comes-from :initarg :comes-from)))
-;; #<STANDARD-CLASS ANIMAL 2150BA0C>
+(type-of c1)
+;; CHILD
 
-(defclass mammal (animal)
-               ((diet :initform 'antelopes :initarg :diet)))
-;; #<STANDARD-CLASS MAMMAL 2150A894>
+(subtypep (type-of c1) 'person)
+;; T
 
-(defclass aardvark (mammal)
-               ((cute-p :accessor cute-p :initform nil)))
-;; #<STANDARD-CLASS AARDVARK 2150A5D4>
+(ql:quickload "closer-mop")
+;; ...
 
-CL-USER 38 >
+(closer-mop:subclassp (class-of c1) 'person)
+;; T
 ~~~
 
-In this example, `mammal` is defined (by line 36) to be
-    a subclass of `animal`. This means that every instance of
-    `mammal` is also an instance of `animal`. If we
-    `(make-instance 'mammal)`, we get an object with three
-    slots: `diet` which comes directly from the definition of
-    `mammal`, plus `legs` and
-    `comes-from` which are both <cite>inherited</cite> from the
-    definition of `animal`.
-
-Similarly, every `aardvark` is both a
-    `mammal` and an `animal`, and has four slots,
-    three of which are inherited from superclasses. **Note**
-    that the subclass relationship is <cite>transitive</cite> -
-    `aardvark` is an (<cite>indirect</cite>) subclass of
-    `animal`, via `mammal`. Therefore you do not
-    need to explicitly list `animal` as a superclass of
-    `aardvark`.
-
-| <a id="figure-1" name="figure-1">![Aardvark is a subclass of mammal, which is a subclass of animal](assets/clos/images/fig-1.gif) |
-| Figure 1. `Aardvark` is a subclass of `mammal` which is a subclass of `animal`. The arrows denote the <cite>superclass</cite> relationship. |
+[`closer-mop`](https://github.com/pcostanza/closer-mop) is *the*
+portable way to do CLOS/MOP operations.
 
 
-In CLOS, these relationships can be queried by the readers
-    `class-direct-superclasses` and
-    `class-precedence-list`. (**Implementation
-note:** these two functions are not part of Common Lisp. In
-    LispWorks they're available via your default
-    `package-use-list`, in Allegro they're exported from
-    `ACLMOP`. Also in Allegro, you have to have made an
-    instance of `aardvark` before you can interrogate its
-    precedence list.)
+A subclass inherits all of its parents slots, and it can override any
+of their slot options. Common Lisp makes this process dynamic, great
+for REPL session, and we can even control parts of it (like, do
+something when a given slot is removed/updated/added, etc).
+
+The **class precedence list** of a `child` is thus:
+
+    child <- person <-- standard-object <- t
+
+Which we can get with:
 
 ~~~lisp
-(class-direct-superclasses (find-class 'aardvark))
-(#<STANDARD-CLASS MAMMAL 2150A894>)
-
-(class-precedence-list (find-class 'aardvark))
-(#<STANDARD-CLASS AARDVARK 2150A5D4> #<STANDARD-CLASS MAMMAL 2150A894>
-                  #<STANDARD-CLASS ANIMAL 2150BA0C> #<STANDARD-CLASS STANDARD-OBJECT 20305B4C>
-                  #<BUILT-IN-CLASS T 20305AEC>)
-
-CL-USER 40 >
+(closer-mop:class-precedence-list (class-of c1))
+;; (#<standard-class child>
+;;  #<standard-class person>
+;;  #<standard-class standard-object>
+;;  #<sb-pcl::slot-class sb-pcl::slot-object>
+;;  #<sb-pcl:system-class t>)
 ~~~
 
-The `class-precedence-list` of a class is a list which
-    starts from that class and recursively shows superclasses, in
-    order. The first three elements in the above list come as no surprise
-    but the other two merit brief discussion.
-
-*   All CLOS objects (anything allocated by calling
-    `make-instance`) are instances of the system class
-    `standard-object`. In other words, all instances of
-    `standard-class`es inherit from
-    `standard-object`. You do not ever have to list
-    `standard-object` as a superclass because it's there
-    implicitly. `(defclass foo () ())` and `(defclass foo
-    (standard-object) ())` are the same.
-
-*   All classes are subclasses of the class named `t`,
-    which we introduced in [section 3.4][section-34]
-    above.
-
-| <a id="figure-2" name="figure-2">![Class precedence for aardvark](assets/clos/images/fig-2.gif) |
-| Figure 2. Class precedence for `aardvark` |
-
-Now consider this:
+However, the **direct superclass** of a `child` is only:
 
 ~~~lisp
-(defclass figurine ()
-               ((potter :accessor made-by :initarg :made-by)
-                (comes-from :initarg :made-in)))
-;; #<STANDARD-CLASS FIGURINE 205FBD1C>
-
-(defclass figurine-aardvark (aardvark figurine)
-               ((name :reader aardvark-name :initarg :aardvark-name)
-                (diet :initform nil)))
-;; #<STANDARD-CLASS FIGURINE-AARDVARK 205FF354>
-
-CL-USER 42 >
+(closer-mop:class-direct-superclasses (class-of c1))
+;; (#<standard-class person>)
 ~~~
 
-The class `figurine-aardvark` here inherits its
-    behaviour from <u>two</u> direct superclasses. Any instance of this
-    class will therefore also be an instance of each of these two classes,
-    and of all their superclasses.
+We can further inspect our classes with
+`class-direct-[subclasses, slots, default-initargs]` and many more functions.
 
-| <a id="figure-3" name="figure-3">![Figurine-aardvark inherits from two direct superclasses](assets/clos/images/fig-3.gif) |
-| Figure 3. `Figurine-aardvark` inherits from two direct superclasses |
+How slots are combined follows some rules:
+
+- `:accessor` and `:reader` are combined by the **union** of accessors
+   and readers from all the inherited slots.
+
+- `:initarg`: the **union** of initialization arguments from all the
+  inherited slots.
+
+- `:initform`: we get **the most specific** default initial value
+  form, i.e. the first `:initform` for that slot in the precedence
+  list.
+
+- `:allocation` is not inherited. It is controlled solely by the class
+  being defined and defaults to `:instance`.
 
 
-This is called <cite>multiple inheritance</cite>. It's a terribly
-    useful feature of CLOS. Not all OO systems support it. For example,
-    consider `implements` in Java, where you can have full
-    inheritance from no more than one superclass and a highly restricted
-    form of inheritance from any others. Multiple inheritance in CLOS is
-    symmetric between as many superclasses as you want to specify. Ensure
-    that the OO system you're using supports full multiple
-    inheritance.
+Last but not least, be warned that inheritance is fairly easy to
+misuse, and multiple inheritance is multiply so, so please take a
+little care. Ask yourself whether `foo` really wants to inherit from
+`bar`, or whether instances of `foo` want a slot containing a `bar`. A
+good general guide is that if `foo` and `bar` are "same sort of thing"
+then it's correct to mix them together by inheritance, but if they're
+really separate concepts then you should use slots to keep them apart.
 
-**Note that**, because every CLOS class inherits from
-    `standard-object`, a feature of multiple inheritance is the
-    presence of "loops" in the class inheritance diagram. Calculating the
-    precedence list is no longer straightforward (look up
-    <cite>topological sorting</cite>), but it's worth knowing that the
-    result has to be compatible with (a) the order of explicitly named
-    superclasses and (b) the class precedence lists of all
-    superclasses.
+
+## Multiple inheritance
+
+CLOS supports multiple inheritance.
+
 
 ~~~lisp
-(class-precedence-list (find-class 'figurine-aardvark))
-(#<STANDARD-CLASS FIGURINE-AARDVARK 2150938C> #<STANDARD-CLASS AARDVARK 2150A5D4>
-                  #<STANDARD-CLASS MAMMAL 2150A894> #<STANDARD-CLASS ANIMAL 2150BA0C>
-                  #<STANDARD-CLASS FIGURINE 2150A06C> #<STANDARD-CLASS STANDARD-OBJECT 20305B4C>
-                  #<BUILT-IN-CLASS T 20305AEC>)
-
-CL-USER 43 >
+(defun baby (child person)
+  ())
 ~~~
 
-
-Let's now turn to look at the slots of
-    `figurine-aardvark`:
-
-*   `legs` - inherited from `animal`;
-
-*   `comes-from` - inherited from `animal` and
-`figurine`;
-
-*   `diet` - inherited from `mammal`, also a
-direct slot in `figurine-aardvark`;
-
-*   `cute-p` - inherited from `aardvark`;
-
-*   `potter` - inherited from `figurine`;
-
-*   `name` - direct slot in
-`figurine-aardvark`.
-
-What happens if a slot with some given name appears more than once
-    in the precedence list? The answer is that the subclass ends up with
-    only one slot of that name, and that slot's properties are a
-    combination of the properties of the slots which it inherited. The
-    rules for combining each option are as follows:
-
-*   `:accessor` and `:reader` - the union of
-    accessors / readers from all the inherited slots; see [section 4][section-4] below for the sense in which this
-    works if names are repeated.
-
-*   `:initarg` - the union of initialization arguments
-    from all the inherited slots. For example, the valid
-    `:initarg`s for the `comes-from` slot in
-    `figurine-aardvark` are `:comes-from` and
-    `:made-in`.
-
-*   `:initform` - the most <cite>specific</cite> default
-    initial value form (i.e. the first `:initform` for that
-    slot in the precedence list). For example, the `:initform`
-    for a `figurine-aardvark`'s `diet` is
-    `nil`.
-
-*   `:allocation` - not inherited; controlled solely by
-    the class being defined; defaults to `:instance`.
-
-Example:
-
-~~~lisp
-(setf Eric (make-instance 'figurine-aardvark
-                                       :legs 4
-                                       :made-by "Jen"
-                                       :made-in "Brittany"
-                                       :aardvark-name "Eric"))
-;; #<FIGURINE-AARDVARK 206108BC>
-
-(shiftf (cute-p Eric) t)
-NIL
-
-(slot-value Eric 'diet)
-NIL
-
-CL-USER 46 >
-~~~
-
-Be warned that inheritance is fairly easy to misuse, and multiple
-    inheritance is multiply so, so please take a little care. Ask yourself
-    whether `foo` really wants to inherit from
-    `bar`, or whether instances of `foo` want a slot
-    containing a `bar`. A good general guide is that if
-    `foo` and `bar` are "same sort of thing" then
-    it's correct to mix them together by inheritance, but if they're
-    really separate concepts then you should use slots to keep them
-    apart.
-
-For instance, suppose your application wants to draw a picture of a
-    traffic light. The class `drawable-traffic-light` probably
-    wants to inherit from `drawable` and to have a slot
-    pointing to each instance's `traffic-light`. Mixing the
-    classes together with this flashy multiple inheritance stuff will just
-    lead to <a
-        href="http://www.cogsci.princeton.edu/cgi-bin/webwn1.7.1?stage=1&word=spaghetti">spaghetti</a>.
-    If following your code depends on an intimate understanding of how
-    topological sorting works, or detailed examination of many classes to
-    figure out why you didn't get the `:initform` you wanted,
-    then you've overdone it by a long way. Back off.
-
-**Exercise:** For which features of
-    `defstruct` have we not yet covered the CLOS
-    counterparts?
-
-**Exercise:** Take an application which uses
-    structures, rewrite it using `defclass`, and get it working
-    again.
-
-**Exercise:** Use your lisp implementation, to take a
-    look at the `class-precedence-list` of (the class of)
-    `nil`.
+The first class on the list of parent classes is the most specific
+one, child's slots will take precedence over person's.
 
 
 ## 3.7. Changing a class
