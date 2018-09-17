@@ -549,72 +549,107 @@ The first class on the list of parent classes is the most specific
 one, child's slots will take precedence over person's.
 
 
-## 3.7. Changing a class
+## Redefining and changing a class
 
-This section briefly covers two topics: redefinition of an existing
-    class, and changing an instance of one class into an instance of
-    another. In both cases we'll gloss over the details: suffice it to say
-    that they're hairy but everything's configurable.
+This section briefly covers two topics:
 
-To redefine a class, simply evaluate a new `defclass`
-    form. This then takes the place of the old definition, the existing
-    class object is updated, and all instances of the class (and -
-    recursively - its subclasses) are updated to reflect the new
-    definition. For example:
+- redefinition of an existing class, which you might already have done
+  by following our code snippets, and what we do naturally during
+  development, and
+- changing an instance of one class into an instance of another,
+  a powerful feature of CLOS that you'll probably won't use very often.
 
-~~~lisp
-(list Eric (class-of Eric) (slot-exists-p Eric 'has-tail-p))
-(#<FIGURINE-AARDVARK 2112B44C>
-                     #<STANDARD-CLASS FIGURINE-AARDVARK 2150938C>
-                     NIL)
+We'll gloss over the details. Suffice it to say that everything's
+configurable by implementing methods exposed by the MOP.
 
-(defclass animal ()
-               ((legs :reader leg-count :initarg :legs)
-                (has-tail-p :reader has-tail-p :initform t)
-                (comes-from :reader comes-from :initarg :comes-from)))
-;; #<STANDARD-CLASS ANIMAL 2150BA0C>
+To redefine a class, simply evaluate a new `defclass` form. This then
+takes the place of the old definition, the existing class object is
+updated, and **all instances of the class** (and, recursively, its
+subclasses) **are updated to reflect the new definition**. You don't
+have to recompile anything other than the new `defclass`, nor to
+invalidate any of your objects.
 
-(list Eric (class-of Eric) (slot-value Eric 'has-tail-p))
-(#<FIGURINE-AARDVARK 2112B44C>
-                     #<STANDARD-CLASS FIGURINE-AARDVARK 2150938C>
-                     T)
-
-CL-USER 49 >
-~~~
-
-You can redefine classes while an application is running, in just
-    the same way and for the same reasons as you can redefine
-    functions. The great strength of class redefinition though is during
-    application development. For example, you can revisit a class and add
-    a slot or a superclass that you hadn't thought about earlier, without
-    having to recompile anything other than the new `defclass`,
-    and without invalidating any of your objects.
-
-To change the class of an instance, use
-    `change-class`:
+For example, with our `person` class:
 
 ~~~lisp
-(defclass antelope (mammal)
-               ((diet :reader munched-by)))
-;; #<STANDARD-CLASS ANTELOPE 2061A14C>
+(defclass person ()
+  ((name
+    :initarg :name
+    :accessor name)
+   (lisper
+    :initform nil
+    :accessor lisper)))
 
-(change-class Eric 'antelope
-                           :diet 'greens)
-;; #<ANTELOPE 2112B44C>
-
-(list (slot-exists-p Eric 'potter) (munched-by Eric))
-(NIL GREENS)
-
-CL-USER 52 >
+(defvar p1 (make-instance 'person :name "me" ))
 ~~~
 
-In the above example, a ceramic aardvark has become a graceful Old
-    World ruminant, automatically losing the slot `potter` and
-    explicitly being put on a healthy diet of greens (among other
-    changes). Leaving aside questions of <a
-                        href="http://ww.telent.net/diary/2002/10/#28.4949">animal cruelty</a>,
-    this is a powerful feature of CLOS although probably one which you
-    won't use very often.
+Changing, adding, removing slots,...
+
+~~~lisp
+(lisper p1)
+;; NIL
+
+(defclass person ()
+  ((name
+    :initarg :name
+    :accessor name)
+   (lisper
+    :initform t        ;; <-- from nil to t
+    :accessor lisper)))
+
+(lisper p1)
+;; NIL (of course!)
+
+(lisper (make-instance 'person :name "You"))
+;; T
+
+(defclass person ()
+  ((name
+    :initarg :name
+    :accessor name)
+   (lisper
+    :initform nil
+    :accessor lisper)
+   (age
+    :initarg :arg
+    :initform 18
+    :accessor age)))
+
+(age p1)
+;; => slot unbound. This is different from "slot missing":
+
+(slot-value p1 'bwarf)
+;; => "the slot bwarf is missing from the object #<person…>"
+
+(setf (age p1) 30)
+(age p1) ;; => 30
+
+(defclass person ()
+  ((name
+    :initarg :name
+    :accessor name)))
+
+(slot-value p1 'lisper) ;; => slot lisper is missing.
+(lisper p1) ;; => there is no applicable method for the generic function lisper when called with arguments #(lisper).
+~~~
+
+
+To change the class of an instance, use `change-class`:
+
+~~~lisp
+(change-class p1 'child)
+;; we can also set slots of the new class:
+(change-class p1 'child :can-walk-p nil)
+
+(class-of p1)
+;; #<STANDARD-CLASS CHILD>
+
+(can-walk-p p1)
+;; T
+~~~
+
+In the above example, I became a `child`, and I inherited the `can-walk-p` slot, which is true by default.
+
 
 ## 3.8. Pretty printing
 
