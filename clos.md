@@ -567,7 +567,7 @@ takes the place of the old definition, the existing class object is
 updated, and **all instances of the class** (and, recursively, its
 subclasses) **are updated to reflect the new definition**. You don't
 have to recompile anything other than the new `defclass`, nor to
-invalidate any of your objects.
+invalidate any of your objects. Think about it for a second: this is awesome !
 
 For example, with our `person` class:
 
@@ -580,7 +580,7 @@ For example, with our `person` class:
     :initform nil
     :accessor lisper)))
 
-(defvar p1 (make-instance 'person :name "me" ))
+(setf p1 (make-instance 'person :name "me" ))
 ~~~
 
 Changing, adding, removing slots,...
@@ -616,7 +616,7 @@ Changing, adding, removing slots,...
     :accessor age)))
 
 (age p1)
-;; => slot unbound. This is different from "slot missing":
+;; => slot unbound error. This is different from "slot missing":
 
 (slot-value p1 'bwarf)
 ;; => "the slot bwarf is missing from the object #<person…>"
@@ -651,36 +651,61 @@ To change the class of an instance, use `change-class`:
 In the above example, I became a `child`, and I inherited the `can-walk-p` slot, which is true by default.
 
 
-## 3.8. Pretty printing
+## Pretty printing
 
-Remember the `daft-point` above. Creating an instance prints it like so:
+Everytime we printed an object so far we got an output like
 
-    #<STANDARD-CLASS DAFT-POINT 21DF867C>
+    #<PERSON {1006234593}>
+
+which doesn't say much.
 
 What if we want to show more information ? Something like
 
-    #<DAFT-POINT x: 10 y: -2>
+    #<PERSON me lisper: t>
 
-Pretty print it is done by writing a `print-object` method for this class:
+Pretty printing is done by specializing the generic `print-object` method for this class:
 
 ~~~lisp
-(defmethod print-object ((daft-point daft-point) stream)
-      (print-unreadable-object (daft-point stream :type t)
-        (with-accessors ((daft-x daft-x)
-                         (daft-y daft-y))
-            daft-point
-          (format stream "x: ~a, y: ~a" daft-x daft-y))))
+(defmethod print-object ((obj person) stream)
+      (print-unreadable-object (obj stream :type t)
+        (with-accessors ((name name)
+                         (lisper lisper))
+            obj
+          (format stream "~a, lisper: ~a" name lisper))))
+~~~
+
+It gives:
+
+~~~lisp
+p1
+;; #<PERSON me, lisper: T>
 ~~~
 
 `print-unreadable-object` prints the `#<...>`, that says to the reader
-that this object can not be read back in.
+that this object can not be read back in. Its `:type t` argument asks
+to print the object-type prefix, that is, `PERSON`. Without it, we get
+`#<me, lisper: T>`.
+
+We used the `with-accessors` macro, but of course for simple cases this is enough:
+
+~~~lisp
+(defmethod print-object ((obj person) stream)
+  (print-unreadable-object (obj stream :type t)
+    (format stream "~a, lisper: ~a" (name obj) (lisper obj))))
+~~~
+
+Caution: trying to access a slot that is not bound by default will
+lead to an error. Use `slot-boundp`.
+
 
 For reference, the following reproduces the default behaviour:
 
 ~~~lisp
-(defmethod print-object ((object foo) stream)
-  (print-unreadable-object (object stream :type t :identity t)))
+(defmethod print-object ((obj person) stream)
+  (print-unreadable-object (obj stream :type t :identity t)))
 ~~~
+
+Here, `:identity` to `t` prints the `{1006234593}` address.
 
 
 ## 3.9. Implementation notes: object wrappers
