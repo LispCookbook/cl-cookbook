@@ -712,9 +712,42 @@ Here, `:identity` to `t` prints the `{1006234593}` address.
 
 ## See also
 
-### defclass-std
+### defclass-std: write shorter classes
 
-TODO ?
+The library [defclass-std](https://github.com/EuAndreh/defclass-std)
+is a macro to write shorter `defclass` forms.
+
+By default, it defines an accessor, an initarg and an initform to `nil`:
+
+This:
+
+~~~lisp
+(defclass/std example ()
+  ((slot1 slot2 slot3)))
+~~~
+
+expands to:
+
+~~~lisp
+(defclass example ()
+  ((slot1
+    :accessor slot1
+    :initarg :slot1
+    :initform nil)
+   (slot2
+     :accessor slot2
+     :initarg :slot2
+     :initform nil)
+   (slot3
+     :accessor slot3
+     :initarg :slot3
+     :initform nil)))
+~~~
+
+It does much more and is very flexible.
+
+However: this library is seldom used by the Common Lisp community. Use at your own risks.
+
 
 # Methods
 
