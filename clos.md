@@ -24,6 +24,7 @@ Features:
 
 You may enjoy other introductions to the CLOS:
 
+- [Practical Common Lisp](http://www.gigamonkeys.com/book/object-reorientation-generic-functions.html), by Peter Seibel,
 - [A Guide to CLOS](http://www.aiai.ed.ac.uk/~jeff/clos-guide.html) by Jeff Dalton
 - http://cs.northwestern.edu/academics/courses/325/readings/clos.php
 
