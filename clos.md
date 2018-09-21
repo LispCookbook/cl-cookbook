@@ -83,7 +83,7 @@ inheritance.
 
 TODO: inheritance with slots
 
-## Defining classes - `defclass`
+## Defining classes (defclass)
 
 The macro used for defining new data types in CLOS is `defclass`.
 
@@ -138,7 +138,7 @@ We could write a minimal class definition without slots options like this:
 
 or even without slots specificiers: `(defclass point () ())`.
 
-## Creating objects - make-instance
+## Creating objects (make-instance)
 
 We create instances of a class with `make-instance`:
 
@@ -159,7 +159,7 @@ not the class itself.
 
 ## Slots
 
-### A method that always works - slot-value
+### A method that always works (slot-value)
 
 The default method to access any slot is `(slot-value <object> <slot-name>)`.
 
@@ -712,12 +712,12 @@ Here, `:identity` to `t` prints the `{1006234593}` address.
 
 ## See also
 
-### defclass-std: write shorter classes
+### defclass/std: write shorter classes
 
-The library [defclass-std](https://github.com/EuAndreh/defclass-std)
-is a macro to write shorter `defclass` forms.
+The library [defclass/std](https://github.com/EuAndreh/defclass-std)
+provides a macro to write shorter `defclass` forms.
 
-By default, it defines an accessor, an initarg and an initform to `nil`:
+By default, it adds an accessor, an initarg and an initform to `nil` to your slots definition:
 
 This:
 
@@ -744,15 +744,13 @@ expands to:
      :initform nil)))
 ~~~
 
-It does much more and is very flexible.
-
-However: this library is seldom used by the Common Lisp community. Use at your own risks.
+It does much more and it is very flexible, however it is seldom used
+by the Common Lisp community: use at your own risks©.
 
 
 # Methods
 
 ## Diving in
-
 Recalling our `person` and `child` classes from the beginning:
 
 ~~~lisp
@@ -766,40 +764,47 @@ Recalling our `person` and `child` classes from the beginning:
   ())
 ;; #<STANDARD-CLASS CHILD>
 
-(defvar p1 (make-instance 'person :name "me"))
-(defvar c1 (make-instance 'child :name "Alice"))
+(setf p1 (make-instance 'person :name "me"))
+(setf c1 (make-instance 'child :name "Alice"))
 ~~~
 
 Below we create methods, we specialize them, we use method combination
-(before, after, around), and we use qualifiers.
+(before, after, around), and qualifiers.
 
 ~~~lisp
-(defmethod greet (anything)
-  (format t "Are you a person ?"))
-
-(greet :anything)
-;; Are you a person ?
-;; NIL
-(greet p1) ;; => same
-
-(defmethod greet ((obj person))
-  (format t "Hello ~a !~&" (name obj)))
+(defmethod greet (obj)
+  (format t "Are you a person ? You are a ~a.~&" (type-of obj)))
 ;; style-warning: Implicitly creating new generic function common-lisp-user::greet.
 ;; #<STANDARD-METHOD GREET (t) {1008EE4603}>
 
+(greet :anything)
+;; Are you a person ? You are a KEYWORD.
+;; NIL
+(greet p1)
+;; Are you a person ? You are a PERSON.
+
+(defgeneric greet (obj)
+  (:documentation "say hello"))
+;; STYLE-WARNING: redefining COMMON-LISP-USER::GREET in DEFGENERIC
+;; #<STANDARD-GENERIC-FUNCTION GREET (2)>
+
+(defmethod greet ((obj person))
+  (format t "Hello ~a !~&" (name obj)))
+;; #<STANDARD-METHOD GREET (PERSON) {1007C26743}>
+
 (greet p1) ;; => "Hello me !"
+(greet c1) ;; => "Hello Alice !"
 
 (defmethod greet ((obj child))
   (format t "ur so cute~&"))
 ;; #<STANDARD-METHOD GREET (CHILD) {1008F3C1C3}>
 
-(greet c1)
-;; ur so cute
-;; nil
+(greet p1) ;; => "Hello me !"
+(greet c1) ;; => "ur so cute"
 
-;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Method combination: before, after, around.
-;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmethod greet :before ((obj child))
   (format t "-- before child~&"))
@@ -834,170 +839,207 @@ Below we create methods, we specialize them, we use method combination
 ;; Hello my dear
 ;; -- before child
 ;; ur so cute
+;; -- after child
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Specializers / qualifiers TODO: both terms ?
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;
+;; Adding in &key
+;;;;;;;;;;;;;;;;;
 
-;; In order to add "&keys" to our generic method, we need to remove its definition first.
+;; In order to add "&key" to our generic method, we need to remove its definition first.
 (fmakunbound 'greet)  ;; with Slime: C-c C-u (slime-undefine-function)
-
 (defmethod greet ((obj person) &key talkative)
   (format t "Hello ~a~&" (name obj))
   (when talkative
     (format t "blah")))
 
-(greet p1 :talkative t)
-;; Hello me
-;; blah
+(defgeneric greet (obj &key &allow-other-keys)
+  (:documentation "say hi"))
 
-(defmethod cook (obj &key (time 0))
-  (format t "cooking ~a for ~a min.~&" obj time))
+(defmethod greet (obj)
+  (format t "Are you a person ? You are a ~a.~&" (type-of obj)))
 
-(defmethod cook (obj &key (time (eql 0)))
-    (declare (ignore time))
-    (format t "no, we need some time.~&"))
-; in: DEFMETHOD COOK (T)
-;     (EQL 0)
-;
-; caught WARNING:
-;   The function was called with one argument, but wants exactly two.
-;
-; compilation unit finished
-;   caught 1 WARNING condition
-;; STYLE-WARNING: redefining COOK (#<SB-PCL:SYSTEM-CLASS T>) in DEFMETHOD
-;; #<STANDARD-METHOD COOK (T) {1008095843}>
+(defmethod greet ((obj person) &key talkative)
+  (format t "Hello ~a !~&" (name obj))
+  (when talkative
+    (format t "blah")))
 
-(cook c1 :time 0)
-;; no, we need some time.
+(greet p1 :talkative t) ;; ok
+(greet p1 :foo t) ;; still ok
 
-(defmethod cook ((obj (eql c1)) &key time)
-    (declare (ignore time))
-    (format t "no, not Alice !~&"))
-;; STYLE-WARNING:
-;;  redefining COOK (#<SB-MOP:EQL-SPECIALIZER {100811EF13}>) in DEFMETHOD
-;; #<STANDARD-METHOD COOK ((EQL #<CHILD {100B886823}>)) {100848D9F3}>
 
-(cook c1)
-;; no, not Alice !
+;;;;;;;;;;;;;;;;;;;;;;;
+
+(defgeneric greet (obj)
+  (:documentation "say hello")
+  (:method (obj)
+    (format t "Are you a person ? You are a ~a~&." (type-of obj)))
+  (:method ((obj person))
+    (format t "Hello ~a~& !" (name obj)))
+  (:method ((obj child))
+    (format t "ur so cute")))
+
+;;;;;;;;;;;;;;;;
+;;; Specializers
+;;;;;;;;;;;;;;;;
+
+(defgeneric feed (obj meal-type)
+  (:method (obj meal-type)
+    (declare (ignorable meal-type))
+    (format t "eating~&")))
+
+(defmethod feed (obj (meal-type (eql :dessert)))
+    (declare (ignorable meal-type))
+    (format t "mmh, dessert !~&"))
+
+(feed c1 :dessert)
+;; mmh, dessert !
+
+(defmethod feed ((obj child) (meal-type (eql :soup)))
+    (declare (ignorable meal-type))
+    (format t "bwark~&"))
+
+(feed p1 :soup)
+;; eating
+(feed c1 :soup)
+;; bwark
 ~~~
 
 
-## Generic methods - defgeneric, defmethod
+## Generic methods (defgeneric, defmethod)
 
-The `defmethod` form looks like - and is similar to - a
-    `defun`. It associates a body of code with the function
-    name `my-describe` but - unlike an <cite>ordinary
-function</cite> - that body may only be executed if the types of the
-    arguments match the pattern declared by the lambda list.
+The `defmethod` form is similar to a `defun`. It associates a body of
+code with a function name, but that body may only be executed if the
+types of the arguments match the pattern declared by the lambda list.
 
-**Note** that the syntax for invoking a method is
-    precisely the same as the syntax for invoking an ordinary
-    function. You cannot tell from the calling code (e.g. lines 60 and 61
-    above) whether the call is to an ordinary function or a CLOS
-    method. You can call methods from ordinary functions, and ordinary
-    functions from methods, and generally mix them together.
+The `defgeneric` form defines the generic function. If we write a
+`defmethod` without a corresponding `defgeneric`, a generic function
+is automatically created (see examples).
 
-Moving onto the `defmethod` form itself, the way that
-    pattern matching works is that the required parameters in the method's
-    lambda list may take one of the following two forms:
-    <cite>variable</cite> or <cite>(variable specializer)</cite>. In the
-    first case, <cite>variable</cite> is bound to the corresponding
-    argument value as usual. However in the latter case,
-    <cite>variable</cite> is bound to the corresponding argument only if
-    that argument is of class <cite>specializer</cite> (or a subclass). If
-    any argument fails to match its specializer then the method is not
-    <cite>applicable</cite> and it cannot be executed with those
-    arguments.
-
-You can define any number of methods with the same function name
-    but with different specializers. The system chooses the most
-    <cite>specific</cite> applicable method - that is, the applicable
-    method whose specializers are nearest to the head of the
-    `class-precedence-list` corresponding to each argument -
-    and executes its body.
-
-In the above example, we defined two methods on
-    `my-describe`. The first one does not specialize on its
-    argument and so that method is always applicable. The second method
-    specializes its argument on the class `animal`, and so is
-    applicable only if this argument is an `animal`.
-
-In line 60 we describe an `animal`. Both methods are
-    applicable. How does the system choose which one to invoke?
+It is generally a good idea to write the `defgeneric`s. We can add a
+default implementation and even some documentation.
 
 ~~~lisp
-(mapcar 'class-name
-                     (class-precedence-list (class-of Eric)))
-(ANTELOPE MAMMAL ANIMAL STANDARD-OBJECT T)
-
-CL-USER 63 >
+(defgeneric greet (obj)
+  (:documentation "says hi")
+  (:method (obj)
+    (format t "Hi")))
 ~~~
 
-The specialized method is more <cite>specific</cite> because its
-    specializer appears earlier in the precedence list than that of the
-    <cite>unqualified</cite> (or <cite>default</cite>) method:
-    `animal` precedes `t`. Another way of expressing
-    this is that the specialized method <cite>overrides</cite> the
-    unqualified one.
+The required parameters in the method's lambda list may take one of
+the following three forms:
 
-In line 61 we describe a `figurine`. This time only one
-    of the two methods is applicable, because the class
-    `figurine` is not a subclass of `animal`.
+1- a simple variable:
+
+~~~lisp
+(defmethod greet (foo)
+  ...)
+~~~
+
+This method can take any argument, it is always applicable.
+
+The variable `foo` is bound to the corresponding argument value, as
+usual.
+
+2- a variable and a **specializer**, as in:
+
+~~~lisp
+(defmethod greet ((foo person))
+  ...)
+~~~
+
+In this case, the variable `foo` is bound to the corresponding
+argument only if that argument is of specializer class `person` *or a subclass*,
+like `child` (indeed, a "child" is also a "person").
+
+If any argument fails to match its
+specializer then the method is not *applicable* and it cannot be
+executed with those arguments.We'll get an error message like
+"there is no applicable method for the generic function xxx when
+called with arguments yyy".
+
+**Only required parameters can be specialized**. We can't specialize on optional `&key` arguments.
 
 
-This matching process has two consequences:
+3- a variable and an **eql specializer**
 
-*   dispatch by discrimination according to the type of a program
-    value, which is just what we were looking for; and
+~~~lisp
+(defmethod feed ((obj child) (meal-type (eql :soup)))
+    (declare (ignorable meal-type))
+    (format t "bwark~&"))
 
-*   as an interesting side effect, an implied guarantee about the
-    class of a specialized value inside the method body, which has
-    implications for optimization (for example, of calls to
-    `slot-value`).
+(feed c1 :soup)
+;; "bwark"
+~~~
+
+In place of a simple symbol (`:soup`), the eql specializer can be any
+lisp form. It is evaluated at the same time of the defmethod.
+
+You can define any number of methods with the same function name but
+with different specializers, as long as the form of the lambda list is
+*congruent* with the shape of the generic function. The system chooses
+the most *specific* applicable method and executes its body. The most
+specific method is the one whose specializers are nearest to the head
+of the `class-precedence-list` of the argument (classes on the left of
+the lambda list are more specific). A method with specializers is more
+specific to one without any.
+
 
 **Notes:**
 
-*   It's an error to define a method with the same function name as
-    an ordinary function, hence the call to `fmakunbound`
-    above.
+-   It is an error to define a method with the same function name as
+    an ordinary function. If you really want to do that, use the
+    shadowing mechanism.
 
-*   Methods can be redefined (exactly as for ordinary
-    functions).
+-   To add or remove `keys` or `rest` arguments to an existing generic
+    method's lambda list, you will need to delete its declaration with
+    `fmakunbound` (or `C-c C-u` (slime-undefine-function) with the
+    cursor on the function in Slime) and start again. Otherwise,
+    you'll see:
 
-*   The order in which methods are defined is irrelevant, although
+```
+attempt to add the method
+  #<STANDARD-METHOD NIL (#<STANDARD-CLASS CHILD>) {1009504233}>
+to the generic function
+  #<STANDARD-GENERIC-FUNCTION GREET (2)>;
+but the method and generic function differ in whether they accept
+&REST or &KEY arguments.
+```
+
+-   Methods can be redefined (exactly as for ordinary functions).
+
+-   The order in which methods are defined is irrelevant, although
     any classes on which they specialize must already exist.
 
-*   An unspecialized argument is more or less equivalent to being
+-   An unspecialized argument is more or less equivalent to being
     specialized on the class `t`. The only difference is that
     all specialized arguments are implicitly taken to be "referred to" (in
     the sense of `declare ignore`.)
 
-*   Each `defmethod` form generates (and returns) a CLOS
+-   Each `defmethod` form generates (and returns) a CLOS
     instance, of class `standard-method`.
 
-**Exercise:** All CLOS objects are printed by a method
-    on `print-object`, whose arguments are `(object
-stream)`. Define methods for printing `aardvark`s and
-    `antelope`s more interestingly than by the default
-    method. How might the default method (for printing a
-    `standard-object`) be defined?
+- An `eql` specializer won't work as is with strings. Indeed, strings
+need `equal` or `equalp` to be compared. But, we can assign our string
+to a variable and use the variable both in the `eql` specializer and
+for the function call.
 
-**Exercise** (in which I am indebted to Steve Haflich
-    for his clarifications): Consider the following code and form
-    unassailable opinions as to the circumstances in which a compiler
-    might be entitled to eliminate either of the tests in the method
-    body.
+- Sometimes, we can find one or many method implementations inside the
+  generic definition:
 
 ~~~lisp
-(defclass frob (standard-object) ())
-
-(defmethod foo ((baz frob))
-  (loop initially (mangle)
-        while baz do
-          (etypecase baz
-            (frob (setf baz (bar baz)))))))
+(defgeneric greet (foo)
+  (:method (foo)
+    (...))
+  (:method ((foo person))
+    (...)))
 ~~~
+
+This is equivalent to separate `defmethod`s, and is more a matter of
+style (long vs short methods, ease of renaming,...).
+
+
+See more about [defmethod on the CLHS](http://www.lispworks.com/documentation/lw70/CLHS/Body/m_defmet.htm).
+
 
 ### 4.3. Generic functions and next methods
 
@@ -1190,80 +1232,7 @@ Do whatever makes your code clearer.
     on its second argument, or on more than one argument.
 
 
-
-### Dispatching on specific objects - the eql specializer
-
-For specific objects, rather than whole classes.
-
-The examples of methods shown so far all specialize on
-    `standard-class`es. That isn't necessary. You can specialize on any CLOS
-    class: for example the system classes listed near the top of
-    [section 3.4][section-34], or any structure class.
-
-~~~lisp
-(defmethod my-describe ((self structure-object))
-               (format t "~s is a structure object."
-                       self))
-;; #<STANDARD-METHOD MY-DESCRIBE NIL (STRUCTURE-OBJECT) 205F5744>
-
-(my-describe (make-foo))
-;; #S(FOO) is a structure object.
-NIL
-
-(defmethod my-describe ((self foo))
-               (format t "bar"))
-;; #<STANDARD-METHOD MY-DESCRIBE NIL (FOO) 205F3ADC>
-
-(my-describe (make-foo))
-bar
-NIL
-
-CL-USER 73 >
-~~~
-
-You can use methods in your code without ever defining a CLOS
-    class, just as you can use CLOS classes without a single
-    `defmethod`. These two parts of CLOS are independent -
-    think of them as two object systems for the price of one.
-
-Another form of specializer, which will occasionally be useful, is
-    known as an <cite>eql specializer</cite>. In this case, the
-    specializing class name is replaced by a list whose first element is
-    the symbol `eql` and whose second value is any lisp
-    form. That form is evaluated at the same time as the
-    `defmethod`. In order for the method to be applicable, the
-    corresponding argument must be `eql` to the result of that
-    evaluation. An <cite>eql method</cite> is more specific than one
-    specializing on classes.
-
-~~~lisp
-(defmethod my-describe ((self (eql pi)))
-               (format t "approximately 22/7"))
-;; #<STANDARD-METHOD MY-DESCRIBE NIL ((EQL 3.141592653589793)) 2060E57C>
-
-(defmethod my-describe ((self float))
-               (format t "some float"))
-;; #<STANDARD-METHOD MY-DESCRIBE NIL (FLOAT) 2061EEF4>
-
-(my-describe pi)
-approximately 22/7
-NIL
-
-CL-USER 76 >
-~~~
-
-
-
-
-**Exercise:** Write a method on
-    `my-describe` for lists.
-
-**Exercise:** Write a method on
-    `print-object` for `Eric` the antelope. Change
-    the `class-of Eric`. Do you expect your method to still be
-    applicable?
-
-### 4.6. Qualifiers and method combination
+## 4.6. Qualifiers and method combination
 
 Let's start with a word of warning. Reckless use of method
     combination can - like an unfettered hand with multiple inheritance -
@@ -1396,19 +1365,6 @@ Another example: The CLOS implementation of
     `initialize-instance` as a souped-up analogue of the
     <cite>constructors</cite> offered by other OO systems. But CLOS
     doesn't offer a <cite>destructor.</cite> Should this matter?
-
-## Redifining methods: adding or removing REST or KEY arguments
-
-TODO:
-
-```
-attempt to add the method
-  #<STANDARD-METHOD NIL (#<STANDARD-CLASS CHILD>) {1009504233}>
-to the generic function
-  #<STANDARD-GENERIC-FUNCTION GREET (2)>;
-but the method and generic function differ in whether they accept
-&REST or &KEY arguments.
-```
 
 ### 4.7. Implementation notes: generic function dispatch
 
