@@ -906,11 +906,18 @@ Below we create methods, we specialize them, we use method combination
 ~~~
 
 
-## Generic methods (defgeneric, defmethod)
+## Generic functions (defgeneric, defmethod)
+
+A `generic function` is a lisp function which is associated
+with a set of methods and dispatches them when it's invoked. All
+the methods with the same function name belong to the same generic
+function.
 
 The `defmethod` form is similar to a `defun`. It associates a body of
 code with a function name, but that body may only be executed if the
 types of the arguments match the pattern declared by the lambda list.
+
+They can have optional, keyword and `&rest` arguments.
 
 The `defgeneric` form defines the generic function. If we write a
 `defmethod` without a corresponding `defgeneric`, a generic function
@@ -1038,77 +1045,77 @@ for the function call.
 This is equivalent to separate `defmethod`s, and is more a matter of
 style (long vs short methods, ease of renaming,...).
 
+- All the methods with the same function name belong to the same generic function.
+
+- All slot accessors and readers defined by `defclass` are methods. They can override or be overridden by other methods on the same generic function.
+
 
 See more about [defmethod on the CLHS](http://www.lispworks.com/documentation/lw70/CLHS/Body/m_defmet.htm).
 
 
-### 4.3. Generic functions and next methods
+### Multimethods
 
-A <cite>generic function</cite> is a lisp function which is
-    associated with a set of methods and dispatches them when it's
-    invoked. All the methods with the same function name belong to the
-    same generic function.
+TODO:
 
-The first time we defined a method on `my-describe`, we
-    implicitly created a generic function with that name. The generic
-    function initially had a single method, until we added a second method
-    with the same name.
+http://www.gigamonkeys.com/book/object-reorientation-generic-functions.html
 
-(**Implementation note:** the functions
-    `generic-function-methods` and
-    `method-generic-function` below are not part of Common
-    Lisp. In LispWorks they're available via your default
-    `package-use-list`, in Allegro they're exported from
-    `ACLMOP`.)
+### Other operators defining methods TODO:
 
-~~~lisp
-#'my-describe
-;; #<STANDARD-GENERIC-FUNCTION MY-DESCRIBE 21111C2A>
+Some operators define methods for a generic function. These operators
+will be referred to as "method-defining operators". Their associated
+forms are called "method-defining forms". The standardized
+method-defining operators are:
 
-(generic-function-methods #'my-describe)
-(#<STANDARD-METHOD MY-DESCRIBE NIL (T) 2110B544>
-                   #<STANDARD-METHOD MY-DESCRIBE NIL (ANIMAL) 21111BF4>)
+    defgeneric
+    defmethod
+    defclass
+    define-condition
+    defstruct
 
-(method-generic-function (car *))
-;; #<STANDARD-GENERIC-FUNCTION MY-DESCRIBE 21111C2A>
+http://www.lispworks.com/documentation/lw50/CLHS/Body/07_fa.htm
 
-CL-USER 66 >
-~~~
+https://stackoverflow.com/questions/29639620/use-of-method-option-in-defgeneric
 
-**Some notes:**
 
-*   In [section 4.2][section-42] above we mentioned
-    "invoking a method". To be accurate, the application cannot directly
-    invoke a method. If the application calls a function which happens to
-    be a generic function, then this will dispatch to (i.e. invoke) the
-    most applicable method.
 
-*   Methods can have optional, keyword and `&rest`
-    arguments. These must be compatible (<cite>congruent
-    lambda lists</cite>) between every method of each generic
-    function. For example, if there existed an optional
-    `stream` argument in one of the two methods on
-    `my-describe` then this argument would have to be present
-    and optional in the other.
+### Dispatch mechanism and next methods
 
-*   All slot accessors / readers defined by `defclass`
-    are methods. They can override or be overridden by other methods on
-    the same generic function.
 
-When a generic function is invoked, the dispatch mechanism proceeds
-    as follows:
+When a generic function is invoked, the application cannot directly invoke a method. The dispatch mechanism proceeds as follows:
 
-1.  compute the list of applicable methods;
-2.  if no method is applicable then signal an error;
-3.  sort the applicable methods in order of specificity;
+1.  compute the list of applicable methods
+2.  if no method is applicable then signal an error
+3.  sort the applicable methods in order of specificity
 4.  invoke the most specific method.
 
+Our `greet` generic function has three applicable methods:
+
+~~~lisp
+(closer-mop:generic-function-methods #'greet)
+(#<STANDARD-METHOD GREET (CHILD) {10098406A3}>
+ #<STANDARD-METHOD GREET (PERSON) {1009008EC3}>
+ #<STANDARD-METHOD GREET (T) {1008E6EBB3}>)
+~~~
+
+For reference, some more introspection functions (just play with your editor's autocompletion):
+
+```
+closer-mop:generic-function
+closer-mop:generic-function-name
+closer-mop:generic-function-methods
+closer-mop:generic-function-lambda-list
+closer-mop:generic-function-declarations
+closer-mop:generic-function-method-class
+closer-mop:generic-function-method-combination
+closer-mop:generic-function-argument-precedence-order
+```
+
 During the execution of a method, the remaining applicable methods
-    are still accessible, via the <cite>local function</cite>
-    `call-next-method`. This function has lexical scope within
-    the body of a method but indefinite extent. It invokes the next most
-    specific method, and returns whatever value that method returned. It
-    can be called with either:
+are still accessible, via the *local function*
+`call-next-method`. This function has lexical scope within
+the body of a method but indefinite extent. It invokes the next most
+specific method, and returns whatever value that method returned. It
+can be called with either:
 
 *   no arguments, in which case the <cite>next method</cite> will
     receive exactly the same arguments as this method did; or
@@ -1118,47 +1125,11 @@ During the execution of a method, the remaining applicable methods
     as that computed when the generic function was first called.
 
 Calling `call-next-method` when there is no next method
-    signals an error. You can find out whether a next method exists by
-    calling the local function `next-method-p` (which also has
-    has lexical scope and indefinite extent).
+signals an error. You can find out whether a next method exists by
+calling the local function `next-method-p` (which also has
+has lexical scope and indefinite extent).
 
-~~~lisp
-(defmethod my-describe ((antelope antelope))
-               (if (string= (slot-value antelope 'comes-from)
-                            "Brittany")
-                   (format t "Eric? Is that you?")
-                   (call-next-method)))
-;; #<STANDARD-METHOD MY-DESCRIBE NIL (ANTELOPE) 20603594>
-
-(my-describe
-              (make-instance 'antelope :comes-from 'nowhere :legs 4))
-;; #<ANTELOPE 205ECB64> is an animal. It has 4 legs and comes from NOWHERE.
-NIL
-
-(my-describe Eric)
-Eric? Is that you?
-NIL
-
-CL-USER 69 >
-~~~
-
-**Note** finally that the body of every method
-    establishes a block with the same name as the method's generic
-    function. If you `return-from` that name you are exiting
-    the current method, not the call to the enclosing generic
-    function.
-
-**Exercise:** Use your lisp implementation, to take a
-    look at the `class-precedence-list` of generic
-    functions.
-
-**Exercise:** When you evaluate `(comes-from
-Eric)`, from which class is the reader inherited? Override this
-    method, so that Antelopes always come from Africa. (This isn't true,
-    but it's an improvement.)
-
-**Exercise:** Experiment with the indefinite extent of
-    `call-next-method`.
+Note finally that the body of every method establishes a block with the same name as the method’s generic function. If you `return-from` that name you are exiting the current method, not the call to the enclosing generic function.
 
 ### 4.4. In OO languages the functionality lives in the object
 
