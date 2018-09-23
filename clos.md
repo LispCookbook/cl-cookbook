@@ -377,18 +377,17 @@ Generously, the functions introduced in the last section also work on
 lisp objects which are <u>not</u> CLOS instances:
 
 ~~~lisp
-(let ((the-symbol-class (find-class 'symbol)))
-  (values the-symbol-class
-          (class-name the-symbol-class)
-          (eq the-symbol-class (class-of 'symbol))
-          (class-of the-symbol-class)))
-;; #<BUILT-IN-CLASS SYMBOL 20306474>
+(find-class 'symbol)
+;; #<BUILT-IN-CLASS SYMBOL>
+(class-name *)
 ;; SYMBOL
+(eq ** (class-of 'symbol))
 ;; T
-;; #<STANDARD-CLASS BUILT-IN-CLASS 20306414>
+(class-of ***)
+;; #<STANDARD-CLASS BUILT-IN-CLASS>
 ~~~
 
-we see here that lisp `symbol`s are instances of the system class
+We see here that symbols are instances of the system class
 `symbol`. This is one of 75 cases in which the language requires a
 class to exist with the same name as the corresponding lisp
 type. Many of these cases are concerned with CLOS itself (for
@@ -427,8 +426,6 @@ in some detail later.
 ~~~lisp
 (find-class t)
 ;; #<BUILT-IN-CLASS T 20305AEC>
-
-CL-USER 27 >
 ~~~
 
 In addition to classes corresponding to lisp types, there is also a
@@ -440,8 +437,6 @@ FOO
 
 (class-of (make-foo))
 ;; #<STRUCTURE-CLASS FOO 21DE8714>
-
-CL-USER 29 >
 ~~~
 
 The metaclass of a `structure-object` is the class
