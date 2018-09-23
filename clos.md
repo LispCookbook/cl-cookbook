@@ -1069,7 +1069,7 @@ style (long vs short methods, ease of renaming,...).
 See more about [defmethod on the CLHS](http://www.lispworks.com/documentation/lw70/CLHS/Body/m_defmet.htm).
 
 
-### Multimethods
+## Multimethods
 
 TODO:
 
@@ -1094,7 +1094,7 @@ https://stackoverflow.com/questions/29639620/use-of-method-option-in-defgeneric
 
 
 
-### Dispatch mechanism and next methods
+## Dispatch mechanism and next methods
 
 
 When a generic function is invoked, the application cannot directly invoke a method. The dispatch mechanism proceeds as follows:
@@ -1150,30 +1150,38 @@ Note finally that the body of every method establishes a block with the same nam
 
 ## Qualifiers and method combination (before, after, around)
 
-TODO: more useful is to capture the result.
+In our "Diving in" examples, we saw some use of the `:before`, `:after` and `:around` *qualifiers*. The syntax is `(defmethod name :qualifier ()…)`:
 
-Let's start with a word of warning. Reckless use of method
-    combination can tangle
-    your code beyond recognition !
+- `(defmethod foo :before (obj) (...))`
+- `(defmethod foo :after (obj) (...))`
+- `(defmethod foo :around (obj) (...))`
 
-The full syntax for `defmethod` is:
+By default, in the *standard method combination* framework provided by
+CLOS, the flow of control is as follows:
 
-~~~lisp
-**defmethod** function-name {method-qualifier}* specialized-lambda-list
-        [[declaration* | documentation]] form*
-~~~
+- a **before-method** is called, well, before the applicable primary
+  method. If they are many before-methods, **all** are called. The
+  most specific before-method is called first (child before person).
+- the most specific applicable **primary method** (a method without
+  qualifiers) is called (only one).
+- all applicable **after-methods** are called. The most specific one is
+  called *last* (after-method of person, then after-method of child).
 
-We're only going to look here at the default, or *standard
-method combination*. (Other method combinations are available,
-    and you can even define your own but I'm not sure I've ever met anyone
-    who did.) With standard method combination, no more than one
-    *method qualifier* is permitted per method, and if present
-    is must be one of the following keywords: `:before`,
-    `:after` and `:around`. The methods without a
-    qualifier are known as *primary* methods. The full dispatch
-    mechanism for generic functions is as follows; **note**
-    that `:before` and `:after` methods are only run
-    for their side effects.
+**The generic function returns the value of the primary method**. Any
+values of the before or after methods are ignored. They are used for
+their side effects.
+
+And then we have **around-methods**. They are wrappers around the core
+framework we just described. They can be useful to catch return values
+or to set up an environment around the primary method (set up a catch,
+a lock, timing an execution,…).
+
+If the dispatch mechanism finds an around-method, it calls it and
+returns its result. If the around-method has a `call-next-method`, it
+calls the next most applicable around-method. It is only when we reach
+the primary method that we start calling the before and after-methods.
+
+Thus, the full dispatch mechanism for generic functions is as follows:
 
 1.  compute the applicable methods, and partition them into
     separate lists according to their qualifier;
@@ -1214,9 +1222,10 @@ method combination*. (Other method combinations are available,
 Think of it as an onion, with all the `:around`
     methods in the outermost layer, `:before` and
     `:after` methods in the middle layer, and primary methods
-    on the inside. Be grateful there are only three layers.
+    on the inside.
 
-Another example: The CLOS implementation of
+
+Another example, dealing with some MOP: The CLOS implementation of
     `make-instance` is in two stages: allocate the new object,
     and then pass it along with all the `make-instance` keyword
     arguments, to the generic function
@@ -1234,6 +1243,10 @@ Another example: The CLOS implementation of
 ~~~
 **initialize-instance** instance &rest initargs &key &allow-other-keys
 ~~~
+
+Other method combinations are available,
+    and no need to say that you can even define your own !
+
 
 
 ## Debugging: tracing method combination
