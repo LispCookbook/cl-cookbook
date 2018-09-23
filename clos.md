@@ -802,19 +802,38 @@ Below we create methods, we specialize them, we use method combination
 ;;; Method combination: before, after, around.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defmethod greet :before ((obj person))
+  (format t "-- before person~&"))
+#<STANDARD-METHOD GREET :BEFORE (PERSON) {100C94A013}>
+
+(greet p1)
+;; -- before person
+;; Hello me
+
 (defmethod greet :before ((obj child))
   (format t "-- before child~&"))
 ;; #<STANDARD-METHOD GREET :BEFORE (CHILD) {100AD32A43}>
 (greet c1)
 ;; -- before child
+;; -- before person
 ;; ur so cute
+
+(defmethod greet :after ((obj person))
+  (format t "-- after person~&"))
+;; #<STANDARD-METHOD GREET :AFTER (PERSON) {100CA2E1A3}>
+(greet p1)
+;; -- before person
+;; Hello me
+;; -- after person
 
 (defmethod greet :after ((obj child))
   (format t "-- after child~&"))
 ;; #<STANDARD-METHOD GREET :AFTER (CHILD) {10075B71F3}>
 (greet c1)
 ;; -- before child
+;; -- before person
 ;; ur so cute
+;; -- after person
 ;; -- after child
 
 (defmethod greet :around ((obj child))
@@ -834,7 +853,9 @@ Below we create methods, we specialize them, we use method combination
 (greet c1)
 ;; Hello my dear
 ;; -- before child
+;; -- before person
 ;; ur so cute
+;; -- after person
 ;; -- after child
 
 ;;;;;;;;;;;;;;;;;
@@ -870,9 +891,9 @@ Below we create methods, we specialize them, we use method combination
   (:method (obj)
     (format t "Are you a person ? You are a ~a~&." (type-of obj)))
   (:method ((obj person))
-    (format t "Hello ~a~& !" (name obj)))
+    (format t "Hello ~a !~&" (name obj)))
   (:method ((obj child))
-    (format t "ur so cute")))
+    (format t "ur so cute~&")))
 
 ;;;;;;;;;;;;;;;;
 ;;; Specializers
