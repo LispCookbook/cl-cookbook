@@ -369,86 +369,6 @@ the *metaclass* (i.e. the class of the class) of
 `my-point`. We can make good uses of metaclasses, as we'll see later.
 
 
-## Classes of traditional lisp types
-
-Where we approach that we don't need CLOS objects to use CLOS.
-
-Generously, the functions introduced in the last section also work on
-lisp objects which are <u>not</u> CLOS instances:
-
-~~~lisp
-(find-class 'symbol)
-;; #<BUILT-IN-CLASS SYMBOL>
-(class-name *)
-;; SYMBOL
-(eq ** (class-of 'symbol))
-;; T
-(class-of ***)
-;; #<STANDARD-CLASS BUILT-IN-CLASS>
-~~~
-
-We see here that symbols are instances of the system class
-`symbol`. This is one of 75 cases in which the language requires a
-class to exist with the same name as the corresponding lisp
-type. Many of these cases are concerned with CLOS itself (for
-example, the correspondence between the type `standard-class` and
-the CLOS class of that name) or with the condition system (which
-might or might not be built using CLOS classes in any given
-implementation). However, 33 correspondences remain relating to
-"traditional" lisp types:
-
-
-|`array`|`hash-table`|`readtable`|
-|`bit-vector`|`integer`|`real`|
-|`broadcast-stream`|`list`|`sequence`|
-|`character`|`logical-pathname&nbsp;&nbsp;`|`stream`|
-|`complex`|`null`|`string`|
-|`concatenated-stream&nbsp;&nbsp;`|`number`|`string-stream`|
-|`cons`|`package`|`symbol`|
-|`echo-stream`|`pathname`|`synonym-stream`|
-|`file-stream`|`random-state`|`t`|
-|`float`|`ratio`|`two-way-stream`|
-|`function`|`rational`|`vector`|
-
-
-Note that not all "traditional" lisp types are included in this
-list. (Consider: `atom`, `fixnum`, `short-float`, and any type not
-denoted by a symbol.)
-
-
-The presence of `t` is interesting. Just as every lisp
-object is of type `t`, every lisp object is also a member
-of the class named `t`. This is a simple example of
-membership of more then one class at a time, and it brings into
-question the issue of *inheritance*, which we will consider
-in some detail later.
-
-~~~lisp
-(find-class t)
-;; #<BUILT-IN-CLASS T 20305AEC>
-~~~
-
-In addition to classes corresponding to lisp types, there is also a
-    CLOS class for every structure type you define:
-
-~~~lisp
-(defstruct foo)
-FOO
-
-(class-of (make-foo))
-;; #<STRUCTURE-CLASS FOO 21DE8714>
-~~~
-
-The metaclass of a `structure-object` is the class
-    `structure-class`. It is implementation-dependent whether
-    the metaclass of a "traditional" lisp object is
-    `standard-class`, `structure-class`, or
-    `built-in-class`. Restrictions:
-
-|`built-in-class`| May not use `make-instance`, may not use `slot-value`, may not use `defclass` to modify, may not create subclasses.|
-|`structure-class`| May not use `make-instance`, might work with `slot-value` (implementation-dependent). Use `defstruct` to subclass application structure types. Consequences of modifying an existing `structure-class` are undefined: full recompilation may be necessary.|
-|`standard-class`|None of these restrictions.|
-
 
 ## Subclasses and inheritance
 
@@ -702,6 +622,86 @@ For reference, the following reproduces the default behaviour:
 ~~~
 
 Here, `:identity` to `t` prints the `{1006234593}` address.
+
+## Classes of traditional lisp types
+
+Where we approach that we don't need CLOS objects to use CLOS.
+
+Generously, the functions introduced in the last section also work on
+lisp objects which are <u>not</u> CLOS instances:
+
+~~~lisp
+(find-class 'symbol)
+;; #<BUILT-IN-CLASS SYMBOL>
+(class-name *)
+;; SYMBOL
+(eq ** (class-of 'symbol))
+;; T
+(class-of ***)
+;; #<STANDARD-CLASS BUILT-IN-CLASS>
+~~~
+
+We see here that symbols are instances of the system class
+`symbol`. This is one of 75 cases in which the language requires a
+class to exist with the same name as the corresponding lisp
+type. Many of these cases are concerned with CLOS itself (for
+example, the correspondence between the type `standard-class` and
+the CLOS class of that name) or with the condition system (which
+might or might not be built using CLOS classes in any given
+implementation). However, 33 correspondences remain relating to
+"traditional" lisp types:
+
+
+|`array`|`hash-table`|`readtable`|
+|`bit-vector`|`integer`|`real`|
+|`broadcast-stream`|`list`|`sequence`|
+|`character`|`logical-pathname&nbsp;&nbsp;`|`stream`|
+|`complex`|`null`|`string`|
+|`concatenated-stream&nbsp;&nbsp;`|`number`|`string-stream`|
+|`cons`|`package`|`symbol`|
+|`echo-stream`|`pathname`|`synonym-stream`|
+|`file-stream`|`random-state`|`t`|
+|`float`|`ratio`|`two-way-stream`|
+|`function`|`rational`|`vector`|
+
+
+Note that not all "traditional" lisp types are included in this
+list. (Consider: `atom`, `fixnum`, `short-float`, and any type not
+denoted by a symbol.)
+
+
+The presence of `t` is interesting. Just as every lisp
+object is of type `t`, every lisp object is also a member
+of the class named `t`. This is a simple example of
+membership of more then one class at a time, and it brings into
+question the issue of *inheritance*, which we will consider
+in some detail later.
+
+~~~lisp
+(find-class t)
+;; #<BUILT-IN-CLASS T 20305AEC>
+~~~
+
+In addition to classes corresponding to lisp types, there is also a
+    CLOS class for every structure type you define:
+
+~~~lisp
+(defstruct foo)
+FOO
+
+(class-of (make-foo))
+;; #<STRUCTURE-CLASS FOO 21DE8714>
+~~~
+
+The metaclass of a `structure-object` is the class
+    `structure-class`. It is implementation-dependent whether
+    the metaclass of a "traditional" lisp object is
+    `standard-class`, `structure-class`, or
+    `built-in-class`. Restrictions:
+
+|`built-in-class`| May not use `make-instance`, may not use `slot-value`, may not use `defclass` to modify, may not create subclasses.|
+|`structure-class`| May not use `make-instance`, might work with `slot-value` (implementation-dependent). Use `defstruct` to subclass application structure types. Consequences of modifying an existing `structure-class` are undefined: full recompilation may be necessary.|
+|`standard-class`|None of these restrictions.|
 
 
 ## Introspection
