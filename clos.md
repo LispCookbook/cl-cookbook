@@ -1127,29 +1127,29 @@ has lexical scope and indefinite extent).
 Note finally that the body of every method establishes a block with the same name as the method’s generic function. If you `return-from` that name you are exiting the current method, not the call to the enclosing generic function.
 
 
-## 4.6. Qualifiers and method combination
+## Qualifiers and method combination (before, after, around)
+
+TODO: more useful is to capture the result.
 
 Let's start with a word of warning. Reckless use of method
-    combination can - like an unfettered hand with multiple inheritance -
-    <a
-    href="http://www.cogsci.princeton.edu/cgi-bin/webwn1.7.1?stage=1&word=spaghetti">tangle</a>
-    your code beyond recognition.
+    combination can tangle
+    your code beyond recognition !
 
 The full syntax for `defmethod` is:
 
 ~~~lisp
-**defmethod** <cite>function-name {method-qualifier}* specialized-lambda-list
-        [[declaration* | documentation]] form*</cite>
+**defmethod** function-name {method-qualifier}* specialized-lambda-list
+        [[declaration* | documentation]] form*
 ~~~
 
-We're only going to look here at the default, or <cite>standard
-method combination</cite>. (Other method combinations are available,
+We're only going to look here at the default, or *standard
+method combination*. (Other method combinations are available,
     and you can even define your own but I'm not sure I've ever met anyone
     who did.) With standard method combination, no more than one
-    <cite>method qualifier</cite> is permitted per method, and if present
+    *method qualifier* is permitted per method, and if present
     is must be one of the following keywords: `:before`,
     `:after` and `:around`. The methods without a
-    qualifier are known as <cite>primary</cite> methods. The full dispatch
+    qualifier are known as *primary* methods. The full dispatch
     mechanism for generic functions is as follows; **note**
     that `:before` and `:after` methods are only run
     for their side effects.
@@ -1190,43 +1190,10 @@ method combination</cite>. (Other method combinations are available,
             `call-next-method` or
             `next-method-p`.
 
-If you think all this looks insanely complicated, you're probably
-    right. Think of it as an onion, with all the `:around`
+Think of it as an onion, with all the `:around`
     methods in the outermost layer, `:before` and
     `:after` methods in the middle layer, and primary methods
-    on the inside. Be grateful there are only three layers. To make the
-    model work, it helps conceptually to pair `:before` and
-    `:after` methods like this:
-
-~~~lisp
-(defmethod spong :before-and-after
-    (&rest args)
-     (let ((before (find-method #'spong '(:before) args))
-           (after  (find-method #'spong '(:after) args)))
-       (when before (invoke-method before args))
-       (multiple-value-prog1
-           (call-next-before-and-after-method)
-         (when after (invoke-method after args)))))
-~~~
-
-**Note** how this gives us a reversed order for
-    `:after` methods. This happens quite naturally, which might
-    explain why the reversal was specified in the first place.
-
-In real life (you hope) the situation won't get that complicated. A
-    simple example: `my-describe` suppressing return values.
-
-~~~lisp
-(defmethod my-describe :around (self)
-               (call-next-method)
-               (values))
-;; #<STANDARD-METHOD MY-DESCRIBE (:AROUND) (T) 20605A34>
-
-(my-describe Eric)
-Eric? Is that you?
-
-CL-USER 78 >
-~~~
+    on the inside. Be grateful there are only three layers.
 
 Another example: The CLOS implementation of
     `make-instance` is in two stages: allocate the new object,
@@ -1244,22 +1211,9 @@ Another example: The CLOS implementation of
     for `initialize-instance` is:
 
 ~~~
-**initialize-instance** <cite>instance</cite> &rest <cite>initargs</cite> &key &allow-other-keys
+**initialize-instance** instance &rest initargs &key &allow-other-keys
 ~~~
 
-**Exercise:** Add an `:after` method to
-    `initialize-instance` to make all aardvarks come from
-    Cambridge, England. Add another method (qualified how?) to prohibit
-    the following interaction:
-
-~~~lisp
-(make-instance 'cannibal :diet (make-instance 'cannibal))
-~~~
-
-**Exercise:** You might choose to regard
-    `initialize-instance` as a souped-up analogue of the
-    <cite>constructors</cite> offered by other OO systems. But CLOS
-    doesn't offer a <cite>destructor.</cite> Should this matter?
 
 ## Debugging: tracing method combination
 
