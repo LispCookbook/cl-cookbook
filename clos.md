@@ -241,31 +241,41 @@ If you don't specify any of these, you can still use `slot-value`.
 You can give a slot more than one `:accessor`, `:reader` or `:initarg`.
 
 
-We introduce two macros to access slots.
+We introduce two macros to make the access to slots shorter in some situations:
 
-`with-slots` allows to abbreviate several calls to slot-value. The
+1- `with-slots` allows to abbreviate several calls to slot-value. The
 first argument is a list of slot names. The second argument evaluates
-to a CLOS instance; this is followed by optional declarations and an
+to a CLOS instance. This is followed by optional declarations and an
 implicit `progn`. Lexically during the evaluation of the body, an
 access to any of these names as a variable is equivalent to accessing
-the corresponding slot of the CLOS instance.
+the corresponding slot of the instance with `slot-value`.
 
 
 ~~~lisp
-(defun distance-from-origin (point)
-    (with-slots (x y z)
-        point
-      (sqrt (+ (* x x) (* y y) (* z z)))))
+(with-slots (name lisper)
+    c1
+  (format t "got ~a, ~a~&" name lisper))
 ~~~
 
-
-TODO: with-accessors
+or
 
 ~~~lisp
-(with-accessors ((daft-x daft-x)
-                 (daft-y daft-y))
-            daft-point
-          (format stream "x: ~a, y: ~a" daft-x daft-y))))
+(with-slots ((n name)
+             (l lisper))
+    c1
+  (format t "got ~a, ~a~&" n l))
+~~~
+
+2- `with-accessors` is equivalent, but instead of a list of slots it
+takes a list of accessor functions. Any reference to the variable
+inside the macro is equivalent to a call to the accessor function.
+
+~~~lisp
+(with-accessors ((name        name)
+                  ^^variable  ^^accessor
+                 (lisper lisper))
+            p1
+          (format t "name: ~a, lisper: ~a" name lisper))
 ~~~
 
 ### Class VS instance slots
