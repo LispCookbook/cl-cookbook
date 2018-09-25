@@ -1131,12 +1131,27 @@ the body of a method but indefinite extent. It invokes the next most
 specific method, and returns whatever value that method returned. It
 can be called with either:
 
-*   no arguments, in which case the <cite>next method</cite> will
-    receive exactly the same arguments as this method did; or
+*   no arguments, in which case the *next method* will
+    receive exactly the same arguments as this method did, or
 
 *   explicit arguments, in which case it is required that the
     sorted set of methods applicable to the new arguments must be the same
     as that computed when the generic function was first called.
+
+For example:
+
+~~~lisp
+(defmethod greet ((obj child))
+  (format t "ur so cute~&")
+  (when (next-method-p)
+    (call-next-method)))
+;; STYLE-WARNING: REDEFINING GREET (#<STANDARD-CLASS CHILD>) in DEFMETHOD
+;; #<STANDARD-METHOD GREET (child) {1003D3DB43}>
+
+(greet c1)
+;; ur so cute
+;; Hello Alice !
+~~~
 
 Calling `call-next-method` when there is no next method
 signals an error. You can find out whether a next method exists by
