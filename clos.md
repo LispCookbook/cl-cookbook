@@ -1101,6 +1101,22 @@ have to in other languages.
 
 Read more on [Practical Common Lisp](http://www.gigamonkeys.com/book/object-reorientation-generic-functions.html#multimethods).
 
+## Controlling setters (setf-ing methods)
+
+In Lisp, we can define `setf` counterparts of functions or methods. We
+might want this to have more control on how to update an object.
+
+~~~lisp
+(defmethod (setf name) (new-val (obj person))
+  (if (equalp new-val "james bond")
+    (format t "Dude that's not possible.~&")
+    (setf (slot-value obj 'name) new-val)))
+
+(setf (name p1) "james bond") ;; -> no rename
+~~~
+
+If you know Python, this behaviour is provided by the `@property` decorator.
+
 
 ## Dispatch mechanism and next methods
 
