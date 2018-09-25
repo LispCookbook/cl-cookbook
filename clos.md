@@ -1075,7 +1075,7 @@ TODO:
 
 http://www.gigamonkeys.com/book/object-reorientation-generic-functions.html
 
-### Other operators defining methods TODO:
+## Other operators defining methods TODO:
 
 Some operators define methods for a generic function. These operators
 will be referred to as "method-defining operators". Their associated
@@ -1148,16 +1148,16 @@ has lexical scope and indefinite extent).
 Note finally that the body of every method establishes a block with the same name as the method’s generic function. If you `return-from` that name you are exiting the current method, not the call to the enclosing generic function.
 
 
-## Qualifiers and method combination (before, after, around)
+## Method qualifiers (before, after, around)
 
-In our "Diving in" examples, we saw some use of the `:before`, `:after` and `:around` *qualifiers*. The syntax is `(defmethod name :qualifier ()…)`:
+In our "Diving in" examples, we saw some use of the `:before`, `:after` and `:around` *qualifiers*:
 
 - `(defmethod foo :before (obj) (...))`
 - `(defmethod foo :after (obj) (...))`
 - `(defmethod foo :around (obj) (...))`
 
 By default, in the *standard method combination* framework provided by
-CLOS, the flow of control is as follows:
+CLOS, we can only use one of those three qualifiers, and the flow of control is as follows:
 
 - a **before-method** is called, well, before the applicable primary
   method. If they are many before-methods, **all** are called. The
@@ -1172,7 +1172,7 @@ values of the before or after methods are ignored. They are used for
 their side effects.
 
 And then we have **around-methods**. They are wrappers around the core
-framework we just described. They can be useful to catch return values
+mechanism we just described. They can be useful to catch return values
 or to set up an environment around the primary method (set up a catch,
 a lock, timing an execution,…).
 
@@ -1241,12 +1241,119 @@ Another example, dealing with some MOP: The CLOS implementation of
     for `initialize-instance` is:
 
 ~~~
-**initialize-instance** instance &rest initargs &key &allow-other-keys
+initialize-instance instance &rest initargs &key &allow-other-keys
 ~~~
 
-Other method combinations are available,
-    and no need to say that you can even define your own !
+## Controlling the method combination (method-combination)
 
+The default method combination type we just saw is named `standard`,
+but other method combination types are available, and no need to say
+that you can define your own.
+
+The built-in types are:
+
+    progn + list nconc and max or append min
+
+You notice that these types have the name of a lisp operator. Indeed,
+what they do is they define a framework that combines the applicable
+primary methods inside a call to the lisp operator of that name. For
+example, using the `progn` combination type is equivalent to calling **all**
+the primary methods one after the other:
+
+~~~lisp
+(progn
+  (method-1 args)
+  (method-2 args)
+  (method-3 args))
+~~~
+
+Here, unlike the standard mechanism, all the primary methods
+applicable for a given object are called, the most specific
+first.
+
+To change the combination type, we set the `:method-combination`
+option of `defgeneric` to it and we use it as the methods' qualifier:
+
+~~~lisp
+(defgeneric foo (obj)
+  (:method-combination progn))
+
+(defmethod foo progn ((obj obj))
+   (...))
+~~~
+
+An example with **progn**:
+
+~~~lisp
+(defgeneric dishes (obj)
+   (:method-combination progn)
+   (:method progn (obj)
+     (format t "- clean and dry.~&"))
+   (:method progn ((obj person))
+     (format t "- bring a person's dishes~&"))
+   (:method progn ((obj child))
+     (format t "- bring the baby dishes~&")))
+;; #<STANDARD-GENERIC-FUNCTION DISHES (3)>
+
+(dishes c1)
+;; - bring the baby dishes
+;; - bring a person's dishes
+;; - clean and dry.
+
+(greet c1)
+;; ur so cute  --> only the most applicable method was called.
+~~~
+
+Similarly, using the `list` type is equivalent to returning the list
+of the values of the methods.
+
+~~~lisp
+(list
+  (method-1 args)
+  (method-2 args)
+  (method-3 args))
+~~~
+
+~~~lisp
+(defgeneric tidy (obj)
+  (:method-combination list)
+  (:method list (obj)
+    :foo)
+  (:method list ((obj person))
+    :books)
+  (:method list ((obj child))
+    :toys))
+;; #<STANDARD-GENERIC-FUNCTION TIDY (3)>
+
+(tidy c1)
+;; (:toys :books :foo)
+~~~
+
+**Around methods** are accepted:
+
+~~~lisp
+(defmethod tidy :around (obj)
+   (let ((res (call-next-method)))
+     (format t "I'm going to clean up ~a~&" res)
+     (when (> (length res)
+              1)
+       (format t "that's too much !~&"))))
+
+(tidy c1)
+;; I'm going to clean up (toys book foo)
+;; that's too much !
+~~~
+
+Note that these operators don't support `before`, `after` and `around`
+methods (indeed, there is no room for them anymore). They do support
+around methods, where `call-next-method` is allowed, but they don't
+support calling `call-next-method` in the primary methods (it would
+indeed be redundant since all primary methods are called, or clunky to
+*not* call one).
+
+CLOS allows us to define a new operator as a method combination type, be
+it a lisp function, macro or special form. We'll let you refer to the
+books if you feel the need.
 
 
 ## Debugging: tracing method combination
