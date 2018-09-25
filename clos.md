@@ -224,8 +224,8 @@ Sometimes we see the following trick to clearly require a slot:
 ### Getters and setters (accessor, reader, writer)
 
 - `:accessor foo`: an accessor is both a **getter** and a
-  **setter**. Its argument is a name that will become a *generic
-  function*.
+  **setter**. Its argument is a name that will become a **generic
+  function**.
 
 ~~~lisp
 (name p1) ;; => "me"
@@ -1068,30 +1068,28 @@ style (long vs short methods, ease of renaming,...).
 
 See more about [defmethod on the CLHS](http://www.lispworks.com/documentation/lw70/CLHS/Body/m_defmet.htm).
 
-
 ## Multimethods
 
-TODO:
+Multimethods explicitly specialize more than one of the generic
+function's required parameters.
 
-http://www.gigamonkeys.com/book/object-reorientation-generic-functions.html
+They don't belong to a particular class. Meaning, we don't have to
+decide on the class that would be best to host this method, as we might
+have to in other languages.
 
-## Other operators defining methods TODO:
+~~~lisp
+(defgeneric hug (a b)
+   (:documentation "Hug between two persons."))
+;; #<STANDARD-GENERIC-FUNCTION HUG (0)>
 
-Some operators define methods for a generic function. These operators
-will be referred to as "method-defining operators". Their associated
-forms are called "method-defining forms". The standardized
-method-defining operators are:
+(defmethod hug ((a person) (b person))
+  :person-person-hug)
 
-    defgeneric
-    defmethod
-    defclass
-    define-condition
-    defstruct
+(defmethod hug ((a person) (b child))
+  :person-child-hug)
+~~~
 
-http://www.lispworks.com/documentation/lw50/CLHS/Body/07_fa.htm
-
-https://stackoverflow.com/questions/29639620/use-of-method-option-in-defgeneric
-
+Read more on [Practical Common Lisp](http://www.gigamonkeys.com/book/object-reorientation-generic-functions.html#multimethods).
 
 
 ## Dispatch mechanism and next methods
