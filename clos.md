@@ -24,14 +24,15 @@ Features:
 
 You may enjoy other introductions to the CLOS:
 
-- [Practical Common Lisp](http://www.gigamonkeys.com/book/object-reorientation-generic-functions.html), by Peter Seibel,
+- in [Practical Common Lisp](http://www.gigamonkeys.com/book/object-reorientation-generic-functions.html), by Peter Seibel,
 - [A Guide to CLOS](http://www.aiai.ed.ac.uk/~jeff/clos-guide.html) by Jeff Dalton
 - http://cs.northwestern.edu/academics/courses/325/readings/clos.php
 
-But in the end, to learn the subject in depth, you will need these two books:
+But in the end, to learn the subject in depth, you will need these books:
 
 - [Object-Oriented Programming in Common Lisp: a Programmer's Guide to CLOS](http://www.communitypicks.com/r/lisp/s/17592186046723-object-oriented-programming-in-common-lisp-a-programmer), Sonya Keene,
 - ["the Art of the Metaobject Protocol"](http://www.communitypicks.com/r/lisp/s/17592186045709-the-art-of-the-metaobject-protocol), by Gregor Kiczales, Jim des Rivières et al,
+- also [Common Lisp, the Language](https://www.cs.cmu.edu/Groups/AI/html/cltl/clm/node260.html#SECTION003200000000000000000)
 - and for reference, the complete [CLOS-MOP specifications](https://clos-mop.hexstreamsoft.com/)
 
 
@@ -82,8 +83,6 @@ inheritance.
 ;; T
 ~~~
 
-TODO: inheritance with slots
-
 ## Defining classes (defclass)
 
 The macro used for defining new data types in CLOS is `defclass`.
@@ -103,8 +102,6 @@ We used it like this:
 This gives us a CLOS type (or class) called `person` and two slots,
 named `name` and `lisper`.
 
-TODO: move in "predicates" ?
-
 ~~~lisp
 (class-of p1)
 #<STANDARD-CLASS PERSON>
@@ -112,7 +109,6 @@ TODO: move in "predicates" ?
 (type-of p1)
 PERSON
 ~~~
-
 
 The general form of `defclass` is:
 
@@ -472,7 +468,7 @@ CLOS supports multiple inheritance.
 ~~~
 
 The first class on the list of parent classes is the most specific
-one, child's slots will take precedence over person's.
+one, `child`'s slots will take precedence over the `person`'s.
 
 
 ## Redefining and changing a class
@@ -1428,3 +1424,100 @@ TODO: see SBCL (notes.org)
 [section-A]: #a-references
 [section-B]: #b-document-history
 [section-C]: #c-partial-class-hierarchy
+
+# MOP
+
+We gather here some examples that make use of the framework provided
+by the meta-object protocol, the configurable object system that rules
+Lisp's object system. We touch advanced concepts so, new reader, don't
+worry: you don't need to understand this section to start using the
+Common Lisp Object System.
+
+We won't explain much about the MOP here, but hopefully sufficiently
+to make you see its possibilities or to help you understand how some
+CL libraries are built. We invite you to read the books referenced in
+the introduction.
+
+
+## Metaclasses
+
+Metaclasses are needed to control the behaviour of other classes.
+
+*As announced, we won't talk much. See also Wikipedia for [metaclasses](https://en.wikipedia.org/wiki/Metaclass) or [CLOS](https://en.wikipedia.org/wiki/Common_Lisp_Object_System)*.
+
+The standard metaclass is `standard-class`:
+
+~~~lisp
+(class-of p1) ;; #<STANDARD-CLASS PERSON>
+~~~
+
+But we'll change it to one of our own, so that we'll be able to
+**count the creation of instances**. This same mechanism could be used
+to auto increment the primary key of a database system (and this is
+exactly what the Mito library does), to log the creation of objects,
+etc.
+
+Our metaclass inherits from `standard-class`:
+
+~~~lisp
+(defclass counted-class (standard-class)
+  ((counter :initform 0)))
+#<STANDARD-CLASS COUNTED-CLASS>
+
+(unintern 'person)
+;; this is necessary to change the metaclass of person.
+;; or (setf (find-class 'person) nil)
+;; https://stackoverflow.com/questions/38811931/how-to-change-classs-metaclass#38812140
+
+(defclass person ()
+  ((name
+    :initarg :name
+    :accessor name)
+  (:metaclass counted-class)) ;; <- metaclass
+;; #<COUNTED-CLASS PERSON>
+;;   ^^^ not standard-class anymore.
+~~~
+
+The `:metaclass` class option can appear only once.
+
+Actually you should have gotten a message asking to implement
+`validate-superclass`. So, still with the `closer-mop` library:
+
+~~~lisp
+(defmethod closer-mop:validate-superclass ((class counted-class)
+                                           (superclass standard-class))
+  t)
+~~~
+
+Now we can control the creation of new `person` instances:
+
+~~~lisp
+(defmethod make-instance :after ((class counted-class) &key)
+  (incf (slot-value class 'counter)))
+;; #<STANDARD-METHOD MAKE-INSTANCE :AFTER (COUNTED-CLASS) {1007718473}>
+~~~
+
+See that an `:after` qualifier is the safest choice, we let the
+standard method run as usual and return a new instance.
+
+The `&key` is necessary, remember that `make-instance` is given initargs.
+
+Now testing:
+
+~~~lisp
+(defvar p3 (make-instance 'person :name "adam"))
+#<PERSON {1007A8F5B3}>
+
+(slot-value p3 'counter)
+;; => error. No, our new slot isn't on the person class.
+(slot-value (find-class 'person) 'counter)
+;; 1
+
+(make-instance 'person :name "eve")
+;; #<PERSON {1007AD5773}>
+(slot-value (find-class 'person) 'counter)
+;; 2
+~~~
+
+It's working.
+
