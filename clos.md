@@ -1437,36 +1437,6 @@ Let's trace it:
 ~~~
 
 
-# Partial class hierarchy
-
-| <a id="figure-6" name="figure-6">![Partial class hierarchy.](assets/clos/images/fig-6.gif) |
-| Figure 6. Partial class hierarchy. The arrows denote the <cite>superclass</cite> relationship. All classes are instances of `standard-class`, apart from `t` and `function` which are instances of `built-in-class` and `generic-function` which is an instance of `funcallable-standard-class.` |
-
-[section-1]: #1-introduction
-[section-2]: #2-background
-[section-21]: #21-references
-[section-22]: #22-getting-started
-[section-3]: #3-classes-and-instances
-[section-31]: #31-review---the-non-oo-approach
-[section-32]: #32-introducing-the-macro-defclass
-[section-33]: #33-classes-are-instances-too
-[section-34]: #34-you-dont-need-clos-objects-to-use-clos
-[section-35]: #35-slots
-[section-36]: #36-subclasses-and-inheritance
-[section-37]: #37-changing-a-class
-[section-38]: #38-implementation-notes-object-wrappers
-[section-4]: #4-methods
-[section-41]: #41-review---the-non-oo-approach
-[section-42]: #42-introducing-the-macro-defmethod
-[section-43]: #43-generic-functions-and-next-methods
-[section-44]: #44-in-oo-languages-the-functionality-lives-in-the-object
-[section-45]: #45-other-specializers-you-still-dont-need-clos-objects-to-use-clos
-[section-46]: #46-qualifiers-and-method-combination
-[section-47]: #47-implementation-notes-generic-function-dispatch
-[section-A]: #a-references
-[section-B]: #b-document-history
-[section-C]: #c-partial-class-hierarchy
-
 # MOP
 
 We gather here some examples that make use of the framework provided
