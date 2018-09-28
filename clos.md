@@ -3,37 +3,39 @@ title: Fundamentals of CLOS
 ---
 
 
-# Introduction
+CLOS is the "Common Lisp Object System", arguably one of the most
+powerful object systems available in any language.
 
-*CLOS* is the "Common Lisp Object System". The functionality belonging to
-this name was added to the Common Lisp language between the publication of
-Steele's first edition of "Common Lisp, the Language" in 1984 and the
-formalization of the language as an ANSI standard ten years later.
+Some of its features include:
 
-<!-- todo -->
+* it is **dynamic**, making it a joy to work with in a Lisp REPL. For
+  example, changing a class definition will update the existing
+  objects, given certain rules which we have control upon.
+* it supports **multiple dispatch** and **multiple inheritance**,
+* it is different from most object systems in that class and method
+  definitions are not tied together,
+* it has excellent **introspection** capabilities,
+* it is provided by a **meta-object protocol**, which provides a
+  standard interface to the CLOS, and allows *in fine* to create new
+  object systems.
 
-Features:
+The functionality belonging to this name was added to the Common Lisp
+language between the publication of Steele's first edition of "Common
+Lisp, the Language" in 1984 and the formalization of the language as
+an ANSI standard ten years later.
 
-* polymorphism, generic dispatch
-* live manipulation: changing a class also changes its current
-  instances. For example, adding a slot will add it to the existing
-  objects. Mechanism we can control (MOP).
-* excellent introspection
-* MOP
+This page aims to give a good understanding of how to use CLOS, but little presents of the MOP.
 
+To learn the subjects in depth, you will need two books:
 
-You may enjoy other introductions to the CLOS:
+- [Object-Oriented Programming in Common Lisp: a Programmer's Guide to CLOS](http://www.communitypicks.com/r/lisp/s/17592186046723-object-oriented-programming-in-common-lisp-a-programmer), by Sonya Keene,
+- [the Art of the Metaobject Protocol](http://www.communitypicks.com/r/lisp/s/17592186045709-the-art-of-the-metaobject-protocol), by Gregor Kiczales, Jim des Rivières et al.
 
-- in [Practical Common Lisp](http://www.gigamonkeys.com/book/object-reorientation-generic-functions.html), by Peter Seibel,
-- [A Guide to CLOS](http://www.aiai.ed.ac.uk/~jeff/clos-guide.html) by Jeff Dalton
-- http://cs.northwestern.edu/academics/courses/325/readings/clos.php
+But see also
 
-But in the end, to learn the subject in depth, you will need these books:
-
-- [Object-Oriented Programming in Common Lisp: a Programmer's Guide to CLOS](http://www.communitypicks.com/r/lisp/s/17592186046723-object-oriented-programming-in-common-lisp-a-programmer), Sonya Keene,
-- ["the Art of the Metaobject Protocol"](http://www.communitypicks.com/r/lisp/s/17592186045709-the-art-of-the-metaobject-protocol), by Gregor Kiczales, Jim des Rivières et al,
-- also [Common Lisp, the Language](https://www.cs.cmu.edu/Groups/AI/html/cltl/clm/node260.html#SECTION003200000000000000000)
-- and for reference, the complete [CLOS-MOP specifications](https://clos-mop.hexstreamsoft.com/)
+- the introduction in [Practical Common Lisp](http://www.gigamonkeys.com/book/object-reorientation-generic-functions.html) (online), by Peter Seibel.
+-  [Common Lisp, the Language](https://www.cs.cmu.edu/Groups/AI/html/cltl/clm/node260.html#SECTION003200000000000000000)
+- and for reference, the complete [CLOS-MOP specifications](https://clos-mop.hexstreamsoft.com/).
 
 
 #  Classes and instances
