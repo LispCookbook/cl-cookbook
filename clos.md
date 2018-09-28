@@ -1279,7 +1279,7 @@ Another example, dealing with some MOP: The CLOS implementation of
 initialize-instance instance &rest initargs &key &allow-other-keys
 ~~~
 
-## Controlling the method combination (method-combination)
+## Other method combinations
 
 The default method combination type we just saw is named `standard`,
 but other method combination types are available, and no need to say
@@ -1453,8 +1453,8 @@ The standard metaclass is `standard-class`:
 
 But we'll change it to one of our own, so that we'll be able to
 **count the creation of instances**. This same mechanism could be used
-to auto increment the primary key of a database system (and this is
-exactly what the Mito library does), to log the creation of objects,
+to auto increment the primary key of a database system (this is
+how the Postmodern or Mito libraries do), to log the creation of objects,
 etc.
 
 Our metaclass inherits from `standard-class`:
@@ -1521,3 +1521,20 @@ Now testing:
 
 It's working.
 
+
+## Controlling the initialization of instances (initialize-instance)
+
+To further customize the creation of instances by specializing
+`initialize-instance`, which is called by `make-instance`, just after
+it has created a new instance but didn't initialize it yet with the
+default initargs and initforms.
+
+It is recommended (Keene) to create an after method, since creating a
+primary method would prevent slots' initialization.
+
+~~~lisp
+(defmethod initialize-instance :after ((obj person) &key)
+  (do something with obj))
+~~~
+
+See more in the books !
