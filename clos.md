@@ -400,7 +400,7 @@ Every child instance is also an instance of `person`.
 ;; T
 ~~~
 
-[`closer-mop`](https://github.com/pcostanza/closer-mop) is *the*
+The [closer-mop](https://github.com/pcostanza/closer-mop) library is *the*
 portable way to do CLOS/MOP operations.
 
 
@@ -713,6 +713,54 @@ The metaclass of a `structure-object` is the class
 
 
 ## Introspection
+
+we already saw some introspection functions.
+
+Your best option is to discover the
+[closer-mop](https://github.com/pcostanza/closer-mop) libray and to
+keep the [CLOS & MOP specifications](https://clos-mop.hexstreamsoft.com/) at
+hand.
+
+More functions:
+
+```
+closer-mop:class-default-initargs
+closer-mop:class-direct-default-initargs
+closer-mop:class-direct-slots
+closer-mop:class-direct-subclasses
+closer-mop:class-direct-superclasses
+closer-mop:class-precedence-list
+closer-mop:class-slots
+closer-mop:classp
+closer-mop:extract-lambda-list
+closer-mop:extract-specializer-names
+closer-mop:generic-function-argument-precedence-order
+closer-mop:generic-function-declarations
+closer-mop:generic-function-lambda-list
+closer-mop:generic-function-method-class
+closer-mop:generic-function-method-combination
+closer-mop:generic-function-methods
+closer-mop:generic-function-name
+closer-mop:method-combination
+closer-mop:method-function
+closer-mop:method-generic-function
+closer-mop:method-lambda-list
+closer-mop:method-specializers
+closer-mop:slot-definition
+closer-mop:slot-definition-allocation
+closer-mop:slot-definition-initargs
+closer-mop:slot-definition-initform
+closer-mop:slot-definition-initfunction
+closer-mop:slot-definition-location
+closer-mop:slot-definition-name
+closer-mop:slot-definition-readers
+closer-mop:slot-definition-type
+closer-mop:slot-definition-writers
+closer-mop:specializer-direct-generic-functions
+closer-mop:specializer-direct-methods
+closer-mop:standard-accessor-method
+```
+
 
 ## See also
 
@@ -1055,20 +1103,6 @@ need `equal` or `equalp` to be compared. But, we can assign our string
 to a variable and use the variable both in the `eql` specializer and
 for the function call.
 
-- Sometimes, we can find one or many method implementations inside the
-  generic definition:
-
-~~~lisp
-(defgeneric greet (foo)
-  (:method (foo)
-    (...))
-  (:method ((foo person))
-    (...)))
-~~~
-
-This is equivalent to separate `defmethod`s, and is more a matter of
-style (long vs short methods, ease of renaming,...).
-
 - All the methods with the same function name belong to the same generic function.
 
 - All slot accessors and readers defined by `defclass` are methods. They can override or be overridden by other methods on the same generic function.
@@ -1134,19 +1168,6 @@ Our `greet` generic function has three applicable methods:
  #<STANDARD-METHOD GREET (PERSON) {1009008EC3}>
  #<STANDARD-METHOD GREET (T) {1008E6EBB3}>)
 ~~~
-
-For reference, some more introspection functions (just play with your editor's autocompletion):
-
-```
-closer-mop:generic-function
-closer-mop:generic-function-name
-closer-mop:generic-function-methods
-closer-mop:generic-function-lambda-list
-closer-mop:generic-function-declarations
-closer-mop:generic-function-method-class
-closer-mop:generic-function-method-combination
-closer-mop:generic-function-argument-precedence-order
-```
 
 During the execution of a method, the remaining applicable methods
 are still accessible, via the *local function*
@@ -1262,25 +1283,6 @@ Think of it as an onion, with all the `:around`
     on the inside.
 
 
-Another example, dealing with some MOP: The CLOS implementation of
-    `make-instance` is in two stages: allocate the new object,
-    and then pass it along with all the `make-instance` keyword
-    arguments, to the generic function
-    `initialize-instance`. Implementors and application writers
-    define `:after` methods on
-    `initialize-instance`, to initialize the slots of the
-    instance. The system-supplied primary method does this with regard to
-    (a) `:initform` and `:initarg` values supplied
-    with the class was defined and (b) the keywords passed through from
-    `make-instance`. Other methods can extend this behaviour as
-    they see fit. For example, they might accept an additional keyword
-    which invokes a database access to fill certain slots. The lambda list
-    for `initialize-instance` is:
-
-~~~
-initialize-instance instance &rest initargs &key &allow-other-keys
-~~~
-
 ## Other method combinations
 
 The default method combination type we just saw is named `standard`,
@@ -1291,7 +1293,7 @@ The built-in types are:
 
     progn + list nconc and max or append min
 
-You notice that these types have the name of a lisp operator. Indeed,
+You notice that these types are named after a lisp operator. Indeed,
 what they do is they define a framework that combines the applicable
 primary methods inside a call to the lisp operator of that name. For
 example, using the `progn` combination type is equivalent to calling **all**
@@ -1309,7 +1311,7 @@ applicable for a given object are called, the most specific
 first.
 
 To change the combination type, we set the `:method-combination`
-option of `defgeneric` to it and we use it as the methods' qualifier:
+option of `defgeneric` and we use it as the methods' qualifier:
 
 ~~~lisp
 (defgeneric foo (obj)
@@ -1396,7 +1398,7 @@ books if you feel the need.
 ## Debugging: tracing method combination
 
 It is possible to [trace](http://www.xach.com/clhs?q=trace) the method
-combination, but this is implementation dependant.
+combination, but this is implementation dependent.
 
 In SBCL, we can use `(trace foo :methods t)`. See [this post by an SBCL core developer](http://christophe.rhodes.io/notes/blog/posts/2018/sbcl_method_tracing/).
 
@@ -1547,6 +1549,25 @@ primary method would prevent slots' initialization.
 ~~~lisp
 (defmethod initialize-instance :after ((obj person) &key)
   (do something with obj))
+~~~
+
+Another rational. The CLOS implementation of
+    `make-instance` is in two stages: allocate the new object,
+    and then pass it along with all the `make-instance` keyword
+    arguments, to the generic function
+    `initialize-instance`. Implementors and application writers
+    define `:after` methods on
+    `initialize-instance`, to initialize the slots of the
+    instance. The system-supplied primary method does this with regard to
+    (a) `:initform` and `:initarg` values supplied
+    with the class was defined and (b) the keywords passed through from
+    `make-instance`. Other methods can extend this behaviour as
+    they see fit. For example, they might accept an additional keyword
+    which invokes a database access to fill certain slots. The lambda list
+    for `initialize-instance` is:
+
+~~~
+initialize-instance instance &rest initargs &key &allow-other-keys
 ~~~
 
 See more in the books !
