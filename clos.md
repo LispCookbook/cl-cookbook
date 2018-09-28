@@ -1395,7 +1395,47 @@ books if you feel the need.
 
 ## Debugging: tracing method combination
 
-TODO: see SBCL (notes.org)
+It is possible to [trace](http://www.xach.com/clhs?q=trace) the method
+combination, but this is implementation dependant.
+
+In SBCL, we can use `(trace foo :methods t)`. See [this post by an SBCL core developer](http://christophe.rhodes.io/notes/blog/posts/2018/sbcl_method_tracing/).
+
+For example, given a generic:
+
+~~~lisp
+(defgeneric foo (x)
+  (:method (x) 3))
+(defmethod foo :around ((x fixnum))
+  (1+ (call-next-method)))
+(defmethod foo ((x integer))
+  (* 2 (call-next-method)))
+(defmethod foo ((x float))
+  (* 3 (call-next-method)))
+(defmethod foo :before ((x single-float))
+  'single)
+(defmethod foo :after ((x double-float))
+ 'double)
+~~~
+
+Let's trace it:
+
+~~~lisp
+(trace foo :methods t)
+
+(foo 2.0d0)
+  0: (FOO 2.0d0)
+    1: ((SB-PCL::COMBINED-METHOD FOO) 2.0d0)
+      2: ((METHOD FOO (FLOAT)) 2.0d0)
+        3: ((METHOD FOO (T)) 2.0d0)
+        3: (METHOD FOO (T)) returned 3
+      2: (METHOD FOO (FLOAT)) returned 9
+      2: ((METHOD FOO :AFTER (DOUBLE-FLOAT)) 2.0d0)
+      2: (METHOD FOO :AFTER (DOUBLE-FLOAT)) returned DOUBLE
+    1: (SB-PCL::COMBINED-METHOD FOO) returned 9
+  0: FOO returned 9
+9
+~~~
+
 
 # Partial class hierarchy
 
