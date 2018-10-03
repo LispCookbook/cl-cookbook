@@ -16,15 +16,16 @@ Some of its features include:
   definitions are not tied together,
 * it has excellent **introspection** capabilities,
 * it is provided by a **meta-object protocol**, which provides a
-  standard interface to the CLOS, and allows *in fine* to create new
-  object systems.
+  standard interface to the CLOS, and can be used to create new object
+  systems.
 
 The functionality belonging to this name was added to the Common Lisp
 language between the publication of Steele's first edition of "Common
 Lisp, the Language" in 1984 and the formalization of the language as
 an ANSI standard ten years later.
 
-This page aims to give a good understanding of how to use CLOS, but little presents of the MOP.
+This page aims to give a good understanding of how to use CLOS, but
+only a brief introduction to the MOP.
 
 To learn the subjects in depth, you will need two books:
 
