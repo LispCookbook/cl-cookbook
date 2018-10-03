@@ -159,9 +159,9 @@ not the class itself.
 
 ## Slots
 
-### A method that always works (slot-value)
+### A function that always works (slot-value)
 
-The default method to access any slot is `(slot-value <object> <slot-name>)`.
+The function to access any slot anytime is `(slot-value <object> <slot-name>)`.
 
 Given our `point` class above, which didn't define any slot accessors:
 
@@ -361,7 +361,7 @@ To do it otherwise, see [this Stack-Overflow answer](https://stackoverflow.com/q
 ;; T
 ~~~
 
-CLOS objects are also instances of a CLOS class, and we can find out
+CLOS classes are also instances of a CLOS class, and we can find out
 what that class is, as in the example below:
 
 ~~~lisp
@@ -490,7 +490,7 @@ configurable by implementing methods exposed by the MOP.
 To redefine a class, simply evaluate a new `defclass` form. This then
 takes the place of the old definition, the existing class object is
 updated, and **all instances of the class** (and, recursively, its
-subclasses) **are updated to reflect the new definition**. You don't
+subclasses) **are lazily updated to reflect the new definition**. You don't
 have to recompile anything other than the new `defclass`, nor to
 invalidate any of your objects. Think about it for a second: this is awesome !
 
@@ -929,10 +929,10 @@ Below we create methods, we specialize them, we use method combination
 (defgeneric greet (obj &key &allow-other-keys)
   (:documentation "say hi"))
 
-(defmethod greet (obj)
+(defmethod greet (obj &key &allow-other-keys)
   (format t "Are you a person ? You are a ~a.~&" (type-of obj)))
 
-(defmethod greet ((obj person) &key talkative)
+(defmethod greet ((obj person) &key talkative &allow-other-keys)
   (format t "Hello ~a !~&" (name obj))
   (when talkative
     (format t "blah")))
@@ -1488,7 +1488,7 @@ Our metaclass inherits from `standard-class`:
   ((name
     :initarg :name
     :accessor name)
-  (:metaclass counted-class)) ;; <- metaclass
+  (:metaclass counted-class))) ;; <- metaclass
 ;; #<COUNTED-CLASS PERSON>
 ;;   ^^^ not standard-class anymore.
 ~~~
