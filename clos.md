@@ -664,9 +664,9 @@ implementation). However, 33 correspondences remain relating to
 |`array`|`hash-table`|`readtable`|
 |`bit-vector`|`integer`|`real`|
 |`broadcast-stream`|`list`|`sequence`|
-|`character`|`logical-pathname&nbsp;&nbsp;`|`stream`|
+|`character`|`logical-pathname`|`stream`|
 |`complex`|`null`|`string`|
-|`concatenated-stream&nbsp;&nbsp;`|`number`|`string-stream`|
+|`concatenated-stream`|`number`|`string-stream`|
 |`cons`|`package`|`symbol`|
 |`echo-stream`|`pathname`|`synonym-stream`|
 |`file-stream`|`random-state`|`t`|
