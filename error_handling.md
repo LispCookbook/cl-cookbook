@@ -222,9 +222,9 @@ it if needed. Here we get the name of the erronous option with the
 defined reader `(opts:option condition)` (see below).
 
 
-## Creating conditions
+## Defining and making conditions
 
-With `define-condition`, and we can inherit from `error` or `simple-error`:
+We define conditions with `define-condition` and we make (initialize) them with `make-condition`.
 
 <!-- todo: differences ? -->
 
@@ -234,8 +234,7 @@ With `define-condition`, and we can inherit from `error` or `simple-error`:
 (define-condition my-division-by-zero (error) ())
 ~~~
 
-It is a regular class, so we can add information into slots. Here, we
-add a custom message:
+Conditions are not classes (though we can specialize on them with `defmethod`) and we cannot use `defclass` to define them and we must instead use `define-condition`.
 
 ~~~lisp
 (define-condition my-division-by-zero (error)
@@ -312,21 +311,19 @@ particular option."))
   ()
   (:report (lambda (c s) (format s "unknown option: ~s" (option c))))
   (:documentation "This condition is thrown when parser encounters
-unknown (not previously defined with `define-opts') option."))
+unknown (not previously defined with `define-opts`) option."))
 ~~~
 
 
 ## Signaling (throwing) conditions
 
-We can use `error`, like we did above. Two ways:
+We can use `error`, like we did above, in two ways:
 
 - `(error "some text")`: signals a condition of type `simple-error`
 - `(error 'my-error :message "We did this and this and it didn't work.")`
 
 Throwing these conditions will enter the interactive debugger,
-where a few options will be presented by default. We can give
-more options with *restarts*,
-and we can prevent from entering the debugger by handling the condition and invoking a restart.
+where the user may select a restart. Use `signal` if you do not want to enter the debugger if your program failed to handle the condition.
 
 Simple example from `unix-opts`: it adds information into the `option` slot:
 
