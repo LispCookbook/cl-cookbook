@@ -81,18 +81,32 @@ As for contents of that file, they would look like this:
 
 ~~~lisp
 (defpackage :foobar
-    (:use :common-lisp :alexandria :trivia)
-    (:export
-    #:some-function
-    #:another-function
-    #:call-with-foobar
-    #:with-foobar))
+  (:use :common-lisp :alexandria :trivia)
+  (:export
+   #:some-function
+   #:another-function
+   #:call-with-foobar
+   #:with-foobar))
 
 (in-package :foobar)
 
 (defun some-function (...)
     ...)
 ...
+~~~
+
+Instead of `using` multiple complete packages, you might want to just import parts of them:
+
+~~~lisp
+(defpackage :foobar
+  (:use #:common-lisp)
+  (:import-from #:alexandria
+                #:some-function
+                #:another-function))
+  (:import-from #:trivia
+                #:some-function
+                #:another-function))
+...)                
 ~~~
 
 
