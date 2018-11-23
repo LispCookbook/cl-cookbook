@@ -35,6 +35,26 @@ Or you can do it with [`LOOP`][loop].
   collect s)
 ~~~
 
+# Give package local nickname
+
+Sometimes it is handy to give imported a local name for saving some typing. 
+
+This can be achieved by using [`RENAME-PACKAGE`][rename-package]. For example:
+
+~~~lisp
+(asdf:load-system :cl-ppcre)
+
+(defpackage :mypackage
+  (:use :cl))
+(in-package :mypackage)
+
+(rename-package :cl-ppcre :re)
+
+;; You can use RE instead of CL-PPCRE now.
+(re:scan "a" "abc")
+~~~
+
 [guide]: http://www.flownet.com/gat/packages.pdf
 [do-sym]: http://www.lispworks.com/documentation/HyperSpec/Body/m_do_sym.htm
 [loop]: http://www.lispworks.com/documentation/HyperSpec/Body/06_a.htm
+[rename-package]: http://www.lispworks.com/documentation/HyperSpec/Body/f_rn_pkg.htm
