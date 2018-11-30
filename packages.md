@@ -39,23 +39,37 @@ Or you can do it with [`LOOP`][loop].
 
 ## Nickname Provided by Packages
 
-When defining a package, it is normal to give it a nickname for better user
-experience. For example:
+When defining a package, it is trivial to give it a nickname for better user
+experience. The following example is a snippet of `PROVE` package:
 
 ~~~lisp
-(defpackage :my-package-with-a-long-name
-  (:use :cl)
-  (:nicknames :my-package :my)
-  (:export :my-function
-           :my-another-function))
+(defpackage prove
+  (:nicknames :cl-test-more :test-more)
+  (:export :run
+           :is
+           :ok)
 ~~~
 
-Afterwards, a user may use nickname instead of the full name to refer to this
+Afterwards, a user may use nickname instead of the package name to refer to this
 package. For example:
 
 ~~~lisp
-(my-package:my-function)
-(my:my-another-function)
+(prove:run)
+(cl-test-more:is)
+(test-more:ok)
+~~~
+
+Please note that although Common Lisp allows defining multiple nicknames for
+one package, too many nicknames may bring maintenance complexity to the
+users. Thus the nicknames shall be meaningful and straightforward. For
+example:
+
+~~~lisp
+(defpackage #:iterate
+  (:nicknames #:iter))
+  
+(defpackage :cl-ppcre
+  (:nicknames :ppcre)
 ~~~
 
 ## Give a Package a Local Nickname
@@ -83,9 +97,12 @@ Please note that the original name (`:CL-PPCRE` in the example above) will
 
 ## Package locks
 
-A package can be declared to be locked so that it cannot be modified by the
-user. Attempts to change its symbol table or redefine functions which its
-symbols name result in an error.
+The package `common-lisp` and SBCL internal implementation packages are locked
+by default, including `sb-ext`.
+
+In addition, any user-defined package can be declared to be locked so that it
+cannot be modified by the user. Attempts to change its symbol table or
+redefine functions which its symbols name result in an error.
 
 More detailed information can be obtained from documents of
 [SBCL][sbcl-package-lock] and [CLisp][clisp-package-lock].
