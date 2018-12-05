@@ -35,6 +35,7 @@ title: Home
 * [Threads](process.html)
 * [Defining Systems](systems.html)
 * [Using the Win32 API](win32.html)
+* [Debugging](debugging.html)
 * [Scripting. Building executables](scripting.html)
 * [Testing and Continuous Integration](testing.html)
 * [Databases](databases.html)
