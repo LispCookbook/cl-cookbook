@@ -86,14 +86,32 @@ This can be achieved by using [`RENAME-PACKAGE`][rename-package]. For example:
   (:use :cl))
 (in-package :mypackage)
 
-(rename-package :cl-ppcre :re)
+(rename-package :cl-ppcre :cl-ppcre '(re))
 
 ;; You can use RE instead of CL-PPCRE now.
 (re:scan "a" "abc")
 ~~~
 
-Please note that the original name (`:CL-PPCRE` in the example above) will
-**not** be available any more after renaming.
+The function head of `RENAME-PACKAGE` is as follows:
+
+~~~lisp
+(rename-package package-designator name &optional (nicknames nil))
+~~~
+
+Although it is possible to simply rename a package by giving it a new *name*
+instead of a new *nickname*, it is highly recommended **not** to do so.
+
+Because if you do so, the package will be modified and the original name
+(`:CL-PPCRE` in the example above) will **not** be available any more after
+renaming. For example:
+
+~~~lisp
+;; DO NOT DO THIS!
+(rename-package :cl-ppcre :re)
+
+;; ERROR!
+(cl-ppcre:scan ...)
+~~~
 
 ## Package locks
 
