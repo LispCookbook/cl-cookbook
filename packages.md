@@ -86,9 +86,10 @@ This can be achieved by using [`RENAME-PACKAGE`][rename-package]. For example:
   (:use :cl))
 (in-package :mypackage)
 
+;; Add nickname :RE to package :CL-PPCRE.
 (rename-package :cl-ppcre :cl-ppcre '(re))
 
-;; You can use RE instead of CL-PPCRE now.
+;; You can use :RE instead of :CL-PPCRE now.
 (re:scan "a" "abc")
 ~~~
 
@@ -98,20 +99,23 @@ The function head of `RENAME-PACKAGE` is as follows:
 (rename-package package-designator name &optional (nicknames nil))
 ~~~
 
-Although it is possible to simply rename a package by giving it a new *name*
-instead of a new *nickname*, it is highly recommended **not** to do so.
+As you may guess, this function can be used to rename a package by giving it a
+new *name* instead of a new *nickname*.
 
-Because if you do so, the package will be modified and the original name
-(`:CL-PPCRE` in the example above) will **not** be available any more after
-renaming. For example:
+However, it is highly recommended **not** to do so. Because otherwise the
+package will be modified and the original name (`:CL-PPCRE` in the example
+above) will **not** be available any more after renaming. For example:
 
 ~~~lisp
 ;; DO NOT DO THIS!
 (rename-package :cl-ppcre :re)
 
 ;; ERROR!
-(cl-ppcre:scan ...)
+(cl-ppcre:scan "a" "abc")
 ~~~
+
+This might cause problems if you want to load another package that relies on
+the modified package.
 
 ## Package locks
 
