@@ -53,6 +53,9 @@ for Vim.
 <img src="assets/slimv.jpg"
      style="width: 800px"/>
 
+[Slimv_box](https://github.com/justin2004/slimv_box) brings Vim, SBCL
+and tmux in a Docker container for a quick installation.
+
 ## Lem
 
 Lem is an editor tailored for Common Lisp development. Once you
