@@ -56,6 +56,18 @@ for Vim.
 [Slimv_box](https://github.com/justin2004/slimv_box) brings Vim, SBCL
 and tmux in a Docker container for a quick installation.
 
+
+## Eclipse
+
+[Dandelion](https://github.com/Ragnaroek/dandelion) is a plugin for the
+Eclipse IDE.
+
+Available for Windows, Mac and Linux, built-in SBCL and CLISP support
+and possibility to connect other environments, interactive debugger
+with restarts, macro-expansion, parenthesis matching,…
+
+<img src="dandelion.png" style="width: 800px"/>
+
 ## Lem
 
 Lem is an editor tailored for Common Lisp development. Once you
