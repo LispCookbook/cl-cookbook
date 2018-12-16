@@ -8,7 +8,7 @@ The main goal is making the Cookbook more modern and more accessible in addition
 
 ## Contributing
 
-When adding a new content, ensure, it renders propertly.
+When adding a new content, ensure, it renders properly.
 
 There are two ways to do this:
 
