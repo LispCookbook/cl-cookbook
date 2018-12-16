@@ -466,12 +466,14 @@ CLOS supports multiple inheritance.
 
 
 ~~~lisp
-(defun baby (child person)
+(defclass baby (child person)
   ())
 ~~~
 
 The first class on the list of parent classes is the most specific
-one, `child`'s slots will take precedence over the `person`'s.
+one, `child`'s slots will take precedence over the `person`'s. Note
+that both `child` and `person` have to be defined prior to defining
+`baby` in this example.
 
 
 ## Redefining and changing a class
