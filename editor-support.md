@@ -41,7 +41,7 @@ See ["Using Emacs as an IDE"](emacs-ide.html).
 See ["Setting up Emacs on Windows or Mac"](windows.html).
 
 
-## Vim
+## Vim & Neovim
 
 [Slimv](http://www.vim.org/scripts/script.php) is a full-blown
 environment for Common Lisp inside of Vim.
@@ -52,6 +52,12 @@ for Vim.
 
 <img src="assets/slimv.jpg"
      style="width: 800px"/>
+
+[cl-neovim](https://github.com/adolenc/cl-neovim/) makes it possible to write
+Neovim plugins in Common Lisp.
+
+[quicklisp.nvim](https://gitlab.com/HiPhish/quicklisp.nvim) is a Neovim
+frontend for Quicklisp.
 
 [Slimv_box](https://github.com/justin2004/slimv_box) brings Vim, SBCL
 and tmux in a Docker container for a quick installation.
