@@ -343,8 +343,80 @@ be what you're looking for ! See the [testing](testing.html) section and a list 
 [test frameworks and libraries](https://github.com/CodyReichert/awesome-cl#unit-testing).
 
 
+## Remote debugging
+
+Here's how to debug a running application on another machine.
+
+The steps involved are to start a Swank server on the remote machine, create an
+ssh tunnel, and connect to the Swank server from our editor. Then we
+can browse and evaluate code of the running instance transparently.
+
+Let's define a function that prints forever.
+
+If needed, import the dependencies first:
+
+~~~lisp
+(ql:quickload '(:swank :bordeaux-threads))
+~~~
+
+
+~~~lisp
+;; a little common lisp swank demo
+;; while this program is running, you can connect to it from another terminal or machine
+;; and change the definition of doprint to print something else out!
+
+(require :swank)
+(require :bordeaux-threads)
+
+(defparameter *counter* 0)
+
+(defun dostuff ()
+  (format t "hello world ~a!~%" *counter*))
+
+(defun runner ()
+  (bt:make-thread (lambda ()
+                    (swank:create-server :port 4006)))
+  (format t "we are past go!~%")
+  (loop while t do
+       (sleep 5)
+       (dostuff)
+       (incf *counter*)))
+
+(runner)
+~~~
+
+On the server, we can run it with
+
+    sbcl --load demo.lisp
+
+we do port forwarding on our development machine:
+
+    ssh -L4006:127.0.0.1:4006 username@example.com
+
+this will securely forward port 4006 on the server at example.com to
+our local computer's port 4006 (swanks only accepts connections from
+localhost).
+
+We connect to the running swank with `M-x slime-connect`, typing in
+port 4006.
+
+We can write new code:
+
+~~~lisp
+(defun dostuff ()
+  (format t "goodbye world ~a!~%" *counter*))
+(setf *counter* 0)
+~~~
+
+and eval it as usual with `M-x slime-eval-region` for instance. The output should change.
+
+See the references for more pointers.
+
+
 ## References
 
 - ["How to understand and use Common Lisp"](https://successful-lisp.blogspot.com/p/httpsdrive.html), chap. 30, David Lamkins (book download from author's site)
 - [Malisper: debugging Lisp series](https://malisper.me/debugging-lisp-part-1-recompilation/)
 - [Two Wrongs: debugging Common Lisp in Slime](https://two-wrongs.com/debugging-common-lisp-in-slime.html)
+- [Slime documentation: connecting to a remote Lisp](https://common-lisp.net/project/slime/doc/html/Connecting-to-a-remote-lisp.html#Connecting-to-a-remote-lisp)
+- [cvberrycom: remotely modifying a running Lisp program using Swank](http://cvberry.com/tech_writings/howtos/remotely_modifying_a_running_program_using_swank.html)
