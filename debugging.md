@@ -185,7 +185,7 @@ and the backtrace. A few remarks:
   file at the right line,
 - hit enter on a frame for more details,
 - we can explore the functionnality with the menu that should appear
-  in our editor. See below in "the interactive debugger" for a few
+  in our editor. See the "break" section below for a few
   more commands (eval in frame, etc).
 
 Usually your compiler will optimize things out and this will reduce
