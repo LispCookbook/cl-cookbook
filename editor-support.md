@@ -73,10 +73,12 @@ with restarts, macro-expansion, parenthesis matching,…
 Lem is an editor tailored for Common Lisp development. Once you
 install it, you can start developing. Its interface ressembles Emacs
 and Slime (same shortcuts). It comes with an ncurses and an Electron
-frontend.
+frontend, and other programming modes: Python, Go, Rust, JS, Nim,
+Scheme, HTML, CSS, directory mode, a vim layer, and more.
 
 <img src="https://github.com/cxxxr/lem/raw/master/screenshots/terminal.png"
      style="width: 800px"/>
+
 
 ## Atom
 
