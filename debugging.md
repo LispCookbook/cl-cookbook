@@ -410,7 +410,7 @@ We can write new code:
 
 and eval it as usual with `C-c C-c` or `M-x slime-eval-region` for instance. The output should change.
 
-That's how Ron Garret debugged the Deep Space 1 shuttle from the earth
+That's how Ron Garret debugged the Deep Space 1 spacecraft from the earth
 in 1999:
 
 > we were able to debug and fix a race condition that had not shown up during ground testing. (Debugging a program running on a $100M piece of hardware that is 100 million miles away is an interesting experience. Having a read-eval-print loop running on the spacecraft proved invaluable in finding and fixing the problem.
