@@ -1069,6 +1069,47 @@ CL-USER> (hash-table-count *my-hash*)
 0
 ~~~
 
+### Printing a hash table readably
+
+This snippets prints the keys, values and the test function of a
+hash-table, and uses `alexandria:alist-hash-table` to read it back in:
+
+~~~lisp
+;; https://github.com/phoe/phoe-toolbox/blob/master/phoe-toolbox.lisp
+(defun print-hash-table-readably (hash-table
+                                  &optional (stream *standard-output*))
+  "Prints a hash table readably using ALEXANDRIA:ALIST-HASH-TABLE."
+  (let ((test (hash-table-test hash-table))
+        (*print-circle* t)
+        (*print-readably* t))
+    (format stream "#.(ALEXANDRIA:ALIST-HASH-TABLE '(~%")
+    (maphash (lambda (k v) (format stream "   (~S . ~S)~%" k v)) hash-table)
+    (format stream "   ) :TEST '~A)" test)
+    hash-table))
+~~~
+
+Example output:
+
+```
+#.(ALEXANDRIA:ALIST-HASH-TABLE
+'((ONE . 1))
+  :TEST 'EQL)
+#<HASH-TABLE :TEST EQL :COUNT 1 {10046D4863}>
+```
+
+This output can be read back in to create a hash-table:
+
+~~~lisp
+(read-from-string
+ (with-output-to-string (s)
+   (print-hash-table-readably
+    (alexandria:alist-hash-table
+     '((a . 1) (b . 2) (c . 3))) s)))
+;; #<HASH-TABLE :TEST EQL :COUNT 3 {1009592E23}>
+;; 83
+~~~
+
+
 
 <a name="size"></a>
 
