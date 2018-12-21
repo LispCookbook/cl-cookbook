@@ -408,9 +408,12 @@ We can write new code:
 (setf *counter* 0)
 ~~~
 
-and eval it as usual with `M-x slime-eval-region` for instance. The output should change.
+and eval it as usual with `C-c C-c` or `M-x slime-eval-region` for instance. The output should change.
 
-See the references for more pointers.
+That's how Ron Garret debugged the Deep Space 1 shuttle from the earth
+in 1999:
+
+> we were able to debug and fix a race condition that had not shown up during ground testing. (Debugging a program running on a $100M piece of hardware that is 100 million miles away is an interesting experience. Having a read-eval-print loop running on the spacecraft proved invaluable in finding and fixing the problem.
 
 
 ## References
@@ -420,3 +423,5 @@ See the references for more pointers.
 - [Two Wrongs: debugging Common Lisp in Slime](https://two-wrongs.com/debugging-common-lisp-in-slime.html)
 - [Slime documentation: connecting to a remote Lisp](https://common-lisp.net/project/slime/doc/html/Connecting-to-a-remote-lisp.html#Connecting-to-a-remote-lisp)
 - [cvberrycom: remotely modifying a running Lisp program using Swank](http://cvberry.com/tech_writings/howtos/remotely_modifying_a_running_program_using_swank.html)
+- [Ron Garret: Lisping at the JPL](http://www.flownet.com/gat/jpl-lisp.html#1994-1999%20-%20Remote%20Agent)
+- [the Remote Agent experiment: debugging code from 60 million miles away (youtube)](https://www.youtube.com/watch?v=_gZK0tW8EhQ&feature=youtu.be&t=4175) (["AMA" on reddit](https://www.reddit.com/r/lisp/comments/a7156w/lisp_and_the_remote_agent/))
