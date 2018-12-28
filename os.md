@@ -6,6 +6,11 @@ title: Interfacing with your OS
 The ANSI Common Lisp standard doesn't mention this topic. (Keep in mind that it was written at a time where [Lisp Machines](http://kogs-www.informatik.uni-hamburg.de/~moeller/symbolics-info/symbolics.html) were at their peak. On these boxes Lisp _was_ your operating system!) So almost everything that can be said here depends on your OS and your implementation.
 
 
+* ASDF3, which is included with almost all Common Lisp implementations,
+  includes [Utilities for Implementation- and OS- Portability (UIOP)](https://gitlab.common-lisp.net/asdf/asdf/blob/master/uiop/README.md).
+
+
+
 <a name="env"></a>
 
 ## Accessing Environment variables
@@ -185,7 +190,7 @@ interfaces to readline,…).
 
 ## Running external programs
 
-`uiop` has us covered.
+[uiop](https://gitlab.common-lisp.net/asdf/asdf/blob/master/uiop/README.md) has us covered.
 
 ### Synchronously
 
@@ -315,16 +320,20 @@ launch-program (command &rest keys
                            &allow-other-keys)
 ~~~
 
-If `output` is a pathname, a string designating a pathname, or `nil` (the
-default) designating the null device, the file at that path is used as
-output.
-If it's `:interactive`, output is inherited from the current process;
-beware that this may be different from your `*standard-output*`, and
-under Slime will be on your `*inferior-lisp*` buffer.  If it's T, output
-goes to your current `*standard-output*` stream.  If it's `:stream`, a new
-stream will be made available that can be accessed via
-`process-info-output` and read from. Otherwise, `output` should be a value
-that the underlying lisp implementation knows how to handle.
+Output (stdout) from the launched program is set using the `output`
+keyword:
+
+ - If `output` is a pathname, a string designating a pathname, or
+   `nil` (the default) designating the null device, the file at that
+   path is used as output.
+ - If it's `:interactive`, output is inherited from the current process;
+   beware that this may be different from your `*standard-output*`, and
+   under Slime will be on your `*inferior-lisp*` buffer.
+ - If it's `T`, output goes to your current `*standard-output*` stream.
+ - If it's `:stream`, a new stream will be made available that can be accessed via
+   `process-info-output` and read from.
+ - Otherwise, `output` should be a value that the underlying lisp
+   implementation knows how to handle. 
 
 `if-output-exists`, which is only meaningful if `output` is a string or a
 pathname, can take the values `:error`, `:append`, and `:supersede` (the
@@ -361,6 +370,69 @@ and `:stream` causes a stream to be made available via
 
 See the [docstrings](https://gitlab.common-lisp.net/asdf/asdf/blob/master/uiop/launch-program.lisp#L508).
 
+### Test if subprocess is alive
+
+`uiop:process-alive-p` tests if a process is still alive, given a
+`process-info` object returned by `launch-program`:
+
+~~~lisp
+* (defparameter *shell* (uiop:launch-program "bash" :input :stream :output :stream))
+
+;; inferior shell process now running
+* (uiop:process-alive-p *shell*)
+T
+
+;; Close input and output streams
+* (uiop:close-streams *shell*)
+* (uiop:process-alive-p *shell*)
+NIL
+~~~
+
+### Input and output from subprocess
+
+If the `input` keyword is set to `:stream` then a stream is created
+and can be written to in the same way as a file. The stream can be
+accessed using `uiop:process-info-input`:
+
+~~~lisp
+;; Start the inferior shell, with input and output streams
+* (defparameter *shell* (uiop:launch-program "bash" :input :stream :output :stream))
+;; Write a line to the shell
+* (write-line "find . -name '*.md'" (uiop:process-info-input *shell*))
+;; Flush stream
+* (force-output (uiop:process-info-input *shell*))
+~~~
+
+where [write-line](http://clhs.lisp.se/Body/f_wr_stg.htm) writes the
+string to the given stream, adding a newline at the end. The
+[force-output](http://clhs.lisp.se/Body/f_finish.htm) call attempts to
+flush the stream, but does not wait for completion.
+
+Reading from the output stream is similar, with
+`uiop:process-info-output` returning the output stream:
+
+~~~list
+* (read-line (uiop:process-info-output *shell*))
+~~~
+
+In some cases the amount of data to be read is known, or there are
+delimiters to determine when to stop reading. If this is not the case,
+then calls to [read-line](http://clhs.lisp.se/Body/f_rd_lin.htm) can
+hang while waiting for data. To avoid this,
+[listen](http://clhs.lisp.se/Body/f_listen.htm) can be used to test if
+a character is available:
+
+~~~list
+* (let ((stream (uiop:process-info-output *shell*)))
+     (loop while (listen stream) do
+         ;; Characters are immediately available
+         (princ (read-line stream))
+         (terpri)))
+~~~
+
+There is also
+[read-char-no-hang](http://clhs.lisp.se/Body/f_rd_c_1.htm) which reads
+a single character, or returns `nil` if no character is available.
 
 <a name="fork-cmucl"></a>
 
