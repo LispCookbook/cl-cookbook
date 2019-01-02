@@ -4,11 +4,13 @@ title: Interfacing with your OS
 
 
 The ANSI Common Lisp standard doesn't mention this topic. (Keep in mind that it was written at a time where [Lisp Machines](http://kogs-www.informatik.uni-hamburg.de/~moeller/symbolics-info/symbolics.html) were at their peak. On these boxes Lisp _was_ your operating system!) So almost everything that can be said here depends on your OS and your implementation.
-
+There are however some widely used libraries, which either come with your Common Lisp implementation, or are easily
+available through [Quicklisp](https://www.quicklisp.org/beta/). These include:
 
 * ASDF3, which is included with almost all Common Lisp implementations,
   includes [Utilities for Implementation- and OS- Portability (UIOP)](https://gitlab.common-lisp.net/asdf/asdf/blob/master/uiop/README.md).
-
+* [osicat](https://common-lisp.net/project/osicat/) 
+* [unix-opts](http://quickdocs.org/unix-opts/) is a command-line argument parser, similar to Python's `argparse`. 
 
 
 <a name="env"></a>
@@ -190,7 +192,8 @@ interfaces to readline,…).
 
 ## Running external programs
 
-[uiop](https://gitlab.common-lisp.net/asdf/asdf/blob/master/uiop/README.md) has us covered.
+[uiop](https://gitlab.common-lisp.net/asdf/asdf/blob/master/uiop/README.md) has us covered,
+and is probably included in your Common Lisp implementation.
 
 ### Synchronously
 
@@ -433,6 +436,9 @@ a character is available:
 There is also
 [read-char-no-hang](http://clhs.lisp.se/Body/f_rd_c_1.htm) which reads
 a single character, or returns `nil` if no character is available.
+Note that due to issues like buffering, and the timing of when the
+other process is executed, there is no guarantee that all data sent
+will be received before `listen` or `read-char-no-hang` return `nil`. 
 
 <a name="fork-cmucl"></a>
 
