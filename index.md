@@ -18,12 +18,12 @@ title: Home
 * [Data Structures](data-structures.html)
 * [Strings](strings.html)
 * [Numbers](numbers.html)
+* [Loops, iteration, mapping](iteration.html)
 * [Multidimensional Arrays](arrays.html)
 * [Dates and Times](dates_and_times.html)
 * [Pattern Matching](pattern_matching.html)
 * [Regular Expressions](regexp.html)
 * [Functions](functions.html)
-* [Loop](loop.html)
 * [Input/Output](io.html)
 * [Files and Directories](files.html)
 * [Error and condition handling](error_handling.html)
@@ -61,7 +61,6 @@ title: Home
 * [Common Lisp the Language, 2nd Edition](http://www-2.cs.cmu.edu/Groups/AI/html/cltl/cltl2.html) by Guy L. Steele
 * [Common Lisp Hints](http://www.n-a-n-o.com/lisp/cmucl-tutorials/LISP-tutorial.html) by Geoffrey J. Gordon
 * [Common Lisp Pitfalls](http://www.aiai.ed.ac.uk/~jeff/lisp/cl-pitfalls) by Jeff Dalton
-* [Tutorial for the Common Lisp Loop Macro](http://www.ai.sri.com/~pkarp/loop.html) by Peter D. Karp
 * [A Tutorial on Good Lisp Style](https://www.cs.umd.edu/%7Enau/cmsc421/norvig-lisp-style.pdf) by Peter Norvig and Kent Pitman
 * [Lisp and Elements of Style](http://www.nicklevine.org/declarative/lectures/) by Nick Levine
 * Pascal Costanza's [Highly Opinionated Guide to Lisp](http://www.p-cos.net/lisp/guide.html)
