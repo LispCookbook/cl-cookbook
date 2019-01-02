@@ -4,7 +4,7 @@ title: Interfacing with your OS
 
 
 The ANSI Common Lisp standard doesn't mention this topic. (Keep in mind that it was written at a time where [Lisp Machines](http://kogs-www.informatik.uni-hamburg.de/~moeller/symbolics-info/symbolics.html) were at their peak. On these boxes Lisp _was_ your operating system!) So almost everything that can be said here depends on your OS and your implementation.
-There are however some widely used libraries, which either come with your Common Lisp implementation, or are easily
+There are, however, some widely used libraries, which either come with your Common Lisp implementation, or are easily
 available through [Quicklisp](https://www.quicklisp.org/beta/). These include:
 
 * ASDF3, which is included with almost all Common Lisp implementations,
@@ -393,7 +393,7 @@ NIL
 
 ### Input and output from subprocess
 
-If the `input` keyword is set to `:stream` then a stream is created
+If the `input` keyword is set to `:stream`, then a stream is created
 and can be written to in the same way as a file. The stream can be
 accessed using `uiop:process-info-input`:
 
