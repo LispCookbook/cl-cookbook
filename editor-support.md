@@ -43,7 +43,7 @@ See ["Setting up Emacs on Windows or Mac"](windows.html).
 
 ## Vim & Neovim
 
-[Slimv](http://www.vim.org/scripts/script.php) is a full-blown
+[Slimv](https://www.vim.org/scripts/script.php?script_id=2531) is a full-blown
 environment for Common Lisp inside of Vim.
 
 [Vlime](https://github.com/l04m33/vlime) is a Common Lisp dev
