@@ -17,7 +17,7 @@ available through [Quicklisp](https://www.quicklisp.org/beta/). These include:
 
 ## Accessing Environment variables
 
-ASDF comes with a function that'll allow you to look at Unix/Linux environment variables on a lot of different CL implementations:
+UIOP comes with a function that'll allow you to look at Unix/Linux environment variables on a lot of different CL implementations:
 
 ~~~lisp
 * (uiop:getenv "HOME")
@@ -28,18 +28,18 @@ Below is an example implementation:
 
 ~~~lisp
 * (defun my-getenv (name &optional default)
-  "Obtains the current value of the POSIX environment variable NAME."
-  (declare (type (or string symbol) name))
-  (let ((name (string name)))
-    (or #+abcl (ext:getenv name)
-        #+ccl (ccl:getenv name)
-        #+clisp (ext:getenv name)
-        #+cmu (unix:unix-getenv name) ; since CMUCL 20b
-        #+ecl (si:getenv name)
-        #+gcl (si:getenv name)
-        #+mkcl (mkcl:getenv name)
-        #+sbcl (sb-ext:posix-getenv name)
-        default)))
+    "Obtains the current value of the POSIX environment variable NAME."
+    (declare (type (or string symbol) name))
+    (let ((name (string name)))
+      (or #+abcl (ext:getenv name)
+         #+ccl (ccl:getenv name)
+         #+clisp (ext:getenv name)
+         #+cmu (unix:unix-getenv name) ; since CMUCL 20b
+         #+ecl (si:getenv name)
+         #+gcl (si:getenv name)
+         #+mkcl (mkcl:getenv name)
+         #+sbcl (sb-ext:posix-getenv name)
+         default)))
 MY-GETENV
 * (my-getenv "HOME")
 "/home/edi"
@@ -87,7 +87,7 @@ More on using this to write standalone Lisp scripts can be found in the [SBCL Ma
 [LispWorks](http://www.lispworks.com) has `system:*line-arguments-list*`
 
 ~~~lisp
-CL-USER> system:*line-arguments-list*
+* system:*line-arguments-list*
 ("/Users/cbrown/Projects/lisptty/tty-lispworks" "-init" "/Users/cbrown/Desktop/lisp/lispworks-init.lisp")
 ~~~
 
