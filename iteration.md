@@ -133,8 +133,8 @@ functional programming as fast as imperative programming.
 
 ~~~lisp
 (loop for i in '(1 2 3)
-    do (if (> i 1)
-            (return i)))
+     when (> i 1)
+     return i)
 2
 ~~~
 
