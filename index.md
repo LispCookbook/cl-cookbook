@@ -49,7 +49,7 @@ title: Home
 * The [Awesome-cl](https://github.com/CodyReichert/awesome-cl) list
 * [The Common Lisp HyperSpec](http://www.lispworks.com/documentation/HyperSpec/Front/index.htm) by Kent M. Pitman (also available in [Dash](https://kapeli.com/dash), [Zeal](https://zealdocs.org/) and [Velocity](https://velocity.silverlakesoftware.com/))
 * [The Common Lisp UltraSpec](http://phoe.tymoon.eu/clus/doku.php)
-* [Practical Common Lisp](http://www.gigamonkeys.com/book/) by Peter Seibel
+* [Practical Common Lisp](http://www.gigamonkeys.com/book/) by Peter Seibel (better read with [a Firefox add-on](https://www.reddit.com/r/Common_Lisp/comments/abwtxu/beautify_practical_common_lisp_extension_for/))
 * [Common Lisp Recipes](http://weitz.de/cl-recipes/) by Edmund Weitz, published in 2016,
 * [Cliki](http://www.cliki.net/), Common Lisp's wiki
 * [Articulate Common Lisp](http://articulate-lisp.com/), an initiation manual for the uninitiated
