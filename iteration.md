@@ -145,10 +145,11 @@ functional programming as fast as imperative programming.
 
 ~~~lisp
 (dotimes (n 10)
-    (print n))
+  (print n))
 ~~~
 
-`dotimes` returns `nil`.
+Here `dotimes` returns `nil`. The return value is evaluated at the end of the loop.
+
 
 ### loop… repeat
 
@@ -173,7 +174,7 @@ with `collect`, this returns a list.
 
 ~~~lisp
 (dolist (item '(1 2 3))
-   (print item))
+  (print item))
 ~~~
 
 `dolist` returns `nil`.
