@@ -113,12 +113,21 @@ Here is an example with [cl-punch](https://github.com/windymelt/cl-punch/):
 
 and voilà :) We won't use this more in this recipe, but feel free to do.
 
-
 Last but not least, you might like
 **[series](https://github.com/tokenrove/series/wiki/Documentation)**,
-a library that first appeared on "Common Lisp the Language", in the
-appendix A (it nearly became part of the language), that makes
-functional programming as fast as imperative programming.
+a library that describes itself as combining aspects of sequences,
+streams, and loops. Series expressions look like operations on
+sequences, but can achieve the same high level of efficiency as a
+loop. Series first appeared in "Common Lisp the Language", in the
+appendix A (it nearly became part of the language). Series looks like
+this:
+
+~~~lisp
+(collect
+  (mapping ((x (scan-range :from 1 :upto 5)))
+    (* x x)))
+;; (1 4 9 16 25)
+~~~
 
 # Recipes
 
@@ -150,7 +159,6 @@ functional programming as fast as imperative programming.
 
 Here `dotimes` returns `nil`. The return value is evaluated at the end of the loop.
 
-
 ### loop… repeat
 
 ~~~lisp
@@ -167,6 +175,12 @@ This prints 10 times "hello" and returns `nil`.
 
 with `collect`, this returns a list.
 
+### Series
+
+~~~lisp
+(iterate ((n (scan-range :below 10)))
+  (print n))
+~~~
 
 ## Looping over a list
 
@@ -222,13 +236,32 @@ With `on`, we loop over the cdr of the list:
 
 `mapcar` returns the results of the lambda function as a list.
 
+### Series
+~~~lisp
+(iterate ((item (scan '(1 2 3))))
+  (print item))
+~~~
+
+`scan-sublists` is the equivalent of `loop for ... on`:
+
+~~~lisp
+(iterate ((i (scan-sublists '(1 2 3))))
+  (print i))
+~~~
 
 ## Looping over a vector
 
-loop: `across`
+### loop: `across`
 
 ~~~lisp
 (loop for i across #(1 2 3) do (print i))
+~~~
+
+### Series
+
+~~~lisp
+(iterate ((i (scan #(1 2 3))))
+  (print i))
 ~~~
 
 ## Looping over a hash-table
@@ -293,9 +326,15 @@ value:
 
 See also [with-hash-table-iterator](http://www.lispworks.com/documentation/HyperSpec/Body/m_w_hash.htm).
 
+### Series
+~~~lisp
+(iterate (((k v) (scan-hash h)))
+  (format t "~&~a ~a~%" k v))
+~~~
 
 ## Looping over two lists in parallel
 
+### loop
 
 ~~~lisp
 (loop for x in '(a b c)
@@ -304,6 +343,7 @@ See also [with-hash-table-iterator](http://www.lispworks.com/documentation/Hyper
 ;; ((A 1) (B 2) (C 3))
 ~~~
 
+### mapcar
 ~~~lisp
 (mapcar (lambda (x y)
            (list x y))
@@ -331,14 +371,46 @@ Return a flat list:
 ;; (A 1 B 2 C 3)
 ~~~
 
+### Series
+~~~lisp
+(collect
+  (#Mlist (scan '(a b c))
+          (scan '(1 2 3))))
+~~~
+
+A more efficient way, when the lists are known to be of equal length:
+
+~~~lisp
+(collect
+  (mapping (((x y) (scan-multiple 'list
+                                  '(a b c)
+                                  '(1 2 3))))
+    (list x y)))
+~~~
+Return a flat list:
+~~~lisp
+(collect-append ; or collect-nconc
+ (mapping (((x y) (scan-multiple 'list
+                                 '(a b c)
+                                 '(1 2 3))))
+   (list x y)))
+~~~
+
 
 ## Nested loops
-
+### loop
 ~~~lisp
 (loop for x from 1 to 3
       collect (loop for y from 1 to x
 		    collect y))
 ;; ((1) (1 2) (1 2 3))
+~~~
+
+### Series
+~~~lisp
+(collect
+  (mapping ((x (scan-range :from 1 :upto 3)))
+    (collect (scan-range :from 1 :upto x))))
 ~~~
 
 
@@ -354,7 +426,7 @@ with `=`:
 ~~~
 
 ## Loop with a counter
-
+### loop
 Iterate through a list, and have a counter iterate in parallel. The length of
 the list determines when the iteration ends. Two sets of actions are defined,
 one of which is executed conditionally.
@@ -388,7 +460,20 @@ A, B, C, D, E
 NIL
 ~~~
 
+### Series
+
+By iterating on multiple series in parallel, and using an infinite
+range, we can make a counter.
+
+~~~lisp
+(iterate ((x (scan '(a b c d e)))
+          (y (scan-range :from 1)))
+  (when (> y 1) (format t ", "))
+  (format t "~A" x))
+~~~
+
 ## Ascending, descending order, limits
+### loop
 
 `from… to…`:
 
@@ -407,7 +492,23 @@ NIL
 
 Similarly, use `from 10 downto 0` (10…0) and `from 10 above 0` (10…1).
 
+### Series
+
+`:from ... :upto`, including the upper limit:
+~~~lisp
+(iterate ((i (scan-range :from 0 :upto 10)))
+  (print i))
+~~~
+
+`:from ... :below`, excluding the upper limit:
+~~~lisp
+(iterate ((i (scan-range :from 0 :below 10)))
+  (print i))
+~~~
+
+
 ## Steps
+### loop
 
 with `by`:
 
@@ -425,8 +526,16 @@ if it was in a closure:
       do (print i))
 ~~~
 
+### Series
+with `:by`
+~~~lisp
+(iterate ((i (scan-range :from 1 :upto 10 :by 2)))
+  (print i))
+~~~
+
 
 ## Loop and conditionals
+### loop
 
 with `if`, `else` and `finally`:
 
@@ -471,7 +580,30 @@ do`, `and count`):
 5
 ```
 
+### Series
+
+The preceding loop would be done a bit differently in Series. `split`
+sorts one series into multiple according to provided boolean series.
+
+~~~lisp
+(let* ((number (#M(lambda (n) (random 100))
+                  (scan-range :below 10)))
+       (parity (#Mevenp number)))
+  (iterate ((n number) (p parity))
+    (when p (format t "~a is even!~%" n)))
+  (multiple-value-bind (evens odds) (split number parity)
+    (values (collect evens)
+            (collect odds)
+            (collect-length odds))))
+~~~
+
+Note that although `iterate` and the three `collect` expressions are
+written sequentially, only one iteration is performed, the same as the
+example with loop.
+
+
 ## Terminate the loop with a test (until, while)
+### loop
 
 ~~~lisp
 (loop for x in '(1 2 3 4 5)
@@ -488,7 +620,18 @@ the same, with `while`:
 	collect x)
 ~~~
 
+### Series
+
+We truncate the series with `until-if`, then collect from its result.
+
+~~~lisp
+(collect
+  (until-if (lambda (i) (> i 3))
+            (scan '(1 2 3 4 5))))
+~~~
+
 ## Loop, print and return a result
+### loop
 
 `do` and `collect` can be combined in one expression
 
@@ -503,7 +646,19 @@ x is 3
 (1 2 3)
 ~~~
 
+### Series
+By mapping we can perform a side effect and also collect items
+~~~lisp
+(collect
+  (mapping ((x (until-if (complement (lambda (x) (< x 4)))
+                         (scan '(1 2 3 4 5)))))
+    (format t "x is ~a~&" x)
+    x))
+~~~
+
+
 ## Named loops and early exit
+### loop
 
 The special `loop named` foo syntax allows you to create a loop that
 you can exit early from. The exit is performed using `return-from`,
@@ -521,8 +676,7 @@ and can be used from within nested loops.
 2
 ~~~
 
-
-## Shorthands of when/return
+### Loop shorthands for when/return
 
 Several actions provide shorthands for combinations of when/return:
 
@@ -544,21 +698,47 @@ NIL
 NIL
 ~~~
 
-## Count
+### Series
 
+A block is manually created and returned from.
+
+~~~lisp
+(block loop-1
+  (iterate ((x (scan-range :from 0 :upto 10 :by 2)))
+    (iterate ((y (scan-range :from 0 :upto 100 :by (1+ (random 3)))))
+      (when (< x y)
+        (return-from loop-1 (values x y))))))
+~~~
+
+## Count
+### loop
 ~~~lisp
 (loop for i from 1 to 3 count (oddp i))
 ;; 2
 ~~~
 
+### Series
+~~~lisp
+(collect-length (choose-if #'oddp (scan-range :from 1 :upto 3)))
+~~~
+
 ## Summation
+### loop
 
 ~~~lisp
 (loop for i from 1 to 3 sum (* i i))
 ;; 14
 ~~~
 
+### Series
+
+~~~lisp
+(collect-sum (#M(lambda (i) (* i i))
+                (scan-range :from 1 :upto 3)))
+~~~
+
 ## max, min
+### loop
 
 ~~~lisp
 (loop for i from 1 to 3 maximize (mod i 3))
@@ -567,8 +747,15 @@ NIL
 
 and `minimize`.
 
+### Series
+~~~lisp
+(collect-max (#M(lambda (i) (mod i 3))
+                (scan-range :from 1 :upto 3)))
+~~~
+and `collect-min`.
 
 ## Destructuring, aka pattern matching against the list or dotted pairs
+### loop
 
 ~~~lisp
 (loop for (a b) in '((x 1) (y 2) (z 3))
@@ -589,6 +776,44 @@ Use `nil` to ignore a term:
 ;; (X Y Z)
 ~~~
 
+### Series
+In general, with `destructuring-bind`:
+~~~lisp
+(collect
+  (mapping ((l (scan '((x 1) (y 2) (z 3)))))
+    (destructuring-bind (a b) l
+      (list b a))))
+~~~
+
+But for alists, `scan-alist` is provided:
+
+~~~lisp
+(collect
+  (mapping (((a b) (scan-alist '((1 . a) (2 . b) (3 . c)))))
+    b))
+~~~
+
+# Custom series scanners
+
+If we often scan the same type of object, we can write our own scanner
+ for it: the iteration itself can be factored out. Taking the example
+ above, of scanning a list of two-element lists, we'll write a scanner
+ that returns a series of the first elements, and a series of the
+ second.
+
+~~~lisp
+(defun scan-listlist (listlist)
+  (declare (optimizable-series-function 2))
+  (map-fn '(values t t)
+          (lambda (l)
+            (destructuring-bind (a b) l
+              (values a b)))
+          (scan listlist)))
+
+(collect
+  (mapping (((a b) (scan-listlist '((x 1) (y 2) (z 3)))))
+    (list b a)))
+~~~
 
 
 # Loop gotchas
