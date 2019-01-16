@@ -67,7 +67,7 @@ example:
 ~~~lisp
 (defpackage #:iterate
   (:nicknames #:iter))
-  
+
 (defpackage :cl-ppcre
   (:nicknames :ppcre)
 ~~~
@@ -136,7 +136,7 @@ For example, if you try the following code:
 (rename-package :alexandria :alex)
 ~~~
 
-You will get following error (on SBCL):
+You will get the following error (on SBCL):
 
 ~~~
 Lock on package ALEXANDRIA violated when renaming as ALEX while
@@ -156,7 +156,7 @@ Restarts:
 ...
 ~~~
 
-If modification is required anyway, a package named
+If a modification is required anyway, a package named
 [cl-package-lock][cl-package-lock] can be used to ignore package locks. For
 example:
 

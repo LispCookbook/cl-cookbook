@@ -53,7 +53,7 @@ We get a welcome `division-by-zero` warning but the code runs well and
 it returns two things: `nil` and the condition that was signaled. We
 could not choose what to return.
 
-Rembember that we can `inspect` the condition with a right click in Slime.
+Remember that we can `inspect` the condition with a right click in Slime.
 
 
 ## Catching any condition - handler-case
