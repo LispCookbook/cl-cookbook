@@ -9,6 +9,13 @@ particular string function, make sure you've also searched for the more general
 [array or sequence functions](http://www.gigamonkeys.com/book/collections.html). We'll only cover a fraction of what can be done
 with and to strings here.
 
+ASDF3, which is included with almost all Common Lisp implementations,
+includes
+[Utilities for Implementation- and OS- Portability (UIOP)](https://gitlab.common-lisp.net/asdf/asdf/blob/master/uiop/README.md),
+which defines functions to work on strings (`strcat`,
+`string-prefix-p`, `string-enclosed-p`, `first-char`, `last-char`,
+`split-string`, `stripln`).
+
 Some external libraries available on Quicklisp bring some more
 functionality or some shorter ways to do.
 
@@ -201,7 +208,7 @@ is heavily optimized.
 
 # Concatenating Strings
 
-The name says it all: CONCATENATE is your friend. Note that this a generic
+The name says it all: CONCATENATE is your friend. Note that this is a generic
 sequence function and you have to provide the result type as the first argument.
 
 ~~~lisp
@@ -209,6 +216,18 @@ sequence function and you have to provide the result type as the first argument.
 "Karl Marx"
 * (concatenate 'list "Karl" " " "Marx")
 (#\K #\a #\r #\l #\Space #\M #\a #\r #\x)
+~~~
+
+With UIOP, use `strcat`:
+
+~~~lisp
+* (uiop:strcat "karl" " " marx")
+~~~
+
+or with the library `str`, use `concat`:
+
+~~~lisp
+* (str:concat "foo" "bar")
 ~~~
 
 If you have to construct a string out of many parts, all of these calls to
@@ -323,16 +342,30 @@ its destructive counterpart NREVERSE).
 ~~~
 
 There's no one-liner in CL to reverse a string by word (like you would do it in
-Perl with split and join). You either have to use function from an external
-library like SPLIT-SEQUENCE or you have to roll your own solution. Here's an
-attempt:
+Perl with split and join). You either have to use functions from an external
+library like SPLIT-SEQUENCE or you have to roll your own solution.
+
+Here's an attempt with the `str` library:
+
+~~~lisp
+* (defparameter *singing* "singing in the rain")
+*SINGING*
+* (str:words *SINGING*)
+("singing" "in" "the" "rain")
+* (reverse *)
+("rain" "the" "in" "singing")
+* (str:unwords *)
+"rain the in singing"
+~~~
+
+And here's another one with no external dependencies:
 
 ~~~lisp
 * (defun split-by-one-space (string)
     "Returns a list of substrings of string
-divided by ONE space each.
-Note: Two consecutive spaces will be seen as
-if there were an empty string between them."
+    divided by ONE space each.
+    Note: Two consecutive spaces will be seen as
+    if there were an empty string between them."
     (loop for i = 0 then (1+ j)
           as j = (position #\Space string :start i)
           collect (subseq string i j)
@@ -383,7 +416,7 @@ Common Lisp has a couple of functions to control the case of a string.
 "Cool Example"
 ~~~
 
-These functions take :START and :END keyword arguments so you can optionally
+These functions take the `:start` and `:end` keyword arguments so you can optionally
 only manipulate a part of the string. They also have destructive counterparts
 whose names starts with "N".
 
@@ -402,10 +435,11 @@ whose names starts with "N".
 "big"
 ~~~
 
-Note this potential caveat: According to the HyperSpec, "for STRING-UPCASE,
-STRING-DOWNCASE, and STRING-CAPITALIZE, string is not modified. However, if no
-characters in string require conversion, the result may be either string or a
-copy of it, at the implementation's discretion." This implies the last result in
+Note this potential caveat: according to the HyperSpec,
+
+> for STRING-UPCASE, STRING-DOWNCASE, and STRING-CAPITALIZE, string is not modified. However, if no characters in string require conversion, the result may be either string or a copy of it, at the implementation's discretion.
+
+This implies that the last result in
 the following example is implementation-dependent - it may either be "BIG" or
 "BUG". If you want to be sure, use COPY-SEQ.
 
