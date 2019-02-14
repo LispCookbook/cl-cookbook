@@ -848,18 +848,16 @@ tables, runs the code and connects back to the original DB connection.
      (uiop:with-temporary-file (:pathname name :prefix prefix)
        ;; Bind our *db-name* to a new name, so as to create a new DB.
        (let* ((*db-name* name))
-         ;; Catch anything in order to always re-connect to our real DB.
-         (handler-case
-             (progn
-               ;; Call our connect function, create the tables, run the migrations.
-               (connect)
-               (ensure-tables-exist)
-               (migrate-all)
-               ,@body)
-           (t (c)
-             (format t "Error in fresh DB: ~a~&" c))
+         ;; Always re-connect to our real DB even in case of error in body.
+         (unwind-protect
+           (progn
+             ;; our functions to connect to the DB, create the tables and run the migrations.
+             (connect)
+             (ensure-tables-exist)
+             (migrate-all)
+             ,@body)
 
-         (setf mito.connection:*connection* connection)))))
+           (setf mito:*connection* connection))))))
 ~~~
 
 Use it like this:
