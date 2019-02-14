@@ -843,18 +843,21 @@ tables, runs the code and connects back to the original DB connection.
           (prefix (concatenate 'string
                                (random-string 8)
                                "/"))
-          ;; *db* is your db connection, may be nil but a bound variable.
-          (connection *db*))
+          ;; Save our current DB connection.
+          (connection mito:*connection*))
      (uiop:with-temporary-file (:pathname name :prefix prefix)
+       ;; Bind our *db-name* to a new name, so as to create a new DB.
        (let* ((*db-name* name))
-         (connect)
-         ;; catch anything to always re-connect to our real db.
+         ;; Catch anything in order to always re-connect to our real DB.
          (handler-case
              (progn
+               ;; Call our connect function, create the tables, run the migrations.
+               (connect)
                (ensure-tables-exist)
                (migrate-all)
                ,@body)
-           (t () nil))
+           (t (c)
+             (format t "Error in fresh DB: ~a~&" c))
 
          (setf mito.connection:*connection* connection)))))
 ~~~
