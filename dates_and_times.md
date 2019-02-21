@@ -226,3 +226,27 @@ If this is a problem for you, here's a small function by Gerald Doussot (adapted
                   -1))
      7)))
 ~~~
+
+## The `local-time` library
+
+The `local-time` library (available on Quicklisp) is a very handy extension to
+the somewhat limited functionalities as defined by the standard.
+
+In particular, in can
+
+- parse timestrings,
+- print timestamp in various standard or custom formats (e.g. RFC1123 or RFC3339)
+- perform time arithmetic,
+- convert Unix times, timestamps, and universal times to and fro.
+
+For example, here is a function that returns Unix times as a human readable string:
+~~~lisp
+(defun unix-time-to-human-string (unix-time)
+  (local-time:format-timestring
+   nil
+   (local-time:unix-to-timestamp unix-time)
+   :format local-time:+asctime-format+))
+~~~
+
+See the [manual](https://common-lisp.net/project/local-time/manual.html) for
+more details.
