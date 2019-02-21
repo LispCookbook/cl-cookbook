@@ -326,14 +326,18 @@ where it stopped (using the "step-continue" restart).
 ## Advise and watch
 
 [advise](http://www.xach.com/clhs?q=break) and
-[watch](http://www.xach.com/clhs?q=watch) are available in some vendor
-implementations, like LispWorks. They are not available in
+[watch](http://www.xach.com/clhs?q=watch) are available in some
+implementations, like CCL
+([advise](https://ccl.clozure.com/manual/chapter4.3.html#Advising) and
+[watch](https://ccl.clozure.com/manual/chapter4.12.html#watched-objects))
+and [LispWorks](http://www.lispworks.com/). They are not available in
 SBCL. `advise` allows to modify a function without changing its
 source, or to do something before or after its execution, like CLOS'
 method combination (befor, after around methods).
 
-`watch` allows to specify variables to be displayed in some GUI during
-the program execution.
+`watch` will signal a condition when a thread attempts to write to an
+object being watched. It can be coupled with the display of the
+watched objects in a GUI.
 
 
 ## Unit tests
