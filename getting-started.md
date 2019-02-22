@@ -368,8 +368,9 @@ want to work with it on the REPL, but Quicklisp doesn't know it. How
 can you do ?
 
 Well first, if you create it or clone it into
-`~/quicklisp/local-projects`, you'll be able to `(ql:quickload …)` it
-with no further ado.
+one of `~/common-lisp`, `~/.local/share/common-lisp/source/` or
+`~/quicklisp/local-projects`, you'll be able to `(ql:quickload …)` it with no
+further ado.
 
 Otherwise you'll need to compile and load its system definition
 (`.asd`) first. In Slime, type `C-c C-k`
