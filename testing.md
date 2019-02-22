@@ -10,7 +10,9 @@ integration services like Travis CI and Coveralls.
 We will use an established and well-designed regression testing
 framework called [Prove](https://github.com/fukamachi/prove). It is
 not the only possibility though,
-[FiveAM](http://quickdocs.org/fiveam/api) is a popular one. We prefer
+[FiveAM](http://quickdocs.org/fiveam/api) is a popular one (see
+[this blogpost](http://turtleware.eu/posts/Tutorial-Working-with-FiveAM.html) for an
+introduction). We prefer
 `Prove` for its doc and its **extensible reporters** (it has different
 report styles and we can extend them).
 
