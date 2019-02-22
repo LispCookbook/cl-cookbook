@@ -71,14 +71,37 @@ for CL programming.
 
 *   Setup:
     *   Installing it from [MELPA](http://wikemacs.org/wiki/Melpa) is straightforward. Search package-list-packages for 'slime' and click to install. If MELPA is configured correctly, it will install itself and all dependencies.
-    *   Run slime with `M-x slime`.
+    *   Enable the desired contribs (SLIME does very little by defaults), e.g. `(slime-setup '(slime-fancy slime-quicklisp slime-asdf))`.
+    *   Run SLIME with `M-x slime`.
 
 Check out this **[video tutorial](https://www.youtube.com/watch?v=sBcPNr1CKKw)** ! (and the author's channel, full of great stuff)
 
+SLIME also has some nice extensions like
+[Helm-SLIME](https://github.com/emacs-helm/helm-slime) which features, among
+others
+- Fuzzy completion,
+- REPL and connection listing,
+- Fuzzy-search of the REPL history,
+- Fuzzy-search of the _apropos_ documentation.
+
+#### REPL interactions
+
+From the SLIME REPL, press `,` to prompt for commands.  There is completion
+over the available systems and packages.  Examples:
+
+- `,load-system`
+- `,reload-system`
+- `,in-package`
+- `,restart-inferior-lisp`
+
+and many more.
+
+With the `slime-quicklisp` contrib, you can also `,ql` to list all systems
+available for installation.
 
 ### SLY: Sylvester the Cat's Common Lisp IDE
 
-[SLY](https://github.com/joaotavora/sly) is a Slime fork that contains
+[SLY](https://github.com/joaotavora/sly) is a SLIME fork that contains
 the following improvements:
 
 * Completely redesigned REPL based on Emacs's own full-featured comint.el
@@ -175,7 +198,7 @@ With `C-M-q`:
 
 #### Code completion
 
-Use the built-in `C-c TAB` to complete symbols in Slime. You can get tooltips
+Use the built-in `C-c TAB` to complete symbols in SLIME. You can get tooltips
 with [company-mode](http://wikemacs.org/wiki/Company-mode).
 
 ~~~lisp
@@ -203,7 +226,7 @@ Insert a comment, comment a region with `M-;`, adjust text with `M-q`.
 
 <a name="Slide-11"></a>
 
-### Evaluating and Compiling Lisp in Slime
+### Evaluating and Compiling Lisp in SLIME
 
 Compile the entire **buffer** by pressing `C-c C-k`.
 
@@ -274,7 +297,7 @@ definition. Press `M-,` to come back.
 
 #### Find who's calling, referencing, setting a symbol
 
-See Slime's help menu. You can search and list "who" is *calling*,
+See SLIME's help menu. You can search and list "who" is *calling*,
 *referencing*, *setting*, *binding*, *macroexpanding* symbols, and
 more.
 
@@ -297,7 +320,7 @@ more.
 
 ### Argument lists
 
-When you put the cursor on a function, Slime will show its signature
+When you put the cursor on a function, SLIME will show its signature
 in the minibuffer.
 
 
@@ -336,6 +359,18 @@ in the minibuffer.
 
 
 <a name="Slide-15"></a>
+
+### Consult the CLHS offline
+
+~~~lisp
+(ql:quickload "clhs")
+~~~
+
+Then add this to your Emacs configuration:
+
+~~~lisp
+(load "~/.quicklisp/clhs-use-local.el" 'noerror)
+~~~
 
 ## Miscellaneous
 
@@ -384,7 +419,7 @@ and for Sly:
 ~~~
 
 This will avoid getting `ascii stream decoding error`s when you have
-non-ascii characters in files you evaluate with Slime.
+non-ascii characters in files you evaluate with SLIME.
 
 
 ### Standard shell
@@ -435,7 +470,7 @@ Windows-like:
 really have to type in all this stuff to get started with Emacs and
 Lisp?*
 
-No, you can add yourself just what's needed to get Slime working.
+No, you can add yourself just what's needed to get SLIME working.
 
 You can try [Portacle](https://shinmera.github.io/portacle/) which has
 everything ready.

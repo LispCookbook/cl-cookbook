@@ -13,19 +13,30 @@ lookup, and so on. It works with many implementations.
 
 [Portacle](https://shinmera.github.io/portacle/) is a portable and
 multiplatform Common Lisp environment. It ships Emacs25, SBCL,
-Quicklisp, Slime and Git.
+Quicklisp, SLIME and Git.
 
 <img src="assets/portacle.png"
      style="width: 800px"/>
 
-### Installing Slime
+### Installing SLIME
 
-Slime is in the official GNU Elpa repository of Emacs Lisp packages
+SLIME is in the official GNU ELPA repository of Emacs Lisp packages
 (in Emacs24 and forward). Install with:
 
     M-x package-install RET slime RET
 
-Now you can run Slime with `M-x slime`.
+Since SLIME is heavily modular and the defaults only do the bare minimum (not
+even the SLIME REPL), you might want to enable more features with
+
+~~~lisp
+(slime-setup '(slime-fancy slime-quicklisp slime-asdf))
+~~~
+
+For more details, consult the
+[documentation](https://common-lisp.net/project/slime/doc/html/) (also available
+as an Info page).
+
+Now you can run SLIME with `M-x slime` and/or `M-x slime-connect`.
 
 See also:
 
@@ -78,7 +89,7 @@ with restarts, macro-expansion, parenthesis matching,…
 
 Lem is an editor tailored for Common Lisp development. Once you
 install it, you can start developing. Its interface ressembles Emacs
-and Slime (same shortcuts). It comes with an ncurses and an Electron
+and SLIME (same shortcuts). It comes with an ncurses and an Electron
 frontend, and other programming modes: Python, Go, Rust, JS, Nim,
 Scheme, HTML, CSS, directory mode, a vim layer, and more.
 
