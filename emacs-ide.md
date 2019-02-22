@@ -75,6 +75,14 @@ for CL programming.
 
 Check out this **[video tutorial](https://www.youtube.com/watch?v=sBcPNr1CKKw)** ! (and the author's channel, full of great stuff)
 
+SLIME also has some nice extensions like
+[Helm-SLIME](https://github.com/emacs-helm/helm-slime) which features, among
+others
+- Fuzzy completion,
+- REPL and connection listing,
+- Fuzzy-search of the REPL history,
+- Fuzzy-search of the _apropos_ documentation.
+
 
 ### SLY: Sylvester the Cat's Common Lisp IDE
 
