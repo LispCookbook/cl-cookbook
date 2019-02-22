@@ -7,7 +7,7 @@ Easy steps to install a development environment and start a project.
 Want a 2-clicks install ? Then get
 [Portacle](https://shinmera.github.io/portacle/), *a portable and
 multiplatform* Common Lisp environment. It ships Emacs25, SBCL (the
-implementation), Quicklisp (package manager), Slime (IDE) and
+implementation), Quicklisp (package manager), SLIME (IDE) and
 Git. It's the most straightforward way to get going !
 
 ## Install an implementation
@@ -79,8 +79,8 @@ into an SBCL REPL:
 
     docker run --rm -it -v /path/to/local/code:/usr/local/share/common-lisp/source daewok/lisp-devel:base sbcl
 
-But we still want to develop from our Emacs and Slime, so we need to
-connect Slime to the Lisp inside Docker. See
+But we still want to develop from our Emacs and SLIME, so we need to
+connect SLIME to the Lisp inside Docker. See
 [slime-docker](https://github.com/daewok/slime-docker) for a library
 that helps on setting that up.
 
@@ -373,7 +373,7 @@ one of `~/common-lisp`, `~/.local/share/common-lisp/source/` or
 further ado.
 
 Otherwise you'll need to compile and load its system definition
-(`.asd`) first. In Slime, type `C-c C-k`
+(`.asd`) first. In SLIME, type `C-c C-k`
 (*slime-compile-and-load-file*) in the `.asd`, then you can
 `(ql:quickload …)` it.
 
