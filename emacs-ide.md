@@ -71,7 +71,7 @@ for CL programming.
 
 *   Setup:
     *   Installing it from [MELPA](http://wikemacs.org/wiki/Melpa) is straightforward. Search package-list-packages for 'slime' and click to install. If MELPA is configured correctly, it will install itself and all dependencies.
-    *   Run slime with `M-x slime`.
+    *   Run SLIME with `M-x slime`.
 
 Check out this **[video tutorial](https://www.youtube.com/watch?v=sBcPNr1CKKw)** ! (and the author's channel, full of great stuff)
 
@@ -86,7 +86,7 @@ others
 
 ### SLY: Sylvester the Cat's Common Lisp IDE
 
-[SLY](https://github.com/joaotavora/sly) is a Slime fork that contains
+[SLY](https://github.com/joaotavora/sly) is a SLIME fork that contains
 the following improvements:
 
 * Completely redesigned REPL based on Emacs's own full-featured comint.el
@@ -183,7 +183,7 @@ With `C-M-q`:
 
 #### Code completion
 
-Use the built-in `C-c TAB` to complete symbols in Slime. You can get tooltips
+Use the built-in `C-c TAB` to complete symbols in SLIME. You can get tooltips
 with [company-mode](http://wikemacs.org/wiki/Company-mode).
 
 ~~~lisp
@@ -211,7 +211,7 @@ Insert a comment, comment a region with `M-;`, adjust text with `M-q`.
 
 <a name="Slide-11"></a>
 
-### Evaluating and Compiling Lisp in Slime
+### Evaluating and Compiling Lisp in SLIME
 
 Compile the entire **buffer** by pressing `C-c C-k`.
 
@@ -282,7 +282,7 @@ definition. Press `M-,` to come back.
 
 #### Find who's calling, referencing, setting a symbol
 
-See Slime's help menu. You can search and list "who" is *calling*,
+See SLIME's help menu. You can search and list "who" is *calling*,
 *referencing*, *setting*, *binding*, *macroexpanding* symbols, and
 more.
 
@@ -305,7 +305,7 @@ more.
 
 ### Argument lists
 
-When you put the cursor on a function, Slime will show its signature
+When you put the cursor on a function, SLIME will show its signature
 in the minibuffer.
 
 
@@ -392,7 +392,7 @@ and for Sly:
 ~~~
 
 This will avoid getting `ascii stream decoding error`s when you have
-non-ascii characters in files you evaluate with Slime.
+non-ascii characters in files you evaluate with SLIME.
 
 
 ### Standard shell
@@ -443,7 +443,7 @@ Windows-like:
 really have to type in all this stuff to get started with Emacs and
 Lisp?*
 
-No, you can add yourself just what's needed to get Slime working.
+No, you can add yourself just what's needed to get SLIME working.
 
 You can try [Portacle](https://shinmera.github.io/portacle/) which has
 everything ready.
