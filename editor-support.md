@@ -25,7 +25,18 @@ SLIME is in the official GNU ELPA repository of Emacs Lisp packages
 
     M-x package-install RET slime RET
 
-Now you can run SLIME with `M-x slime`.
+Since SLIME is heavily modular and the defaults only do the bare minimum (not
+even the SLIME REPL), you might want to enable more features with
+
+~~~lisp
+(slime-setup '(slime-fancy slime-quicklisp slime-asdf))
+~~~
+
+For more details, consult the
+[documentation](https://common-lisp.net/project/slime/doc/html/) (also available
+as an Info page).
+
+Now you can run SLIME with `M-x slime` and/or `M-x slime-connect`.
 
 See also:
 
