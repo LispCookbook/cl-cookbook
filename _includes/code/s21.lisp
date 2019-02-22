@@ -1,5 +1,5 @@
 ;; Enter and evaluate the following definitions, then put the cursor
-;; on "(xx)" and press "C-c I" (Slime) to execute "inspect" on
+;; on "(xx)" and press "C-c I" or "C-c C-v C-i" (SLIME) to execute "inspect" on
 ;; the "xx" function. Entering "h" gives a list of help commands and
 ;; "q" exits the inspector.
 
