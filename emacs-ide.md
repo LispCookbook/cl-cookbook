@@ -84,6 +84,20 @@ others
 - Fuzzy-search of the REPL history,
 - Fuzzy-search of the _apropos_ documentation.
 
+#### REPL interactions
+
+From the SLIME REPL, press `,` to prompt for commands.  There is completion
+over the available systems and packages.  Examples:
+
+- `,load-system`
+- `,reload-system`
+- `,in-package`
+- `,restart-inferior-lisp`
+
+and many more.
+
+With the `slime-quicklisp` contrib, you can also `,ql` to list all systems
+available for installation.
 
 ### SLY: Sylvester the Cat's Common Lisp IDE
 
