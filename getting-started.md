@@ -247,20 +247,41 @@ See more: https://wiki.debian.org/CommonLisp
 
 ### Advanced dependencies management
 
-Note that you don't need to know that to get started.
+You can drop Common Lisp projects into any of those folders:
 
-Quicklisp installs the libraries into `~/quicklisp/local-projects/`. A
-library installed here is automatically available for every project.
+- `~/common-lisp`,
+- `~/.local/share/common-lisp/source`,
+- `~/quicklisp/local-projects`
+
+For a complete list, see
+
+~~~lisp
+(asdf/source-registry:default-user-source-registry)
+~~~
+
+and
+~~~lisp
+asdf:*central-registry*
+~~~
+
+A library installed here is automatically available for every project.
 
 #### Providing our own version of a library. Cloning projects.
 
 Given the property above, we can clone any library into the
-local-projects directory and it will be found by quicklisp and
+local-projects directory and it will be found by ASDF (and Quicklisp) and
 available right-away:
 
 ~~~lisp
-(ql:quickload "package")
+(asdf:load-system "system")
 ~~~
+or
+~~~lisp
+(ql:quickload "system")
+~~~
+
+The practical different between the two is that `ql:quickload` first tries to
+fetch the system from the Internet if it is not already installed.
 
 #### How to work with local versions of libraries
 
