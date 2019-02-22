@@ -381,6 +381,10 @@ If you dislike the REPL to print all symbols upcase, add this:
 
     (setf *print-case* :downcase)
 
+Beware that this might break some packages like
+[Mito](https://github.com/fukamachi/mito/issues/45).  Avoid doing this in
+production.
+
 
 ## Read more
 
