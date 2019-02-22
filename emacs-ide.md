@@ -345,6 +345,18 @@ in the minibuffer.
 
 <a name="Slide-15"></a>
 
+### Consult the CLHS offline
+
+~~~lisp
+(ql:quickload "clhs")
+~~~
+
+Then add this to your Emacs configuration:
+
+~~~lisp
+(load "~/.quicklisp/clhs-use-local.el" 'noerror)
+~~~
+
 ## Miscellaneous
 
 ### Send to the REPL
