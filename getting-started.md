@@ -373,7 +373,7 @@ one of `~/common-lisp`, `~/.local/share/common-lisp/source/` or
 further ado.
 
 Otherwise you'll need to compile and load its system definition
-(`.asd`) first. In SLIME, type `C-c C-k`
+(`.asd`) first. In SLIME with the `slime-asdf` contrib loaded, type `C-c C-k`
 (*slime-compile-and-load-file*) in the `.asd`, then you can
 `(ql:quickload …)` it.
 
