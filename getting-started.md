@@ -194,6 +194,13 @@ Then, in both cases, still from the REPL:
 This will create the `~/quicklisp/` directory, where Quicklisp will
 maintain its state and downloaded projects.
 
+If you wish, you can install Quicklisp to a different location.  For instance,
+to install it to a hidden folder on Unix systems:
+
+~~~lisp
+(quicklisp-quickstart:install :path "~/.quicklisp)
+~~~
+
 If you want Quicklisp to always be loaded in your Lisp sessions, run
 `(ql:add-to-init-file)`: this adds the right stuff to the init file of
 your CL implementation. Otherwise, you have to run `(load
