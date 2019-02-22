@@ -149,8 +149,8 @@ namespace, a Python module or a Java package.
   one-to-one relationship between systems and packages, but this is in
   no way mandatory. A system may declare a dependency on other
   systems. Systems are managed by [ASDF](https://common-lisp.net/project/asdf/asdf.html) (Another System Definition
-  Facility), which offers functionalities similar to those of make and
-  ld.so, and has become a de facto standard.
+  Facility), which offers functionalities similar to those of `make` and
+  `ld.so`, and has become a de facto standard.
 
 * A Common Lisp library or project typically consists of one or
   several ASDF systems (and is distributed as one Quicklisp project).
