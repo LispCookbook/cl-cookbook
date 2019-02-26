@@ -8,7 +8,7 @@ inspect, check and manipulate types.
 ## Values Have Types, Not Variables
 
 Being different from some languages such as C/C++, variables in Lisp are just
-*placeholders* for values. When you [`SETF`][setf] something, the value is only
+*placeholders* for values. When you [`setf`][setf] something, the value is only
 *bound* to the variable. You can bind another value to the same variable later,
 as you wish.
 
@@ -25,13 +25,13 @@ For example:
 (INTEGER 0 4611686018427387903)
 ~~~
 
-Function [`TYPE-OF`][type-of] returns the type of given variable. The returned
-result is a [type specifier][type-specifier]. The first element is the type and
-the remaining part is extra information of that type. In this case it is lower
+The function [`type-of`][type-of] returns the type of the given variable. The
+returned result is a type specifier. The first element is the type and the
+remaining part is extra information of that type. In this case it is lower
 bound and upper bound. You can safely ignore it for now. Also remember that
 numbers in Lisp have no limit!
 
-Now let's try to [`SETF`][setf] the variable:
+Now let's try to [`setf`][setf] the variable:
 
 ~~~lisp
 * (setf *var* "hello")
@@ -41,13 +41,13 @@ Now let's try to [`SETF`][setf] the variable:
 (SIMPLE-ARRAY CHARACTER (5))
 ~~~
 
-You see, the type of the same variable is changed to
-[`SIMPLE-ARRAY`][simple-array], with contents of type [`CHARACTER`][character]
+You see, the type of the same variable changed to
+[`simple-array`][simple-array], with contents of type [`character`][character]
 and length 5.
 
 ## Type Hierarchy
 
-Inheritance relationship of Lisp types consists a type tree. For example:
+The inheritance relationship of Lisp types consists a type tree. For example:
 
 ~~~lisp
 * (describe 'number)
@@ -61,14 +61,15 @@ NUMBER names the built-in-class #<BUILT-IN-CLASS COMMON-LISP:NUMBER>:
   No direct slots.
 ~~~
 
-Function [`DESCRIBE`][describe] shows that type [`NUMBER`][number] inherits type
-`T` and is directly inherited by types [`COMPLEX`][complex] and [`REAL`][real].
+The function [`describe`][describe] shows that the type [`number`][number]
+inherits from the type `T` and is directly inherited by the types
+[`complex`][complex] and [`real`][real].
 
-Similarly, the precedence list of type [`INTEGER`][integer] is
-[`INTEGER`][integer] <- [`RATIONAL`][rational] <- [`REAL`][real] <-
-[`NUMBER`][number] <- `T`. Type `T` is the root of **all** types.
+Similarly, the precedence list of the [`integer`][integer] type is
+[`integer`][integer] <- [`rational`][rational] <- [`real`][real] <-
+[`number`][number] <- `T`. The type `T` is the root of **all** types.
 
-It might be confusing that [`NUMBER`][number] is a built-in-class. This is
+It might be confusing that [`number`][number] is a built-in-class. This is
 because Lisp types are implemented as CLOS classes. For example:
 
 ~~~lisp
@@ -79,20 +80,20 @@ because Lisp types are implemented as CLOS classes. For example:
 #<BUILT-IN-CLASS COMMON-LISP:FIXNUM>
 ~~~
 
-Function [`CLASS-OF`][class-of] gives more specific result.
+The function [`class-of`][class-of] gives a more specific result.
 
-## Work with Types
+## Working with Types
 
-Function [`TYPEP`][typep] can be used to check if given argument is of given
-type.
+The function [`typep`][typep] can be used to check if the first argument is of
+the given type specified by the second argument.
 
 ~~~lisp
 * (typep 1234 'integer)
 T
 ~~~
 
-Function [`SUBTYPEP`][subtypep] can be used to inspect if a type is sub-type of
-another. It returns 2 values:
+The function [`subtypep`][subtypep] can be used to inspect if a type inherits
+from the another one. It returns 2 values:
 - `T, T` means first argument is sub-type of the second one.
 - `NIL, T` means first argument is *not* sub-type of the second one.
 - `NIL, NIL` means "not determined".
@@ -110,7 +111,7 @@ T
 ~~~
 
 Sometimes you may want to perform different actions according to the type of a
-parameter. Macro [`TYPECASE`][typecase] is your friend in this case:
+parameter. The macro [`typecase`][typecase] is your friend in this case:
 
 ~~~lisp
 * (defun plus1 (arg)
@@ -130,32 +131,96 @@ PLUS1
 ERROR
 ~~~
 
-You can also use [`DEFTYPE`][deftype] to define a new type-specifier. The body
-should be a macro checking given argument is of this type (see
-[`DEFMACRO`][defmacro]). For example:
+## Type Specifier
+
+A type specifier is a form specifying a type. As mentioned above, returning
+value of the function `type-of` and the second argument of `typep` are both
+type specifiers.
+
+The function `type-of` usually returns a type specifier in the form of a
+list. The head of the list is a symbol and the rest is subsidiary type
+information. Such a type specifier is called a compound type specifier. For
+example, `(integer 0 4611686018427387903)` and `(vector number 100)` are type
+specifiers of this kind.
 
 ~~~lisp
-* (deftype square (&optional type size)
-  `(and (array ,type (,size ,size))))
-SQUARE
-
-* (defvar *square* (make-array '(2 2) :initial-element 100))
-*SQUARE*
-
-* *square*
-#2A((100 100) (100 100))
-
-* (type-of *square*)
-(SIMPLE-ARRAY T (2 2))
-
-* (typep *square* 'square)
+* (typep '#(1 2 3) '(vector number 3))
 T
+~~~
+
+The rest part of a compound type specifier can be a `*`, which means
+"anything". For example, the type specifier `(vector number *)` denotes a
+vector consisting of any number of numbers.
+
+~~~lisp
+* (typep '#(1 2 3) '(vector number *))
+T
+~~~
+
+The trailing parts can be omitted, the omitted elements are treated as
+`*`s:
+
+~~~lisp
+* (typep '#(1 2 3) '(vector number))
+T
+
+* (typep '#(1 2 3) '(vector))
+T
+~~~
+
+As you may have guessed, the type specifier above can be shortened as
+following:
+
+~~~lisp
+* (typep '#(1 2 3) 'vector)
+T
+~~~
+
+You may refer to the [CLHS page][type-specifiers] for more information.
+
+## Defining New Type
+
+You can use the macro [`deftype`][deftype] to define a new type-specifier.
+
+Its argument list can be understood as a direct mapping to elements of rest
+part of a compound type specifier. They are be defined as optional to allow
+symbol type specifier.
+
+Its body should be a macro checking whether given argument is of this type
+(see [`defmacro`][defmacro]).
+
+Now let us define a new data type. The data type should be a array with at
+most 10 elements. Also each element should be a number smaller than 10. See
+following code for an example:
+
+~~~lisp
+* (defun small-number-array-p (thing)
+    (and (arrayp thing)
+      (<= (length thing) 10)
+      (every #'numberp thing)
+      (every (lambda (x) (< x 10)) thing)))
+
+* (deftype small-number-array (&optional type)
+    `(and (array ,type 1)
+          (satisfies small-number-array-p)))
+
+* (typep '#(1 2 3 4) '(small-number-array number))
+T
+
+* (typep '#(1 2 3 4) 'small-number-array)
+T
+
+* (typep '#(1 2 3 4 100) 'small-number-array)
+NIL
+
+* (small-number-array-p '#(1 2 3 4 5 6 7 8 9 0 1))
+NIL
 ~~~
 
 [defvar]: http://www.lispworks.com/documentation/lw51/CLHS/Body/m_defpar.htm
 [setf]: http://www.lispworks.com/documentation/lw50/CLHS/Body/m_setf_.htm
 [type-of]: http://www.lispworks.com/documentation/HyperSpec/Body/f_tp_of.htm
-[type-specifier]: http://www.lispworks.com/documentation/lw51/CLHS/Body/04_bc.htm
+[type-specifiers]: http://www.lispworks.com/documentation/lw51/CLHS/Body/04_bc.htm
 [number]: http://www.lispworks.com/documentation/lw61/CLHS/Body/t_number.htm
 [typep]: http://www.lispworks.com/documentation/lw51/CLHS/Body/f_typep.htm
 [subtypep]: http://www.lispworks.com/documentation/lw71/CLHS/Body/f_subtpp.htm
