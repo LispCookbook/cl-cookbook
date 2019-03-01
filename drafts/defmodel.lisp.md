@@ -1,3 +1,11 @@
+---
+title: A "defmodel" macro
+---
+
+ 
+
+
+~~~lisp
 (defmacro defmodel (name slot-definitions)
   `(progn
      (defclass ,name ()
@@ -30,3 +38,4 @@
      (defun ,(symb name 'delete) (,name)
        (with-connection (db-params)
 (delete-dao ,name)))))
+~~~

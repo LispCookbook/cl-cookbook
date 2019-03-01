@@ -889,6 +889,6 @@ Use it like this:
 - [mito-attachment](https://github.com/fukamachi/mito-attachment)
 - [mito-auth](https://github.com/fukamachi/mito-auth)
 - [can](https://github.com/fukamachi/can/) a role-based access right control library
-- an advanced ["defmodel" macro](assets/defmodel.lisp).
+- an advanced ["defmodel" macro](drafts/defmodel.lisp.html).
 
 <!-- # todo: Generating models for an existing DB -->
