@@ -8,12 +8,13 @@ inspect, check and manipulate types.
 ## Values Have Types, Not Variables
 
 Being different from some languages such as C/C++, variables in Lisp are just
-*placeholders* for values. When you [`setf`][setf] something, the value is only
-*bound* to the variable. You can bind another value to the same variable later,
-as you wish.
+*placeholders* for objects[^1]. When you [`setf`][setf] a variable, an object
+is "placed" in it. You can place another value to the same variable later, as
+you wish.
 
-This implies a fact that in Common Lisp **values have types**, while variables
-do not. This might be surprising at first if you come from a C/C++ background.
+This implies a fact that in Common Lisp **objects have types**, while
+variables do not. This might be surprising at first if you come from a C/C++
+background.
 
 For example:
 
@@ -25,11 +26,11 @@ For example:
 (INTEGER 0 4611686018427387903)
 ~~~
 
-The function [`type-of`][type-of] returns the type of the given variable. The
-returned result is a type specifier. The first element is the type and the
-remaining part is extra information of that type. In this case it is lower
-bound and upper bound. You can safely ignore it for now. Also remember that
-numbers in Lisp have no limit!
+The function [`type-of`][type-of] returns the type of the given object. The
+returned result is a [type-specifier][type-specifiers]. In this case the first
+element is the type and the remaining part is extra information (lower and
+upper bound) of that type.  You can safely ignore it for now. Also remember
+that integers in Lisp have no limit!
 
 Now let's try to [`setf`][setf] the variable:
 
@@ -41,36 +42,44 @@ Now let's try to [`setf`][setf] the variable:
 (SIMPLE-ARRAY CHARACTER (5))
 ~~~
 
-You see, the type of the same variable changed to
-[`simple-array`][simple-array], with contents of type [`character`][character]
-and length 5.
+You see, `type-of` returns a different result: [`simple-array`][simple-array]
+of length 5 with contents of type [`character`][character]. This is because
+`*var*` is evaluated to string `"hello"` and the function `type-of` actually
+returns the type of object `"hello"` instead of variable `*var*`.
 
 ## Type Hierarchy
 
-The inheritance relationship of Lisp types consists a type tree. For example:
+The inheritance relationship of Lisp types consists a type graph and the root
+of all types is `T`. For example:
 
 ~~~lisp
-* (describe 'number)
-COMMON-LISP:NUMBER
+* (describe integer)
+COMMON-LISP:INTEGER
   [symbol]
 
-NUMBER names the built-in-class #<BUILT-IN-CLASS COMMON-LISP:NUMBER>:
-  Class precedence-list: NUMBER, T
-  Direct superclasses: T
-  Direct subclasses: COMPLEX, REAL
+INTEGER names the built-in-class #<BUILT-IN-CLASS COMMON-LISP:INTEGER>:
+  Class precedence-list: INTEGER, RATIONAL, REAL, NUMBER, T
+  Direct superclasses: RATIONAL
+  Direct subclasses: FIXNUM, BIGNUM
   No direct slots.
+
+INTEGER names a primitive type-specifier:
+  Lambda-list: (&OPTIONAL (SB-KERNEL::LOW '*) (SB-KERNEL::HIGH '*))
 ~~~
 
-The function [`describe`][describe] shows that the type [`number`][number]
-inherits from the type `T` and is directly inherited by the types
-[`complex`][complex] and [`real`][real].
+The function [`describe`][describe] shows that the symbol [`integer`][integer]
+is a primitive type-specifier that has optional information lower bound and
+upper bound. Meanwhile, it is a built-in class. But why?
 
-Similarly, the precedence list of the [`integer`][integer] type is
-[`integer`][integer] <- [`rational`][rational] <- [`real`][real] <-
-[`number`][number] <- `T`. The type `T` is the root of **all** types.
+Most common Lisp types are implemented as CLOS classes. Some types are simply
+"wrappers" of other types. Each CLOS class maps to a corresponding type. In
+Lisp types are referred to indirectly by the use of [`type
+specifiers`][type-specifiers].
 
-It might be confusing that [`number`][number] is a built-in-class. This is
-because Lisp types are implemented as CLOS classes. For example:
+There are some differences between the function [`type-of`][type-of] and
+[`class-of`][class-of]. The function `type-of` returns the type of a given
+object in type specifier format while `class-of` returns the implementation
+details.
 
 ~~~lisp
 * (type-of 1234)
@@ -79,8 +88,6 @@ because Lisp types are implemented as CLOS classes. For example:
 * (class-of 1234)
 #<BUILT-IN-CLASS COMMON-LISP:FIXNUM>
 ~~~
-
-The function [`class-of`][class-of] gives a more specific result.
 
 ## Working with Types
 
@@ -110,8 +117,8 @@ NIL
 T
 ~~~
 
-Sometimes you may want to perform different actions according to the type of a
-parameter. The macro [`typecase`][typecase] is your friend in this case:
+Sometimes you may want to perform different actions according to the type of
+an argument. The macro [`typecase`][typecase] is your friend:
 
 ~~~lisp
 * (defun plus1 (arg)
@@ -135,18 +142,20 @@ ERROR
 
 A type specifier is a form specifying a type. As mentioned above, returning
 value of the function `type-of` and the second argument of `typep` are both
-type specifiers.
+type specifiers. 
 
-The function `type-of` usually returns a type specifier in the form of a
-list. The head of the list is a symbol and the rest is subsidiary type
-information. Such a type specifier is called a compound type specifier. For
-example, `(integer 0 4611686018427387903)` and `(vector number 100)` are type
-specifiers of this kind.
+As shown above, `(type-of 1234)` returns `(INTEGER 0
+4611686018427387903)`. This kind of type specifiers are called compound type
+specifier. It is a list whose head is a symbol indicating the type. The rest
+part of it is complementary information.
 
 ~~~lisp
 * (typep '#(1 2 3) '(vector number 3))
 T
 ~~~
+
+Here the complementary information of the type `vector` is its elements type
+and size respectively.
 
 The rest part of a compound type specifier can be a `*`, which means
 "anything". For example, the type specifier `(vector number *)` denotes a
@@ -217,6 +226,43 @@ NIL
 NIL
 ~~~
 
+## Type Checking
+
+Common Lisp supports run-time type checking via the macro
+[`check-type`][check-type]. It accepts a [`place`][place] and a type specifier
+as arguments and signals an [`type-error`][type-error] if the contents of
+place are not of the given type.
+
+~~~lisp
+* (defun plus1 (arg)
+    (check-type arg number)
+    (1+ arg))
+PLUS1
+
+* (plus1 1)
+2 (2 bits, #x2, #o2, #b10)
+
+* (plus1 "hello")
+; Debugger entered on #<SIMPLE-TYPE-ERROR expected-type: NUMBER datum: "Hello">
+
+The value of ARG is "Hello", which is not of type NUMBER.
+   [Condition of type SIMPLE-TYPE-ERROR]
+...
+~~~
+
+What about compile-time type checking?
+
+Well, you may provide type information for variables, function arguments etc
+etc via the macro [`declare`][declare]. However, similar to `:type` slot
+introduced in [CLOS section][clos], the effects of type declarations are
+undefined in Lisp standard and are implementation specific. So there is no
+guarantee that Lisp compiler will perform compile-time type checking.
+
+---
+
+[^1]: The term *object* here has nothing to do with Object-Oriented or so. It
+    means "any Lisp datum".
+
 [defvar]: http://www.lispworks.com/documentation/lw51/CLHS/Body/m_defpar.htm
 [setf]: http://www.lispworks.com/documentation/lw50/CLHS/Body/m_setf_.htm
 [type-of]: http://www.lispworks.com/documentation/HyperSpec/Body/f_tp_of.htm
@@ -238,3 +284,8 @@ NIL
 [typecase]: http://www.lispworks.com/documentation/lw60/CLHS/Body/m_tpcase.htm
 [deftype]: http://www.lispworks.com/documentation/lw51/CLHS/Body/m_deftp.htm
 [defmacro]: http://www.lispworks.com/documentation/lw70/CLHS/Body/m_defmac.htm
+[check-type]: http://www.lispworks.com/documentation/HyperSpec/Body/m_check_.htm#check-type
+[type-error]: http://www.lispworks.com/documentation/HyperSpec/Body/e_tp_err.htm#type-error
+[place]: http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_p.htm#place
+[declare]: http://www.lispworks.com/documentation/HyperSpec/Body/s_declar.htm
+[safety]: http://www.lispworks.com/documentation/HyperSpec/Body/d_optimi.htm#speed
