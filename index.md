@@ -37,6 +37,7 @@ title: Home
 * [Defining Systems](systems.html)
 * [Using the Win32 API](win32.html)
 * [Debugging](debugging.html)
+* [Performance Tuning](performance.html)
 * [Scripting. Building executables](scripting.html)
 * [Testing and Continuous Integration](testing.html)
 * [Databases](databases.html)
