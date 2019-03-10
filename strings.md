@@ -663,7 +663,9 @@ NIL
 
 # Converting a String to a Number
 
-CL provides the PARSE-INTEGER to convert a string representation of an integer
+## To an integer: parse-integer
+
+CL provides the `parse-integer` function to convert a string representation of an integer
 to the corresponding numeric value. The second return value is the index into
 the string where the parsing stopped.
 
@@ -692,10 +694,15 @@ Error in function PARSE-INTEGER:
    There's junk in this string: " 42 is forty-two".
 ~~~
 
-PARSE-INTEGER doesn't understand radix specifiers like #X, nor is there a
-built-in function to parse other numeric types. You could use READ-FROM-STRING
-in this case, but be aware that the full reader is in effect if you're using
-this function.
+`parse-integer` doesn't understand radix specifiers like `#X`, nor is there a
+built-in function to parse other numeric types. You could use `read-from-string`
+in this case.
+
+
+## To any number: read-from-string
+
+Be aware that the full reader is in effect if you're using this
+function. This can lead to vulnerability issues.
 
 ~~~lisp
 * (read-from-string "#X23")
@@ -724,6 +731,25 @@ SYMBOL
 * *foo*
 "gotcha"
 ~~~
+
+## To a float: the parse-float library
+
+There is no built-in function similar to `parse-integer` to parse
+other number types. The external library
+[parse-float](https://github.com/soemraws/parse-float) does exactly
+that. It doesn't use `read-from-string` so it is safe to use.
+
+~~~lisp
+(ql:quickload "parse-float")
+(parse-float:parse-float "1.2e2")
+;; 120.00001
+;; 5
+~~~
+
+LispWorks also has a [parse-float](http://www.lispworks.com/documentation/lw51/LWRM/html/lwref-228.htm) function.
+
+See also [parse-number](https://github.com/sharplispers/parse-number).
+
 
 # Converting a Number to a String
 
