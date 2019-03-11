@@ -2,8 +2,8 @@
 title: Performance Tuning and Tips
 ---
 
-Most (if not all) Common Lisp implementations translates the source code into
-assembly language, so the performance is really good compared with some other
+Many Common Lisp implementations translate the source code into assembly
+language, so the performance is really good compared with some other
 interpreted languages.
 
 However, sometimes we just want the program to be faster. This chapter
@@ -69,7 +69,7 @@ PLUS
 The [*declare expression*][declare] can be used to provide hints for compilers
 to perform various optimization. Please note that these hints are
 implementation-dependent. Some implementations such as SBCL support this
-feature, and you may refer to their own documents for detailed
+feature, and you may refer to their own documentation for detailed
 information. Here only some basic techniques mentioned in CLHS are introduced.
 
 In general, declare expressions can occur only at the beginning of the bodies
@@ -79,7 +79,7 @@ forms. Here we introduce some of them that are related to performance tuning.
 
 Please keep in mind that these optimization skills introduced in this section
 are strongly connected to the Lisp implementation selected. Always check their
-documents before using `declare`!
+documentation before using `declare`!
 
 ### Speed and Safety
 
@@ -121,7 +121,7 @@ unused code are pruned.
 
 As mentioned in the [*Type System*][sec:type] chapter, Lisp has a very
 powerful type system. You may provide type hints so that the compiler may
-reduce size of generated code.
+reduce the size of the generated code.
 
 ~~~lisp
 * (defun max-with-type (a b)
@@ -162,12 +162,12 @@ But wait...What happens if we declare wrong types? The answer is: it depends.
 
 For example, SBCL treats type declarations in a [special way][sbcl-type]. It
 performs different levels of type checking according to the safety level. If
-safety level is set to 0, no type checking will be performed. Thus wrong type
-specifier might bring a lot of damage.
+safety level is set to 0, no type checking will be performed. Thus a wrong
+type specifier might cause a lot of damage.
 
-### More on Type Declaration
+### More on Type Declaration with `declaim`
 
-If you try to evaluate `declare` form in the top level, you might get the
+If you try to evaluate a `declare` form in the top level, you might get the
 following error:
 
 ~~~lisp
@@ -184,10 +184,10 @@ being evaluated, which invokes undefined behaviour.
 This is because type declarations have [scopes][declare-scope]. In the
 examples above, we have seen type declarations applied to a function. 
 
-During development it is usually useful to raise importance of safety in order
-to find out potential problems as soon as possible. On the contrary, speed
-might be more important after deployment. However, it might be too verbose to
-specify declaration expression for each single function.
+During development it is usually useful to raise the importance of safety in
+order to find out potential problems as soon as possible. On the contrary,
+speed might be more important after deployment. However, it might be too
+verbose to specify declaration expression for each single function.
 
 The macro [`declaim`][declaim] provides such possibility. It can be used as a
 top level form in a file and the declarations will be made at compile-time.
@@ -236,19 +236,26 @@ prohibit code inline.
 (defun dispatch (x) (funcall (get (car x) 'dispatch) x))
 
 ;; Here is an example where inlining would be encouraged.
-(defun top-level-1 () (dispatch (read-command)))
- 
+;; Because function DISPATCH was defined as INLINE, the code 
+;; inlining will be encouraged by default.
+(defun use-dispatch-inline-by-default () 
+  (dispatch (read-command)))
+
 ;; Here is an example where inlining would be prohibited.
-(defun top-level-2 ()
+;; The NOTINLINE here only affects this function.
+(defun use-dispatch-with-declare-notinline  ()
   (declare (notinline dispatch))
   (dispatch (read-command)))
 
 ;; Here is an example where inlining would be prohibited.
+;; The NOTINLINE here affects all following code.
 (declaim (notinline dispatch))
-(defun top-level-3 () (dispatch (read-command)))
+(defun use-dispatch-with-declaim-noinline () 
+  (dispatch (read-command)))
 
-;; Here is an example where inlining would be encouraged.
-(defun top-level-4 () 
+;; Inlining would be encouraged becuase you specified it.
+;; The INLINE here only affects this function.
+(defun use-dispatch-with-inline () 
   (declare (inline dispatch))
   (dispatch (read-command)))
 ~~~
@@ -262,8 +269,8 @@ development. However, the flexibility comes with cost: generic methods are
 much slower than trivial functions. The performance cost becomes a burden
 especially when the flexibility is not needed.
 
-Package [`inlined-generic-function`][inlined-generic-function] provides
-functions to convert generic functions to static dispatch, moving dispatch
+The package [`inlined-generic-function`][inlined-generic-function] provides
+functions to convert generic functions to static dispatch, moving the dispatch
 cost to compile-time. You just need to define generic function as a
 `inlined-generic-function`.
 
@@ -327,6 +334,31 @@ It can be enabled globally by adding `:inline-generic-function` flag in
 When this feature is present, all inlinable generic functions are inlined
 unless it is declared `notinline`.
 
+## Misc
+
+### Use `eval-when` to Control Evaluation
+
+The special operator [`eval-when`][eval-when] can be used to control when to
+evaluate a form.
+
+~~~lisp
+(eval-when (:compile-toplevel)
+  (print "This line will be printed during compilation."))
+  
+(eval-when (:load-toplevel)
+  (print "This line will be printed during load.")))
+  
+(eval-when (:compile-toplevel :execute)
+  (print "This line will be printed during compilation and execution.")))
+~~~
+
+Thus you can specify top-level optimization using `eval-when`:
+
+~~~lisp
+(eval-when (:compile-toplevel)
+  (declaim (optimize (speed 3) (safety 1))))
+~~~
+
 [time]: http://www.lispworks.com/documentation/lw51/CLHS/Body/m_time.htm
 [trace-output]: http://www.lispworks.com/documentation/lw71/CLHS/Body/v_debug_.htm#STtrace-outputST
 [disassemble]: http://www.lispworks.com/documentation/lw61/LW/html/lw-643.htm
@@ -339,3 +371,4 @@ unless it is declared `notinline`.
 [declaim]: http://www.lispworks.com/documentation/lw71/CLHS/Body/m_declai.htm
 [inline]: http://www.lispworks.com/documentation/lw51/CLHS/Body/d_inline.htm
 [*features*]: http://www.lispworks.com/documentation/lw71/CLHS/Body/v_featur.htm
+[eval-when]: http://www.lispworks.com/documentation/HyperSpec/Body/s_eval_w.htm
