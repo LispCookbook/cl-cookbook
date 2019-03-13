@@ -88,7 +88,7 @@ the declaration [`optimize`][optimize]. Each quality may be assigned a value
 from 0 to 3, with 0 being "totally unimportant" and 3 being "extremely
 important".
 
-The most significant qualities might be `safety` and `speed`. 
+The most significant qualities might be `safety` and `speed`.
 
 By default, Lisp considers code safety to be much more important than
 speed. But you may adjust the weight for more aggressive optimization.
@@ -101,7 +101,63 @@ MAX-ORIGINAL
 * (disassemble 'max-original)
 ; disassembly for MAX-ORIGINAL
 ; Size: 144 bytes. Origin: #x52D450EF
-...
+; 7A7:       8D46F1           lea eax, [rsi-15]               ; no-arg-parsing entry point
+; 7AA:       A801             test al, 1
+; 7AC:       750E             jne L0
+; 7AE:       3C0A             cmp al, 10
+; 7B0:       740A             jeq L0
+; 7B2:       A80F             test al, 15
+; 7B4:       7576             jne L5
+; 7B6:       807EF11D         cmp byte ptr [rsi-15], 29
+; 7BA:       7770             jnbe L5
+; 7BC: L0:   8D43F1           lea eax, [rbx-15]
+; 7BF:       A801             test al, 1
+; 7C1:       750E             jne L1
+; 7C3:       3C0A             cmp al, 10
+; 7C5:       740A             jeq L1
+; 7C7:       A80F             test al, 15
+; 7C9:       755A             jne L4
+; 7CB:       807BF11D         cmp byte ptr [rbx-15], 29
+; 7CF:       7754             jnbe L4
+; 7D1: L1:   488BD3           mov rdx, rbx
+; 7D4:       488BFE           mov rdi, rsi
+; 7D7:       B9C1030020       mov ecx, 536871873              ; generic->
+; 7DC:       FFD1             call rcx
+; 7DE:       488B75F0         mov rsi, [rbp-16]
+; 7E2:       488B5DF8         mov rbx, [rbp-8]
+; 7E6:       7E09             jle L3
+; 7E8:       488BD3           mov rdx, rbx
+; 7EB: L2:   488BE5           mov rsp, rbp
+; 7EE:       F8               clc
+; 7EF:       5D               pop rbp
+; 7F0:       C3               ret
+; 7F1: L3:   4C8BCB           mov r9, rbx
+; 7F4:       4C894DE8         mov [rbp-24], r9
+; 7F8:       4C8BC6           mov r8, rsi
+; 7FB:       4C8945E0         mov [rbp-32], r8
+; 7FF:       488BD3           mov rdx, rbx
+; 802:       488BFE           mov rdi, rsi
+; 805:       B929040020       mov ecx, 536871977              ; generic-=
+; 80A:       FFD1             call rcx
+; 80C:       4C8B45E0         mov r8, [rbp-32]
+; 810:       4C8B4DE8         mov r9, [rbp-24]
+; 814:       488B75F0         mov rsi, [rbp-16]
+; 818:       488B5DF8         mov rbx, [rbp-8]
+; 81C:       498BD0           mov rdx, r8
+; 81F:       490F44D1         cmoveq rdx, r9
+; 823:       EBC6             jmp L2
+; 825: L4:   CC0A             break 10                        ; error trap
+; 827:       04               byte #X04
+; 828:       13               byte #X13                       ; OBJECT-NOT-REAL-ERROR
+; 829:       FE9B01           byte #XFE, #X9B, #X01           ; RBX
+; 82C: L5:   CC0A             break 10                        ; error trap
+; 82E:       04               byte #X04
+; 82F:       13               byte #X13                       ; OBJECT-NOT-REAL-ERROR
+; 830:       FE1B03           byte #XFE, #X1B, #X03           ; RSI
+; 833:       CC0A             break 10                        ; error trap
+; 835:       02               byte #X02
+; 836:       19               byte #X19                       ; INVALID-ARG-COUNT-ERROR
+; 837:       9A               byte #X9A                       ; RCX
 
 * (defun max-with-speed-3 (a b)
     (declare (optimize (speed 3) (safety 0)))
@@ -111,11 +167,41 @@ MAX-WITH-SPEED-3
 * (disassemble 'max-with-speed-3)
 ; disassembly for MAX-WITH-SPEED-3
 ; Size: 92 bytes. Origin: #x52D452C3
-...
+; 3B:       48895DE0         mov [rbp-32], rbx                ; no-arg-parsing entry point
+; 3F:       488945E8         mov [rbp-24], rax
+; 43:       488BD0           mov rdx, rax
+; 46:       488BFB           mov rdi, rbx
+; 49:       B9C1030020       mov ecx, 536871873               ; generic->
+; 4E:       FFD1             call rcx
+; 50:       488B45E8         mov rax, [rbp-24]
+; 54:       488B5DE0         mov rbx, [rbp-32]
+; 58:       7E0C             jle L1
+; 5A:       4C8BC0           mov r8, rax
+; 5D: L0:   498BD0           mov rdx, r8
+; 60:       488BE5           mov rsp, rbp
+; 63:       F8               clc
+; 64:       5D               pop rbp
+; 65:       C3               ret
+; 66: L1:   488945E8         mov [rbp-24], rax
+; 6A:       488BF0           mov rsi, rax
+; 6D:       488975F0         mov [rbp-16], rsi
+; 71:       4C8BC3           mov r8, rbx
+; 74:       4C8945F8         mov [rbp-8], r8
+; 78:       488BD0           mov rdx, rax
+; 7B:       488BFB           mov rdi, rbx
+; 7E:       B929040020       mov ecx, 536871977               ; generic-=
+; 83:       FFD1             call rcx
+; 85:       488B45E8         mov rax, [rbp-24]
+; 89:       488B75F0         mov rsi, [rbp-16]
+; 8D:       4C8B45F8         mov r8, [rbp-8]
+; 91:       4C0F44C6         cmoveq r8, rsi
+; 95:       EBC6             jmp L0
 ~~~
 
-As you can see, the generated assembly code is much shorter, which means that
-unused code are pruned.
+As you can see, the generated assembly code is much shorter (92 bytes
+VS 144).  The compiler was able to perform optimizations. Yet but we
+can do better by declaring types.
+
 
 ### Type Hints
 
@@ -133,6 +219,21 @@ MAX-WITH-TYPE
 * (disassemble 'max-with-type)
 ; disassembly for MAX-WITH-TYPE
 ; Size: 42 bytes. Origin: #x52D48A23
+; 1B:       488BF7           mov rsi, rdi                     ; no-arg-parsing entry point
+; 1E:       488975F0         mov [rbp-16], rsi
+; 22:       488BD8           mov rbx, rax
+; 25:       48895DF8         mov [rbp-8], rbx
+; 29:       488BD0           mov rdx, rax
+; 2C:       B98C030020       mov ecx, 536871820               ; generic-<
+; 31:       FFD1             call rcx
+; 33:       488B75F0         mov rsi, [rbp-16]
+; 37:       488B5DF8         mov rbx, [rbp-8]
+; 3B:       480F4CDE         cmovl rbx, rsi
+; 3F:       488BD3           mov rdx, rbx
+; 42:       488BE5           mov rsp, rbp
+; 45:       F8               clc
+; 46:       5D               pop rbp
+; 47:       C3               ret
 ~~~
 
 The size of generated assembly code shrunk to about 1/3 of the size. What
