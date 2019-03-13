@@ -90,6 +90,29 @@ usual `C-c C-c`.
 
 See [Prove's documentation](https://github.com/fukamachi/prove) !
 
+
+## Interactively fixing unit tests
+
+Common Lisp is interactive by nature (or so are most implementations),
+and testing frameworks make use of it. It is possible to ask the
+framework to open the debugger on a failing test, so that we can
+inspect the stacktrace and go to the erronous line instantly, fix it
+and re-run the test from where it left off, by choosing the suggested
+*restart*.
+
+With Prove, set `prove:*debug-on-error*` to `t`.
+
+Below is a short screencast showing all this in action (with FiveAM):
+
+<iframe width="560" height="315" sandbox="allow-same-origin allow-scripts" src="https://peertube.video/videos/embed/c0c82209-feaa-444d-962f-afa25745bfc0" frameborder="0" allowfullscreen></iframe>
+
+Note that in the debugger:
+
+- `<enter>` on a backtrace shows more of it
+- `v` on a backtrace goes to the corresponding line or function.
+- see more options with the menu.
+
+
 ## Code coverage
 
 A code coverage tool produces a visual output that allows to see what
