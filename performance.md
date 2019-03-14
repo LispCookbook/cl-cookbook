@@ -199,7 +199,7 @@ MAX-WITH-SPEED-3
 ~~~
 
 As you can see, the generated assembly code is much shorter (92 bytes
-VS 144).  The compiler was able to perform optimizations. Yet but we
+VS 144).  The compiler was able to perform optimizations. Yet we
 can do better by declaring types.
 
 
