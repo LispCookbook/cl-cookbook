@@ -13,7 +13,7 @@ introduces some techniques to squeeze the CPU power out.
 
 ### Acquiring Execution Time
 
-The macro [`time`][time] might be the most useful tool for profiling. It takes
+The macro [`time`][time] is very useful for finding out bottlenecks. It takes
 a form, evaluates it and prints timing information in
 [`*trace-output*`][trace-output], as shown below:
 
@@ -33,13 +33,17 @@ Evaluation took:
   0 bytes consed
 ~~~
 
-By using `TIME` macro it is fairly easy to find out which part of your program
+By using `time` macro it is fairly easy to find out which part of your program
 takes too much time.
+
+Please note that the timing information provided here is not guaranteed to be
+reliable enough for marketing comparisons. It should only be used for tuning
+purpose, as demonstrated in this chapter.
 
 ### Checking Assembly Code
 
-The function [`disassemble`][disassemble] takes a function and returns the
-machine code of it. For example:
+The function [`disassemble`][disassemble] takes a function and prints the
+compiled code of it to `*standard-output*`. For example:
 
 ~~~lisp
 * (defun plus (a b)
@@ -63,6 +67,31 @@ PLUS
 ; 5D:       C3               RET
 ; 5E:       CC0F             BREAK 15                         ; Invalid argument count trap
 ~~~
+
+The code above was evaluated in SBCL. In some other implementations such as
+CLISP, `disassembly` might return something different: 
+
+~~~lisp
+* (defun plus (a b)
+    (+ a b))
+PLUS
+
+* (disassemble 'plus)
+Disassembly of function PLUS
+2 required arguments
+0 optional arguments
+No rest parameter
+No keyword parameters
+4 byte-code instructions:
+0     (LOAD&PUSH 2)
+1     (LOAD&PUSH 2)
+2     (CALLSR 2 55)                       ; +
+5     (SKIP&RET 3)
+NIL
+~~~
+
+It is because SBCL compiles the Lisp code into machine code, while CLISP does
+not.
 
 ## Using Declare Expression
 
@@ -205,7 +234,7 @@ can do better by declaring types.
 
 ### Type Hints
 
-As mentioned in the [*Type System*][sec:type] chapter, Lisp has a very
+As mentioned in the [*Type System*][sec:type] chapter, Lisp has a relatively
 powerful type system. You may provide type hints so that the compiler may
 reduce the size of the generated code.
 
@@ -318,16 +347,18 @@ MAX-ORIGINAL
 ; Size: 142 bytes. Origin: #x52D4815D
 ~~~
 
-You may specify different safety and speed level and perform optimization
-strategy globally.
+Please note that `declaim` works in **compile-time** of a file. It is mostly
+used to make some declares local to that file. And it is unspecified whether
+or not the compile-time side-effects of a declaim persist after the file has
+been compiled.
 
 ### Code Inline
 
-The declaration [`inline`][inline] replaces function calls with function
-body. It will save the cost of function calls but will potentially increase
-the code size. The best situation to use `inline` might be those small but
-frequently used functions. The following snippet shows how to encourage and
-prohibit code inline.
+The declaration [`inline`][inline] replaces function calls with function body,
+if the compiler supports it. It will save the cost of function calls but will
+potentially increase the code size. The best situation to use `inline` might
+be those small but frequently used functions. The following snippet shows how
+to encourage and prohibit code inline.
 
 ~~~lisp
 ;; The globally defined function DISPATCH should be open-coded,
@@ -360,6 +391,9 @@ prohibit code inline.
   (declare (inline dispatch))
   (dispatch (read-command)))
 ~~~
+
+Please note that when the inlined functions change, all the callers must be
+re-compiled.
 
 ## Optimizing Generic Functions
 
@@ -444,10 +478,10 @@ evaluate a form.
 
 ~~~lisp
 (eval-when (:compile-toplevel)
-  (print "This line will be printed during compilation."))
+  (print "This line will be printed during compiling a file."))
   
 (eval-when (:load-toplevel)
-  (print "This line will be printed during load.")))
+  (print "This line will be printed during loading a file.")))
   
 (eval-when (:compile-toplevel :execute)
   (print "This line will be printed during compilation and execution.")))
@@ -462,7 +496,7 @@ Thus you can specify top-level optimization using `eval-when`:
 
 [time]: http://www.lispworks.com/documentation/lw51/CLHS/Body/m_time.htm
 [trace-output]: http://www.lispworks.com/documentation/lw71/CLHS/Body/v_debug_.htm#STtrace-outputST
-[disassemble]: http://www.lispworks.com/documentation/lw61/LW/html/lw-643.htm
+[disassemble]: http://www.lispworks.com/documentation/lw60/CLHS/Body/f_disass.htm
 [inlined-generic-function]: https://github.com/guicho271828/inlined-generic-function
 [sec:type]: #type
 [declare]: http://www.lispworks.com/documentation/lw71/CLHS/Body/s_declar.htm
