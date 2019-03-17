@@ -409,6 +409,11 @@ functions to convert generic functions to static dispatch, moving the dispatch
 cost to compile-time. You just need to define generic function as a
 `inlined-generic-function`.
 
+**Caution**
+
+This package is declared as experimental thus is not recommended to be used in
+a serious software production. Use it at your own risk!
+
 ~~~lisp
 * (defgeneric plus (a b)
     (:generic-function-class inlined-generic-function))
