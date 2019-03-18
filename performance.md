@@ -474,31 +474,6 @@ It can be enabled globally by adding `:inline-generic-function` flag in
 When this feature is present, all inlinable generic functions are inlined
 unless it is declared `notinline`.
 
-## Misc
-
-### Use `eval-when` to Control Evaluation
-
-The special operator [`eval-when`][eval-when] can be used to control when to
-evaluate a form.
-
-~~~lisp
-(eval-when (:compile-toplevel)
-  (print "This line will be printed during compiling a file."))
-  
-(eval-when (:load-toplevel)
-  (print "This line will be printed during loading a file.")))
-  
-(eval-when (:compile-toplevel :execute)
-  (print "This line will be printed during compilation and execution.")))
-~~~
-
-Thus you can specify top-level optimization using `eval-when`:
-
-~~~lisp
-(eval-when (:compile-toplevel)
-  (declaim (optimize (speed 3) (safety 1))))
-~~~
-
 [time]: http://www.lispworks.com/documentation/lw51/CLHS/Body/m_time.htm
 [trace-output]: http://www.lispworks.com/documentation/lw71/CLHS/Body/v_debug_.htm#STtrace-outputST
 [disassemble]: http://www.lispworks.com/documentation/lw60/CLHS/Body/f_disass.htm
@@ -511,4 +486,3 @@ Thus you can specify top-level optimization using `eval-when`:
 [declaim]: http://www.lispworks.com/documentation/lw71/CLHS/Body/m_declai.htm
 [inline]: http://www.lispworks.com/documentation/lw51/CLHS/Body/d_inline.htm
 [*features*]: http://www.lispworks.com/documentation/lw71/CLHS/Body/v_featur.htm
-[eval-when]: http://www.lispworks.com/documentation/HyperSpec/Body/s_eval_w.htm
