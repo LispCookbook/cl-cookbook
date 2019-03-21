@@ -335,6 +335,17 @@ and sequences' predicates.
 ;; => ("hello" "hello" "hello")
 ~~~
 
+### member (elt, list)
+
+Returns the tail of `list` beginning with the first element satisfying `eql`ity.
+
+Accepts `:test`, `:test-not`, `:key` (functions or symbols).
+
+~~~lisp
+(member 2 '(1 2 3))
+;; (2 3)
+~~~
+
 ## Sequences
 
 **lists** and **vectors** (and thus **strings**) are sequences.
@@ -426,17 +437,6 @@ See also sequence functions defined in
 `starts-with`, `ends-with`, `ends-with-subseq`, `length=`, `emptyp`,…
 
 #### length (sequence)
-
-#### member (elt, sequence)
-
-Returns the tail of `sequence` beginning with the first element satisfying `eql`ity.
-
-Accepts `:test`, `:test-not`, `:key` (functions or symbols).
-
-~~~lisp
-(member 2 '(1 2 3))
-;; (2 3)
-~~~
 
 #### elt (sequence, index) - find by index
 
