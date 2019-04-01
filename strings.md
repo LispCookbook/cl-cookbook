@@ -29,6 +29,14 @@ functionality or some shorter ways to do.
   has functions to convert strings between camelCase, param-case,
   snake_case and more.
 
+Last but not least, when you'll need to tackle the `format` construct,
+don't miss the following resources:
+
+* the official [CLHS documentation](http://www.lispworks.com/documentation/HyperSpec/Body/22_c.htm)
+* a [quick reference](http://clqr.boundp.org/)
+* a [CLHS summary on HexstreamSoft](https://www.hexstreamsoft.com/articles/common-lisp-format-reference/clhs-summary/#subsections-summary-table)
+* plus a Slime tip: type `C-c C-d ~` plus a letter of a format directive to open up its documentation. Again more useful with `ivy-mode` or `helm-mode`.
+
 # Accessing Substrings
 
 As a string is a sequence, you can access substrings with the SUBSEQ
@@ -805,9 +813,6 @@ NIL
 The `format` function has a lot of directives to print strings,
 numbers, lists, going recursively, even calling Lisp functions,
 etc. We'll focus here on a few things to print and format strings.
-
-See the documentation (like this
-[quick reference](http://clqr.boundp.org/)) for more details.
 
 The need of our examples arise when we want to print many strings and
 justify them. Let's work with this list of movies:
