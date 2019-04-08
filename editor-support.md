@@ -99,9 +99,9 @@ Scheme, HTML, CSS, directory mode, a vim layer, and more.
 
 ## Atom
 
-See [Atom-Slime](https://atom.io/packages/atom-slime). This package
-allows you to interactively develop Common Lisp code, helping turn
-Atom into a full-featured Lisp IDE.
+See [SLIMA](https://github.com/neil-lindquist/slima). This package
+allows you to interactively develop Common Lisp code, turning
+Atom into a pretty good Lisp IDE.
 
 <img src="assets/atom-slime.png"
      style="width: 800px"/>
