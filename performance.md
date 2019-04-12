@@ -439,7 +439,9 @@ NIL
 ~~~~
 
 
-If, however, you add atype declaration forx, the Compiler can assume that the expression (square x) is a fixnum, and it will use the fixnum-specific version of the+ operator.
+If, however, you add a type declaration for `x`, the Compiler can assume 
+that the expression `(square x)` is a `fixnum`, and it will use 
+the fixnum-specific version of the `+` operator:
 
 ~~~lisp
 (defun do-some-arithmetic (x)
