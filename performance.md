@@ -354,45 +354,37 @@ been compiled.
 
 
 ### Declaring function types
-
-A `ftype` declaration specifies the manner in which the returned value type of 
-a declared function depends on the argument types of the function. Whenever 
-the arguments to a declared function are of the indicated types, the result 
-of the function will also be of the indicated type. A function can have more 
-than one `ftype` declaration associated with it. One would use a`ftype` declaration 
-when you want to conditionally restrict the result of a function every time 
-the function is called. It has the following form:
+ANother useful declaration is a `ftype` declaration which establishes 
+the relationship between the function argument types and the return value type.
+If the type of passed arguments matches the declared types, the return value type
+is expected to match the declared one. Because of that, a function can have more 
+than one `ftype` declaration associated with it. A `ftype` declaration restricts
+the type of the argument every time the function is called. It has the following form:
 
 ~~~lisp
-(declare (ftype type function-name-1 function-name-2 ...))
+ (declare (ftype (function (arg1 arg2 ...) return-value) function-name1))
 ~~~~
 
-A `function` declaration is an abbreviated form of a `ftype` declaration. 
-It has the following form:
-
-~~~lisp
-(declare (function name arglist result-type-1 result-type-2 ...))
-~~~~
-
-A `ftype` declaration does not require the arguments to an expression 
-to be of a particular type; it merely specifies that the result of the function will be of a certain type if the arguments of the function have been declared as a certain type. If the arguments 
-are not of the specified type, no error is signaled. For example, 
-the following declamation declares that if the argument to the function `square`
-is a `fixnum` integer, the value of the function will also be a `fixnum` integer:
+If function returns `nil`, it's return type is `null`.
+This declaration does not put any restriction on the types of arguments by itself.
+It only takes effect if the provided arguments have the specified types -- otherwise
+no error is signaled and declaration has no effect. For example, 
+the following declamation states that if the argument to the function `square`
+is a `fixnum`, the value of the function will also be a `fixnum`:
 
 ~~~lisp
 (declaim (ftype (function (fixnum) fixnum) square))
 (defun square (x) (* x x))
 ~~~~
-
-This has no effect on the following code because the argument `x` is not declared to be of type `fixnum`:
+If we provide it with the argument which is not declared to be of type `fixnum`, 
+no optimization will take place:
 
 ~~~lisp
 (defun do-some-arithmetic (x)
   (the fixnum (+ x (square x))))
 ~~~~
 
-If we try to optimize the speed, the compiler will state, that there is type uncertainty:
+If we try to optimize the speed, the compiler will state that there is type uncertainty:
 
 ~~~lisp
 (defun do-some-arithmetic (x)
@@ -439,9 +431,8 @@ NIL
 ~~~~
 
 
-If, however, you add a type declaration for `x`, the Compiler can assume 
-that the expression `(square x)` is a `fixnum`, and it will use 
-the fixnum-specific version of the `+` operator:
+Now we can add a type declaration for `x`, so the compiler can assume 
+that the expression `(square x)` is a `fixnum`, and use the fixnum-specific `+`:
 
 ~~~lisp
 (defun do-some-arithmetic (x)
