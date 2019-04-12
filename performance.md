@@ -354,7 +354,7 @@ been compiled.
 
 
 ### Declaring function types
-ANother useful declaration is a `ftype` declaration which establishes 
+Another useful declaration is a `ftype` declaration which establishes 
 the relationship between the function argument types and the return value type.
 If the type of passed arguments matches the declared types, the return value type
 is expected to match the declared one. Because of that, a function can have more 
@@ -365,7 +365,7 @@ the type of the argument every time the function is called. It has the following
  (declare (ftype (function (arg1 arg2 ...) return-value) function-name1))
 ~~~~
 
-If function returns `nil`, it's return type is `null`.
+If the function returns `nil`, its return type is `null`.
 This declaration does not put any restriction on the types of arguments by itself.
 It only takes effect if the provided arguments have the specified types -- otherwise
 no error is signaled and declaration has no effect. For example, 
@@ -384,7 +384,7 @@ no optimization will take place:
   (the fixnum (+ x (square x))))
 ~~~~
 
-If we try to optimize the speed, the compiler will state that there is type uncertainty:
+Now let's try to optimize the speed. The compiler will state that there is type uncertainty:
 
 ~~~lisp
 (defun do-some-arithmetic (x)
