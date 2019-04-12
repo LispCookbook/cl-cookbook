@@ -352,6 +352,116 @@ used to make some declares local to that file. And it is unspecified whether
 or not the compile-time side-effects of a declaim persist after the file has
 been compiled.
 
+
+### Declaring function types
+Another useful declaration is a `ftype` declaration which establishes 
+the relationship between the function argument types and the return value type.
+If the type of passed arguments matches the declared types, the return value type
+is expected to match the declared one. Because of that, a function can have more 
+than one `ftype` declaration associated with it. A `ftype` declaration restricts
+the type of the argument every time the function is called. It has the following form:
+
+~~~lisp
+ (declare (ftype (function (arg1 arg2 ...) return-value) function-name1))
+~~~~
+
+If the function returns `nil`, its return type is `null`.
+This declaration does not put any restriction on the types of arguments by itself.
+It only takes effect if the provided arguments have the specified types -- otherwise
+no error is signaled and declaration has no effect. For example, 
+the following declamation states that if the argument to the function `square`
+is a `fixnum`, the value of the function will also be a `fixnum`:
+
+~~~lisp
+(declaim (ftype (function (fixnum) fixnum) square))
+(defun square (x) (* x x))
+~~~~
+If we provide it with the argument which is not declared to be of type `fixnum`, 
+no optimization will take place:
+
+~~~lisp
+(defun do-some-arithmetic (x)
+  (the fixnum (+ x (square x))))
+~~~~
+
+Now let's try to optimize the speed. The compiler will state that there is type uncertainty:
+
+~~~lisp
+(defun do-some-arithmetic (x)
+  (declare (optimize (speed 3) (debug 0) (safety 0)))
+  (the fixnum (+ x (square x))))
+  
+; compiling (DEFUN DO-SOME-ARITHMETIC ...)
+
+; file: /tmp/slimeRzDh1R  
+ in: DEFUN DO-SOME-ARITHMETIC
+;     (+ TEST-FRAMEWORK::X (TEST-FRAMEWORK::SQUARE TEST-FRAMEWORK::X))
+; 
+; note: forced to do GENERIC-+ (cost 10)
+;       unable to do inline fixnum arithmetic (cost 2) because:
+;       The first argument is a NUMBER, not a FIXNUM.
+;       unable to do inline (signed-byte 64) arithmetic (cost 5) because:
+;       The first argument is a NUMBER, not a (SIGNED-BYTE 64).
+;       etc.
+; 
+; compilation unit finished
+;   printed 1 note
+
+
+      (disassemble 'do-some-arithmetic)
+; disassembly for DO-SOME-ARITHMETIC
+; Size: 53 bytes. Origin: #x52CD1D1A
+; 1A:       488945F8         MOV [RBP-8], RAX                 ; no-arg-parsing entry point
+; 1E:       488BD0           MOV RDX, RAX
+; 21:       4883EC10         SUB RSP, 16
+; 25:       B902000000       MOV ECX, 2
+; 2A:       48892C24         MOV [RSP], RBP
+; 2E:       488BEC           MOV RBP, RSP
+; 31:       E8C2737CFD       CALL #x504990F8                  ; #<FDEFN SQUARE>
+; 36:       480F42E3         CMOVB RSP, RBX
+; 3A:       488B45F8         MOV RAX, [RBP-8]
+; 3E:       488BFA           MOV RDI, RDX
+; 41:       488BD0           MOV RDX, RAX
+; 44:       E807EE42FF       CALL #x52100B50                  ; GENERIC-+
+; 49:       488BE5           MOV RSP, RBP
+; 4C:       F8               CLC
+; 4D:       5D               POP RBP
+; 4E:       C3               RET
+NIL
+~~~~
+
+
+Now we can add a type declaration for `x`, so the compiler can assume 
+that the expression `(square x)` is a `fixnum`, and use the fixnum-specific `+`:
+
+~~~lisp
+(defun do-some-arithmetic (x)
+  (declare (optimize (speed 3) (debug 0) (safety 0)))
+  (declare (type fixnum x))
+  (the fixnum (+ x (square x))))
+  
+       (disassemble 'do-some-arithmetic)
+
+; disassembly for DO-SOME-ARITHMETIC
+; Size: 48 bytes. Origin: #x52C084DA
+; 4DA:       488945F8         MOV [RBP-8], RAX                ; no-arg-parsing entry point
+; 4DE:       4883EC10         SUB RSP, 16
+; 4E2:       488BD0           MOV RDX, RAX
+; 4E5:       B902000000       MOV ECX, 2
+; 4EA:       48892C24         MOV [RSP], RBP
+; 4EE:       488BEC           MOV RBP, RSP
+; 4F1:       E8020C89FD       CALL #x504990F8                 ; #<FDEFN SQUARE>
+; 4F6:       480F42E3         CMOVB RSP, RBX
+; 4FA:       488B45F8         MOV RAX, [RBP-8]
+; 4FE:       4801D0           ADD RAX, RDX
+; 501:       488BD0           MOV RDX, RAX
+; 504:       488BE5           MOV RSP, RBP
+; 507:       F8               CLC
+; 508:       5D               POP RBP
+; 509:       C3               RET
+NIL  
+~~~~
+
 ### Code Inline
 
 The declaration [`inline`][inline] replaces function calls with function body,
