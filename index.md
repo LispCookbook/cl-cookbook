@@ -92,44 +92,13 @@ The pages here on Github are kept up to date. You can also download a
 [up to date zip file][zip] for offline browsing. More info can be found at the
 [Github project page][gh].
 
-## Contributors
+<div style="text-align: center">
+    <img src="orly-cover.png"/>
+</div>
 
-<p id="contributors"></p>
-
-* Marco Antoniotti
-* [Zach Beane](mailto:xach@xach.com)
-* Pierpaolo Bernardi
-* [Christopher Brown](mailto:skeptomai@mac.com)
-* [Frederic Brunel](mailto:brunel@mail.dotcom.fr)
-* [Jeff Caldwell](mailto:jdcal@yahoo.com)
-* [Bill Clementson](mailto:bill_clementson@yahoo.com)
-* Martin Cracauer
-* [Gerald Doussot](mailto:gdoussot@yahoo.com)
-* [Paul Foley](mailto:mycroft@actrix.gen.nz)
-* Jörg-Cyril Höhle
-* [Nick Levine](mailto:ndl@ravenbrook.com)
-* [Austin King](mailto:shout@ozten.com)
-* [Lieven Marchand](mailto:mal@wyrd.be)
-* [Drew McDermott](mailto:drew.mcdermott@yale.edu)
-* [Kalman Reti](mailto:reti@ai.mit.edu)
-* [Alberto Riva](mailto:alb@chip.org)
-* [Rudi Schlatte](mailto:rschlatte@ist.tu-graz.ac.at)
-* [Emre Sevinç](mailto:emres@bilgi.edu.tr)
-* Paul Tarvydas
-* Kenny Tilton
-* [Reini Urban](mailto:rurban@x-ray.at)
-* [Matthieu Villeneuve](mailto:matthieu@matthieu-villeneuve.net)
-* [Edi Weitz](mailto:edi@agharta.de)
-* Fernando Borretti
-
-Finally, the credit for finally giving birth to the project probably goes to
-"dj_special_ed" who posted [this message][msg] to [comp.lang.lisp][cll].
-
+[cll]: news:comp.lang.lisp
 [perl]: http://www.oreilly.com/catalog/cookbook/
 [thread]: http://groups.google.com/groups?threadm=m3it9soz3m.fsf%40bird.agharta.de
-[cll]: news:comp.lang.lisp
-[msg]: http://groups.google.com/groups?selm=76be8851.0201222259.70ecbcb1%40posting.google.com
 [toc]: http://www.oreilly.com/catalog/cookbook/
 [zip]: https://github.com/LispCookbook/cl-cookbook/archive/master.zip
 [gh]: https://github.com/LispCookbook/cl-cookbook
-[clog]: https://github.com/can3p/cl-cookbook/blob/master/CHANGELOG
