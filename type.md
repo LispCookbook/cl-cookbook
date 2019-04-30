@@ -53,7 +53,7 @@ The inheritance relationship of Lisp types consists a type graph and the root
 of all types is `T`. For example:
 
 ~~~lisp
-* (describe integer)
+* (describe 'integer)
 COMMON-LISP:INTEGER
   [symbol]
 
