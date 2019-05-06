@@ -1489,8 +1489,8 @@ Our metaclass inherits from `standard-class`:
 (defclass person ()
   ((name
     :initarg :name
-    :accessor name)
-  (:metaclass counted-class))) ;; <- metaclass
+    :accessor name))
+  (:metaclass counted-class)) ;; <- metaclass
 ;; #<COUNTED-CLASS PERSON>
 ;;   ^^^ not standard-class anymore.
 ~~~
