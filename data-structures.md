@@ -99,21 +99,21 @@ start of the list is:
   "Modifies the last cdr of list ITEMS, returning a circular list"
   (setf (cdr (last items)) items))
 
-(circular! (list 1 2 3)) 
+(circular! (list 1 2 3))
 ;; => #1=(1 2 3 . #1#)
 
-(fifth (circular! (list 1 2 3))) 
+(fifth (circular! (list 1 2 3)))
 ;; => 2
 ~~~
 
 The [list-length](http://www.lispworks.com/documentation/HyperSpec/Body/f_list_l.htm#list-length)
 function recognises circular lists, returning `nil`.
 
-The reader can also create circular lists, using 
+The reader can also create circular lists, using
 [Sharpsign Equal-Sign](http://www.lispworks.com/documentation/HyperSpec/Body/02_dho.htm)
 notation. An object (like a list) can be prefixed with `#n=` where `n`
 is an unsigned decimal integer (one or more digits). The
-label `#n#` can be used to refer to the object later in the 
+label `#n#` can be used to refer to the object later in the
 expression:
 
 ~~~lisp
@@ -1387,7 +1387,7 @@ Classes provided by the Common Lisp Object System (CLOS) are more flexible howev
 
 ### Creation
 
-`defstruct`
+Use `defstruct`:
 
 ~~~lisp
 (defstruct person
@@ -1490,6 +1490,8 @@ Slots are `setf`-able:
 
 ### Predicate
 
+A predicate function is generated:
+
 ~~~lisp
 (person-p *me*)
 T
@@ -1497,7 +1499,7 @@ T
 
 ### Single inheritance
 
-With the `:include <struct>` argument:
+Use single inheritance with the `:include <struct>` argument:
 
 ~~~lisp
 (defstruct (female (:include person))
@@ -1505,6 +1507,8 @@ With the `:include <struct>` argument:
 (make-female :name "Lilie")
 ;; #S(FEMALE :ID NIL :NAME "Lilie" :AGE NIL :GENDER "female")
 ~~~
+
+Note that the CLOS object system is more powerful.
 
 ### Limitations
 
