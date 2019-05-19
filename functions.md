@@ -4,7 +4,7 @@ title: Functions
 
 <a name="return"></a>
 
-## Creating named functions: `defun`
+## Named functions: `defun`
 
 Creating named functions is done with the `defun` keyword. It follows this model:
 
@@ -248,7 +248,7 @@ We use `values` to return multiple values:
 ~~~
 
 ~~~lisp
-(defvar *res* (foo :a :b :c))
+(setf *res* (foo :a :b :c))
 ;; :A
 ~~~
 
@@ -282,7 +282,7 @@ Last but not least: note that `(values)` with no values returns… no values at 
 
 See also `multiple-value-call`.
 
-## Lambdas
+## Anonymous functions: `lambda`
 
 Anonymous functions are created with `lambda`:
 
@@ -292,8 +292,8 @@ Anonymous functions are created with `lambda`:
 
 We can call a lambda with `funcall` or `apply` (see below).
 
-If a lambda expression in the first element of an unquoted list, it is
-called:
+If the first element of an unquoted list is a lambda expression, the
+lambda is called:
 
 ~~~lisp
 ((lambda (x) (print x)) "hello")
@@ -385,13 +385,10 @@ To simplify a bit, you can think of each symbol in CL having (at least) two "cel
 The other cell - sometimes referred to as its _function cell_ - can hold the definition of the symbol's (global) function binding. In this case, the symbol is said to be _fbound_ to this definition. You can use [`fboundp`](http://www.lispworks.com/documentation/HyperSpec/Body/f_fbound.htm) to test whether a symbol is fbound. You can access the function cell of a symbol (in the global environment) with [`symbol-function`](http://www.lispworks.com/documentation/HyperSpec/Body/f_symb_1.htm).
 
 
-Now, if a _symbol_ is evaluated, it is treated as a _variable_ in that it's value cell is returned (just `foo`). If a _compound form_, i.e. a _cons_, is evaluated and its _car_ is a symbol, then the function cell of this symbol is used (as in `(foo 3)`).
+Now, if a _symbol_ is evaluated, it is treated as a _variable_ in that its value cell is returned (just `foo`). If a _compound form_, i.e. a _cons_, is evaluated and its _car_ is a symbol, then the function cell of this symbol is used (as in `(foo 3)`).
 
 
-In Common Lisp, as opposed to Scheme, it is _not_ possible that the car of the compound form to be evaluated is an arbitrary form. If it is not a symbol, it _must_ be a _lambda expression_, which looks like
-
-`(lambda `_lambda-list_ _form*_`)`
-
+In Common Lisp, as opposed to Scheme, it is _not_ possible that the car of the compound form to be evaluated is an arbitrary form. If it is not a symbol, it _must_ be a _lambda expression_, which looks like `(lambda `_lambda-list_ _form*_`)`.
 
 This explains the error message we got above - `(adder 3)` is neither a symbol nor a lambda expression.
 
@@ -411,19 +408,70 @@ CL-USER> (*my-fun* 5)
 
 Read the CLHS section about [form evaluation](http://www.lispworks.com/documentation/HyperSpec/Body/03_aba.htm) for more.
 
+## Closures
+
+Closures allow to capture lexical bindings:
+
+~~~lisp
+(let ((limit 3)
+      (counter -1))
+    (defun my-counter ()
+      (if (< counter limit)
+          (incf counter)
+          (setf counter 0))))
+
+(my-counter)
+0
+(my-counter)
+1
+(my-counter)
+2
+(my-counter)
+3
+(my-counter)
+0
+~~~
+
+Or similarly:
+
+~~~lisp
+(defun repeater (n)
+  (let ((counter -1))
+     (lambda ()
+       (if (< counter n)
+         (incf counter)
+         (setf counter 0)))))
+
+(defparameter *my-repeater* (repeater 3))
+;; *MY-REPEATER*
+(funcall *my-repeater*)
+0
+(funcall *my-repeater*)
+1
+(funcall *my-repeater*)
+2
+(funcall *my-repeater*)
+3
+(funcall *my-repeater*)
+0
+~~~
+
+
+See more on [Practical Common Lisp](http://www.gigamonkeys.com/book/variables.html).
+
 ## `setf` functions
 
 A function name can also be a list of two symbols with `setf` as the
-firts one, and where the first argument is the new value:
+first one, and where the first argument is the new value:
 
 ~~~lisp
-(defun (setf <name>) (new-value)
+(defun (setf <name>) (new-value <other arguments>)
   body)
 ~~~
 
 This mechanism is particularly used for CLOS methods.
 
-Silly example:
+A silly example:
 
 ~~~lisp
 (defparameter *current-name* ""
@@ -434,7 +482,7 @@ Silly example:
 
 (defun (setf hello) (new-value)
   (hello new-value)
-  (setf *CURRENT-NAME* new-value)
+  (setf *current-name* new-value)
   (format t "current name is now ~a~&" new-value))
 
 (setf (hello) "Alice")
@@ -445,7 +493,7 @@ Silly example:
 
 <a name="curry"></a>
 
-## Currying functions
+## Currying
 
 ### Concept
 
@@ -491,10 +539,6 @@ library (in Quicklisp).
 (setf (symbol-function 'add-one) add-one)
 (add-one 10)  ;; => 11
 ~~~
-
-## Hook system
-
-Hooks VS CLOS methods with method combination (before, after, around).
 
 ## Documentation
 
