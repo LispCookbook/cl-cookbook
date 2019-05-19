@@ -4,7 +4,313 @@ title: Functions
 
 <a name="return"></a>
 
-## Functions that return functions
+## Creating named functions: `defun`
+
+Creating named functions is done with the `defun` keyword. It follows this model:
+
+~~~lisp
+(defun <name> (list of arguments)
+  "docstring"
+  (function body))
+~~~
+
+The return value is the value returned by the last expression of the body
+(see below for more). There is no "return xx" statement.
+
+So, for example:
+
+~~~lisp
+(defun hello-world ()
+  ;;               ^^ no arguments
+  (print "hello world!"))
+~~~
+
+Call it:
+
+~~~lisp
+(hello-world)
+;; "hello world!"  <-- output
+;; "hello world!"  <-- a string is returned.
+~~~
+
+## Arguments
+
+### Base case: required arguments
+
+Add in arguments like this:
+
+~~~lisp
+(defun hello (name)
+  "Say hello to `name'."
+  (format t "hello ~a !~&" name))
+;; HELLO
+~~~
+
+(where `~a` is the most used `format` directive to print a variable
+*aesthetically* and `~&` prints a newline)
+
+Call the function:
+
+~~~lisp
+(hello "me")
+;; hello me !  <-- this is printed by `format`
+;; NIL         <-- return value: `format t` prints a string to standard output and returns nil.
+~~~
+
+If you don't specify the right amount of arguments, you'll be trapped
+into the interactive debugger with an explicit error message:
+
+   (hello)
+
+> invalid number of arguments: 0
+
+### Optional arguments: `&optional`
+
+Optional arguments are declared after the `&optional` keyword in the
+lambda list. They are ordered, they must appear one after another.
+
+This function:
+
+~~~lisp
+(defun hello (name &optional age gender) …)
+~~~
+
+must be called like this:
+
+~~~lisp
+(hello "me") ;; a value for the required argument, zero optional arguments
+(hello "me" "7")  ;; a value for age
+(hello "me" 7 :h) ;; a value for age and gender
+~~~
+
+### Named parameters: `&key`
+
+It is not always convenient to remember the order of the arguments. It
+is thus possible to supply arguments by name: we declare them using
+`&key <name>`, we set them with `:name <value>` in the function call,
+and we use `name` as a regular variable in the function body. They are
+`nil` by default.
+
+~~~lisp
+(defun hello (name &key happy)
+  "If `happy' is `t', print a smiley"
+  (format t "hello ~a " name)
+  (when happy
+    (format t ":)~&"))
+~~~
+
+The following calls are possible:
+
+    (hello "me")
+    (hello "me" :happy t)
+    (hello "me" :happy nil) ;; useless, equivalent to (hello "me")
+
+and this is not valid: `(hello "me" :happy)`:
+
+> odd number of &KEY arguments
+
+A similar example of a function declaration, with several key parameters:
+
+~~~lisp
+(defun hello (name &key happy lisper cookbook-contributor-p) …)
+~~~
+
+it can be called with zero or more key parameters, in any order:
+
+~~~lisp
+(hello "me" :lisper t)
+(hello "me" :lisper t :happy t)
+(hello "me" :cookbook-contributor-p t :happy t)
+~~~
+
+#### Mixing optional and key parameters
+
+It is generally a style warning, but it is possible.
+
+~~~lisp
+(defun hello (&optional name &key happy)
+  (format t "hello ~a " name)
+  (when happy
+    (format t ":)~&")))
+~~~
+
+In SBCL, this yields:
+
+~~~lisp
+; in: DEFUN HELLO
+;     (SB-INT:NAMED-LAMBDA HELLO
+;         (&OPTIONAL NAME &KEY HAPPY)
+;       (BLOCK HELLO (FORMAT T "hello ~a " NAME) (WHEN HAPPY (FORMAT T ":)~&"))))
+;
+; caught STYLE-WARNING:
+;   &OPTIONAL and &KEY found in the same lambda list: (&OPTIONAL (NAME "John") &KEY
+;                                                      HAPPY)
+;
+; compilation unit finished
+;   caught 1 STYLE-WARNING condition
+~~~
+
+We can call it:
+
+~~~lisp
+(hello "me" :happy t)
+;; hello me :)
+;; NIL
+~~~
+
+### Default values
+
+In the lambda list, use pairs to give a default value to an optional or a key argument, like `(happy t)` below:
+
+~~~lisp
+(defun hello (name &key (happy t))
+~~~
+
+Now `happy` is true by default.
+
+### Variable number of arguments: `&rest`
+
+Sometimes you want a function to accept a variable number of
+arguments. Use `&rest <variable>`, where `<variable>` will be a list.
+
+~~~lisp
+(defun mean (x &rest numbers)
+    (/ (apply #'+ x numbers)
+       (1+ (length numbers))))
+~~~
+
+~~~lisp
+(mean 1)
+(mean 1 2)
+(mean 1 2 3 4 5)
+~~~
+
+### `&allow-other-keys`
+
+Observe:
+
+~~~lisp
+(defun hello (name &key happy)
+  (format t "hello ~a~&" name))
+
+(hello "me" :lisper t)
+;; => Error: unknown keyword argument
+~~~
+
+whereas
+
+~~~lisp
+(defun hello (name &key happy &allow-other-keys)
+  (format t "hello ~a~&" name))
+
+(hello "me" :lisper t)
+;; hello me
+~~~
+
+We might need `&allow-other-keys` when passing around arguments or
+with higher level manipulation of functions.
+
+
+## Return values
+
+The return value of the function is the value returned by the last
+executed form of the body.
+
+There are ways for non-local exits (`return-from <function name> <value>`), but they are usually not needed.
+
+Common Lisp has also the concept of multiple return values.
+
+### Multiple return values: `values` and `multiple-value-bind`
+
+Returning multiple values is *not* like returning a tuple or a list of
+results ;) This is a common misconception.
+
+Multiple values are specially useful and powerful because a change in
+them needs little to no refactoring.
+
+~~~lisp
+(defun foo (a b c)
+  a)
+~~~
+
+This function returns `a`.
+
+~~~lisp
+(defvar *res* (foo :a :b :c))
+;; :A
+~~~
+
+We use `values` to return multiple values:
+
+~~~lisp
+(defun foo (a b c)
+  (values a b c))
+~~~
+
+~~~lisp
+(defvar *res* (foo :a :b :c))
+;; :A
+~~~
+
+Observe here that `*res*` *is still `:A`*.
+
+All functions that use the return value of `foo` need no change, they
+still work. If we had returned a list or an array, this would be
+different.
+
+We destructure multiple values with `multiple-value-bind` (or
+`mvb`+TAB in Slime for short):
+
+~~~lisp
+(multiple-value-bind (res1 res2 res3)
+    (foo :a :b :c)
+  (format t "res1 is ~a, res2 is ~a, res2 is ~a~&" res1 res2 res3))
+;; res1 is A, res2 is B, res2 is C
+;; NIL
+~~~
+
+Its general form is
+
+~~~lisp
+(multiple-value-bind (var-1 .. var-n) expr
+  body)
+~~~
+
+The variables `var-n` are not available outside the scope of `multiple-value-bind`.
+
+Last but not least: note that `(values)` with no values returns… no values at all.
+
+See also `multiple-value-call`.
+
+## Lambdas
+
+Anonymous functions are created with `lambda`:
+
+~~~lisp
+(lambda (x) (print x))
+~~~
+
+We can call a lambda with `funcall` or `apply` (see below).
+
+If a lambda expression in the first element of an unquoted list, it is
+called:
+
+~~~lisp
+((lambda (x) (print x)) "hello")
+;; hello
+~~~
+
+## Calling functions programatically: `funcall` and `apply`
+
+`funcall` is to be used with a known number of arguments, when `apply`
+can be used on a list, for example from `&rest`:
+
+~~~lisp
+(funcall #'+ 1 2)
+(apply #'+ '(1 2))
+~~~
+
+## Higher order functions: functions that return functions
 
 "How do I write a function that returns a function?" is a typical question asked by people who have learned Scheme before they started with Common Lisp. In Scheme, they were accustomed to be able to do things like this:
 
@@ -164,6 +470,37 @@ Note that the argument to `funcall` (and `apply`) can either be the function its
 
 All of the above is _extremely simplified_ - we haven't even mentioned macros, special forms, symbol macros, self-evaluating objects, and lexical environments. Read the CLHS section about [form evaluation](http://www.lispworks.com/documentation/HyperSpec/Body/03_aba.htm) for the real deal.
 
+## `setf` functions
+
+A function name can also be a list of two symbols with `setf` as the
+firts one, and where the first argument is the new value:
+
+~~~lisp
+(defun (setf <name>) (new-value)
+  body)
+~~~
+
+This mechanism is particularly used for CLOS methods.
+
+Silly example:
+
+~~~lisp
+(defparameter *current-name* ""
+  "A global name.")
+
+(defun hello (name)
+  (format t "hello ~a~&" name))
+
+(defun (setf hello) (new-value)
+  (hello new-value)
+  (setf *CURRENT-NAME* new-value)
+  (format t "current name is now ~a~&" new-value))
+
+(setf (hello) "Alice")
+;; hello Alice
+;; current name is now Alice
+;; NIL
+~~~
 
 <a name="curry"></a>
 
@@ -213,3 +550,13 @@ library (in Quicklisp).
 (setf (symbol-function 'add-one) add-one)
 (add-one 10)  ;; => 11
 ~~~
+
+## Hook system
+
+Hooks VS CLOS methods with method combination (before, after, around).
+
+## Documentation
+
+- functions: http://www.lispworks.com/documentation/HyperSpec/Body/t_fn.htm#function
+- ordinary lambda lists: http://www.lispworks.com/documentation/HyperSpec/Body/03_da.htm
+- multiple-value-bind: http://clhs.lisp.se/Body/m_multip.htm
