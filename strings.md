@@ -19,7 +19,7 @@ which defines functions to work on strings (`strcat`,
 Some external libraries available on Quicklisp bring some more
 functionality or some shorter ways to do.
 
-- [cl-string](https://github.com/diogoalexandrefranco/cl-strings)
+- [cl-strings](https://github.com/diogoalexandrefranco/cl-strings)
   defines functions such as `split`, `join`, `replace`, `insert`,
   `starts-with`, `ends-with`, functions to change case,…
 - [str](https://github.com/vindarel/cl-str) defines `trim`, `words`,
