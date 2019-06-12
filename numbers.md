@@ -2,8 +2,6 @@
 title: Numbers
 ---
 
-## Introduction
-
 Common Lisp has a rich set of numerical types, including integer,
 rational, floating point, and complex. 
 
@@ -13,6 +11,7 @@ Some sources:
 * [`Numbers, Characters and Strings`][numbers-characters-strings] 
   in Practical Common Lisp
 
+## Introduction
 
 ### Integer types
 
@@ -230,6 +229,22 @@ The real and imaginary parts of a complex number can be extracted using
 7
 * (imagpart #C(4.2 9.5))
 9.5
+~~~
+
+#### Complex arithmetic
+
+Common Lisp's mathematical functions generally handle complex numbers,
+and return complex numbers when this is the true result. For example:
+
+~~~lisp
+* (sqrt -1)
+#C(0.0 1.0)
+
+* (exp #C(0.0 0.5))
+#C(0.87758255 0.47942555)
+
+* (sin #C(1.0 1.0))
+#C(1.2984576 0.63496387)
 ~~~
 
 ## Reading numbers from strings
@@ -463,22 +478,6 @@ Other resources:
 
 * The [random-state][random-state] package is available on QuickLisp, and
   provides a number of portable random number generators.
-
-## Using complex numbers
-
-Common Lisp's mathematical functions generally handle complex numbers,
-and return complex numbers when this is the true result. For example:
-
-~~~lisp
-* (sqrt -1)
-#C(0.0 1.0)
-
-* (exp #C(0.0 0.5))
-#C(0.87758255 0.47942555)
-
-* (sin #C(1.0 1.0))
-#C(1.2984576 0.63496387)
-~~~
 
 ## Bit-wise Operation
 
