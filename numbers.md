@@ -9,10 +9,9 @@ rational, floating point, and complex.
 
 Some sources:
 
-* [Numbers](https://www.cs.cmu.edu/Groups/AI/html/cltl/clm/node16.html#SECTION00610000000000000000)
- in Common Lisp the Language, 2nd Edition
-* [Numbers, Characters and Strings](http://www.gigamonkeys.com/book/numbers-characters-and-strings.html) 
- in Practical Common Lisp
+* [`Numbers`][numbers] in Common Lisp the Language, 2nd Edition
+* [`Numbers, Characters and Strings`][numbers-characters-strings] 
+  in Practical Common Lisp
 
 
 ### Integer types
@@ -39,8 +38,8 @@ is given by:
 
 Functions which operate on or evaluate to integers include:
 
-* [isqrt](http://clhs.lisp.se/Body/f_sqrt_.htm), which returns the greatest 
-  integer less than or equal to the exact positive square root of natural.
+* [`isqrt`][isqrt], which returns the greatest integer less than or equal to the
+  exact positive square root of natural.
 
 ~~~lisp
 * (isqrt 10)
@@ -49,27 +48,25 @@ Functions which operate on or evaluate to integers include:
 2
 ~~~
 
-* [gcd](http://clhs.lisp.se/Body/f_gcd.htm) to find the Greatest Common Denominator
-* [lcm](http://clhs.lisp.se/Body/f_lcm.htm#lcm) for the Least Common Multiple.
+* [`gcd`][gcd] to find the Greatest Common Denominator
+* [`lcm`][lcm] for the Least Common Multiple.
 
 ### Rational types
 
-Rational numbers of type [RATIO](http://clhs.lisp.se/Body/t_ratio.htm)
-consist of two `bignum`s, the numerator and denominator. Both can
-therefore be arbitrarily large: 
+Rational numbers of type [`ratio`][ratio] consist of two `bignum`s, the
+numerator and denominator. Both can therefore be arbitrarily large:
 
 ~~~lisp
 * (/ (1+ (expt 2 100)) (expt 2 100))
 1267650600228229401496703205377/1267650600228229401496703205376
 ~~~
 
-It is a subtype of the
-[rational](http://clhs.lisp.se/Body/t_ration.htm#rational) class,
-along with [integer](http://clhs.lisp.se/Body/t_intege.htm#integer). 
+It is a subtype of the [`rational`][rational] class, along with
+[`integer`][integer].
 
 ### Floating point types
 
-See [Common Lisp the Language, 2nd Edition, section 2.1.3](https://www.cs.cmu.edu/Groups/AI/html/cltl/clm/node19.html).
+See [Common Lisp the Language, 2nd Edition, section 2.1.3][book-cl-2.1.3].
 
 Floating point types attempt to represent the continuous real numbers
 using a finite number of bits. This means that many real numbers
@@ -77,8 +74,8 @@ cannot be represented, but are approximated. This can lead to some nasty
 surprises, particularly when converting between base-10 and the base-2
 internal representation. If you are working with floating point
 numbers then reading [What Every Computer Scientist Should Know About
-Floating-Point Arithmetic](https://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html) 
-is highly recommended.
+Floating-Point Arithmetic][article-floating-point-arithmetic] is highly
+recommended.
 
 The Common Lisp standard allows for several floating point types. In
 order of increasing precision these are: `short-float`,
@@ -86,18 +83,17 @@ order of increasing precision these are: `short-float`,
 implementation dependent, and it is possible for an implementation to
 have only one floating point precision for all types. 
 
-The constants [short-float-epsilon, single-float-epsilon,
-double-float-epsilon and long-float-epsilon](http://clhs.lisp.se/Body/v_short_.htm) give
+The constants [`short-float-epsilon`, `single-float-epsilon`,
+`double-float-epsilon` and `long-float-epsilon`][float-constants] give
 a measure of the precision of the floating point types, and are
 implementation dependent. 
 
 #### Floating point literals
 
-When reading floating point numbers, the default type is set by the
-special variable
-[*read-default-float-format*](http://clhs.lisp.se/Body/v_rd_def.htm).
-By default this is `SINGLE-FLOAT`, so if you want to ensure that a number is read as
-double precision then put a `d0` suffix at the end
+When reading floating point numbers, the default type is set by the special
+variable [`*read-default-float-format*`][read-default-float-format].  By
+default this is `SINGLE-FLOAT`, so if you want to ensure that a number is read
+as double precision then put a `d0` suffix at the end
 
 ~~~lisp
 * (type-of 1.24)
@@ -131,10 +127,9 @@ SINGLE-FLOAT
 
 #### Floating point errors 
 
-If the result of a floating point calculation is too large then a
-floating point overflow occurs. By default in
-[SBCL](http://www.sbcl.org/) (and other implementations) this results
-in an error condition:
+If the result of a floating point calculation is too large then a floating
+point overflow occurs. By default in [SBCL][SBCL] (and other implementations)
+this results in an error condition:
 
 ~~~lisp
 * (exp 1000)
@@ -157,7 +152,7 @@ changed, to return `+infinity`. In SBCL this is:
 The calculation now silently continues, without an error condition. 
 
 A similar functionality to disable floating overflow errors 
-exists in [CCL](https://ccl.clozure.com/):
+exists in [CCL][CCL]:
 ~~~lisp
 * (set-fpu-mode :overflow nil)
 ~~~
@@ -173,8 +168,7 @@ In SBCL the floating point modes can be inspected:
 #### Arbitrary precision
 
 For arbitrary high precision calculations there is the
-[computable-reals](http://quickdocs.org/computable-reals/) library on
-QuickLisp:
+[computable-reals][computable-reals] library on QuickLisp:
 
 ~~~lisp
 * (ql:quickload :computable-reals)
@@ -200,9 +194,9 @@ There are 5 types of complex number: The real and imaginary parts must
 be of the same type, and can be rational, or one of the floating point
 types (short, single, double or long). 
 
-Complex values can be created using the `#C` reader macro or the
-[complex](http://clhs.lisp.se/Body/f_comp_2.htm#complex). The reader
-macro does not allow the use of expressions as real and imaginary parts:
+Complex values can be created using the `#C` reader macro or the function
+[`complex`][complex]. The reader macro does not allow the use of expressions
+as real and imaginary parts:
 
 ~~~lisp
 * #C(1 1)
@@ -229,7 +223,7 @@ If constructed with mixed types then the higher precision type will be used for 
 ~~~
 
 The real and imaginary parts of a complex number can be extracted using
-[realpart and imagpart](http://clhs.lisp.se/Body/f_realpa.htm):
+[`realpart` and `imagpart`][realpart-and-imaginary]:
 
 ~~~lisp
 * (realpart #C(7 9))
@@ -240,12 +234,10 @@ The real and imaginary parts of a complex number can be extracted using
 
 ## Reading numbers from strings
 
-The [parse-integer](http://clhs.lisp.se/Body/f_parse_.htm) function reads an integer
-from a string.
+The [`parse-integer`][parse-integer] function reads an integer from a string.
 
-The [parse-float](https://github.com/soemraws/parse-float/blob/master/parse-float.lisp)
-library provides a parser which cannot evaluate arbitrary expressions,
-so should be safer to use on untrusted input:
+The [parse-float][parse-float] library provides a parser which cannot evaluate
+arbitrary expressions, so should be safer to use on untrusted input:
 
 ~~~lisp
 * (ql:quickload :parse-float)
@@ -256,8 +248,7 @@ so should be safer to use on untrusted input:
 6
 ~~~
 
-See the [strings section](https://lispcookbook.github.io/cl-cookbook/strings.html#converting-a-string-to-a-number)
-on converting between strings and numbers.
+See the [strings section][strings] on converting between strings and numbers.
 
 ## Converting numbers
 
@@ -265,15 +256,15 @@ Most numerical functions automatically convert types as needed.
 The `coerce` function converts objects from one type to another,
 including numeric types.
 
-See [Common Lisp the Language, 2nd Edition, section 12.6](https://www.cs.cmu.edu/Groups/AI/html/cltl/clm/node130.html)
+See [Common Lisp the Language, 2nd Edition, section 12.6][book-cl-12.6].
 
 ### Convert float to rational
 
-The [rational and rationalize functions](http://clhs.lisp.se/Body/f_ration.htm) convert a real numeric
-argument into a rational. `rational` assumes that floating point
-arguments are exact; `rationalize` expoits the fact that floating
-point numbers are only exact to their precision, so can often find a
-simpler rational number.
+The [`rational` and `rationalize` functions][rational-and-rationalize] convert
+a real numeric argument into a rational. `rational` assumes that floating
+point arguments are exact; `rationalize` expoits the fact that floating point
+numbers are only exact to their precision, so can often find a simpler
+rational number.
 
 ### Convert rational to integer
 
@@ -288,10 +279,10 @@ to an integer:
 
 ## Rounding floating-point and rational numbers
 
-The [ceiling, floor, round and truncate](http://www.lispworks.com/documentation/HyperSpec/Body/f_floorc.htm)
-functions convert floating point or rational numbers to integers. 
-The difference between the result and the input is returned as the
-second value, so that the input is the sum of the two outputs.
+The [`ceiling`, `floor`, `round` and `truncate`][ceiling-functions] functions
+convert floating point or rational numbers to integers.  The difference
+between the result and the input is returned as the second value, so that the
+input is the sum of the two outputs.
 
 ~~~lisp
 * (ceiling 1.42)
@@ -346,17 +337,15 @@ DOUBLE-FLOAT
 
 ## Comparing numbers
 
-See [Common Lisp the Language, 2nd Edition, Section 12.3](https://www.cs.cmu.edu/Groups/AI/html/cltl/clm/node124.html).
+See [Common Lisp the Language, 2nd Edition, Section 12.3][book-cl-12.3].
 
 The `=` predicate returns `T` if all arguments are numerically equal. 
 Note that comparison of floating point numbers includes some margin
 for error, due to the fact that they cannot represent all real
 numbers and accumulate errors. 
 
-The constant
-[single-float-epsilon](http://clhs.lisp.se/Body/v_short_.htm) is the
-smallest number which will cause an `=` comparison to fail, if it is
-added to 1.0:
+The constant [`single-float-epsilon`][single-float-epsilon] is the smallest
+number which will cause an `=` comparison to fail, if it is added to 1.0:
 
 ~~~lisp
 * (= (+ 1s0 5e-8) 1s0)
@@ -402,20 +391,18 @@ NIL
 
 Many Common Lisp functions operate on sequences, which can be either lists
 or vectors (1D arrays). See the section on 
-[mapping](https://lispcookbook.github.io/cl-cookbook/data-structures.html#mapping-map-mapcar-remove-if-not).
+[mapping][mapping].
 
 Operations on multidimensional arrays are discussed in 
-[this section](https://lispcookbook.github.io/cl-cookbook/arrays.html).
+[this section][arrays].
 
 Libraries are available for defining and operating on lazy sequences,
 including "infinite" sequences of numbers. For example 
 
-* [Clazy](https://common-lisp.net/project/clazy/) which is on QuickLisp
-* [folio2](https://github.com/mikelevins/folio2) on
-  QuickLisp. Includes an interface to the
-  [Series](https://github.com/tokenrove/series/wiki/Documentation)
-  package for efficient sequences.
-* [lazy-seq](https://github.com/fredokun/lisp-lazy-seq) 
+* [Clazy][clazy] which is on QuickLisp.
+* [folio2][folio2] on QuickLisp. Includes an interface to the
+* [Series][series] package for efficient sequences.
+* [lazy-seq][lazy-seq].
 
 ## Working with Roman numerals
 
@@ -427,14 +414,12 @@ The `format` function can convert numbers to roman numerals with the
 "XLII"
 ~~~
 
-There is a [gist by tormaroe](https://gist.github.com/tormaroe/90ddd9dc7cc191040be4) for
-reading roman numerals.
+There is a [gist by tormaroe][gist-tormaroe] for reading roman numerals.
 
 ## Generating random numbers
 
-The [random](http://clhs.lisp.se/Body/f_random.htm#random) function
-generates either integer or floating point random numbers, depending on
-the type of its argument. 
+The [`random`][random] function generates either integer or floating point
+random numbers, depending on the type of its argument.
 
 ~~~lisp
 * (random 10)
@@ -448,14 +433,13 @@ SINGLE-FLOAT
 DOUBLE-FLOAT
 ~~~
 
-In SBCL a [Mersenne Twister](https://en.wikipedia.org/wiki/Mersenne_Twister)
- pseudo-random number generator is used. See section 
-[7.13 of the SBCL manual](http://www.sbcl.org/manual/#Random-Number-Generation) for details.
+In SBCL a [Mersenne Twister][mersenne-twister] pseudo-random number generator
+ is used. See section [7.13 of the SBCL manual][sbcl-7.13] for details.
  
-The random seed is stored in [*random-state*](http://clhs.lisp.se/Body/v_rnd_st.htm#STrandom-stateST) 
-whose internal representation is implementation dependent. The
-function [make-random-state](http://clhs.lisp.se/Body/f_mk_rnd.htm)
-can be used to make new random states, or copy existing states. 
+The random seed is stored in [`*random-state*`][random-state] whose internal
+representation is implementation dependent. The function
+[`make-random-state`][make-random-state] can be used to make new random
+states, or copy existing states.
 
 To use the same set of random numbers multiple times, 
 `(make-random-state nil)` makes a copy of the current `*random-state*`:
@@ -477,8 +461,8 @@ bound to a copy of its state before the `let` form.
 
 Other resources:
 
-* The [random-state](http://quickdocs.org/random-state/) package is available on QuickLisp,
-  and provides a number of portable random number generators.
+* The [random-state][random-state] package is available on QuickLisp, and
+  provides a number of portable random number generators.
 
 ## Using complex numbers
 
@@ -496,3 +480,41 @@ and return complex numbers when this is the true result. For example:
 #C(1.2984576 0.63496387)
 ~~~
 
+[numbers]: https://www.cs.cmu.edu/Groups/AI/html/cltl/clm/node16.html#SECTION00610000000000000000
+[numbers-characters-strings]: http://www.gigamonkeys.com/book/numbers-characters-and-strings.html
+[isqrt]: http://clhs.lisp.se/Body/f_sqrt_.htm
+[gcd]: http://clhs.lisp.se/Body/f_gcd.htm
+[lcm]: http://clhs.lisp.se/Body/f_lcm.htm#lcm
+[ratio]: http://clhs.lisp.se/Body/t_ratio.htm
+[rational]: http://clhs.lisp.se/Body/t_ration.htm#rational
+[integer]: http://clhs.lisp.se/Body/t_intege.htm#integer
+[book-cl-2.1.3]: https://www.cs.cmu.edu/Groups/AI/html/cltl/clm/node19.html
+[article-floating-point-arithmetic]: https://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html
+[float-constants]: http://clhs.lisp.se/Body/v_short_.htm
+[read-default-float-format]: http://clhs.lisp.se/Body/v_rd_def.htm
+[SBCL]: http://www.sbcl.org/
+[CCL]: https://ccl.clozure.com/
+[computable-reals]: http://quickdocs.org/computable-reals/
+[complex]: http://clhs.lisp.se/Body/f_comp_2.htm#complex
+[realpart-and-imaginary]: http://clhs.lisp.se/Body/f_realpa.htm
+[parse-integer]: http://clhs.lisp.se/Body/f_parse_.htm
+[parse-float]: https://github.com/soemraws/parse-float/blob/master/parse-float.lisp
+[strings]: https://lispcookbook.github.io/cl-cookbook/strings.html#converting-a-string-to-a-number
+[book-cl-12.6]: https://www.cs.cmu.edu/Groups/AI/html/cltl/clm/node130.html
+[rational-and-rationalize]: http://clhs.lisp.se/Body/f_ration.htm
+[ceiling-functions]: http://www.lispworks.com/documentation/HyperSpec/Body/f_floorc.htm
+[book-cl-12.3]: https://www.cs.cmu.edu/Groups/AI/html/cltl/clm/node124.html
+[single-float-epsilon]: http://clhs.lisp.se/Body/v_short_.htm
+[mapping]: https://lispcookbook.github.io/cl-cookbook/data-structures.html#mapping-map-mapcar-remove-if-not
+[arrays]: https://lispcookbook.github.io/cl-cookbook/arrays.html
+[clazy]: https://common-lisp.net/project/clazy/
+[series]: https://github.com/tokenrove/series/wiki/Documentation
+[lazy-seq]: https://github.com/fredokun/lisp-lazy-seq
+[folio2]: https://github.com/mikelevins/folio2
+[gist-tormaroe]: https://gist.github.com/tormaroe/90ddd9dc7cc191040be4
+[random]: http://clhs.lisp.se/Body/f_random.htm#random
+[mersenne-twister]: https://en.wikipedia.org/wiki/Mersenne_Twister
+[sbcl-7.13]: http://www.sbcl.org/manual/#Random-Number-Generation
+[random-state]: http://clhs.lisp.se/Body/v_rnd_st.htm#STrandom-stateST
+[make-random-state]: http://clhs.lisp.se/Body/f_mk_rnd.htm
+[random-state]: http://quickdocs.org/random-state/
