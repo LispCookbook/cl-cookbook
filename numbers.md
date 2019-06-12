@@ -480,6 +480,83 @@ and return complex numbers when this is the true result. For example:
 #C(1.2984576 0.63496387)
 ~~~
 
+## Bit-wise Operation
+
+Common Lisp also provides many functions to perform bit-wise arithmetic
+operations. Some commonly used ones are listed below, together with their
+C/C++ equivalence.
+
+{:class="table table-bordered table-stripped"}
+| Common  Lisp     | C/C++       | Description                                      |
+|------------------|-------------|--------------------------------------------------|
+| `(logand a b c)` | `a & b & c` | Bit-wise and of multiple operands                |
+| `(logior a b c)` | `a | b | c` | Bit-wise OR of multiple arguments                |
+| `(lognot a)`     | `~a`        | Bit-wise not of single operand                   |
+| `(logxor a b c)` | `a ^ b ^ c` | Bit-wise exclusive or (XOR) or multiple operands |
+| `(ash a 3)`      | `a << 3`    | Bit-wise left shift                              |
+| `(ash a -3)`     | `a >> 3`    | Bit-wise right shift                             |
+
+Negative numbers are treated as two's-complements. If you have forgotten this,
+please refer to the [Wiki page][twos-complements].
+
+For example:
+
+~~~lisp
+* (logior 1 2 4 8)
+15
+;; Explanation:
+;;   0001
+;;   0010
+;;   0100
+;; | 1000
+;; -------
+;;   1111
+
+* (logand 2 -3 4)
+0
+
+;; Explanation:
+;;   0010 (2)
+;;   1101 (two's complement of -3)
+;; & 0100 (4)
+;; ------- 
+;;   0000
+
+* (logxor 1 3 7 15)
+10
+
+;; Explanation:
+;;   0001
+;;   0011
+;;   0111
+;; ^ 1111
+;; -------
+;;   1010
+
+* (lognot -1)
+0
+;; Explanation:
+;;   11 -> 00
+
+* (lognot -3)
+2
+;;   101 -> 010
+
+* (ash 3 2)
+12
+;; Explanation:
+;;   11 -> 1100
+
+* (ash -5 -2)
+-2
+;; Explanation
+;;   11011 -> 110
+~~~
+
+Please see the [CLHS page][logand-functions] for a more detailed explanation
+or other bit-wise functions.
+
+
 [numbers]: https://www.cs.cmu.edu/Groups/AI/html/cltl/clm/node16.html#SECTION00610000000000000000
 [numbers-characters-strings]: http://www.gigamonkeys.com/book/numbers-characters-and-strings.html
 [isqrt]: http://clhs.lisp.se/Body/f_sqrt_.htm
@@ -518,3 +595,5 @@ and return complex numbers when this is the true result. For example:
 [random-state]: http://clhs.lisp.se/Body/v_rnd_st.htm#STrandom-stateST
 [make-random-state]: http://clhs.lisp.se/Body/f_mk_rnd.htm
 [random-state]: http://quickdocs.org/random-state/
+[logand-functions]: http://www.lispworks.com/documentation/HyperSpec/Body/f_logand.htm
+[twos-complements]: https://en.wikipedia.org/wiki/Twos_complement
