@@ -488,9 +488,9 @@ C/C++ equivalence.
 {:class="table table-bordered table-stripped"}
 | Common  Lisp     | C/C++       | Description                                      |
 |------------------|-------------|--------------------------------------------------|
-| `(logand a b c)` | `a & b & c` | Bit-wise and of multiple operands                |
+| `(logand a b c)` | `a & b & c` | Bit-wise AND of multiple operands                |
 | `(logior a b c)` | `a | b | c` | Bit-wise OR of multiple arguments                |
-| `(lognot a)`     | `~a`        | Bit-wise not of single operand                   |
+| `(lognot a)`     | `~a`        | Bit-wise NOT of single operand                   |
 | `(logxor a b c)` | `a ^ b ^ c` | Bit-wise exclusive or (XOR) or multiple operands |
 | `(ash a 3)`      | `a << 3`    | Bit-wise left shift                              |
 | `(ash a -3)`     | `a >> 3`    | Bit-wise right shift                             |
