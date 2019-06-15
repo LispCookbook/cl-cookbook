@@ -61,8 +61,8 @@ For each installation, an installation directory is suggested. It is recommended
     md c:\bin\
     </pre>
 
-* Download the precompiled [Emacs](http://www.gnu.org/software/emacs/) binaries for Windows from [http://ftp.gnu.org/pub/gnu/windows/emacs/emacs-21.3-fullbin-i386.tar.gz](http://ftp.gnu.org/pub/gnu/windows/emacs/emacs-21.3-fullbin-i386.tar.gz) and use Winzip to unpack the files into the c:\bin directory. This should result in a new directory: c:\bin\emacs-21.3
-* Using Run on the Windows Start menu, enter "c:\bin\emacs-21.3\bin\runemacs.exe" to verify that the program works. On the Help menu, there is an Emacs on-line tutorial. If you are unfamiliar with Emacs, you should (at least) complete this tutorial before proceeding any further. The remainder of this chapter's instructions will assume that you have at least basic familiarity with the use of Emacs.
+* Download the precompiled [Emacs](http://www.gnu.org/software/emacs/) binaries for Windows from [http://ftp.gnu.org/pub/gnu/windows/emacs/emacs-26/emacs-26.2-i686.zip](http://ftp.gnu.org/pub/gnu/windows/emacs/emacs-26/emacs-26.2-i686.zip) and use Winzip to unpack the files into the c:\bin directory. This should result in a new directory: c:\bin\emacs-26.2
+* Using Run on the Windows Start menu, enter "c:\bin\emacs-26.2\bin\runemacs.exe" to verify that the program works. On the Help menu, there is an Emacs on-line tutorial. If you are unfamiliar with Emacs, you should (at least) complete this tutorial before proceeding any further. The remainder of this chapter's instructions will assume that you have at least basic familiarity with the use of Emacs.
 * Download the sample .emacs file from [here](.emacs) and place it in the c:\home directory.
 
 
@@ -72,7 +72,7 @@ For each installation, an installation directory is suggested. It is recommended
     * Edit the EMACSDIR and ILISPDIR variables at the beginning of the icompile.bat file in the ilisp-5.12.0 directory so that they match the settings given below.
 
       <pre>
-      set EMACSDIR=c:\bin\emacs-21.3
+      set EMACSDIR=c:\bin\emacs-26.2
       set ILISPDIR=c:\home\site\ilisp
       </pre>
 
@@ -95,7 +95,7 @@ For each installation, an installation directory is suggested. It is recommended
 
 * OPTIONAL: Download the [Common Lisp Hyperspec](http://www.lispworks.com/documentation/HyperSpec/) reference from: [http://www.lispworks.com/documentation/HyperSpec/HyperSpec-6-0.tar.gz](http://www.lispworks.com/documentation/HyperSpec/HyperSpec-6-0.tar.gz) and use Winzip to unpack the files into the c:\home\docs directory. This should result in a new directory: c:\home\docs\HyperSpec
 * OPTIONAL: Download the [Common Lisp the Language](http://www-2.cs.cmu.edu/Groups/AI/html/cltl/cltl2.html) (CLtL2) reference from: [http://www-2.cs.cmu.edu/afs/cs.cmu.edu/project/ai-repository/ai/lang/lisp/doc/cltl/cltl_ht.tgz](http://www-2.cs.cmu.edu/afs/cs.cmu.edu/project/ai-repository/ai/lang/lisp/doc/cltl/cltl_ht.tgz) and use Winzip to unpack the files into the c:\home\docs directory. This should result in a new directory: [c:\home\docs\cltl](file:///c:/home/docs/cltl)
-* OPTIONAL: Download the info version of the CL (early ANSI draft) documentation from [ftp://ftp.gnu.org/pub/gnu/gcl/gcl.info.tgz](ftp://ftp.gnu.org/pub/gnu/gcl/gcl.info.tgz) and use Winzip to unpack the files into the c:\home\info directory. You will then need to use Winzip again on each of the "*.gz" files that are in the info directory - unpack each of these into the c:\home\info directory as well. You may then delete the "*.gz" files that remain in the directory. Lastly, add the following line to the "dir" file in the c:\bin\emacs-21.3\info directory:
+* OPTIONAL: Download the info version of the CL (early ANSI draft) documentation from [ftp://ftp.gnu.org/pub/gnu/gcl/gcl.info.tgz](ftp://ftp.gnu.org/pub/gnu/gcl/gcl.info.tgz) and use Winzip to unpack the files into the c:\home\info directory. You will then need to use Winzip again on each of the "*.gz" files that are in the info directory - unpack each of these into the c:\home\info directory as well. You may then delete the "*.gz" files that remain in the directory. Lastly, add the following line to the "dir" file in the c:\bin\emacs-26.2\info directory:
 
     <pre>
     * ANSI-CL: (gcl). ANSI Common Lisp Manual.
@@ -167,8 +167,8 @@ For each installation, an installation directory is suggested. It is recommended
 * Setup environmental variables either in the autoexec.bat file (e.g. - Windows/98) or the Control Panel/System (e.g. - Windows/NT/2000/XP):
 
     * HOME: Should be set to c:/home (Note: use "/" rather than "\". Note also that you should make certain that you don't have both a User and a System HOME variable set up when setting up the HOME environmental variable under Windows/NT/2000/XP. If you do, the User variable will override the System one. Delete one of the two (better to leave the system one if you want multiple login users to use your same emacs configuration) and make certain that it is set to the c:\home directory.).
-    * EMACSDIR: Should be set to c:\bin\emacs-21.3
-    * PATH: The c:\bin\emacs-21.3\bin directory path should be prepended to the existing PATH to ensure that the Emacs executable can be found (e.g. -- set path=c:\bin\emacs-21.3\bin;%path%).
+    * EMACSDIR: Should be set to c:\bin\emacs-26.2
+    * PATH: The c:\bin\emacs-26.2\bin directory path should be prepended to the existing PATH to ensure that the Emacs executable can be found (e.g. -- set path=c:\bin\emacs-26.2\bin;%path%).
 
 * If the specified directory locations were used, no changes to the .emacs file should be necessary. If file locations were changed, the directory locations that are specified in the first section of the .emacs file (the "Site-Specific Variables" section) should be modified with the correct directory locations (Note: when specifying directory locations in the .emacs file, use "/" rather than "\" as the directory separator character).
 * If not all the Lisp implementations were downloaded, the .emacs file will still work "as is". If you did download multiple installations, you will probably want to change the lisp-used variable (default value is the first lisp implementation in the list of lisp implementations that you installed) to default to the main lisp implementation that you will be using (you don't have to change it, you can still toggle to the other lisp implementations using "C-M-F5").
@@ -303,6 +303,6 @@ You should now have a working Windows/Emacs setup that supports a number of diff
 * The following Lisp installations are supported by the .[emacs](.emacs) file. I am not providing full build instructions for them as was provided for the Windows installation. The things that you need to know to use these installations with the .[emacs](.emacs) file are:
     * CLISP version 2.29: Installed and built with [Fink](http://fink.sourceforge.net/pdb/package.php/clisp). (Note: in order to build CLISP with Fink, you will need the [Apple December 2002 Development Tools](http://developer.apple.com/tools/download/)). The resulting clisp executable should be installed in the /sw/bin/ directory. This is the only source code based install, all the other Lisp installs are binary; therefore, the CLISP installation takes the longest and is the most complicated to do.
     * ACL version 10.1: Installed from [Franz's download page](https://franz.com/downloads/).
-    * OpenMCL version 0.13: The [binary distribution](http://openmcl.clozure.com/Distributions) was downloaded and installed in the ~/bin/ directory. The OpenMCL executable should be at ~/bin/ccl/scripts/openmcl.
-    * SBCL version 0.8.2.8: The [binary distribution](http://www-jcsu.jesus.cam.ac.uk/~csr21/sbcl-darwin-binary.tar.gz) was downloaded and unpacked. The files src/runtime/sbcl and output/sbcl.core were moved to the ~/bin/ directory.
+    * OpenMCL version 0.13: The [binary distribution](https://ccl.clozure.com/download.html) was downloaded and installed in the ~/bin/ directory. The OpenMCL executable should be at ~/bin/ccl/scripts/openmcl.
+    * SBCL version 0.8.2.8: The [binary distribution](http://prdownloads.sourceforge.net/sbcl/sbcl-1.2.11-x86-64-darwin-binary.tar.bz2) was downloaded and unpacked. The files src/runtime/sbcl and output/sbcl.core were moved to the ~/bin/ directory.
     * LispWorks 4.3: I was not able to get a trial version of LispWorks to try out on Mac OS X; however, I have made the changes to the .emacs file that I think will be necessary to support it. The LispWorks executable should be at ~/bin/lispworks-4.3/lw43-console.

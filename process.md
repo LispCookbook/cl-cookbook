@@ -1108,8 +1108,8 @@ You should follow up on your own by reading a lot more on this
 topic. I share some of my own references here:
 
 -    [Common Lisp Recipes](http://weitz.de/cl-recipes/)
--    [Bordeaux API Reference](https://trac.common-lisp.net/bordeaux-threads/wiki/ApiDocumentation%E2%80%9D)
--    [SBCL Manual](https://www.sbcl.org/manual/#Threading%E2%80%9D)
+-    [Bordeaux API Reference](https://trac.common-lisp.net/bordeaux-threads/wiki/ApiDocumentation)
+-    [SBCL Manual](http://www.sbcl.org/manual/#Threading%E2%80%9D)
 -    [The Common Lisp Hyperspec](https://www.lispworks.com/documentation/HyperSpec/Front/)
 
 Next up, the final post in this mini-series: parallelism in Common

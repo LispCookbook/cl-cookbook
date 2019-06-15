@@ -485,7 +485,7 @@ My first thought, when I finally completed my demo program, was "That looks like
 
 Win32 API programming cries out for new languages. It is a very powerful and flexible API but in a given application context, only certain subsets are used and they are used in repetitive fashions. This does not mean that the APIs should be redefined, were that possible. What works for one application may not work for the next. There probably are some language extensions that will be used in nearly all Win32 programs. Other extensions will apply only to certain applications.
 
-One beauty of Lisp is that the programmer can define a new extension at any time. See [the Common Lisp Cookbook's chapter on macros](macros.html). I also recommend Paul Graham's [On Lisp](www.paulgraham.com/books.html) for learning to write macros and a whole lot more.
+One beauty of Lisp is that the programmer can define a new extension at any time. See [the Common Lisp Cookbook's chapter on macros](macros.html). I also recommend Paul Graham's [On Lisp](http://paulgraham.com/books.html) for learning to write macros and a whole lot more.
 
 When writing code, notice when the same pattern is typed over and over. Then think, sooner rather than later, "it's time for a macro or a function." Notice the repetitive coding even when you're writing macros. Macros can be built upon macros, and macros can generate macros.
 

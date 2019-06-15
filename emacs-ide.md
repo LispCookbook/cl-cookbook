@@ -42,7 +42,7 @@ straightforward way to get going.
     *   No numerical tower support
 
 *   Some good Emacs Lisp learning resources:
-    *   [An Introduction to Programming in Emacs Lisp](http://www.gnu.org/manual/emacs-lisp-intro/emacs-lisp-intro.html)
+    *   [An Introduction to Programming in Emacs Lisp](https://www.gnu.org/software/emacs/manual/eintr.html)
     *   [Writing GNU Emacs Extensions](http://www.oreilly.com/catalog/gnuext/)
     *   [Wikemacs](http://wikemacs.org/wiki/Category:Emacs_Lisp)
 
@@ -348,7 +348,8 @@ in the minibuffer.
 
 ## Lisp Documentation in Emacs - Lisp Documentation
 
-*   [CL HyperSpec](ftp://ftp.lispworks.com/pub/software_tools/documentation/HyperSpec-7-0.tar.gz)
+*   [CL HyperSpec (online)](http://www.lispworks.com/documentation/HyperSpec/Front/)
+*   [CL HyperSpec (tarball)](http://macports.mirror.ac.za/distfiles/lisp-hyperspec/HyperSpec-7-0.tar.gz)
 *   [CLtL2](http://www-2.cs.cmu.edu/afs/cs.cmu.edu/project/ai-repository/ai/lang/lisp/doc/cltl/cltl_ht.tgz)
 *   [ACL Documenation](https://franz.com/support/documentation/)
 *   Example code ( [s23.lisp](s23.lisp) )
