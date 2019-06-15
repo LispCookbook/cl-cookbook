@@ -56,7 +56,7 @@ and
 [`READ-CHAR`](http://www.lispworks.com/documentation/HyperSpec/Body/f_rd_cha.htm)
 are in the standard. Some implementations let both functions be called
 interchangeably. Others allow either one or the other. (The
-[simple stream proposal](http://ww.telent.net/cliki/simple-stream) defines the
+[simple stream proposal](https://www.cliki.net/simple-stream) defines the
 notion of a _bivalent stream_ where both are possible.)
 
 Varying element-types are useful as some protocols rely on the ability to send
