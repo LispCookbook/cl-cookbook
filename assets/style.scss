@@ -3,27 +3,106 @@
 
 @charset 'utf-8';
 
-html {
-  height: 100vh;
-  margin: 0;
-  padding: 0;
+#toc a{
+    color: #696969;
+}
+#title-xs{
+    display:none;
+}
+#title-xs, #title-non-xs{
+    // color: #007bff;
+}
+#logo{
+    height:90px;
+    width:23%;
+    margin-left:1%;
+    margin-right:1%;
+    position:fixed;
+}
+#toc-container {
+    margin-left:1%;
+    margin-right:1%;
+    margin-top:90px;
+    margin-bottom:10%;
+    padding:1%;
+    width:23%;
+    position:fixed;
+    overflow-y:auto;
+    height:100%;
+}
+#content-container {
+    margin-left:25%;
+    width:75%;
+    padding:2%;
+    position:fixed;
+    overflow-y:scroll;
+    max-height:100%;
+}
+#top-btn{
+    display:none;
 }
 
-#toc a {
-    color: #696969;
+@media only screen and (max-width:576px){
+    #logo{
+	display:none;
+    }
+    #title-xs{
+	padding:2%;
+	width:100%;
+	position:static;
+	margin-left:0;
+	display:block;
+	// display:inline;
+    }
+    #title-non-xs{
+	display:none;
+    }
+    #toc-container{
+	padding:2%;
+	display:block;
+	position:static;
+	width:100%;
+	margin:0;
+    }
+    #content-container{
+	display:block;
+	padding-top:0;
+	margin:0;
+	position:static;
+	margin-left:0;
+	width:100%;
+    }
+    #top-btn{
+	position:fixed;
+	float:right;
+	bottom:4%;
+	right:4%;
+	border-width:1px;
+	border-radius:5px;
+	border-style:solid;
+	display:block;
+	background-color:#111111;
+	padding:5px
+    }
+    #top-btn > a{
+	color:orange;
+	font-weight:700;
+    }
+}
+
+@media only screen and (min-width:576px) and (max-width:991px){
+    #toc-container {
+	width: 30%;
+    }
+    #content-container {
+	width:70%;
+	margin-left:30%;
+    }
 }
 
 footer {
     color: darkgrey;
-    margin: 20px 0px 20px;
-}
-
-#logo {
-    position: fixed;
-}
-
-#page-title, #content-container {
-    margin-left: 25%;
+   
 }
 
 .page-source {
@@ -33,15 +112,12 @@ footer {
     opacity: 0.9;
 }
 
-/* On small screens we remove left column to make text more readable */
-@media screen and (max-width: 40em) {
-    #toc {
-        display: none;
-    }
-    #logo {
-        display: none;
-    }
-    #page-title, #content-container {
-        margin-left: 0;
-    }
+ul{
+    margin-left:0px;
+}
+ul ul{
+    margin-left:-16px;
+}
+ul ul ul{
+    margin-left:-26px;
 }
