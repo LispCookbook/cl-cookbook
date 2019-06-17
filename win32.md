@@ -495,7 +495,7 @@ If macros are not used in this way, then functions that would have been created 
 
 Be aware that functions can be declaimed inline and can be passed as parameters, while macros cannot.
 
-Many of the macros defined in [On Lisp](www.paulgraham.com/books.html) are very useful in Win32 programming. I use the symbol creation macros extensively.
+Many of the macros defined in [On Lisp](http://www.paulgraham.com/books.html) are very useful in Win32 programming. I use the symbol creation macros extensively.
 
 One set of needed macros make using the Foreign Language Interface easier, more compact, and more readable. I have a macro `with-foreign-strings` which takes a list of pointer-name/string pairs and creates a nested series of `(fli:with-foreign-string...` calls, including creation of the element-count and byte-count parameters with unique, predictible names for each string. My `setf-foreign-slot-values`, and `with-foreign-slot-values` macros also make for more compact and readable code.
 
