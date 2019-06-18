@@ -42,7 +42,7 @@ Some libraries available through
 [quicklisp](https://www.quicklisp.org/beta/) which take this approach 
 are: 
 
-* [matlisp](https://github.com/matlisp/matlisp), some of which is
+* [matlisp](https://github.com/bharath1097/matlisp/), some of which is
   described in sections below.
 * [MGL-MAT](https://github.com/melisgl/mgl-mat), which has a manual
   and provides bindings to BLAS and CUDA. This is used in a machine
@@ -763,7 +763,7 @@ functions:
 
 # Matlisp
 
-The [Matlisp](https://github.com/matlisp/matlisp) scientific
+The [Matlisp](https://github.com/bharath1097/matlisp/) scientific
 computation library provides high performance operations on arrays,
 including wrappers around BLAS and LAPACK functions. 
 It can be loaded using quicklisp:
