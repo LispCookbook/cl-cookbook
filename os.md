@@ -91,7 +91,7 @@ More on using this to write standalone Lisp scripts can be found in the [SBCL Ma
 ("/Users/cbrown/Projects/lisptty/tty-lispworks" "-init" "/Users/cbrown/Desktop/lisp/lispworks-init.lisp")
 ~~~
 
-[CMUCL](http://www.cons.org/cmucl/) has interesting extensions for [manipulating the arguments](http://common-lisp.net/project/cmucl/doc/cmu-user/unix.html)
+[CMUCL](http://www.cons.org/cmucl/) has interesting extensions for [manipulating the arguments](https://common-lisp.net/project/cmucl/docs/cmu-user/html/UNIX-Interface.html)
 
 Here's a quick function to return the argument strings list across multiple implementations:
 
