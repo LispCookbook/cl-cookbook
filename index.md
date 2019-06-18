@@ -56,7 +56,7 @@ title: Home
 * [Cliki](http://www.cliki.net/), Common Lisp's wiki
 * [Articulate Common Lisp](http://articulate-lisp.com/), an initiation manual for the uninitiated
 * [Common Lisp](https://en.wikibooks.org/wiki/Common_Lisp) on Wikibooks
-* [The old comp.lang.lisp FAQ](http://www-2.cs.cmu.edu/Groups//AI/html/faqs/lang/lisp/top.html) by Mark Kantrowitz
+* [The old comp.lang.lisp FAQ](https://common-lisp.net/project/lispfaq/FAQ/) by Mark Kantrowitz, Barry Margolin, and Christophe Rhodes
 * [Common Lisp: A Gentle Introduction to Symbolic Computation](http://www-2.cs.cmu.edu/~dst/LispBook/) by David S. Touretzky
 * [Successful Lisp: How to Understand and Use Common Lisp](https://successful-lisp.blogspot.com/p/httpsdrive.html) by David B. Lamkins
 * [On Lisp](http://www.paulgraham.com/onlisptext.html) by Paul Graham
