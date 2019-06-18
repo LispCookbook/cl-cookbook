@@ -220,7 +220,7 @@ There are ways for non-local exits (`return-from <function name> <value>`), but 
 
 Common Lisp has also the concept of multiple return values.
 
-### Multiple return values: `values` and `multiple-value-bind`
+### Multiple return values: `values`, `multiple-value-bind` and `nth-value`
 
 Returning multiple values is *not* like returning a tuple or a list of
 results ;) This is a common misconception.
@@ -254,12 +254,13 @@ We use `values` to return multiple values:
 
 Observe here that `*res*` *is still `:A`*.
 
-All functions that use the return value of `foo` need no change, they
+All functions that use the return value of `foo` need *not* to change, they
 still work. If we had returned a list or an array, this would be
 different.
 
 We destructure multiple values with `multiple-value-bind` (or
-`mvb`+TAB in Slime for short):
+`mvb`+TAB in Slime for short) and we can get one given its position
+with `nth-value`:
 
 ~~~lisp
 (multiple-value-bind (res1 res2 res3)
@@ -277,6 +278,21 @@ Its general form is
 ~~~
 
 The variables `var-n` are not available outside the scope of `multiple-value-bind`.
+
+With `nth-value`:
+
+~~~lisp
+(nth-value 0 (values :a :b :c))  ;; => :A
+(nth-value 2 (values :a :b :c))  ;; => :C
+(nth-value 9 (values :a :b :c))  ;; => NIL
+~~~
+
+Look here too that `values` is different from a list:
+
+~~~lisp
+(nth-value 0 '(:a :b :c)) ;; => (:A :B :C)
+(nth-value 1 '(:a :b :c)) ;; => NIL
+~~~
 
 Last but not least: note that `(values)` with no values returns… no values at all.
 
