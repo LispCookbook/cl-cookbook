@@ -40,7 +40,7 @@ Now you can run SLIME with `M-x slime` and/or `M-x slime-connect`.
 
 See also:
 
-* http://wikemacs.org/wiki/SLIME - configuration examples and extensions.
+* [https://wikemacs.org/wiki/SLIME](https://wikemacs.org/wiki/SLIME) - configuration examples and extensions.
 
 
 ### Using Emacs as an IDE
