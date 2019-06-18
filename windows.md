@@ -43,8 +43,8 @@ B. [Mac OS X Setup Instructions](#Mac OS X Setup Instructions)
 For each installation, an installation directory is suggested. It is recommended that you install in the suggested directory since, if you use the suggested directory names, the provided Emacs start-up file (.emacs) will work "out-of-the-box". Please note the following:
 
 * If you use alternative directory names, you will need to modify the .emacs file (instructions provided in step #8).
-* The instructions assume you are using Winzip; however, you can use any alternative utility.
-* When you unpack .gz files with Winzip, it will ask you "Should WinZip decompress it to a temporary folder and open it?" - click on "No". When you unzip any files, you should ensure that "All files" radio button is selected and the "Use folder names" check box is ticked.
+* The instructions assume you are using WinZip; however, you can use any alternative utility.
+* When you unpack .gz files with WinZip, it will ask you "Should WinZip decompress it to a temporary folder and open it?" - click on "No". When you unzip any files, you should ensure that "All files" radio button is selected and the "Use folder names" check box is ticked.
 * There are instructions for downloading all the implementations; however, it is not necessary to do so. You should complete step #1 (Read through step #2 to determine whether you want/need any of the optional Emacs utilities covered in this section. Step #3 is required if you want local access to the Common Lisp documentation. If you don't want/need the documentation, this step is optional as well.) and the relevant parts of #8 & #9 (regardless of which implementations you download) and you will need to download at least one of #4 - #7\. You can download multiple implementations if you want to trial them.
 
 
@@ -61,14 +61,14 @@ For each installation, an installation directory is suggested. It is recommended
     md c:\bin\
     </pre>
 
-* Download the precompiled [Emacs](http://www.gnu.org/software/emacs/) binaries for Windows from [http://ftp.gnu.org/pub/gnu/windows/emacs/emacs-26/emacs-26.2-i686.zip](http://ftp.gnu.org/pub/gnu/windows/emacs/emacs-26/emacs-26.2-i686.zip) and use Winzip to unpack the files into the c:\bin directory. This should result in a new directory: c:\bin\emacs-26.2
+* Download the precompiled [Emacs](http://www.gnu.org/software/emacs/) binaries for Windows from [http://ftp.gnu.org/pub/gnu/windows/emacs/emacs-26/emacs-26.2-i686.zip](http://ftp.gnu.org/pub/gnu/windows/emacs/emacs-26/emacs-26.2-i686.zip) and use WinZip to unpack the files into the c:\bin directory. This should result in a new directory: c:\bin\emacs-26.2
 * Using Run on the Windows Start menu, enter "c:\bin\emacs-26.2\bin\runemacs.exe" to verify that the program works. On the Help menu, there is an Emacs on-line tutorial. If you are unfamiliar with Emacs, you should (at least) complete this tutorial before proceeding any further. The remainder of this chapter's instructions will assume that you have at least basic familiarity with the use of Emacs.
 * Download the sample .emacs file from [here](.emacs) and place it in the c:\home directory.
 
 
 ## <a name="Installing additional Emacs utilities">2\. Installing additional Emacs utilities</a>
 
-* OPTIONAL: ILISP is needed if you intend to use CLISP or LispWorks with it. Also, if you want to access the HyperSpec documentation or CLtL2, the code to do this is in the ILISP package. Download the [ILISP](http://sourceforge.net/projects/ilisp/) package from [http://prdownloads.sourceforge.net/ilisp/ilisp-5.12.0.tar.gz?download](http://prdownloads.sourceforge.net/ilisp/ilisp-5.12.0.tar.gz?download) and use Winzip to unpack it into the c:\home\site directory. This should result in a new directory: c:\home\site\ilisp-5.12.0\
+* OPTIONAL: ILISP is needed if you intend to use CLISP or LispWorks with it. Also, if you want to access the HyperSpec documentation or CLtL2, the code to do this is in the ILISP package. Download the [ILISP](http://sourceforge.net/projects/ilisp/) package from [http://prdownloads.sourceforge.net/ilisp/ilisp-5.12.0.tar.gz?download](http://prdownloads.sourceforge.net/ilisp/ilisp-5.12.0.tar.gz?download) and use WinZip to unpack it into the c:\home\site directory. This should result in a new directory: c:\home\site\ilisp-5.12.0\
     * Edit the EMACSDIR and ILISPDIR variables at the beginning of the icompile.bat file in the ilisp-5.12.0 directory so that they match the settings given below.
 
       <pre>
@@ -86,16 +86,16 @@ For each installation, an installation directory is suggested. It is recommended
 
 * OPTIONAL: If you want Emacs Copy/Cut/Paste keyboard shortcuts to match those of Windows (e.g. - C-c, C-x, C-v), download the [cua.el](http://www.cua.dk/cua.html) utility (provides Windows standard key mappings)  from [http://www.cua.dk/cua.el](http://www.cua.dk/cua.el) and put it into the c:\home\site directory. If you want to use the Emacs defaults for the Copy/Cut/Paste keyboard shortcuts, don't download the cua.el utility.
 * OPTIONAL: If you want Emacs to emulate the Windows-style buffer switching (e.g. - C-TAB to move from buffer to buffer), download the [cua-emul.el](http://www.vegetable.demon.co.uk/wence/cua-emul.el) utility from [http://www.vegetable.demon.co.uk/wence/cua-emul.el](http://www.vegetable.demon.co.uk/wence/cua-emul.el) and put it into the c:\home\site directory. If you want to use the Emacs defaults for buffer switching, don't download the cua-emul.el utility.
-* OPTIONAL: The standard code colorization that is done by Emacs is not to everyone's taste. If you want to use my custom colorization scheme (included in the sample .emacs file) or use one of the standard ones that are included in this optional package (after installation, just press "M-x color-theme-select" to get a listing that you can select from), then download [color-theme.el](http://www.geocities.com/kensanata/emacs.html#colortheme) from [http://www.emacswiki.org/elisp/color-theme.el.gz](http://www.emacswiki.org/elisp/color-theme.el.gz) and and use Winzip to unpack the files into the c:\home\site directory.
-* OPTIONAL: If you want to browse the Lisp documentation files with your default web browser, then skip this step; however, if you want to be able to browse Lisp documentation from within an Emacs buffer, using an Emacs-based web browser, then download the [w3](http://www.cs.indiana.edu/elisp/w3/docs.html) browser from [ftp://ftp.xemacs.org/pub/xemacs/emacs-w3/w3.tar.gz](ftp://ftp.xemacs.org/pub/xemacs/emacs-w3/w3.tar.gz) and use Winzip to unpack the files into c:\home\site\w3\. Then, from a command line, cd to the c:\home\site\w3  directory and run the build.bat command.
+* OPTIONAL: The standard code colorization that is done by Emacs is not to everyone's taste. If you want to use my custom colorization scheme (included in the sample .emacs file) or use one of the standard ones that are included in this optional package (after installation, just press "M-x color-theme-select" to get a listing that you can select from), then download [color-theme.el](https://www.emacswiki.org/emacs/color-theme.el) from [https://www.emacswiki.org/emacs/download/color-theme.el](https://www.emacswiki.org/emacs/download/color-theme.el) and and use WinZip to unpack the files into the c:\home\site directory.
+* OPTIONAL: If you want to browse the Lisp documentation files with your default web browser, then skip this step; however, if you want to be able to browse Lisp documentation from within an Emacs buffer, using an Emacs-based web browser, then download the [w3](http://www.cs.indiana.edu/elisp/w3/docs.html) browser from [ftp://ftp.xemacs.org/pub/xemacs/emacs-w3/w3.tar.gz](ftp://ftp.xemacs.org/pub/xemacs/emacs-w3/w3.tar.gz) and use WinZip to unpack the files into c:\home\site\w3\. Then, from a command line, cd to the c:\home\site\w3  directory and run the build.bat command.
 * OPTIONAL: The [Emacs Code Browser](http://ecb.sourceforge.net/) (ECB) is a useful utility for browsing Lisp code. However, installation is a bit involved and you might want to defer installation until you are more familiar with your Lisp implementation and decide whether it might be useful for your style of development. The sample .emacs file includes setup code for ECB if you do decide to install it. Follow the installation instructions on the ECB site and make certain that the installation directories are all in the C:\home\site\ directory and that they are named ecb, eieio, semantic and speedbar.
 
 
 ## <a name="Installing on-line documentation">3\. Installing on-line documentation</a> (optional)
 
-* OPTIONAL: Download the [Common Lisp Hyperspec](http://www.lispworks.com/documentation/HyperSpec/) reference from: [http://www.lispworks.com/documentation/HyperSpec/HyperSpec-6-0.tar.gz](http://www.lispworks.com/documentation/HyperSpec/HyperSpec-6-0.tar.gz) and use Winzip to unpack the files into the c:\home\docs directory. This should result in a new directory: c:\home\docs\HyperSpec
-* OPTIONAL: Download the [Common Lisp the Language](http://www-2.cs.cmu.edu/Groups/AI/html/cltl/cltl2.html) (CLtL2) reference from: [http://www-2.cs.cmu.edu/afs/cs.cmu.edu/project/ai-repository/ai/lang/lisp/doc/cltl/cltl_ht.tgz](http://www-2.cs.cmu.edu/afs/cs.cmu.edu/project/ai-repository/ai/lang/lisp/doc/cltl/cltl_ht.tgz) and use Winzip to unpack the files into the c:\home\docs directory. This should result in a new directory: [c:\home\docs\cltl](file:///c:/home/docs/cltl)
-* OPTIONAL: Download the info version of the CL (early ANSI draft) documentation from [ftp://ftp.gnu.org/pub/gnu/gcl/gcl.info.tgz](ftp://ftp.gnu.org/pub/gnu/gcl/gcl.info.tgz) and use Winzip to unpack the files into the c:\home\info directory. You will then need to use Winzip again on each of the "*.gz" files that are in the info directory - unpack each of these into the c:\home\info directory as well. You may then delete the "*.gz" files that remain in the directory. Lastly, add the following line to the "dir" file in the c:\bin\emacs-26.2\info directory:
+* OPTIONAL: Download the [Common Lisp Hyperspec](http://www.lispworks.com/documentation/HyperSpec/) reference from: [http://www.lispworks.com/documentation/HyperSpec/HyperSpec-6-0.tar.gz](http://www.lispworks.com/documentation/HyperSpec/HyperSpec-6-0.tar.gz) and use WinZip to unpack the files into the c:\home\docs directory. This should result in a new directory: c:\home\docs\HyperSpec
+* OPTIONAL: Download the [Common Lisp the Language](http://www-2.cs.cmu.edu/Groups/AI/html/cltl/cltl2.html) (CLtL2) reference from: [http://www-2.cs.cmu.edu/afs/cs.cmu.edu/project/ai-repository/ai/lang/lisp/doc/cltl/cltl_ht.tgz](http://www-2.cs.cmu.edu/afs/cs.cmu.edu/project/ai-repository/ai/lang/lisp/doc/cltl/cltl_ht.tgz) and use WinZip to unpack the files into the c:\home\docs directory. This should result in a new directory: [c:\home\docs\cltl](file:///c:/home/docs/cltl)
+* OPTIONAL: Download the info version of the CL (early ANSI draft) documentation from [ftp://ftp.gnu.org/pub/gnu/gcl/gcl.info.tgz](ftp://ftp.gnu.org/pub/gnu/gcl/gcl.info.tgz) and use WinZip to unpack the files into the c:\home\info directory. You will then need to use WinZip again on each of the "*.gz" files that are in the info directory - unpack each of these into the c:\home\info directory as well. You may then delete the "*.gz" files that remain in the directory. Lastly, add the following line to the "dir" file in the c:\bin\emacs-26.2\info directory:
 
     <pre>
     * ANSI-CL: (gcl). ANSI Common Lisp Manual.
@@ -105,7 +105,7 @@ For each installation, an installation directory is suggested. It is recommended
 ## <a name="Installing CLISP">4\. Installing CLISP</a> (optional)
 
 * Download the precompiled [CLISP](http://clisp.cons.org/) binaries for Windows from: [CLISP - an ANSI Common Lisp](http://sourceforge.net/project/showfiles.php?group_id=1355)
-* Use Winzip to unpack the files into the c:\bin directory This should result in a new directory: c:\bin\clisp-2.31
+* Use WinZip to unpack the files into the c:\bin directory This should result in a new directory: c:\bin\clisp-2.31
 * Create a file named _clisprc.lisp in the c:\home directory. This file can have any initializations that need to occur when CLISP starts. For the time being, just leave it empty.
 
 
@@ -126,7 +126,7 @@ For each installation, an installation directory is suggested. It is recommended
     </code></pre>
 
 * A non-IDE Lisp image & exe (alisp.exe) will be created in the ACL directory to be used with Emacs. Exit the ACL IDE.
-* OPTIONAL: Download the [Franz documentation](https://franz.com/support/documentation/) from [https://franz.com/ftp/pub/acl10.1/acl10.1doc.zip](https://franz.com/ftp/pub/acl10.1/acl10.1doc.zip) and use Winzip to unpack the files into the c:\bin\acl-6.2 directory. [Larry Hunter](http://compbio.uchsc.edu/Hunter/) wrote the [acldoc.el](http://compbio.uchsc.edu/Hunter/acldoc.el) utility that allows you to use the Franz documentation. Download it from [http://compbio.uchsc.edu/Hunter/acldoc.el](http://compbio.uchsc.edu/Hunter/acldoc.el) and put it into the c:\home\site directory.
+* OPTIONAL: Download the [Franz documentation](https://franz.com/support/documentation/) from [https://franz.com/ftp/pub/acl10.1/acl10.1doc.zip](https://franz.com/ftp/pub/acl10.1/acl10.1doc.zip) and use WinZip to unpack the files into the c:\bin\acl-6.2 directory.
 
 
 ## <a name="Installing LispWorks">6\. Installing LispWorks</a> (optional)
