@@ -28,7 +28,7 @@
     overflow-y:scroll;
     max-height:100%;
 }
-#top-btn{
+#toc-btn{
     display:none;
 }
 
@@ -83,13 +83,13 @@
 	margin-left:0;
 	width:100%;
     }
-    #top-btn{
+    #toc-btn{
 	position:fixed;
 	right:0%;
-	bottom:5%;
-	width:30px;
-	// height:4.7 em;
-	font-size:1em;
+	bottom:10%;
+	width:45px;
+	padding:5px;
+	font-size:1.25em;
 	text-align:center;
 	border-radius:5px;
 	border-style:solid;
