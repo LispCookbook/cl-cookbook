@@ -19,6 +19,10 @@
     <script type="text/javascript" src=
 	    "{{ site.baseurl }}/assets/jquery.toc/jquery.toc.min.js">
     </script>
+    <script type="text/javascript" src=
+	    "{{ site.baseurl }}/assets/toggle-toc.js">
+    </script>
+
     <link rel="stylesheet" href=
 	  "{{ site.baseurl }}/assets/github.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -30,7 +34,9 @@
         <img src="{{ site.baseurl }}/assets/cl-logo-blue.png" height="70" style="margin: 15px"/>
       </a>
     </div>
-    <div id="toc-container">
+
+    <div id="toc-container" class="toc-close">
+      <div id="toc-title">Table of Contents</div>
       <ul id="toc" class="list-unstyled"></ul>
     </div>
     <div id="content-container">
@@ -38,18 +44,16 @@
 
       {{ content }}
 
-  
+      
       <div>
         {% include footer.html %}
       </div>
-      <div id="top-btn"> 
-	<a href="#toc">TOC</a>
-      </div>      
+      <div id="top-btn" onclick="toggleTOC()">T<br>O<br>C</div>
     </div>
 
     
     
-    <script>
+    <script text="javascript">
       HighlightLisp.highlight_auto({className: null});
     </script>
   </body>
