@@ -29,7 +29,7 @@
     max-height:100%;
 }
 #toc-btn{
-    display:none;
+    // display:none;
 }
 
 
@@ -56,6 +56,7 @@
 	padding:0;
     }
     #toc-container{
+	z-index:1; // above the "page source" bar
 	display:block;
 	position:fixed;
 	margin:0;
@@ -84,6 +85,7 @@
 	width:100%;
     }
     #toc-btn{
+	z-index: 2; // above the toc-container
 	position:fixed;
 	right:0%;
 	bottom:10%;
@@ -93,7 +95,7 @@
 	text-align:center;
 	border-radius:5px;
 	border-style:solid;
-	display:block;
+	// display:block;
 	background-color:#111111;
 	color:orange;
 	font-weight:700;
