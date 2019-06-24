@@ -28,10 +28,8 @@
     overflow-y:scroll;
     max-height:100%;
 }
-#toc-btn{
-    // display:none;
-}
 
+// toc-btn display is handled by toggle-toc.js, to be able to not render it on root
 
 @media only screen and (max-width:576px){
     #logo{
