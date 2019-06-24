@@ -3,18 +3,26 @@
 
 @charset 'utf-8';
 
+img{
+    max-width:100%;
+}
 #toc a{
     color: #696969;
 }
 #title-xs{
     display:none;
 }
-#logo{
+#logo-container{
     height:90px;
     width:23%;
     margin-left:1%;
     margin-right:1%;
     position:fixed;
+}
+#logo{
+    width:auto;
+    height:70px;
+    margin:15px;
 }
 #toc-title{
     display:none;
@@ -24,10 +32,11 @@
     margin-left:25%;
     width:75%;
     padding:2%;
-    position:fixed;
+    position:static;
     overflow-y:scroll;
     max-height:100%;
 }
+
 
 // toc-btn display is handled by toggle-toc.js, to be able to not render it on root
 
