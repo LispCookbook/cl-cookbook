@@ -3,27 +3,139 @@
 
 @charset 'utf-8';
 
-html {
-  height: 100vh;
-  margin: 0;
-  padding: 0;
+img{
+    max-width:100%;
+}
+#toc a{
+    color: #696969;
+}
+#title-xs{
+    display:none;
+}
+#logo-container{
+    height:90px;
+    width:23%;
+    margin-left:1%;
+    margin-right:1%;
+    position:fixed;
+}
+#logo{
+    width:auto;
+    height:70px;
+    margin:15px;
+}
+#toc-title{
+    display:none;
 }
 
-#toc a {
-    color: #696969;
+#content-container {
+    margin-left:25%;
+    width:75%;
+    padding:2%;
+    position:static;
+    overflow-y:scroll;
+    max-height:100%;
+}
+
+
+// toc-btn display is handled by toggle-toc.js, to be able to not render it on root
+
+@media only screen and (max-width:576px){
+    #logo{
+	display:none;
+    }
+    #title-xs{
+	padding:2%;
+	width:100%;
+	position:static;
+	margin-left:0;
+	display:block;
+    }
+    #title-non-xs{
+	display:none;
+    }
+    #toc-title{
+    	display:block;
+    	background-color:#111111;
+    	color:orange;
+    	text-align:center;
+    	width:100%;
+	padding:0;
+    }
+    #toc-container{
+	z-index:1; // above the "page source" bar
+	display:block;
+	position:fixed;
+	margin:0;
+	padding:2%;
+	overflow-y:auto;
+	top:0;
+	width:80%;
+	height:100vh;
+	background-color:#eeeeee;
+	transition:all 0.2s ease;
+    }
+    .toc-close{
+	right:-85%;
+	box-shadow:none;
+    }
+    .toc-open{
+	right:0;
+	box-shadow:0vw 0vw 20vw black;
+    }
+    #content-container{
+	display:block;
+	padding-top:0;
+	margin:0;
+	position:static;
+	margin-left:0;
+	width:100%;
+    }
+    #toc-btn{
+	z-index: 2; // above the toc-container
+	position:fixed;
+	right:0%;
+	bottom:10%;
+	width:45px;
+	padding:5px;
+	font-size:1.25em;
+	text-align:center;
+	border-radius:5px;
+	border-style:solid;
+	// display:block;
+	background-color:#111111;
+	color:orange;
+	font-weight:700;
+    }
+}
+
+@media only screen and (min-width:576px){
+    #toc-container {
+	margin-left:1%;
+	margin-right:1%;
+	margin-top:90px;
+	margin-bottom:10%;
+	padding:1%;
+	width:23%;
+	position:fixed;
+	height:calc(90% - 90px);
+	overflow-y:auto;
+    }
+}
+
+@media only screen and (min-width:576px) and (max-width:991px){
+    #toc-container {
+	width: 30%;
+    }
+    #content-container {
+	width:70%;
+	margin-left:30%;
+    }
 }
 
 footer {
     color: darkgrey;
-    margin: 20px 0px 20px;
-}
-
-#logo {
-    position: fixed;
-}
-
-#page-title, #content-container {
-    margin-left: 25%;
+   
 }
 
 .page-source {
@@ -33,15 +145,12 @@ footer {
     opacity: 0.9;
 }
 
-/* On small screens we remove left column to make text more readable */
-@media screen and (max-width: 40em) {
-    #toc {
-        display: none;
-    }
-    #logo {
-        display: none;
-    }
-    #page-title, #content-container {
-        margin-left: 0;
-    }
+ul{
+    margin-left:0px;
+}
+ul ul{
+    margin-left:-16px;
+}
+ul ul ul{
+    margin-left:-26px;
 }

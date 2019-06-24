@@ -1,58 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>{{ page.title }} &ndash; the Common Lisp Cookbook</title>
+    <meta name="generator" content=
+	  "HTML Tidy for HTML5 for Linux version 5.2.0">
+    <title>{{ page.title }}</title>
     <meta charset="utf-8">
     <meta name="description" content="{{ site.description }}">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="{{ site.baseurl }}/assets/style.css">
-    <script type="text/javascript" src="{{ site.baseurl }}/assets/highlight-lisp.js"></script>
-    <script type="text/javascript" src="{{ site.baseurl }}/assets/jquery-3.2.1.min.js"></script>
-    <script type="text/javascript" src="{{ site.baseurl }}/assets/jquery.toc/jquery.toc.min.js"></script>
-    <link rel="stylesheet" href="{{ site.baseurl }}/assets/github.css">
+    <meta name="viewport" content=
+	  "width=device-width, initial-scale=1">
+    <link rel="stylesheet" href=
+	  "{{ site.baseurl }}/assets/style.css">
+    <script type="text/javascript" src=
+	    "{{ site.baseurl }}/assets/highlight-lisp.js">
+    </script>
+    <script type="text/javascript" src=
+	    "{{ site.baseurl }}/assets/jquery-3.2.1.min.js">
+    </script>
+    <script type="text/javascript" src=
+	    "{{ site.baseurl }}/assets/jquery.toc/jquery.toc.min.js">
+    </script>
+    <script type="text/javascript" src=
+	    "{{ site.baseurl }}/assets/toggle-toc.js">
+    </script>
+
+    <link rel="stylesheet" href=
+	  "{{ site.baseurl }}/assets/github.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
   </head>
-  <body class="container-fluid">
-
-    <div class="row">
-      <div id="logo" class="col-lg-3">
-        <a href="{{ site.baseurl }}/">
-          <img src="{{ site.baseurl }}/assets/cl-logo-blue.png" height="70" style="margin: 15px"/>
-        </a>
-      </div>
-
-      <div id="page-title" class="col-lg-8">
-        {% if page.title %}
-        {% assign dash = "&ndash;" %}
-        {% endif %}
-        <h1>
-          <a href="{{ site.baseurl }}/">The Common Lisp Cookbook</a> {{ dash }} {{ page.title }}
-        </h1>
-      </div>
+  <body>
+    <h1 id="title-xs"><a href="{{ site.baseurl }}/">The Common Lisp Cookbook</a> &ndash; {{ page.title }}</h1>
+    <div id="logo-container">
+      <a href="{{ site.baseurl }}/">
+        <img id="logo" src="{{ site.baseurl }}/assets/cl-logo-blue.png"/>
+      </a>
     </div>
 
-    <div class="row">
-      <div class="col-lg-3"
-           style="overflow-y: auto;
-                  position: fixed;
-                  top: 90px;
-                  width: 25%;
-                  height: 87%">
-        <ul id="toc" class="list-unstyled"></ul>
-      </div>
-
-      <div id="content-container" class="col-lg-8">
-        {{ content }}
-
-        <div>
-          {% include footer.html %}
-        </div>
-
-      </div>
-
+    <div id="toc-container" class="toc-close">
+      <div id="toc-title">Table of Contents</div>
+      <ul id="toc" class="list-unstyled"></ul>
     </div>
+    <div id="content-container">
+      <h1 id="title-non-xs"><a href="{{ site.baseurl }}/">The Common Lisp Cookbook</a> &ndash; {{ page.title }}</h1>
 
+      {{ content }}
 
+      
+      <div>
+        {% include footer.html %}
+      </div>
+      <div id="toc-btn">T<br>O<br>C</div>
+    </div>
+    
+    <script text="javascript">
+      HighlightLisp.highlight_auto({className: null});
+    </script>
   </body>
-  <script type="text/javascript">HighlightLisp.highlight_auto({className: null});</script>
 </html>

@@ -16,7 +16,7 @@ First option is to install [Jekyll][jekyll] and run `jekyll serve` in a folder w
 
 Another option is to use github gem provided with the repo. To do this do the following:
 
-1. Ensure that bundler is installed (`gem install bundler` should do)
+1. Ensure that bundler is installed (`gem install bundler` should do; in case that doesn't work, try `gem install bundler -v '1.17.3'` as per [this SO page][bundler-v2].)
 2. `bundle install --path vendor/bundle`
 3. `bundle exec jekyll serve`
 
@@ -55,3 +55,4 @@ Also, refer to a [CONTRIBUTING.md][contributing] file.
 [jekyll]: https://jekyllrb.com/docs/installation/
 [rbenv]: https://github.com/rbenv/rbenv
 [contributing]: CONTRIBUTING.md
+[bundler-v2]: https://stackoverflow.com/questions/54087856/cant-find-gem-bundler-0-a-with-executable-bundle-gemgemnotfoundexceptio
