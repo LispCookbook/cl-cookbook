@@ -15,7 +15,6 @@ $(document).ready( function () {
 
     toggleTOC = function(){
 	toc = document.getElementById("toc-container");
-	toc_title = document.getElementById("toc-title");
 	if (!TOCVisible){
 	    toc.classList.remove("toc-close");
 	    toc.classList.add("toc-open");
@@ -27,6 +26,4 @@ $(document).ready( function () {
 	    TOCVisible = false;
 	}
     }
-
-    toggleTOCButton();
 })
