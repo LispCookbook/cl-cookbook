@@ -81,7 +81,8 @@ generator, a routing system à la Flask or Sinatra, deployment options
   (Qtools, Portacle, lquery, …), is a web application environment,
   more general than usual web frameworks. It lets us write and tie
   websites and applications together, easing their deployment as a
-  whole. For example, see
+  whole. It has thorough [documentation](https://shirakumo.github.io/radiance/), a [tutorial](https://github.com/Shirakumo/radiance-tutorial), [modules](https://github.com/Shirakumo/radiance-contribs), pre-written applications like [an image board](https://github.com/Shirakumo/purplish) and a [blogging platform](https://github.com/Shirakumo/reader), and more.
+  For example websites, see
   [https://shinmera.com/](https://shinmera.com/),
   [reader.tymoon.eu](https://reader.tymoon.eu/) and [events.tymoon.eu](https://events.tymoon.eu/).
 - [Snooze][snooze], by João Távora (Sly, Emacs' Yasnippet, Eglot, …),
