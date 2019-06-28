@@ -13,7 +13,7 @@ running server. We can change and compile *one function at a time*
 immediate. We can choose the degree of interactivity: the web server
 can catch exceptions and fire the interactive debugger, or print lisp
 backtraces on the browser, or display a 404 error page and print logs
-on the console. The ability to build self-contained executables eases
+on standard output. The ability to build self-contained executables eases
 deployment tremendously (compared to, for example, npm-based apps), in
 that we just copy the executable to a server and run it.
 
@@ -38,7 +38,12 @@ Hunchentoot is
 > a web server and at the same time a toolkit for building dynamic websites. As a stand-alone web server, Hunchentoot is capable of HTTP/1.1 chunking (both directions), persistent connections (keep-alive), and SSL. It provides facilities like automatic session handling (with and without cookies), logging, customizable error handling, and easy access to GET and POST parameters sent by the client.
 
 It is a software written by Edi Weitz ("Common Lisp Recipes",
-`cl-ppcre` and [much more](https://edicl.github.io/)), it's used and proven solid.
+`cl-ppcre` and [much more](https://edicl.github.io/)), it's used and
+proven solid. One can achieve a lot with it, but sometimes with more
+friction than with a traditional web framework. For example,
+dispatching a route by the HTTP method is a bit convoluted, one must
+write a function for the `:uri` parameter that does the check, when it
+is a built-in keyword in other frameworks like Caveman.
 
 Clack is
 
