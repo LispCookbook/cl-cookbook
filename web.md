@@ -2,14 +2,36 @@
 title: Web development
 ---
 
-Web development is a large subject. We'll present here some
-established web frameworks and other common libraries to help you
-getting started in developing a web application.
+
+For web development as for any other task, one can leverage Common
+Lisp's advantages: the unmatched REPL and exception handling system,
+performance, the ability to build a self-contained executable,
+stability, good threads story, strong typing, etc. We can, say, define
+a new route and try it right away, there is no need to restart any
+running server. We can change and compile *one function at a time*
+(the usual `C-c C-c` in Slime) and try it. The feedback is
+immediate. We can choose the degree of interactivity: the web server
+can catch exceptions and fire the interactive debugger, or print lisp
+backtraces on the browser, or display a 404 error page and print logs
+on the console. The ability to build self-contained executables eases
+deployment tremendously (compared to, for example, npm-based apps), in
+that we just copy the executable to a server and run it.
+
+We'll present here some established web frameworks and other common
+libraries to help you getting started in developing a web
+application. We do *not* aim to be exhaustive nor to replace the
+upstream documentation. Your feedback and contributions are
+appreciated.
+
+
+<!-- form creation, form validation -->
+
+<!-- Javascript -->
 
 # Overview
 
-[Hunchentoot](hunchentoot) and [Clack](clack) are two web servers that
-you'll ofter hear about.
+[Hunchentoot][hunchentoot] and [Clack][clack] are two web servers that
+you'll often hear about.
 
 Hunchentoot is
 
@@ -46,26 +68,29 @@ to a database, session management, or facilities to build a REST api.
 
 Some web frameworks include:
 
-- [Caveman](cavement), by E. Fukamachi. It provides, out of the box,
+- [Caveman][caveman], by E. Fukamachi. It provides, out of the box,
 database management, a templating engine (Djula), a project skeleton
 generator, a routing system à la Flask or Sinatra, deployment options
 (mod_lisp or FastCGI), support for Roswell on the command line, etc.
-- [Radiance](radiance), by [Shinmera](https://github.com/Shinmera)
+- [Radiance][radiance], by [Shinmera](https://github.com/Shinmera)
   (Qtools, Portacle, lquery, …), is a web application environment,
-  more general than usual web frameworks. It lets us write and tigh
-  websites and applications together, easing their deployment as a whole. For example, see [https://shinmera.com/](https://shinmera.com/).
-- [Snooze](snooze), by João Távora (Sly, Emacs' Yasnippet, Eglot, …),
+  more general than usual web frameworks. It lets us write and tie
+  websites and applications together, easing their deployment as a
+  whole. For example, see
+  [https://shinmera.com/](https://shinmera.com/),
+  [reader.tymoon.eu](https://reader.tymoon.eu/) and [events.tymoon.eu](https://events.tymoon.eu/).
+- [Snooze][snooze], by João Távora (Sly, Emacs' Yasnippet, Eglot, …),
   is "an URL router designed around REST web services". It is
   different because in Snooze, routes are just functions and HTTP
   conditions are just Lisp conditions.
-- [cl-rest-server](cl-rest-server) is a library for writing REST web
+- [cl-rest-server][cl-rest-server] is a library for writing REST web
   APIs. It features validation with schemas, annotations for logging,
   caching, permissions or authentication, documentation via OpenAPI (Swagger),
   etc.
-- last but not least, [Weblocks](weblocks) is a venerable Common Lisp
+- last but not least, [Weblocks][weblocks] is a venerable Common Lisp
   web framework that permits to write ajax-based dynamic web
   applications without writing any JavaScript, nor writing some lisp
-  that would transpile to Common Lisp. It is seeing an extensive
+  that would transpile to JavaScript. It is seeing an extensive
   rewrite and update since 2017. We present it in more details below.
 
 For a full list of libraries for the web, please see the [awesome-cl list #network-and-internet](https://github.com/CodyReichert/awesome-cl#network-and-internet)
@@ -151,9 +176,9 @@ Note that we just created another *acceptor* on a different port on
 the same lisp image. This is already pretty cool.
 
 
-## Access your server from the internet
+# Access your server from the internet
 
-### Hunchentoot
+## Hunchentoot
 
 With Hunchentoot we have nothing to do, we can see the server from the
 internet right away.
@@ -345,14 +370,14 @@ where `<type>` is a simple type.
 
 <!-- ## Cookies -->
 
-## Error handling
+# Error handling
 
 In all frameworks, we can choose the level of interactivity. The web
 framework can return a 404 page and print output on the repl, it can
 catch errors and invoke the interactive lisp debugger, or it can show
 the lisp backtrace on the html page.
 
-### Hunchentoot
+## Hunchentoot
 
 The global variables to set are `*catch-errors-p*`,
 `*show-lisp-errors-p*` and `*show-lisp-backtraces-p*`.
@@ -362,7 +387,7 @@ Hunchentoot also defines condition classes.
 See the documentation: [https://edicl.github.io/hunchentoot/#conditions](https://edicl.github.io/hunchentoot/#conditions).
 
 
-### Clack
+## Clack
 
 Clack users might make a good use of plugins, like the clack-errors middleware: [https://github.com/CodyReichert/awesome-cl#clack-plugins](https://github.com/CodyReichert/awesome-cl#clack-plugins).
 
@@ -370,7 +395,7 @@ Clack users might make a good use of plugins, like the clack-errors middleware: 
 
 # Weblocks - solving the "JavaScript problem"©
 
-[Weblocks](weblocks) is a widgets-based and
+[Weblocks][weblocks] is a widgets-based and
 server-based framework with a built-in ajax update mechanism. It
 allows to write dynamic web applications *without the need to write
 JavaScript or to write lisp code that would transpile to JavaScript*.
@@ -390,10 +415,9 @@ Elixir's Phoenix LiveView and others.
 The [Ultralisp](http://ultralisp.org/) website is an example Weblocks
 website in production known in the CL community.
 
+---
 
-## Overview
-
-Weblock's unit of work is a *widget*. They look like a class definition:
+Weblock's unit of work is the *widget*. They look like a class definition:
 
 ~~~lisp
 (defwidget task ()
@@ -418,6 +442,9 @@ Then all we have to do is to define the `render` method for this widget:
                        (title task)))))
 ~~~
 
+It uses the Spinneret template engine by default, but we can bind any
+other one of our choice.
+
 To trigger an ajax event, we write lambdas in full Common Lisp:
 
 ~~~lisp
@@ -436,13 +463,10 @@ that calls the lisp one on the server, and automatically refreshes the
 HTML of the widgets that need it. In our example, it re-renders one
 task only.
 
-Carry on this quickstart guide here: http://40ants.com/weblocks/quickstart.html
+Is it appealing ? Carry on this quickstart guide here: [http://40ants.com/weblocks/quickstart.html](http://40ants.com/weblocks/quickstart.html).
 
 
 # Templates
-
-See a curated list of HTML generators and template engines: https://github.com/CodyReichert/awesome-cl#html-generators-and-templates
-
 
 ## Djula - HTML markup
 
@@ -505,7 +529,12 @@ has more features under it sleeves:
 - it can tell where in the document a generator function is (see `get-html-tag`)
 
 
-# Common tasks
+# Connecting to a database
+
+Please see the [databases section](databases.html). The Mito ORM
+supports SQLite3, PostgreSQL, MySQL, it has migrations and db schema
+versioning, etc.
+
 
 ## Encrypting passwords
 
@@ -563,6 +592,184 @@ library.
 ~~~
 
 *Credit: `/u/arvid` on [/r/learnlisp](https://www.reddit.com/r/learnlisp/comments/begcf9/can_someone_give_me_an_eli5_on_hiw_to_encrypt_and/)*.
+
+# Building
+
+## Building a self-contained executable
+
+As for all Common Lisp applications, we can bundle our web app in one
+single executable, including the assets. It makes deployment very
+easy: copy it to your server and run it.
+
+```
+$ ./my-web-app
+Hunchentoot server is started.
+Listening on localhost:9003.
+```
+
+See this recipe on [scripting#for-web-apps](scripting.html#for-web-apps).
+
+
+## Continuous delivery with Travis CI or Gitlab CI
+
+Please see the section on [testing#continuous-integration](testing.html#continuous-integration).
+
+
+## Multiplatform delivery with Electron
+
+[Ceramic](https://ceramic.github.io/) makes all the work for us.
+
+It is as simple as this:
+
+~~~lisp
+;; Load Ceramic and our app
+(ql:quickload '(:ceramic :our-app))
+
+;; Ensure Ceramic is set up
+(ceramic:setup)
+(ceramic:interactive)
+
+;; Start our app (here based on the Lucerne framework)
+(lucerne:start our-app.views:app :port 8000)
+
+;; Open a browser window to it
+(defvar window (ceramic:make-window :url "http://localhost:8000/"))
+
+;; start Ceramic
+(ceramic:show-window window)
+~~~
+
+and we can ship this on Linux, Mac and Windows.
+
+There is more:
+
+> Ceramic applications are compiled down to native code, ensuring both performance and enabling you to deliver closed-source, commercial applications.
+
+Thus, no need to minify our JS.
+
+# Deployment
+
+## Deploying manually
+
+We can start our executable in a shell and send it to the bakcground (`C-z bg`), or run it inside a `tmux` session. These are not the best but hey, it works©.
+
+
+## Daemonizing, restarting in case of crashes, handling logs with Systemd
+
+This is actually a system-specific task. See how to do that on your system.
+
+Most GNU/Linux distros now come with Systemd, so here's a little example.
+
+Deploying an app with Systemd is as simple as writing a configuration file:
+
+```
+$ emacs -nw /etc/systemd/system/my-app.service
+[Unit]
+Description=stupid simple example
+
+[Service]
+WorkingDirectory=/path/to/your/app
+ExecStart=/usr/local/bin/sthg sthg
+Type=simple
+Restart=always
+RestartSec=10
+```
+
+Then we have a command to start it:
+
+    sudo systemctl start my-app.service
+
+a command to check its status:
+
+    systemctl status my-app.service
+
+
+and Systemd can handle **logging** (we write to stdout or stderr, it writes logs):
+
+    journalctl -f -u my-app.service
+
+
+and it handles crashes and **restarts the app**:
+
+    Restart=always
+
+and it can **start the app after a reboot**:
+
+    [Install]
+    WantedBy=basic.target
+
+to enable it:
+
+    sudo systemctl enable my-app.service
+
+
+## With Docker
+
+There are several Docker images for Common
+Lisp. For example:
+
+- [40ants/base-lisp-image](https://github.com/40ants/base-lisp-image)
+is based on Ubuntu LTS and includes SBCL, CCL, Quicklisp, Qlot and
+Roswell.
+- [container-lisp/s2i-lisp](https://github.com/container-lisp/s2i-lisp)
+is CentOs based and contains the source for building a Quicklisp based
+Common Lisp application as a reproducible docker image using OpenShift's
+source-to-image.
+
+
+## With Guix
+
+[GNU Guix](https://www.gnu.org/software/guix/) is a transactional
+package manager, that can be installed on top of an existing OS, and a
+whole distro that supports declarative system configuration. It allows
+to ship self-contained tarballs, which also contain system
+dependencies. For an example, see the [Next browser](https://github.com/atlas-engineer/next/).
+
+
+## Deploying on Heroku and other services
+
+See [heroku-buildpack-common-lisp](https://gitlab.com/duncan-bayne/heroku-buildpack-common-lisp) and the [Awesome CL#deploy](https://github.com/CodyReichert/awesome-cl#deployment) section for interface libraries for Kubernetes, OpenShift, AWS, etc.
+
+
+## Monitoring
+
+See [Prometheus.cl](https://github.com/deadtrickster/prometheus.cl)
+for a Grafana dashboard for SBCL and Hunchentoot metrics (memory,
+threads, requests per second,…).
+
+## Connecting to a remote Lisp image
+
+This this section: [debugging#remote-debugging](debugging.html#remote-debugging).
+
+## Hot reload
+
+This is an example from [Quickutil](https://github.com/stylewarning/quickutil/blob/master/quickutil-server/). It is actually an automated version of the precedent section.
+
+It has a Makefile target:
+
+```lisp
+hot_deploy:
+	$(call $(LISP), \
+		(ql:quickload :quickutil-server) (ql:quickload :swank-client), \
+		(swank-client:with-slime-connection (conn "localhost" $(SWANK_PORT)) \
+			(swank-client:slime-eval (quote (handler-bind ((error (function continue))) \
+				(ql:quickload :quickutil-utilities) (ql:quickload :quickutil-server) \
+				(funcall (symbol-function (intern "STOP" :quickutil-server))) \
+				(funcall (symbol-function (intern "START" :quickutil-server)) $(start_args)))) conn)) \
+		$($(LISP)-quit))
+```
+
+It has to be run on the server (a simple fabfile command can call this
+through ssh). Beforehand, a `fab update` has run `git pull` on the
+server, so new code is present but not running. It connects to the
+local swank server, loads the new code, stops and starts the app in a
+row.
+
+
+# Credits
+
+- [https://lisp-journey.gitlab.io/web-dev/](https://lisp-journey.gitlab.io/web-dev/)
+
 [hunchentoot]: https://edicl.github.io/hunchentoot
 [clack]: https://github.com/fukamachi/clack
 [caveman]: https://github.com/fukamachi/caveman
