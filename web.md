@@ -4,18 +4,16 @@ title: Web development
 
 Web development is a large subject. We'll present here some
 established web frameworks and other common libraries to help you
-get started in developing a web application.
+getting started in developing a web application.
 
-Most [Common Lisp web frameworks](https://github.com/CodyReichert/awesome-cl#web-frameworks)
-use  either [Hunchentoot](https://edicl.github.io/hunchentoot) or
-[Clack](https://github.com/fukamachi/clack). These two web servers don't fullfil the
-same role though.
+# Overview
+
+[Hunchentoot](hunchentoot) and [Clack](clack) are two web servers that
+you'll ofter hear about.
 
 Hunchentoot is
 
-> a web server and at the same time a toolkit for building dynamic websites. As a stand-alone web server, Hunchentoot is capable of HTTP/1.1 chunking (both directions), persistent connections (keep-alive), and SSL.
-
-> It provides facilities like automatic session handling (with and without cookies), logging, customizable error handling, and easy access to GET and POST parameters sent by the client.
+> a web server and at the same time a toolkit for building dynamic websites. As a stand-alone web server, Hunchentoot is capable of HTTP/1.1 chunking (both directions), persistent connections (keep-alive), and SSL. It provides facilities like automatic session handling (with and without cookies), logging, customizable error handling, and easy access to GET and POST parameters sent by the client.
 
 It is a software written by Edi Weitz ("Common Lisp Recipes",
 `cl-ppcre` and [much more](https://edicl.github.io/)), it's used and proven solid.
@@ -24,17 +22,53 @@ Clack is
 
 > a web application environment for Common Lisp inspired by Python's WSGI and Ruby's Rack.
 
-Also written by a prolific lisper ([E. Fukamachi](https://github.com/fukamachi/)), it actually uses
+Also written by a prolific lisper
+([E. Fukamachi](https://github.com/fukamachi/)), it actually uses
 Hunchentoot by default as the server, but thanks to its pluggable
-architecture one can  use another web server, like the
-asynchronous [Woo](https://github.com/fukamachi/woo), maybe "the
-fastest web server written in any programming language".
+architecture one can use another web server, like the asynchronous
+[Woo](https://github.com/fukamachi/woo), built on the
+[libev](http://software.schmorp.de/pkg/libev.html) event loop, maybe
+"the fastest web server written in any programming language".
+
+We'll cite also [Wookie](https://github.com/orthecreedence/wookie), an asynchronous HTTP server, and its
+companion library
+[cl-async](https://github.com/orthecreedence/cl-async), for general
+purpose, non-blocking programming in Common Lisp, built on libuv, the
+backend library in Node.js.
 
 Clack being more recent and less documented, and Hunchentoot a
 de-facto standard, we'll concentrate on the latter for this
 recipe. Your contributions are of course welcome.
 
-For a full list of libraries for the web, see the [awesome-cl list #network-and-internet](https://github.com/CodyReichert/awesome-cl#network-and-internet)
+Web frameworks build upon web servers and can provide facilities for
+common activities in web development, like a templating system, access
+to a database, session management, or facilities to build a REST api.
+
+Some web frameworks include:
+
+- [Caveman](cavement), by E. Fukamachi. It provides, out of the box,
+database management, a templating engine (Djula), a project skeleton
+generator, a routing system à la Flask or Sinatra, deployment options
+(mod_lisp or FastCGI), support for Roswell on the command line, etc.
+- [Radiance](radiance), by [Shinmera](https://github.com/Shinmera)
+  (Qtools, Portacle, lquery, …), is a web application environment,
+  more general than usual web frameworks. It lets us write and tigh
+  websites and applications together, easing their deployment as a whole. For example, see [https://shinmera.com/](https://shinmera.com/).
+- [Snooze](snooze), by João Távora (Sly, Emacs' Yasnippet, Eglot, …),
+  is "an URL router designed around REST web services". It is
+  different because in Snooze, routes are just functions and HTTP
+  conditions are just Lisp conditions.
+- [cl-rest-server](cl-rest-server) is a library for writing REST web
+  APIs. It features validation with schemas, annotations for logging,
+  caching, permissions or authentication, documentation via OpenAPI (Swagger),
+  etc.
+- last but not least, [Weblocks](weblocks) is a venerable Common Lisp
+  web framework that permits to write ajax-based dynamic web
+  applications without writing any JavaScript, nor writing some lisp
+  that would transpile to Common Lisp. It is seeing an extensive
+  rewrite and update since 2017. We present it in more details below.
+
+For a full list of libraries for the web, please see the [awesome-cl list #network-and-internet](https://github.com/CodyReichert/awesome-cl#network-and-internet)
 and [Cliki](https://www.cliki.net/Web).
 
 
@@ -45,6 +79,9 @@ Let's install the libraries we'll use:
 ~~~lisp
 (ql:quickload '("hunchentoot" "caveman" "spinneret" "djula"))
 ~~~
+
+To try Weblocks, please see its documentation. The Weblocks in
+Quicklisp is not yet, as of writing, the one we are interested in.
 
 We'll start by serving local files and we'll run more than one local
 server in the running image.
@@ -135,8 +172,6 @@ Stop it with `(hunchentoot:stop *)`.
 
 ### Hunchentoot
 
-#### create-prefix-dispatcher
-
 To bind an existing function to a route, we create a "prefix dispatch"
 that we push onto the `*dispatch-table*` list:
 
@@ -170,7 +205,7 @@ We can see logs on the REPL:
 127.0.0.1 - [2018-10-27 23:50:19] "get /hello.html http/1.1" 200 20 "-" "Mozilla/5.0 (X11; Linux x86_64; rv:58.0) Gecko/20100101 Firefox/58.0"
 ```
 
-#### define-easy-handler
+---
 
 [define-easy-handler](https://edicl.github.io/hunchentoot/#define-easy-handler) allows to create a function and to bind it to an uri at once.
 
@@ -211,7 +246,7 @@ There are also keys to know for the lambda list. Please see the documentation.
 
 ### Caveman
 
-[Caveman](https://github.com/fukamachi/caveman) provides two ways to
+[Caveman](caveman) provides two ways to
 define a route: the `defroute` macro and the `@route` pythonic
 *annotation*:
 
@@ -304,25 +339,11 @@ or a compound list:
 where `<type>` is a simple type.
 
 
-### Caveman
+<!-- ## Sessions -->
 
+<!-- todo ? -->
 
-
-## Replies
-
-default `*reply*` object.
-
-    (setf (content-type*) 'new-value)
-    ;; equivalent to
-    ;; (setf (content-type* *reply*) 'new-value)
-
-Also `return-code*`, etc.
-
-https://edicl.github.io/hunchentoot/#replies
-
-## Sessions
-
-## Cookies
+<!-- ## Cookies -->
 
 ## Error handling
 
@@ -336,33 +357,35 @@ the lisp backtrace on the html page.
 The global variables to set are `*catch-errors-p*`,
 `*show-lisp-errors-p*` and `*show-lisp-backtraces-p*`.
 
-Hunchentoot also defines condition classe.s
+Hunchentoot also defines condition classes.
 
-See the documentation: https://edicl.github.io/hunchentoot/#conditions
+See the documentation: [https://edicl.github.io/hunchentoot/#conditions](https://edicl.github.io/hunchentoot/#conditions).
 
 
 ### Clack
 
-Clack users might make a good use of plugins, like the clack-errors middleware: https://github.com/CodyReichert/awesome-cl#clack-plugins
+Clack users might make a good use of plugins, like the clack-errors middleware: [https://github.com/CodyReichert/awesome-cl#clack-plugins](https://github.com/CodyReichert/awesome-cl#clack-plugins).
+
+![](https://camo.githubusercontent.com/17dd6e0a7a916c8118f0134a94404f6757bee9dc/68747470733a2f2f7261772e6769746875622e636f6d2f6575646f786961302f636c61636b2d6572726f72732f6d61737465722f73637265656e73686f742d6465762e706e67)
 
 # Weblocks - solving the "JavaScript problem"©
 
-[Weblocks](https://github.com/40ants/weblocks) is a widgets-based and
+[Weblocks](weblocks) is a widgets-based and
 server-based framework with a built-in ajax update mechanism. It
 allows to write dynamic web applications *without the need to write
 JavaScript or to write lisp code that would transpile to JavaScript*.
 
 ![](http://40ants.com/weblocks/_images/quickstart-check-task.gif)
 
-It was initially based on continuations (they were removed to date)
-and thus a lispy cousin of Smalltalk's
-[Seaside](https://en.wikipedia.org/wiki/Seaside_(software)). We can
-also relate it to the goals of Haskell's Haste, OCamal's Eliom,
-Elixir Phoenix's LiveView and others.
-
 Weblocks is an old framework developed by Slava Akhmechet, Stephen
 Compall and Leslie Polzer. After nine calm years, it is seeing a very
 active update, refactoring and rewrite effort by Alexander Artemenko.
+
+It was initially based on continuations (they were removed to date)
+and thus a lispy cousin of Smalltalk's
+[Seaside](https://en.wikipedia.org/wiki/Seaside_(software)). We can
+also relate it to Haskell's Haste, OCaml's Eliom,
+Elixir's Phoenix LiveView and others.
 
 The [Ultralisp](http://ultralisp.org/) website is an example Weblocks
 website in production known in the CL community.
@@ -540,3 +563,10 @@ library.
 ~~~
 
 *Credit: `/u/arvid` on [/r/learnlisp](https://www.reddit.com/r/learnlisp/comments/begcf9/can_someone_give_me_an_eli5_on_hiw_to_encrypt_and/)*.
+[hunchentoot]: https://edicl.github.io/hunchentoot
+[clack]: https://github.com/fukamachi/clack
+[caveman]: https://github.com/fukamachi/caveman
+[radiance]: https://github.com/Shirakumo/radiance
+[snooze]: https://github.com/joaotavora/snooze
+[cl-rest-server]: https://github.com/mmontone/cl-rest-server
+[weblocks]: https://github.com/40ants/weblocks
