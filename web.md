@@ -99,8 +99,12 @@ generator, a routing system à la Flask or Sinatra, deployment options
   that would transpile to JavaScript. It is seeing an extensive
   rewrite and update since 2017. We present it in more details below.
 
-For a full list of libraries for the web, please see the [awesome-cl list #network-and-internet](https://github.com/CodyReichert/awesome-cl#network-and-internet)
-and [Cliki](https://www.cliki.net/Web).
+For a full list of libraries for the web, please see the [awesome-cl
+list
+#network-and-internet](https://github.com/CodyReichert/awesome-cl#network-and-internet)
+and [Cliki](https://www.cliki.net/Web). If you are looking for a
+featureful static site generator, see
+[Coleslaw](https://github.com/coleslaw-org/coleslaw).
 
 
 # Installation
