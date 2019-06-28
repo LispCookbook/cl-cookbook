@@ -396,7 +396,7 @@ See the documentation: [https://edicl.github.io/hunchentoot/#conditions](https:/
 
 Clack users might make a good use of plugins, like the clack-errors middleware: [https://github.com/CodyReichert/awesome-cl#clack-plugins](https://github.com/CodyReichert/awesome-cl#clack-plugins).
 
-![](https://camo.githubusercontent.com/17dd6e0a7a916c8118f0134a94404f6757bee9dc/68747470733a2f2f7261772e6769746875622e636f6d2f6575646f786961302f636c61636b2d6572726f72732f6d61737465722f73637265656e73686f742d6465762e706e67)
+<img src="https://camo.githubusercontent.com/17dd6e0a7a916c8118f0134a94404f6757bee9dc/68747470733a2f2f7261772e6769746875622e636f6d2f6575646f786961302f636c61636b2d6572726f72732f6d61737465722f73637265656e73686f742d6465762e706e67" width="800"/>
 
 # Weblocks - solving the "JavaScript problem"©
 
