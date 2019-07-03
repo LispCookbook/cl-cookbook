@@ -545,6 +545,63 @@ Please see the [databases section](databases.html). The Mito ORM
 supports SQLite3, PostgreSQL, MySQL, it has migrations and db schema
 versioning, etc.
 
+In Caveman, a database connection is alive during the Lisp session and is
+reused in each HTTP requests.
+
+## Checking a user is logged-in
+
+A framework will provide a way to work with sessions. We'll create a
+little macro to wrap our routes to check if the user is logged in.
+
+In Caveman, `*session*` is a hash table that represents the session's
+data. Here are our login and logout functions:
+
+~~~lisp
+(defun login (user)
+  "Log the user into the session"
+  (setf (gethash :user *session*) user))
+
+(defun logout ()
+  "Log the user out of the session."
+  (setf (gethash :user *session*) nil))
+~~~
+
+We define a simple predicate:
+
+~~~lisp
+(defun logged-in-p ()
+  (gethash :user cm:*session*))
+~~~
+
+and we define our `with-logged-in` macro:
+
+~~~lisp
+(defmacro with-logged-in (&body body)
+  `(if (logged-in-p)
+       (progn ,@body)
+       (render #p"login.html"
+               '(:message "Please log-in to access this page."))))
+~~~
+
+If the user isn't logged in, there will nothing in the session store,
+and we render the login page. When all is well, we execute the macro's
+body. We use it like this:
+
+~~~lisp
+(defroute "/account/logout" ()
+  "Show the log-out page, only if the user is logged in."
+  (with-logged-in
+    (logout)
+    (render #p"logout.html")))
+
+(defroute ("/account/review" :method :get) ()
+  (with-logged-in
+    (render #p"review.html"
+            (list :review (get-review (gethash :user *session*))))))
+~~~
+
+and so on.
+
 
 ## Encrypting passwords
 
