@@ -2,6 +2,9 @@ title: Common Lisp Cookbook
 description: A collection of examples of using Common Lisp
 baseurl: "/cl-cookbook"
 
+# https://stackoverflow.com/questions/39057405/unable-to-build-a-jekyll-site-invalid-date
+exclude: [vendor]
+
 markdown: kramdown
 sass:
   style: :compressed

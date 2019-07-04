@@ -1576,7 +1576,7 @@ Features:
 * Purely functional amortized queue.
 
 
-## Appendix A - generic access of alists, plists, hash-tables and CLOS slots
+## Appendix A - generic and nested access of alists, plists, hash-tables and CLOS slots
 
 The solutions presented below might help you getting started, but keep
 in mind that they'll have a performance impact and that error messages
@@ -1584,7 +1584,7 @@ will be less explicit.
 
 * [CL21](cl21.html) has a generic `getf` (as well as others generic functions),
 * [rutils](https://github.com/vseloved/rutils) as a generic `generic-elt` or `?`,
-* the [access](https://github.com/AccelerationNet/access) library (battle tested, used by the Djula templating system) has a generic `(access my-var :elt)` ([blog post](https://lisp-journey.gitlab.io/blog/generice-consistent-access-of-data-structures-dotted-path/)).
+* the [access](https://github.com/AccelerationNet/access) library (battle tested, used by the Djula templating system) has a generic `(access my-var :elt)` ([blog post](https://lisp-journey.gitlab.io/blog/generice-consistent-access-of-data-structures-dotted-path/)). It also has `accesses` (plural) to access and set nested values.
 
 ## Appendix B - accessing nested data structures
 
