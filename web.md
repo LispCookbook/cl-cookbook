@@ -30,7 +30,7 @@ appreciated.
 
 # Overview
 
-[Hunchentoot][hunchentoot] and [Clack][clack] are two web servers that
+[Hunchentoot][hunchentoot] and [Clack][clack] are two projects that
 you'll often hear about.
 
 Hunchentoot is
