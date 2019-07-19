@@ -25,8 +25,26 @@ you will.
 The ANSI Common Lisp standard doesn't mention this topic. We will
 present here the portable
 [bordeaux-threads](https://github.com/sionescu/bordeaux-threads)
-library, SBCL threads and the [lparallel](https://lparallel.org)
+library, [SBCL threads](http://www.sbcl.org/manual/index.html#sb_002dconcurrency) and the [lparallel](https://lparallel.org)
 library.
+
+Bordeaux-threads is a de-facto standard portable library, that exposes
+rather low-level primitives. Lparallel builds on it and features:
+
+-  a simple model of task submission with receiving queue
+-  constructs for expressing fine-grained parallelism
+-  **asynchronous condition handling** across thread boundaries
+-  **parallel versions of map, reduce, sort, remove**, and many others
+-  **promises**, futures, and delayed evaluation constructs
+-  computation trees for parallelizing interconnected tasks
+-  bounded and unbounded FIFO **queues**
+-  **channels**
+-  high and low priority tasks
+-  task killing by category
+-  integrated timeouts
+
+For more libraries on parallelism and concurrency, see the [awesome CL list](https://github.com/CodyReichert/awesome-cl#parallelism-and-concurrency)
+and [Quickdocs](http://quickdocs.org/).
 
 <a name="why_bother"></a>
 
@@ -2331,6 +2349,7 @@ them by age in non-decreasing order.
 To see how lparallel handles error handling (hint: with
 `lparallel:task-handler-bind`), please read
 [https://z0ltan.wordpress.com/2016/09/10/basic-concurrency-and-parallelism-in-common-lisp-part-4b-parallelism-using-lparallel-error-handling/](https://z0ltan.wordpress.com/2016/09/10/basic-concurrency-and-parallelism-in-common-lisp-part-4b-parallelism-using-lparallel-error-handling/).
+
 
 ### References
 
