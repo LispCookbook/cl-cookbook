@@ -93,11 +93,19 @@ Let's try something:
 
 Wow it works ! We get here a vector of plump elements.
 
-Since it is a vector we could map over them with `(map 'vector (lambda
-(elt) (…)) *)`.
+I'd like to easily check what those elements are. To see the entire
+html, we can end our lquery line with `(serialize)`:
 
-But I'd like to easily check what those elements are. To see their textual
-content we can append `(text)` to our lquery form:
+~~~lisp
+(lquery:$  *parsed-content* "#content li" (serialize))
+#("<li><a href=\"license.html\">License</a></li>"
+  "<li><a href=\"getting-started.html\">Getting started</a></li>"
+  "<li><a href=\"editor-support.html\">Editor support</a></li>"
+  […]
+~~~
+
+And to see their *textual* content (the user-visible text inside the
+html), we can use `(text)` instead:
 
 ~~~lisp
 (lquery:$  *parsed-content* "#content" (text))
@@ -106,25 +114,16 @@ content we can append `(text)` to our lquery form:
   "Files and Directories" "Packages" "Macros and Backquote"
   "CLOS (the Common Lisp Object System)" "Sockets" "Interfacing with your OS"
   "Foreign Function Interfaces" "Threads" "Defining Systems"
-  "Using the Win32 API" "Testing" "Miscellaneous" "License" "Marco Antoniotti"
-  "Zach Beane" "Pierpaolo Bernardi" "Christopher Brown" "Frederic Brunel"
-  "Jeff Caldwell" "Bill Clementson" "Martin Cracauer" "Gerald Doussot"
-  "Paul Foley" "Jörg-Cyril
   […]
-  "Edi Weitz" "Fernando Borretti" "lisp-lang.org" "The Awesome-cl list"
-  "The Common Lisp HyperSpec by Kent M. Pitman" "The Common Lisp UltraSpec"
-  "Practical Common Lisp by Peter Seibel"
-  "Common Lisp Recipes by Edmund Weitz, published in 2016,"
-  […]
-  "A Tutorial on Good Lisp Style by Peter Norvig and Kent Pitman"
-  "Lisp and Elements of Style by Nick Levine"
   "Pascal Costanza’s Highly Opinionated Guide to Lisp"
   "Loving Lisp - the Savy Programmer’s Secret Weapon by Mark Watson"
   "FranzInc, a company selling Common Lisp and Graph Database solutions.")
 ~~~
 
 Allright, so we see we are manipulating what we want. Now to get their
-href, a quick look at lquery's doc and:
+`href`, a quick look at lquery's doc and we'll use `(attr
+"some-name")`:
+
 
 ~~~lisp
 (lquery:$  *parsed-content* "#content li a" (attr :href))
@@ -133,19 +132,13 @@ href, a quick look at lquery's doc and:
 ;;  "files.html" "packages.html" "macros.html"
 ;;  "/cl-cookbook/clos-tutorial/index.html" "sockets.html" "os.html" "ffi.html"
 ;;  "process.html" "systems.html" "win32.html" "testing.html" "misc.html"
-;;  "license.html" "mailto:xach@xach.com" "mailto:skeptomai@mac.com"
-;;  "mailto:brunel@mail.dotcom.fr" "mailto:jdcal@yahoo.com"
-;;  "mailto:bill_clementson@yahoo.com" "mailto:gdoussot@yahoo.com"
-;;  […]
-;;  "mailto:matthieu@matthieu-villeneuve.net" "mailto:edi@agharta.de"
-;;  "http://lisp-lang.org/" "https://github.com/CodyReichert/awesome-cl"
-;;  "http://www.lispworks.com/documentation/HyperSpec/Front/index.htm"
-;;  "http://phoe.tymoon.eu/clus/doku.php" "http://www.gigamonkeys.com/book/"
 ;;  […]
 ;;  "http://www.nicklevine.org/declarative/lectures/"
 ;;  "http://www.p-cos.net/lisp/guide.html" "https://leanpub.com/lovinglisp/"
 ;;  "https://franz.com/")
 ~~~
+
+*Note*: using `(serialize)` after `attr` leads to an error.
 
 Nice, we now have the list (well, a vector) of links of the
 page. We'll now write an async program to check and validate they are
