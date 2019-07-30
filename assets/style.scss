@@ -113,12 +113,12 @@ img{
     #toc-container {
 	margin-left:1%;
 	margin-right:1%;
-	margin-top:90px;
+	margin-top:25px;
 	margin-bottom:10%;
 	padding:1%;
 	width:23%;
 	position:fixed;
-	height:calc(90% - 90px);
+	height:calc(90% - 90px);  // logo + searchbox
 	overflow-y:auto;
     }
 }
@@ -135,7 +135,7 @@ img{
 
 footer {
     color: darkgrey;
-   
+
 }
 
 .page-source {
