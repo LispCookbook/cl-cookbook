@@ -258,6 +258,8 @@ All functions that use the return value of `foo` need *not* to change, they
 still work. If we had returned a list or an array, this would be
 different.
 
+**multiple-value-bind**
+
 We destructure multiple values with `multiple-value-bind` (or
 `mvb`+TAB in Slime for short) and we can get one given its position
 with `nth-value`:
@@ -279,7 +281,7 @@ Its general form is
 
 The variables `var-n` are not available outside the scope of `multiple-value-bind`.
 
-With `nth-value`:
+With **nth-value**:
 
 ~~~lisp
 (nth-value 0 (values :a :b :c))  ;; => :A
@@ -294,9 +296,26 @@ Look here too that `values` is different from a list:
 (nth-value 1 '(:a :b :c)) ;; => NIL
 ~~~
 
-Last but not least: note that `(values)` with no values returns… no values at all.
+Note that `(values)` with no values returns… no values at all.
 
-See also `multiple-value-call`.
+**multiple-value-list**
+
+While we are at it: [multiple-value-list](http://www.lispworks.com/documentation/HyperSpec/Body/m_mult_1.htm) turns multiple values to a list:
+
+~~~lisp
+(multiple-value-list (values 1 2 3))
+;; (1 2 3)
+~~~
+
+The reverse is **values-list**, it turns a list to multiple values:
+
+~~~lisp
+(values-list '(1 2 3))
+;; 1
+;; 2
+;; 3
+~~~
+
 
 ## Anonymous functions: `lambda`
 
