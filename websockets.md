@@ -41,7 +41,7 @@ The `websocket-driver` API provides handlers for the following events:
 - `:message` When a message arrives. Expects a handler with one argument, the message received.
 - `:close` When a connection closes. Expects a handler with two keyword args, a
   "code" and a "reason" for the dropped connection.
-- `:error` When some kind of protocol level error occurs. Expects a handler of
+- `:error` When some kind of protocol level error occurs. Expects a handler with
   one argument, the error message. 
   
 For the purposes of your chat server, you will want to handle the case when a
