@@ -9,11 +9,11 @@ an extension to [Hunchentoot](https://edicl.github.io/hunchentoot/), the classic
 web server for Common Lisp.  I have used both and I find them to be wonderful.
 
 Today, however, you will be using the equally excellent
-[websocket-driver](https://github.com/fukamachi/websocket-driver) for use with
-[Clack](https://github.com/fukamachi/clack). The community has expressed a
-slight prefernce for the Clack eco system, as it provides a uniform interface to
-a variety of backends, including Hunchentoot. You can pick and choose the
-backend.
+[websocket-driver](https://github.com/fukamachi/websocket-driver) to build a Websocket server with 
+[Clack](https://github.com/fukamachi/clack). The Common Lisp web development community has expressed a
+slight prefernce for the Clack ecosystem because it provides a uniform interface to
+a variety of backends, including Hunchentoot. That is, with Clack, you can pick and choose the
+backend you prefer.
 
 In what follows, you will build a one-room chat server and connect to it from a
 web browser. The tutorial is written so that you can enter the code into your
