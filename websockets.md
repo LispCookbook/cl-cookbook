@@ -9,15 +9,15 @@ an extension to [Hunchentoot](https://edicl.github.io/hunchentoot/), the classic
 web server for Common Lisp.  I have used both and I find them to be wonderful.
 
 Today, however, you will be using the equally excellent
-[websocket-driver](https://github.com/fukamachi/websocket-driver) to build a Websocket server with 
+[websocket-driver](https://github.com/fukamachi/websocket-driver) to build a WebSocket server with 
 [Clack](https://github.com/fukamachi/clack). The Common Lisp web development community has expressed a
 slight prefernce for the Clack ecosystem because it provides a uniform interface to
 a variety of backends, including Hunchentoot. That is, with Clack, you can pick and choose the
 backend you prefer.
 
-In what follows, you will build a one-room chat server and connect to it from a
+In what follows, you will build a simple chat server and connect to it from a
 web browser. The tutorial is written so that you can enter the code into your
-REPL as you go. The full code listing is repeated on the end.
+REPL as you go, but in case you miss something, the full code listing can be found at the end.
 
 As a first step, you should load the needed libraries via quicklisp:
 
@@ -218,5 +218,97 @@ should see your chat app!
 <img src="https://raw.githubusercontent.com/thegoofist/resource-dump/master/lisp-chat.gif"
      width="470" height="247"/>
 
+## All The Code
+
+~~~lisp
+(ql:quickload '(clack websocket-driver alexandria))
+
+(defvar *connections* (make-hash-table))
+
+(defun handle-new-connection (con)
+  (setf (gethash con *connections*)
+        (format nil "user-~a" (random 100000))))
+
+(defun broadcast-to-room (connection message)
+  (let ((message (format nil "~a: ~a"
+                         (gethash connection *connections*)
+                         message)))
+    (loop :for con :being :the :hash-key :of *connections* :do
+          (websocket-driver:send con message))))
+
+(defun handle-close-connection (connection)
+  (let ((message (format nil " .... ~a has left."
+                         (gethash connection *connections*))))
+    (remhash connection *connections*)
+    (loop :for con :being :the :hash-key :of *connections* :do
+          (websocket-driver:send con message))))
+
+(defun chat-server (env)
+  (let ((ws (websocket-driver:make-server env)))
+    (websocket-driver:on :open ws
+                         (lambda () (handle-new-connection ws)))
+
+    (websocket-driver:on :message ws
+                         (lambda (msg) (broadcast-to-room ws msg)))
+
+    (websocket-driver:on :close ws
+                         (lambda (&key code reason)
+                           (declare (ignore code reason))
+                           (handle-close-connection ws)))
+    (lambda (responder)
+      (declare (ignore responder))
+      (websocket-driver:start-connection ws))))
+
+(defvar *html* 
+  "<!doctype html>
+
+<html lang=\"en\">
+<head>
+  <meta charset=\"utf-8\">
+  <title>LISP-CHAT</title>
+</head>
+
+<body>
+    <ul id=\"chat-echo-area\">
+    </ul>
+    <div style=\"position:fixed; bottom:0;\">
+        <input id=\"chat-input\" placeholder=\"say something\" >
+    </div>
+    <script>
+     window.onload = function () {
+         const inputField = document.getElementById(\"chat-input\");
+
+         function receivedMessage(msg) {
+             let li = document.createElement(\"li\");
+             li.textContent = msg.data;
+             document.getElementById(\"chat-echo-area\").appendChild(li);
+         }
+
+         const ws = new WebSocket(\"ws://localhost:12345/\");
+         ws.addEventListener('message', receivedMessage);
+
+         inputField.addEventListener(\"keyup\", (evt) => {
+             if (evt.key === \"Enter\") {
+                 ws.send(evt.target.value);
+                 evt.target.value = \"\";
+             }
+         });
+     };
+
+    </script>
+</body>
+</html>
+")
+
+
+
+(defun client-server (env)
+    (declare (ignore env))
+    `(200 (:content-type "text/html")
+          (,*html*))))
+
+(defvar *chat-handler* (clack:clackup #'chat-server :port 12345))
+(defvar *client-handler* (clack:clackup #'client-server :port 8080))
+~~~
 
 
