@@ -45,7 +45,7 @@ The `websocket-driver` API provides handlers for the following events:
   one argument, the error message. 
   
 For the purposes of your chat server, you will want to handle the case when a
-new user arrives to the channel, when the user sends a message to the channel,
+new user arrives to the channel, when a user sends a message to the channel,
 and when a user leaves.
 
 ## Defining Handlers for Chat Server Logic 
