@@ -35,7 +35,7 @@ which exposes an event-driven API. You register event handlers by passing your
 WebSocket instance the method `on`, e.g. `(on :message my-websocket #'some-message-handler)`, 
 where `some-message-handler` would be invoked whenever a new message arrives.
 
-The `websocket-driver` API provides for handlers on the following events:
+The `websocket-driver` API provides handlers for the following events:
 
 - `:open`: When a connection is opened. Expects a thunk as its handler.
 - `:message` When a message arrives. Expects a handler of one argument, the message received.
