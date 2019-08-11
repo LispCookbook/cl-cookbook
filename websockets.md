@@ -33,7 +33,7 @@ As a first step, you should load the needed libraries via quicklisp:
 In websocket-driver, a WebSocket connection is an instance of the `ws` class,
 which exposes an event-driven API. You register event handlers by passing your
 WebSocket instance the method `on`, e.g. `(on :message my-websocket #'some-message-handler)`, 
-where `some-message-handler` would be evoked whenever a new message arrives.
+where `some-message-handler` would be invoked whenever a new message arrives.
 
 The `websocket-driver` API provides for handlers on the following events:
 
