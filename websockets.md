@@ -38,7 +38,7 @@ where `some-message-handler` would be invoked whenever a new message arrives.
 The `websocket-driver` API provides handlers for the following events:
 
 - `:open`: When a connection is opened. Expects a thunk as its handler.
-- `:message` When a message arrives. Expects a handler of one argument, the message received.
+- `:message` When a message arrives. Expects a handler with one argument, the message received.
 - `:close` When a connection closes. Expects a handler with two keyword args, a
   "code" and a "reason" for the dropped connection.
 - `:error` When some kind of protocol level error occurs. Expects a handler of
