@@ -11,7 +11,7 @@ web server for Common Lisp.  I have used both and I find them to be wonderful.
 Today, however, you will be using the equally excellent
 [websocket-driver](https://github.com/fukamachi/websocket-driver) to build a WebSocket server with 
 [Clack](https://github.com/fukamachi/clack). The Common Lisp web development community has expressed a
-slight prefernce for the Clack ecosystem because it provides a uniform interface to
+slight prefernce for the Clack ecosystem because Clack provides a uniform interface to
 a variety of backends, including Hunchentoot. That is, with Clack, you can pick and choose the
 backend you prefer.
 
@@ -32,8 +32,9 @@ As a first step, you should load the needed libraries via quicklisp:
 
 In websocket-driver, a WebSocket connection is an instance of the `ws` class,
 which exposes an event-driven API. You register event handlers by passing your
-WebSocket instance the method `on`, e.g. `(on :message my-websocket #'some-message-handler)`, 
-where `some-message-handler` would be invoked whenever a new message arrives.
+WebSocket instance as the first argument to a method called `on`. For example,
+calling `(on :message my-websocket #'some-message-handler)` would invoke
+`some-message-handler` whenever a new message arrives.
 
 The `websocket-driver` API provides handlers for the following events:
 
@@ -44,15 +45,15 @@ The `websocket-driver` API provides handlers for the following events:
 - `:error` When some kind of protocol level error occurs. Expects a handler with
   one argument, the error message. 
   
-For the purposes of your chat server, you will want to handle the case when a
-new user arrives to the channel, when a user sends a message to the channel,
+For the purposes of your chat server, you will want to handle three cases: when
+a new user arrives to the channel, when a user sends a message to the channel,
 and when a user leaves.
 
 ## Defining Handlers for Chat Server Logic 
 
 In this section you will define the functions that your event handlers will
 eventually call. These are helper functions that manage the chat server logic.
-You will actually define the server in the next section.
+You will define the WebSocket server in the next section.
 
 First, when a user connects to the server, you need to give that user a nickname
 so that other users know whose chats belong to whom. You will also need a data
@@ -108,10 +109,10 @@ contains environment information about a request and is provided by the system.
 Your chat server will not make use of that environment, but if you want to learn
 more you can check out Clack's documentation.  
 
-When a browser connects to your server, a websocket will be instantiated,
-handlers defined on it for the events you want to support, and then a websocket
-"handshake" will be sent back to notify the browser that the connection has been
-made. Here's how it works:
+When a browser connects to your server, a websocket will be instantiated and
+will be handlers defined on it each of the the events you want to support.
+Finally a WebSocket "handshake" will be sent back to the browser, indicating
+that the connection has been made. Here's how it works:
 
 ~~~lisp
 (defun chat-server (env)
@@ -130,7 +131,7 @@ made. Here's how it works:
 
     (lambda (responder)
       (declare (ignore responder))
-      (websocket-driver:start-connection ws))))
+      (websocket-driver:start-connection ws)))) ; send the handshake
 
 ~~~
 
@@ -199,7 +200,7 @@ application that serves a webpage to display and send chats.  First the web page
 
 ~~~
 
-You might prefer to put this in a file, as escaping quotes is kind of annoying.
+You might prefer to put the HTML into a file, as escaping quotes is kind of annoying.
 Keeping the page data in a `defvar` was simpler for the purposes of this
 tutorial.
 
