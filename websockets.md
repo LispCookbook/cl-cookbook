@@ -32,7 +32,7 @@ As a first step, you should load the needed libraries via quicklisp:
 
 In websocket-driver, a WebSocket connection is an instance of the `ws` class,
 which exposes an event-driven API. You register event handlers by passing your
-WebSocket instance as the first argument to a method called `on`. For example,
+WebSocket instance as the second argument to a method called `on`. For example,
 calling `(on :message my-websocket #'some-message-handler)` would invoke
 `some-message-handler` whenever a new message arrives.
 
@@ -110,8 +110,8 @@ Your chat server will not make use of that environment, but if you want to learn
 more you can check out Clack's documentation.  
 
 When a browser connects to your server, a websocket will be instantiated and
-will be handlers defined on it each of the the events you want to support.
-Finally a WebSocket "handshake" will be sent back to the browser, indicating
+handlers will be defined on it for each of the the events you want to support.
+A WebSocket "handshake" will then be sent back to the browser, indicating
 that the connection has been made. Here's how it works:
 
 ~~~lisp
@@ -147,7 +147,7 @@ You may now start your server, running on port `12345`:
 ## A Quick HTML Chat Client
 
 So now you need a way to talk to your server. Using Clack, define a simple
-application that serves a webpage to display and send chats.  First the web page:
+application that serves a web page to display and send chats.  First the web page:
 
 ~~~lisp
 
