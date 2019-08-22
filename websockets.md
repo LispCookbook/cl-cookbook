@@ -11,7 +11,7 @@ web server for Common Lisp.  I have used both and I find them to be wonderful.
 Today, however, you will be using the equally excellent
 [websocket-driver](https://github.com/fukamachi/websocket-driver) to build a WebSocket server with 
 [Clack](https://github.com/fukamachi/clack). The Common Lisp web development community has expressed a
-slight prefernce for the Clack ecosystem because Clack provides a uniform interface to
+slight preference for the Clack ecosystem because Clack provides a uniform interface to
 a variety of backends, including Hunchentoot. That is, with Clack, you can pick and choose the
 backend you prefer.
 
