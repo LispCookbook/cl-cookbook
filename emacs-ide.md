@@ -297,9 +297,30 @@ definition. Press `M-,` to come back.
 
 #### Crossreferencing: find who's calling, referencing, setting a symbol
 
-See SLIME's help menu. You can search and list "who" is *calling*,
-*referencing*, *setting*, *binding*, *macroexpanding* symbols, and
-more.
+Slime has a nice cross referencing facility, for example, you can see
+what calls a particular function or expands a macro.  It presents a
+list of places which reference a particular entity, from there you can
+recompile the thing which references by pressing **C-c C-c** on that
+line. **C-c C-k** will recompile all the references. This is useful when
+modifying macros, inline functions, or constants.
+
+The following bindings are also shown in Slime's menu:
+
+- **C-c C-w c** *slime-who-calls* callers of a function
+- **C-c C-w m** *slime-who-macroexpands* places where a macro is expanded
+- **C-c C-w r** *slime-who-references* global variable references
+- **C-c C-w b** *slime-who-bind* global variable bindings
+- **C-c C-w s** *slime-who-sets* global variable setters
+- **C-c C-w a** *slime-who-specializes* methods specialized on a symbol
+
+And when the `slime-asdf` contrib is enabled,
+**C-c C-w d** *slime-who-depends-on* lists dependent ASDF systems
+
+And a general binding: **M-? or M-_** *slime-edit-uses** combines all
+of the above, it lists every kind of references.
+
+(thanks to [Slime tips](https://slime-tips.tumblr.com/page/2))
+
 
 #### Lisp symbols in multiple source files (etags)
 
