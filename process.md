@@ -2351,7 +2351,26 @@ To see how lparallel handles error handling (hint: with
 [https://z0ltan.wordpress.com/2016/09/10/basic-concurrency-and-parallelism-in-common-lisp-part-4b-parallelism-using-lparallel-error-handling/](https://z0ltan.wordpress.com/2016/09/10/basic-concurrency-and-parallelism-in-common-lisp-part-4b-parallelism-using-lparallel-error-handling/).
 
 
-### References
+## Monitoring and controlling threads with Slime
+
+**M-x slime-list-threads** (you can also access it through the
+*slime-selector*, shortcut **t**) will list running threads by their
+names, and their statuses.
+
+The thread on the current line can be killed with **k**, or if there’s a
+lot of threads to kill, several lines can be selected and **k** will kill
+all the threads in the selected region.
+
+**g** will update the thread list, but when you have a lot of threads
+starting and stopping it may be too cumbersome to always press **g**, so
+there’s a variable `slime-threads-update-interval`, when set to a number
+X the thread list will be automatically updated each X seconds, a
+reasonable value would be 0.5.
+
+Thanks to [Slime tips](https://slime-tips.tumblr.com/).
+
+
+## References
 
 There are, of course, a lot more functions, objects, and idiomatic
 ways of performing parallel computations using the lparallel
