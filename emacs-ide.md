@@ -295,7 +295,7 @@ See also helm-imenu and [imenu-anywhere](https://github.com/vspinu/imenu-anywher
 Put the cursor on any symbol and press `M-.` to go to its
 definition. Press `M-,` to come back.
 
-#### Find who's calling, referencing, setting a symbol
+#### Crossreferencing: find who's calling, referencing, setting a symbol
 
 See SLIME's help menu. You can search and list "who" is *calling*,
 *referencing*, *setting*, *binding*, *macroexpanding* symbols, and

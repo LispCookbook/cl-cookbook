@@ -9,7 +9,7 @@ The editor of choice is still Emacs, but it is not the only one.
 [SLIME](https://github.com/slime/slime/) is the Superior Lisp
 Interaction Mode for Emacs. It has support for interacting with a
 running Common Lisp process for compilation, debugging, documentation
-lookup, and so on. It works with many implementations.
+lookup, cross-references, and so on. It works with many implementations.
 
 [Portacle](https://shinmera.github.io/portacle/) is a portable and
 multiplatform Common Lisp environment. It ships Emacs25, SBCL,
