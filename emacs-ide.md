@@ -344,6 +344,16 @@ of the above, it lists every kind of references.
 When you put the cursor on a function, SLIME will show its signature
 in the minibuffer.
 
+### Documentation lookup
+
+- **C-c C-d h**  looks up documentation in CLHS. But it works only on symbols, so there are two more bindings:
+- **C-c C-d #** for reader macros
+- **C-c C-d ~**  for format directives
+
+Other bindings which may be useful:
+
+- **C-c C-d d**  describes a symbol using `describe`
+- **C-c C-d f**  describes a function using `describe`
 
 ### Documentation
 
@@ -396,6 +406,60 @@ Then add this to your Emacs configuration:
 
 ## Miscellaneous
 
+### Synchronizing packages
+
+**C-c ~** (*slime-sync-package-and-default-directory*): When run in a
+buffer with a lisp file it will change the current package of the REPL
+to the package of that file and also set the current directory of the REPL
+to the parent directory of the file.
+
+### Calling code
+
+**C-c C-y** (*slime-call-defun*): When the point is inside a defun and
+C-c C-y is pressed,
+
+(I’ll use [] as an indication where the cursor is)
+
+
+~~~lisp
+(defun foo ()
+ nil[])
+~~~
+
+
+then `(foo [])` will be inserted into the REPL, so that you can write
+additional arguments and run it.
+
+
+If `foo` was in a different package than the package of the REPL,
+`(package:foo )` or `(package::foo )` will be inserted.
+
+This feature is very useful for testing a function you just wrote.
+
+That works not only for defun, but also for defgeneric, defmethod,
+defmacro, and define-compiler-macro in the same fashion as for defun.
+
+For defvar, defparameter, defconstant: `[] *foo*` will be inserted
+(the cursor is positioned before the symbol so that you can easily
+wrap it into a function call).
+
+For defclass: `(make-instance ‘class-name )`.
+
+**Inserting calls to frames in the debugger**
+
+**C-y** in SLDB on a frame will insert a call to that frame into the REPL, e.g.,
+
+```
+(/ 0) =>
+…
+1: (CCL::INTEGER-/-INTEGER 1 0)
+…
+```
+
+**C-y** will insert `(CCL::INTEGER-/-INTEGER 1 0)`.
+
+(thanks to [Slime tips](https://slime-tips.tumblr.com/page/2))
+
 ### Send to the REPL
 
 ~~~lisp
@@ -403,6 +467,41 @@ Then add this to your Emacs configuration:
 ~~~
 
 See also [eval-in-repl](https://github.com/kaz-yos/eval-in-repl) to send any form to the repl.
+
+### Exporting symbols
+
+**C-c x** (*slime-export-symbol-at-point*) from the `slime-package-fu`
+contrib: takes the symbol at point and modifies the `:export` clause of
+the corresponding defpackage form. It also exports the symbol.  When
+called with a negative argument (C-u C-c x) it will remove the symbol
+from `:export` and unexport it.
+
+**M-x slime-export-class** does the same but with symbols defined
+by a structure or a class, like accesors, constructors, and so on.
+It works on structures only on SBCL and Clozure CL so far.
+Classes should work everywhere with MOP.
+
+Customization
+
+There are different styles of how symbols are presented in
+`defpackage`, the default is to use uninterned symbols (`#:foo`).
+This can be changed:
+
+to use keywords:
+
+
+~~~lisp
+(setq slime-export-symbol-representation-function
+      (lambda (n) (format ":%s" n)))
+~~~
+
+or strings:
+
+~~~lisp
+(setq slime-export-symbol-representation-function
+ (lambda (n) (format "\"%s\"" (upcase n))))
+~~~
+
 
 ### Project Management
 
