@@ -886,6 +886,8 @@ Use it like this:
 
 ## See also
 
+- [exploring an existing (PostGres) database with postmodern](https://sites.google.com/site/sabraonthehill/postmodern-examples/exploring-a-database)
+
 - [mito-attachment](https://github.com/fukamachi/mito-attachment)
 - [mito-auth](https://github.com/fukamachi/mito-auth)
 - [can](https://github.com/fukamachi/can/) a role-based access right control library
