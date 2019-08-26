@@ -605,21 +605,6 @@ some minor tweaking. See the
 "[Setting up an IDE with Emacs on Windows or Mac OS X](windows.html)".
 
 
-
-### Alternatives to Emacs for CL programming
-
-*I've tried out Emacs and I just can't get used to it. What other
-Lisp-friendly alternative are there?*
-
-  * Vim can be used to edit Lisp code. See some
-    [vim plugins](https://github.com/CodyReichert/awesome-cl#vim).
-  * There is an [Atom package](https://atom.io/packages/atom-slime).
-  * The [Franz](https://franz.com/), [LispWorks](http://www.lispworks.com/), [Corman](http://www.cormanlisp.com/), and Digitool commercial Lisp
-offerings all have Lisp-aware editors.
-  * Lastly, for true masochists, notepad on Windows or ed on UNIX® can also be used. ;-)
-
-
-
 ## Disclaimer
 
 The original material on this page was originally presented at the [ILC 2003 conference](http://www.international-lisp-conference.org/index.html). A paper with more in-depth coverage of some of the material on this page can be found on [Bill Clementson's ILC2003](https://web.archive.org/web/20040213103100/http://home.comcast.net/~b.clementson/ilc_2003.htm) page, which is now archived.
