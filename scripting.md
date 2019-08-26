@@ -419,6 +419,25 @@ wichever other policy.
 
 See [Continuous Integration](testing.html#continuous-integration).
 
+# Bootstrapping an app
+
+## With SBCL
+
+To automate the process of installing quicklisp (after downloading `quicklisp.lisp`):
+~~~
+$ sbcl --non-interactive \
+       --load quicklisp.lisp \
+       --eval '(quicklisp-quickstart:install)' \
+       --eval '(ql::without-prompting (ql:add-to-init-file))'
+~~~
+
+You can also automate the process of installing dependencies, compiling your system, and running your app like so:
+~~~
+$ sbcl --eval '(ql:quickload :my-app)' \
+       --eval '(asdf:load-system :my-app)' \
+       --eval '(my-app:main)'
+~~~
+
 # Credit
 
 * [cl-torrents' tutorial](https://vindarel.github.io/cl-torrents/tutorial.html)
