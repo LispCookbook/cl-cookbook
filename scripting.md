@@ -219,10 +219,14 @@ Is it the case ?
 
 Yes, it is the case with this SBCL installed from Debian.
 
+**With SBCL**
+
 In pure SBCL, we would give an argument to `save-lisp-and-die`, where
 `:compression`
 
 > may be an integer from -1 to 9, corresponding to zlib compression levels, or t (which is equivalent to the default compression level, -1).
+
+**With ASDF**
 
 However, we prefer to do this portably with ASDF. Add this in your .asd:
 
@@ -231,6 +235,15 @@ However, we prefer to do this portably with ASDF. Add this in your .asd:
 (defmethod asdf:perform ((o asdf:image-op) (c asdf:system))
   (uiop:dump-image (asdf:output-file o c) :executable t :compression t))
 ```
+
+**With Deploy**
+
+Also, the [Deploy](https://github.com/Shinmera/deploy/) library can be used
+to build an image. It will use compression if available.
+
+Deploy is specifically geared towards applications with foreign
+library dependencies. It collects all the `*.so` files of dependencies,
+such as libssl.co in the `bin` subdirectory.
 
 And voilà !
 
