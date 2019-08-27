@@ -201,7 +201,39 @@ CCL's binaries seem to be as fast as SBCL and nearly half the size.
 |        19948 | clisp.big      |  97% |        .0259 |
 ```
 
-<!-- ? We may have another trick  to distribute small executables: to make the fasl files executables. ?-->
+## Building a smaller binary with SBCL's core compression
+
+Building with SBCL's core compression can dramatically reduce your
+application's binary size. In our case, we passed from 120MB to 23MB,
+for a loss of a dozen milliseconds of start uptime, which was still
+under 50ms !
+
+Your SBCL must be built with core compression, see the documentation: http://www.sbcl.org/manual/#Saving-a-Core-Image
+
+Is it the case ?
+
+~~~lisp
+(find :sb-core-compression *features*)
+:SB-CORE-COMPRESSION
+~~~
+
+Yes, it is the case with this SBCL installed from Debian.
+
+In pure SBCL, we would give an argument to `save-lisp-and-die`, where
+`:compression`
+
+> may be an integer from -1 to 9, corresponding to zlib compression levels, or t (which is equivalent to the default compression level, -1).
+
+However, we prefer to do this portably with ASDF. Add this in your .asd:
+
+```
+#+sb-core-compression
+(defmethod asdf:perform ((o asdf:image-op) (c asdf:system))
+  (uiop:dump-image (asdf:output-file o c) :executable t :compression t))
+```
+
+And voilà !
+
 
 # Parsing command line arguments
 
