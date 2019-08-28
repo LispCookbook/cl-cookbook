@@ -208,7 +208,7 @@ application's binary size. In our case, we passed from 120MB to 23MB,
 for a loss of a dozen milliseconds of start uptime, which was still
 under 50ms !
 
-Your SBCL must be built with core compression, see the documentation: http://www.sbcl.org/manual/#Saving-a-Core-Image
+Your SBCL must be built with core compression, see the documentation: [http://www.sbcl.org/manual/#Saving-a-Core-Image](http://www.sbcl.org/manual/#Saving-a-Core-Image)
 
 Is it the case ?
 
@@ -226,15 +226,17 @@ In pure SBCL, we would give an argument to `save-lisp-and-die`, where
 
 > may be an integer from -1 to 9, corresponding to zlib compression levels, or t (which is equivalent to the default compression level, -1).
 
+We experienced a 1MB difference between levels -1 and 9.
+
 **With ASDF**
 
 However, we prefer to do this portably with ASDF. Add this in your .asd:
 
-```
+~~~lisp
 #+sb-core-compression
 (defmethod asdf:perform ((o asdf:image-op) (c asdf:system))
   (uiop:dump-image (asdf:output-file o c) :executable t :compression t))
-```
+~~~
 
 **With Deploy**
 
