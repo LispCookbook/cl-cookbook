@@ -10,10 +10,10 @@ issue of
 [pathnames](http://www.lispworks.com/documentation/HyperSpec/Body/19_ab.htm)
 needs to be covered separately.
 
-Many functions will come from uiop, so we suggest you have a look directly at it:
+Many functions will come from UIOP, so we suggest you have a look directly at it:
 
-* [filesystem](https://gitlab.common-lisp.net/asdf/asdf/blob/master/uiop/filesystem.lisp).
-* [pathname](https://gitlab.common-lisp.net/asdf/asdf/blob/master/uiop/pathname.lisp)
+* [UIOP/filesystem](https://common-lisp.net/project/asdf/uiop.html#UIOP_002fFILESYSTEM)
+* [UIOP/pathname](https://common-lisp.net/project/asdf/uiop.html#UIOP_002fPATHNAME)
 
 Of course, do not miss:
 
