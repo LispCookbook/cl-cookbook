@@ -335,13 +335,13 @@ where it stopped (using the "step-continue" restart).
 
 ## Advise and watch
 
-[advise](http://www.xach.com/clhs?q=break) and
+*advise* and
 [watch](http://www.xach.com/clhs?q=watch) are available in some
 implementations, like CCL
 ([advise](https://ccl.clozure.com/manual/chapter4.3.html#Advising) and
 [watch](https://ccl.clozure.com/manual/chapter4.12.html#watched-objects))
-and [LispWorks](http://www.lispworks.com/). They are not available in
-SBCL. `advise` allows to modify a function without changing its
+and [LispWorks](http://www.lispworks.com/). They do exist in
+SBCL but are not exported. `advise` allows to modify a function without changing its
 source, or to do something before or after its execution, like CLOS'
 method combination (befor, after around methods).
 
@@ -349,6 +349,7 @@ method combination (befor, after around methods).
 object being watched. It can be coupled with the display of the
 watched objects in a GUI.
 
+There is a [cl-advice](https://bitbucket.org/budden/budden-tools/src/default/cl-advice/?at=default) non-published library defining a portability layer.
 
 ## Unit tests
 
