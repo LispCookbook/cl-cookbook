@@ -8,9 +8,9 @@ There are, however, some widely used libraries, which either come with your Comm
 available through [Quicklisp](https://www.quicklisp.org/beta/). These include:
 
 * ASDF3, which is included with almost all Common Lisp implementations,
-  includes [Utilities for Implementation- and OS- Portability (UIOP)](https://gitlab.common-lisp.net/asdf/asdf/blob/master/uiop/README.md).
-* [osicat](https://common-lisp.net/project/osicat/) 
-* [unix-opts](http://quickdocs.org/unix-opts/) is a command-line argument parser, similar to Python's `argparse`. 
+  includes [Utilities for Implementation- and OS- Portability (UIOP)](https://common-lisp.net/project/asdf/uiop.html).
+* [osicat](https://common-lisp.net/project/osicat/)
+* [unix-opts](http://quickdocs.org/unix-opts/) is a command-line argument parser, similar to Python's `argparse`.
 
 
 <a name="env"></a>
@@ -192,12 +192,12 @@ interfaces to readline,…).
 
 ## Running external programs
 
-[uiop](https://gitlab.common-lisp.net/asdf/asdf/blob/master/uiop/README.md) has us covered,
-and is probably included in your Common Lisp implementation.
+**uiop** has us covered, and is probably included in your Common Lisp
+implementation.
 
 ### Synchronously
 
-`uiop:run-program` either takes a string as argument, denoting the
+[`uiop:run-program`](https://common-lisp.net/project/asdf/uiop.html#UIOP_002fRUN_002dPROGRAM) either takes a string as argument, denoting the
 name of the executable to run, or a list of strings, for the program and its arguments:
 
 ~~~lisp
@@ -207,15 +207,14 @@ name of the executable to run, or a list of strings, for the program and its arg
 or
 
 ~~~lisp
-(uiop:run-program '("firefox" "http:url"))
+(uiop:run-program (list "firefox" "http:url"))
 ~~~
 
 This will process the program output as specified and return the
 processing results when the program and its output processing are
 complete.
 
-
-This function has the following optional arguments (the documentation is [in the source](https://gitlab.common-lisp.net/asdf/asdf/blob/master/uiop/run-program.lisp#L539)):
+This function has the following optional arguments:
 
 ~~~lisp
 run-program (command &rest keys &key
@@ -298,11 +297,7 @@ before or after the subprocess is spawned, using temporary files.
 
 ### Asynchronously
 
-With
-
-~~~lisp
-uiop:launch-program
-~~~
+With [`uiop:launch-program`](https://common-lisp.net/project/asdf/uiop.html#UIOP_002fLAUNCH_002dPROGRAM).
 
 Its signature is the following:
 
