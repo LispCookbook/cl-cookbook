@@ -458,6 +458,45 @@ Returns a list of pathnames:
  #P"/home/vince/projects/cl-cookbook/assets/")
 ```
 
+#### Traversing (walking) directories
+
+See `uiop/filesystem:collect-sub*directories`. It takes as arguments:
+
+- a `directory`
+- a `recursep` function
+- a `collectp` function
+- a `collector` function
+
+Given a directory, when `collectp` returns true with the directory,
+call the `collector` function on the directory, and recurse
+each of its subdirectories on which `recursep` returns true.
+
+This function will thus let you traverse a filesystem hierarchy,
+superseding the functionality of `cl-fad:walk-directory`.
+
+The behavior in presence of symlinks is not portable. Use IOlib to handle such situations.
+
+Example:
+
+~~~lisp
+(defparameter *dirs* nil "All recursive directories.")
+
+(uiop:collect-sub*directories "~/cl-cookbook"
+    (constantly t)
+    (constantly t)
+    (lambda (it) (push it *dirs*)))
+~~~
+
+With `cl-fad:walk-directory`, we can also collect files, not only subdirectories:
+
+~~~lisp
+(cl-fad:walk-directory "./"
+  (lambda (name)
+     (format t "~A~%" name))
+~~~
+
+
+
 #### Finding files matching a pattern
 
 Below we simply list files of a directory and check that their name
