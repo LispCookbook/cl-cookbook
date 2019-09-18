@@ -113,12 +113,14 @@ below. Also note that you usually don't need to provide any keyword arguments if
 you just want to open an existing file for reading.<a name="strings">
 
 
-### Reading a file into a string or a list of lines
+### Reading files
+
+#### Reading a file into a string or a list of lines
 
 It's quite common to need to access the contents of a file in string
 form, or to get a list of lines.
 
-[uiop](https://github.com/fare/asdf/blob/master/uiop/stream.lisp#L445) is included in ASDF (there is no extra library to install or
+uiop is included in ASDF (there is no extra library to install or
 system to load) and has the following functions:
 
 
@@ -132,10 +134,8 @@ and
 (uiop:read-file-lines "file.txt")
 ~~~
 
-
-
-**Otherwise**, this can be achieved by using `read-line` or `read-char` functions,
-that probably won't be the best solution. File might not be divided into
+*Otherwise*, this can be achieved by using `read-line` or `read-char` functions,
+that probably won't be the best solution. The file might not be divided into
 multiple lines or reading one character at a time might bring significant
 performance problems. To solve this problems, you can read files using buckets
 of specific sizes.
@@ -176,7 +176,7 @@ and optionnally
 
     (setf sb-alien::*default-c-string-external-format* :utf-8)
 
-### Reading a file one line at a time
+#### Reading a file one line at a time
 
 [`read-line`](http://www.lispworks.com/documentation/HyperSpec/Body/f_rd_lin.htm)
 will read one line from a stream (which defaults to
@@ -207,7 +207,7 @@ the end of the file:
    do (print line)))
 ~~~
 
-### Reading a file one character at a time
+#### Reading a file one character at a time
 
 [`read-char`](http://www.lispworks.com/documentation/HyperSpec/Body/f_rd_cha.htm)
 is similar to `read-line`, but it only reads one character as opposed to one
@@ -222,7 +222,7 @@ characters by this function.
        (print char)))
 ~~~
 
-### Looking one character ahead
+#### Looking one character ahead
 
 You can 'look at' the next character of a stream without actually removing it
 from there - this is what the function
@@ -325,7 +325,7 @@ back exactly _one_ character onto the stream. Also, you _must_ put back the same
 character that has been read previously, and you can't unread a character if
 none has been read before.
 
-### Random access to a File
+#### Random access to a File
 
 Use the function
 [`file-position`](http://www.lispworks.com/documentation/HyperSpec/Body/f_file_p.htm)
@@ -377,7 +377,7 @@ The library [str](https://github.com/vindarel/cl-str) has a shortcut:
 ~~~
 
 
-### Getting file attributes (size, access time,...), with the Osicat library
+### Getting file attributes (size, access time,...)
 
 [Osicat](https://www.common-lisp.net/project/osicat/) (in Quicklisp)
 is a lightweight operating system interface for Common Lisp on
