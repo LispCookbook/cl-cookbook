@@ -31,24 +31,15 @@ either `nil` if the file doesn't exists, or its
 (which might be different from the argument you supplied).
 
 ~~~lisp
-edi@bird:/tmp> ln -s /etc/passwd foo
-edi@bird:/tmp> cmucl
-; Loading #p"/home/edi/.cmucl-init".
-CMU Common Lisp 18d-pre, level-1 built 2002-01-15 on maftia1, running on bird
-Send questions to cmucl-help@cons.org. and bug reports to cmucl-imp@cons.org.
-Loaded subsystems:
-Python native code compiler, target Intel x86
-CLOS based on PCL version:  September 16 92 PCL (f)
-Gray Streams Protocol Support
-CLX X Library MIT R5.02
+$ ln -s /etc/passwd foo
+
 * (probe-file "/etc/passwd")
-
 #p"/etc/passwd"
+
 * (probe-file "foo")
-
 #p"/etc/passwd"
-* (probe-file "bar")
 
+* (probe-file "bar")
 NIL
 ~~~
 
