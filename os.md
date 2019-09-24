@@ -214,6 +214,8 @@ This will process the program output as specified and return the
 processing results when the program and its output processing are
 complete.
 
+Use `:output t` to print to standard output.
+
 This function has the following optional arguments:
 
 ~~~lisp
