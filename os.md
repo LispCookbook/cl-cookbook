@@ -370,7 +370,7 @@ and `:stream` causes a stream to be made available via
 
 See the [docstrings](https://gitlab.common-lisp.net/asdf/asdf/blob/master/uiop/launch-program.lisp#L508).
 
-### Test if subprocess is alive
+#### Test if a subprocess is alive
 
 `uiop:process-alive-p` tests if a process is still alive, given a
 `process-info` object returned by `launch-program`:
@@ -387,6 +387,37 @@ T
 * (uiop:process-alive-p *shell*)
 NIL
 ~~~
+
+#### Get the exit code
+
+We can use `uiop:wait-process`. If the process is finished, it returns
+immediately, and returns the exit code. If not, it waits for the
+process to terminate.
+
+~~~lisp
+(uiop:process-alive-p *process*)
+NIL
+(uiop:wait-process *process*)
+0
+~~~
+
+An exit code to 0 means success (use `zerop`).
+
+The exit code is also stored in the `exit-code` slot of our
+`process-info` object. We see from the class definition above that it
+has no accessor, so we'll use `slot-value`. It has an `initform` to
+nil, so we don't have to check if the slot is bound.  We can do:
+
+~~~lisp
+(slot-value *my-process* 'uiop/launch-program::exit-code)
+0
+~~~
+
+The trick is that we *must* run `wait-process` beforehand, otherwise
+the result will be `nil`.
+
+Note that `run-program` returns the exit code as the third value.
+
 
 ### Input and output from subprocess
 
