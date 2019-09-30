@@ -233,6 +233,7 @@ To do this, let us work our way through a number of simple examples:
 -    Modify a shared resource from multiple threads — fixed using locks
 -    Modify a shared resource from multiple threads — using atomic operations
 -    Joining on a thread, destroying a thread example
+
 ### Basics — list current thread, list all threads, get thread name
 
 ~~~lisp
@@ -303,15 +304,15 @@ As we can see, because the main thread returned immediately, the
 initial value of `*counter*` is 0, and then around a second later, it
 gets updated to 1 by the anonymous thread.
 
-### Print a message onto the top-level using a thread
+### Create a thread: print a message onto the top-level
 
 ~~~lisp
     ;;; Print a message onto the top-level using a thread
-
     (defun print-message-top-level-wrong ()
       (bt:make-thread
        (lambda ()
-         (format *standard-output* "Hello from thread!")))
+         (format *standard-output* "Hello from thread!"))
+       :name "hello")
       nil)
 ~~~
 
@@ -340,12 +341,12 @@ So how do we fix the problem of the previous example? By binding the top-level a
 
 ~~~lisp
     ;;; Print a message onto the top-level using a thread — fixed
-
     (defun print-message-top-level-fixed ()
       (let ((top-level *standard-output*))
         (bt:make-thread
          (lambda ()
-           (format top-level "Hello from thread!"))))
+           (format top-level "Hello from thread!"))
+         :name "hello")))
       nil)
 ~~~
 

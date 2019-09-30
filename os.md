@@ -420,12 +420,13 @@ Since `wait-process` is blocking, we can do it on a new thread:
 
 ~~~lisp
 (bt:make-thread
- (lambda ()
-   (let ((exit-code (uiop:wait-process
-                     (uiop:launch-program (list "of" "commands"))))
-     (if (zerop exit-code)
-         (print :success)
-         (print :failure))))))
+  (lambda ()
+    (let ((exit-code (uiop:wait-process
+                       (uiop:launch-program (list "of" "commands"))))
+      (if (zerop exit-code)
+          (print :success)
+          (print :failure)))))
+  :name "Waiting for <program>")
 ~~~
 
 
