@@ -416,6 +416,19 @@ nil, so we don't have to check if the slot is bound.  We can do:
 The trick is that we *must* run `wait-process` beforehand, otherwise
 the result will be `nil`.
 
+Since `wait-process` is blocking, we can do it on a new thread:
+
+~~~lisp
+(bt:make-thread
+ (lambda ()
+   (let ((exit-code (uiop:wait-process
+                     (uiop:launch-program (list "of" "commands"))))
+     (if (zerop exit-code)
+         (print :success)
+         (print :failure))))))
+~~~
+
+
 Note that `run-program` returns the exit code as the third value.
 
 
