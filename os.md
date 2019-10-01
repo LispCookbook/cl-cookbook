@@ -456,7 +456,7 @@ flush the stream, but does not wait for completion.
 Reading from the output stream is similar, with
 `uiop:process-info-output` returning the output stream:
 
-~~~list
+~~~lisp
 * (read-line (uiop:process-info-output *shell*))
 ~~~
 
@@ -467,7 +467,7 @@ hang while waiting for data. To avoid this,
 [listen](http://clhs.lisp.se/Body/f_listen.htm) can be used to test if
 a character is available:
 
-~~~list
+~~~lisp
 * (let ((stream (uiop:process-info-output *shell*)))
      (loop while (listen stream) do
          ;; Characters are immediately available
