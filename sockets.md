@@ -44,13 +44,13 @@ the connections and the server socket and boom you are done!
   (let* ((socket (usocket:socket-listen "127.0.0.1" port))
 	 (connection (usocket:socket-accept socket :element-type 'character)))
     (unwind-protect
-	 (progn
-	   (format (usocket:socket-stream connection) "Hello World~%")
-	   (force-output (usocket:socket-stream connection)))
+        (progn
+	      (format (usocket:socket-stream connection) "Hello World~%")
+	      (force-output (usocket:socket-stream connection)))
       (progn
-	(format t "Closing sockets~%")
-	(usocket:socket-close connection)
-(usocket:socket-close socket)))))
+	    (format t "Closing sockets~%")
+	    (usocket:socket-close connection)
+        (usocket:socket-close socket)))))
 ~~~
 
 Now for the client. This part is easy. Just connect to the server port
@@ -64,9 +64,9 @@ and fix it.
 (defun create-client (port)
   (let ((socket (usocket:socket-connect "127.0.0.1" port :element-type 'character)))
     (unwind-protect
-	 (progn
-	   (usocket:wait-for-input socket)
-	   (format t "~A~%" (read-line (usocket:socket-stream socket))))
+        (progn
+          (usocket:wait-for-input socket)
+	      (format t "~A~%" (read-line (usocket:socket-stream socket))))
       (usocket:socket-close socket))))
 ~~~
 
