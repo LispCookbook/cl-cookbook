@@ -58,8 +58,7 @@ can be written without multi-threading. For example:
 
 *   you might be writing a server which needs to be able to respond to
     more than one user / connection at a time (for instance: a web
-    server - see [this example](./sockets.html#server) on the Sockets
-    page);
+    server) on the Sockets page);
 *   you might want to perform some background activity, without
     halting the main application while this is going on;
 *   you might want your application to be notified when a certain time
