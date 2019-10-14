@@ -62,14 +62,13 @@ and fix it.
 
 ~~~lisp
 (defun create-client (port)
-  (let ((socket (usocket:socket-connect "127.0.0.1" port :element-type 'character)))
+  (usocket:with-client-socket (socket stream "127.0.0.1" port :element-type 'character)
     (unwind-protect
-        (progn
-          (usocket:wait-for-input socket)
-	      (format t "~A~%" (read-line (usocket:socket-stream socket))))
+         (progn
+           (usocket:wait-for-input socket)
+           (format t "Input is: ~a~%" (read-line stream)))
       (usocket:socket-close socket))))
 ~~~
-
 
 So, how do you run this? You need two REPLs, one for the server
 and one for the client. Load this file in both REPLs. Create the
