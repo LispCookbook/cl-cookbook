@@ -19,10 +19,10 @@ background.
 For example:
 
 ~~~lisp
-* (defvar *var* 1234)
+(defvar *var* 1234)
 *VAR*
 
-* (type-of *var*)
+(type-of *var*)
 (INTEGER 0 4611686018427387903)
 ~~~
 
