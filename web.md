@@ -180,7 +180,7 @@ Let's start a new acceptor on a new port:
 (hunchentoot:start *my-acceptor*)
 ~~~
 
-go to [p://127.0.0.1:4444/](http://127.0.0.1:4444/) and see the difference.
+go to [http://127.0.0.1:4444/](http://127.0.0.1:4444/) and see the difference.
 
 Note that we just created another *acceptor* on a different port on
 the same lisp image. This is already pretty cool.
