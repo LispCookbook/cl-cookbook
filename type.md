@@ -269,6 +269,7 @@ thorough type checking.
 Let's recall first that Lisp already warns about simple type
 warnings. The following function wrongly wants to concatenate a string
 and a number. When we compile it, we get a type warning.
+
 ~~~lisp
 (defconstant +foo+ 3)
 (defun bar ()
