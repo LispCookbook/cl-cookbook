@@ -324,7 +324,7 @@ We use again the `declaim` macro, with `ftype (function …)` instead of just `t
 
 With this we get nice type warnings at compile time.
 
-If we change the function to erronously return a string instead of a
+If we change the function to erroneously return a string instead of a
 fixnum, we get a warning:
 
 ~~~lisp
