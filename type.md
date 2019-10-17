@@ -3,8 +3,8 @@ title: Type System
 ---
 
 Common Lisp has a complete and flexible type system and corresponding
-tools to inspect, check and manipulate types. It allows to create
-custom types, to add type declarations to variables and functions and
+tools to inspect, check and manipulate types. It allows creating
+custom types, adding type declarations to variables and functions and
 thus to get compile-time warnings and errors.
 
 
@@ -266,6 +266,24 @@ guarantee that the Lisp compiler will perform compile-time type checking.
 However, it is possible, and SBCL is an implementation that does
 thorough type checking.
 
+Let's recall first that Lisp already warns about simple type
+warnings. The following function wrongly wants to concatenate a string
+and a number. When we compile it, we get a type warning.
+~~~lisp
+(defconstant +foo+ 3)
+(defun bar ()
+  (concatenate 'string "+" +foo+))
+; caught WARNING:
+;   Constant 3 conflicts with its asserted type SEQUENCE.
+;   See also:
+;     The SBCL Manual, Node "Handling of Types"
+~~~
+
+The example is simple, but it already shows a capacity some other
+languages don't have, and it is actually useful during development ;)
+Now, we'll do better.
+
+
 ### Declaring the type of variables
 
 Use the macro [`declaim`][declaim].
@@ -367,20 +385,6 @@ its argument types which appear to be incompatible with those of
 
 This all happens indeed *at compile time*, either in the REPL,
 either with a simple `C-c C-c` in Slime, or when we `load` a file.
-
-
-After this, no need to recall that lisp already warns about simple
-type warnings? The following function wrongly wants to concatenate a
-string and a number. The example is simple, but it is actually useful
-during development ;) and it already shows a capacity other languages
-don't have.
-
-~~~lisp
-(defun bar ()
-  (concatenate 'string "+" 3))
-; caught WARNING:
-;   Constant 3 conflicts with its asserted type SEQUENCE.
-~~~
 
 
 ## See also
