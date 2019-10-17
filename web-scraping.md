@@ -130,7 +130,7 @@ Allright, so we see we are manipulating what we want. Now to get their
 ;; => #("license.html" "editor-support.html" "strings.html" "dates_and_times.html"
 ;;  "hashes.html" "pattern_matching.html" "functions.html" "loop.html" "io.html"
 ;;  "files.html" "packages.html" "macros.html"
-;;  "/cl-cookbook/clos-tutorial/index.html" "sockets.html" "os.html" "ffi.html"
+;;  "/cl-cookbook/clos-tutorial/index.html" "os.html" "ffi.html"
 ;;  "process.html" "systems.html" "win32.html" "testing.html" "misc.html"
 ;;  […]
 ;;  "http://www.nicklevine.org/declarative/lectures/"

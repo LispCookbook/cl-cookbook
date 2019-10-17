@@ -29,11 +29,15 @@ Logging is a good evolution from print debugging ;)
 [log4cl](https://github.com/sharplispers/log4cl/) is the popular,
 de-facto logging library but it isn't the only one. Download it:
 
-    (ql:quickload :log4cl)
+~~~lisp
+(ql:quickload :log4cl)
+~~~
 
 and let's have a dummy variable:
 
-    (defvar *foo* '(:a :b :c))
+~~~lisp
+(defvar *foo* '(:a :b :c))
+~~~
 
 We can use log4cl with its `log` nickname, then it is as simple to use as:
 
@@ -95,10 +99,10 @@ functions but inside a `#+nil` declaration so that only you can
 manually compile them:
 
 ~~~lisp
-    #+nil
-    (progn
-       (defvar *test-data* nil)
-       (setf *test-data* (make-instance 'foo …)))
+#+nil
+(progn
+   (defvar *test-data* nil)
+   (setf *test-data* (make-instance 'foo …)))
 ~~~
 
 When you load this file, `*test-data*` won't exist, but you can
@@ -193,7 +197,9 @@ the amount of information available to the debugger. For example
 sometimes we can't see intermediate variables of computations. We can
 change the optimization choices with:
 
-    (declaim (optimize (speed 0) (space 0) (debug 3)))
+~~~lisp
+(declaim (optimize (speed 0) (space 0) (debug 3)))
+~~~
 
 and recompile our code.
 
@@ -237,7 +243,9 @@ If you don't see recursive calls, that may be because of the
 compiler's optimizations. Try this before defining the function to be
 traced:
 
-    (declaim (optimize (debug 3)))
+~~~lisp
+(declaim (optimize (debug 3)))
+~~~
 
 The output is printed to `*trace-output*` (see the CLHS).
 
@@ -273,7 +281,9 @@ See the [CLOS](clos.html) section for a tad more information.
 [step](http://www.xach.com/clhs?q=step) is an interactive command with
 similar scope than `trace`. This:
 
-    (step (factorial 2))
+~~~lisp
+(step (factorial 2))
+~~~
 
 gives an interactive pane with the available restarts:
 
@@ -325,13 +335,13 @@ where it stopped (using the "step-continue" restart).
 
 ## Advise and watch
 
-[advise](http://www.xach.com/clhs?q=break) and
+*advise* and
 [watch](http://www.xach.com/clhs?q=watch) are available in some
 implementations, like CCL
 ([advise](https://ccl.clozure.com/manual/chapter4.3.html#Advising) and
 [watch](https://ccl.clozure.com/manual/chapter4.12.html#watched-objects))
-and [LispWorks](http://www.lispworks.com/). They are not available in
-SBCL. `advise` allows to modify a function without changing its
+and [LispWorks](http://www.lispworks.com/). They do exist in
+SBCL but are not exported. `advise` allows to modify a function without changing its
 source, or to do something before or after its execution, like CLOS'
 method combination (befor, after around methods).
 
@@ -339,6 +349,7 @@ method combination (befor, after around methods).
 object being watched. It can be coupled with the display of the
 watched objects in a GUI.
 
+There is a [cl-advice](https://bitbucket.org/budden/budden-tools/src/default/cl-advice/?at=default) non-published library defining a portability layer.
 
 ## Unit tests
 

@@ -58,8 +58,7 @@ can be written without multi-threading. For example:
 
 *   you might be writing a server which needs to be able to respond to
     more than one user / connection at a time (for instance: a web
-    server - see [this example](./sockets.html#server) on the Sockets
-    page);
+    server) on the Sockets page);
 *   you might want to perform some background activity, without
     halting the main application while this is going on;
 *   you might want your application to be notified when a certain time
@@ -233,6 +232,7 @@ To do this, let us work our way through a number of simple examples:
 -    Modify a shared resource from multiple threads — fixed using locks
 -    Modify a shared resource from multiple threads — using atomic operations
 -    Joining on a thread, destroying a thread example
+
 ### Basics — list current thread, list all threads, get thread name
 
 ~~~lisp
@@ -303,15 +303,15 @@ As we can see, because the main thread returned immediately, the
 initial value of `*counter*` is 0, and then around a second later, it
 gets updated to 1 by the anonymous thread.
 
-### Print a message onto the top-level using a thread
+### Create a thread: print a message onto the top-level
 
 ~~~lisp
     ;;; Print a message onto the top-level using a thread
-
     (defun print-message-top-level-wrong ()
       (bt:make-thread
        (lambda ()
-         (format *standard-output* "Hello from thread!")))
+         (format *standard-output* "Hello from thread!"))
+       :name "hello")
       nil)
 ~~~
 
@@ -340,12 +340,12 @@ So how do we fix the problem of the previous example? By binding the top-level a
 
 ~~~lisp
     ;;; Print a message onto the top-level using a thread — fixed
-
     (defun print-message-top-level-fixed ()
       (let ((top-level *standard-output*))
         (bt:make-thread
          (lambda ()
-           (format top-level "Hello from thread!"))))
+           (format top-level "Hello from thread!"))
+         :name "hello")))
       nil)
 ~~~
 
@@ -2351,7 +2351,26 @@ To see how lparallel handles error handling (hint: with
 [https://z0ltan.wordpress.com/2016/09/10/basic-concurrency-and-parallelism-in-common-lisp-part-4b-parallelism-using-lparallel-error-handling/](https://z0ltan.wordpress.com/2016/09/10/basic-concurrency-and-parallelism-in-common-lisp-part-4b-parallelism-using-lparallel-error-handling/).
 
 
-### References
+## Monitoring and controlling threads with Slime
+
+**M-x slime-list-threads** (you can also access it through the
+*slime-selector*, shortcut **t**) will list running threads by their
+names, and their statuses.
+
+The thread on the current line can be killed with **k**, or if there’s a
+lot of threads to kill, several lines can be selected and **k** will kill
+all the threads in the selected region.
+
+**g** will update the thread list, but when you have a lot of threads
+starting and stopping it may be too cumbersome to always press **g**, so
+there’s a variable `slime-threads-update-interval`, when set to a number
+X the thread list will be automatically updated each X seconds, a
+reasonable value would be 0.5.
+
+Thanks to [Slime tips](https://slime-tips.tumblr.com/).
+
+
+## References
 
 There are, of course, a lot more functions, objects, and idiomatic
 ways of performing parallel computations using the lparallel

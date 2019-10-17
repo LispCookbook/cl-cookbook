@@ -19,15 +19,18 @@ which defines functions to work on strings (`strcat`,
 Some external libraries available on Quicklisp bring some more
 functionality or some shorter ways to do.
 
-- [cl-strings](https://github.com/diogoalexandrefranco/cl-strings)
-  defines functions such as `split`, `join`, `replace`, `insert`,
-  `starts-with`, `ends-with`, functions to change case,…
 - [str](https://github.com/vindarel/cl-str) defines `trim`, `words`,
-  `unwords`, `lines`, `unlines`, `concat`, `split`, `repeat`,
+  `unwords`, `lines`, `unlines`, `concat`, `split`, `shorten`, `repeat`,
   `replace-all`, `starts-with?`, `ends-with?`, `blankp`, `emptyp`, …
 - [cl-change-case](https://github.com/rudolfochrist/cl-change-case)
   has functions to convert strings between camelCase, param-case,
   snake_case and more.
+- [mk-string-metrics](https://github.com/cbaggers/mk-string-metrics)
+  has functions to calculate various string metrics efficiently
+  (Damerau-Levenshtein, Hamming, Jaro, Jaro-Winkler, Levenshtein, etc),
+- and `cl-ppcre` can come in handy, for example
+  `ppcre:replace-regexp-all`. See the [regexp](regexp.html) section.
+
 
 Last but not least, when you'll need to tackle the `format` construct,
 don't miss the following resources:

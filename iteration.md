@@ -161,6 +161,16 @@ this:
 
 Here `dotimes` returns `nil`. The return value is evaluated at the end of the loop.
 
+You can use `return` inside of it:
+
+~~~lisp
+(dotimes (i 10)
+   (if (> i 3)
+       (return)
+       (print i)))
+~~~
+
+
 ### loop… repeat
 
 ~~~lisp

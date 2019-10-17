@@ -481,7 +481,18 @@ parameters.
 
 #### substitute, nsubstitute[if,if-not]
 
+Return a sequence of the same kind as `sequence` with the same elements,
+except that all elements equal to `old` are replaced with `new`.
+
+~~~lisp
+(substitute #\o #\x "hellx") ;; => "hello"
+(substitute :a :x '(:a :x :x)) ;; => (:A :A :A)
+(substitute "a" "x" '("a" "x" "x") :test #'string=) ;; => ("a" "a" "a")
+~~~
+
 #### sort, stable-sort, merge
+
+(see above)
 
 #### replace (sequence-a, sequence-b)
 

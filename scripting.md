@@ -201,7 +201,56 @@ CCL's binaries seem to be as fast as SBCL and nearly half the size.
 |        19948 | clisp.big      |  97% |        .0259 |
 ```
 
-<!-- ? We may have another trick  to distribute small executables: to make the fasl files executables. ?-->
+## Building a smaller binary with SBCL's core compression
+
+Building with SBCL's core compression can dramatically reduce your
+application binary's size. In our case, we passed from 120MB to 23MB,
+for a loss of a dozen milliseconds of start-up time, which was still
+under 50ms!
+
+Your SBCL must be built with core compression, see the documentation: [http://www.sbcl.org/manual/#Saving-a-Core-Image](http://www.sbcl.org/manual/#Saving-a-Core-Image)
+
+Is it the case ?
+
+~~~lisp
+(find :sb-core-compression *features*)
+:SB-CORE-COMPRESSION
+~~~
+
+Yes, it is the case with this SBCL installed from Debian.
+
+<!-- In case you want to build from scratch, you can use `./make.sh --fancy`. -->
+
+**With SBCL**
+
+In SBCL, we would give an argument to `save-lisp-and-die`, where
+`:compression`
+
+> may be an integer from -1 to 9, corresponding to zlib compression levels, or t (which is equivalent to the default compression level, -1).
+
+We experienced a 1MB difference between levels -1 and 9.
+
+**With ASDF**
+
+However, we prefer to do this with ASDF (or rather, UIOP). Add this in your .asd:
+
+~~~lisp
+#+sb-core-compression
+(defmethod asdf:perform ((o asdf:image-op) (c asdf:system))
+  (uiop:dump-image (asdf:output-file o c) :executable t :compression t))
+~~~
+
+**With Deploy**
+
+Also, the [Deploy](https://github.com/Shinmera/deploy/) library can be used
+to build a fully standalone application. It will use compression if available.
+
+Deploy is specifically geared towards applications with foreign
+library dependencies. It collects all the foreign shared libraries of
+dependencies, such as libssl.so in the `bin` subdirectory.
+
+And voilà !
+
 
 # Parsing command line arguments
 

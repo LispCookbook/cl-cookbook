@@ -258,6 +258,17 @@ introduced in [CLOS section][clos], the effects of type declarations are
 undefined in Lisp standard and are implementation specific. So there is no
 guarantee that Lisp compiler will perform compile-time type checking.
 
+
+## See also
+
+- the article [Static type checking in SBCL](https://medium.com/@MartinCracauer/static-type-checking-in-the-programmable-programming-language-lisp-79bb79eb068a), by Martin Cracauer
+- the [Coalton](https://github.com/stylewarning/coalton) library
+  (pre-alpha): adding Hindley-Milner type checking to Common Lisp
+  which allows for gradual adoption, in the same way Typed Racket or
+  Hack allows for. It is as an embedded DSL in Lisp that resembles
+  Standard ML or OCaml, but lets you seamlessly interoperate with
+  non-statically-typed Lisp code (and vice versa).
+
 ---
 
 [^1]: The term *object* here has nothing to do with Object-Oriented or so. It

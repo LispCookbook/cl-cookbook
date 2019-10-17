@@ -1,5 +1,13 @@
 After August 2nd, 2015, this repository has lived in Git. Please see `git log` for further details.
 
+2019-09-18
+  Files: added a "traverse (walk) directories" section.
+
+2019-09-10
+  Web: added easy-routes, more capable than default Hunchentoot routing.
+
+[changelog to update]
+
 2007-11-01
   Changed Alberto's address
   Updated link section

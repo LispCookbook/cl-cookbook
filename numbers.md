@@ -50,6 +50,24 @@ Functions which operate on or evaluate to integers include:
 * [`gcd`][gcd] to find the Greatest Common Denominator
 * [`lcm`][lcm] for the Least Common Multiple.
 
+Like other low-level programming languages, Common Lisp provides literal
+representation for hexadecimals and other radixes up to 36. For example:
+
+~~~lisp
+* #xFF
+255
+* #2r1010
+10
+* #4r33
+15
+* #8r11
+9
+* #16rFF
+255
+* #36rz
+35
+~~~
+
 ### Rational types
 
 Rational numbers of type [`ratio`][ratio] consist of two `bignum`s, the

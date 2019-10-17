@@ -229,7 +229,7 @@ If you didn't yet, create an acceptor and start the server:
 (hunchentoot:start *server*)
 ~~~
 
-and access it on [http://localhost:4242/hello.html]http://localhost:4242/hello.html).
+and access it on [http://localhost:4242/hello.html](http://localhost:4242/hello.html).
 
 We can see logs on the REPL:
 
@@ -278,6 +278,62 @@ It also has a `default-parameter-type` which we'll use in a minute to get url pa
 
 There are also keys to know for the lambda list. Please see the documentation.
 
+
+### Easy-routes (Hunchentoot)
+
+[easy-routes](https://github.com/mmontone/easy-routes) is a route
+handling extension on top of Hunchentoot. It provides:
+
+- dispatch based on HTTP method (otherwise cumbersome in Hunchentoot)
+- arguments extraction from the url path
+- and decorators.
+
+To use it, don't create a server with `hunchentoot:easy-acceptor` but
+with `easy-routes:routes-acceptor`:
+
+~~~lisp
+(setf *server* (make-instance 'easy-routes:routes-acceptor))
+~~~
+
+Then define a route like this:
+
+~~~lisp
+(easy-routes:defroute name ("/foo/:x" :method :get) (y &get z)
+    (format nil "x: ~a y: ~y z: ~a" x y z))
+~~~
+
+Here, `:x` captures the path parameter and binds it to the `x`
+variable into the route body. `y` and `&get z` define url parameters,
+and we can have `&post` parameters to extract from the HTTP request
+body.
+
+These parameters can take an `:init-form` and `:parameter-type`
+options as in `define-easy-handler`.
+
+**Decorators** are functions that are executed before the route body. They
+should call the `next` parameter function to continue executing the
+decoration chain and the route body finally. Examples:
+
+~~~lisp
+(defun @auth (next)
+  (let ((*user* (hunchentoot:session-value 'user)))
+    (if (not *user*)
+	(hunchentoot:redirect "/login")
+	(funcall next))))
+
+(defun @html (next)
+  (setf (hunchentoot:content-type*) "text/html")
+  (funcall next))
+
+(defun @json (next)
+  (setf (hunchentoot:content-type*) "application/json")
+  (funcall next))
+(defun @db (next)
+  (postmodern:with-connection *db-spec*
+    (funcall next)))
+~~~
+
+See `easy-routes`' readme for more.
 
 ### Caveman
 
