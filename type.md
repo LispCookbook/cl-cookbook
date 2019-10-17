@@ -2,8 +2,11 @@
 title: Type System
 ---
 
-Common Lisp has a complete and flexible type system and corresponding tools to
-inspect, check and manipulate types.
+Common Lisp has a complete and flexible type system and corresponding
+tools to inspect, check and manipulate types. It allows to create
+custom types, to add type declarations to variables and functions and
+thus to get compile-time warnings and errors.
+
 
 ## Values Have Types, Not Variables
 
@@ -89,7 +92,7 @@ details.
 #<BUILT-IN-CLASS COMMON-LISP:FIXNUM>
 ~~~
 
-## Working with Types
+## Checking Types
 
 The function [`typep`][typep] can be used to check if the first argument is of
 the given type specified by the second argument.
@@ -142,7 +145,7 @@ ERROR
 
 A type specifier is a form specifying a type. As mentioned above, returning
 value of the function `type-of` and the second argument of `typep` are both
-type specifiers. 
+type specifiers.
 
 As shown above, `(type-of 1234)` returns `(INTEGER 0
 4611686018427387903)`. This kind of type specifiers are called compound type
@@ -187,7 +190,7 @@ T
 
 You may refer to the [CLHS page][type-specifiers] for more information.
 
-## Defining New Type
+## Defining New Types
 
 You can use the macro [`deftype`][deftype] to define a new type-specifier.
 
@@ -250,13 +253,134 @@ The value of ARG is "Hello", which is not of type NUMBER.
 ...
 ~~~
 
-What about compile-time type checking?
 
-Well, you may provide type information for variables, function arguments etc
-etc via the macro [`declare`][declare]. However, similar to `:type` slot
+## Compile-time type checking
+
+You may provide type information for variables, function arguments
+etc via the macros [`declare`][declare] and [`declaim`][declaim].
+However, similar to the `:type` slot
 introduced in [CLOS section][clos], the effects of type declarations are
 undefined in Lisp standard and are implementation specific. So there is no
-guarantee that Lisp compiler will perform compile-time type checking.
+guarantee that the Lisp compiler will perform compile-time type checking.
+
+However, it is possible, and SBCL is an implementation that does
+thorough type checking.
+
+### Declaring the type of variables
+
+Use the macro [`declaim`][declaim].
+
+Let's declare that our global variable `*name*` is a string (you can
+type the following in any order in the REPL):
+
+~~~lisp
+(declaim (type (string) *name*))
+(defparameter *name* "book")
+~~~
+
+Now if we try to set it with a bad type, we get a `simple-type-error`:
+
+~~~lisp
+(setf *name* :me)
+Value of :ME in (THE STRING :ME) is :ME, not a STRING.
+   [Condition of type SIMPLE-TYPE-ERROR]
+~~~
+
+We can do the same with our custom types. Let's quickly declare the type `list-of-strings`:
+
+~~~lisp
+(defun list-of-strings-p (list)
+  "Return t if LIST is non nil and contains only strings."
+  (and (consp list)
+       (every #'stringp list)))
+
+(deftype list-of-strings ()
+  `(satisfies list-of-strings-p))
+~~~
+
+Now let's declare that our `*all-names*` variables is a list of strings:
+
+~~~lisp
+(declaim (type (list-of-strings) *all-names*))
+(defparameter *all-names* "")
+~~~
+
+We can compose types:
+
+~~~lisp
+(declaim (type (or null list-of-strings) *all-names*))
+~~~
+
+### Declaring the input and output types of functions
+
+We use again the `declaim` macro, with `ftype (function …)` instead of just `type`:
+
+~~~lisp
+(declaim (ftype (function (fixnum) fixnum) add))
+;;                         ^^input ^^output [optional]
+(defun add (n)
+	(+ n  1))
+~~~
+
+With this we get nice type warnings at compile time.
+
+If we change the function to erronously return a string instead of a
+fixnum, we get a warning:
+
+~~~lisp
+(defun add (n)
+	(format nil "~a" (+ n  1)))
+; caught WARNING:
+;   Derived type of ((GET-OUTPUT-STREAM-STRING STREAM)) is
+;     (VALUES SIMPLE-STRING &OPTIONAL),
+;   conflicting with the declared function return type
+;     (VALUES FIXNUM &REST T).
+~~~
+
+If we use `add` inside another function, to a place that expects a
+string, we get a warning:
+
+~~~lisp
+(defun bad-concat (n)
+    (concatenate 'string (add n)))
+; caught WARNING:
+;   Derived type of (ADD N) is
+;     (VALUES FIXNUM &REST T),
+;   conflicting with its asserted type
+;     SEQUENCE.
+~~~
+
+If we use `add` inside another function, and that function declares
+its argument types which appear to be incompatible with those of
+`add`, we get a warning:
+
+~~~lisp
+(declaim (ftype (function (string)) bad-arg))
+(defun bad-arg (n)
+    (add n))
+; caught WARNING:
+;   Derived type of N is
+;     (VALUES STRING &OPTIONAL),
+;   conflicting with its asserted type
+;     FIXNUM.
+~~~
+
+This all happens indeed *at compile time*, either in the REPL,
+either with a simple `C-c C-c` in Slime, or when we `load` a file.
+
+
+After this, no need to recall that lisp already warns about simple
+type warnings? The following function wrongly wants to concatenate a
+string and a number. The example is simple, but it is actually useful
+during development ;) and it already shows a capacity other languages
+don't have.
+
+~~~lisp
+(defun bar ()
+  (concatenate 'string "+" 3))
+; caught WARNING:
+;   Constant 3 conflicts with its asserted type SEQUENCE.
+~~~
 
 
 ## See also
@@ -299,4 +423,5 @@ guarantee that Lisp compiler will perform compile-time type checking.
 [type-error]: http://www.lispworks.com/documentation/HyperSpec/Body/e_tp_err.htm#type-error
 [place]: http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_p.htm#place
 [declare]: http://www.lispworks.com/documentation/HyperSpec/Body/s_declar.htm
+[declaim]: https://www.xach.com/clhs?q=declaim
 [safety]: http://www.lispworks.com/documentation/HyperSpec/Body/d_optimi.htm#speed
