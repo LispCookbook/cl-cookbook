@@ -40,7 +40,8 @@ expression, but you can combine them in many ways.
 
 **[iterate](https://common-lisp.net/project/iterate/doc/index.html)** is a
 popular iteration macro that aims at being simpler, "lispier" and more
-predictable than `loop`. However it isn't built-in, so you have to import it:
+predictable than `loop`, besides being extensible. However it isn't built-in, 
+so you have to import it:
 
     (ql:quickload :iterate)
     (use-package :iterate)
@@ -53,6 +54,17 @@ Iterate looks like this:
 ~~~
 
 (if you use loop and iterate in the same package, you might run into name conflicts)
+
+Iterate also comes with `display-iterate-clauses` that can be quite handy:
+~~~lisp
+(display-iterate-clauses '(for))
+;; FOR PREVIOUS &OPTIONAL INITIALLY BACK     Previous value of a variable
+;; FOR FIRST THEN            Set var on first, and then on subsequent iterations
+;; ...
+~~~
+
+Much of the examples on this page that are valid for loop are also valid for iterate,
+with minor modifications.
 
 **[for](https://github.com/Shinmera/for/)** is an extensible iteration
 macro that is often shorter than loop, that "unlike loop is extensible
@@ -119,7 +131,7 @@ Last but not least, you might like
 **[series](https://github.com/tokenrove/series/wiki/Documentation)**,
 a library that describes itself as combining aspects of sequences,
 streams, and loops. Series expressions look like operations on
-sequences, but can achieve the same high level of efficiency as a
+sequences (= functional programming), but can achieve the same high level of efficiency as a
 loop. Series first appeared in "Common Lisp the Language", in the
 appendix A (it nearly became part of the language). Series looks like
 this:
@@ -193,6 +205,36 @@ with `collect`, this returns a list.
 (iterate ((n (scan-range :below 10)))
   (print n))
 ~~~
+
+## Iterate's for loop
+
+For lists and vectors:
+
+~~~lisp
+(iter (for item in '(1 2 3))
+  (print item))
+(iter (for i in-vector #(1 2 3))
+  (print i))
+~~~
+
+Looping over a hash-table is also straightforward:
+~~~lisp
+(let ((h (let ((h (make-hash-table)))
+           (setf (gethash 'a h) 1)
+           (setf (gethash 'b h) 2)
+           h)))
+  (iter (for (k v) in-hashtable h)
+    (print k)))
+;; b
+;; a           
+~~~
+
+In fact, take a look [here](https://common-lisp.net/project/iterate/doc/Sequence-Iteration.html),
+or `(display-iterate-clauses '(for))` to know about iterating over
+
+- symbols in-package
+- forms - or lines, or whatever-you-wish - in-file, or in-stream
+- elements in-sequence - sequences can be vectors or lists
 
 ## Looping over a list
 
@@ -418,6 +460,15 @@ Return a flat list:
 ;; ((1) (1 2) (1 2 3))
 ~~~
 
+### iterate
+~~~lisp
+(iter outer
+   (for i below 2) 
+   (iter (for j below 3)
+      (in outer (collect (list i j)))))
+;; ((0 0) (0 1) (0 2) (1 0) (1 1) (1 2))
+~~~
+
 ### Series
 ~~~lisp
 (collect
@@ -591,6 +642,23 @@ do`, `and count`):
 (7 45 43 15 69)
 5
 ```
+
+### iterate
+
+Translating (or even writing!) the above example using iterate is straight-forward:
+
+~~~lisp
+(iter (repeat 10)
+   (for x = (random 100))
+   (if (evenp x)
+       (progn
+         (collect x into evens)
+         (format t "~a is even!~%" x))
+       (progn
+         (collect x into odds)
+         (count t into n-odds)))
+   (finally (return (values evens odds n-odds))))
+~~~
 
 ### Series
 
@@ -884,7 +952,23 @@ Only `for` and `in` are keywords.
 
 # Credit and references
 
+## Loop
+
 * [Tutorial for the Common Lisp Loop Macro](http://www.ai.sri.com/~pkarp/loop.html) by Peter D. Karp
 * [http://www.unixuser.org/~euske/doc/cl/loop.html](http://www.unixuser.org/~euske/doc/cl/loop.html)
 * [riptutorial.com](https://riptutorial.com/common-lisp/)
+* 
+
+## Iterate
+
+* [The Iterate Manual](https://common-lisp.net/project/iterate/doc/index.html) - 
+* [iterate](https://digikar99.github.io/cl-iterate-docs/) - highlights at a glance and examples
+* [Loop v Iterate - SabraOnTheHill](https://sites.google.com/site/sabraonthehill/loop-v-iter)
+
+## Series
+
+* [SERIES for Common Lisp - Richard C. Waters](http://series.sourceforge.net/)
+
+## Others
+
 * See also: [more functional constructs](https://lisp-journey.gitlab.io/blog/snippets-functional-style-more/) (do-repeat, take,…)
