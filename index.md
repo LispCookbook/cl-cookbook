@@ -20,7 +20,6 @@ title: Home
 * [Strings](strings.html)
 * [Numbers](numbers.html)
 * [Loops, iteration, mapping](iteration.html)
-+ [The Iterate Library](iterate.html)
 * [Multidimensional Arrays](arrays.html)
 * [Dates and Times](dates_and_times.html)
 * [Pattern Matching](pattern_matching.html)
