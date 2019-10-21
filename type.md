@@ -391,6 +391,7 @@ either with a simple `C-c C-c` in Slime, or when we `load` a file.
 ## See also
 
 - the article [Static type checking in SBCL](https://medium.com/@MartinCracauer/static-type-checking-in-the-programmable-programming-language-lisp-79bb79eb068a), by Martin Cracauer
+- the article [Typed List, a Primer](https://alhassy.github.io/TypedLisp/) - let's explore Lisp's fine-grained type hierarchy! with a shallow comparison to Haskell.
 - the [Coalton](https://github.com/stylewarning/coalton) library
   (pre-alpha): adding Hindley-Milner type checking to Common Lisp
   which allows for gradual adoption, in the same way Typed Racket or
