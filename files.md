@@ -367,6 +367,14 @@ The library [str](https://github.com/vindarel/cl-str) has a shortcut:
 (str:to-file "file.txt" content) ;; with optional options
 ~~~
 
+### Getting the file extension
+
+The file extension is a pathname type in Lisp parlance:
+
+~~~lisp
+(pathname-type "~/foo.org")  ;; => "org"
+~~~
+
 
 ### Getting file attributes (size, access time,...)
 
