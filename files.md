@@ -89,8 +89,9 @@ typical use of `with-open-file` looks like this:
     and a file with that name already exists - this option is ignored if you
     just want to read from the file. The default is `:error` which means that an
     error is signalled. Other useful options are `:supersede` (meaning that the
-    new file will replace the old one), `nil` (the stream variable will be bound
-    to `nil`), and `:rename` (i.e. the old file is renamed).
+    new file will replace the old one), `:append` (content is added to the file),
+    `nil` (the stream variable will be bound to `nil`),
+    and `:rename` (i.e. the old file is renamed).
 *   `<_if-does-not-exist_>` specifies what to do if the file you want to open does
     not exist. It is one of `:error` for signalling an error, `:create` for
     creating an empty file, or `nil` for binding the stream variable to
