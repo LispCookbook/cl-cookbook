@@ -261,7 +261,7 @@ Example:
 Visit it at [p://localhost:4242/yo](http://localhost:4242/yo) and add parameters on the url:
 [http://localhost:4242/yo?name=Alice](http://localhost:4242/yo?name=Alice).
 
-Just a thought… we didn't explicitely ask Hunchentoot to add this
+Just a thought… we didn't explicitly ask Hunchentoot to add this
 route to our first acceptor of the port 4242. Let's try another acceptor (see
 previous section), on port 4444: [http://localhost:4444/yo?name=Bob](http://localhost:4444/yo?name=Bob) It
 works too ! In fact, `define-easy-handler` accepts an `acceptor-names`
@@ -387,7 +387,7 @@ First of all, note that we can access query parameters anytime with
 
 It acts on the default `*request*` object which is passed to all handlers.
 
-There is also `get-paramater` and `post-parameter`.
+There is also `get-parameter` and `post-parameter`.
 
 
 Earlier we saw some key parameters to `define-easy-handler`. We now
@@ -738,7 +738,7 @@ See this recipe on [scripting#for-web-apps](scripting.html#for-web-apps).
 Please see the section on [testing#continuous-integration](testing.html#continuous-integration).
 
 
-## Multiplatform delivery with Electron
+## Multi-platform delivery with Electron
 
 [Ceramic](https://ceramic.github.io/) makes all the work for us.
 
@@ -774,7 +774,7 @@ Thus, no need to minify our JS.
 
 ## Deploying manually
 
-We can start our executable in a shell and send it to the bakcground (`C-z bg`), or run it inside a `tmux` session. These are not the best but hey, it works©.
+We can start our executable in a shell and send it to the background (`C-z bg`), or run it inside a `tmux` session. These are not the best but hey, it works©.
 
 
 ## Daemonizing, restarting in case of crashes, handling logs with Systemd

@@ -73,7 +73,7 @@ With sqlite you don't need the username and password:
 (connect-toplevel :sqlite3 :database-name "myapp")
 ~~~
 
-As usual, you need to create the MySQL or Postgre database beforehand.
+As usual, you need to create the MySQL or PostgreSQL database beforehand.
 Refer to their documentation.
 
 Connecting sets `mito:*connection*` to the new connection and returns it.
@@ -240,7 +240,7 @@ Now you can create or retrieve a `TWEET` by a `USER` object, not a `USER-ID`.
 (mito:find-dao 'tweet :user *user*)
 ~~~
 
-Mito doesn't add foreign key constraints for refering tables.
+Mito doesn't add foreign key constraints for referring tables.
 
 #### One-to-one
 
@@ -259,8 +259,8 @@ linking back to the "one" side. Here the `tweet` class defines a
 `user` foreign key, so a tweet can only have one user. You didn't need
 to edit the `user` class.
 
-A many-to-one relationship is actually the contraty of a one-to-many.
-You have to put the foreign key on the approriate side.
+A many-to-one relationship is actually the contrary of a one-to-many.
+You have to put the foreign key on the appropriate side.
 
 #### Many-to-many
 
@@ -886,7 +886,7 @@ Use it like this:
 
 ## See also
 
-- [exploring an existing (PostGres) database with postmodern](https://sites.google.com/site/sabraonthehill/postmodern-examples/exploring-a-database)
+- [exploring an existing (PostgreSQL) database with postmodern](https://sites.google.com/site/sabraonthehill/postmodern-examples/exploring-a-database)
 
 - [mito-attachment](https://github.com/fukamachi/mito-attachment)
 - [mito-auth](https://github.com/fukamachi/mito-auth)

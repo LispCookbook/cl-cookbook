@@ -2,7 +2,7 @@
 title: License
 ---
 
-Redistribution and use of the "Common Lisp Cookbook" in its orginal form (HTML)
+Redistribution and use of the "Common Lisp Cookbook" in its original form (HTML)
 or in 'derived' forms (PDF, Postscript, RTF and so forth) with or without
 modification, are permitted provided that the following condition is met:
 

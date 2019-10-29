@@ -335,7 +335,7 @@ lambda is called:
 ;; hello
 ~~~
 
-## Calling functions programatically: `funcall` and `apply`
+## Calling functions programmatically: `funcall` and `apply`
 
 `funcall` is to be used with a known number of arguments, when `apply`
 can be used on a list, for example from `&rest`:
@@ -427,7 +427,7 @@ In Common Lisp, as opposed to Scheme, it is _not_ possible that the car of the c
 
 This explains the error message we got above - `(adder 3)` is neither a symbol nor a lambda expression.
 
-If we want to be able to use the symbol `*my-fun*` in the car of a compound form, we have to explicitely store something in its _function cell_ (which is normally done for us by the macro [`defun`](http://www.lispworks.com/documentation/HyperSpec/Body/m_defun.htm)):
+If we want to be able to use the symbol `*my-fun*` in the car of a compound form, we have to explicitly store something in its _function cell_ (which is normally done for us by the macro [`defun`](http://www.lispworks.com/documentation/HyperSpec/Body/m_defun.htm)):
 
 ~~~lisp
 ;;; continued from above

@@ -69,7 +69,7 @@ PLUS
 ~~~
 
 The code above was evaluated in SBCL. In some other implementations such as
-CLISP, `disassembly` might return something different: 
+CLISP, `disassembly` might return something different:
 
 ~~~lisp
 * (defun plus (a b)
@@ -312,7 +312,7 @@ being evaluated, which invokes undefined behaviour.
 ~~~
 
 This is because type declarations have [scopes][declare-scope]. In the
-examples above, we have seen type declarations applied to a function. 
+examples above, we have seen type declarations applied to a function.
 
 During development it is usually useful to raise the importance of safety in
 order to find out potential problems as soon as possible. On the contrary,
@@ -354,10 +354,10 @@ been compiled.
 
 
 ### Declaring function types
-Another useful declaration is a `ftype` declaration which establishes 
+Another useful declaration is a `ftype` declaration which establishes
 the relationship between the function argument types and the return value type.
 If the type of passed arguments matches the declared types, the return value type
-is expected to match the declared one. Because of that, a function can have more 
+is expected to match the declared one. Because of that, a function can have more
 than one `ftype` declaration associated with it. A `ftype` declaration restricts
 the type of the argument every time the function is called. It has the following form:
 
@@ -368,7 +368,7 @@ the type of the argument every time the function is called. It has the following
 If the function returns `nil`, its return type is `null`.
 This declaration does not put any restriction on the types of arguments by itself.
 It only takes effect if the provided arguments have the specified types -- otherwise
-no error is signaled and declaration has no effect. For example, 
+no error is signaled and declaration has no effect. For example,
 the following declamation states that if the argument to the function `square`
 is a `fixnum`, the value of the function will also be a `fixnum`:
 
@@ -376,7 +376,7 @@ is a `fixnum`, the value of the function will also be a `fixnum`:
 (declaim (ftype (function (fixnum) fixnum) square))
 (defun square (x) (* x x))
 ~~~~
-If we provide it with the argument which is not declared to be of type `fixnum`, 
+If we provide it with the argument which is not declared to be of type `fixnum`,
 no optimization will take place:
 
 ~~~lisp
@@ -390,20 +390,20 @@ Now let's try to optimize the speed. The compiler will state that there is type 
 (defun do-some-arithmetic (x)
   (declare (optimize (speed 3) (debug 0) (safety 0)))
   (the fixnum (+ x (square x))))
-  
+
 ; compiling (DEFUN DO-SOME-ARITHMETIC ...)
 
-; file: /tmp/slimeRzDh1R  
+; file: /tmp/slimeRzDh1R
  in: DEFUN DO-SOME-ARITHMETIC
 ;     (+ TEST-FRAMEWORK::X (TEST-FRAMEWORK::SQUARE TEST-FRAMEWORK::X))
-; 
+;
 ; note: forced to do GENERIC-+ (cost 10)
 ;       unable to do inline fixnum arithmetic (cost 2) because:
 ;       The first argument is a NUMBER, not a FIXNUM.
 ;       unable to do inline (signed-byte 64) arithmetic (cost 5) because:
 ;       The first argument is a NUMBER, not a (SIGNED-BYTE 64).
 ;       etc.
-; 
+;
 ; compilation unit finished
 ;   printed 1 note
 
@@ -431,7 +431,7 @@ NIL
 ~~~~
 
 
-Now we can add a type declaration for `x`, so the compiler can assume 
+Now we can add a type declaration for `x`, so the compiler can assume
 that the expression `(square x)` is a `fixnum`, and use the fixnum-specific `+`:
 
 ~~~lisp
@@ -439,7 +439,7 @@ that the expression `(square x)` is a `fixnum`, and use the fixnum-specific `+`:
   (declare (optimize (speed 3) (debug 0) (safety 0)))
   (declare (type fixnum x))
   (the fixnum (+ x (square x))))
-  
+
        (disassemble 'do-some-arithmetic)
 
 ; disassembly for DO-SOME-ARITHMETIC
@@ -459,7 +459,7 @@ that the expression `(square x)` is a `fixnum`, and use the fixnum-specific `+`:
 ; 507:       F8               CLC
 ; 508:       5D               POP RBP
 ; 509:       C3               RET
-NIL  
+NIL
 ~~~~
 
 ### Code Inline
@@ -472,15 +472,15 @@ to encourage and prohibit code inline.
 
 ~~~lisp
 ;; The globally defined function DISPATCH should be open-coded,
-;; if the implementation supports inlining, unless a NOTINLINE 
+;; if the implementation supports inlining, unless a NOTINLINE
 ;; declaration overrides this effect.
 (declaim (inline dispatch))
 (defun dispatch (x) (funcall (get (car x) 'dispatch) x))
 
 ;; Here is an example where inlining would be encouraged.
-;; Because function DISPATCH was defined as INLINE, the code 
+;; Because function DISPATCH was defined as INLINE, the code
 ;; inlining will be encouraged by default.
-(defun use-dispatch-inline-by-default () 
+(defun use-dispatch-inline-by-default ()
   (dispatch (read-command)))
 
 ;; Here is an example where inlining would be prohibited.
@@ -492,12 +492,12 @@ to encourage and prohibit code inline.
 ;; Here is an example where inlining would be prohibited.
 ;; The NOTINLINE here affects all following code.
 (declaim (notinline dispatch))
-(defun use-dispatch-with-declaim-noinline () 
+(defun use-dispatch-with-declaim-noinline ()
   (dispatch (read-command)))
 
-;; Inlining would be encouraged becuase you specified it.
+;; Inlining would be encouraged because you specified it.
 ;; The INLINE here only affects this function.
-(defun use-dispatch-with-inline () 
+(defun use-dispatch-with-inline ()
   (declare (inline dispatch))
   (dispatch (read-command)))
 ~~~

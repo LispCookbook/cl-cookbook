@@ -120,7 +120,7 @@ html), we can use `(text)` instead:
   "FranzInc, a company selling Common Lisp and Graph Database solutions.")
 ~~~
 
-Allright, so we see we are manipulating what we want. Now to get their
+All right, so we see we are manipulating what we want. Now to get their
 `href`, a quick look at lquery's doc and we'll use `(attr
 "some-name")`:
 
@@ -154,7 +154,7 @@ In this example we'll take the list of url from above and we'll check
 if they are reachable. We want to do this asynchronously, but to see
 the benefits we'll first do it synchronously !
 
-We need a bit of filtering first to exclude the email adresses (maybe
+We need a bit of filtering first to exclude the email addresses (maybe
 that was doable in the CSS selector ?).
 
 We put the vector of urls in a variable:
@@ -178,7 +178,7 @@ We remove the elements that start with "mailto:": (a quick look at the
 ;;  "https://franz.com/")
 ~~~
 
-Actually before writting the `remove-if` (which works on any sequence,
+Actually before writing the `remove-if` (which works on any sequence,
 including vectors) I tested with a `(map 'vector …)` to see that the
 results where indeed `nil` or `t`.
 
@@ -199,7 +199,7 @@ order not to write too much stuff irrelevant to web scraping:
 (remove-if-not (lambda (it) (string= it "http" :start1 0 :end1 (length "http"))) *) ;; note the remove-if-NOT
 ~~~
 
-Allright, we put this result in another variable:
+All right, we put this result in another variable:
 
 ~~~lisp
 (defvar *filtered-urls* *)

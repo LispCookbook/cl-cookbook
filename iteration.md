@@ -40,7 +40,7 @@ expression, but you can combine them in many ways.
 
 **[iterate](https://common-lisp.net/project/iterate/doc/index.html)** is a
 popular iteration macro that aims at being simpler, "lispier" and more
-predictable than `loop`, besides being extensible. However it isn't built-in, 
+predictable than `loop`, besides being extensible. However it isn't built-in,
 so you have to import it:
 
     (ql:quickload :iterate)
@@ -88,7 +88,7 @@ You also have to quickload it:
 We'll also give examples with **`mapcar`** and `map`, and eventually
 with their friends `mapcon`, `mapcan`, `maplist`, `mapc` and `mapl`
 which E. Weitz categorizes very well in his "Common Lisp Recipes",
-chap. 7. The one you are certainly accostumed to from other languages is
+chap. 7. The one you are certainly accustomed to from other languages is
 `mapcar`: it takes a function, one or more lists as arguments,
 applies the function on each *element* of the lists one by one and
 returns a list of result.
@@ -116,7 +116,7 @@ values, or don't return anything. We'll see some of them.
 
 If you like `mapcar`, use it a lot, and would like a quicker and
 shorter way to write lambdas, then you might like one of those
-[lambda shorhand libraries](https://github.com/CodyReichert/awesome-cl#lambda-shorthands).
+[lambda shorthand libraries](https://github.com/CodyReichert/awesome-cl#lambda-shorthands).
 
 Here is an example with [cl-punch](https://github.com/windymelt/cl-punch/):
 
@@ -226,7 +226,7 @@ Looping over a hash-table is also straightforward:
   (iter (for (k v) in-hashtable h)
     (print k)))
 ;; b
-;; a           
+;; a
 ~~~
 
 In fact, take a look [here](https://common-lisp.net/project/iterate/doc/Sequence-Iteration.html),
@@ -463,7 +463,7 @@ Return a flat list:
 ### iterate
 ~~~lisp
 (iter outer
-   (for i below 2) 
+   (for i below 2)
    (iter (for j below 3)
       (in outer (collect (list i j)))))
 ;; ((0 0) (0 1) (0 2) (1 0) (1 1) (1 2))
@@ -957,11 +957,11 @@ Only `for` and `in` are keywords.
 * [Tutorial for the Common Lisp Loop Macro](http://www.ai.sri.com/~pkarp/loop.html) by Peter D. Karp
 * [http://www.unixuser.org/~euske/doc/cl/loop.html](http://www.unixuser.org/~euske/doc/cl/loop.html)
 * [riptutorial.com](https://riptutorial.com/common-lisp/)
-* 
+*
 
 ## Iterate
 
-* [The Iterate Manual](https://common-lisp.net/project/iterate/doc/index.html) - 
+* [The Iterate Manual](https://common-lisp.net/project/iterate/doc/index.html) -
 * [iterate](https://digikar99.github.io/cl-iterate-docs/) - highlights at a glance and examples
 * [Loop v Iterate - SabraOnTheHill](https://sites.google.com/site/sabraonthehill/loop-v-iter)
 

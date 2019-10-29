@@ -6,7 +6,7 @@ Easy steps to install a development environment and start a project.
 
 Want a 2-clicks install ? Then get
 [Portacle](https://shinmera.github.io/portacle/), *a portable and
-multiplatform* Common Lisp environment. It ships Emacs25, SBCL (the
+multi-platform* Common Lisp environment. It ships Emacs25, SBCL (the
 implementation), Quicklisp (package manager), SLIME (IDE) and
 Git. It's the most straightforward way to get going !
 
@@ -131,7 +131,7 @@ use SBCL's `--disable-debugger` option.
 
 ## Libraries
 
-Common Lisp has hundreds of libraries available under a free software licence. See:
+Common Lisp has hundreds of libraries available under a free software license. See:
 
 * [Quickdocs](http://quickdocs.org/) - the library documentation hosting for CL.
 * the [Awesome-cl](https://github.com/CodyReichert/awesome-cl) list, a
@@ -333,7 +333,7 @@ it will create a directory structure like this:
     `-- my-project.lisp
 ```
 
-Where `my-project.asd` ressembles this:
+Where `my-project.asd` resembles this:
 
 ~~~lisp
 (defsystem "my-project"

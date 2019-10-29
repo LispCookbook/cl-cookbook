@@ -75,7 +75,7 @@ build:
 
 ## With ASDF
 
-Now that we'seen the basics, we need a portable method. Since its
+Now that we've seen the basics, we need a portable method. Since its
 version 3.1, ASDF allows to do that. It introduces the [`make` command](https://common-lisp.net/project/asdf/asdf.html#Convenience-Functions),
 that reads parameters from the .asd. Add this to your .asd declaration:
 
@@ -183,7 +183,7 @@ executable.
 
 According to
 [this reddit source](https://www.reddit.com/r/lisp/comments/46k530/tackling_the_eternal_problem_of_lisp_image_size/), ECL produces indeed the smallest executables of all,
-an order of magnituted smaller than SBCL, but with a longer startup time.
+an order of magnitude smaller than SBCL, but with a longer startup time.
 
 CCL's binaries seem to be as fast as SBCL and nearly half the size.
 
@@ -464,7 +464,7 @@ symbols in the `*features*` list.  We can also combine symbols with
 
 We can make a Continuous Integration system (Travis CI, Gitlab CI,…)
 build binaries for us at every commit, or at every tag pushed or at
-wichever other policy.
+whichever other policy.
 
 See [Continuous Integration](testing.html#continuous-integration).
 

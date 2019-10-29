@@ -6,7 +6,7 @@ This page is meant to provide an introduction to using Emacs as a Lisp IDE. The 
 
 
 **Note**: [Portacle](https://shinmera.github.io/portacle/) is a
-portable and multiplatform CL development environment, a
+portable and multi-platform CL development environment, a
 straightforward way to get going.
 
 
@@ -148,7 +148,7 @@ extension, according to the
   automatically fixes the parens depending on the indentation, or the
   other way round (or both !).
 
-We personnaly advice to try Parinfer and the famous Paredit, then to
+We personally advice to try Parinfer and the famous Paredit, then to
 go up the list. See explanations and even more on
 [Wikemacs](http://wikemacs.org/wiki/Lisp_editing).
 
@@ -270,7 +270,7 @@ and backward respectively)
 expression search/replace
 
 
-#### Finding occurences (occur, grep)
+#### Finding occurrences (occur, grep)
 
 With `M-x grep`, `rgrep`, `occur`,…
 
@@ -382,7 +382,7 @@ Other bindings which may be useful:
 *   [CL HyperSpec (online)](http://www.lispworks.com/documentation/HyperSpec/Front/)
 *   [CL HyperSpec (tarball)](http://macports.mirror.ac.za/distfiles/lisp-hyperspec/HyperSpec-7-0.tar.gz)
 *   [CLtL2](http://www-2.cs.cmu.edu/afs/cs.cmu.edu/project/ai-repository/ai/lang/lisp/doc/cltl/cltl_ht.tgz)
-*   [ACL Documenation](https://franz.com/support/documentation/)
+*   [ACL Documentation](https://franz.com/support/documentation/)
 *   Example code ( [s23.lisp](s23.lisp) )
 
 ~~~lisp
@@ -477,7 +477,7 @@ called with a negative argument (C-u C-c x) it will remove the symbol
 from `:export` and unexport it.
 
 **M-x slime-export-class** does the same but with symbols defined
-by a structure or a class, like accesors, constructors, and so on.
+by a structure or a class, like accessors, constructors, and so on.
 It works on structures only on SBCL and Clozure CL so far.
 Classes should work everywhere with MOP.
 
