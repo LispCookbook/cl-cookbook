@@ -121,7 +121,7 @@ Warning: This function is undefined:
   *MY-FUN*
 ~~~
 
-Note that in the last example the function object returned by `(adder 3)` is stored in the _value cell_ of `*my-fun*` - thus the error message. If we want to be able to use the symbol `*my-fun*` in the car of a compound form, we have to explicitely store something in its _function cell_ (which is normally done for us by the macro [`defun`](http://www.lispworks.com/documentation/HyperSpec/Body/m_defun.htm)):
+Note that in the last example the function object returned by `(adder 3)` is stored in the _value cell_ of `*my-fun*` - thus the error message. If we want to be able to use the symbol `*my-fun*` in the car of a compound form, we have to explicitly store something in its _function cell_ (which is normally done for us by the macro [`defun`](http://www.lispworks.com/documentation/HyperSpec/Body/m_defun.htm)):
 
 ~~~lisp
 ;;; continued from above

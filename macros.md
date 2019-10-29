@@ -110,7 +110,7 @@ One problem with backquote is that once you learn it you tend to use for every l
                 (t '())))
         some-list)
 ~~~
-        
+
 which yields `((a) 15 15)` when `some-list` = `(a 6 15)`. The problem is that [`mapcan`](http://www.lispworks.com/documentation/HyperSpec/Body/f_mapc_.htm) destructively alters the results returned by the [`lambda`](http://www.lispworks.com/documentation/HyperSpec/Body/s_lambda.htm)-expression. Can we be sure that the lists returned by that expression are "[fresh](http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_f.htm#fresh)," that is, they are different (in the [`eq`](http://www.lispworks.com/documentation/HyperSpec/Body/f_eq.htm) sense) from the structures returned on other calls of that `lambda` expression? In the present case, close analysis will show that they must be fresh, but in general backquote is not obligated to return a fresh list every time (whether it does or not is implementation-dependent). If the example above got changed to
 
 ~~~lisp
@@ -269,12 +269,12 @@ which neither of which is particularly clear or aesthetic. The keyword package i
 Let's look at another example, both to illustrate a nice macro, and to provide an auxiliary function for some of the discussion below. One often wants to create new symbols in Lisp, and `gensym` is not always adequate for building them. Here is a description of an alternative facility called `build-symbol`:
 
 > <code>(build-symbol [(:package <em>p</em>)] <em>-pieces-</em>)</code> builds a symbol by concatenating the given _pieces_ and interns it as specified by _p_. For each element of _pieces_, if it is a ...
-> 
+>
 > *   ... string: The string is added to the new symbol's name.
 > *   ... symbol: The name of the symbol is added to the new symbol's name.
 > *   ... expression of the form <code>(:< <em>e</em>)</code>: _e_ should evaluate to a string, symbol, or number; the characters of the value of _e_ (as printed by `princ`) are concatenated into the new symbol's name.
-> *   ... expression of the form <code>(:++ <em>p</em>)</code>: _p_ should be a place expression (i.e., appropriate as the first argument to `setf`), whose value is an integer; the value is incremented by 1, and the new value is concatenated intot he new symbol's name.
-> 
+> *   ... expression of the form <code>(:++ <em>p</em>)</code>: _p_ should be a place expression (i.e., appropriate as the first argument to `setf`), whose value is an integer; the value is incremented by 1, and the new value is concatenated into the new symbol's name.
+>
 > If the `:package` specification is omitted, it defaults to the value of `*package*`. If _p_ is `nil`, the symbol is interned nowhere. Otherwise, it should evaluate to a package designator (usually, a keyword whose name is the same of a package).
 
 For example, `(build-symbol (:< x) "-" (:++ *x-num*))`, when `x` = `foo` and `*x-num*` = 8, sets `*x-num*` to 9 and evaluates to `FOO-9`. If evaluated again, the result will be `FOO-10`, and so forth.
@@ -338,7 +338,7 @@ Sometimes a macro is needed only temporarily, as a sort of syntactic scaffolding
 (defun zep-deactivate (x) ...)
 ~~~
 
-Where the omitted pieces are the same in all similarly named functions. (That is, the "..." in `zep-deactivate` is the same code as the "..." in `zip-deactivate`, and so forth.) Here, for the sake of concreteness, if not plausibility, `zip`, `zap`, and `zep` are behaving like odd little data structures. The functions could be rather large, and it would get tedious keeping them all in synch as they are debugged. An alternative would be to use a macro:
+Where the omitted pieces are the same in all similarly named functions. (That is, the "..." in `zep-deactivate` is the same code as the "..." in `zip-deactivate`, and so forth.) Here, for the sake of concreteness, if not plausibility, `zip`, `zap`, and `zep` are behaving like odd little data structures. The functions could be rather large, and it would get tedious keeping them all in sync as they are debugged. An alternative would be to use a macro:
 
 ~~~lisp
 (defmacro odd-define (name buildargs)
@@ -428,4 +428,4 @@ In some Lisp implementations, read-eval-print loops routinely print results usin
 
 I leave the definition of `find-nth-occurrence` as an exercise. You might also want to define a command that just sets and prints the current form: <code>(cf <em>e</em>)</code>.
 
-One caution: In general, command languages will consist of a mixture of macros and functions, with convenience for their definer (and usually sole user) being the main consideration. If a command seems to "want" to evaluate some of its arguments sometimes, you have to decide whether to define two (or more) versions of it, or just one, a function whose arguments must be quoted to prevent their being evaluated. For the `cf` command mentioned in the prevous paragraph, some users might prefer `cf` to be a function, some a macro.
+One caution: In general, command languages will consist of a mixture of macros and functions, with convenience for their definer (and usually sole user) being the main consideration. If a command seems to "want" to evaluate some of its arguments sometimes, you have to decide whether to define two (or more) versions of it, or just one, a function whose arguments must be quoted to prevent their being evaluated. For the `cf` command mentioned in the previous paragraph, some users might prefer `cf` to be a function, some a macro.

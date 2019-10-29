@@ -448,7 +448,7 @@ Suppose we have the following setup with a minimal bank-account class (no error 
       (decf (:balance account) amount))
 ~~~
 
-And we have a simple client which apparently does not believe in any form of synchronisation:
+And we have a simple client which apparently does not believe in any form of synchronization:
 
 ~~~lisp
     (defparameter *rich*
@@ -1081,7 +1081,7 @@ And the output:
 
 ### Useful functions
 
-Here is a summarised list of the functions, macros and global
+Here is a summarized list of the functions, macros and global
 variables used in the examples along with some extras:
 
 -    `(member :thread-support *features*)` (check thread support)
@@ -1151,7 +1151,7 @@ The modus operandi of using the lparallel library (for a basic use case) is as f
      `lparallel:end-kernel`.
 
 Note that the onus of ensuring that the tasks being carried out are
-logically parallelisable as well as taking care of all mutable state
+logically parallelizable as well as taking care of all mutable state
 is on the developer.
 
 _Credit: this article first appeared on
@@ -1305,7 +1305,7 @@ To load "lparallel":
 (:LPARALLEL)
 ~~~
 
-Initialise the lparallel kernel:
+Initialize the lparallel kernel:
 
 ~~~lisp
 CL-USER> (setf lparallel:*kernel* (lparallel:make-kernel 8 :name "custom-kernel"))
@@ -1341,7 +1341,7 @@ NIL
 ~~~
 
 End the kernel (this is important since `*kernel*` does not get
-garbage collected until we explictly end it):
+garbage collected until we explicitly end it):
 
 ~~~lisp
 CL-USER> (lparallel:end-kernel :wait t)
@@ -1368,7 +1368,7 @@ For these demos, we will be using the following initial setup from a coding pers
 
 (in-package :lparallel-user)
 
-;;; initialise the kernel
+;;; initialize the kernel
 (defun init ()
   (setf *kernel* (make-kernel 8 :name "channel-queue-kernel")))
 
@@ -1425,8 +1425,8 @@ NIL
 ~~~
 
 Now let’s try submitting multiple tasks to the same channel. In this
-simple example, we are simpy creating three tasks that square, triple,
-and quadrupls the supplied input respectively.
+simple example, we are simply creating three tasks that square, triple,
+and quadruple the supplied input respectively.
 
 Note that in case of multiple tasks, the output will be in non-deterministic order:
 
@@ -1822,7 +1822,7 @@ promise object p, and we spawn off a thread that sleeps for some
 random time and then fulfills the promise by giving it a value.
 
 Meanwhile, in the main thread, we spawn off another thread that keeps
-hecking if the promise has been fulfilled or not. If not, it prints
+checking if the promise has been fulfilled or not. If not, it prints
 some random number and continues checking. Once the promise has been
 fulfilled, we can extract the value using `lparallel:force` in the main
 thread as shown.
@@ -1983,13 +1983,13 @@ the blocking `lparallel:force` call because it’s on a separate thread):
 (format stream "Square of ~d = ~d~%" n (force p))))
 ~~~
 
-To summarise, the general idiom of usage is: **define objects which will
+To summarize, the general idiom of usage is: **define objects which will
 hold the results of asynchronous computations in promises, and use
 futures to fulfill those promises**.
 
 ### Using cognates - parallel equivalents of Common Lisp counterparts
 
-Cognates are argubaly the raison d’etre of the lparallel
+Cognates are arguably the raison d’etre of the lparallel
 library. These constructs are what truly provide parallelism in the
 lparallel. Note, however, that most (if not all) of these constructs
 are built on top of futures and promises.
@@ -2007,7 +2007,7 @@ At this juncture, it is important to know that cognates come in two basic flavou
 
 In the first case we don’t have much explicit control over the
 operations themselves. We mostly rely on the fact that the library
-itself will optimise and parallelise the forms to whatever extent it
+itself will optimize and parallelize the forms to whatever extent it
 can. In this post, we will focus on the second category of cognates.
 
 Take, for instance, the cognate function `lparallel:pmap` is exactly
@@ -2082,7 +2082,7 @@ through an example:
 Note that all the mapping functions (`lparallel:pmap`,
 **lparallel:pmapc**,`lparallel:pmapcar`, etc.) take two special keyword
 arguments
-- `:size`, specifiying the number of elements of the input
+- `:size`, specifying the number of elements of the input
 sequence(s) to process, and
 - `:parts` which specifies the number of parallel parts to divide the
 sequence(s) into.

@@ -107,7 +107,7 @@ extension, according to the
   automatically fixes the parens depending on the indentation, or the
   other way round (or both !).
 
-We personnaly advice to try Parinfer and the famous Paredit, then to
+We personally advice to try Parinfer and the famous Paredit, then to
 go up the list. See explanations and even more on
 [Wikemacs](http://wikemacs.org/wiki/Lisp_editing).
 
@@ -199,7 +199,7 @@ See also [code folding](http://wikemacs.org/wiki/Folding).
 {% include code/s12.lisp %}
 ~~~
 
-#### Finding occurances (occur, grep) ( [s13.lisp](s13.lisp) )
+#### Finding occurrences (occur, grep) ( [s13.lisp](s13.lisp) )
 
 ~~~lisp
 {% include code/s13.lisp %}
@@ -277,7 +277,7 @@ in the minibuffer.
 
 *   [CL HyperSpec](ftp://ftp.lispworks.com/pub/software_tools/documentation/HyperSpec-7-0.tar.gz)
 *   [CLtL2](http://www-2.cs.cmu.edu/afs/cs.cmu.edu/project/ai-repository/ai/lang/lisp/doc/cltl/cltl_ht.tgz)
-*   [ACL Documenation](https://franz.com/support/documentation/)
+*   [ACL Documentation](https://franz.com/support/documentation/)
 *   Example code ( [s23.lisp](s23.lisp) )
 
 ~~~lisp

@@ -167,7 +167,7 @@ HyperSpec for more.
 
 Another function that can be frequently used (but not part of the ANSI standard)
 is replace-all. This function provides an easy functionality for search/replace
-operations on a string, by returning a new string in which all the occurences of
+operations on a string, by returning a new string in which all the occurrences of
 the 'part' in string is replaced with 'replacement'".
 
 ~~~lisp
@@ -179,7 +179,7 @@ One of the implementations of replace-all is as follows:
 
 ~~~lisp
 (defun replace-all (string part replacement &key (test #'char=))
-"Returns a new string in which all the occurences of the part
+"Returns a new string in which all the occurrences of the part
 is replaced with replacement."
     (with-output-to-string (out)
       (loop with part-length = (length part)
@@ -463,7 +463,7 @@ NIL
 
 # Trimming Blanks from the Ends of a String
 
-Not only can you trim blanks, but you can get rid of arbitary characters. The
+Not only can you trim blanks, but you can get rid of arbitrary characters. The
 functions STRING-TRIM, STRING-LEFT-TRIM and STRING-RIGHT-TRIM return a substring
 of their second argument where all characters that are in the first argument are
 removed off the beginning and/or the end. The first argument can be any sequence
@@ -793,7 +793,7 @@ Print a tilde with `~~`, or 10 with `~10~`.
 
 Other directives include:
 
-- `R`: Roman (e.g., prints in english): `(format t "~R" 20)` => "twenty".
+- `R`: Roman (e.g., prints in English): `(format t "~R" 20)` => "twenty".
 - `$`: monetary: `(format t "~$" 21982)` => 21982.00
 - `D`, `B`, `O`, `X`: Decimal, Binary, Octal, Hexadecimal.
 - `F`: fixed-format Floating point.
@@ -867,7 +867,7 @@ with an `@` as in `~2@A`:
 
 ## Justifying decimals
 
-In `~,2F`, 2 is the number of decimals and F the floats diretive:
+In `~,2F`, 2 is the number of decimals and F the floats directive:
 `(format t "~,2F" 20.1)` => "20.10".
 
 With `~2,2f`:

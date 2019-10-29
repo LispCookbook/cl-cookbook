@@ -175,7 +175,7 @@ of specific sizes.
 ~~~
 
 Furthermore, you're free to change the format of the read/written data, instead
-of using elements of type character everytime. For instance, you can set
+of using elements of type character every time. For instance, you can set
 `:element-type` type argument of `with-output-to-string`, `with-open-file` and
 `make-array` functions to `'(unsigned-byte 8)` to read data in octets.
 

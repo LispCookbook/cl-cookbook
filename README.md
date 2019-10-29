@@ -8,7 +8,7 @@ The main goal is making the Cookbook more modern and more accessible in addition
 
 ## Contributing
 
-When adding a new content, ensure, it renders propertly. To do this, install [Jekyll][jekyll] and run `jekyll serve` in a folder where this repository was checked out.
+When adding a new content, ensure, it renders properly. To do this, install [Jekyll][jekyll] and run `jekyll serve` in a folder where this repository was checked out.
 
 Also, refer to a CONTRIBUTING.md file.
 

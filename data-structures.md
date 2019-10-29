@@ -263,7 +263,7 @@ If this gives you the will to do pattern matching, see
 
 `null` is equivalent to `not`, but considered better style.
 
-`listp` tests wether an object is a cons cell or nil.
+`listp` tests whether an object is a cons cell or nil.
 
 and sequences' predicates.
 
@@ -384,7 +384,7 @@ beware, here the sequence comes first.
 
 Return the number of elements in sequence that match *foo*.
 
-Additional paramaters: `:from-end`, `:start`, `:end`.
+Additional parameters: `:from-end`, `:start`, `:end`.
 
 See also `count-if`, `count-not` *(test-function sequence)*.
 

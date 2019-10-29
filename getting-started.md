@@ -125,7 +125,7 @@ working in this REPL. See [editor-support](editor-support.html).
 
 ## Libraries
 
-Common Lisp has hundreds of libraries available under a free software licence. See:
+Common Lisp has hundreds of libraries available under a free software license. See:
 
 * [Quickdocs](http://quickdocs.org/) - the library documentation hosting for CL.
 * the [Awesome-cl](https://github.com/CodyReichert/awesome-cl) list, a
@@ -299,7 +299,7 @@ it will create a directory structure like this:
     `-- my-project.lisp
 ```
 
-Where `my-project.asd` ressembles this:
+Where `my-project.asd` resembles this:
 
 ~~~lisp
 (defsystem "my-project"

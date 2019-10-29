@@ -79,7 +79,7 @@ usual `C-c C-c`.
 * **colorize** the output,
 * report **tests duration**,
 * change the default test function,
-* set a treshold for slow tests,
+* set a threshold for slow tests,
 * invoke the **CL debugger** whenever getting an error during running tests,
 * integrate with **ASDF** so than we can execute `(asdf:test-system)` or
   `(prove:run)` in the REPL (such configuration is provided by
@@ -240,7 +240,7 @@ build:
 Here we defined two `stages` (see
 [environments](https://docs.gitlab.com/ce/ci/environments.html)),
 "test" and "build", defined to run one after another. A "build" stage
-will start only if the "test" one succeesds.
+will start only if the "test" one succeeds.
 
 "build" is asked to run `only` when a
 new tag is pushed, not at every commit. When it succeeds, it will make

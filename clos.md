@@ -487,8 +487,8 @@ Each <cite>slot-option</cite> consists of a keyword followed by a
 
     *   you are rewarded for using them by having code that's simpler and
             more compact.
-    
-    
+
+
 
 `:reader`
 : Defines a single method for reading the slot; a read-only
@@ -498,7 +498,7 @@ Each <cite>slot-option</cite> consists of a keyword followed by a
 : Specifies a keyword which can be used to pass an initial value
     for this slot to `make-instance` (an <cite>initialization
         argument</cite>).
-    
+
 `:initform`
 :   Specifies a default value for this slot, to be used if no
     initial value was specified explicitly. This form is evaluated each
@@ -623,7 +623,7 @@ note:** these two functions are not part of Common Lisp. In
     `package-use-list`, in Allegro they're exported from
     `ACLMOP`. Also in Allegro, you have to have made an
     instance of `aardvark` before you can interrogate its
-    precedence list.) 
+    precedence list.)
 
 ~~~lisp
 CL-USER 38 > (class-direct-superclasses (find-class 'aardvark))
@@ -979,7 +979,7 @@ If a class is redefined it gets a new wrapper with a new
     several times without any work having to be done on its instances.
 
 | <a id="figure-5" name="figure-5">![Invalid instance, class, new and old wrappers.](assets/clos/images/fig-5.gif) |
-| Figure 5. "Invalid" instance, class, new and old wrappers. The greyed-out strutures have been updated. |
+| Figure 5. "Invalid" instance, class, new and old wrappers. The greyed-out structures have been updated. |
 
 Every time the application accesses an instance - for example in
     the definition of `slot-value` above - the CLOS system
@@ -1077,7 +1077,7 @@ There are a number of problems with this:
     unacceptable.
 
 *   We have to take care ordering the statements (the case for
-    `null` would have to preceed `symbol`.)
+    `null` would have to precede `symbol`.)
 
 *   Suppose we wanted to discriminate according to the types of
     more than one value?
@@ -1505,7 +1505,7 @@ CL-USER 76 >
 
 
 **Exercise:** Write a method on
-    `my-describe` for lists. 
+    `my-describe` for lists.
 
 **Exercise:** Write a method on
     `print-object` for `Eric` the antelope. Change
@@ -1653,7 +1653,7 @@ Computing, sorting and executing a list of applicable methods are
     cache its results and reuse them as often - but as cheaply - as
     possible. An implementor once told me that his aim was to make "best
     case" generic function dispatch no more than three times slower than
-    calling an ordinary function. 
+    calling an ordinary function.
 
 The method cache cannot be calculated in advance, because (a) we
     typically don't know what arguments might be passed to the generic
@@ -1669,7 +1669,7 @@ The following strategies might be useful:
     the latter.
 
 *   Implement method execution (steps 4 though 6 in the "full
-    dispatch mechanism" described in [section 4.6][section-46] above) 
+    dispatch mechanism" described in [section 4.6][section-46] above)
     by closing pre-compiled templates over sorted lists of
     applicable methods, thus generating <cite>combined methods</cite>. A
     combined method is a funcallable object which takes the same arguments
