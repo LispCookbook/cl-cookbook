@@ -321,7 +321,12 @@ Now let's declare that our `*all-names*` variables is a list of strings:
 
 ~~~lisp
 (declaim (type (list-of-strings) *all-names*))
+;; and with a wrong value:
 (defparameter *all-names* "")
+;; we get an error:
+Cannot set SYMBOL-VALUE of *ALL-NAMES* to "", not of type
+(SATISFIES LIST-OF-STRINGS-P).
+   [Condition of type SIMPLE-TYPE-ERROR]
 ~~~
 
 We can compose types:
