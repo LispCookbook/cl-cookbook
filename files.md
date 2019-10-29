@@ -142,7 +142,7 @@ of specific sizes.
 ~~~
 
 Furthermore, you're free to change the format of the read/written data, instead
-of using elements of type character everytime. For instance, you can set
+of using elements of type character every time. For instance, you can set
 `:element-type` type argument of `with-output-to-string`, `with-open-file` and
 `make-array` functions to `'(unsigned-byte 8)` to read data in octets.
 
@@ -164,7 +164,7 @@ better set the default encoding to utf-8.  Add this line to your
 
     (setf sb-impl::*default-external-format* :utf-8)
 
-and optionnally
+and optionally
 
     (setf sb-alien::*default-c-string-external-format* :utf-8)
 

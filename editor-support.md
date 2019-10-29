@@ -12,7 +12,7 @@ running Common Lisp process for compilation, debugging, documentation
 lookup, cross-references, and so on. It works with many implementations.
 
 [Portacle](https://shinmera.github.io/portacle/) is a portable and
-multiplatform Common Lisp environment. It ships Emacs25, SBCL,
+multi-platform Common Lisp environment. It ships Emacs25, SBCL,
 Quicklisp, SLIME and Git.
 
 <img src="assets/portacle.png"
@@ -88,7 +88,7 @@ with restarts, macro-expansion, parenthesis matching,…
 ## Lem
 
 Lem is an editor tailored for Common Lisp development. Once you
-install it, you can start developing. Its interface ressembles Emacs
+install it, you can start developing. Its interface resembles Emacs
 and SLIME (same shortcuts). It comes with an ncurses and an Electron
 frontend, and other programming modes: Python, Go, Rust, JS, Nim,
 Scheme, HTML, CSS, directory mode, a vim layer, and more.

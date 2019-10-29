@@ -4,7 +4,7 @@ title: Debugging
 
 You entered this new world of Lisp and now wonder: how can we debug
 what's going on ?  How is it more interactive than in other platforms
-?  What does bring the interactive debugger appart from stacktraces ?
+?  What does bring the interactive debugger apart from stacktraces ?
 
 ## Print debugging
 
@@ -188,7 +188,7 @@ and the backtrace. A few remarks:
 - in Slime, press `v` on a stacktrace to be redirected to the source
   file at the right line,
 - hit enter on a frame for more details,
-- we can explore the functionnality with the menu that should appear
+- we can explore the functionality with the menu that should appear
   in our editor. See the "break" section below for a few
   more commands (eval in frame, etc).
 
@@ -343,7 +343,7 @@ implementations, like CCL
 and [LispWorks](http://www.lispworks.com/). They do exist in
 SBCL but are not exported. `advise` allows to modify a function without changing its
 source, or to do something before or after its execution, like CLOS'
-method combination (befor, after around methods).
+method combination (before, after around methods).
 
 `watch` will signal a condition when a thread attempts to write to an
 object being watched. It can be coupled with the display of the

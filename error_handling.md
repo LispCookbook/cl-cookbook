@@ -218,7 +218,7 @@ Our `unknown-option` function is simple and looks like this:
 ~~~
 
 it takes the condition as parameter, so we can read information from
-it if needed. Here we get the name of the erronous option with the
+it if needed. Here we get the name of the erroneous option with the
 defined reader `(opts:option condition)` (see below).
 
 

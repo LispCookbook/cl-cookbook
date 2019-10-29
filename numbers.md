@@ -3,12 +3,12 @@ title: Numbers
 ---
 
 Common Lisp has a rich set of numerical types, including integer,
-rational, floating point, and complex. 
+rational, floating point, and complex.
 
 Some sources:
 
 * [`Numbers`][numbers] in Common Lisp the Language, 2nd Edition
-* [`Numbers, Characters and Strings`][numbers-characters-strings] 
+* [`Numbers, Characters and Strings`][numbers-characters-strings]
   in Practical Common Lisp
 
 ## Introduction
@@ -98,12 +98,12 @@ The Common Lisp standard allows for several floating point types. In
 order of increasing precision these are: `short-float`,
 `single-float`, `double-float`, and `long-float`. Their precisions are
 implementation dependent, and it is possible for an implementation to
-have only one floating point precision for all types. 
+have only one floating point precision for all types.
 
 The constants [`short-float-epsilon`, `single-float-epsilon`,
 `double-float-epsilon` and `long-float-epsilon`][float-constants] give
 a measure of the precision of the floating point types, and are
-implementation dependent. 
+implementation dependent.
 
 #### Floating point literals
 
@@ -124,7 +124,7 @@ Other suffixes are `s` (short), `f` (single float), `d` (double
 float), `l` (long float) and `e` (default; usually single float).
 
 The default type can be changed, but note that this may break packages
-which assume `single-float` type. 
+which assume `single-float` type.
 
 ~~~lisp
 * (setq *read-default-float-format* 'double-float)
@@ -142,7 +142,7 @@ to the end of a number does not make it a float:
 SINGLE-FLOAT
 ~~~
 
-#### Floating point errors 
+#### Floating point errors
 
 If the result of a floating point calculation is too large then a floating
 point overflow occurs. By default in [SBCL][SBCL] (and other implementations)
@@ -166,9 +166,9 @@ changed, to return `+infinity`. In SBCL this is:
 0.0
 ~~~
 
-The calculation now silently continues, without an error condition. 
+The calculation now silently continues, without an error condition.
 
-A similar functionality to disable floating overflow errors 
+A similar functionality to disable floating overflow errors
 exists in [CCL][CCL]:
 ~~~lisp
 * (set-fpu-mode :overflow nil)
@@ -209,7 +209,7 @@ The precision to print is set by `*PRINT-PREC*`, by default 20
 
 There are 5 types of complex number: The real and imaginary parts must
 be of the same type, and can be rational, or one of the floating point
-types (short, single, double or long). 
+types (short, single, double or long).
 
 Complex values can be created using the `#C` reader macro or the function
 [`complex`][complex]. The reader macro does not allow the use of expressions
@@ -226,7 +226,7 @@ as real and imaginary parts:
 #C(3 5)
 ~~~
 
-If constructed with mixed types then the higher precision type will be used for both parts. 
+If constructed with mixed types then the higher precision type will be used for both parts.
 
 ~~~lisp
 * (type-of #C(1 1))
@@ -295,7 +295,7 @@ See [Common Lisp the Language, 2nd Edition, section 12.6][book-cl-12.6].
 
 The [`rational` and `rationalize` functions][rational-and-rationalize] convert
 a real numeric argument into a rational. `rational` assumes that floating
-point arguments are exact; `rationalize` expoits the fact that floating point
+point arguments are exact; `rationalize` exploits the fact that floating point
 numbers are only exact to their precision, so can often find a simpler
 rational number.
 
@@ -372,10 +372,10 @@ DOUBLE-FLOAT
 
 See [Common Lisp the Language, 2nd Edition, Section 12.3][book-cl-12.3].
 
-The `=` predicate returns `T` if all arguments are numerically equal. 
+The `=` predicate returns `T` if all arguments are numerically equal.
 Note that comparison of floating point numbers includes some margin
 for error, due to the fact that they cannot represent all real
-numbers and accumulate errors. 
+numbers and accumulate errors.
 
 The constant [`single-float-epsilon`][single-float-epsilon] is the smallest
 number which will cause an `=` comparison to fail, if it is added to 1.0:
@@ -403,7 +403,7 @@ can accumulate and a larger error margin may be needed. In this case
 the absolute difference can be compared:
 
 ~~~lisp
-* (< (abs (- (+ 10s0 5e-7) 
+* (< (abs (- (+ 10s0 5e-7)
              10s0))
      1s-6)
 T
@@ -423,14 +423,14 @@ NIL
 ## Operating on a series of numbers
 
 Many Common Lisp functions operate on sequences, which can be either lists
-or vectors (1D arrays). See the section on 
+or vectors (1D arrays). See the section on
 [mapping][mapping].
 
-Operations on multidimensional arrays are discussed in 
+Operations on multidimensional arrays are discussed in
 [this section][arrays].
 
 Libraries are available for defining and operating on lazy sequences,
-including "infinite" sequences of numbers. For example 
+including "infinite" sequences of numbers. For example
 
 * [Clazy][clazy] which is on QuickLisp.
 * [folio2][folio2] on QuickLisp. Includes an interface to the
@@ -468,21 +468,21 @@ DOUBLE-FLOAT
 
 In SBCL a [Mersenne Twister][mersenne-twister] pseudo-random number generator
  is used. See section [7.13 of the SBCL manual][sbcl-7.13] for details.
- 
+
 The random seed is stored in [`*random-state*`][random-state] whose internal
 representation is implementation dependent. The function
 [`make-random-state`][make-random-state] can be used to make new random
 states, or copy existing states.
 
-To use the same set of random numbers multiple times, 
+To use the same set of random numbers multiple times,
 `(make-random-state nil)` makes a copy of the current `*random-state*`:
 
 ~~~lisp
 * (dotimes (i 3)
     (let ((*random-state* (make-random-state nil)))
-      (format t "~a~%" 
+      (format t "~a~%"
               (loop for i from 0 below 10 collecting (random 10)))))
-              
+
 (8 3 9 2 1 8 0 0 4 1)
 (8 3 9 2 1 8 0 0 4 1)
 (8 3 9 2 1 8 0 0 4 1)
@@ -536,7 +536,7 @@ For example:
 ;;   0010 (2)
 ;;   1101 (two's complement of -3)
 ;; & 0100 (4)
-;; ------- 
+;; -------
 ;;   0000
 
 * (logxor 1 3 7 15)

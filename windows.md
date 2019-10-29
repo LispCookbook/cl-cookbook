@@ -6,9 +6,9 @@ Emacs is the preferred Lisp source code editor for most CL developers.
 
 If you want to get going easily, get
 [Portacle](https://shinmera.github.io/portacle/), a **portable** and
-**multiplatform** CL development environment. You get:
+**multi-platform** CL development environment. You get:
 
-- Emacs25, sligthly customized,
+- Emacs25, slightly customized,
 - Slime,
 - SBCL,
 - Quicklisp,
@@ -50,7 +50,7 @@ For each installation, an installation directory is suggested. It is recommended
 
 ### <a name="Installing Emacs">1\. Installing Emacs</a>
 
-* From a command line, create the following directories (used later): 
+* From a command line, create the following directories (used later):
 
     <pre>
     md c:\home\
@@ -111,7 +111,7 @@ For each installation, an installation directory is suggested. It is recommended
 
 ## <a name="Installing ACL">5\. Installing ACL</a> (optional)
 
-* Download the trial version of [Franz's ACL](https://franz.com/) for Windows from: [https://franz.com/downloads/](https://franz.com/downloads/)  
+* Download the trial version of [Franz's ACL](https://franz.com/) for Windows from: [https://franz.com/downloads/](https://franz.com/downloads/)
 * (Note: you will need to agree to their license and provide an email address. Franz will send you an email with instructions on how to download the temporary license key. The key works for 60 days and a new one can be downloaded before that one expires).
 * Run the downloaded installation program (acl62_trial.exe) and install ACL into the c:\bin\acl-6.2 directory.
 * Install the license key as per the instructions that you received from Franz.
@@ -222,7 +222,7 @@ For each installation, an installation directory is suggested. It is recommended
             * Click in the *inferior-lisp* window and press "C-h b" (this will show you the keybindings that are in effect for Corman in Inferior Lisp Mode).
             * Click in the *Help* window and scroll through the keybinding list. When finished, press "F4" to close that window.
             * Click in the *inferior-lisp* window and press "F4" to close that window.
-    * If you installed the documentation, you can test that the online documentation works by pressing "F1" (for the HyperSpect) or "M-F1" (for CLtL2) when the cursor is on a Lisp keyword (e.g. -- "defun" or "setq"). This should bring up a browser with the documentation for that keyword. See the function key definitions below for accessing other documentation.
+    * If you installed the documentation, you can test that the online documentation works by pressing "F1" (for the HyperSpec) or "M-F1" (for CLtL2) when the cursor is on a Lisp keyword (e.g. -- "defun" or "setq"). This should bring up a browser with the documentation for that keyword. See the function key definitions below for accessing other documentation.
     * Exit Emacs by pressing "C-x C-c" and pressing "y" when you get the "Do you really want to exit Emacs ? (y or n)" prompt in the minibuffer.
 
 You should now have a working Windows/Emacs setup that supports a number of different Lisp implementations.
@@ -255,7 +255,7 @@ You should now have a working Windows/Emacs setup that supports a number of diff
         * C-c x - For ACL or the ILISP Lisps, does a "Do What I Mean" eval/compile (see function documentation for copy-eval-dwim-lisp).
         * C-c e - Prompts for a Lisp form to evaluate.
         * C-c ; - Comments out the sexp that the cursor is on (repeated presses comment outward sexp's). (see function documentation for insert-balanced-comments).
-        * C-c : - Uncomments comments that were insered with insert-balanced-comments (see function documentation for remove-balanced-comments).
+        * C-c : - Uncomments comments that were inserted with insert-balanced-comments (see function documentation for remove-balanced-comments).
     * **Standard Key Overrides:** Some convenience key setups. The following key bindings have been added:
         * mouse-2 - Brings up a menu of Lisp symbols when in a Lisp source file.
         * F6 - Switches focus to another window (when multiple windows are in an Emacs frame).

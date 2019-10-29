@@ -6,7 +6,7 @@ The ANSI Common Lisp standard doesn't mention this topic. So almost everything t
 
 Note: You should read the</a> [relevant chapter](http://clisp.sourceforge.net/impnotes.html#dffi) from the CLISP implementation notes before you proceed.
 
-`int gethostname(char *name, int len)` follows a typical pattern of C "out"-parameter convention - it expects a pointer to a buffer it's going to fill. So you must view this parameter as either `:OUT` or `:IN-OUT`. Additionaly, one must tell the function the size of the buffer. Here `len` is just an `:IN` parameter. Sometimes this will be an `:IN-OUT` parameter, returning the number of bytes actually filled in.
+`int gethostname(char *name, int len)` follows a typical pattern of C "out"-parameter convention - it expects a pointer to a buffer it's going to fill. So you must view this parameter as either `:OUT` or `:IN-OUT`. Additionally, one must tell the function the size of the buffer. Here `len` is just an `:IN` parameter. Sometimes this will be an `:IN-OUT` parameter, returning the number of bytes actually filled in.
 
 So `name` is actually a pointer to an array of up to `len` characters, regardless of what the poor "`char *`" C prototype says, to be used like a C string (0-termination). How many elements are in the array? Luckily, in our case, you can find it out without calculating the `sizeof()` a C structure. It's a hostname that will be returned. The Solaris 2.x manpage says "Host names are limited to MAXHOSTNAMELEN characters, currently 256."
 
@@ -50,7 +50,7 @@ Possibly `SUBSEQ` and `POSITION` are superfluous, thanks to `C-ARRAY-MAX` as opp
 
 ### Example: Calling 'gethostname' from Allegro CL
 
-This is how the same example above would be written in Allegro Common Lisp version 6 and above. ACL doesn't explicitely distinguish between `input` and `output` arguments. The way to declare an argument as `output` (i.e., modifiable by C) is to use an array, since arrays are passed by reference and C therefore receives a pointer to a memory location (which is what it expects). In this case things are made even easier by the fact that `gethostname()` expects an array of char, and a `SIMPLE-ARRAY` of `CHARACTER` represents essentially the same thing in Lisp. The foreign function definition is therefore the following:
+This is how the same example above would be written in Allegro Common Lisp version 6 and above. ACL doesn't explicitly distinguish between `input` and `output` arguments. The way to declare an argument as `output` (i.e., modifiable by C) is to use an array, since arrays are passed by reference and C therefore receives a pointer to a memory location (which is what it expects). In this case things are made even easier by the fact that `gethostname()` expects an array of char, and a `SIMPLE-ARRAY` of `CHARACTER` represents essentially the same thing in Lisp. The foreign function definition is therefore the following:
 
 ~~~lisp
 (def-foreign-call (c-get-hostname "gethostname")

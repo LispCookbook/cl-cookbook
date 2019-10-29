@@ -179,7 +179,7 @@ mylist
 (nreverse mylist)
 ;; => (3 2 1)
 mylist
-;; => (1) in SBCL but implementation dependant.
+;; => (1) in SBCL but implementation dependent.
 ~~~
 
 
@@ -316,7 +316,7 @@ If this gives you the will to do pattern matching, see
 
 `null` is equivalent to `not`, but considered better style.
 
-`listp` tests wether an object is a cons cell or nil.
+`listp` tests whether an object is a cons cell or nil.
 
 and sequences' predicates.
 
@@ -1566,7 +1566,7 @@ The Common Lisp Object System (which came after into the language)
 doesn't have such limitations. See the [CLOS section](clos.html).
 
 * [structures on the hyperspec](http://www.lispworks.com/documentation/HyperSpec/Body/08_.htm)
-* David B. Lamkins, ["Successful Lisp, How to Undertsand and Use Common Lisp"](http://www.communitypicks.com/r/lisp/s/17592186045679-successful-lisp-how-to-understand-and-use-common).
+* David B. Lamkins, ["Successful Lisp, How to Understand and Use Common Lisp"](http://www.communitypicks.com/r/lisp/s/17592186045679-successful-lisp-how-to-understand-and-use-common).
 
 ## Tree
 

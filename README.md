@@ -24,7 +24,7 @@ Another option is to use github gem provided with the repo. To do this do the fo
 
 It can happen that you have older version of ruby installed in the system and
 bundler will fail with install. To fix this you need to update ruby. Sometimes
-system update is not an option, in this case consider instaling [rbenv][rbenv].
+system update is not an option, in this case consider installing [rbenv][rbenv].
 
 ~~~ sh
     # Check rbenv homepage for install instructions on systems other than Mac OS X

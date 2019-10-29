@@ -1359,7 +1359,7 @@ NIL
 ~~~
 
 End the kernel (this is important since `*kernel*` does not get
-garbage collected until we explictly end it):
+garbage collected until we explicitly end it):
 
 ~~~lisp
 CL-USER> (lparallel:end-kernel :wait t)
@@ -1443,8 +1443,8 @@ NIL
 ~~~
 
 Now let’s try submitting multiple tasks to the same channel. In this
-simple example, we are simpy creating three tasks that square, triple,
-and quadrupls the supplied input respectively.
+simple example, we are simply creating three tasks that square, triple,
+and quadruple the supplied input respectively.
 
 Note that in case of multiple tasks, the output will be in non-deterministic order:
 
@@ -1840,7 +1840,7 @@ promise object p, and we spawn off a thread that sleeps for some
 random time and then fulfills the promise by giving it a value.
 
 Meanwhile, in the main thread, we spawn off another thread that keeps
-hecking if the promise has been fulfilled or not. If not, it prints
+checking if the promise has been fulfilled or not. If not, it prints
 some random number and continues checking. Once the promise has been
 fulfilled, we can extract the value using `lparallel:force` in the main
 thread as shown.
@@ -2007,7 +2007,7 @@ futures to fulfill those promises**.
 
 ### Using cognates - parallel equivalents of Common Lisp counterparts
 
-Cognates are argubaly the raison d’etre of the lparallel
+Cognates are arguably the raison d’etre of the lparallel
 library. These constructs are what truly provide parallelism in the
 lparallel. Note, however, that most (if not all) of these constructs
 are built on top of futures and promises.
@@ -2100,7 +2100,7 @@ through an example:
 Note that all the mapping functions (`lparallel:pmap`,
 **lparallel:pmapc**,`lparallel:pmapcar`, etc.) take two special keyword
 arguments
-- `:size`, specifiying the number of elements of the input
+- `:size`, specifying the number of elements of the input
 sequence(s) to process, and
 - `:parts` which specifies the number of parallel parts to divide the
 sequence(s) into.

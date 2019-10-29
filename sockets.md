@@ -94,7 +94,7 @@ So, what were the problems I faced due to my mistakes?
 Mistake 1 - Unlike TCP, you don't pass host and port to `socket-connect`.
 If you do that, then you are indicating that you want to send a packet.
 Instead, you pass `nil` but you set `:local-host` and `:local-port` to the address
-and port that you wnat to receive data on. This part took some time to
+and port that you want to receive data on. This part took some time to
 figure out, because the documentation didn't cover it. Instead reading
 a bit of code from
 https://code.google.com/p/blackthorn-engine-3d/source/browse/src/examples/usocket/usocket.lisp helped a lot.
