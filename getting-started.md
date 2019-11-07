@@ -123,10 +123,15 @@ and:
 But we'll setup our editor to offer a better experience instead of
 working in this REPL. See [editor-support](editor-support.html).
 
-
 Lisp is interactive by nature, so in case of an error we enter the
 debugger. This can be annoying in certain cases so you might want to
 use SBCL's `--disable-debugger` option.
+
+_Tip: the CLISP implementation has a better default REPL for the
+terminal (readline capabilities, completion of symbols). You can even
+use `clisp -on-error abort` to have error messages without the
+debugger. It's handy to try things out, but we recommend to set-up
+one's editor and to use SBCL or CCL for production._
 
 
 ## Libraries
