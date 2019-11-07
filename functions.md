@@ -535,8 +535,6 @@ A silly example:
 A related concept is that of _[currying](https://en.wikipedia.org/wiki/Currying)_ which you might be familiar with if you're coming from a functional language. After we've read the last section that's rather easy to implement:
 
 ~~~lisp
-CL-USER> (declaim (ftype (function (function &rest t) function) curry) (inline curry))
-NIL
 CL-USER> (defun curry (function &rest args)
            (lambda (&rest more-args)
 	           (apply function (append args more-args))))
@@ -550,8 +548,6 @@ CL-USER> (setf (symbol-function 'power-of-ten) (curry #'expt 10))
 CL-USER> (power-of-ten 3)
 1000
 ~~~
-
-Note that the [`declaim`](http://www.lispworks.com/documentation/HyperSpec/Body/m_declai.htm) statement above is just a hint for the compiler so it can produce more efficient code if it so wishes. Leaving it out won't change the semantics of the function.
 
 ### With the Alexandria library
 
