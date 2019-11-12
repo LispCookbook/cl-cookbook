@@ -9,7 +9,7 @@ an extension to [Hunchentoot](https://edicl.github.io/hunchentoot/), the classic
 web server for Common Lisp.  I have used both and I find them to be wonderful.
 
 Today, however, you will be using the equally excellent
-[websocket-driver](https://github.com/fukamachi/websocket-driver) to build a WebSocket server with 
+[websocket-driver](https://github.com/fukamachi/websocket-driver) to build a WebSocket server with
 [Clack](https://github.com/fukamachi/clack). The Common Lisp web development community has expressed a
 slight preference for the Clack ecosystem because Clack provides a uniform interface to
 a variety of backends, including Hunchentoot. That is, with Clack, you can pick and choose the
@@ -43,13 +43,13 @@ The `websocket-driver` API provides handlers for the following events:
 - `:close` When a connection closes. Expects a handler with two keyword args, a
   "code" and a "reason" for the dropped connection.
 - `:error` When some kind of protocol level error occurs. Expects a handler with
-  one argument, the error message. 
-  
+  one argument, the error message.
+
 For the purposes of your chat server, you will want to handle three cases: when
 a new user arrives to the channel, when a user sends a message to the channel,
 and when a user leaves.
 
-## Defining Handlers for Chat Server Logic 
+## Defining Handlers for Chat Server Logic
 
 In this section you will define the functions that your event handlers will
 eventually call. These are helper functions that manage the chat server logic.
@@ -68,8 +68,8 @@ structure to map individual WebSocket connections to nicknames:
 (defun handle-new-connection (con)
   (setf (gethash con *connections*)
         (format nil "user-~a" (random 100000))))
-        
-~~~ 
+
+~~~
 
 Next, when a user sends a chat to the room, the rest of the room should be
 notified. The message that the server receives is prepended with the nickname of
@@ -102,12 +102,12 @@ connection should be dropped from the `*connections*` table.
 
 Using Clack, a server is started by passing a function to `clack:clackup`. You
 will define a function called `chat-server` that you will start by
-calling `(clack:clackup #'chat-server :port 12345)`.  
+calling `(clack:clackup #'chat-server :port 12345)`.
 
 A Clack server function accepts a single plist as its argument. That plist
 contains environment information about a request and is provided by the system.
 Your chat server will not make use of that environment, but if you want to learn
-more you can check out Clack's documentation.  
+more you can check out Clack's documentation.
 
 When a browser connects to your server, a websocket will be instantiated and
 handlers will be defined on it for each of the the events you want to support.
@@ -151,7 +151,7 @@ application that serves a web page to display and send chats.  First the web pag
 
 ~~~lisp
 
-(defvar *html* 
+(defvar *html*
   "<!doctype html>
 
 <html lang=\"en\">
@@ -209,7 +209,7 @@ ahead and start it, this time on port `8080`:
 
 ~~~lisp
 (defvar *client-handler* (clack:clackup #'client-server :port 8080))
-~~~ 
+~~~
 
 ## Check it out!
 
@@ -260,7 +260,7 @@ should see your chat app!
       (declare (ignore responder))
       (websocket-driver:start-connection ws))))
 
-(defvar *html* 
+(defvar *html*
   "<!doctype html>
 
 <html lang=\"en\">
@@ -301,15 +301,11 @@ should see your chat app!
 </html>
 ")
 
-
-
 (defun client-server (env)
-    (declare (ignore env))
-    `(200 (:content-type "text/html")
-          (,*html*))))
+  (declare (ignore env))
+  `(200 (:content-type "text/html")
+     (,*html*)))
 
 (defvar *chat-handler* (clack:clackup #'chat-server :port 12345))
 (defvar *client-handler* (clack:clackup #'client-server :port 8080))
 ~~~
-
-
