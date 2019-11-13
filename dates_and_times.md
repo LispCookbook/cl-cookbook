@@ -240,6 +240,7 @@ In particular, it can
 - convert Unix times, timestamps, and universal times to and fro.
 
 For example, here is a function that returns Unix times as a human readable string:
+
 ~~~lisp
 (defun unix-time-to-human-string (unix-time)
   (local-time:format-timestring
@@ -250,6 +251,20 @@ For example, here is a function that returns Unix times as a human readable stri
 
 See the [manual](https://common-lisp.net/project/local-time/manual.html) for
 the full details.
+
+### Get today's date
+
+Use `now` or `today`:
+
+~~~lisp
+(local-time:now)
+@2019-11-13T20:02:13.529541+01:00
+
+(local-time:today)
+@2019-11-13T01:00:00.000000+01:00
+~~~
+
+"today" is the midnight of the current day in the UTC zone.
 
 
 ### Formatting time strings
@@ -331,3 +346,68 @@ We see the form `(:day 2)`: the 2 is for padding, to ensure that the
 day is printed with two digits (not only `1`, but `01`). There could be
 an optional third argument, the character with which to fill the
 padding (by default, `#\0`).
+
+### Parsing time strings
+
+Use `parse-timestring` to parse timestrings, in the form
+`2019-11-13T18:09:06.313650+01:00`. It works in a variety of formats
+by default, and we can change parameters to adapt it to our needs.
+
+To parse more formats such as "Thu Jul 23 19:42:23 2013" (asctime),
+we'll use the [cl-date-time-parser](https://github.com/tkych/cl-date-time-parser) library.
+
+The `parse-timestring` docstring is:
+
+>  Parses a timestring and returns the corresponding timestamp. Parsing begins at start and stops at the end position. If there are invalid characters within timestring and fail-on-error is T, then an invalid-timestring error is signaled, otherwise NIL is returned.
+>
+> If there is no timezone specified in timestring then offset is used as the default timezone offset (in seconds).
+
+Examples:
+
+~~~lisp
+(local-time:parse-timestring "2019-11-13T18:09:06.313650+01:00")
+;; @2019-11-13T18:09:06.313650+01:00
+~~~
+
+~~~lisp
+(local-time:parse-timestring "2019-11-13")
+;; @2019-11-13T01:00:00.000000+01:00
+~~~
+
+This custom format fails by default: "2019/11/13", but we can set the
+`:date-separator` to "/":
+
+~~~lisp
+(local-time:parse-timestring "2019/11/13" :date-separator #\/)
+;; @2019-11-13T19:42:32.394092+01:00
+~~~
+
+There is also a `:time-separator` (defaulting to `#\:`) and
+`:date-time-separator` (`#\T`).
+
+Other options include:
+
+- the start and end positions
+- `fail-on-error` (defaults to `t`)
+- `(allow-missing-elements t)`
+- `(allow-missing-date-part allow-missing-elements)`
+- `(allow-missing-time-part allow-missing-elements)`
+- `(allow-missing-timezone-part allow-missing-elements)`
+- `(offset 0)`
+
+Now a format like ""Wed Nov 13 18:13:15 2019" will fail. We'll use the
+`cl-date-time-parser` library:
+
+~~~lisp
+(cl-date-time-parser:parse-date-time "Wed Nov 13 18:13:15 2019")
+;; 3782657595
+;; 0
+~~~
+
+It returns the universal time which, in turn, we can ingest with the
+local-time library:
+
+~~~lisp
+(local-time:universal-to-timestamp *)
+;; @2019-11-13T19:13:15.000000+01:00
+~~~
