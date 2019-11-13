@@ -15,6 +15,7 @@ title: Home
 * [License](license.html)
 * [Getting started](getting-started.html)
 * [Editor support](editor-support.html)
+* [Functions](functions.html)
 * [Data Structures](data-structures.html)
 * [Strings](strings.html)
 * [Numbers](numbers.html)
@@ -23,23 +24,27 @@ title: Home
 * [Dates and Times](dates_and_times.html)
 * [Pattern Matching](pattern_matching.html)
 * [Regular Expressions](regexp.html)
-* [Functions](functions.html)
 * [Input/Output](io.html)
 * [Files and Directories](files.html)
 * [Error and condition handling](error_handling.html)
 * [Packages](packages.html)
 * [Macros and Backquote](macros.html)
 * [CLOS (the Common Lisp Object System)](clos.html)
+* [Type System](type.html)
+* [Sockets](sockets.html)
 * [Interfacing with your OS](os.html)
 * [Foreign Function Interfaces](ffi.html)
 * [Threads](process.html)
 * [Defining Systems](systems.html)
 * [Using the Win32 API](win32.html)
 * [Debugging](debugging.html)
+* [Performance Tuning](performance.html)
 * [Scripting. Building executables](scripting.html)
 * [Testing and Continuous Integration](testing.html)
 * [Databases](databases.html)
+* [Web development](web.html)
 * [Web Scraping](web-scraping.html)
+* [WebSockets](websockets.html)
 * [Experimental CL21](cl21.html)
 * [Miscellaneous](misc.html)
 
@@ -49,20 +54,20 @@ title: Home
 * The [Awesome-cl](https://github.com/CodyReichert/awesome-cl) list
 * [The Common Lisp HyperSpec](http://www.lispworks.com/documentation/HyperSpec/Front/index.htm) by Kent M. Pitman (also available in [Dash](https://kapeli.com/dash), [Zeal](https://zealdocs.org/) and [Velocity](https://velocity.silverlakesoftware.com/))
 * [The Common Lisp UltraSpec](http://phoe.tymoon.eu/clus/doku.php)
-* [Practical Common Lisp](http://www.gigamonkeys.com/book/) by Peter Seibel (better read with [a Firefox add-on](https://www.reddit.com/r/Common_Lisp/comments/abwtxu/beautify_practical_common_lisp_extension_for/))
+* [Practical Common Lisp](http://www.gigamonkeys.com/book/) by Peter Seibel
 * [Common Lisp Recipes](http://weitz.de/cl-recipes/) by Edmund Weitz, published in 2016,
 * [Cliki](http://www.cliki.net/), Common Lisp's wiki
 * [Articulate Common Lisp](http://articulate-lisp.com/), an initiation manual for the uninitiated
 * [Common Lisp](https://en.wikibooks.org/wiki/Common_Lisp) on Wikibooks
-* [The old comp.lang.lisp FAQ](http://www-2.cs.cmu.edu/Groups//AI/html/faqs/lang/lisp/top.html) by Mark Kantrowitz
+* [The old comp.lang.lisp FAQ](https://common-lisp.net/project/lispfaq/FAQ/) by Mark Kantrowitz, Barry Margolin, and Christophe Rhodes
 * [Common Lisp: A Gentle Introduction to Symbolic Computation](http://www-2.cs.cmu.edu/~dst/LispBook/) by David S. Touretzky
-* [Successful Lisp: How to Understand and Use Common Lisp](http://www.psg.com/~dlamkins/sl/cover.html) by David B. Lamkins
+* [Successful Lisp: How to Understand and Use Common Lisp](https://successful-lisp.blogspot.com/p/httpsdrive.html) by David B. Lamkins
 * [On Lisp](http://www.paulgraham.com/onlisptext.html) by Paul Graham
 * [Common Lisp the Language, 2nd Edition](http://www-2.cs.cmu.edu/Groups/AI/html/cltl/cltl2.html) by Guy L. Steele
 * [Common Lisp Hints](http://www.n-a-n-o.com/lisp/cmucl-tutorials/LISP-tutorial.html) by Geoffrey J. Gordon
-* [Common Lisp Pitfalls](http://www.aiai.ed.ac.uk/~jeff/lisp/cl-pitfalls) by Jeff Dalton
+* [Common Lisp Pitfalls](https://raw.githubusercontent.com/ebzzry/cl-pitfalls/master/cl-pitfalls.txt) by Jeff Dalton
 * [A Tutorial on Good Lisp Style](https://www.cs.umd.edu/%7Enau/cmsc421/norvig-lisp-style.pdf) by Peter Norvig and Kent Pitman
-* [Lisp and Elements of Style](http://www.nicklevine.org/declarative/lectures/) by Nick Levine
+* [Lisp and Elements of Style](http://web.archive.org/web/20190316190256/https://www.nicklevine.org/declarative/lectures/) by Nick Levine
 * Pascal Costanza's [Highly Opinionated Guide to Lisp](http://www.p-cos.net/lisp/guide.html)
 * [Loving Lisp - the Savy Programmer's Secret Weapon](https://leanpub.com/lovinglisp/) by Mark Watson
 * [FranzInc](https://franz.com/), a company selling Common Lisp and Graph Database solutions.
@@ -90,44 +95,13 @@ The pages here on Github are kept up to date. You can also download a
 [up to date zip file][zip] for offline browsing. More info can be found at the
 [Github project page][gh].
 
-## Contributors
+<div style="text-align: center">
+    <img src="orly-cover.png"/>
+</div>
 
-<p id="contributors"></p>
-
-* Marco Antoniotti
-* [Zach Beane](mailto:xach@xach.com)
-* Pierpaolo Bernardi
-* [Christopher Brown](mailto:skeptomai@mac.com)
-* [Frederic Brunel](mailto:brunel@mail.dotcom.fr)
-* [Jeff Caldwell](mailto:jdcal@yahoo.com)
-* [Bill Clementson](mailto:bill_clementson@yahoo.com)
-* Martin Cracauer
-* [Gerald Doussot](mailto:gdoussot@yahoo.com)
-* [Paul Foley](mailto:mycroft@actrix.gen.nz)
-* Jörg-Cyril Höhle
-* [Nick Levine](mailto:ndl@ravenbrook.com)
-* [Austin King](mailto:shout@ozten.com)
-* [Lieven Marchand](mailto:mal@wyrd.be)
-* [Drew McDermott](mailto:drew.mcdermott@yale.edu)
-* [Kalman Reti](mailto:reti@ai.mit.edu)
-* [Alberto Riva](mailto:alb@chip.org)
-* [Rudi Schlatte](mailto:rschlatte@ist.tu-graz.ac.at)
-* [Emre Sevinç](mailto:emres@bilgi.edu.tr)
-* Paul Tarvydas
-* Kenny Tilton
-* [Reini Urban](mailto:rurban@x-ray.at)
-* [Matthieu Villeneuve](mailto:matthieu@matthieu-villeneuve.net)
-* [Edi Weitz](mailto:edi@agharta.de)
-* Fernando Borretti
-
-Finally, the credit for finally giving birth to the project probably goes to
-"dj_special_ed" who posted [this message][msg] to [comp.lang.lisp][cll].
-
+[cll]: news:comp.lang.lisp
 [perl]: http://www.oreilly.com/catalog/cookbook/
 [thread]: http://groups.google.com/groups?threadm=m3it9soz3m.fsf%40bird.agharta.de
-[cll]: news:comp.lang.lisp
-[msg]: http://groups.google.com/groups?selm=76be8851.0201222259.70ecbcb1%40posting.google.com
 [toc]: http://www.oreilly.com/catalog/cookbook/
 [zip]: https://github.com/LispCookbook/cl-cookbook/archive/master.zip
 [gh]: https://github.com/LispCookbook/cl-cookbook
-[clog]: https://github.com/can3p/cl-cookbook/blob/master/CHANGELOG

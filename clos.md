@@ -124,7 +124,7 @@ The general form of `defclass` is:
    :another-optional-class-option))
 ```
 
-So, our `person` class doesn't explicitely inherit from another class
+So, our `person` class doesn't explicitly inherit from another class
 (it gets the empty parentheses `()`). However it still inherits by default from
 the class `t` and from `standard-object`. See below under
 "inheritance".
@@ -136,7 +136,7 @@ We could write a minimal class definition without slots options like this:
   (x y z))
 ~~~
 
-or even without slots specificiers: `(defclass point () ())`.
+or even without slots specifiers: `(defclass point () ())`.
 
 ## Creating objects (make-instance)
 
@@ -580,7 +580,7 @@ In the above example, I became a `child`, and I inherited the `can-walk-p` slot,
 
 ## Pretty printing
 
-Everytime we printed an object so far we got an output like
+Every time we printed an object so far we got an output like
 
     #<PERSON {1006234593}>
 
@@ -720,7 +720,7 @@ The metaclass of a `structure-object` is the class
 we already saw some introspection functions.
 
 Your best option is to discover the
-[closer-mop](https://github.com/pcostanza/closer-mop) libray and to
+[closer-mop](https://github.com/pcostanza/closer-mop) library and to
 keep the [CLOS & MOP specifications](https://clos-mop.hexstreamsoft.com/) at
 hand.
 
@@ -1489,8 +1489,8 @@ Our metaclass inherits from `standard-class`:
 (defclass person ()
   ((name
     :initarg :name
-    :accessor name)
-  (:metaclass counted-class))) ;; <- metaclass
+    :accessor name))
+  (:metaclass counted-class)) ;; <- metaclass
 ;; #<COUNTED-CLASS PERSON>
 ;;   ^^^ not standard-class anymore.
 ~~~

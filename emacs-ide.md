@@ -6,7 +6,7 @@ This page is meant to provide an introduction to using Emacs as a Lisp IDE. The 
 
 
 **Note**: [Portacle](https://shinmera.github.io/portacle/) is a
-portable and multiplatform CL development environment, a
+portable and multi-platform CL development environment, a
 straightforward way to get going.
 
 
@@ -42,7 +42,7 @@ straightforward way to get going.
     *   No numerical tower support
 
 *   Some good Emacs Lisp learning resources:
-    *   [An Introduction to Programming in Emacs Lisp](http://www.gnu.org/manual/emacs-lisp-intro/emacs-lisp-intro.html)
+    *   [An Introduction to Programming in Emacs Lisp](https://www.gnu.org/software/emacs/manual/eintr.html)
     *   [Writing GNU Emacs Extensions](http://www.oreilly.com/catalog/gnuext/)
     *   [Wikemacs](http://wikemacs.org/wiki/Category:Emacs_Lisp)
 
@@ -71,14 +71,37 @@ for CL programming.
 
 *   Setup:
     *   Installing it from [MELPA](http://wikemacs.org/wiki/Melpa) is straightforward. Search package-list-packages for 'slime' and click to install. If MELPA is configured correctly, it will install itself and all dependencies.
-    *   Run slime with `M-x slime`.
+    *   Enable the desired contribs (SLIME does very little by defaults), e.g. `(slime-setup '(slime-fancy slime-quicklisp slime-asdf))`.
+    *   Run SLIME with `M-x slime`.
 
 Check out this **[video tutorial](https://www.youtube.com/watch?v=sBcPNr1CKKw)** ! (and the author's channel, full of great stuff)
 
+SLIME also has some nice extensions like
+[Helm-SLIME](https://github.com/emacs-helm/helm-slime) which features, among
+others
+- Fuzzy completion,
+- REPL and connection listing,
+- Fuzzy-search of the REPL history,
+- Fuzzy-search of the _apropos_ documentation.
+
+#### REPL interactions
+
+From the SLIME REPL, press `,` to prompt for commands.  There is completion
+over the available systems and packages.  Examples:
+
+- `,load-system`
+- `,reload-system`
+- `,in-package`
+- `,restart-inferior-lisp`
+
+and many more.
+
+With the `slime-quicklisp` contrib, you can also `,ql` to list all systems
+available for installation.
 
 ### SLY: Sylvester the Cat's Common Lisp IDE
 
-[SLY](https://github.com/joaotavora/sly) is a Slime fork that contains
+[SLY](https://github.com/joaotavora/sly) is a SLIME fork that contains
 the following improvements:
 
 * Completely redesigned REPL based on Emacs's own full-featured comint.el
@@ -125,7 +148,7 @@ extension, according to the
   automatically fixes the parens depending on the indentation, or the
   other way round (or both !).
 
-We personnaly advice to try Parinfer and the famous Paredit, then to
+We personally advice to try Parinfer and the famous Paredit, then to
 go up the list. See explanations and even more on
 [Wikemacs](http://wikemacs.org/wiki/Lisp_editing).
 
@@ -175,7 +198,7 @@ With `C-M-q`:
 
 #### Code completion
 
-Use the built-in `C-c TAB` to complete symbols in Slime. You can get tooltips
+Use the built-in `C-c TAB` to complete symbols in SLIME. You can get tooltips
 with [company-mode](http://wikemacs.org/wiki/Company-mode).
 
 ~~~lisp
@@ -203,7 +226,7 @@ Insert a comment, comment a region with `M-;`, adjust text with `M-q`.
 
 <a name="Slide-11"></a>
 
-### Evaluating and Compiling Lisp in Slime
+### Evaluating and Compiling Lisp in SLIME
 
 Compile the entire **buffer** by pressing `C-c C-k`.
 
@@ -247,7 +270,7 @@ and backward respectively)
 expression search/replace
 
 
-#### Finding occurences (occur, grep)
+#### Finding occurrences (occur, grep)
 
 With `M-x grep`, `rgrep`, `occur`,…
 
@@ -272,11 +295,32 @@ See also helm-imenu and [imenu-anywhere](https://github.com/vspinu/imenu-anywher
 Put the cursor on any symbol and press `M-.` to go to its
 definition. Press `M-,` to come back.
 
-#### Find who's calling, referencing, setting a symbol
+#### Crossreferencing: find who's calling, referencing, setting a symbol
 
-See Slime's help menu. You can search and list "who" is *calling*,
-*referencing*, *setting*, *binding*, *macroexpanding* symbols, and
-more.
+Slime has a nice cross referencing facility, for example, you can see
+what calls a particular function or expands a macro.  It presents a
+list of places which reference a particular entity, from there you can
+recompile the thing which references by pressing **C-c C-c** on that
+line. **C-c C-k** will recompile all the references. This is useful when
+modifying macros, inline functions, or constants.
+
+The following bindings are also shown in Slime's menu:
+
+- **C-c C-w c** *slime-who-calls* callers of a function
+- **C-c C-w m** *slime-who-macroexpands* places where a macro is expanded
+- **C-c C-w r** *slime-who-references* global variable references
+- **C-c C-w b** *slime-who-bind* global variable bindings
+- **C-c C-w s** *slime-who-sets* global variable setters
+- **C-c C-w a** *slime-who-specializes* methods specialized on a symbol
+
+And when the `slime-asdf` contrib is enabled,
+**C-c C-w d** *slime-who-depends-on* lists dependent ASDF systems
+
+And a general binding: **M-? or M-_** *slime-edit-uses** combines all
+of the above, it lists every kind of references.
+
+(thanks to [Slime tips](https://slime-tips.tumblr.com/page/2))
+
 
 #### Lisp symbols in multiple source files (etags)
 
@@ -297,9 +341,19 @@ more.
 
 ### Argument lists
 
-When you put the cursor on a function, Slime will show its signature
+When you put the cursor on a function, SLIME will show its signature
 in the minibuffer.
 
+### Documentation lookup
+
+- **C-c C-d h**  looks up documentation in CLHS. But it works only on symbols, so there are two more bindings:
+- **C-c C-d #** for reader macros
+- **C-c C-d ~**  for format directives
+
+Other bindings which may be useful:
+
+- **C-c C-d d**  describes a symbol using `describe`
+- **C-c C-d f**  describes a function using `describe`
 
 ### Documentation
 
@@ -325,9 +379,10 @@ in the minibuffer.
 
 ## Lisp Documentation in Emacs - Lisp Documentation
 
-*   [CL HyperSpec](ftp://ftp.lispworks.com/pub/software_tools/documentation/HyperSpec-7-0.tar.gz)
+*   [CL HyperSpec (online)](http://www.lispworks.com/documentation/HyperSpec/Front/)
+*   [CL HyperSpec (tarball)](http://macports.mirror.ac.za/distfiles/lisp-hyperspec/HyperSpec-7-0.tar.gz)
 *   [CLtL2](http://www-2.cs.cmu.edu/afs/cs.cmu.edu/project/ai-repository/ai/lang/lisp/doc/cltl/cltl_ht.tgz)
-*   [ACL Documenation](https://franz.com/support/documentation/)
+*   [ACL Documentation](https://franz.com/support/documentation/)
 *   Example code ( [s23.lisp](s23.lisp) )
 
 ~~~lisp
@@ -337,7 +392,73 @@ in the minibuffer.
 
 <a name="Slide-15"></a>
 
+### Consult the CLHS offline
+
+~~~lisp
+(ql:quickload "clhs")
+~~~
+
+Then add this to your Emacs configuration:
+
+~~~lisp
+(load "~/.quicklisp/clhs-use-local.el" 'noerror)
+~~~
+
 ## Miscellaneous
+
+### Synchronizing packages
+
+**C-c ~** (*slime-sync-package-and-default-directory*): When run in a
+buffer with a lisp file it will change the current package of the REPL
+to the package of that file and also set the current directory of the REPL
+to the parent directory of the file.
+
+### Calling code
+
+**C-c C-y** (*slime-call-defun*): When the point is inside a defun and
+C-c C-y is pressed,
+
+(I’ll use [] as an indication where the cursor is)
+
+
+~~~lisp
+(defun foo ()
+ nil[])
+~~~
+
+
+then `(foo [])` will be inserted into the REPL, so that you can write
+additional arguments and run it.
+
+
+If `foo` was in a different package than the package of the REPL,
+`(package:foo )` or `(package::foo )` will be inserted.
+
+This feature is very useful for testing a function you just wrote.
+
+That works not only for defun, but also for defgeneric, defmethod,
+defmacro, and define-compiler-macro in the same fashion as for defun.
+
+For defvar, defparameter, defconstant: `[] *foo*` will be inserted
+(the cursor is positioned before the symbol so that you can easily
+wrap it into a function call).
+
+For defclass: `(make-instance ‘class-name )`.
+
+**Inserting calls to frames in the debugger**
+
+**C-y** in SLDB on a frame will insert a call to that frame into the REPL, e.g.,
+
+```
+(/ 0) =>
+…
+1: (CCL::INTEGER-/-INTEGER 1 0)
+…
+```
+
+**C-y** will insert `(CCL::INTEGER-/-INTEGER 1 0)`.
+
+(thanks to [Slime tips](https://slime-tips.tumblr.com/page/2))
 
 ### Send to the REPL
 
@@ -346,6 +467,41 @@ in the minibuffer.
 ~~~
 
 See also [eval-in-repl](https://github.com/kaz-yos/eval-in-repl) to send any form to the repl.
+
+### Exporting symbols
+
+**C-c x** (*slime-export-symbol-at-point*) from the `slime-package-fu`
+contrib: takes the symbol at point and modifies the `:export` clause of
+the corresponding defpackage form. It also exports the symbol.  When
+called with a negative argument (C-u C-c x) it will remove the symbol
+from `:export` and unexport it.
+
+**M-x slime-export-class** does the same but with symbols defined
+by a structure or a class, like accessors, constructors, and so on.
+It works on structures only on SBCL and Clozure CL so far.
+Classes should work everywhere with MOP.
+
+Customization
+
+There are different styles of how symbols are presented in
+`defpackage`, the default is to use uninterned symbols (`#:foo`).
+This can be changed:
+
+to use keywords:
+
+
+~~~lisp
+(setq slime-export-symbol-representation-function
+      (lambda (n) (format ":%s" n)))
+~~~
+
+or strings:
+
+~~~lisp
+(setq slime-export-symbol-representation-function
+ (lambda (n) (format "\"%s\"" (upcase n))))
+~~~
+
 
 ### Project Management
 
@@ -384,7 +540,7 @@ and for Sly:
 ~~~
 
 This will avoid getting `ascii stream decoding error`s when you have
-non-ascii characters in files you evaluate with Slime.
+non-ascii characters in files you evaluate with SLIME.
 
 
 ### Standard shell
@@ -435,7 +591,7 @@ Windows-like:
 really have to type in all this stuff to get started with Emacs and
 Lisp?*
 
-No, you can add yourself just what's needed to get Slime working.
+No, you can add yourself just what's needed to get SLIME working.
 
 You can try [Portacle](https://shinmera.github.io/portacle/) which has
 everything ready.
@@ -447,21 +603,6 @@ that have been described in this page and (hopefully) should work with
 some minor tweaking. See the
 [CL-Cookbook](http://lispcookbook.github.io/cl-cookbook/) page on
 "[Setting up an IDE with Emacs on Windows or Mac OS X](windows.html)".
-
-
-
-### Alternatives to Emacs for CL programming
-
-*I've tried out Emacs and I just can't get used to it. What other
-Lisp-friendly alternative are there?*
-
-  * Vim can be used to edit Lisp code. See some
-    [vim plugins](https://github.com/CodyReichert/awesome-cl#vim).
-  * There is an [Atom package](https://atom.io/packages/atom-slime).
-  * The [Franz](https://franz.com/), [LispWorks](http://www.lispworks.com/), [Corman](http://www.cormanlisp.com/), and [Digitool](http://www.digitool.com/) commercial Lisp
-offerings all have Lisp-aware editors.
-  * Lastly, for true masochists, notepad on Windows or ed on UNIX® can also be used. ;-)
-
 
 
 ## Disclaimer

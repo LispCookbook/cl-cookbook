@@ -10,10 +10,10 @@ issue of
 [pathnames](http://www.lispworks.com/documentation/HyperSpec/Body/19_ab.htm)
 needs to be covered separately.
 
-Many functions will come from uiop, so we suggest you have a look directly at it:
+Many functions will come from UIOP, so we suggest you have a look directly at it:
 
-* [filesystem](https://gitlab.common-lisp.net/asdf/asdf/blob/master/uiop/filesystem.lisp).
-* [pathname](https://gitlab.common-lisp.net/asdf/asdf/blob/master/uiop/pathname.lisp)
+* [UIOP/filesystem](https://common-lisp.net/project/asdf/uiop.html#UIOP_002fFILESYSTEM)
+* [UIOP/pathname](https://common-lisp.net/project/asdf/uiop.html#UIOP_002fPATHNAME)
 
 Of course, do not miss:
 
@@ -31,24 +31,15 @@ either `nil` if the file doesn't exists, or its
 (which might be different from the argument you supplied).
 
 ~~~lisp
-edi@bird:/tmp> ln -s /etc/passwd foo
-edi@bird:/tmp> cmucl
-; Loading #p"/home/edi/.cmucl-init".
-CMU Common Lisp 18d-pre, level-1 built 2002-01-15 on maftia1, running on bird
-Send questions to cmucl-help@cons.org. and bug reports to cmucl-imp@cons.org.
-Loaded subsystems:
-Python native code compiler, target Intel x86
-CLOS based on PCL version:  September 16 92 PCL (f)
-Gray Streams Protocol Support
-CLX X Library MIT R5.02
+$ ln -s /etc/passwd foo
+
 * (probe-file "/etc/passwd")
-
 #p"/etc/passwd"
+
 * (probe-file "foo")
-
 #p"/etc/passwd"
-* (probe-file "bar")
 
+* (probe-file "bar")
 NIL
 ~~~
 
@@ -98,8 +89,9 @@ typical use of `with-open-file` looks like this:
     and a file with that name already exists - this option is ignored if you
     just want to read from the file. The default is `:error` which means that an
     error is signalled. Other useful options are `:supersede` (meaning that the
-    new file will replace the old one), `nil` (the stream variable will be bound
-    to `nil`), and `:rename` (i.e. the old file is renamed).
+    new file will replace the old one), `:append` (content is added to the file),
+    `nil` (the stream variable will be bound to `nil`),
+    and `:rename` (i.e. the old file is renamed).
 *   `<_if-does-not-exist_>` specifies what to do if the file you want to open does
     not exist. It is one of `:error` for signalling an error, `:create` for
     creating an empty file, or `nil` for binding the stream variable to
@@ -113,12 +105,14 @@ below. Also note that you usually don't need to provide any keyword arguments if
 you just want to open an existing file for reading.<a name="strings">
 
 
-### Reading a file into a string or a list of lines
+### Reading files
+
+#### Reading a file into a string or a list of lines
 
 It's quite common to need to access the contents of a file in string
 form, or to get a list of lines.
 
-[uiop](https://github.com/fare/asdf/blob/master/uiop/stream.lisp#L445) is included in ASDF (there is no extra library to install or
+uiop is included in ASDF (there is no extra library to install or
 system to load) and has the following functions:
 
 
@@ -132,10 +126,8 @@ and
 (uiop:read-file-lines "file.txt")
 ~~~
 
-
-
-**Otherwise**, this can be achieved by using `read-line` or `read-char` functions,
-that probably won't be the best solution. File might not be divided into
+*Otherwise*, this can be achieved by using `read-line` or `read-char` functions,
+that probably won't be the best solution. The file might not be divided into
 multiple lines or reading one character at a time might bring significant
 performance problems. To solve this problems, you can read files using buckets
 of specific sizes.
@@ -150,7 +142,7 @@ of specific sizes.
 ~~~
 
 Furthermore, you're free to change the format of the read/written data, instead
-of using elements of type character everytime. For instance, you can set
+of using elements of type character every time. For instance, you can set
 `:element-type` type argument of `with-output-to-string`, `with-open-file` and
 `make-array` functions to `'(unsigned-byte 8)` to read data in octets.
 
@@ -172,11 +164,11 @@ better set the default encoding to utf-8.  Add this line to your
 
     (setf sb-impl::*default-external-format* :utf-8)
 
-and optionnally
+and optionally
 
     (setf sb-alien::*default-c-string-external-format* :utf-8)
 
-### Reading a file one line at a time
+#### Reading a file one line at a time
 
 [`read-line`](http://www.lispworks.com/documentation/HyperSpec/Body/f_rd_lin.htm)
 will read one line from a stream (which defaults to
@@ -207,7 +199,7 @@ the end of the file:
    do (print line)))
 ~~~
 
-### Reading a file one character at a time
+#### Reading a file one character at a time
 
 [`read-char`](http://www.lispworks.com/documentation/HyperSpec/Body/f_rd_cha.htm)
 is similar to `read-line`, but it only reads one character as opposed to one
@@ -222,7 +214,7 @@ characters by this function.
        (print char)))
 ~~~
 
-### Looking one character ahead
+#### Looking one character ahead
 
 You can 'look at' the next character of a stream without actually removing it
 from there - this is what the function
@@ -325,7 +317,7 @@ back exactly _one_ character onto the stream. Also, you _must_ put back the same
 character that has been read previously, and you can't unread a character if
 none has been read before.
 
-### Random access to a File
+#### Random access to a File
 
 Use the function
 [`file-position`](http://www.lispworks.com/documentation/HyperSpec/Body/f_file_p.htm)
@@ -376,8 +368,16 @@ The library [str](https://github.com/vindarel/cl-str) has a shortcut:
 (str:to-file "file.txt" content) ;; with optional options
 ~~~
 
+### Getting the file extension
 
-### Getting file attributes (size, access time,...), with the Osicat library
+The file extension is a pathname type in Lisp parlance:
+
+~~~lisp
+(pathname-type "~/foo.org")  ;; => "org"
+~~~
+
+
+### Getting file attributes (size, access time,...)
 
 [Osicat](https://www.common-lisp.net/project/osicat/) (in Quicklisp)
 is a lightweight operating system interface for Common Lisp on
@@ -457,6 +457,45 @@ Returns a list of pathnames:
  #P"/home/vince/projects/cl-cookbook/_site/"
  #P"/home/vince/projects/cl-cookbook/assets/")
 ```
+
+#### Traversing (walking) directories
+
+See `uiop/filesystem:collect-sub*directories`. It takes as arguments:
+
+- a `directory`
+- a `recursep` function
+- a `collectp` function
+- a `collector` function
+
+Given a directory, when `collectp` returns true with the directory,
+call the `collector` function on the directory, and recurse
+each of its subdirectories on which `recursep` returns true.
+
+This function will thus let you traverse a filesystem hierarchy,
+superseding the functionality of `cl-fad:walk-directory`.
+
+The behavior in presence of symlinks is not portable. Use IOlib to handle such situations.
+
+Example:
+
+~~~lisp
+(defparameter *dirs* nil "All recursive directories.")
+
+(uiop:collect-sub*directories "~/cl-cookbook"
+    (constantly t)
+    (constantly t)
+    (lambda (it) (push it *dirs*)))
+~~~
+
+With `cl-fad:walk-directory`, we can also collect files, not only subdirectories:
+
+~~~lisp
+(cl-fad:walk-directory "./"
+  (lambda (name)
+     (format t "~A~%" name))
+~~~
+
+
 
 #### Finding files matching a pattern
 

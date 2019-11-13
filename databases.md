@@ -73,7 +73,7 @@ With sqlite you don't need the username and password:
 (connect-toplevel :sqlite3 :database-name "myapp")
 ~~~
 
-As usual, you need to create the MySQL or Postgre database beforehand.
+As usual, you need to create the MySQL or PostgreSQL database beforehand.
 Refer to their documentation.
 
 Connecting sets `mito:*connection*` to the new connection and returns it.
@@ -240,7 +240,7 @@ Now you can create or retrieve a `TWEET` by a `USER` object, not a `USER-ID`.
 (mito:find-dao 'tweet :user *user*)
 ~~~
 
-Mito doesn't add foreign key constraints for refering tables.
+Mito doesn't add foreign key constraints for referring tables.
 
 #### One-to-one
 
@@ -259,8 +259,8 @@ linking back to the "one" side. Here the `tweet` class defines a
 `user` foreign key, so a tweet can only have one user. You didn't need
 to edit the `user` class.
 
-A many-to-one relationship is actually the contraty of a one-to-many.
-You have to put the foreign key on the approriate side.
+A many-to-one relationship is actually the contrary of a one-to-many.
+You have to put the foreign key on the appropriate side.
 
 #### Many-to-many
 
@@ -843,20 +843,22 @@ tables, runs the code and connects back to the original DB connection.
           (prefix (concatenate 'string
                                (random-string 8)
                                "/"))
-          ;; *db* is your db connection, may be nil but a bound variable.
-          (connection *db*))
+          ;; Save our current DB connection.
+          (connection (when (mito.connection:connected-p)
+                        mito:*connection*)))
      (uiop:with-temporary-file (:pathname name :prefix prefix)
+       ;; Bind our *db-name* to a new name, so as to create a new DB.
        (let* ((*db-name* name))
-         (connect)
-         ;; catch anything to always re-connect to our real db.
-         (handler-case
-             (progn
-               (ensure-tables-exist)
-               (migrate-all)
-               ,@body)
-           (t () nil))
+         ;; Always re-connect to our real DB even in case of error in body.
+         (unwind-protect
+           (progn
+             ;; our functions to connect to the DB, create the tables and run the migrations.
+             (connect)
+             (ensure-tables-exist)
+             (migrate-all)
+             ,@body)
 
-         (setf mito.connection:*connection* connection)))))
+           (setf mito:*connection* connection))))))
 ~~~
 
 Use it like this:
@@ -884,9 +886,11 @@ Use it like this:
 
 ## See also
 
+- [exploring an existing (PostgreSQL) database with postmodern](https://sites.google.com/site/sabraonthehill/postmodern-examples/exploring-a-database)
+
 - [mito-attachment](https://github.com/fukamachi/mito-attachment)
 - [mito-auth](https://github.com/fukamachi/mito-auth)
 - [can](https://github.com/fukamachi/can/) a role-based access right control library
-- an advanced ["defmodel" macro](assets/defmodel.lisp).
+- an advanced ["defmodel" macro](drafts/defmodel.lisp.html).
 
 <!-- # todo: Generating models for an existing DB -->

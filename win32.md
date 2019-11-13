@@ -28,7 +28,7 @@ The beginning sections of the chapter introduce concepts and ideas leading to th
     :style ws_overlappedwindow :width 150 :height 200 :title "Hello Program"))
 ~~~
 
-Lispworks for Windows version 4.2.7 is used. (The Personal Edition is available for free download.) No attempt is made to accomodate other Lisps and no thought is given to cross-platform compatibility. These ideas were discussed when outlining this document and the current approach decided upon because:
+Lispworks for Windows version 4.2.7 is used. (The Personal Edition is available for free download.) No attempt is made to accommodate other Lisps and no thought is given to cross-platform compatibility. These ideas were discussed when outlining this document and the current approach decided upon because:
 
 * It is good to publish early and publish often. Reducing the scope fits this philosophy. Other Lisps can be included at a later time. I know that [Corman Lisp](http://www.cormanlisp.com) is one that includes a lot of Win32 API capabilities. I don't have experience with other vendor's Lisps, so look at them all.
 * The information presented should apply generally to other vendor's Lisps. The foreign language interface may change but Win32 remains the same.
@@ -62,7 +62,7 @@ Seeing the gory details of Lispwork's Foreign Language Interface, or FLI, may se
 The OS treats a Win32 GUI program as a set of subroutines, or functions.
 
 * The first of these functions, WinMain, is called when the program is initialized.
-* WinMain calls the Win32 function RegisterClass to inform the OS of the location of a callback function. Serveral calls may be made to RegisterClass but only one of these calls, naming one callback function, serves the primary window of the application. After RegisterClass is called, the OS knows about the newly-defined class.
+* WinMain calls the Win32 function RegisterClass to inform the OS of the location of a callback function. Several calls may be made to RegisterClass but only one of these calls, naming one callback function, serves the primary window of the application. After RegisterClass is called, the OS knows about the newly-defined class.
 * The Win32 function CreateWindowEx is called and given the class name specified on a previous RegisterClass call. Now the window exists and, depending upon the parameters passed to CreateWindowEx, is visible.
 * The OS begins queueing messages relating to the newly-created window. The queue is saved for delivery to WinMain.
 * WinMain accesses the message queue in a loop referred to as a _message pump_. The message pump loop calls GetMessage, TranslateMessage, and DispatchMessage.
@@ -461,9 +461,9 @@ A common C++ idiom is "Resource Acquisition Is Initialization", in which a C++ o
 
 Objects with dynamic extent are declared local at the beginning of a C++ function and the object's destructor is called when the function returns and the object goes out of scope. The corresponding Lisp idiom is the use of a `with-...` macro. The macro is responsible for acquiring the resource and releasing it under an unwind-protect.
 
-In C++, objects with indefinite extent must have their destructor called explicity, with `delete` or `delete []`. The destructor tears down the object, first releasing any acquired resources via explicitly-programmed C++ code, then releasing the object's memory via compiler-generated code as the destructor exits.
+In C++, objects with indefinite extent must have their destructor called explicitly, with `delete` or `delete []`. The destructor tears down the object, first releasing any acquired resources via explicitly-programmed C++ code, then releasing the object's memory via compiler-generated code as the destructor exits.
 
-Lisp is garbage collected, which means that Lisp is responsible for freeing the object's memory. However, that may not happen for a very long time after the last reference to the object has disappeared. The garbage collector runs only as memory fills or when it is explicity called. If an object holds an acquired resource, almost always there is a proper time to release the resource and not releasing it at that time leads to resource exhaustion.
+Lisp is garbage collected, which means that Lisp is responsible for freeing the object's memory. However, that may not happen for a very long time after the last reference to the object has disappeared. The garbage collector runs only as memory fills or when it is explicitly called. If an object holds an acquired resource, almost always there is a proper time to release the resource and not releasing it at that time leads to resource exhaustion.
 
 Lisp is not responsible for acquired resources, such as window handles, which the programmer acquired with explicit Lisp code. The programmer must define a function, something like `(defun release-resources...`, and call the release function at the point where the destructor would have been called in C++. After the release function returns and there are no references to the object, Lisp will free the object's memory during a future garbage collection.
 
@@ -485,7 +485,7 @@ My first thought, when I finally completed my demo program, was "That looks like
 
 Win32 API programming cries out for new languages. It is a very powerful and flexible API but in a given application context, only certain subsets are used and they are used in repetitive fashions. This does not mean that the APIs should be redefined, were that possible. What works for one application may not work for the next. There probably are some language extensions that will be used in nearly all Win32 programs. Other extensions will apply only to certain applications.
 
-One beauty of Lisp is that the programmer can define a new extension at any time. See [the Common Lisp Cookbook's chapter on macros](macros.html). I also recommend Paul Graham's [On Lisp](www.paulgraham.com/books.html) for learning to write macros and a whole lot more.
+One beauty of Lisp is that the programmer can define a new extension at any time. See [the Common Lisp Cookbook's chapter on macros](macros.html). I also recommend Paul Graham's [On Lisp](http://paulgraham.com/books.html) for learning to write macros and a whole lot more.
 
 When writing code, notice when the same pattern is typed over and over. Then think, sooner rather than later, "it's time for a macro or a function." Notice the repetitive coding even when you're writing macros. Macros can be built upon macros, and macros can generate macros.
 
@@ -495,9 +495,9 @@ If macros are not used in this way, then functions that would have been created 
 
 Be aware that functions can be declaimed inline and can be passed as parameters, while macros cannot.
 
-Many of the macros defined in [On Lisp](www.paulgraham.com/books.html) are very useful in Win32 programming. I use the symbol creation macros extensively.
+Many of the macros defined in [On Lisp](http://www.paulgraham.com/books.html) are very useful in Win32 programming. I use the symbol creation macros extensively.
 
-One set of needed macros make using the Foreign Language Interface easier, more compact, and more readable. I have a macro `with-foreign-strings` which takes a list of pointer-name/string pairs and creates a nested series of `(fli:with-foreign-string...` calls, including creation of the element-count and byte-count parameters with unique, predictible names for each string. My `setf-foreign-slot-values`, and `with-foreign-slot-values` macros also make for more compact and readable code.
+One set of needed macros make using the Foreign Language Interface easier, more compact, and more readable. I have a macro `with-foreign-strings` which takes a list of pointer-name/string pairs and creates a nested series of `(fli:with-foreign-string...` calls, including creation of the element-count and byte-count parameters with unique, predictable names for each string. My `setf-foreign-slot-values`, and `with-foreign-slot-values` macros also make for more compact and readable code.
 
 Another set of macros is useful for defining the Windows message handler functions. I prefer to create a CLOS class for windows messages and let the CLOS method dispatcher find the proper function for each message. This allows message handlers to be inherited and more-specific handlers defined for selected messages in the derived class. CLOS handles this nicely. I have a `DefMsgHandler` macro that calls RegisterClass, defines the CLOS method for each message to be handled, takes care of necessary housekeeping in ubiquitous functions such as `WM_PAINT`, and allows easy definition of function bodies to be executed for each desired type of message. Other macros are useful for defining pushbuttons, edit boxes, list views, and other Win32 controls.
 
@@ -510,7 +510,7 @@ The program in [Appendix C](#appendixc) uses these macros to define a window inc
 
 ### Conclusion
 
-The example code presented in the text and in appendicies A-C places an emphasis on staying in Lisp and accessing the Win32 API from there. Paul Tarvydas has code in [Appendix D](#appendixd) which demonstrates cooperation and interaction between C and Lisp. In Paul's well-documented example, a C dll is used to drive the message loop. The Lisp callback function's address is placed from within Lisp into a variable in the dll.
+The example code presented in the text and in appendices A-C places an emphasis on staying in Lisp and accessing the Win32 API from there. Paul Tarvydas has code in [Appendix D](#appendixd) which demonstrates cooperation and interaction between C and Lisp. In Paul's well-documented example, a C dll is used to drive the message loop. The Lisp callback function's address is placed from within Lisp into a variable in the dll.
 
 Lisp provides an interactive and rich programming environment. The judicious use of macros to create language extensions in Lisp concentrates application-specific information into small local areas of the overall system. This simplifies the effort of understanding the application, increases the reliability of the application, reduces maintenance time, and increases the reliability of maintenance changes. Lisp is designed to make this easy.
 

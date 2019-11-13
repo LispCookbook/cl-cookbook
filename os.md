@@ -8,9 +8,9 @@ There are, however, some widely used libraries, which either come with your Comm
 available through [Quicklisp](https://www.quicklisp.org/beta/). These include:
 
 * ASDF3, which is included with almost all Common Lisp implementations,
-  includes [Utilities for Implementation- and OS- Portability (UIOP)](https://gitlab.common-lisp.net/asdf/asdf/blob/master/uiop/README.md).
-* [osicat](https://common-lisp.net/project/osicat/) 
-* [unix-opts](http://quickdocs.org/unix-opts/) is a command-line argument parser, similar to Python's `argparse`. 
+  includes [Utilities for Implementation- and OS- Portability (UIOP)](https://common-lisp.net/project/asdf/uiop.html).
+* [osicat](https://common-lisp.net/project/osicat/)
+* [unix-opts](http://quickdocs.org/unix-opts/) is a command-line argument parser, similar to Python's `argparse`.
 
 
 <a name="env"></a>
@@ -91,7 +91,7 @@ More on using this to write standalone Lisp scripts can be found in the [SBCL Ma
 ("/Users/cbrown/Projects/lisptty/tty-lispworks" "-init" "/Users/cbrown/Desktop/lisp/lispworks-init.lisp")
 ~~~
 
-[CMUCL](http://www.cons.org/cmucl/) has interesting extensions for [manipulating the arguments](http://common-lisp.net/project/cmucl/doc/cmu-user/unix.html)
+[CMUCL](http://www.cons.org/cmucl/) has interesting extensions for [manipulating the arguments](https://common-lisp.net/project/cmucl/docs/cmu-user/html/UNIX-Interface.html)
 
 Here's a quick function to return the argument strings list across multiple implementations:
 
@@ -192,12 +192,12 @@ interfaces to readline,…).
 
 ## Running external programs
 
-[uiop](https://gitlab.common-lisp.net/asdf/asdf/blob/master/uiop/README.md) has us covered,
-and is probably included in your Common Lisp implementation.
+**uiop** has us covered, and is probably included in your Common Lisp
+implementation.
 
 ### Synchronously
 
-`uiop:run-program` either takes a string as argument, denoting the
+[`uiop:run-program`](https://common-lisp.net/project/asdf/uiop.html#UIOP_002fRUN_002dPROGRAM) either takes a string as argument, denoting the
 name of the executable to run, or a list of strings, for the program and its arguments:
 
 ~~~lisp
@@ -207,15 +207,16 @@ name of the executable to run, or a list of strings, for the program and its arg
 or
 
 ~~~lisp
-(uiop:run-program '("firefox" "http:url"))
+(uiop:run-program (list "firefox" "http:url"))
 ~~~
 
 This will process the program output as specified and return the
 processing results when the program and its output processing are
 complete.
 
+Use `:output t` to print to standard output.
 
-This function has the following optional arguments (the documentation is [in the source](https://gitlab.common-lisp.net/asdf/asdf/blob/master/uiop/run-program.lisp#L539)):
+This function has the following optional arguments:
 
 ~~~lisp
 run-program (command &rest keys &key
@@ -298,11 +299,7 @@ before or after the subprocess is spawned, using temporary files.
 
 ### Asynchronously
 
-With
-
-~~~lisp
-uiop:launch-program
-~~~
+With [`uiop:launch-program`](https://common-lisp.net/project/asdf/uiop.html#UIOP_002fLAUNCH_002dPROGRAM).
 
 Its signature is the following:
 
@@ -373,7 +370,7 @@ and `:stream` causes a stream to be made available via
 
 See the [docstrings](https://gitlab.common-lisp.net/asdf/asdf/blob/master/uiop/launch-program.lisp#L508).
 
-### Test if subprocess is alive
+#### Test if a subprocess is alive
 
 `uiop:process-alive-p` tests if a process is still alive, given a
 `process-info` object returned by `launch-program`:
@@ -390,6 +387,51 @@ T
 * (uiop:process-alive-p *shell*)
 NIL
 ~~~
+
+#### Get the exit code
+
+We can use `uiop:wait-process`. If the process is finished, it returns
+immediately, and returns the exit code. If not, it waits for the
+process to terminate.
+
+~~~lisp
+(uiop:process-alive-p *process*)
+NIL
+(uiop:wait-process *process*)
+0
+~~~
+
+An exit code to 0 means success (use `zerop`).
+
+The exit code is also stored in the `exit-code` slot of our
+`process-info` object. We see from the class definition above that it
+has no accessor, so we'll use `slot-value`. It has an `initform` to
+nil, so we don't have to check if the slot is bound.  We can do:
+
+~~~lisp
+(slot-value *my-process* 'uiop/launch-program::exit-code)
+0
+~~~
+
+The trick is that we *must* run `wait-process` beforehand, otherwise
+the result will be `nil`.
+
+Since `wait-process` is blocking, we can do it on a new thread:
+
+~~~lisp
+(bt:make-thread
+  (lambda ()
+    (let ((exit-code (uiop:wait-process
+                       (uiop:launch-program (list "of" "commands"))))
+      (if (zerop exit-code)
+          (print :success)
+          (print :failure)))))
+  :name "Waiting for <program>")
+~~~
+
+
+Note that `run-program` returns the exit code as the third value.
+
 
 ### Input and output from subprocess
 
@@ -414,7 +456,7 @@ flush the stream, but does not wait for completion.
 Reading from the output stream is similar, with
 `uiop:process-info-output` returning the output stream:
 
-~~~list
+~~~lisp
 * (read-line (uiop:process-info-output *shell*))
 ~~~
 
@@ -425,7 +467,7 @@ hang while waiting for data. To avoid this,
 [listen](http://clhs.lisp.se/Body/f_listen.htm) can be used to test if
 a character is available:
 
-~~~list
+~~~lisp
 * (let ((stream (uiop:process-info-output *shell*)))
      (loop while (listen stream) do
          ;; Characters are immediately available

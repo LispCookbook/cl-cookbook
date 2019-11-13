@@ -9,18 +9,36 @@ particular string function, make sure you've also searched for the more general
 [array or sequence functions](http://www.gigamonkeys.com/book/collections.html). We'll only cover a fraction of what can be done
 with and to strings here.
 
+ASDF3, which is included with almost all Common Lisp implementations,
+includes
+[Utilities for Implementation- and OS- Portability (UIOP)](https://gitlab.common-lisp.net/asdf/asdf/blob/master/uiop/README.md),
+which defines functions to work on strings (`strcat`,
+`string-prefix-p`, `string-enclosed-p`, `first-char`, `last-char`,
+`split-string`, `stripln`).
+
 Some external libraries available on Quicklisp bring some more
 functionality or some shorter ways to do.
 
-- [cl-string](https://github.com/diogoalexandrefranco/cl-strings)
-  defines functions such as `split`, `join`, `replace`, `insert`,
-  `starts-with`, `ends-with`, functions to change case,…
 - [str](https://github.com/vindarel/cl-str) defines `trim`, `words`,
-  `unwords`, `lines`, `unlines`, `concat`, `split`, `repeat`,
+  `unwords`, `lines`, `unlines`, `concat`, `split`, `shorten`, `repeat`,
   `replace-all`, `starts-with?`, `ends-with?`, `blankp`, `emptyp`, …
 - [cl-change-case](https://github.com/rudolfochrist/cl-change-case)
   has functions to convert strings between camelCase, param-case,
   snake_case and more.
+- [mk-string-metrics](https://github.com/cbaggers/mk-string-metrics)
+  has functions to calculate various string metrics efficiently
+  (Damerau-Levenshtein, Hamming, Jaro, Jaro-Winkler, Levenshtein, etc),
+- and `cl-ppcre` can come in handy, for example
+  `ppcre:replace-regexp-all`. See the [regexp](regexp.html) section.
+
+
+Last but not least, when you'll need to tackle the `format` construct,
+don't miss the following resources:
+
+* the official [CLHS documentation](http://www.lispworks.com/documentation/HyperSpec/Body/22_c.htm)
+* a [quick reference](http://clqr.boundp.org/)
+* a [CLHS summary on HexstreamSoft](https://www.hexstreamsoft.com/articles/common-lisp-format-reference/clhs-summary/#subsections-summary-table)
+* plus a Slime tip: type `C-c C-d ~` plus a letter of a format directive to open up its documentation. Again more useful with `ivy-mode` or `helm-mode`.
 
 # Accessing Substrings
 
@@ -167,7 +185,7 @@ HyperSpec for more.
 
 Another function that can be frequently used (but not part of the ANSI standard)
 is replace-all. This function provides an easy functionality for search/replace
-operations on a string, by returning a new string in which all the occurences of
+operations on a string, by returning a new string in which all the occurrences of
 the 'part' in string is replaced with 'replacement'".
 
 ~~~lisp
@@ -179,7 +197,7 @@ One of the implementations of replace-all is as follows:
 
 ~~~lisp
 (defun replace-all (string part replacement &key (test #'char=))
-"Returns a new string in which all the occurences of the part
+"Returns a new string in which all the occurrences of the part
 is replaced with replacement."
     (with-output-to-string (out)
       (loop with part-length = (length part)
@@ -201,7 +219,7 @@ is heavily optimized.
 
 # Concatenating Strings
 
-The name says it all: CONCATENATE is your friend. Note that this a generic
+The name says it all: CONCATENATE is your friend. Note that this is a generic
 sequence function and you have to provide the result type as the first argument.
 
 ~~~lisp
@@ -209,6 +227,18 @@ sequence function and you have to provide the result type as the first argument.
 "Karl Marx"
 * (concatenate 'list "Karl" " " "Marx")
 (#\K #\a #\r #\l #\Space #\M #\a #\r #\x)
+~~~
+
+With UIOP, use `strcat`:
+
+~~~lisp
+* (uiop:strcat "karl" " " marx")
+~~~
+
+or with the library `str`, use `concat`:
+
+~~~lisp
+* (str:concat "foo" "bar")
 ~~~
 
 If you have to construct a string out of many parts, all of these calls to
@@ -323,16 +353,30 @@ its destructive counterpart NREVERSE).
 ~~~
 
 There's no one-liner in CL to reverse a string by word (like you would do it in
-Perl with split and join). You either have to use function from an external
-library like SPLIT-SEQUENCE or you have to roll your own solution. Here's an
-attempt:
+Perl with split and join). You either have to use functions from an external
+library like SPLIT-SEQUENCE or you have to roll your own solution.
+
+Here's an attempt with the `str` library:
+
+~~~lisp
+* (defparameter *singing* "singing in the rain")
+*SINGING*
+* (str:words *SINGING*)
+("singing" "in" "the" "rain")
+* (reverse *)
+("rain" "the" "in" "singing")
+* (str:unwords *)
+"rain the in singing"
+~~~
+
+And here's another one with no external dependencies:
 
 ~~~lisp
 * (defun split-by-one-space (string)
     "Returns a list of substrings of string
-divided by ONE space each.
-Note: Two consecutive spaces will be seen as
-if there were an empty string between them."
+    divided by ONE space each.
+    Note: Two consecutive spaces will be seen as
+    if there were an empty string between them."
     (loop for i = 0 then (1+ j)
           as j = (position #\Space string :start i)
           collect (subseq string i j)
@@ -383,7 +427,7 @@ Common Lisp has a couple of functions to control the case of a string.
 "Cool Example"
 ~~~
 
-These functions take :START and :END keyword arguments so you can optionally
+These functions take the `:start` and `:end` keyword arguments so you can optionally
 only manipulate a part of the string. They also have destructive counterparts
 whose names starts with "N".
 
@@ -402,10 +446,11 @@ whose names starts with "N".
 "big"
 ~~~
 
-Note this potential caveat: According to the HyperSpec, "for STRING-UPCASE,
-STRING-DOWNCASE, and STRING-CAPITALIZE, string is not modified. However, if no
-characters in string require conversion, the result may be either string or a
-copy of it, at the implementation's discretion." This implies the last result in
+Note this potential caveat: according to the HyperSpec,
+
+> for STRING-UPCASE, STRING-DOWNCASE, and STRING-CAPITALIZE, string is not modified. However, if no characters in string require conversion, the result may be either string or a copy of it, at the implementation's discretion.
+
+This implies that the last result in
 the following example is implementation-dependent - it may either be "BIG" or
 "BUG". If you want to be sure, use COPY-SEQ.
 
@@ -463,7 +508,7 @@ NIL
 
 # Trimming Blanks from the Ends of a String
 
-Not only can you trim blanks, but you can get rid of arbitary characters. The
+Not only can you trim blanks, but you can get rid of arbitrary characters. The
 functions STRING-TRIM, STRING-LEFT-TRIM and STRING-RIGHT-TRIM return a substring
 of their second argument where all characters that are in the first argument are
 removed off the beginning and/or the end. The first argument can be any sequence
@@ -629,7 +674,9 @@ NIL
 
 # Converting a String to a Number
 
-CL provides the PARSE-INTEGER to convert a string representation of an integer
+## To an integer: parse-integer
+
+CL provides the `parse-integer` function to convert a string representation of an integer
 to the corresponding numeric value. The second return value is the index into
 the string where the parsing stopped.
 
@@ -658,10 +705,15 @@ Error in function PARSE-INTEGER:
    There's junk in this string: " 42 is forty-two".
 ~~~
 
-PARSE-INTEGER doesn't understand radix specifiers like #X, nor is there a
-built-in function to parse other numeric types. You could use READ-FROM-STRING
-in this case, but be aware that the full reader is in effect if you're using
-this function.
+`parse-integer` doesn't understand radix specifiers like `#X`, nor is there a
+built-in function to parse other numeric types. You could use `read-from-string`
+in this case.
+
+
+## To any number: read-from-string
+
+Be aware that the full reader is in effect if you're using this
+function. This can lead to vulnerability issues.
 
 ~~~lisp
 * (read-from-string "#X23")
@@ -690,6 +742,25 @@ SYMBOL
 * *foo*
 "gotcha"
 ~~~
+
+## To a float: the parse-float library
+
+There is no built-in function similar to `parse-integer` to parse
+other number types. The external library
+[parse-float](https://github.com/soemraws/parse-float) does exactly
+that. It doesn't use `read-from-string` so it is safe to use.
+
+~~~lisp
+(ql:quickload "parse-float")
+(parse-float:parse-float "1.2e2")
+;; 120.00001
+;; 5
+~~~
+
+LispWorks also has a [parse-float](http://www.lispworks.com/documentation/lw51/LWRM/html/lwref-228.htm) function.
+
+See also [parse-number](https://github.com/sharplispers/parse-number).
+
 
 # Converting a Number to a String
 
@@ -746,9 +817,6 @@ The `format` function has a lot of directives to print strings,
 numbers, lists, going recursively, even calling Lisp functions,
 etc. We'll focus here on a few things to print and format strings.
 
-See the documentation (like this
-[quick reference](http://clqr.boundp.org/)) for more details.
-
 The need of our examples arise when we want to print many strings and
 justify them. Let's work with this list of movies:
 
@@ -793,7 +861,7 @@ Print a tilde with `~~`, or 10 with `~10~`.
 
 Other directives include:
 
-- `R`: Roman (e.g., prints in english): `(format t "~R" 20)` => "twenty".
+- `R`: Roman (e.g., prints in English): `(format t "~R" 20)` => "twenty".
 - `$`: monetary: `(format t "~$" 21982)` => 21982.00
 - `D`, `B`, `O`, `X`: Decimal, Binary, Octal, Hexadecimal.
 - `F`: fixed-format Floating point.
@@ -867,7 +935,7 @@ with an `@` as in `~2@A`:
 
 ## Justifying decimals
 
-In `~,2F`, 2 is the number of decimals and F the floats diretive:
+In `~,2F`, 2 is the number of decimals and F the floats directive:
 `(format t "~,2F" 20.1)` => "20.10".
 
 With `~2,2f`:

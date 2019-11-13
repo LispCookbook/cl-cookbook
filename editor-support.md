@@ -9,27 +9,38 @@ The editor of choice is still Emacs, but it is not the only one.
 [SLIME](https://github.com/slime/slime/) is the Superior Lisp
 Interaction Mode for Emacs. It has support for interacting with a
 running Common Lisp process for compilation, debugging, documentation
-lookup, and so on. It works with many implementations.
+lookup, cross-references, and so on. It works with many implementations.
 
 [Portacle](https://shinmera.github.io/portacle/) is a portable and
-multiplatform Common Lisp environment. It ships Emacs25, SBCL,
-Quicklisp, Slime and Git.
+multi-platform Common Lisp environment. It ships Emacs25, SBCL,
+Quicklisp, SLIME and Git.
 
 <img src="assets/portacle.png"
      style="width: 800px"/>
 
-### Installing Slime
+### Installing SLIME
 
-Slime is in the official GNU Elpa repository of Emacs Lisp packages
+SLIME is in the official GNU ELPA repository of Emacs Lisp packages
 (in Emacs24 and forward). Install with:
 
     M-x package-install RET slime RET
 
-Now you can run Slime with `M-x slime`.
+Since SLIME is heavily modular and the defaults only do the bare minimum (not
+even the SLIME REPL), you might want to enable more features with
+
+~~~lisp
+(slime-setup '(slime-fancy slime-quicklisp slime-asdf))
+~~~
+
+For more details, consult the
+[documentation](https://common-lisp.net/project/slime/doc/html/) (also available
+as an Info page).
+
+Now you can run SLIME with `M-x slime` and/or `M-x slime-connect`.
 
 See also:
 
-* http://wikemacs.org/wiki/SLIME - configuration examples and extensions.
+* [https://wikemacs.org/wiki/SLIME](https://wikemacs.org/wiki/SLIME) - configuration examples and extensions.
 
 
 ### Using Emacs as an IDE
@@ -77,8 +88,8 @@ with restarts, macro-expansion, parenthesis matching,…
 ## Lem
 
 Lem is an editor tailored for Common Lisp development. Once you
-install it, you can start developing. Its interface ressembles Emacs
-and Slime (same shortcuts). It comes with an ncurses and an Electron
+install it, you can start developing. Its interface resembles Emacs
+and SLIME (same shortcuts). It comes with an ncurses and an Electron
 frontend, and other programming modes: Python, Go, Rust, JS, Nim,
 Scheme, HTML, CSS, directory mode, a vim layer, and more.
 
@@ -88,9 +99,9 @@ Scheme, HTML, CSS, directory mode, a vim layer, and more.
 
 ## Atom
 
-See [Atom-Slime](https://atom.io/packages/atom-slime). This package
-allows you to interactively develop Common Lisp code, helping turn
-Atom into a full-featured Lisp IDE.
+See [SLIMA](https://github.com/neil-lindquist/slima). This package
+allows you to interactively develop Common Lisp code, turning
+Atom into a pretty good Lisp IDE.
 
 <img src="assets/atom-slime.png"
      style="width: 800px"/>

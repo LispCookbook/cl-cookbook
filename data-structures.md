@@ -99,21 +99,21 @@ start of the list is:
   "Modifies the last cdr of list ITEMS, returning a circular list"
   (setf (cdr (last items)) items))
 
-(circular! (list 1 2 3)) 
+(circular! (list 1 2 3))
 ;; => #1=(1 2 3 . #1#)
 
-(fifth (circular! (list 1 2 3))) 
+(fifth (circular! (list 1 2 3)))
 ;; => 2
 ~~~
 
 The [list-length](http://www.lispworks.com/documentation/HyperSpec/Body/f_list_l.htm#list-length)
 function recognises circular lists, returning `nil`.
 
-The reader can also create circular lists, using 
+The reader can also create circular lists, using
 [Sharpsign Equal-Sign](http://www.lispworks.com/documentation/HyperSpec/Body/02_dho.htm)
 notation. An object (like a list) can be prefixed with `#n=` where `n`
 is an unsigned decimal integer (one or more digits). The
-label `#n#` can be used to refer to the object later in the 
+label `#n#` can be used to refer to the object later in the
 expression:
 
 ~~~lisp
@@ -179,7 +179,7 @@ mylist
 (nreverse mylist)
 ;; => (3 2 1)
 mylist
-;; => (1) in SBCL but implementation dependant.
+;; => (1) in SBCL but implementation dependent.
 ~~~
 
 
@@ -316,7 +316,7 @@ If this gives you the will to do pattern matching, see
 
 `null` is equivalent to `not`, but considered better style.
 
-`listp` tests wether an object is a cons cell or nil.
+`listp` tests whether an object is a cons cell or nil.
 
 and sequences' predicates.
 
@@ -333,6 +333,17 @@ and sequences' predicates.
 ;; => (NIL NIL NIL)
 (fill * "hello")
 ;; => ("hello" "hello" "hello")
+~~~
+
+### member (elt, list)
+
+Returns the tail of `list` beginning with the first element satisfying `eql`ity.
+
+Accepts `:test`, `:test-not`, `:key` (functions or symbols).
+
+~~~lisp
+(member 2 '(1 2 3))
+;; (2 3)
 ~~~
 
 ## Sequences
@@ -427,17 +438,6 @@ See also sequence functions defined in
 
 #### length (sequence)
 
-#### member (elt, sequence)
-
-Returns the tail of `sequence` beginning with the first element satisfying `eql`ity.
-
-Accepts `:test`, `:test-not`, `:key` (functions or symbols).
-
-~~~lisp
-(member 2 '(1 2 3))
-;; (2 3)
-~~~
-
 #### elt (sequence, index) - find by index
 
 beware, here the sequence comes first.
@@ -481,7 +481,18 @@ parameters.
 
 #### substitute, nsubstitute[if,if-not]
 
+Return a sequence of the same kind as `sequence` with the same elements,
+except that all elements equal to `old` are replaced with `new`.
+
+~~~lisp
+(substitute #\o #\x "hellx") ;; => "hello"
+(substitute :a :x '(:a :x :x)) ;; => (:A :A :A)
+(substitute "a" "x" '("a" "x" "x") :test #'string=) ;; => ("a" "a" "a")
+~~~
+
 #### sort, stable-sort, merge
+
+(see above)
 
 #### replace (sequence-a, sequence-b)
 
@@ -1387,7 +1398,7 @@ Classes provided by the Common Lisp Object System (CLOS) are more flexible howev
 
 ### Creation
 
-`defstruct`
+Use `defstruct`:
 
 ~~~lisp
 (defstruct person
@@ -1490,6 +1501,8 @@ Slots are `setf`-able:
 
 ### Predicate
 
+A predicate function is generated:
+
 ~~~lisp
 (person-p *me*)
 T
@@ -1497,7 +1510,7 @@ T
 
 ### Single inheritance
 
-With the `:include <struct>` argument:
+Use single inheritance with the `:include <struct>` argument:
 
 ~~~lisp
 (defstruct (female (:include person))
@@ -1505,6 +1518,8 @@ With the `:include <struct>` argument:
 (make-female :name "Lilie")
 ;; #S(FEMALE :ID NIL :NAME "Lilie" :AGE NIL :GENDER "female")
 ~~~
+
+Note that the CLOS object system is more powerful.
 
 ### Limitations
 
@@ -1551,7 +1566,7 @@ The Common Lisp Object System (which came after into the language)
 doesn't have such limitations. See the [CLOS section](clos.html).
 
 * [structures on the hyperspec](http://www.lispworks.com/documentation/HyperSpec/Body/08_.htm)
-* David B. Lamkins, ["Successful Lisp, How to Undertsand and Use Common Lisp"](http://www.communitypicks.com/r/lisp/s/17592186045679-successful-lisp-how-to-understand-and-use-common).
+* David B. Lamkins, ["Successful Lisp, How to Understand and Use Common Lisp"](http://www.communitypicks.com/r/lisp/s/17592186045679-successful-lisp-how-to-understand-and-use-common).
 
 ## Tree
 
@@ -1572,7 +1587,7 @@ Features:
 * Purely functional amortized queue.
 
 
-## Appendix A - generic access of alists, plists, hash-tables and CLOS slots
+## Appendix A - generic and nested access of alists, plists, hash-tables and CLOS slots
 
 The solutions presented below might help you getting started, but keep
 in mind that they'll have a performance impact and that error messages
@@ -1580,7 +1595,7 @@ will be less explicit.
 
 * [CL21](cl21.html) has a generic `getf` (as well as others generic functions),
 * [rutils](https://github.com/vseloved/rutils) as a generic `generic-elt` or `?`,
-* the [access](https://github.com/AccelerationNet/access) library (battle tested, used by the Djula templating system) has a generic `(access my-var :elt)` ([blog post](https://lisp-journey.gitlab.io/blog/generice-consistent-access-of-data-structures-dotted-path/)).
+* the [access](https://github.com/AccelerationNet/access) library (battle tested, used by the Djula templating system) has a generic `(access my-var :elt)` ([blog post](https://lisp-journey.gitlab.io/blog/generice-consistent-access-of-data-structures-dotted-path/)). It also has `accesses` (plural) to access and set nested values.
 
 ## Appendix B - accessing nested data structures
 

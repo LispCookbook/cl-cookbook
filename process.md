@@ -25,8 +25,26 @@ you will.
 The ANSI Common Lisp standard doesn't mention this topic. We will
 present here the portable
 [bordeaux-threads](https://github.com/sionescu/bordeaux-threads)
-library, SBCL threads and the [lparallel](https://lparallel.org)
+library, [SBCL threads](http://www.sbcl.org/manual/index.html#sb_002dconcurrency) and the [lparallel](https://lparallel.org)
 library.
+
+Bordeaux-threads is a de-facto standard portable library, that exposes
+rather low-level primitives. Lparallel builds on it and features:
+
+-  a simple model of task submission with receiving queue
+-  constructs for expressing fine-grained parallelism
+-  **asynchronous condition handling** across thread boundaries
+-  **parallel versions of map, reduce, sort, remove**, and many others
+-  **promises**, futures, and delayed evaluation constructs
+-  computation trees for parallelizing interconnected tasks
+-  bounded and unbounded FIFO **queues**
+-  **channels**
+-  high and low priority tasks
+-  task killing by category
+-  integrated timeouts
+
+For more libraries on parallelism and concurrency, see the [awesome CL list](https://github.com/CodyReichert/awesome-cl#parallelism-and-concurrency)
+and [Quickdocs](http://quickdocs.org/).
 
 <a name="why_bother"></a>
 
@@ -40,8 +58,7 @@ can be written without multi-threading. For example:
 
 *   you might be writing a server which needs to be able to respond to
     more than one user / connection at a time (for instance: a web
-    server - see [this example](./sockets.html#server) on the Sockets
-    page);
+    server) on the Sockets page);
 *   you might want to perform some background activity, without
     halting the main application while this is going on;
 *   you might want your application to be notified when a certain time
@@ -215,6 +232,7 @@ To do this, let us work our way through a number of simple examples:
 -    Modify a shared resource from multiple threads — fixed using locks
 -    Modify a shared resource from multiple threads — using atomic operations
 -    Joining on a thread, destroying a thread example
+
 ### Basics — list current thread, list all threads, get thread name
 
 ~~~lisp
@@ -285,15 +303,15 @@ As we can see, because the main thread returned immediately, the
 initial value of `*counter*` is 0, and then around a second later, it
 gets updated to 1 by the anonymous thread.
 
-### Print a message onto the top-level using a thread
+### Create a thread: print a message onto the top-level
 
 ~~~lisp
     ;;; Print a message onto the top-level using a thread
-
     (defun print-message-top-level-wrong ()
       (bt:make-thread
        (lambda ()
-         (format *standard-output* "Hello from thread!")))
+         (format *standard-output* "Hello from thread!"))
+       :name "hello")
       nil)
 ~~~
 
@@ -322,12 +340,12 @@ So how do we fix the problem of the previous example? By binding the top-level a
 
 ~~~lisp
     ;;; Print a message onto the top-level using a thread — fixed
-
     (defun print-message-top-level-fixed ()
       (let ((top-level *standard-output*))
         (bt:make-thread
          (lambda ()
-           (format top-level "Hello from thread!"))))
+           (format top-level "Hello from thread!"))
+         :name "hello")))
       nil)
 ~~~
 
@@ -1108,8 +1126,8 @@ You should follow up on your own by reading a lot more on this
 topic. I share some of my own references here:
 
 -    [Common Lisp Recipes](http://weitz.de/cl-recipes/)
--    [Bordeaux API Reference](https://trac.common-lisp.net/bordeaux-threads/wiki/ApiDocumentation%E2%80%9D)
--    [SBCL Manual](https://www.sbcl.org/manual/#Threading%E2%80%9D)
+-    [Bordeaux API Reference](https://trac.common-lisp.net/bordeaux-threads/wiki/ApiDocumentation)
+-    [SBCL Manual](http://www.sbcl.org/manual/#Threading%E2%80%9D)
 -    [The Common Lisp Hyperspec](https://www.lispworks.com/documentation/HyperSpec/Front/)
 
 Next up, the final post in this mini-series: parallelism in Common
@@ -1341,7 +1359,7 @@ NIL
 ~~~
 
 End the kernel (this is important since `*kernel*` does not get
-garbage collected until we explictly end it):
+garbage collected until we explicitly end it):
 
 ~~~lisp
 CL-USER> (lparallel:end-kernel :wait t)
@@ -1425,8 +1443,8 @@ NIL
 ~~~
 
 Now let’s try submitting multiple tasks to the same channel. In this
-simple example, we are simpy creating three tasks that square, triple,
-and quadrupls the supplied input respectively.
+simple example, we are simply creating three tasks that square, triple,
+and quadruple the supplied input respectively.
 
 Note that in case of multiple tasks, the output will be in non-deterministic order:
 
@@ -1822,7 +1840,7 @@ promise object p, and we spawn off a thread that sleeps for some
 random time and then fulfills the promise by giving it a value.
 
 Meanwhile, in the main thread, we spawn off another thread that keeps
-hecking if the promise has been fulfilled or not. If not, it prints
+checking if the promise has been fulfilled or not. If not, it prints
 some random number and continues checking. Once the promise has been
 fulfilled, we can extract the value using `lparallel:force` in the main
 thread as shown.
@@ -1989,7 +2007,7 @@ futures to fulfill those promises**.
 
 ### Using cognates - parallel equivalents of Common Lisp counterparts
 
-Cognates are argubaly the raison d’etre of the lparallel
+Cognates are arguably the raison d’etre of the lparallel
 library. These constructs are what truly provide parallelism in the
 lparallel. Note, however, that most (if not all) of these constructs
 are built on top of futures and promises.
@@ -2082,7 +2100,7 @@ through an example:
 Note that all the mapping functions (`lparallel:pmap`,
 **lparallel:pmapc**,`lparallel:pmapcar`, etc.) take two special keyword
 arguments
-- `:size`, specifiying the number of elements of the input
+- `:size`, specifying the number of elements of the input
 sequence(s) to process, and
 - `:parts` which specifies the number of parallel parts to divide the
 sequence(s) into.
@@ -2332,7 +2350,27 @@ To see how lparallel handles error handling (hint: with
 `lparallel:task-handler-bind`), please read
 [https://z0ltan.wordpress.com/2016/09/10/basic-concurrency-and-parallelism-in-common-lisp-part-4b-parallelism-using-lparallel-error-handling/](https://z0ltan.wordpress.com/2016/09/10/basic-concurrency-and-parallelism-in-common-lisp-part-4b-parallelism-using-lparallel-error-handling/).
 
-### References
+
+## Monitoring and controlling threads with Slime
+
+**M-x slime-list-threads** (you can also access it through the
+*slime-selector*, shortcut **t**) will list running threads by their
+names, and their statuses.
+
+The thread on the current line can be killed with **k**, or if there’s a
+lot of threads to kill, several lines can be selected and **k** will kill
+all the threads in the selected region.
+
+**g** will update the thread list, but when you have a lot of threads
+starting and stopping it may be too cumbersome to always press **g**, so
+there’s a variable `slime-threads-update-interval`, when set to a number
+X the thread list will be automatically updated each X seconds, a
+reasonable value would be 0.5.
+
+Thanks to [Slime tips](https://slime-tips.tumblr.com/).
+
+
+## References
 
 There are, of course, a lot more functions, objects, and idiomatic
 ways of performing parallel computations using the lparallel
@@ -2342,7 +2380,7 @@ reading, you may find the following resources useful:
 
 - [The API docs hosted on Quickdoc](http://quickdocs.org/lparallel/api#package-LPARALLEL)
 - [The official homepage of the lparallel library](https://lparallel.org/)
-- [The Common Lisp Hyperspec](https://www.lispworks.com/documentation/HyperSpec/Front/%E2%80%9D), and, of course
+- [The Common Lisp Hyperspec](https://www.lispworks.com/documentation/HyperSpec/Front/), and, of course
 - Your Common Lisp implementation’s
-  manual. [For SBCL, here is a link to the official manual](https://www.lispworks.com/documentation/HyperSpec/Front/%E2%80%9D)
+  manual. [For SBCL, here is a link to the official manual](https://www.lispworks.com/documentation/HyperSpec/Front/)
 - [Common Lisp recipes](http://weitz.de/cl-recipes/) by the venerable Edi Weitz.

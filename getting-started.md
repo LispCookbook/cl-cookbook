@@ -6,8 +6,8 @@ Easy steps to install a development environment and start a project.
 
 Want a 2-clicks install ? Then get
 [Portacle](https://shinmera.github.io/portacle/), *a portable and
-multiplatform* Common Lisp environment. It ships Emacs25, SBCL (the
-implementation), Quicklisp (package manager), Slime (IDE) and
+multi-platform* Common Lisp environment. It ships Emacs25, SBCL (the
+implementation), Quicklisp (package manager), SLIME (IDE) and
 Git. It's the most straightforward way to get going !
 
 ## Install an implementation
@@ -79,8 +79,8 @@ into an SBCL REPL:
 
     docker run --rm -it -v /path/to/local/code:/usr/local/share/common-lisp/source daewok/lisp-devel:base sbcl
 
-But we still want to develop from our Emacs and Slime, so we need to
-connect Slime to the Lisp inside Docker. See
+But we still want to develop from our Emacs and SLIME, so we need to
+connect SLIME to the Lisp inside Docker. See
 [slime-docker](https://github.com/daewok/slime-docker) for a library
 that helps on setting that up.
 
@@ -123,15 +123,20 @@ and:
 But we'll setup our editor to offer a better experience instead of
 working in this REPL. See [editor-support](editor-support.html).
 
-
 Lisp is interactive by nature, so in case of an error we enter the
 debugger. This can be annoying in certain cases so you might want to
 use SBCL's `--disable-debugger` option.
 
+_Tip: the CLISP implementation has a better default REPL for the
+terminal (readline capabilities, completion of symbols). You can even
+use `clisp -on-error abort` to have error messages without the
+debugger. It's handy to try things out, but we recommend to set-up
+one's editor and to use SBCL or CCL for production._
+
 
 ## Libraries
 
-Common Lisp has hundreds of libraries available under a free software licence. See:
+Common Lisp has hundreds of libraries available under a free software license. See:
 
 * [Quickdocs](http://quickdocs.org/) - the library documentation hosting for CL.
 * the [Awesome-cl](https://github.com/CodyReichert/awesome-cl) list, a
@@ -149,8 +154,8 @@ namespace, a Python module or a Java package.
   one-to-one relationship between systems and packages, but this is in
   no way mandatory. A system may declare a dependency on other
   systems. Systems are managed by [ASDF](https://common-lisp.net/project/asdf/asdf.html) (Another System Definition
-  Facility), which offers functionalities similar to those of make and
-  ld.so, and has become a de facto standard.
+  Facility), which offers functionalities similar to those of `make` and
+  `ld.so`, and has become a de facto standard.
 
 * A Common Lisp library or project typically consists of one or
   several ASDF systems (and is distributed as one Quicklisp project).
@@ -193,6 +198,13 @@ Then, in both cases, still from the REPL:
 
 This will create the `~/quicklisp/` directory, where Quicklisp will
 maintain its state and downloaded projects.
+
+If you wish, you can install Quicklisp to a different location.  For instance,
+to install it to a hidden folder on Unix systems:
+
+~~~lisp
+(quicklisp-quickstart:install :path "~/.quicklisp)
+~~~
 
 If you want Quicklisp to always be loaded in your Lisp sessions, run
 `(ql:add-to-init-file)`: this adds the right stuff to the init file of
@@ -240,20 +252,41 @@ See more: https://wiki.debian.org/CommonLisp
 
 ### Advanced dependencies management
 
-Note that you don't need to know that to get started.
+You can drop Common Lisp projects into any of those folders:
 
-Quicklisp installs the libraries into `~/quicklisp/local-projects/`. A
-library installed here is automatically available for every project.
+- `~/common-lisp`,
+- `~/.local/share/common-lisp/source`,
+- `~/quicklisp/local-projects`
+
+For a complete list, see
+
+~~~lisp
+(asdf/source-registry:default-user-source-registry)
+~~~
+
+and
+~~~lisp
+asdf:*central-registry*
+~~~
+
+A library installed here is automatically available for every project.
 
 #### Providing our own version of a library. Cloning projects.
 
 Given the property above, we can clone any library into the
-local-projects directory and it will be found by quicklisp and
+local-projects directory and it will be found by ASDF (and Quicklisp) and
 available right-away:
 
 ~~~lisp
-(ql:quickload "package")
+(asdf:load-system "system")
 ~~~
+or
+~~~lisp
+(ql:quickload "system")
+~~~
+
+The practical different between the two is that `ql:quickload` first tries to
+fetch the system from the Internet if it is not already installed.
 
 #### How to work with local versions of libraries
 
@@ -305,7 +338,7 @@ it will create a directory structure like this:
     `-- my-project.lisp
 ```
 
-Where `my-project.asd` ressembles this:
+Where `my-project.asd` resembles this:
 
 ~~~lisp
 (defsystem "my-project"
@@ -340,11 +373,12 @@ want to work with it on the REPL, but Quicklisp doesn't know it. How
 can you do ?
 
 Well first, if you create it or clone it into
-`~/quicklisp/local-projects`, you'll be able to `(ql:quickload …)` it
-with no further ado.
+one of `~/common-lisp`, `~/.local/share/common-lisp/source/` or
+`~/quicklisp/local-projects`, you'll be able to `(ql:quickload …)` it with no
+further ado.
 
 Otherwise you'll need to compile and load its system definition
-(`.asd`) first. In Slime, type `C-c C-k`
+(`.asd`) first. In SLIME with the `slime-asdf` contrib loaded, type `C-c C-k`
 (*slime-compile-and-load-file*) in the `.asd`, then you can
 `(ql:quickload …)` it.
 
@@ -380,6 +414,10 @@ You can add this to your `~/.sbclrc`.
 If you dislike the REPL to print all symbols upcase, add this:
 
     (setf *print-case* :downcase)
+
+Beware that this might break some packages like
+[Mito](https://github.com/fukamachi/mito/issues/45).  Avoid doing this in
+production.
 
 
 ## Read more

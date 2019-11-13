@@ -10,7 +10,9 @@ integration services like Travis CI and Coveralls.
 We will use an established and well-designed regression testing
 framework called [Prove](https://github.com/fukamachi/prove). It is
 not the only possibility though,
-[FiveAM](http://quickdocs.org/fiveam/api) is a popular one. We prefer
+[FiveAM](http://quickdocs.org/fiveam/api) is a popular one (see
+[this blogpost](http://turtleware.eu/posts/Tutorial-Working-with-FiveAM.html) for an
+introduction). We prefer
 `Prove` for its doc and its **extensible reporters** (it has different
 report styles and we can extend them).
 
@@ -79,7 +81,7 @@ usual `C-c C-c`.
 * **colorize** the output,
 * report **tests duration**,
 * change the default test function,
-* set a treshold for slow tests,
+* set a threshold for slow tests,
 * invoke the **CL debugger** whenever getting an error during running tests,
 * integrate with **ASDF** so than we can execute `(asdf:test-system)` or
   `(prove:run)` in the REPL (such configuration is provided by
@@ -87,6 +89,29 @@ usual `C-c C-c`.
   author).
 
 See [Prove's documentation](https://github.com/fukamachi/prove) !
+
+
+## Interactively fixing unit tests
+
+Common Lisp is interactive by nature (or so are most implementations),
+and testing frameworks make use of it. It is possible to ask the
+framework to open the debugger on a failing test, so that we can
+inspect the stacktrace and go to the erroneous line instantly, fix it
+and re-run the test from where it left off, by choosing the suggested
+*restart*.
+
+With Prove, set `prove:*debug-on-error*` to `t`.
+
+Below is a short screencast showing all this in action (with FiveAM):
+
+<iframe width="560" height="315" sandbox="allow-same-origin allow-scripts" src="https://peertube.video/videos/embed/c0c82209-feaa-444d-962f-afa25745bfc0" frameborder="0" allowfullscreen></iframe>
+
+Note that in the debugger:
+
+- `<enter>` on a backtrace shows more of it
+- `v` on a backtrace goes to the corresponding line or function.
+- see more options with the menu.
+
 
 ## Code coverage
 
@@ -240,7 +265,7 @@ build:
 Here we defined two `stages` (see
 [environments](https://docs.gitlab.com/ce/ci/environments.html)),
 "test" and "build", defined to run one after another. A "build" stage
-will start only if the "test" one succeesds.
+will start only if the "test" one succeeds.
 
 "build" is asked to run `only` when a
 new tag is pushed, not at every commit. When it succeeds, it will make
