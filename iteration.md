@@ -928,6 +928,33 @@ If we often scan the same type of object, we can write our own scanner
     (list b a)))
 ~~~
 
+# Shorter series expressions
+
+~~~lisp
+Consider this series expression:
+
+(collect-sum (mapping ((i (scan-range :length 5)))
+                    (* i 2)))
+~~~
+
+It's a bit longer than it needs to be--the `mapping` form's only
+purpose is to bind the variable `i`, and `i` is used in only one
+place. Series has a "hidden feature" which allows us to simplify this
+expression to the following:
+
+~~~lisp
+(collect-sum (* 2 (scan-range :length 5)))
+~~~
+
+This is called implicit mapping, and can be enabled when
+`series::install` is called:
+
+~~~lisp
+(series::install :implicit-map t)
+~~~
+
+When using implicit mapping, the #M reader macro demonstrated above
+becomes redundant.
 
 # Loop gotchas
 
