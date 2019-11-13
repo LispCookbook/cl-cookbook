@@ -257,7 +257,7 @@ The value of ARG is "Hello", which is not of type NUMBER.
 ## Compile-time type checking
 
 You may provide type information for variables, function arguments
-etc via the macros [`declare`][declare] and [`declaim`][declaim].
+etc via [`proclaim`][proclaim], [`declaim`][declaim] and [`declare`][declare].
 However, similar to the `:type` slot
 introduced in [CLOS section][clos], the effects of type declarations are
 undefined in Lisp standard and are implementation specific. So there is no
@@ -433,6 +433,7 @@ either with a simple `C-c C-c` in Slime, or when we `load` a file.
 [check-type]: http://www.lispworks.com/documentation/HyperSpec/Body/m_check_.htm#check-type
 [type-error]: http://www.lispworks.com/documentation/HyperSpec/Body/e_tp_err.htm#type-error
 [place]: http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_p.htm#place
+[proclaim]: http://www.lispworks.com/documentation/HyperSpec/Body/f_procla.htm
+[declaim]: http://www.lispworks.com/documentation/HyperSpec/Body/m_declai.htm
 [declare]: http://www.lispworks.com/documentation/HyperSpec/Body/s_declar.htm
-[declaim]: https://www.xach.com/clhs?q=declaim
 [safety]: http://www.lispworks.com/documentation/HyperSpec/Body/d_optimi.htm#speed
