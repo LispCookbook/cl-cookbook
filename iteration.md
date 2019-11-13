@@ -173,8 +173,6 @@ this:
 
 Here `dotimes` returns `nil`. The return value is evaluated at the end of the loop.
 
-<<<<<<< HEAD
-=======
 You can use `return` inside of it:
 
 ~~~lisp
@@ -185,7 +183,6 @@ You can use `return` inside of it:
 ~~~
 
 
->>>>>>> upstream/master
 ### loop… repeat
 
 ~~~lisp
@@ -208,8 +205,6 @@ with `collect`, this returns a list.
 (iterate ((n (scan-range :below 10)))
   (print n))
 ~~~
-<<<<<<< HEAD
-=======
 
 ## Iterate's for loop
 
@@ -240,7 +235,6 @@ or `(display-iterate-clauses '(for))` to know about iterating over
 - symbols in-package
 - forms - or lines, or whatever-you-wish - in-file, or in-stream
 - elements in-sequence - sequences can be vectors or lists
->>>>>>> upstream/master
 
 ## Looping over a list
 
@@ -439,7 +433,6 @@ Return a flat list:
 ~~~
 
 A more efficient way, when the lists are known to be of equal length:
-<<<<<<< HEAD
 
 ~~~lisp
 (collect
@@ -458,26 +451,6 @@ Return a flat list:
 ~~~
 
 
-=======
-
-~~~lisp
-(collect
-  (mapping (((x y) (scan-multiple 'list
-                                  '(a b c)
-                                  '(1 2 3))))
-    (list x y)))
-~~~
-Return a flat list:
-~~~lisp
-(collect-append ; or collect-nconc
- (mapping (((x y) (scan-multiple 'list
-                                 '(a b c)
-                                 '(1 2 3))))
-   (list x y)))
-~~~
-
-
->>>>>>> upstream/master
 ## Nested loops
 ### loop
 ~~~lisp
@@ -487,8 +460,6 @@ Return a flat list:
 ;; ((1) (1 2) (1 2 3))
 ~~~
 
-<<<<<<< HEAD
-=======
 ### iterate
 ~~~lisp
 (iter outer
@@ -498,7 +469,6 @@ Return a flat list:
 ;; ((0 0) (0 1) (0 2) (1 0) (1 1) (1 2))
 ~~~
 
->>>>>>> upstream/master
 ### Series
 ~~~lisp
 (collect
@@ -673,8 +643,6 @@ do`, `and count`):
 5
 ```
 
-<<<<<<< HEAD
-=======
 ### iterate
 
 Translating (or even writing!) the above example using iterate is straight-forward:
@@ -692,7 +660,6 @@ Translating (or even writing!) the above example using iterate is straight-forwa
    (finally (return (values evens odds n-odds))))
 ~~~
 
->>>>>>> upstream/master
 ### Series
 
 The preceding loop would be done a bit differently in Series. `split`
@@ -928,34 +895,6 @@ If we often scan the same type of object, we can write our own scanner
     (list b a)))
 ~~~
 
-# Shorter series expressions
-
-Consider this series expression:
-
-~~~lisp
-
-(collect-sum (mapping ((i (scan-range :length 5)))
-                    (* i 2)))
-~~~
-
-It's a bit longer than it needs to be—the `mapping` form's only
-purpose is to bind the variable `i`, and `i` is used in only one
-place. Series has a "hidden feature" which allows us to simplify this
-expression to the following:
-
-~~~lisp
-(collect-sum (* 2 (scan-range :length 5)))
-~~~
-
-This is called implicit mapping, and can be enabled in the call to
-`series::install`:
-
-~~~lisp
-(series::install :implicit-map t)
-~~~
-
-When using implicit mapping, the `#M` reader macro demonstrated above
-becomes redundant.
 
 # Loop gotchas
 
