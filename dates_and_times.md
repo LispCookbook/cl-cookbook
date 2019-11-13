@@ -232,10 +232,10 @@ If this is a problem for you, here's a small function by Gerald Doussot (adapted
 The `local-time` library (available on Quicklisp) is a very handy extension to
 the somewhat limited functionalities as defined by the standard.
 
-In particular, in can
+In particular, it can
 
-- parse timestrings,
 - print timestamp in various standard or custom formats (e.g. RFC1123 or RFC3339)
+- parse timestrings,
 - perform time arithmetic,
 - convert Unix times, timestamps, and universal times to and fro.
 
@@ -249,4 +249,85 @@ For example, here is a function that returns Unix times as a human readable stri
 ~~~
 
 See the [manual](https://common-lisp.net/project/local-time/manual.html) for
-more details.
+the full details.
+
+
+### Formatting time strings
+
+~~~lisp
+(local-time:now)
+@2019-11-13T18:07:57.425654+01:00
+~~~
+
+~~~lisp
+(format nil "~a" (local-time:now))
+"2019-11-13T18:08:23.312664+01:00"
+~~~
+
+`format-timestring` takes a stream argument like `format`:
+
+~~~lisp
+(local-time:format-timestring nil (local-time:now))
+"2019-11-13T18:09:06.313650+01:00"
+~~~
+
+Here `nil` returns a new string. `t` would print to `*standard-output*`.
+
+It also accepts a `:format` argument. Its default value is
+`+iso-8601-format+`, with the output shown above. The
+`+rfc3339-format+` format defaults to it.
+
+With `+rfc-1123-format+`:
+
+~~~lisp
+(local-time:format-timestring nil (local-time:now) :format local-time:+rfc-1123-format+)
+"Wed, 13 Nov 2019 18:11:38 +0100"
+~~~
+
+With `+asctime-format+`:
+
+~~~lisp
+(local-time:format-timestring nil (local-time:now) :format local-time:+asctime-format+)
+"Wed Nov 13 18:13:15 2019"
+~~~
+
+With `+iso-week-date-format+`:
+
+~~~lisp
+(local-time:format-timestring nil (local-time:now) :format local-time:+iso-week-date-format+)
+"2019-W46-3"
+~~~
+
+
+### Defining format strings
+
+We can pass a custom `:format` argument to `format-timestring`.
+
+The syntax consists of a list made of symbols with special meanings
+(`:year`, `:day`…), strings and characters:
+
+~~~lisp
+(local-time:format-timestring nil (local-time:now) :format '(:year "-" :month "-" :day))
+"2019-11-13"
+~~~
+
+The list of symbols is available in the documentation: https://common-lisp.net/project/local-time/manual.html#Parsing-and-Formatting
+
+There are `:year :month :day :weekday :hour :min :sec :msec`, long and
+short notations ("Monday", "Mo."), gmt offset, timezone markers and
+more.
+
+The `+rfc-1123-format+` itself is defined like this:
+
+~~~lisp
+(defparameter +rfc-1123-format+
+  ;; Sun, 06 Nov 1994 08:49:37 GMT
+  '(:short-weekday ", " (:day 2) #\space :short-month #\space (:year 4) #\space
+    (:hour 2) #\: (:min 2) #\: (:sec 2) #\space :gmt-offset-hhmm)
+  "See the RFC 1123 for the details about the possible values of the timezone field.")
+~~~
+
+We see the form `(:day 2)`: the 2 is for padding, to ensure that the
+day is printed with two digits (not only `1`, but `01`). There could be
+an optional third argument, the character with which to fill the
+padding (by default, `#\0`).
