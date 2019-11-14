@@ -24,7 +24,7 @@ functionality or some shorter ways to do.
   `replace-all`, `starts-with?`, `ends-with?`, `blankp`, `emptyp`, …
 - [cl-change-case](https://github.com/rudolfochrist/cl-change-case)
   has functions to convert strings between camelCase, param-case,
-  snake_case and more.
+  snake_case and more. They are also included into `str`.
 - [mk-string-metrics](https://github.com/cbaggers/mk-string-metrics)
   has functions to calculate various string metrics efficiently
   (Damerau-Levenshtein, Hamming, Jaro, Jaro-Winkler, Levenshtein, etc),
@@ -888,9 +888,14 @@ with `~T`. Also `~10T` works.
 Also `i` for indentation.
 
 
-## Justifying text
+## Justifying text / add padding on the right
 
-With a number as parameter, like `~2a`:
+Use a number as parameter, like `~2a`:
+
+~~~lisp
+(format nil "~20a" "yo")
+;; "yo                  "
+~~~
 
 ~~~lisp
 (mapcar (lambda (it)
@@ -918,9 +923,14 @@ So, expanding:
 
 text is justified on the right (this would be with option `:`).
 
-### justify on the left: @
+### Justifying on the left: @
 
-with an `@` as in `~2@A`:
+Use a `@` as in `~2@A`:
+
+~~~lisp
+(format nil "~20@a" "yo")
+;; "                  yo"
+~~~
 
 ~~~lisp
 (mapcar (lambda (it)
@@ -952,3 +962,16 @@ With `~2,2f`:
 ```
 
 And we're happy with this result.
+
+## Formatting a format string
+
+Sometimes you want to justify a string, but the length is a variable
+itself. You can't hardcode its value as in `(format nil "~30a"
+"foo")`. Enters the `v` directive. We can use it in place of the
+comma-separated prefix parameters:
+
+~~~lisp
+(let ((padding 30))
+    (format nil "~va" padding "foo"))
+;; "foo                           "
+~~~
