@@ -585,14 +585,16 @@ keys."))
 
 ### Find all
 
-Use `select-dao`.
+Use the macro `select-dao`.
 
 Get a list of all users:
 
 ~~~lisp
 (mito:select-dao 'user)
-;=> (#<USER {10077C6073}>)
+;(#<USER {10077C6073}>)
+;#<SXQL-STATEMENT: SELECT * FROM user>
 ~~~
+
 
 ### Find by relationship
 
@@ -613,6 +615,29 @@ Example:
 (select-dao 'tweet
     (where (:like :status "%Japan%")))
 ~~~
+
+another:
+
+~~~lisp
+(select (:id :name :sex)
+  (from (:as :person :p))
+  (where (:and (:>= :age 18)
+               (:< :age 65)))
+  (order-by (:desc :age)))
+~~~
+
+You can compose your queries with regular Lisp code:
+
+~~~lisp
+(defun find-tweets (&key user)
+  (select-dao 'tweet
+    (when user
+      (where (:= :user user)))
+    (order-by :object-created)))
+~~~
+
+`select-dao` is a macro that expands to the right thing©.
+
 
 #### Clauses
 
