@@ -55,18 +55,20 @@ them.
 
 ## Parsing and extracting content with CSS selectors
 
-We'll use `Plump` to parse the html and `Lquery` to extract
-content. They have nice documentation:
+We'll use `lquery` to parse the html and extract the
+content.
 
-- [https://shinmera.github.io/plump/](https://shinmera.github.io/plump/)
 - [https://shinmera.github.io/lquery/](https://shinmera.github.io/lquery/)
 
+We first need to parse the html into an internal data structure. Use
+`(lquery:$ (initialize <html>))`:
+
 ~~~lisp
-(defvar *parsed-content* (plump:parse *request*))
-;; => *PARSED-CONTENT**
-*parsed-content**
+(defvar *parsed-content* (lquery:$ (initialize *request*)))
 ;; => #<PLUMP-DOM:ROOT {1009EE5FE3}>
 ~~~
+
+lquery uses [plump](https://shinmera.github.io/plump/) internally.
 
 Now we'll extract the links with CSS selectors.
 
@@ -81,7 +83,7 @@ So the links I want to extract are in a page with an `id` of value
 Let's try something:
 
 ~~~lisp
-(lquery:$  *parsed-content* "#content li")
+(lquery:$ *parsed-content* "#content li")
 ;; => #(#<PLUMP-DOM:ELEMENT li {100B3263A3}> #<PLUMP-DOM:ELEMENT li {100B3263E3}>
 ;;  #<PLUMP-DOM:ELEMENT li {100B326423}> #<PLUMP-DOM:ELEMENT li {100B326463}>
 ;;  #<PLUMP-DOM:ELEMENT li {100B3264A3}> #<PLUMP-DOM:ELEMENT li {100B3264E3}>
