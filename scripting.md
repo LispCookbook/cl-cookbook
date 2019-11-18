@@ -70,7 +70,7 @@ From the command line, or from a Makefile, use `--load` and `--eval`:
 build:
 	sbcl --load my-app.asd \
 	     --eval '(ql:quickload :my-app)' \
-         --eval "(sb-ext:save-lisp-and-die #p\"my-app\" :toplevel #my-app:main :executable t)"
+         --eval "(sb-ext:save-lisp-and-die #p\"my-app\" :toplevel #'my-app:main :executable t)"
 ```
 
 ## With ASDF
