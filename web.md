@@ -661,12 +661,31 @@ and so on.
 
 ## Encrypting passwords
 
-In this recipe we use the de-facto standard
+### With cl-pass
+
+[cl-pass](https://github.com/eudoxia0/cl-pass) is a password hashing and verification library. It is as simple to use as this:
+
+~~~lisp
+(cl-pass:hash "test")
+;; "PBKDF2$sha256:20000$5cf6ee792cdf05e1ba2b6325c41a5f10$19c7f2ccb3880716bf7cdf999b3ed99e07c7a8140bab37af2afdc28d8806e854"
+(cl-pass:check-password "test" *)
+;; t
+(cl-pass:check-password "nope" **)
+;; nil
+~~~
+
+You might also want to look at
+[hermetic](https://github.com/eudoxia0/hermetic), a simple
+authentication system for Clack-based applications.
+
+### Manually (with Ironclad)
+
+In this recipe we do the encryption and verification ourselves. We use the de-facto standard
 [Ironclad](https://github.com/froydnj/ironclad) cryptographic toolkit
 and the [Babel](https://github.com/cl-babel/babel) charset
 encoding/decoding library.
 
-This snippet creates the password hash that should be stored in your
+The following snippet creates the password hash that should be stored in your
 database. Note that Ironclad expects a byte-vector, not a string.
 
 ~~~lisp
