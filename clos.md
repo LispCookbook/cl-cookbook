@@ -339,8 +339,9 @@ constructors to manually check slot types.
 
 Indeed, whether slot types are being checked or not is undefined. See the [Hyperspec](http://www.lispworks.com/documentation/HyperSpec/Body/m_defcla.htm#defclass).
 
-Few implementations will do it. Clozure CL does it, SBCL does it when
-safety is high (`(declaim (optimize safety))`).
+Few implementations will do it. Clozure CL does it, SBCL does it since
+its version 1.5.9 (november, 2019) or when safety is high (`(declaim
+(optimize safety))`).
 
 To do it otherwise, see [this Stack-Overflow answer](https://stackoverflow.com/questions/51723992/how-to-force-slots-type-to-be-checked-during-make-instance), and see also [quid-pro-quo](https://github.com/sellout/quid-pro-quo), a contract programming library.
 
