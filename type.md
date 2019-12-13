@@ -411,6 +411,52 @@ Note: see also [sanity-clause][sanity-clause], a data
 serialization/contract library to check slots' types during
 `make-instance` (which is not compile time).
 
+### Limitations
+
+Complex types involving `satisfies` are not checked inside a function
+body, only at its boundaries. Even if it does a lot, SBCL doesn't do
+as much as a statically typed language.
+
+Consider this example, where we badly increment an integer with a
+string:
+
+~~~lisp
+(declaim (ftype (function () string) bad-adder))
+(defun bad-adder ()
+       (let ((res 10))
+         (loop for name in '("alice")
+            do (incf res name))  ;; bad
+         (format nil "finally doing sth with ~a" res)))
+~~~
+
+Compiling this function doesn't throw a type warning.
+
+However, if we had the problematic line at the function's boundary
+we'd get the warning:
+
+~~~lisp
+(defun bad-adder ()
+  (let ((res 10))
+    (loop for name in  '("alice")
+       return (incf res name))))
+; in: DEFUN BAD-ADDER
+;     (SB-INT:NAMED-LAMBDA BAD-ADDER
+;         NIL
+;       (BLOCK BAD-ADDER
+;         (LET ((RES 10))
+;           (LOOP FOR NAME IN *ALL-NAMES* RETURN (INCF RES NAME)))))
+;
+; caught WARNING:
+;   Derived type of ("a hairy form" NIL (SETQ RES (+ NAME RES))) is
+;     (VALUES (OR NULL NUMBER) &OPTIONAL),
+;   conflicting with the declared function return type
+;     (VALUES STRING &REST T).
+~~~
+
+What can we conclude? This is yet another reason to decompose your
+code into small functions.
+
+
 ## See also
 
 - the article [Static type checking in SBCL](https://medium.com/@MartinCracauer/static-type-checking-in-the-programmable-programming-language-lisp-79bb79eb068a), by Martin Cracauer
