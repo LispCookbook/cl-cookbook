@@ -810,6 +810,20 @@ A block is manually created and returned from.
 ;; 14
 ~~~
 
+Summing into a variable:
+
+~~~lisp
+(loop for i from 1 to 3
+   sum (* i i) into total
+   do (print i)
+   finally (print total))
+1
+2
+3
+14
+~~~
+
+
 ### Series
 
 ~~~lisp
