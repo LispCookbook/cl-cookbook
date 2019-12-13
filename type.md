@@ -392,6 +392,24 @@ its argument types which appear to be incompatible with those of
 This all happens indeed *at compile time*, either in the REPL,
 either with a simple `C-c C-c` in Slime, or when we `load` a file.
 
+### Declaring class slots types
+
+A class slot accepts a `:type` slot option. It is however generally
+*not* used to check the type of the initform. SBCL, starting with
+[version 1.5.9][sbcl159] released on
+november 2019, now gives those warnings, meaning that this:
+
+~~~lisp
+(defclass foo ()
+  ((name :type number :initform "17")))
+~~~
+
+throws a warning at compile time.
+
+
+Note: see also [sanity-clause][sanity-clause], a data
+serialization/contract library to check slots' types during
+`make-instance` (which is not compile time).
 
 ## See also
 
@@ -437,3 +455,5 @@ either with a simple `C-c C-c` in Slime, or when we `load` a file.
 [declaim]: http://www.lispworks.com/documentation/HyperSpec/Body/m_declai.htm
 [declare]: http://www.lispworks.com/documentation/HyperSpec/Body/s_declar.htm
 [safety]: http://www.lispworks.com/documentation/HyperSpec/Body/d_optimi.htm#speed
+[sbcl159]: http://www.sbcl.org/news.html#1.5.9
+[sanity-clause]: https://github.com/fisxoj/sanity-clause
