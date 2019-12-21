@@ -51,6 +51,7 @@ title: Home
 ## Other CL Resources
 
 * [lisp-lang.org](http://lisp-lang.org/)
+* [List of Lisp Communities](https://github.com/CodyReichert/awesome-cl#community)
 * The [Awesome-cl](https://github.com/CodyReichert/awesome-cl) list
 * [The Common Lisp HyperSpec](http://www.lispworks.com/documentation/HyperSpec/Front/index.htm) by Kent M. Pitman (also available in [Dash](https://kapeli.com/dash), [Zeal](https://zealdocs.org/) and [Velocity](https://velocity.silverlakesoftware.com/))
 * [The Common Lisp UltraSpec](http://phoe.tymoon.eu/clus/doku.php)
