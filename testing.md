@@ -16,7 +16,7 @@ introduction) and [there are others](https://github.com/CodyReichert/awesome-cl#
 `Prove` for its documentation and its **extensible reporters** (it has different
 report styles and we can extend them).
 
-> :warning: **Prove has a couple limitations and will soon be obsolete**. We advise to start with another test framework.
+> warning: Prove has a couple limitations and will soon be obsolete. We advise to start with another test framework.
 
 
 <a name="install"></a>
