@@ -12,9 +12,11 @@ framework called [Prove](https://github.com/fukamachi/prove). It is
 not the only possibility though,
 [FiveAM](http://quickdocs.org/fiveam/api) is a popular one (see
 [this blogpost](http://turtleware.eu/posts/Tutorial-Working-with-FiveAM.html) for an
-introduction). We prefer
-`Prove` for its doc and its **extensible reporters** (it has different
+introduction) and [there are others](https://github.com/CodyReichert/awesome-cl#unit-testing) (and more again). We prefer
+`Prove` for its documentation and its **extensible reporters** (it has different
 report styles and we can extend them).
+
+> :warning: **Prove has a couple limitations and will soon be obsolete**. We advise to start with another test framework.
 
 
 <a name="install"></a>
