@@ -382,7 +382,7 @@ Finally, macros are essential for defining "command languages." A _command_ is a
 
 As an example, let's define a little command language for debugging macros. (You may actually find this useful.) There are just two commands, `ex` and `fi`. They keep track of a "current form," the thing to be macro-expanded or the result of such an expansion:
 
-1.  <code>(ex [<em>form</em>])</code>: Apply `macro-expand-1` to _form_ (if supplied) or the current form, and make the result the current form. Then pretty-print the current form.
+1.  <code>(ex [<em>form</em>])</code>: Apply `macroexpand-1` to _form_ (if supplied) or the current form, and make the result the current form. Then pretty-print the current form.
 2.  <code>(fi <em>s</em> [<em>k</em>])</code>: Find the _k_'th subexpression of the current form whose `car` is _s_. (_k_ defaults to 0.) Make that subexpression the current form and pretty-print it.
 
 Suppose you're trying to debug a macro `hair-squared` that expands into something complex containing a subform that is itself a macro form beginning with the symbol `odd-define`. You suspect there is a bug in the subform. You might issue the following commands:
