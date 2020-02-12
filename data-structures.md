@@ -12,7 +12,7 @@ also have many more details:
 - the
   [CL standard](https://web.archive.org/web/20190630183107/http://cvberry.com/tech_writings/notes/common_lisp_standard_draft.html)
   with a nice TOC, functions reference, extensive descriptions, more
-  examples and warnings (i.e: everything).
+  examples and warnings (i.e: everything). [PDF mirror](https://gitlab.com/vancan1ty/clstandard_build/-/blob/master/cl-ansi-standard-draft-w-sidebar.pdf)
 - a [Common Lisp quick reference](http://clqr.boundp.org/)
 
 Don't miss the appendix and when you need more data structures, have a
