@@ -346,6 +346,34 @@ Accepts `:test`, `:test-not`, `:key` (functions or symbols).
 ;; (2 3)
 ~~~
 
+### Replace objects in a list: sublis (alist, tree)
+
+[sublis](http://www.lispworks.com/documentation/HyperSpec/Body/f_sublis.htm)
+substitutes the objects given in `alist` and found in `tree` with
+their new values given in the alist:
+
+~~~lisp
+(sublis '((x . 10) (y . 20))
+        '(* x (+ x y) (* y y)))
+;; (* 10 (+ 10 20) (* 20 20))
+~~~
+
+`sublis` accepts the `:test` and `:key` arguments. `:test` is a
+function that takes two arguments, the key and the subtree.
+
+~~~lisp
+(setq tree1 '(1 (1 2) ((1 2 3)) (((1 2 3 4)))))
+(sublis '((t . "string"))
+         (sublis '((1 . "") (4 . 44)) tree1)
+         :key #'stringp)
+;; ("string" ("string" 2) (("string" 2 3)) ((("string" 2 3 44))))
+
+(setq tree2 '("one" ("one" "two") (("one" "TWO" "three"))))
+(sublis '(("two" . 2)) tree2 :test 'equal)
+;; ("one" ("one" 2) (("one" "TWO" "three")))
+~~~
+
+
 ## Sequences
 
 **lists** and **vectors** (and thus **strings**) are sequences.
