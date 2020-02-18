@@ -346,11 +346,24 @@ Accepts `:test`, `:test-not`, `:key` (functions or symbols).
 ;; (2 3)
 ~~~
 
-### Replace objects in a list: sublis (alist, tree)
+### Replacing objects in a tree: subst, sublis
+
+[subst](http://www.lispworks.com/documentation/HyperSpec/Body/f_substc.htm) and
+`subst-if` search and replace occurences of an element
+or subexpression in a tree (when it satisfies the optional `test`):
+
+~~~lisp
+(subst 'one 1 '(1 2 3))
+;; => (ONE 2 3)
+
+(subst  '(1 . one) '(1 . 1) '((1 . 1) (2 . 2) (3 . 3)) :test #'equal)
+;; ((1 . ONE) (2 . 2) (3 . 3))
+~~~
 
 [sublis](http://www.lispworks.com/documentation/HyperSpec/Body/f_sublis.htm)
-substitutes the objects given in `alist` and found in `tree` with
-their new values given in the alist:
+allows to replace many objects at once. It substitutes the objects
+given in `alist` and found in `tree` with their new values given in
+the alist:
 
 ~~~lisp
 (sublis '((x . 10) (y . 20))
@@ -362,15 +375,10 @@ their new values given in the alist:
 function that takes two arguments, the key and the subtree.
 
 ~~~lisp
-(setq tree1 '(1 (1 2) ((1 2 3)) (((1 2 3 4)))))
-(sublis '((t . "string"))
-         (sublis '((1 . "") (4 . 44)) tree1)
-         :key #'stringp)
-;; ("string" ("string" 2) (("string" 2 3)) ((("string" 2 3 44))))
-
-(setq tree2 '("one" ("one" "two") (("one" "TWO" "three"))))
-(sublis '(("two" . 2)) tree2 :test 'equal)
-;; ("one" ("one" 2) (("one" "TWO" "three")))
+(sublis '((t . "foo"))
+        '("one" 2 ("three" (4 5)))
+        :key #'stringp)
+;; ("foo" 2 ("foo" (4 5)))
 ~~~
 
 
