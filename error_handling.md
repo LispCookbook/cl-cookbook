@@ -27,7 +27,7 @@ What is a condition ?
 Let's dive into it step by step. More resources are given afterwards.
 
 
-## Ignore all errors (and return nil)
+## Ignoring all errors, returning nil
 
 Sometimes you know that a function can fail and you just want to
 ignore it: use `ignore-errors`:
@@ -56,7 +56,7 @@ could not choose what to return.
 Remember that we can `inspect` the condition with a right click in Slime.
 
 
-## Catching any condition - handler-case
+## Catching any condition (handler-case)
 
 <!-- we will say "handling" for handler-bind -->
 
@@ -131,24 +131,6 @@ We can specify what condition to handle:
 This workflow is similar to a try/catch as found in other languages, but we can do more.
 
 
-### Ignoring the condition argument
-
-If you don't access the condition object in your handlers, but you still keep it has an argument for good practice, you'll see this compiler warning often:
-
-```
-; caught STYLE-WARNING:
-;   The variable C is defined but never used.
-```
-
-To remove it, use a `declare` call as in:
-
-~~~lisp
-(handler-case (/ 3 0)
-  (division-by-zero (c)
-   (declare (ignore c))
-   (format t "Caught division by zero~%"))) ;; we don't print "c" here and don't get the warning.
-~~~
-
 ## handler-case VS handler-bind
 
 `handler-case` is similar to the `try/catch` forms that we find in
@@ -162,64 +144,13 @@ interactively or programmatically.
 If some library doesn't catch all conditions and lets some bubble out
 to us, we can see the restarts (established by `restart-case`)
 anywhere deep in the stack, including restarts established by other
-libraries whose this library called.  And *we can see the stack
+libraries that this library called.  And *we can see the stack
 trace*, with every frame that was called and, in some lisps, even see
 local variables and such. Once we `handler-case`, we "forget" about
 this, everything is unwound. `handler-bind` does *not* rewind the
 stack.
 
-
-## Handling conditions - handler-bind
-
-Here we use `handler-bind`.
-
-Its general form is:
-
-~~~lisp
-(handler-bind ((a-condition #'function-to-handle-it)
-               (another-one #'another-function))
-    (code that can...)
-    (...error out))
-~~~
-
-So, our simple example:
-
-~~~lisp
-(handler-bind
-             ((division-by-zero #'(lambda (c) (format t "hello condition~&"))))
-           (/ 3 0))
-~~~
-
-This prints some warnings, then it prints our "hello" *and still
-enters the debugger*. If we don't want to enter the debugger, we have
-to define a restart and invoke it.
-
-
-A real example with the
-[`unix-opts`](https://github.com/mrkkrp/unix-opts) library, that
-parses command line arguments. It defined some conditions:
-`unknown-option`, `missing-arg` and `arg-parser-failed`, and it is up
-to use to write what to do in these cases.
-
-~~~lisp
-(handler-bind ((opts:unknown-option #'unknown-option)
-               (opts:missing-arg #'missing-arg)
-               (opts:arg-parser-failed #'arg-parser-failed))
-  (opts:get-opts))
-~~~
-
-Our `unknown-option` function is simple and looks like this:
-
-~~~lisp
-(defun unknown-option (condition)
-  (format t "~s option is unknown.~%" (opts:option condition))
-  (opts:describe)
-  (exit)) ;; <-- we return to the command line, no debugger.
-~~~
-
-it takes the condition as parameter, so we can read information from
-it if needed. Here we get the name of the erroneous option with the
-defined reader `(opts:option condition)` (see below).
+Before we properly see `handler-bind`, let's study conditions and restarts.
 
 
 ## Defining and making conditions
@@ -235,7 +166,7 @@ We define conditions with `define-condition` and we make (initialize) them with 
 ~~~
 
 
-It's better if we give more information when we create this condition, so let's use slots:
+It's better if we give more information to it when we create a condition, so let's use slots:
 
 ~~~lisp
 (define-condition my-division-by-zero (error)
@@ -286,9 +217,9 @@ A difference is that we can't use `slot-value` on slots.
 We can use `error` in two ways:
 
 - `(error "some text")`: signals a condition of type `simple-error`, and opens-up the interactive debugger.
-- `(error 'my-error :message "We did this and that and it didn't work.")`: creates and throws a custom condition with its slot "message".
+- `(error 'my-error :message "We did this and that and it didn't work.")`: creates and throws a custom condition with its slot "message" and opens-up the interactive debugger.
 
-So we can do:
+With our own condition we can do:
 
 ~~~lisp
 (error 'my-division-by-zero :dividend 3)
@@ -299,12 +230,18 @@ So we can do:
 Throwing these conditions will enter the interactive debugger, where
 the user may select a restart.
 
-`warn` will too.
+`warn` will not enter the debugger (create warning conditions by subclassing `simple-warning`).
 
 Use `signal` if you do not want to enter the debugger, but you still want to signal to the upper levels that something *exceptional* happened.
 
+And that can be anything. For example, it can be used to track
+progress during an operation. You would create a condition with a
+`percent` slot, signal one when progress is made, and the
+higher level code would handle it and display it to the user. See the
+resources below for more.
 
-### Custom error messages: report
+
+### Custom error messages (:report)
 
 
 So far, when throwing our error, we saw this default text in the
@@ -337,151 +274,245 @@ Now:
 ;;    [Condition of type MY-DIVISION-BY-ZERO]
 ~~~
 
-As usual, once in the debugger, we can inspect the backtrace, go to
-the erroneous source line (with `v` in Slime), etc.
+
+## Inspecting the stacktrace
+
+That's another quick reminder, not a Slime tutorial. In the debugger,
+you can inspect the stacktrace, the arguments to the function calls,
+go to the erroneous source line (with `v` in Slime), execute code in
+the context (`e`), etc.
+
+Often, you can edit a buggy function, compile it (with the `C-c C-c`
+shortcut in Slime), choose the "RETRY" restart and see your code pass.
+
+All this depends on compiler options, wether it is optimized for
+debugging, speed or security.
+
+See our [debugging section](debugging.html).
 
 
-~~~lisp
-(define-condition troublesome-option (simple-error)
-  ((option
-    :initarg :option
-    :reader option))
-  (:report (lambda (c s) (format s "troublesome option: ~s" (option c))))
-  (:documentation "Generalization over conditions that have to do with some
-particular option."))
-
-(define-condition unknown-option (troublesome-option)
-  ()
-  (:report (lambda (c s) (format s "unknown option: ~s" (option c))))
-  (:documentation "This condition is thrown when parser encounters
-unknown (not previously defined with `define-opts`) option."))
-~~~
-
-
-## Signaling (throwing) conditions
-
-We can use `error`, like we did above, in two ways:
-
-- `(error "some text")`: signals a condition of type `simple-error`
-- `(error 'my-error :message "We did this and this and it didn't work.")`
-
-Throwing these conditions will enter the interactive debugger,
-where the user may select a restart. Use `signal` if you do not want to enter the debugger if your program failed to handle the condition.
-
-Simple example from `unix-opts`: it adds information into the `option` slot:
-
-~~~lisp
-(error 'unknown-option
-        :option opt)
-~~~
-
-
-## Restarts, interactive choices in the debugger
-
-### Defining restarts
+# Restarts, interactive choices in the debugger
 
 Restarts are the choices we get in the debugger, which always has the
-`RETRY` and `ABORT` ones. We can add choices to the top of the list:
+`RETRY` and `ABORT` ones.
+
+By *handling* restarts we can start over the operation as if the error
+didn't occur (as seen in the stack).
+
+
+## Using assert's optional restart
+
+In its simple form `assert` does what we know:
 
 ~~~lisp
-(defun division-restarter ()
-  (restart-case (/ 3 0)
-    (return-zero () 0)
-    (divide-by-one () (/ 3 1))))
+(assert (realp 3))
+;; NIL = passed
 ~~~
 
-By calling this stupid function we get two new choices at the top of the debugger:
+When the assertion fails, we are prompted into the debugger:
+
+~~~lisp
+(defun divide (x y)
+  (assert (not (zerop y)))
+  (/ x y))
+
+(divide 3 0)
+;; The assertion (NOT #1=(ZEROP Y)) failed with #1# = T.
+;;    [Condition of type SIMPLE-ERROR]
+;;
+;; Restarts:
+;;  0: [CONTINUE] Retry assertion.
+;;  1: [RETRY] Retry SLIME REPL evaluation request.
+;;  …
+~~~
+
+It also accepts an optional parameter to offer to change values:
+
+~~~lisp
+(defun divide (x y)
+  (assert (not (zerop y))
+          (y)   ;; list of values that we can change.
+          "Y can not be zero. Please change it") ;; custom error message.
+  (/ x y))
+~~~
+
+Now we get a new restart that offers to change the value of Y:
+
+~~~lisp
+(divide 3 0)
+;; Y can not be zero. Please change it
+;;    [Condition of type SIMPLE-ERROR]
+;;
+;; Restarts:
+;;  0: [CONTINUE] Retry assertion with new value for Y.  <--- new restart
+;;  1: [RETRY] Retry SLIME REPL evaluation request.
+;;  …
+~~~
+
+and when we choose it, we are prompted for a new value in the REPL:
+
+```
+The old value of Y is 0.
+Do you want to supply a new value?  (y or n) y
+
+Type a form to be evaluated:
+2
+3/2  ;; and our result.
+```
+
+
+## Defining restarts
+
+All this is good but we might want more custom choices.  We can add
+restarts on the top of the list by wrapping our function call inside
+`restart-case`.
+
+~~~lisp
+(defun divide-with-restarts (x y)
+  (restart-case (/ x y)
+    (return-zero ()  ;; <-- creates a new restart called "RETURN-ZERO"
+      0)
+    (divide-by-one ()
+      (/ x 1))))
+(divide-with-restarts 3 0)
+~~~
+
+In case of *any error* (we'll improve on that with `handler-bind`),
+we'll get those two new choices at the top of the debugger:
 
 ![](simple-restarts.png)
 
-Note: read in lisper.in's blogpost on csv parsing (see Resources) how
-this system was used effectively in production.
-
-But that's not all, by handling restarts we can start over the
-operation as if the error didn't occur (as seen in the stack).
-
-### Calling restarts programmatically
-
-With `invoke-restart`.
+That's allright but let's just write more human-friendy "reports":
 
 ~~~lisp
-(defun division-and-bind ()
-           (handler-bind
-               ((error (lambda (c)
-                         (format t "Got error: ~a~%" c) ;; error-message
-                         (format t "and will divide by 1~&")
-                         (invoke-restart 'divide-by-one))))
-             (division-restarter)))
-;; (DIVISION-AND-BIND)
+(defun divide-with-restarts (x y)
+  (restart-case (/ x y)
+    (return-zero ()
+      :report "Return 0"  ;; <-- added
+      0)
+    (divide-by-one ()
+      :report "Divide by 1"
+      (/ x 1))))
+(divide-with-restarts 3 0)
+;; Nicer restarts:
+;;  0: [RETURN-ZERO] Return 0
+;;  1: [DIVIDE-BY-ONE] Divide by 1
+~~~
+
+That's better, but we lack the ability to change an operand, as we did
+with the `assert` example above.
+
+
+## Changing a variable with restarts
+
+The two restarts we defined didn't ask for a new value. To do this, we
+add an `:interactive` lambda function to the restart, that asks for
+the user a new value with the input method of its choice. Here, we'll
+use the regular `read`.
+
+~~~lisp
+(defun divide-with-restarts (x y)
+  (restart-case (/ x y)
+    (return-zero ()
+      :report "Return 0"
+      0)
+    (divide-by-one ()
+      :report "Divide by 1"
+      (/ x 1))
+    (set-new-divisor (value)
+      :report "Enter a new divisor"
+      ;;
+      ;; Ask the user for a new value:
+      :interactive (lambda () (prompt-new-value "Please enter a new divisor: "))
+      ;;
+      ;; and call the divide function with the new value…
+      ;; … possibly catching bad input again!
+      (divide-with-restarts x value))))
+
+(defun prompt-new-value (prompt)
+  (format *query-io* prompt)  ;; *query-io*: the special stream to make user queries.
+  (force-output *query-io*)   ;; Ensure the user sees what he types.
+  (list (read *query-io*)))   ;; We must return a list.
+
+(divide-with-restarts 3 0)
+~~~
+
+When calling it, we are offered a new restart, we enter a new value,
+and we get our result:
+
+~~~
+(divide-with-restarts 3 0)
+;; Debugger:
+;;
+;; 2: [SET-NEW-DIVISOR] Enter a new divisor
+;;
+;; Please enter a new divisor: 10
+;;
+;; 3/10
+~~~
+
+Oh, you prefer a graphical user interface? We can use the `zenity`
+command line interface on GNU/Linux.
+
+~~~lisp
+(defun prompt-new-value (prompt)
+  (list
+   (let ((input
+          ;; We capture the program's output to a string.
+          (with-output-to-string (s)
+            (let* ((*standard-output* s))
+              (uiop:run-program `("zenity"
+                                  "--forms"
+                                  ,(format nil "--add-entry=~a" prompt))
+                                :output s)))))
+     ;; We get a string and we want a number.
+     ;; We could also use parse-integer, the parse-number library, etc.
+     (read-from-string input))))
+~~~
+
+Now try again and you should get a little window asking for a new number:
+
+![](assets/zenity-prompt.png)
+
+
+That's fun, but that's not all. Choosing restarts manually is not always (or often?)
+satisfactory.  And by *handling* restarts we can start over the
+operation as if the error didn't occur, as seen in the stack.
+
+
+## Calling restarts programmatically (handler-bind, invoke-restart)
+
+We have a piece of code that we know can throw conditions. Here,
+`divide-with-restarts` can signal an error about a division by
+zero. What we want to do, is our higher-level code to automatically
+handle it and call the appropriate restart.
+
+We can do this with `handler-bind` and `invoke-restart`:
+
+~~~lisp
+(defun divide-and-handle-error (x y)
+  (handler-bind
+      ((division-by-zero (lambda (c)
+                (format t "Got error: ~a~%" c) ;; error-message
+                (format t "and will divide by 1~&")
+                (invoke-restart 'divide-by-one))))
+    (divide-with-restarts x y)))
+
+(divide-and-handle-error 3 0)
 ;; Got error: arithmetic error DIVISION-BY-ZERO signalled
-;; and will divide by 1
 ;; Operation was (/ 3 0).
+;; and will divide by 1
 ;; 3
 ~~~
 
-Note that we called the form that contains our restarts
-(`division-restarter`) and not the function that throws the error.
 
-### Using other restarts
+## Using other restarts
 
 `find-restart 'name-of-restart` will return the most recent bound
-restart with the given name, or `nil`. We can invoke it with
-`invoke-restart`.
+restart with the given name, or `nil`.
 
-### Prompting the user to enter a new value
 
-Let's add a restart in our `division-restarter` to offer the user to
-enter a new dividend, and run the division again.
-
-~~~lisp
-(defun division-restarter ()
-  (restart-case (/ 3 0)
-    (return-nil () nil)
-    (divide-by-one () (/ 3 1))
-    (choose-another-dividend (new-dividend)
-      :report "Please choose another dividend"
-      :interactive (lambda ()
-                     (format t "Enter a new dividend: ")
-                     (list (read))) ;; <-- must return a list.
-      (format t "New division: 3/~a = ~a~&" new-dividend (/ 3 new-dividend)))))
-~~~
-
-We get prompted in the debugger:
-
-```
-arithmetic error DIVISION-BY-ZERO signalled
-Operation was (/ 3 0).
-  [Condition of type DIVISION-BY-ZERO]
-
-Restarts:
- 0: [RETURN-NIL] RETURN-NIL
- 1: [DIVIDE-BY-ONE] DIVIDE-BY-ONE
- 2: [CHOOSE-ANOTHER-DIVIDEND] Please choose another dividend <-- new
- 3: [RETRY] Retry SLIME REPL evaluation request.
- 4: [*ABORT] Return to SLIME's top level.
- 5: [ABORT] abort thread (#<THREAD "repl-thread" RUNNING {1002A47FA3}>)
-```
-
-The new `choose-another-dividend` restart takes an argument for the
-new dividend, that will be fed by the `:interactive` lambda, which
-`read`s for user input and must return a list.
-
-We use it like this:
-
-~~~lisp
-(division-restarter)
-;;
-;; Entered debugger, chose the 2nd restart.
-;;
-Enter a new dividend: 10  <-- got prompted to enter a new value.
-New division: 3/10 = 3/10
-NIL
-~~~
-
-In a real situation we might want to call our "restarter" recursively,
-to get into the debugger again if we enter a bad value.
-
-### Hide and show restarts
+## Hiding and showing restarts
 
 Restarts can be hidden. In `restart-case`, in addition to `:report`
 and `:interactive`, they also accept a `:test` key:
@@ -494,15 +525,69 @@ and `:interactive`, they also accept a `:test` key:
     ...
 ~~~
 
-## Run some code, condition or not ("finally")
+
+# Handling conditions (handler-bind)
+
+We just saw a usage of `handler-bind`.
+
+Its general form is:
+
+~~~lisp
+(handler-bind ((a-condition #'function-to-handle-it)
+               (another-one #'another-function))
+    (code that can...)
+    (...error out))
+~~~
+
+
+We can study a real example with the
+[`unix-opts`](https://github.com/mrkkrp/unix-opts) library, that
+parses command line arguments. It defined some conditions:
+`unknown-option`, `missing-arg` and `arg-parser-failed`, and it is up
+to us to write what to do in these cases.
+
+~~~lisp
+(handler-bind ((opts:unknown-option #'unknown-option)
+               (opts:missing-arg #'missing-arg)
+               (opts:arg-parser-failed #'arg-parser-failed))
+  (opts:get-opts))
+~~~
+
+Our `unknown-option` function is simple and looks like this:
+
+~~~lisp
+(defun unknown-option (condition)
+  (format t "~s option is unknown.~%" (opts:option condition))
+  (opts:describe)
+  (exit)) ;; <-- we return to the command line, no debugger.
+~~~
+
+it takes the condition as parameter, so we can read information from
+it if needed. Here we get the name of the erroneous option with the
+condition's reader `(opts:option condition)`.
+
+
+# Running some code, condition or not ("finally") (unwind-protect)
 
 The "finally" part of others `try/catch/finally` forms is done with `unwind-protect`.
 
 It is the construct used in "with-" macros, like `with-open-file`,
 which always closes the file after it.
 
+With this example:
 
-You're now more than ready to write some code and to dive into other resources !
+~~~lisp
+(unwind-protect (/ 3 0)
+  (format t "This place is safe.~&"))
+~~~
+
+We *do* get the interactive debugger (we didn't use handler-bind or
+anything), but our message is printed afterwards anyway.
+
+
+# Conclusion
+
+You're now more than ready to write some code and to dive into other resources!
 
 
 ## Resources
@@ -510,12 +595,13 @@ You're now more than ready to write some code and to dive into other resources !
 * [Practical Common Lisp: "Beyond Exception Handling: Conditions and Restarts"](http://gigamonkeys.com/book/beyond-exception-handling-conditions-and-restarts.html) - the go-to tutorial, more explanations and primitives.
 * Common Lisp Recipes, chap. 12, by E. Weitz
 * [language reference](https://www.cs.cmu.edu/Groups/AI/html/cltl/clm/node317.html)
-* [lisper.in](https://lisper.in/restarts#signaling-validation-errors) - example with parsing a csv file and using restarts with success, [in a flight travel company](https://www.reddit.com/r/lisp/comments/7k85sf/a_tutorial_on_conditions_and_restarts/drceozm/).
+* [Video tutorial: introduction on conditions and restarts](http://nklein.com/2011/03/tutorial-introduction-to-conditions-and-restarts/), by Patrick Stein.
 * [Condition Handling in the Lisp family of languages](http://www.nhplace.com/kent/Papers/Condition-Handling-2001.html)
-* [z0ltan.wordpress.com](https://z0ltan.wordpress.com/2016/08/06/conditions-and-restarts-in-common-lisp/)
-* [https://github.com/svetlyak40wt/python-cl-conditions](https://github.com/svetlyak40wt/python-cl-conditions) - implementation of the CL conditions system in Python.
+* [z0ltan.wordpress.com](https://z0ltan.wordpress.com/2016/08/06/conditions-and-restarts-in-common-lisp/) (the article this recipe is heavily based upon)
 
 ## See also
 
 * [Algebraic effects - You can touch this !](http://jacek.zlydach.pl/blog/2019-07-24-algebraic-effects-you-can-touch-this.html) - how to use conditions and restarts to implement progress reporting and aborting of a long-running calculation, possibly in an interactive or GUI context.
 * [A tutorial on conditions and restarts](https://github.com/stylewarning/lisp-random/blob/master/talks/4may19/root.lisp),  based around computing the roots of a real function. It was presented by the author at a Bay Area Julia meetup on may 2019 ([talk slides here](https://github.com/stylewarning/talks/blob/master/4may19-julia-meetup/Bay%20Area%20Julia%20Users%20Meetup%20-%204%20May%202019.pdf)).
+* [lisper.in](https://lisper.in/restarts#signaling-validation-errors) - example with parsing a csv file and using restarts with success, [in a flight travel company](https://www.reddit.com/r/lisp/comments/7k85sf/a_tutorial_on_conditions_and_restarts/drceozm/).
+* [https://github.com/svetlyak40wt/python-cl-conditions](https://github.com/svetlyak40wt/python-cl-conditions) - implementation of the CL conditions system in Python.
