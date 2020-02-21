@@ -148,7 +148,7 @@ reachable.
 
 External resources:
 
-- [CSS selectors by example](https://codingsec.net/2016/12/select-specific-text-css-using-selectors/)
+- [CSS selectors](https://www.w3schools.com/css/css_selectors.asp)
 
 ## Async requests
 
