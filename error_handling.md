@@ -226,77 +226,120 @@ defined reader `(opts:option condition)` (see below).
 
 We define conditions with `define-condition` and we make (initialize) them with `make-condition`.
 
-<!-- todo: differences ? -->
-
-<!-- make-condition ? -->
-
 ~~~lisp
-(define-condition my-division-by-zero (error) ())
+(define-condition my-division-by-zero (error)
+  ())
+
+(make-condition 'my-division-by-zero)
+;; #<MY-DIVISION-BY-ZERO {1005A5FE43}>
 ~~~
 
-Conditions are not classes (though we can specialize on them with `defmethod`) and we cannot use `defclass` to define them and we must instead use `define-condition`.
+
+It's better if we give more information when we create this condition, so let's use slots:
 
 ~~~lisp
 (define-condition my-division-by-zero (error)
   ((dividend :initarg :dividend
-            :reader dividend)) ;; <= so we'll get the dividend with (dividend condition), as soon as on the next line.
-  ;; the :report is the message into the debugger:
-  (:report (lambda (condition stream) (format stream "You were going to divide ~a by zero.~&" (dividend condition)))))
+             :initform nil
+             :reader dividend)) ;; <-- we'll get the dividend with (dividend condition). See the CLOS tutorial if needed.
+  (:documentation "Custom error when we encounter a division by zero.")) ;; good practice ;)
 ~~~
 
-The general form looks like a regular class definition:
+Now when we'll "signal" or "throw" the condition in our code we'll be
+able to populate it with information to be consumed later:
 
 ~~~lisp
-(define-condition my-condition (condition-it-inherits-from)
-  ;; list of arguments, can be "()".
-  ((message :initarg :message
-            :reader my-condition-message)
-   (second ...))
-  ;; class arguments
-  (:report (lambda (condition stream) (...))) ;; what is printed in the REPL.
-  (:documentation "a string")) ;; good practice ;)
+(make-condition 'my-division-by-zero :dividend 3)
+;; #<MY-DIVISION-BY-ZERO {1005C18653}>
 ~~~
 
-Now when we throw this condition we must pass it an error message (it
-is a required argument), and read it with `error-message` (the
-`:reader`).
-
-What's in `:report` will be printed in the REPL.
-
-Let's try our condition. We define a simple function that checks our
-divisor, and signals our condition if it is equal to zero:
+Note: here's a quick reminder on classes, if you are not fully operational
+on the CLOS object system:
 
 ~~~lisp
-(defun my-division (x y)
-    (if (= y 0)
-        (error 'MY-DIVISION-BY-ZERO :dividend x))
-    (/ x y))
+(make-condition 'my-division-by-zero :dividend 3)
+;;                                   ^^ this is the ":initarg"
 ~~~
 
-When we use it, we enter the debugger:
+and `:reader dividend` created a *generic function* that is a "getter"
+for the dividend of a `my-division-by-zero` object:
 
 ~~~lisp
-(my-division 3 0)
-;;
-;; into the debugger:
-;;
-You were going to divide 3 by zero.
+(make-condition 'my-division-by-zero :dividend 3)
+;; #<MY-DIVISION-BY-ZERO {1005C18653}>
+(dividend *)
+;; 3
+~~~
+
+an ":accessor" would be both a getter and a setter.
+
+
+So, the general form of `define-condition` looks and feels like a
+regular class definition, but despite the similarities, conditions are
+not standard objects.
+
+A difference is that we can't use `slot-value` on slots.
+
+
+## Signaling (throwing) conditions: error, warn, signal
+
+We can use `error` in two ways:
+
+- `(error "some text")`: signals a condition of type `simple-error`, and opens-up the interactive debugger.
+- `(error 'my-error :message "We did this and that and it didn't work.")`: creates and throws a custom condition with its slot "message".
+
+So we can do:
+
+~~~lisp
+(error 'my-division-by-zero :dividend 3)
+;; which is a shortcut for
+(error (make-condition 'my-division-by-zero :dividend 3))
+~~~
+
+Throwing these conditions will enter the interactive debugger, where
+the user may select a restart.
+
+`warn` will too.
+
+Use `signal` if you do not want to enter the debugger, but you still want to signal to the upper levels that something *exceptional* happened.
+
+
+### Custom error messages: report
+
+
+So far, when throwing our error, we saw this default text in the
+debugger:
+
+```
+Condition COMMON-LISP-USER::MY-DIVISION-BY-ZERO was signalled.
    [Condition of type MY-DIVISION-BY-ZERO]
+```
 
-Restarts:
- 0: [RETRY] Retry SLIME REPL evaluation request.
- 1: [*ABORT] Return to SLIME's top level.
- 2: [ABORT] abort thread (#<THREAD "repl-thread" RUNNING {1002957FA3}>)
+We can do better by giving a `:report` function in our condition declaration:
 
-Backtrace:
-  0: (MY-DIVISION 3 0)
+~~~lisp
+(define-condition my-division-by-zero (error)
+  ((dividend :initarg :dividend
+             :initform nil
+             :accessor dividend))
+  ;; the :report is the message into the debugger:
+  (:report (lambda (condition stream)
+     (format stream "You were going to divide ~a by zero.~&" (dividend condition)))))
 ~~~
 
-We can inspect the backtrace, go to the source (`v` in Slime), etc.
+Now:
 
----
+~~~lisp
+(error 'my-division-by-zero :dividend 3)
+;; Debugger:
+;;
+;; You were going to divide 3 by zero.
+;;    [Condition of type MY-DIVISION-BY-ZERO]
+~~~
 
-Here is how `unix-opts` defines its `unknown-option` condition:
+As usual, once in the debugger, we can inspect the backtrace, go to
+the erroneous source line (with `v` in Slime), etc.
+
 
 ~~~lisp
 (define-condition troublesome-option (simple-error)
