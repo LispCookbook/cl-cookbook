@@ -148,7 +148,7 @@ reachable.
 
 External resources:
 
-- [CSS selectors](https://www.w3schools.com/css/css_selectors.asp)
+- [CSS selectors](https://developer.mozilla.org/en-US/docs/Glossary/CSS_Selector)
 
 ## Async requests
 
