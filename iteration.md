@@ -18,6 +18,8 @@ A simple iteration over a list is:
   do (print x))
 ~~~
 
+It prints what's needed but returns `nil`.
+
 If you want to return a list, use `collect`:
 
 ~~~lisp
