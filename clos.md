@@ -340,8 +340,8 @@ constructors to manually check slot types.
 Indeed, whether slot types are being checked or not is undefined. See the [Hyperspec](http://www.lispworks.com/documentation/HyperSpec/Body/m_defcla.htm#defclass).
 
 Few implementations will do it. Clozure CL does it, SBCL does it since
-its version 1.5.9 (november, 2019) or when safety is high (`(declaim
-(optimize safety))`).
+its version 1.5.9 (November, 2019) or when safety is high (`(declaim
+(optimise safety))`).
 
 To do it otherwise, see [this Stack-Overflow answer](https://stackoverflow.com/questions/51723992/how-to-force-slots-type-to-be-checked-during-make-instance), and see also [quid-pro-quo](https://github.com/sellout/quid-pro-quo), a contract programming library.
 
@@ -1542,20 +1542,64 @@ It's working.
 
 ## Controlling the initialization of instances (initialize-instance)
 
-To further customize the creation of instances by specializing
-`initialize-instance`, which is called by `make-instance`, just after
-it has created a new instance but didn't initialize it yet with the
+To further control the creation of object instances, we can specialize the method
+`initialize-instance`. It is called by `make-instance`, just after
+a new instance was created but wasn't initialized yet with the
 default initargs and initforms.
 
 It is recommended (Keene) to create an after method, since creating a
 primary method would prevent slots' initialization.
 
 ~~~lisp
-(defmethod initialize-instance :after ((obj person) &key)
+(defmethod initialize-instance :after ((obj person) &key) ;; note &key
   (do something with obj))
 ~~~
 
-Another rational. The CLOS implementation of
+A typical example would be to validate the initial values. Here we'll
+check that the person's name is longer than 3 characters:
+
+~~~lisp
+(defmethod initialize-instance :after ((obj person) &key)
+  (with-slots (name) obj
+    (assert (>= (length name) 3))))
+~~~
+
+So this call doesn't work anymore:
+
+~~~lisp
+(make-instance 'person :name "me" )
+;; The assertion (>= #1=(LENGTH NAME) 3) failed with #1# = 2.
+;;   [Condition of type SIMPLE-ERROR]
+~~~
+
+We are prompted into the interactive debugger and we are given a
+choice of restarts (continue, retry, abort).
+
+So while we're at it, here's an assertion that uses the debugger
+features to offer to change "name":
+
+~~~lisp
+(defmethod INITIALIZE-INSTANCE :after ((obj person) &key)
+  (with-slots (name) obj
+    (assert (>= (length name) 3)
+            (name)  ;; creates a restart that offers to change "name"
+            "The value of name is ~a. It should be longer than 3 characters." name)))
+~~~
+
+We get:
+
+```
+The value of name is me. It should be longer than 3 characters.
+   [Condition of type SIMPLE-ERROR]
+
+Restarts:
+ 0: [CONTINUE] Retry assertion with new value for NAME.    <--- new restart
+ 1: [RETRY] Retry SLIME REPL evaluation request.
+ 2: [*ABORT] Return to SLIME's top level.
+```
+
+
+Another rationale. The CLOS implementation of
     `make-instance` is in two stages: allocate the new object,
     and then pass it along with all the `make-instance` keyword
     arguments, to the generic function
