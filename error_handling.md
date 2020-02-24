@@ -240,6 +240,12 @@ progress during an operation. You would create a condition with a
 higher level code would handle it and display it to the user. See the
 resources below for more.
 
+### Conditions hierarchy
+
+The class precedence list of `simple-error` is `simple-error, simple-condition, error, serious-condition, condition, t`.
+
+The class precedence list of `simple-warning` is  `simple-warning, simple-condition, warning, condition, t`.
+
 
 ### Custom error messages (:report)
 
