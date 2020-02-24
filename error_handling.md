@@ -30,7 +30,7 @@ Let's dive into it step by step. More resources are given afterwards.
 ## Ignoring all errors, returning nil
 
 Sometimes you know that a function can fail and you just want to
-ignore it: use `ignore-errors`:
+ignore it: use [ignore-errors][ignore-errors]:
 
 ~~~lisp
 (ignore-errors
@@ -60,7 +60,7 @@ Remember that we can `inspect` the condition with a right click in Slime.
 
 <!-- we will say "handling" for handler-bind -->
 
-`ignore-error` is built from `handler-case`. We can write the previous
+`ignore-errors` is built from [handler-case][handler-case]. We can write the previous
 example by catching the general `error` but now we can return whatever
 we want:
 
@@ -136,7 +136,7 @@ This workflow is similar to a try/catch as found in other languages, but we can 
 `handler-case` is similar to the `try/catch` forms that we find in
 other languages.
 
-`handler-bind` (see the next examples), is what to use
+[handler-bind][handler-bind] (see the next examples), is what to use
 when we need absolute control over what happens when a signal is
 raised. It allows us to use the debugger and restarts, either
 interactively or programmatically.
@@ -155,7 +155,7 @@ Before we properly see `handler-bind`, let's study conditions and restarts.
 
 ## Defining and making conditions
 
-We define conditions with `define-condition` and we make (initialize) them with `make-condition`.
+We define conditions with [define-condition][define-condition] and we make (initialize) them with [make-condition][make-condition].
 
 ~~~lisp
 (define-condition my-division-by-zero (error)
@@ -185,7 +185,7 @@ able to populate it with information to be consumed later:
 ~~~
 
 Note: here's a quick reminder on classes, if you are not fully operational
-on the CLOS object system:
+on the [Common Lisp Object System](clos.html):
 
 ~~~lisp
 (make-condition 'my-division-by-zero :dividend 3)
@@ -214,9 +214,9 @@ A difference is that we can't use `slot-value` on slots.
 
 ## Signaling (throwing) conditions: error, warn, signal
 
-We can use `error` in two ways:
+We can use [error][error] in two ways:
 
-- `(error "some text")`: signals a condition of type `simple-error`, and opens-up the interactive debugger.
+- `(error "some text")`: signals a condition of type [simple-error][simple-error], and opens-up the interactive debugger.
 - `(error 'my-error :message "We did this and that and it didn't work.")`: creates and throws a custom condition with its slot "message" and opens-up the interactive debugger.
 
 With our own condition we can do:
@@ -230,9 +230,9 @@ With our own condition we can do:
 Throwing these conditions will enter the interactive debugger, where
 the user may select a restart.
 
-`warn` will not enter the debugger (create warning conditions by subclassing `simple-warning`).
+`warn` will not enter the debugger (create warning conditions by subclassing [simple-warning][simple-warning]).
 
-Use `signal` if you do not want to enter the debugger, but you still want to signal to the upper levels that something *exceptional* happened.
+Use [signal][signal] if you do not want to enter the debugger, but you still want to signal to the upper levels that something *exceptional* happened.
 
 And that can be anything. For example, it can be used to track
 progress during an operation. You would create a condition with a
@@ -361,11 +361,11 @@ Type a form to be evaluated:
 ```
 
 
-## Defining restarts
+## Defining restarts (restart-case)
 
 All this is good but we might want more custom choices.  We can add
 restarts on the top of the list by wrapping our function call inside
-`restart-case`.
+[restart-case][restart-case].
 
 ~~~lisp
 (defun divide-with-restarts (x y)
@@ -487,7 +487,7 @@ We have a piece of code that we know can throw conditions. Here,
 zero. What we want to do, is our higher-level code to automatically
 handle it and call the appropriate restart.
 
-We can do this with `handler-bind` and `invoke-restart`:
+We can do this with `handler-bind` and [invoke-restart][invoke-restart]:
 
 ~~~lisp
 (defun divide-and-handle-error (x y)
@@ -506,7 +506,9 @@ We can do this with `handler-bind` and `invoke-restart`:
 ~~~
 
 
-## Using other restarts
+## Using other restarts (find-restart)
+
+Use [find-restart][find-restart].
 
 `find-restart 'name-of-restart` will return the most recent bound
 restart with the given name, or `nil`.
@@ -528,7 +530,7 @@ and `:interactive`, they also accept a `:test` key:
 
 # Handling conditions (handler-bind)
 
-We just saw a usage of `handler-bind`.
+We just saw a use for [handler-bind][handler-bind].
 
 Its general form is:
 
@@ -569,7 +571,7 @@ condition's reader `(opts:option condition)`.
 
 # Running some code, condition or not ("finally") (unwind-protect)
 
-The "finally" part of others `try/catch/finally` forms is done with `unwind-protect`.
+The "finally" part of others `try/catch/finally` forms is done with [unwind-protect][unwind-protect].
 
 It is the construct used in "with-" macros, like `with-open-file`,
 which always closes the file after it.
@@ -605,3 +607,17 @@ You're now more than ready to write some code and to dive into other resources!
 * [A tutorial on conditions and restarts](https://github.com/stylewarning/lisp-random/blob/master/talks/4may19/root.lisp),  based around computing the roots of a real function. It was presented by the author at a Bay Area Julia meetup on may 2019 ([talk slides here](https://github.com/stylewarning/talks/blob/master/4may19-julia-meetup/Bay%20Area%20Julia%20Users%20Meetup%20-%204%20May%202019.pdf)).
 * [lisper.in](https://lisper.in/restarts#signaling-validation-errors) - example with parsing a csv file and using restarts with success, [in a flight travel company](https://www.reddit.com/r/lisp/comments/7k85sf/a_tutorial_on_conditions_and_restarts/drceozm/).
 * [https://github.com/svetlyak40wt/python-cl-conditions](https://github.com/svetlyak40wt/python-cl-conditions) - implementation of the CL conditions system in Python.
+
+[ignore-errors]: http://www.lispworks.com/documentation/HyperSpec/Body/m_ignore.htm
+[handler-case]: http://www.lispworks.com/documentation/HyperSpec/Body/m_hand_1.htm
+[handler-bind]: http://www.lispworks.com/documentation/HyperSpec/Body/m_handle.htm
+[define-condition]: http://www.lispworks.com/documentation/HyperSpec/Body/m_defi_5.htm
+[make-condition]: http://www.lispworks.com/documentation/HyperSpec/Body/f_mk_cnd.htm
+[error]: http://www.lispworks.com/documentation/HyperSpec/Body/e_error.htm#error
+[simple-error]: http://www.lispworks.com/documentation/HyperSpec/Body/e_smp_er.htm
+[simple-warning]: http://www.lispworks.com/documentation/HyperSpec/Body/e_smp_wa.htm
+[signal]: http://www.lispworks.com/documentation/HyperSpec/Body/f_signal.htm
+[restart-case]: http://www.lispworks.com/documentation/HyperSpec/Body/m_rst_ca.htm
+[invoke-restart]: http://www.lispworks.com/documentation/HyperSpec/Body/f_invo_1.htm#invoke-restart
+[find-restart]: http://www.lispworks.com/documentation/HyperSpec/Body/f_find_r.htm#find-restart
+[unwind-protect]: http://www.lispworks.com/documentation/HyperSpec/Body/s_unwind.htm

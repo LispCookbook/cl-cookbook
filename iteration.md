@@ -2,6 +2,8 @@
 title: Loop, iteration, mapping
 ---
 
+TODO: of-type
+
 <!-- needs some text before the first heading -->
 
 # Introduction: loop, iterate, for, mapcar
