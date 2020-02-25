@@ -343,7 +343,7 @@ We use again the `declaim` macro, with `ftype (function …)` instead of just `t
 (declaim (ftype (function (fixnum) fixnum) add))
 ;;                         ^^input ^^output [optional]
 (defun add (n)
-	(+ n  1))
+  (+ n  1))
 ~~~
 
 With this we get nice type warnings at compile time.
@@ -353,7 +353,7 @@ fixnum, we get a warning:
 
 ~~~lisp
 (defun add (n)
-	(format nil "~a" (+ n  1)))
+  (format nil "~a" (+ n  1)))
 ; caught WARNING:
 ;   Derived type of ((GET-OUTPUT-STREAM-STRING STREAM)) is
 ;     (VALUES SIMPLE-STRING &OPTIONAL),
@@ -366,7 +366,7 @@ string, we get a warning:
 
 ~~~lisp
 (defun bad-concat (n)
-    (concatenate 'string (add n)))
+  (concatenate 'string (add n)))
 ; caught WARNING:
 ;   Derived type of (ADD N) is
 ;     (VALUES FIXNUM &REST T),
@@ -423,10 +423,10 @@ string:
 ~~~lisp
 (declaim (ftype (function () string) bad-adder))
 (defun bad-adder ()
-       (let ((res 10))
-         (loop for name in '("alice")
-            do (incf res name))  ;; bad
-         (format nil "finally doing sth with ~a" res)))
+  (let ((res 10))
+    (loop for name in '("alice")
+       do (incf res name))  ;; bad
+    (format nil "finally doing sth with ~a" res)))
 ~~~
 
 Compiling this function doesn't throw a type warning.
