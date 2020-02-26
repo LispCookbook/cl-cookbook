@@ -6,6 +6,14 @@ baseurl: "/cl-cookbook"
 exclude: [vendor]
 
 markdown: kramdown
+
+# Disable the default syntax highlighter, to make place to
+# HighlightLisp (in JS).
+highlighter: none
+kramdown:
+    syntax_highlighter_opts:
+      disable: true
+
 sass:
   style: :compressed
 
