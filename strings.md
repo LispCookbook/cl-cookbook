@@ -975,3 +975,7 @@ comma-separated prefix parameters:
     (format nil "~va" padding "foo"))
 ;; "foo                           "
 ~~~
+
+# See also
+
+* [Pretty printing table data](https://gist.github.com/WetHat/a49e6f2140b401a190d45d31e052af8f), in ASCII art, a tutorial as a Jupyter notebook.
