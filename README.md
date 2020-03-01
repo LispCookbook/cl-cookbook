@@ -2,13 +2,13 @@
 
 This is a fork of the [Common Lisp Cookbook][sf], moved from SourceForge.
 
-This project will bring Common Lisp Cookbook to this decade. Development of the original Common Lisp Cookbook in SourceForge halted in 2007. In the meantime, a lot has happened in the land of Common Lisp. Tools and implementations have been improving, and some have fallen out of favor. Most notably, Common Lisp users can now benefit from [Quicklisp][ql] library manager.
+This project will bring Common Lisp Cookbook to this decade. Development of the original Common Lisp Cookbook in SourceForge halted in 2007. In the meantime, a lot has happened in the land of Common Lisp. Tools and implementations have been improving, and some have fallen out of favor. Most notably, Common Lisp users can now benefit from the [Quicklisp][ql] library manager.
 
-The main goal is making the Cookbook more modern and more accessible in addition to updating and expanding the content. Cookbook is an invaluable resource, as it shows how to do various things in clear fashion without all the theoretical context. Sometimes you just need to look things up. While cookbooks can never replace proper documentation such as [HyperSpec][hs] or books such as [Practical Common Lisp][pcl], every language deserves a good cookbook, Common Lisp included.
+The main goal is making the Cookbook more modern and more accessible in addition to updating and expanding the content. Cookbook is an invaluable resource, as it shows how to do various things in a clear fashion without all the theoretical context. Sometimes you just need to look things up. While cookbooks can never replace proper documentation such as [HyperSpec][hs] or books such as [Practical Common Lisp][pcl], every language deserves a good cookbook, Common Lisp included.
 
 ## Contributing
 
-When adding a new content, ensure, it renders properly.
+When adding new content, ensure it renders properly.
 
 There are two ways to do this:
 
@@ -23,8 +23,8 @@ Another option is to use github gem provided with the repo. To do this do the fo
 ### Troubleshooting
 
 It can happen that you have older version of ruby installed in the system and
-bundler will fail with install. To fix this you need to update ruby. Sometimes
-system update is not an option, in this case consider installing [rbenv][rbenv].
+bundler install will fail. To fix this, you need to update ruby. If system update
+is not an option, consider installing [rbenv][rbenv].
 
 ~~~ sh
     # Check rbenv homepage for install instructions on systems other than Mac OS X
@@ -46,7 +46,7 @@ After this you can proceed as usual:
 2. `bundle install --path vendor/bundle`
 3. `bundle exec jekyll serve`
 
-Also, refer to a [CONTRIBUTING.md][contributing] file.
+Also, refer to the [CONTRIBUTING.md][contributing] file.
 
 [sf]: http://cl-cookbook.sourceforge.net/
 [ql]: https://www.quicklisp.org/
