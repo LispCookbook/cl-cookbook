@@ -2,7 +2,7 @@
 title: Testing
 ---
 
-So you want to easily test the code you're writing ? The following
+So you want to easily test the code you're writing? The following
 recipes cover how to write automated tests and see their code
 coverage. We also give pointers to plug those in modern continuous
 integration services like Travis CI and Coveralls.
@@ -90,7 +90,7 @@ usual `C-c C-c`.
   [cl-project](https://github.com/fukamachi/cl-project), by the same
   author).
 
-See [Prove's documentation](https://github.com/fukamachi/prove) !
+See [Prove's documentation](https://github.com/fukamachi/prove)!
 
 
 ## Interactively fixing unit tests
@@ -98,7 +98,7 @@ See [Prove's documentation](https://github.com/fukamachi/prove) !
 Common Lisp is interactive by nature (or so are most implementations),
 and testing frameworks make use of it. It is possible to ask the
 framework to open the debugger on a failing test, so that we can
-inspect the stacktrace and go to the erroneous line instantly, fix it
+inspect the stack trace and go to the erroneous line instantly, fix it
 and re-run the test from where it left off, by choosing the suggested
 *restart*.
 

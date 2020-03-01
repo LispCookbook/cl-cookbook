@@ -3,15 +3,15 @@ title: Debugging
 ---
 
 You entered this new world of Lisp and now wonder: how can we debug
-what's going on ?  How is it more interactive than in other platforms
-?  What does bring the interactive debugger apart from stacktraces ?
+what's going on? How is it more interactive than other platforms?
+What does the interactive debugger bring, apart from stack traces?
 
 ## Print debugging
 
 Well of course we can use the famous technique of "print
 debugging". Let's just recap a few print functions.
 
-`print` works, it prints a READable representation of its argument,
+`print` works, it prints a `read`able representation of its argument,
 which means what is `print`ed can be `read` back in by the Lisp
 reader.
 
@@ -59,10 +59,10 @@ control strings:
 With its companion library `log4slime`, we can interactively change
 the log level:
 
-- globally,
-- per package,
-- per function,
-- and by CLOS methods and CLOS hierarchy (before and after methods).
+- globally
+- per package
+- per function
+- and by CLOS methods and CLOS hierarchy (before and after methods)
 
 It is very handy, when we have a lot of output, to turn off the
 logging of functions or packages we know to work, and thus narrowing
@@ -106,7 +106,7 @@ manually compile them:
 ~~~
 
 When you load this file, `*test-data*` won't exist, but you can
-manually create it with a `C-c C-c` away.
+manually create it with `C-c C-c`.
 
 We can define tests functions like this.
 
@@ -184,10 +184,10 @@ up.
 It presents the error message, available actions (*restarts*),
 and the backtrace. A few remarks:
 
-- the restarts are programmable, we can create our owns,
-- in Slime, press `v` on a stacktrace to be redirected to the source
-  file at the right line,
-- hit enter on a frame for more details,
+- the restarts are programmable, we can create our own
+- in Slime, press `v` on a stack trace frame to view the corresponding
+  source file location
+- hit enter on a frame for more details
 - we can explore the functionality with the menu that should appear
   in our editor. See the "break" section below for a few
   more commands (eval in frame, etc).
@@ -325,8 +325,8 @@ actions. Of which:
 
 - `e` (*sldb-eval-in-frame*) prompts for an expression and evaluates
   it in the selected frame. This is how we can explore our
-  intermediate variables.
-- `d` is similar with the addition of pretty printing the result.
+  intermediate variables
+- `d` is similar with the addition of pretty printing the result
 
 Once we are in a frame and detect a suspicious behavior, we can even
 re-compile a function at runtime and resume the program execution from
@@ -342,8 +342,8 @@ implementations, like CCL
 [watch](https://ccl.clozure.com/manual/chapter4.12.html#watched-objects))
 and [LispWorks](http://www.lispworks.com/). They do exist in
 SBCL but are not exported. `advise` allows to modify a function without changing its
-source, or to do something before or after its execution, like CLOS'
-method combination (before, after around methods).
+source, or to do something before or after its execution, similar
+to CLOS method combination (before, after, around methods).
 
 `watch` will signal a condition when a thread attempts to write to an
 object being watched. It can be coupled with the display of the
@@ -354,7 +354,7 @@ There is a [cl-advice](https://bitbucket.org/budden/budden-tools/src/default/cl-
 ## Unit tests
 
 Last but not least, automatic testing of functions in isolation might
-be what you're looking for ! See the [testing](testing.html) section and a list of
+be what you're looking for! See the [testing](testing.html) section and a list of
 [test frameworks and libraries](https://github.com/CodyReichert/awesome-cl#unit-testing).
 
 
