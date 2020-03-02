@@ -100,6 +100,18 @@ We can confirm that our expression `e`, here `(+ z 3)`, was not
 evaluated. We will see how to control the evaluation of arguments with
 the comma: `,`.
 
+Note: with Slime, you can call macroexpand by putting the cursor at
+the left of the parenthesis of the s-expr to expand and call the function``M-x
+slime-macroexpand-[1,all]``, or ``C-c M-m``:
+
+~~~lisp
+[|](setq2 v1 v2 3)
+;^ cursor
+; C-c M-m
+; =>
+; (PROGN (SETQ V1 3) (SETQ V2 3))
+~~~
+
 
 ## Macros VS functions
 
