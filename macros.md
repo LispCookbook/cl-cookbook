@@ -670,16 +670,17 @@ One caution: In general, command languages will consist of a mixture of macros a
 
 # See also
 
-[A gentle introduction to Compile-Time Computing — Part 1](https://medium.com/@MartinCracauer/a-gentle-introduction-to-compile-time-computing-part-1-d4d96099cea0)
+* [A gentle introduction to Compile-Time Computing — Part 1](https://medium.com/@MartinCracauer/a-gentle-introduction-to-compile-time-computing-part-1-d4d96099cea0)
 
-[Safely dealing with scientific units of variables at compile time (a gentle introduction to Compile-Time Computing — part 3)](https://medium.com/@MartinCracauer/a-gentle-introduction-to-compile-time-computing-part-3-scientific-units-8e41d8a727ca)
+* [Safely dealing with scientific units of variables at compile time (a gentle introduction to Compile-Time Computing — part 3)](https://medium.com/@MartinCracauer/a-gentle-introduction-to-compile-time-computing-part-3-scientific-units-8e41d8a727ca)
 
-The following video, from the series
-["Little bits of Lisp"](https://www.youtube.com/user/CBaggers/playlists)
-by [cbaggers](https://github.com/cbaggers/), is a two hours long talk
-on macros, showing simple to advanced concepts such as compiler
-macros:
+* The following video, from the series ["Little bits of
+Lisp"](https://www.youtube.com/user/CBaggers/playlists) by
+[cbaggers](https://github.com/cbaggers/), is a two hours long talk on
+macros, showing simple to advanced concepts such as compiler macros:
 [https://www.youtube.com/watch?v=ygKXeLKhiTI](https://www.youtube.com/watch?v=ygKXeLKhiTI)
 It also shows how to manipulate macros (and their expansion) in Emacs.
 
 [![video](http://img.youtube.com/vi/ygKXeLKhiTI/0.jpg)](https://www.youtube.com/watch?v=ygKXeLKhiTI)
+
+* the article "Reader macros in Common Lisp": https://lisper.in/reader-macros
