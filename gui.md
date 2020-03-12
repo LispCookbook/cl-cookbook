@@ -84,7 +84,7 @@ The Lisp binding is [Ltk][ltk].
 
 [image]
 
-### List of widgets
+**List of widgets**
 
 ```
 Button Canvas Check-button Entry Frame Label Labelframe Listbox
@@ -138,7 +138,7 @@ yet to be created.
 - Example applications:
   - todo, snake,…
 
-## IUP
+## IUP (lispnik/IUP)
 
 [IUP][iup-tecgraf] is a cross-platform GUI toolkit actively developed
 at the PUC university of Rio de Janeiro, Brazil. It uses **native
@@ -169,7 +169,7 @@ can follow new IUP versions with a minimum work.
 
 ![](img)
 
-### List of widgets
+**List of widgets**
 
 ```
 Radio, Tabs, FlatTabs, ScrollBox, DetachBox,
@@ -235,7 +235,7 @@ or for applications where you want to create new controls.
 - Example applications:
   - [Obvius](https://github.com/thicksteadTHpp/Obvius/) - a ressurrected image processing library.
 
-### List of widgets
+**List of widgets**
 
 Non-exhaustive list:
 
@@ -248,7 +248,7 @@ date-picker
 
 # Getting started
 
-## Ltk
+## Tk
 
 Ltk is quick and easy to grasp.
 
@@ -337,7 +337,7 @@ To try the Nodgui demo, do:
 ~~~
 
 
-## cl-cffi-gtk
+## Gtk3
 
 The
 [documentation](http://www.crategus.com/books/cl-gtk/gtk-tutorial.html)
@@ -392,14 +392,34 @@ and add the box to the window:
 (gtk-container-add window box)
 ~~~
 
-and display all:
+and display them all:
 
 ~~~lisp
 (gtk-widget-show-all window)
 ~~~
 
+### Reacting to events
 
-**Full example:**
+Use `g-signal-connect` + the concerned widget + the event name (as a
+string) + a lambda, that takes the widget as argument:
+
+~~~lisp
+(g-signal-connect window "destroy"
+  (lambda (widget)
+    (declare (ignore widget))
+    (leave-gtk-main)))
+~~~
+
+Or again:
+
+~~~lisp
+(g-signal-connect button "clicked"
+  (lambda (widget)
+    (declare (ignore widget))
+    (format t "Button was pressed.~%")))
+~~~
+
+### Full example
 
 ~~~lisp
 (defun hello-world ()
