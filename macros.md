@@ -100,7 +100,9 @@ We can confirm that our expression `e`, here `(+ z 3)`, was not
 evaluated. We will see how to control the evaluation of arguments with
 the comma: `,`.
 
-Note: with Slime, you can call macroexpand by putting the cursor at
+## Note: Slime tips
+
+With Slime, you can call macroexpand by putting the cursor at
 the left of the parenthesis of the s-expr to expand and call the function``M-x
 slime-macroexpand-[1,all]``, or ``C-c M-m``:
 
@@ -111,6 +113,11 @@ slime-macroexpand-[1,all]``, or ``C-c M-m``:
 ; =>
 ; (PROGN (SETQ V1 3) (SETQ V2 3))
 ~~~
+
+Another tip: on a macro name, type ``C-c C-w m`` (or ``M-x
+slime-who-macroexpands``) to get a new buffer with all the places
+where the macro was expanded. Then type the usual ``C-c C-k``
+(``slime-compile-and-load-file``) to recompile all of them.
 
 
 ## Macros VS functions
