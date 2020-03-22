@@ -29,6 +29,7 @@ Cocoa interface for Clozure Common Lisp. Build Cocoa user interface
 windows dynamically using Lisp code and bypass the typical Xcode
 processes
 * [McCLIM](https://common-lisp.net/project/mcclim/), a toolkit in 100% Common Lisp,
+* [Alloy](https://github.com/Shirakumo/alloy), another very new toolkit in 100% Common Lisp, used for example in the [Kandria](https://github.com/shinmera/kandria) game.
 * [nodgui](https://notabug.org/cage/nodgui), a fork of Ltk, with syntax sugar and additional widgets
 * [eql, eql5, eql5-android](https://gitlab.com/eql), embedded Qt4 and Qt5 Lisp, embedded in ECL, embeddable in Qt. Port of EQL5 to the Android platform
 * this [demo using Java Swing from ABCL](https://github.com/defunkydrummer/abcl-jazz)
@@ -126,61 +127,18 @@ yet to be created.
 - **Framework written in**: C++
 - **Portability**: multiplatform, Android, embedded systems, WASM.
 
-- **Widgets choice**: lare.
+- **Widgets choice**: large.
 
 - **Graphical builder**: yes.
 
 - **Other features**: Web browser, a lot more.
 
+- **Bindings documentation**: lengthy explanations, a few examples. Prior Qt knowledge is required.
 - **Bindings stability**: stable
 - **Bindings activity**: active
-- **Qt Licence**: both commercial and opne source licences.
+- **Qt Licence**: both commercial and open source licences.
 - Example applications:
   - todo, snake,…
-
-## IUP (lispnik/IUP)
-
-[IUP][iup-tecgraf] is a cross-platform GUI toolkit actively developed
-at the PUC university of Rio de Janeiro, Brazil. It uses **native
-controls**: the Windows API for Windows, Gtk3 for GNU/Linux. At the
-time of writing, it has a Cocoa port in the works (as well as iOS,
-Android and WASW ones). A particularity of IUP is its **small API**.
-
-The Lisp bindings is https://github.com/lispnik/iup/. They are nicely
-done in that they are automatically generated from the C sources. They
-can follow new IUP versions with a minimum work.
-
-- **Framework written in**: C (official API also in Lua and LED)
-- **Portability**: Windows and Linux, work started for
-  Cocoa, iOS, Android, WASM.
-
-- **Widgets choice**: medium.
-
-- **Graphical builder**: yes: [IupVisualLED](http://webserver2.tecgraf.puc-rio.br/iup/en/iupvisualled.html)
-
-- **Other features**: OpenGL, Web browser (WebKitGTK on GNU/Linux)
-
-- **Bindings stability**: alpha (but fully generated and working nicely)
-- **Bindings activity**: low
-- **Licence**: TODO
-- Example applications:
-  - todo, snake,…
-
-
-![](img)
-
-**List of widgets**
-
-```
-Radio, Tabs, FlatTabs, ScrollBox, DetachBox,
-Button, FlatButton, DropButton, Calendar, Canvas, Colorbar, ColorBrowser, DatePick, Dial, Gauge, Label, FlatLabel,
-FlatSeparator, Link, List, FlatList, ProgressBar, Spin, Text, Toggle, Tree, Val,
-listDialog, Alarm, Color, Message, Font, Scintilla, GetFile…
-Cells, Matrix, MatrixEx, MatrixList,
-GLCanvas, Plot, MglPlot, OleControl, WebBrowser (WebKit/Gtk+)…
-```
-
-<!-- editor's note: found missing a list view with columns. -->
 
 
 ## Gtk+3 (cl-cffi-gtk)
@@ -189,6 +147,12 @@ GLCanvas, Plot, MglPlot, OleControl, WebBrowser (WebKit/Gtk+)…
 applications. Its (currently most advanced) lisp bindings is
 [cl-cffi-gtk][cl-cffi-gtk]. While primarily created for GNU/Linux, Gtk
 works fine under macOS and can now also be used on Windows.
+
+Gtk also has a the companion
+[Broadway](https://developer.gnome.org/gtk3/stable/gtk-broadway.html)
+protocol to display applications in the browser, via HTML5 and web
+sockets. McClim too got a prototype using Broadway.
+
 
 - **Framework written in**: C
 - **Portability**: GNU/Linux and macOS, also Windows.
@@ -204,6 +168,59 @@ works fine under macOS and can now also be used on Windows.
 - **Licence**: TODO
 - Example applications:
   - todo, snake,…
+
+
+## IUP (lispnik/IUP)
+
+[IUP][iup-tecgraf] is a cross-platform GUI toolkit actively developed
+at the PUC university of Rio de Janeiro, Brazil. It uses **native
+controls**: the Windows API for Windows, Gtk3 for GNU/Linux. At the
+time of writing, it has a Cocoa port in the works (as well as iOS,
+Android and WASW ones). A particularity of IUP is its **small API**.
+
+The Lisp bindings are https://github.com/lispnik/iup/. They are nicely
+done in that they are automatically generated from the C sources. They
+can follow new IUP versions with a minimal work and the required steps
+are documented. All this gives us good guarantee over the bus
+factor…
+
+IUP stands as a great solution in between Tk and Gtk or Qt.
+
+- **Framework written in**: C (official API also in Lua and LED)
+- **Portability**: Windows and Linux, work started for
+  Cocoa, iOS, Android, WASM.
+
+- **Widgets choice**: medium.
+
+- **Graphical builder**: yes: [IupVisualLED](http://webserver2.tecgraf.puc-rio.br/iup/en/iupvisualled.html)
+
+- **Other features**: OpenGL, Web browser (WebKitGTK on GNU/Linux), plotting, Scintilla text editor
+
+- **Bindings documentation**: good examples and good readme, otherwise low.
+- **Bindings stability**: alpha (but fully generated and working nicely)
+- **Bindings activity**: low
+- **Licence**: TODO
+- Example applications:
+  - todo, snake,…
+
+
+
+**List of widgets**
+
+```
+Radio, Tabs, FlatTabs, ScrollBox, DetachBox,
+Button, FlatButton, DropButton, Calendar, Canvas, Colorbar, ColorBrowser, DatePick, Dial, Gauge, Label, FlatLabel,
+FlatSeparator, Link, List, FlatList, ProgressBar, Spin, Text, Toggle, Tree, Val,
+listDialog, Alarm, Color, Message, Font, Scintilla, file-dialog…
+Cells, Matrix, MatrixEx, MatrixList,
+GLCanvas, Plot, MglPlot, OleControl, WebBrowser (WebKit/Gtk+)…
+drag-and-drop
+```
+
+<!-- editor's note: found missing a list view with columns. -->
+
+![](/assets/iup-demo.png)
+
 
 ## Nuklear (Bodge-Nuklear)
 
@@ -367,11 +384,14 @@ wrapper, here `with-main-loop`.
 
 **How to create a widget**
 
-A widget creation function starts with `gtk-` and contains (or ends with) `-new`:
+All widgets have a corresponding class. We can create them with
+`make-instance 'widget-class`, but we preferably use the constructors.
+
+The constructors end with (or contain) "new":
 
 ```lisp
-(gtk-button-new-with-label "Label")
 (gtk-label-new)
+(gtk-button-new-with-label "Label")
 ```
 
 **How to create a layout**
@@ -455,6 +475,213 @@ Or again:
 ~~~
 
 ![](assets/gui/gtk3-hello-buttons.png)
+
+
+## IUP
+
+Please check the installation instructions upstream. You may need one
+system dependency on GNU/Linux, and to modify an environment variable
+on Windows.
+
+Finally, do:
+
+~~~lisp
+(ql:quickload :iup)
+~~~
+
+We are not going to `:use` IUP (it is a bad practice generally after all).
+
+~~~lisp
+(defpackage :test-iup
+  (:use :cl))
+(in-package :test-iup)
+~~~
+
+The following snippet creates a dialog frame to display a text label.
+
+~~~lisp
+(defun hello ()
+  (iup:with-iup ()
+    (let* ((label (iup:label :title (format nil "Hello, World!~%IUP ~A~%~A ~A"
+                                            (iup:version)
+                                            (lisp-implementation-type)
+                                            (lisp-implementation-version))))
+           (dialog (iup:dialog label :title "Hello, World!")))
+      (iup:show dialog)
+      (iup:main-loop))))
+(hello)
+~~~
+
+Important note for SBCL: we currently must trap division-by-zero
+errors (see advancement on [this
+issue](https://github.com/lispnik/iup/issues/30)). So, run snippets
+like so:
+
+~~~lisp
+(defun run-gui-function ()
+  #-sbcl (gui-function)
+  #+sbcl
+  (sb-int:with-float-traps-masked
+      (:divide-by-zero :invalid)
+    (gui-function)))
+~~~
+
+
+**How to run the main loop**
+
+As with all the bindings seen so far, widgets are shown inside a
+`with-iup` macro.
+
+**How to create widgets**
+
+The constructor function is the name of the widget: `iup:label`,
+`iup:dialog`.
+
+**How to display a widget**
+
+Be sure to "show" it: `(iup:show dialog)`.
+
+You can group widgets on `frame`s, and stack them vertically or
+horizontally (`vbox`, `hbox`).
+
+To allow a widget to be expanded on window resize, use `:expand
+:yes` (or `:horizontal` and `:vertical`) (see the example below).
+
+Use also the `:alignement` properties.
+
+**How to get and set a widget's attributes**
+
+Use `(iup:attribute widget attribute)` to get the attribute's value,
+and use `setf` on it to set it.
+
+
+### Reacting to events
+
+Most widgets take an `:action` parameter that takes a lambda function
+with one parameter (the handle).
+
+~~~lisp
+(iup:button :title "Test &1"
+            :expand :yes
+            :tip "Callback inline at control creation"
+            :action (lambda (handle)
+                      (iup:message "title" "button1's action callback")
+                      iup:+default+))
+~~~
+
+Below we create a label and put a button below it. We display a
+message dialog when we click on the button.
+
+~~~lisp
+(defun click-button ()
+  (iup:with-iup ()
+    (let* ((label (iup:label :title (format nil "Hello, World!~%IUP ~A~%~A ~A"
+                                            (iup:version)
+                                            (lisp-implementation-type)
+                                            (lisp-implementation-version))))
+           (button (iup:button :title "Click me"
+                               :expand :yes
+                               :tip "yes, click me"
+                               :action (lambda (handle)
+                                         (declare (ignorable handle))
+                                         (iup:message "title" "button clicked")
+                                         iup:+default+)))
+           (vbox
+            (iup:vbox (list label button)
+                      :gap "10"
+                      :margin "10x10"
+                      :alignment :acenter))
+           (dialog (iup:dialog vbox :title "Hello, World!")))
+      (iup:show dialog)
+      (iup:main-loop))))
+
+#+sbcl
+(sb-int:with-float-traps-masked
+      (:divide-by-zero :invalid)
+    (click-button))
+~~~
+
+Here's a similar example to make a counter of clicks.
+We use a label to hold the count. Its title is an integer.
+
+~~~lisp
+(defun counter ()
+  (iup:with-iup ()
+    (let* ((counter (iup:label :title 0))
+           (label (iup:label :title (format nil "The button was clicked ~a time(s)."
+                                            (iup:attribute counter :title))))
+           (button (iup:button :title "Click me"
+                               :expand :yes
+                               :tip "yes, click me"
+                               :action (lambda (handle)
+                                         (declare (ignorable handle))
+                                         (setf (iup:attribute counter :title)
+                                               (1+ (iup:attribute counter :title 'number)))
+                                         (setf (iup:attribute label :title)
+                                               (format nil "The button was clicked ~a times."
+                                                       (iup:attribute counter :title)))
+                                         iup:+default+)))
+           (vbox
+            (iup:vbox (list label button)
+                      :gap "10"
+                      :margin "10x10"
+                      :alignment :acenter))
+           (dialog (iup:dialog vbox :title "Counter")))
+      (iup:show dialog)
+      (iup:main-loop))))
+
+(defun run-counter ()
+  #-sbcl
+  (counter)
+  #+sbcl
+  (sb-int:with-float-traps-masked
+      (:divide-by-zero :invalid)
+    (counter)))
+~~~
+
+### List widget example
+
+Below we create three list widgets with simple and multiple selection, we
+set their default value (the pre-selected row) and we place them
+horizontally side by side.
+
+~~~lisp
+(defun list-test ()
+  (iup:with-iup ()
+    (let*  ((list-1 (iup:list :tip "List 1"  ;; tooltip
+                              ;; multiple selection
+                              :multiple :yes
+                              :expand :yes))
+            (list-2 (iup:list :value 2   ;; default index of the selected row
+                              :tip "List 2" :expand :yes))
+            (list-3 (iup:list :value 9 :tip "List 3" :expand :yes))
+            (frame (iup:frame
+                    (iup:hbox
+                     (progn
+                       ;; display a list of integers.
+                       (loop for i from 1 upto 10
+                          do (setf (iup:attribute list-1 i)
+                                   (format nil "~A" i))
+                          do (setf (iup:attribute list-2 i)
+                                   (format nil "~A" (+ i 10)))
+                          do (setf (iup:attribute list-3 i)
+                                   (format nil "~A" (+ i 50))))
+                       ;; vbox wants a list of widgets.
+                       (list list-1 list-2 list-3)))
+                    :title "IUP List"))
+            (dialog (iup:dialog frame :menu "menu" :title "List example")))
+
+      (iup:map dialog)
+      (iup:show dialog)
+      (iup:main-loop))))
+
+(defun run-list-test ()
+  #-sbcl (hello)
+  #+sbcl
+  (sb-int:with-float-traps-masked
+      (:divide-by-zero :invalid)
+    (list-test)))
+~~~
 
 
 # Conclusion
