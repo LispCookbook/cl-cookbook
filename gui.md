@@ -40,8 +40,10 @@ as well as the other ones listed on [awesome-cl#gui](https://github.com/CodyReic
 
 [Tk][tk] (or Tcl/Tk, where Tcl is the programming language) has the
 infamous reputation of having an outdated look. This is not (so) true
-anymore since its 8.5 version of 2007. It doesn't look native, but it
-is probably better than you think!
+anymore since its version 8 of 1997 (!). It is probably better than
+you think:
+
+![](/assets/gui/ltk-on-macos.png)
 
 Tk doesn't have a great choice of widgets, but it has a useful canvas,
 and it has a couple of unique features: we can develop a graphical
@@ -83,7 +85,6 @@ The Lisp binding is [Ltk][ltk].
   - [Fulci](https://notabug.org/cage/fulci/) - a program to organize your movie collections.
   - [cl-torrents]() - searching torrents on popular trackers. CLI, readline and a simple Tk GUI.
 
-[image]
 
 **List of widgets**
 
@@ -138,7 +139,10 @@ yet to be created.
 - **Bindings activity**: active
 - **Qt Licence**: both commercial and open source licences.
 - Example applications:
-  - todo, snake,…
+  - https://github.com/Shinmera/qtools/tree/master/examples
+  - https://github.com/Shirakumo/lionchat
+  - https://github.com/shinmera/halftone - a simple image viewer
+  - https://github.com/shirakumo/cl-gamepad
 
 
 ## Gtk+3 (cl-cffi-gtk)
@@ -352,6 +356,102 @@ To try the Nodgui demo, do:
 (ql:quickload :nodgui)
 (nodgui.demo:demo)
 ~~~
+
+## Qt4
+
+~~~lisp
+(ql:quickload '(:qtools :qtcore :qtgui))
+~~~
+
+~~~lisp
+(defpackage #:qtools-test
+  (:use #:cl+qt)
+  (:export #:main))
+(in-package :qtools-test)
+(in-readtable :qtools)
+~~~
+
+We create our main widget that will contain the rest:
+
+~~~lisp
+(define-widget main-window (QWidget)
+  ())
+~~~
+
+We create an input field and a button inside this main widget:
+
+~~~lisp
+(define-subwidget (main-window name) (q+:make-qlineedit main-window)
+  (setf (q+:placeholder-text name) "Your name please."))
+~~~
+
+~~~lisp
+(define-subwidget (main-window go-button) (q+:make-qpushbutton "Go!" main-window))
+~~~
+
+We stack them horizontally:
+
+~~~lisp
+(define-subwidget (main-window layout) (q+:make-qhboxlayout main-window)
+  (q+:add-widget layout name)
+  (q+:add-widget layout go-button))
+~~~
+
+and we show them:
+
+~~~lisp
+(with-main-window
+  (make-instance 'main-window))
+~~~
+
+![](/assets/gui/qtools-intro.png)
+
+That's cool, but we don't react to the click event yet.
+
+### Reacting to events
+
+Reacting to events in Qt happens through signals and slots. Slots are
+functions that receive signals, and signals are event carriers.
+
+We create a signal named `name-set` to throw when the button is clicked:
+
+~~~lisp
+(define-signal (main-window name-set) (string))
+~~~
+
+We want it to create a message window to display the text we entered
+in the input field. The `new-name` parameter is the value received by
+the signal, it is of type `string`.
+
+~~~lisp
+(define-slot (main-window name-set) ((new-name string))
+  (declare (connected main-window (name-set string)))
+  (q+:qmessagebox-information main-window "Greetings" (format NIL "Good day to you, ~a!" new-name)))
+~~~
+
+And now we make our button react to the `pressed` and `return-pressed`
+events. It sends the text value of the "name" input field.
+
+~~~lisp
+(define-slot (main-window go-button) ()
+  (declare (connected go-button (pressed)))
+  (declare (connected name (return-pressed)))
+  (signal! main-window (name-set string) (q+:text name)))
+~~~
+
+You can run again
+
+~~~lisp
+(with-main-window
+  (make-instance 'main-window))
+~~~
+
+### Building and deployment
+
+It is possible to build a binary and bundle it together with all the
+necessary shared libraries.
+
+Please read https://github.com/Shinmera/qtools#deployment
 
 
 ## Gtk3
@@ -658,7 +758,7 @@ horizontally side by side.
             (frame (iup:frame
                     (iup:hbox
                      (progn
-                       ;; display a list of integers.
+                       ;; populate the lists: display integers.
                        (loop for i from 1 upto 10
                           do (setf (iup:attribute list-1 i)
                                    (format nil "~A" i))
@@ -666,7 +766,7 @@ horizontally side by side.
                                    (format nil "~A" (+ i 10)))
                           do (setf (iup:attribute list-3 i)
                                    (format nil "~A" (+ i 50))))
-                       ;; vbox wants a list of widgets.
+                       ;; hbox wants a list of widgets.
                        (list list-1 list-2 list-3)))
                     :title "IUP List"))
             (dialog (iup:dialog frame :menu "menu" :title "List example")))
