@@ -480,7 +480,23 @@ There is also
 a single character, or returns `nil` if no character is available.
 Note that due to issues like buffering, and the timing of when the
 other process is executed, there is no guarantee that all data sent
-will be received before `listen` or `read-char-no-hang` return `nil`. 
+will be received before `listen` or `read-char-no-hang` return `nil`.
+
+## Piping
+
+Here's an example to do the equivalent of `ls | sort`. Note that "ls"
+uses `launch-program` (async) and outputs to a stream, where "sort",
+the last command of the pipe, uses `run-program` and outputs to a
+string.
+
+~~~lisp
+(uiop:run-program "sort"
+                   :input
+                   (uiop:process-info-output
+                    (uiop:launch-program "ls"
+                                         :output :stream))
+                   :output :string)
+~~~
 
 <a name="fork-cmucl"></a>
 
