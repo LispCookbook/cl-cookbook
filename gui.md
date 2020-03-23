@@ -22,7 +22,7 @@ Those are the ones we'll present in this recipe.
 
 In addition, you might want to have a look to:
 
-- the [CAPI][capi] toolkit, by LispWorks (proprietary), a complete and cross-platform toolkit, very praised by its users
+- the [CAPI][capi] toolkit (Common Application Programming Interface) (proprietary), by LispWorks, is a complete and cross-platform toolkit (Windows, Gtk+, Cocoa), very praised by its users. LispWorks also has [iOS and Android runtimes](http://www.lispworks.com/products/lw4mr.html). Example software built with CAPI include [Opusmodus](https://opusmodus.com/) or again [ScoreCloud](https://scorecloud.com/). It is possible to try it with the LispWorks free demo.
 - [Ceramic][ceramic], to ship a cross-platform web app with Electron
 - [CocoaInterface](https://github.com/plkrueger/CocoaInterface/), a
 Cocoa interface for Clozure Common Lisp. Build Cocoa user interface
@@ -152,10 +152,7 @@ applications. Its (currently most advanced) lisp bindings is
 [cl-cffi-gtk][cl-cffi-gtk]. While primarily created for GNU/Linux, Gtk
 works fine under macOS and can now also be used on Windows.
 
-Gtk also has a the companion
-[Broadway](https://developer.gnome.org/gtk3/stable/gtk-broadway.html)
-protocol to display applications in the browser, via HTML5 and web
-sockets. McClim too got a prototype using Broadway.
+<!-- Gtk also has a the companion [Broadway](https://developer.gnome.org/gtk3/stable/gtk-broadway.html) protocol to display applications in the browser, via HTML5 and web sockets. McClim too got a prototype using Broadway. -->
 
 
 - **Framework written in**: C
@@ -232,9 +229,11 @@ drag-and-drop
 
 > [Nuklear] is a minimal-state, immediate-mode graphical user interface toolkit written in ANSI C and licensed under public domain. It was designed as a simple embeddable user interface for application and does not have any dependencies, a default render backend or OS window/input handling but instead provides a highly modular, library-based approach, with simple input state for input and draw commands describing primitive shapes as output. So instead of providing a layered library that tries to abstract over a number of platform and render backends, it focuses only on the actual UI.
 
-its Lisp binding is [Bodge-Nuklear][bodge-nuklear], and its higher level companions [bodge-ui](ones) and [bodge-ui-window](https://github.com/borodust/bodge-ui-window).
+its Lisp binding is [Bodge-Nuklear][bodge-nuklear], and its higher level companions [bodge-ui](https://github.com/borodust/bodge-ui) and [bodge-ui-window](https://github.com/borodust/bodge-ui-window).
 
-Nuklear is fully skinnable. It is particularly well suited for games,
+Unlike traditional UI frameworks, Nuklear allows the developer to take
+over the rendering loop or the input management. This might require
+more setup, but it makes Nuklear particularly well suited for games,
 or for applications where you want to create new controls.
 
 
@@ -254,7 +253,9 @@ or for applications where you want to create new controls.
 - **Bindings activity**: active
 - **Licence**: MIT or Public Domain (unlicence).
 - Example applications:
+  - [Trivial-gamekit](https://github.com/borodust/trivial-gamekit)
   - [Obvius](https://github.com/thicksteadTHpp/Obvius/) - a ressurrected image processing library.
+  - [Notalone](https://github.com/borodust/notalone) - an autumn 2017 Lisp Game Jam entry.
 
 **List of widgets**
 
@@ -782,6 +783,104 @@ horizontally side by side.
       (:divide-by-zero :invalid)
     (list-test)))
 ~~~
+
+## Nuklear
+
+`cl-bodge` is not in Quicklisp but in its own Quicklisp distribution. Let's install it:
+
+~~~lisp
+(ql-dist:install-dist "http://bodge.borodust.org/dist/org.borodust.bodge.txt" :replace t :prompt nil)
+~~~
+
+
+Uncomment and evaluate this line only if you wish to enable OpenGL 2
+renderer:
+
+~~~lisp
+;; (cl:pushnew :bodge-gl2 cl:*features*)
+~~~
+
+We can run the built-in example:
+
+~~~lisp
+(ql:quickload :bodge-ui-window/examples)
+(bodge-ui-window.example.basic:run)
+~~~
+
+Now let's define a package to write a simple application.
+
+~~~lisp
+(cl:defpackage :bodge-ui-window-test
+  (:use :cl :bodge-ui :bodge-host))
+(in-package :bodge-ui-window-test)
+~~~
+
+~~~lisp
+(defpanel (main-panel
+            (:title "Hello Bodge UI")
+            (:origin 200 50)
+            (:width 400) (:height 400)
+            (:options :movable :resizable
+                      :minimizable :scrollable
+                      :closable))
+  (label :text "Nested widgets:")
+  (horizontal-layout
+   (radio-group
+    (radio :label "Option 1")
+    (radio :label "Option 2" :activated t))
+   (vertical-layout
+    (check-box :label "Check 1" :width 100)
+    (check-box :label "Check 2"))
+   (vertical-layout
+    (label :text "Awesomely" :align :left)
+    (label :text "Stacked" :align :centered)
+    (label :text "Labels" :align :right)))
+  (label :text "Expand by width:")
+  (horizontal-layout
+   (button :label "Dynamic")
+   (button :label "Min-Width" :width 80)
+   (button :label "Fixed-Width" :expandable nil :width 100))
+  )
+
+(defun run ()
+  (bodge-host:open-window (make-instance 'main-window)))
+~~~
+
+and run it:
+
+~~~lisp
+(run)
+~~~
+
+![](assets/gui/nuklear-test.png)
+
+To react to events, use the following signals:
+
+```
+:on-click
+:on-error
+:on-hover
+:on-leave
+:on-change
+:on-top-of
+:on-failure
+:on-warnings
+:on-mouse-press
+:on-mouse-release
+```
+
+They take as argument a function with one argument, the panel. But
+beware: they will be called on each rendering cycle when the widget is
+on the given state, so potentially a lot of times.
+
+
+### Interactive development
+
+If you ran the example in the REPL, you couldn't see what's cool. Put
+the code in a lisp file and run the example, so than you get the
+window. You can use [nuklear-test.lisp](/code/nuklear-test.lisp). Now you
+can change the panel widgets and the layout, and your changes will be
+immediately applied while the application is running!
 
 
 # Conclusion
