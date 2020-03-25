@@ -2,15 +2,30 @@
 title: GUI toolkits
 ---
 
-You re-compile your function with a key binding and your GUI program
-instantly displays the changes: that's the promise of using Common
-Lisp for Graphical User Interfaces.
+Lisp has a long and rich history and so does the development of
+Graphical User Interfaces in Lisp. In fact, the first GUI builder was
+written in Lisp (and sold to Apple. It is now Interface Builder).
 
-+ binary, FFI linking
+Lisp is also famous and unrivaled for its interactive development
+capabilities, a feature even more worth having to develop GUI
+applications. Can you imagine compiling one function and seeing your
+GUI update instantly? We can do this with many GUI frameworks today,
+even though the details differ from one to another.
+
+Finally, a key part in building software is how to build it and ship
+it to users. Here also, we can build self-contained binaries, for
+the three main operating systems, that users can run with a double
+click.
+
+We aim here to give you the relevant information to help you choose
+the right GUI framework and to put you on tracks. Don't hesitate to
+[contribute](https://github.com/LispCookbook/cl-cookbook/issues/), to
+send more examples and to furnish the upstream documentations.
+
 
 # Introduction
 
-Common Lisp has good and active bindings for the following GUI toolkits:
+In this recipe, we'll present the following GUI toolkits:
 
 - [Tk][tk] with [Ltk][ltk]
 - [Qt4][qt4] with [Qtools][qtools]
@@ -18,21 +33,26 @@ Common Lisp has good and active bindings for the following GUI toolkits:
 - [Gtk3][gtk] with [cl-cffi-gtk][cl-cffi-gtk]
 - [Nuklear][nuklear] with [Bodge-Nuklear][bodge-nuklear]
 
-Those are the ones we'll present in this recipe.
-
 In addition, you might want to have a look to:
 
-- the [CAPI][capi] toolkit (Common Application Programming Interface) (proprietary), by LispWorks, is a complete and cross-platform toolkit (Windows, Gtk+, Cocoa), very praised by its users. LispWorks also has [iOS and Android runtimes](http://www.lispworks.com/products/lw4mr.html). Example software built with CAPI include [Opusmodus](https://opusmodus.com/) or again [ScoreCloud](https://scorecloud.com/). It is possible to try it with the LispWorks free demo.
-- [Ceramic][ceramic], to ship a cross-platform web app with Electron
+- the [CAPI][capi] toolkit (Common Application Programming Interface),
+  which is proprietary and made by LispWorks. It is a complete and cross-platform
+  toolkit (Windows, Gtk+, Cocoa), very praised by its users. LispWorks
+  also has [iOS and Android
+  runtimes](http://www.lispworks.com/products/lw4mr.html). Example
+  software built with CAPI include [Opusmodus](https://opusmodus.com/)
+  or again [ScoreCloud](https://scorecloud.com/). It is possible to
+  try it with the LispWorks free demo.
 - [CocoaInterface](https://github.com/plkrueger/CocoaInterface/), a
 Cocoa interface for Clozure Common Lisp. Build Cocoa user interface
 windows dynamically using Lisp code and bypass the typical Xcode
-processes
-* [McCLIM](https://common-lisp.net/project/mcclim/), a toolkit in 100% Common Lisp,
+processes.
+* [McCLIM](https://common-lisp.net/project/mcclim/), a toolkit in 100% Common Lisp.
 * [Alloy](https://github.com/Shirakumo/alloy), another very new toolkit in 100% Common Lisp, used for example in the [Kandria](https://github.com/shinmera/kandria) game.
-* [nodgui](https://notabug.org/cage/nodgui), a fork of Ltk, with syntax sugar and additional widgets
-* [eql, eql5, eql5-android](https://gitlab.com/eql), embedded Qt4 and Qt5 Lisp, embedded in ECL, embeddable in Qt. Port of EQL5 to the Android platform
+* [nodgui](https://notabug.org/cage/nodgui), a fork of Ltk, with syntax sugar and additional widgets.
+* [eql, eql5, eql5-android](https://gitlab.com/eql), embedded Qt4 and Qt5 Lisp, embedded in ECL, embeddable in Qt. Port of EQL5 to the Android platform.
 * this [demo using Java Swing from ABCL](https://github.com/defunkydrummer/abcl-jazz)
+* and, last but not least, [Ceramic][ceramic], to ship a cross-platform web app with Electron.
 
 as well as the other ones listed on [awesome-cl#gui](https://github.com/CodyReichert/awesome-cl#gui) and [Cliki](https://www.cliki.net/GUI).
 
@@ -57,7 +77,6 @@ when stability is required.
 
 The Lisp binding is [Ltk][ltk].
 
-
 - **Written in**: Tcl
 - **Portability**: cross-platform (Windows, macOS, Linux).
 
@@ -66,7 +85,7 @@ The Lisp binding is [Ltk][ltk].
   can find some in extensions (such as in **Nodgui**), but they don't
   feel native, at all.
 
-- **Interactive development**: very much. Tk uses the program Wish… TODO:
+- **Interactive development**: very much.
 
 - **Graphical builder**: no
 
@@ -80,10 +99,11 @@ The Lisp binding is [Ltk][ltk].
 - **Bindings documentation**: short but complete. Nodgui too.
 - **Bindings stability**: very stable
 - **Bindings activity**: low to non-existent.
-- **Licence**: TODO
+- **Licence**: Tcl/Tk is BSD-style, Ltk is LGPL.
 - Example applications:
   - [Fulci](https://notabug.org/cage/fulci/) - a program to organize your movie collections.
   - [cl-torrents]() - searching torrents on popular trackers. CLI, readline and a simple Tk GUI.
+  - yours?
 
 
 **List of widgets**
@@ -123,7 +143,7 @@ conditions to ship proprietary ones.
 The [Qtools][qtools] bindings target Qt4. The Qt5 Lisp bindings are
 yet to be created.
 
-<!-- note: experiments involving gobject-introspection -->
+<!-- possible future: gobject-introspection -->
 
 - **Framework written in**: C++
 - **Portability**: multiplatform, Android, embedded systems, WASM.
@@ -152,8 +172,6 @@ applications. Its (currently most advanced) lisp bindings is
 [cl-cffi-gtk][cl-cffi-gtk]. While primarily created for GNU/Linux, Gtk
 works fine under macOS and can now also be used on Windows.
 
-<!-- Gtk also has a the companion [Broadway](https://developer.gnome.org/gtk3/stable/gtk-broadway.html) protocol to display applications in the browser, via HTML5 and web sockets. McClim too got a prototype using Broadway. -->
-
 
 - **Framework written in**: C
 - **Portability**: GNU/Linux and macOS, also Windows.
@@ -161,14 +179,14 @@ works fine under macOS and can now also be used on Windows.
 - **Widgets choice**: large.
 
 - **Graphical builder**: yes: Glade.
-- **Other features**:
+- **Other features**: web browser (WebKitGTK)
 
 - **Bindings documentation**: very good: http://www.crategus.com/books/cl-gtk/gtk-tutorial.html
 - **Bindings stability**: stable
 - **Bindings activity**: low activity, active development.
-- **Licence**: TODO
+- **Licence**: LGPL
 - Example applications:
-  - todo, snake,…
+  - TODO
 
 
 ## IUP (lispnik/IUP)
@@ -177,13 +195,13 @@ works fine under macOS and can now also be used on Windows.
 at the PUC university of Rio de Janeiro, Brazil. It uses **native
 controls**: the Windows API for Windows, Gtk3 for GNU/Linux. At the
 time of writing, it has a Cocoa port in the works (as well as iOS,
-Android and WASW ones). A particularity of IUP is its **small API**.
+Android and WASM ones). A particularity of IUP is its **small API**.
 
-The Lisp bindings are https://github.com/lispnik/iup/. They are nicely
+The Lisp bindings are [lispnik/iup](https://github.com/lispnik/iup/). They are nicely
 done in that they are automatically generated from the C sources. They
 can follow new IUP versions with a minimal work and the required steps
 are documented. All this gives us good guarantee over the bus
-factor…
+factor.
 
 IUP stands as a great solution in between Tk and Gtk or Qt.
 
@@ -200,10 +218,7 @@ IUP stands as a great solution in between Tk and Gtk or Qt.
 - **Bindings documentation**: good examples and good readme, otherwise low.
 - **Bindings stability**: alpha (but fully generated and working nicely)
 - **Bindings activity**: low
-- **Licence**: TODO
-- Example applications:
-  - todo, snake,…
-
+- **Licence**: IUP and the bindings are MIT licenced.
 
 
 **List of widgets**
@@ -276,13 +291,13 @@ Ltk is quick and easy to grasp.
 
 ~~~lisp
 (ql:quickload :ltk)
-(in-package :ltk-user)  ;; for our tests
+(in-package :ltk-user)
 ~~~
 
 
 **How to create widgets**
 
-All widgets are created with a regular `make-instance`:
+All widgets are created with a regular `make-instance` and the widget name:
 
 ~~~lisp
 (make-instance 'button)
@@ -323,7 +338,6 @@ Here's how to display a button:
 
 That's all there is to it.
 
-Building a self-contained executable is equally without surprises.
 
 ### Reacting to events
 
@@ -461,7 +475,7 @@ You might also like [this Travis CI script](https://github.com/phoe-trash/furcad
 
 The
 [documentation](http://www.crategus.com/books/cl-gtk/gtk-tutorial.html)
-is exceptionally good, for beginners including.
+is exceptionally good, including for beginners.
 
 The library to quickload is `cl-cffi-gtk`. It is made of numerous
 ones, that we have to `:use` for our package.
@@ -633,7 +647,7 @@ like so:
 **How to run the main loop**
 
 As with all the bindings seen so far, widgets are shown inside a
-`with-iup` macro.
+`with-iup` macro, and with a call to `iup:main-loop`.
 
 **How to create widgets**
 
@@ -645,10 +659,10 @@ The constructor function is the name of the widget: `iup:label`,
 Be sure to "show" it: `(iup:show dialog)`.
 
 You can group widgets on `frame`s, and stack them vertically or
-horizontally (`vbox`, `hbox`).
+horizontally (with `vbox` or `hbox`, see the example below).
 
 To allow a widget to be expanded on window resize, use `:expand
-:yes` (or `:horizontal` and `:vertical`) (see the example below).
+:yes` (or `:horizontal` and `:vertical`).
 
 Use also the `:alignement` properties.
 
@@ -704,8 +718,8 @@ message dialog when we click on the button.
     (click-button))
 ~~~
 
-Here's a similar example to make a counter of clicks.
-We use a label to hold the count. Its title is an integer.
+Here's a similar example to make a counter of clicks.  We use a label
+and its title to hold the count. The title is an integer.
 
 ~~~lisp
 (defun counter ()
@@ -794,8 +808,7 @@ horizontally side by side.
 (ql-dist:install-dist "http://bodge.borodust.org/dist/org.borodust.bodge.txt" :replace t :prompt nil)
 ~~~
 
-
-Uncomment and evaluate this line only if you wish to enable OpenGL 2
+Uncomment and evaluate this line only if you want to enable the OpenGL 2
 renderer:
 
 ~~~lisp
@@ -879,13 +892,15 @@ on the given state, so potentially a lot of times.
 ### Interactive development
 
 If you ran the example in the REPL, you couldn't see what's cool. Put
-the code in a lisp file and run the example, so than you get the
-window. You can use [nuklear-test.lisp](/code/nuklear-test.lisp). Now you
-can change the panel widgets and the layout, and your changes will be
-immediately applied while the application is running!
+the code in a lisp file and run it, so than you get the window. Now
+you can change the panel widgets and the layout, and your changes will
+be immediately applied while the application is running!
 
 
 # Conclusion
+
+Have fun, and don't hesitate to share your experience and your apps.
+
 
 [tk]: https://www.tcl.tk
 [ltk]: http://www.peter-herth.de/ltk/ltkdoc/
