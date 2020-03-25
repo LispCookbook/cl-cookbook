@@ -452,7 +452,9 @@ You can run again
 It is possible to build a binary and bundle it together with all the
 necessary shared libraries.
 
-Please read https://github.com/Shinmera/qtools#deployment
+Please read [https://github.com/Shinmera/qtools#deployment](https://github.com/Shinmera/qtools#deployment).
+
+You might also like [this Travis CI script](https://github.com/phoe-trash/furcadia-post-splitter/blob/master/.travis.yml) to build a self-contained binary for the three OSes.
 
 
 ## Gtk3
