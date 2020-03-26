@@ -22,6 +22,7 @@ functionality or some shorter ways to do.
 - [str](https://github.com/vindarel/cl-str) defines `trim`, `words`,
   `unwords`, `lines`, `unlines`, `concat`, `split`, `shorten`, `repeat`,
   `replace-all`, `starts-with?`, `ends-with?`, `blankp`, `emptyp`, …
+- [Serapeum](https://github.com/ruricolist/serapeum/blob/master/REFERENCE.md#strings) is a large set of utilities with many string manipulation functions.
 - [cl-change-case](https://github.com/rudolfochrist/cl-change-case)
   has functions to convert strings between camelCase, param-case,
   snake_case and more. They are also included into `str`.
