@@ -103,8 +103,7 @@ The Lisp binding is [Ltk][ltk].
 - Example applications:
   - [Fulci](https://notabug.org/cage/fulci/) - a program to organise your movie collections.
   - [Ltk small games](https://github.com/mijohnson99/ltk-small-games) - snake and tic-tac-toe.
-  - [cl-torrents]() - searching torrents on popular trackers. CLI, readline and a simple Tk GUI.
-  - yours?
+  - [cl-torrents](https://github.com/vindarel/cl-torrents) - searching torrents on popular trackers. CLI, readline and a simple Tk GUI.
 
 
 **List of widgets**
