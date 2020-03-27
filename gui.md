@@ -52,9 +52,10 @@ processes.
 * [nodgui](https://notabug.org/cage/nodgui), a fork of Ltk, with syntax sugar and additional widgets.
 * [eql, eql5, eql5-android](https://gitlab.com/eql), embedded Qt4 and Qt5 Lisp, embedded in ECL, embeddable in Qt. Port of EQL5 to the Android platform.
 * this [demo using Java Swing from ABCL](https://github.com/defunkydrummer/abcl-jazz)
+* [examples of using Gtk without C files with SBCL](https://github.com/mifpasoti/Gtk-Demos), as well as GTK-server.
 * and, last but not least, [Ceramic][ceramic], to ship a cross-platform web app with Electron.
 
-as well as the other ones listed on [awesome-cl#gui](https://github.com/CodyReichert/awesome-cl#gui) and [Cliki](https://www.cliki.net/GUI).
+as well as the other ones listed on [awesome-cl#gui](https://github.com/CodyReichert/awesome-cl#Gui) and [Cliki](https://www.cliki.net/GUI).
 
 ## Tk (Ltk)
 
@@ -107,6 +108,8 @@ The Lisp binding is [Ltk][ltk].
 
 
 **List of widgets**
+
+(please don't suppose the list is exhaustive)
 
 ```
 Button Canvas Check-button Entry Frame Label Labelframe Listbox
@@ -216,8 +219,8 @@ IUP stands as a great solution in between Tk and Gtk or Qt.
 - **Other features**: OpenGL, Web browser (WebKitGTK on GNU/Linux), plotting, Scintilla text editor
 
 - **Bindings documentation**: good examples and good readme, otherwise low.
-- **Bindings stability**: alpha (but fully generated and working nicely)
-- **Bindings activity**: low
+- **Bindings stability**: alpha (but fully generated and working nicely).
+- **Bindings activity**: low but steady, and reactive to new IUP versions.
 - **Licence**: IUP and the bindings are MIT licenced.
 
 
