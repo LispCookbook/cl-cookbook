@@ -840,7 +840,12 @@ horizontally side by side.
 
 ## Nuklear
 
-`cl-bodge` is not in Quicklisp but in its own Quicklisp distribution. Let's install it:
+**Disclaimer**: as per the author's words at the time of writing,
+bodge-ui is in early stages of development and not ready for general
+use yet. There are some quirks that need to be fixed, which might
+require some changes in the API.
+
+`bodge-ui` is not in Quicklisp but in its own Quicklisp distribution. Let's install it:
 
 ~~~lisp
 (ql-dist:install-dist "http://bodge.borodust.org/dist/org.borodust.bodge.txt" :replace t :prompt nil)
@@ -851,6 +856,12 @@ renderer:
 
 ~~~lisp
 ;; (cl:pushnew :bodge-gl2 cl:*features*)
+~~~
+
+Quickload `bodge-ui-window`:
+
+~~~lisp
+(ql:quickload :bodge-ui-window)
 ~~~
 
 We can run the built-in example:
@@ -911,13 +922,9 @@ To react to events, use the following signals:
 
 ```
 :on-click
-:on-error
 :on-hover
 :on-leave
 :on-change
-:on-top-of
-:on-failure
-:on-warnings
 :on-mouse-press
 :on-mouse-release
 ```
