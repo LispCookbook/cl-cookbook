@@ -6,7 +6,7 @@ Lisp has a long and rich history and so does the development of
 Graphical User Interfaces in Lisp. In fact, the first GUI builder was
 written in Lisp (and sold to Apple. It is now Interface Builder).
 
-Lisp is also famous and unrivaled for its interactive development
+Lisp is also famous and unrivalled for its interactive development
 capabilities, a feature even more worth having to develop GUI
 applications. Can you imagine compiling one function and seeing your
 GUI update instantly? We can do this with many GUI frameworks today,
@@ -101,7 +101,7 @@ The Lisp binding is [Ltk][ltk].
 - **Bindings activity**: low to non-existent.
 - **Licence**: Tcl/Tk is BSD-style, Ltk is LGPL.
 - Example applications:
-  - [Fulci](https://notabug.org/cage/fulci/) - a program to organize your movie collections.
+  - [Fulci](https://notabug.org/cage/fulci/) - a program to organise your movie collections.
   - [cl-torrents]() - searching torrents on popular trackers. CLI, readline and a simple Tk GUI.
   - yours?
 
@@ -146,7 +146,7 @@ yet to be created.
 <!-- possible future: gobject-introspection -->
 
 - **Framework written in**: C++
-- **Framework Portability**: multiplatform, Android, embedded systems, WASM.
+- **Framework Portability**: multi-platform, Android, embedded systems, WASM.
 - **Bindings Portability**: Qtools runs on x86 desktop platforms on Windows, macOS and GNU/Linux.
 
 - **Widgets choice**: large.
@@ -262,14 +262,14 @@ or for applications where you want to create new controls.
 
 - **Graphical builder**: no.
 
-- **Other features**: fully skinnable and customizable.
+- **Other features**: fully skinnable and customisable.
 
 - **Bindings stability**: stable
 - **Bindings activity**: active
 - **Licence**: MIT or Public Domain (unlicence).
 - Example applications:
   - [Trivial-gamekit](https://github.com/borodust/trivial-gamekit)
-  - [Obvius](https://github.com/thicksteadTHpp/Obvius/) - a ressurrected image processing library.
+  - [Obvius](https://github.com/thicksteadTHpp/Obvius/) - a resurrected image processing library.
   - [Notalone](https://github.com/borodust/notalone) - an autumn 2017 Lisp Game Jam entry.
 
 **List of widgets**
