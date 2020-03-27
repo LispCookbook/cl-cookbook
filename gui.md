@@ -102,6 +102,7 @@ The Lisp binding is [Ltk][ltk].
 - **Licence**: Tcl/Tk is BSD-style, Ltk is LGPL.
 - Example applications:
   - [Fulci](https://notabug.org/cage/fulci/) - a program to organise your movie collections.
+  - [Ltk small games](https://github.com/mijohnson99/ltk-small-games) - snake and tic-tac-toe.
   - [cl-torrents]() - searching torrents on popular trackers. CLI, readline and a simple Tk GUI.
   - yours?
 
