@@ -186,7 +186,7 @@ works fine under macOS and can now also be used on Windows.
 - **Bindings activity**: low activity, active development.
 - **Licence**: LGPL
 - Example applications:
-  - TODO
+  - an [Atmosphere Calculator](https://github.com/ralph-schleicher/atmosphere-calculator), built with Glade.
 
 
 ## IUP (lispnik/IUP)
