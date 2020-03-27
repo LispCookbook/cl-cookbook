@@ -146,7 +146,8 @@ yet to be created.
 <!-- possible future: gobject-introspection -->
 
 - **Framework written in**: C++
-- **Portability**: multiplatform, Android, embedded systems, WASM.
+- **Framework Portability**: multiplatform, Android, embedded systems, WASM.
+- **Bindings Portability**: Qtools runs on x86 desktop platforms on Windows, macOS and GNU/Linux.
 
 - **Widgets choice**: large.
 
@@ -162,7 +163,6 @@ yet to be created.
   - https://github.com/Shinmera/qtools/tree/master/examples
   - https://github.com/Shirakumo/lionchat
   - https://github.com/shinmera/halftone - a simple image viewer
-  - https://github.com/shirakumo/cl-gamepad
 
 
 ## Gtk+3 (cl-cffi-gtk)
@@ -416,7 +416,7 @@ and we show them:
 
 ~~~lisp
 (with-main-window
-  (make-instance 'main-window))
+  (window 'main-window))
 ~~~
 
 ![](/assets/gui/qtools-intro.png)
@@ -425,27 +425,56 @@ That's cool, but we don't react to the click event yet.
 
 ### Reacting to events
 
-Reacting to events in Qt happens through signals and slots. Slots are
-functions that receive signals, and signals are event carriers.
+Reacting to events in Qt happens through signals and slots. **Slots** are
+functions that receive or "connect to" signals, and **signals** are event carriers.
 
-We create a signal named `name-set` to throw when the button is clicked:
+Widgets already send their own signals: for example, a button sends a
+"pressed" event. So, most of the time, we only need to connect to them.
+
+However, had we extra needs, we can create our own set of signals.
+
+#### Built-in events
+
+We want to connect our `go-button` to the `pressed` and
+`return-pressed` events and display a message box.
+
+- we need to do this inside a `define-slot` function,
+- where we establish the connection to those events,
+- and where we create the message box. We grab the text of the `name`
+  input field with `(q+:text name)`.
+
+~~~lisp
+(define-slot (main-window go-button) ()
+  (declare (connected go-button (pressed)))
+  (declare (connected name (return-pressed)))
+  (q+:qmessagebox-information main-window
+                              "Greetings"  ;; title
+                              (format NIL "Good day to you, ~a!" (q+:text name))))
+~~~
+
+And voilà. Run it with
+
+~~~lisp
+(with-main-window (window 'main-window))
+~~~
+
+#### Custom events
+
+We'll implement the same functionality as above, but for demonstration
+purposes we'll create our own signal named `name-set` to throw when
+the button is clicked.
+
+We start by defining the signal, which happens inside the
+`main-window`, and which is of type `string`:
 
 ~~~lisp
 (define-signal (main-window name-set) (string))
 ~~~
 
-We want it to create a message window to display the text we entered
-in the input field. The `new-name` parameter is the value received by
-the signal, it is of type `string`.
-
-~~~lisp
-(define-slot (main-window name-set) ((new-name string))
-  (declare (connected main-window (name-set string)))
-  (q+:qmessagebox-information main-window "Greetings" (format NIL "Good day to you, ~a!" new-name)))
-~~~
-
-And now we make our button react to the `pressed` and `return-pressed`
-events. It sends the text value of the "name" input field.
+We create a **first slot** to make our button react to the `pressed`
+and `return-pressed` events. But instead of creating the message box
+here, as above, we send the `name-set` signal, with the value of our
+input field..
 
 ~~~lisp
 (define-slot (main-window go-button) ()
@@ -454,11 +483,20 @@ events. It sends the text value of the "name" input field.
   (signal! main-window (name-set string) (q+:text name)))
 ~~~
 
-You can run again
+So far, nobody reacts to `name-set`. We create a **second slot** that
+connects to it, and displays our message. Here again, we precise the
+parameter type.
 
 ~~~lisp
-(with-main-window
-  (make-instance 'main-window))
+(define-slot (main-window name-set) ((new-name string))
+  (declare (connected main-window (name-set string)))
+  (q+:qmessagebox-information main-window "Greetings" (format NIL "Good day to you, ~a!" new-name)))
+~~~
+
+and run it:
+
+~~~lisp
+(with-main-window (window 'main-window))
 ~~~
 
 ### Building and deployment
