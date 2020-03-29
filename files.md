@@ -493,6 +493,7 @@ With `cl-fad:walk-directory`, we can also collect files, not only subdirectories
 (cl-fad:walk-directory "./"
   (lambda (name)
      (format t "~A~%" name))
+   :directories t)
 ~~~
 
 
