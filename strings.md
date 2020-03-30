@@ -41,6 +41,27 @@ don't miss the following resources:
 * a [CLHS summary on HexstreamSoft](https://www.hexstreamsoft.com/articles/common-lisp-format-reference/clhs-summary/#subsections-summary-table)
 * plus a Slime tip: type `C-c C-d ~` plus a letter of a format directive to open up its documentation. Again more useful with `ivy-mode` or `helm-mode`.
 
+# Creating strings
+
+A string is created with double quotes, all right, but we can recall
+these other ways:
+
+- using `format nil` doesn't *print* but returns a new string (see
+  more examples of `format` below):
+
+~~~lisp
+(defparameter *person* "you")
+(format nil "hello ~a" *person*) ;; => "hello you"
+~~~
+
+- `make-string count` creates a string of the given length. The
+  `:initial-element` character is repeated `count` times:
+
+~~~lisp
+(make-string 3 :initial-element #\♥) ;; => "♥♥♥"
+~~~
+
+
 # Accessing Substrings
 
 As a string is a sequence, you can access substrings with the SUBSEQ
@@ -975,6 +996,24 @@ comma-separated prefix parameters:
 (let ((padding 30))
     (format nil "~va" padding "foo"))
 ;; "foo                           "
+~~~
+
+# Capturing what is is printed into a stream
+
+Inside `(with-output-to-string (mystream) …)`, everything that is
+printed into the stream `mystream` is captured and returned as a
+string:
+
+~~~lisp
+(defun greet (name &key (stream t))
+   ;; by default, print to standard output.
+   (format stream "hello ~a" name))
+
+(let ((output (with-output-to-string (stream)
+                (greet "you" :stream stream))))
+   (format t "Output is: '~a'. It is indeed a ~a, aka a string.~&" output (type-of output)))
+;; Output is: 'hello you'. It is indeed a (SIMPLE-ARRAY CHARACTER (9)), aka a string.
+;; NIL
 ~~~
 
 # See also
