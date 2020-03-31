@@ -11,7 +11,7 @@ When adding new content, ensure it renders properly.
 
 There are two ways to do this:
 
-First option is to install [Jekyll][jekyll] and run `jekyll serve` in a folder where this repository was checked out.
+First option is to install [Jekyll][jekyll] and run `jekyll serve` in a folder where this repository was checked out and open `http://127.0.0.1:4000/cl-cookbook/` (the last `/` is important).
 
 Another option is to use github gem provided with the repo. To do this do the following:
 
