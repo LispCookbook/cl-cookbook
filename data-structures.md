@@ -1374,7 +1374,7 @@ use `cdr` or `second` to get the value or even better `assoc-value list key` fro
 
 There is `assoc-if`, and `rassoc` to get a cons cell by its value.
 
-If the alist as repeating (duplicate) keys, you can use `remove-if-not`, for example, to retrieve all of them.
+If the alist has repeating (duplicate) keys, you can use `remove-if-not`, for example, to retrieve all of them.
 
 ~~~lisp
 (remove-if-not
