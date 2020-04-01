@@ -874,6 +874,13 @@ Use `nil` to ignore a term:
 ;; (X Y Z)
 ~~~
 
+Iterate over a list, 2 items at a time
+~~~lisp
+(loop for (key value) :on '(a 2 b 2 c 3) :by #'cddr
+      collect (list key (* 2 value)))
+;; ((A 2) (B 4) (C 6))
+~~~
+
 ### Series
 In general, with `destructuring-bind`:
 ~~~lisp
