@@ -1301,6 +1301,8 @@ _completely ignore_ the values provided for `rehash-size` and
 
 ## Alist
 
+### Definition
+
 An association list is a list of cons cells.
 
 This simple example:
@@ -1325,6 +1327,8 @@ looks like this:
 FOO
 ```
 
+### Construction
+
 We can construct an alist like its representation:
 
 
@@ -1342,6 +1346,20 @@ The constructor `pairlis` associates a list of keys and a list of values:
 ;; => ((:BAR . "bar") (:FOO . "foo"))
 ~~~
 
+Alists are just lists, so you can have the same key multiple times in the same alist:
+
+~~~lisp
+(setf *alist-with-duplicate-keys*
+  '((:a . 1)
+    (:a . 2)
+    (:b . 3)
+    (:a . 4)
+    (:c . 5)))
+~~~
+
+
+### Access
+
 To get a key, we have `assoc` (use `:test 'equal` when your keys are
 strings, as usual). It returns the whole cons cell, so you may want to
 use `cdr` or `second` to get the value or even better `assoc-value list key` from `Alexandria`.
@@ -1354,8 +1372,19 @@ use `cdr` or `second` to get the value or even better `assoc-value list key` fro
 ;; (:FOO . "FOO")
 ~~~
 
-
 There is `assoc-if`, and `rassoc` to get a cons cell by its value.
+
+If the alist as repeating (duplicate) keys, you can use `remove-if-not`, for example, to retrieve all of them.
+
+~~~lisp
+(remove-if-not
+  #'(lambda (entry)
+      (eq :a entry))
+  *alist-with-duplicate-keys*
+  :key #'car)
+~~~
+
+### Insert and remove entries
 
 To add a key, we `push` another cons cell:
 
@@ -1385,9 +1414,33 @@ Remove only one element with `:count`:
 ;; => ((TEAM . "team") (FOO . "foo")) ;; no more 'bar
 ~~~
 
+### Update entries
+
+Replace a value:
+~~~lisp
+*my-alist*
+;; => '((:FOO . "foo") (:BAR . "bar"))
+(assoc :foo *my-alist*)
+;; => (:FOO . "foo")
+(setf (cdr (assoc :foo *my-alist*)) "new-value")
+;; => "new-value"
+*my-alist*
+;; => '((:foo . "new-value") (:BAR . "bar"))
+~~~
+
+Replace a key:
+~~~lisp
+*my-alist*
+;; => '((:FOO . "foo") (:BAR . "bar")))
+(setf (car (assoc :bar *my-alist*)) :new-key)
+;; => :NEW-KEY
+*my-alist*
+;; => '((:FOO . "foo") (:NEW-KEY . "bar")))
+~~~
+
 In the
 [Alexandria](https://common-lisp.net/project/alexandria/draft/alexandria.html#Conses)
-library, see more functions like `remove-from-plist`, `alist-plist`,…
+library, see more functions like `hash-table-alist`, `alist-plist`,…
 
 
 ## Plist
