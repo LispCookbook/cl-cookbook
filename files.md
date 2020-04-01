@@ -359,14 +359,23 @@ With `with-open-file`, specify `:direction :output` and use `write-sequence` ins
 
 If the file exists, you can also `:append` content to it.
 
-If it doesn't exist, you can `:error` out. See the standard for more details.
+If it doesn't exist, you can `:error` out. See [the standard](http://www.lispworks.com/documentation/HyperSpec/Body/f_open.htm) for more details.
 
+#### Using libraries
 
-The library [str](https://github.com/vindarel/cl-str) has a shortcut:
+The library [Alexandria](https://common-lisp.net/project/alexandria/draft/alexandria.html#Conses)
+has a function called [write-string-into-file](https://gitlab.common-lisp.net/alexandria/alexandria/-/blob/master/alexandria-1/io.lisp#L73)
+~~~lisp
+(alexandria:write-string-into-file content "file.txt")
+~~~
+
+Alternatively, the library [str](https://github.com/vindarel/cl-str) has the `to-file` function.
 
 ~~~lisp
 (str:to-file "file.txt" content) ;; with optional options
 ~~~
+
+Both `alexandria:write-string-into-file` and `str:to-file` take the same keyword arguments as `cl:open` that controls file creation: `:if-exists` and `if-does-not-exists`.
 
 ### Getting the file extension
 
