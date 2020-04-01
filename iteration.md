@@ -874,12 +874,33 @@ Use `nil` to ignore a term:
 ;; (X Y Z)
 ~~~
 
-Iterate over a list, 2 items at a time
+#### Iterating 2 by 2 over a list
+
+To iterate over a list, 2 items at a time we use a combination of `on`, `by` and destructuring.
+
+We use `on` to loop over the rest (the `cdr`) of the list.
+
 ~~~lisp
-(loop for (key value) :on '(a 2 b 2 c 3) :by #'cddr
+(loop for rest on '(a 2 b 2 c 3)
+      collect rest)
+;; ((A 2 B 2 C 3) (2 B 2 C 3) (B 2 C 3) (2 C 3) (C 3) (3))
+~~~
+
+We use `by` to skip on element at every iteration (`(cddr list)` is equivalent to `(rest (rest list))`)
+
+~~~lisp
+(loop for rest on '(a 2 b 2 c 3) by #'cddr
+      collect rest)
+;; ((A 2 B 2 C 3) (B 2 C 3) (C 3))
+~~~
+
+Then we add destructuring to bind only the first two item at each iterations:
+~~~lisp
+(loop for (key value) on '(a 2 b 2 c 3) by #'cddr
       collect (list key (* 2 value)))
 ;; ((A 2) (B 4) (C 6))
 ~~~
+
 
 ### Series
 In general, with `destructuring-bind`:
