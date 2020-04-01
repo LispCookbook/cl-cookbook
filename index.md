@@ -42,6 +42,7 @@ title: Home
 * [Scripting. Building executables](scripting.html)
 * [Testing and Continuous Integration](testing.html)
 * [Databases](databases.html)
+* [GUI programming](gui.html)
 * [Web development](web.html)
 * [Web Scraping](web-scraping.html)
 * [WebSockets](websockets.html)
