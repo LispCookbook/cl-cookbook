@@ -894,7 +894,7 @@ We use `by` to skip on element at every iteration (`(cddr list)` is equivalent t
 ;; ((A 2 B 2 C 3) (B 2 C 3) (C 3))
 ~~~
 
-Then we add destructuring to bind only the first two item at each iterations:
+Then we add destructuring to bind only the first two items at each iteration:
 ~~~lisp
 (loop for (key value) on '(a 2 b 2 c 3) by #'cddr
       collect (list key (* 2 value)))
