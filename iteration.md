@@ -886,7 +886,7 @@ We use `on` to loop over the rest (the `cdr`) of the list.
 ;; ((A 2 B 2 C 3) (2 B 2 C 3) (B 2 C 3) (2 C 3) (C 3) (3))
 ~~~
 
-We use `by` to skip on element at every iteration (`(cddr list)` is equivalent to `(rest (rest list))`)
+We use `by` to skip one element at every iteration (`(cddr list)` is equivalent to `(rest (rest list))`)
 
 ~~~lisp
 (loop for rest on '(a 2 b 2 c 3) by #'cddr
