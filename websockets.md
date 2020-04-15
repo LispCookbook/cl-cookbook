@@ -216,7 +216,7 @@ ahead and start it, this time on port `8080`:
 Now open up two browser tabs and point them to `http://localhost:8080` and you
 should see your chat app!
 
-<img src="https://raw.githubusercontent.com/thegoofist/resource-dump/master/lisp-chat.gif"
+<img src="https://raw.githubusercontent.com/cbeo/resource-dump/master/lisp-chat.gif"
      width="470" height="247"/>
 
 ## All The Code
