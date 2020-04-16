@@ -1016,6 +1016,65 @@ string:
 ;; NIL
 ~~~
 
+# Cleaning up strings
+
+The following examples use the
+[cl-slug](https://github.com/EuAndreh/cl-slug/) library which,
+internally, iterates over the characters of the string and uses
+`ppcre:regex-replace-all`.
+
+    (ql:quickload :cl-slug)
+
+Then it can be used with the `slug` prefix.
+
+Its main function is to transform a string to a slug, suitable for a website's url:
+
+~~~lisp
+(slug:slugify "My new cool article, for the blog (V. 2).")
+;; "my-new-cool-article-for-the-blog-v-2"
+~~~
+
+## Removing accentuated letters
+
+Use `slug:asciify` to replace accentuated letters by their ascii equivalent:
+
+~~~lisp
+(slug:asciify "ñ é ß ğ ö")
+;; => "n e ss g o"
+~~~
+
+This function supports many (western) languages:
+
+~~~lisp
+slug:*available-languages*
+((:TR . "Türkçe (Turkish)") (:SV . "Svenska (Swedish)") (:FI . "Suomi (Finnish)")
+ (:UK . "українська (Ukrainian)") (:RU . "Ру́сский (Russian)") (:RO . "Română (Romanian)")
+ (:RM . "Rumàntsch (Romansh)") (:PT . "Português (Portuguese)") (:PL . "Polski (Polish)")
+ (:NO . "Norsk (Norwegian)") (:LT . "Lietuvių (Lithuanian)") (:LV . "Latviešu (Latvian)")
+ (:LA . "Lingua Latīna (Latin)") (:IT . "Italiano (Italian)") (:EL . "ελληνικά (Greek)")
+ (:FR . "Français (French)") (:EO . "Esperanto") (:ES . "Español (Spanish)") (:EN . "English")
+ (:DE . "Deutsch (German)") (:DA . "Dansk (Danish)") (:CS . "Čeština (Czech)")
+ (:CURRENCY . "Currency"))
+~~~
+
+## Removing punctuation
+
+Use `(str:remove-punctuation s)` or `(str:no-case s)` (same as
+`(cl-change-case:no-case s)`):
+
+~~~lisp
+(str:remove-punctuation "HEY! What's up ??")
+;; "HEY What s up"
+
+(str:no-case "HEY! What's up ??")
+;; "hey what s up"
+~~~
+
+They strip the punctuation with one ppcre unicode regexp
+(`(ppcre:regex-replace-all "[^\\p{L}\\p{N}]+"` where `p{L}` is the
+"letter" category and `p{N}` any kind of numeric character).
+
+
 # See also
 
 * [Pretty printing table data](https://gist.github.com/WetHat/a49e6f2140b401a190d45d31e052af8f), in ASCII art, a tutorial as a Jupyter notebook.
