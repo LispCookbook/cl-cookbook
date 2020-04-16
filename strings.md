@@ -430,6 +430,29 @@ JOIN-STRING-LIST
 "word by sentence this Reverse"
 ~~~
 
+# Dealing with unicode strings
+
+We'll use here [SBCL's string operations](http://www.sbcl.org/manual/index.html#String-operations). More generally, see [SBCL's unicode support](http://www.sbcl.org/manual/index.html#Unicode-Support).
+
+
+## Sorting unicode strings alphabetically
+
+Sorting unicode strings with `string-lessp` as the comparison function
+isn't satisfying:
+
+~~~lisp
+(sort '("Aaa" "Ééé" "Zzz") #'string-lessp)
+;; ("Aaa" "Zzz" "Ééé")
+~~~
+
+With SBCL, use `sb-unicode:unicode<`:
+
+~~~lisp
+(sort '("Aaa" "Ééé" "Zzz") #'sb-unicode:unicode<)
+;; ("Aaa" "Ééé" "Zzz")
+~~~
+
+
 # Controlling Case
 
 Common Lisp has a couple of functions to control the case of a string.
