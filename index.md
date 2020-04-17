@@ -56,32 +56,37 @@ The Cookbook has been translated to:
 * [Chinese](https://oneforalone.github.io/cl-cookbook-cn/#/) ([Github](https://github.com/oneforalone/cl-cookbook-cn))
 * [Portuguese (Brazilian)](https://book.lisp.com.br/) ([Github](https://github.com/commonlispbr/cl-cookbook))
 
-## Other CL Resources
+# Other CL Resources
 
-* [lisp-lang.org](http://lisp-lang.org/)
-* [List of Lisp Communities](https://github.com/CodyReichert/awesome-cl#community)
+<p id="two-cols"></p>
+
+* [lisp-lang.org](http://lisp-lang.org/): success stories, tutorials and style guide
 * The [Awesome-cl](https://github.com/CodyReichert/awesome-cl) list
-* [The Common Lisp HyperSpec](http://www.lispworks.com/documentation/HyperSpec/Front/index.htm) by Kent M. Pitman (also available in [Dash](https://kapeli.com/dash), [Zeal](https://zealdocs.org/) and [Velocity](https://velocity.silverlakesoftware.com/))
-* [The Common Lisp UltraSpec](http://phoe.tymoon.eu/clus/doku.php)
-* [Practical Common Lisp](http://www.gigamonkeys.com/book/) by Peter Seibel
-* [Common Lisp Recipes](http://weitz.de/cl-recipes/) by Edmund Weitz, published in 2016,
+* [List of Lisp Communities](https://github.com/CodyReichert/awesome-cl#community)
 * [Cliki](http://www.cliki.net/), Common Lisp's wiki
 * [Articulate Common Lisp](http://articulate-lisp.com/), an initiation manual for the uninitiated
-* [Common Lisp](https://en.wikibooks.org/wiki/Common_Lisp) on Wikibooks
-* [The old comp.lang.lisp FAQ](https://common-lisp.net/project/lispfaq/FAQ/) by Mark Kantrowitz, Barry Margolin, and Christophe Rhodes
+* [lisp-tips](https://github.com/lisp-tips/lisp-tips/issues/)
+* [Common Lisp Pitfalls](https://raw.githubusercontent.com/ebzzry/cl-pitfalls/master/cl-pitfalls.txt) by Jeff Dalton
+* [Lisp and Elements of Style](http://web.archive.org/web/20190316190256/https://www.nicklevine.org/declarative/lectures/) by Nick Levine
+* Pascal Costanza's [Highly Opinionated Guide to Lisp](http://www.p-cos.net/lisp/guide.html)
+
+Books
+
+* [Practical Common Lisp](http://www.gigamonkeys.com/book/) by Peter Seibel
+* [Common Lisp Recipes](http://weitz.de/cl-recipes/) by Edmund Weitz, published in 2016,
 * [Common Lisp: A Gentle Introduction to Symbolic Computation](http://www-2.cs.cmu.edu/~dst/LispBook/) by David S. Touretzky
 * [Successful Lisp: How to Understand and Use Common Lisp](https://successful-lisp.blogspot.com/p/httpsdrive.html) by David B. Lamkins
 * [On Lisp](http://www.paulgraham.com/onlisptext.html) by Paul Graham
 * [Common Lisp the Language, 2nd Edition](http://www-2.cs.cmu.edu/Groups/AI/html/cltl/cltl2.html) by Guy L. Steele
-* [Common Lisp Hints](http://www.n-a-n-o.com/lisp/cmucl-tutorials/LISP-tutorial.html) by Geoffrey J. Gordon
-* [Common Lisp Pitfalls](https://raw.githubusercontent.com/ebzzry/cl-pitfalls/master/cl-pitfalls.txt) by Jeff Dalton
 * [A Tutorial on Good Lisp Style](https://www.cs.umd.edu/%7Enau/cmsc421/norvig-lisp-style.pdf) by Peter Norvig and Kent Pitman
-* [Lisp and Elements of Style](http://web.archive.org/web/20190316190256/https://www.nicklevine.org/declarative/lectures/) by Nick Levine
-* Pascal Costanza's [Highly Opinionated Guide to Lisp](http://www.p-cos.net/lisp/guide.html)
 * [Loving Lisp - the Savy Programmer's Secret Weapon](https://leanpub.com/lovinglisp/) by Mark Watson
-* [FranzInc](https://franz.com/), a company selling Common Lisp and Graph Database solutions.
 
-## Further remarks
+Specifications
+
+* [The Common Lisp HyperSpec](http://www.lispworks.com/documentation/HyperSpec/Front/index.htm) by Kent M. Pitman (also available in [Dash](https://kapeli.com/dash), [Zeal](https://zealdocs.org/) and [Velocity](https://velocity.silverlakesoftware.com/))
+* [The Common Lisp UltraSpec](http://phoe.tymoon.eu/clus/doku.php)
+
+# Further remarks
 
 This is a collaborative project that aims to provide for Common Lisp something
 similar to the [Perl Cookbook][perl] published by O'Reilly. More details about
