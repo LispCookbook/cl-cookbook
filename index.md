@@ -79,7 +79,12 @@ Books
 * [On Lisp](http://www.paulgraham.com/onlisptext.html) by Paul Graham
 * [Common Lisp the Language, 2nd Edition](http://www-2.cs.cmu.edu/Groups/AI/html/cltl/cltl2.html) by Guy L. Steele
 * [A Tutorial on Good Lisp Style](https://www.cs.umd.edu/%7Enau/cmsc421/norvig-lisp-style.pdf) by Peter Norvig and Kent Pitman
+
+Advanced books
+
 * [Loving Lisp - the Savy Programmer's Secret Weapon](https://leanpub.com/lovinglisp/) by Mark Watson
+* [Programming Algorithms](https://leanpub.com/progalgs) - A comprehensive guide to writing efficient programs with examples in Lisp.
+
 
 Specifications
 
