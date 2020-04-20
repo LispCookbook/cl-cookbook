@@ -549,6 +549,27 @@ Make a copy of sequence without elements matching foo. Has
 
 see also `remove-if[-not]` below.
 
+#### remove-duplicates, delete-duplicates (sequence)
+
+[remove-duplicates](http://clhs.lisp.se/Body/f_rm_dup.htm) returns a
+new sequence with uniq elements. `delete-duplicates` may modify the
+original sequence.
+
+`remove-duplicates` accepts the following, usual arguments: `from-end
+test test-not start end key`.
+
+~~~lisp
+(remove-duplicates '(:foo :foo :bar))
+(:FOO :BAR)
+
+(remove-duplicates '("foo" "foo" "bar"))
+("foo" "foo" "bar")
+
+(remove-duplicates '("foo" "foo" "bar") :test #'string-equal)
+("foo" "bar")
+~~~
+
+
 ### mapping (map, mapcar, remove-if[-not],...)
 
 If you're used to map and filter in other languages, you probably want
