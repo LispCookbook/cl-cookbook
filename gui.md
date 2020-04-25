@@ -146,6 +146,13 @@ conditions to ship proprietary ones.
 The [Qtools][qtools] bindings target Qt4. The Qt5 Lisp bindings are
 yet to be created.
 
+A companion library for Qtools, that you'll want to check out once you
+made your first Qtool application, is
+[Qtools-ui](https://github.com/Shinmera/qtools-ui), a collection of
+useful widgets and pre-made components. It comes with short
+[demonstrations
+videos](https://www.youtube.com/playlist?list=PLkDl6Irujx9Mh3BWdBmt4JtIrwYgihTWp).
+
 <!-- possible future: gobject-introspection -->
 
 - **Framework written in**: C++
