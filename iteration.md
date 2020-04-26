@@ -483,7 +483,9 @@ Return a flat list:
 
 ## Computing an intermediate value
 
-with `=`:
+Use `=`.
+
+With `for`:
 
 ~~~lisp
 (loop for x from 1 to 3
@@ -491,6 +493,38 @@ with `=`:
       collect y)
 ;; (10 20 30)
 ~~~
+
+With `with`, the difference being that the value is computed only
+once:
+
+~~~lisp
+(loop for x from 1 to 3
+      for y = (* x 10)
+      with z = x
+      collect (list x y z))
+;; ((1 10 1) (2 20 1) (3 30 1))
+~~~
+
+The HyperSpec defines the `with` clause like this:
+
+    with-clause::= with var1 [type-spec] [= form1] {and var2 [type-spec] [= form2]}*
+
+so it turns out we can specify the type before the `=` and chain the `with` with `and`:
+
+~~~lisp
+(loop for x from 1 to 3
+      for y integer = (* x 10)
+      with z integer = x
+      collect (list x y z))
+~~~
+
+~~~lisp
+(loop for x upto 3
+      with foo = :foo
+      and bar = :bar
+      collect (list x foo bar))
+~~~
+
 
 ## Loop with a counter
 ### loop
