@@ -14,7 +14,7 @@ Git. It's the most straightforward way to get going !
 
 ### With your package manager
 
-TLDR;
+In doubt, just get SBCL:
 
     apt-get install sbcl
 
@@ -22,26 +22,26 @@ Common Lisp has been standardized via an ANSI document, so it can be
 implemented in different ways: see
 [Wikipedia's list of implementations](https://en.wikipedia.org/wiki/Common_Lisp#Implementations).
 
-The following are packaged for Debian and probably for your distro:
+The following implementations are packaged for Debian and probably for your distro:
 
-* [SBCL](http://www.sbcl.org/)
-* [ECL](https://gitlab.com/embeddable-common-lisp/ecl/)
-  (compiles to C)
-* [CMUCL](https://gitlab.common-lisp.net/cmucl/cmucl)
-* [GCL](https://en.wikipedia.org/wiki/GNU_Common_Lisp)
+* [Steel Bank Common Lisp (SBCL)](http://www.sbcl.org/)
+* [Embeddable Common Lisp (ECL)](https://gitlab.com/embeddable-common-lisp/ecl/), which compiles to C,
 * [CLISP](https://clisp.sourceforge.io/)
 
-In doubt, just get SBCL.
+There is also:
 
-See also
-
-* [ABCL](http://abcl.org/) (for the JVM),
-* [ClozureCL](https://ccl.clozure.com/)
-* [CLASP](https://github.com/drmeister/clasp) (C++ and LLVM)
+* [ABCL](http://abcl.org/), to interface with the JVM,
+* [ClozureCL](https://ccl.clozure.com/), a good implementation with very fast build times (see this [Debian package for Clozure CL](http://mr.gy/blog/clozure-cl-deb.html)),
+* [CLASP](https://github.com/drmeister/clasp), that interoperates with C++ libraries using LLVM for compilation to native code,
 * [AllegroCL](https://franz.com/products/allegrocl/) (proprietary)
 * [LispWorks](http://www.lispworks.com/) (proprietary)
 
-and  this [Debian package for Clozure CL](http://mr.gy/blog/clozure-cl-deb.html).
+and older implementations:
+
+* [CMUCL](https://gitlab.common-lisp.net/cmucl/cmucl), originally developed at Carnegie Mellon University, from which SBCL is derived, and
+* [GNU Common Lisp](https://en.wikipedia.org/wiki/GNU_Common_Lisp)
+* and there is more!
+
 
 ### With Roswell
 
