@@ -1696,6 +1696,38 @@ Features:
 * Purely functional [pairing heaps](http://en.wikipedia.org/wiki/Pairing_heap)
 * Purely functional amortized queue.
 
+## Controlling how much of data to print (`*print-length*`, `*print-level*`)
+
+Use `*print-length*` and `*print-level*`.
+
+They are both `nil` by default.
+
+If you have a very big list, printing it on the REPL or in a
+stacktrace can take a long time and bring your editor or even your
+server down. Use `*print-length*` to choose the maximum of elements of
+the list to print, and to show there is a rest with a `...`
+placeholder:
+
+~~~lisp
+(setf *print-length* 2)
+(list :A :B :C :D :E)
+;; (:A :B ...)
+~~~
+
+And if you have a very nested data structure, set `*print-level*` to
+choose the depth to print:
+
+~~~lisp
+(let ((*print-level* 2))
+  (print '(:a (:b (:c (:d :e))))))
+;; (:A (:B #))             <= *print-level* in action
+;; (:A (:B (:C (:D :E))))  <= the list is returned, the let binding is not in effect anymore.
+~~~
+
+`*print-length*` will be applied at each level.
+
+Reference: the [HyperSpec](http://clhs.lisp.se/Body/v_pr_lev.htm).
+
 
 ## Appendix A - generic and nested access of alists, plists, hash-tables and CLOS slots
 
