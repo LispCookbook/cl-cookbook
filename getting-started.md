@@ -85,6 +85,18 @@ connect SLIME to the Lisp inside Docker. See
 that helps on setting that up.
 
 
+### On Windows
+
+All implementations above can be installed on Windows.
+
+[Portacle](https://shinmera.github.io/portacle/) is multiplatform and works on Windows.
+
+You can also try:
+
+* [ρEmacs](https://rho-emacs.sourceforge.io/), a preconfigured distribution of GNU Emacs specificalyl for Microsoft Windows. It ships with many CL implementations: CCL, SBCL, CLISP, ABCL and ECL, and also has components for other programming languages (Python, Racket, Java, C++…).
+* [Corman Lisp](https://github.com/sharplispers/cormanlisp), for Windows XP, Windows 2000, Windows ME or Windows NT. It is fully integrated with the Win32 API, and all the Windows API functions are readily available from Lisp.
+
+
 ## Start a REPL
 
 Just launch the implementation executable on the command line to enter
