@@ -43,6 +43,34 @@ $ ln -s /etc/passwd foo
 NIL
 ~~~
 
+For more portability, use `uiop:probe-file*` or `uiop:file-exists-p`
+which will return the file pathname (if it exists).
+
+### Expanding a file or a directory name with a tilde (`~`)
+
+For portability, use `uiop:native-namestring`:
+
+~~~lisp
+(uiop:native-namestring "~/.emacs.d/")
+"/home/me/.emacs.d/"
+~~~
+
+It also expand the tilde with files and directories that don't exist:
+
+~~~lisp
+(uiop:native-namestring "~/foo987.txt")
+:: "/home/me/foo987.txt"
+~~~
+
+On several implementations (CCL, ABCL, ECL, CLISP, LispWorks),
+`namestring` works similarly. On SBCL, if the file or directory
+doesn't exist, `namestring` doesn't expand the path but returns the
+argument, with the tilde.
+
+With files that exist, you can also use `truename`. But, at least on
+SBCL, it returns an error if the path doesn't exist.
+
+
 ### Creating directories
 
 The function
