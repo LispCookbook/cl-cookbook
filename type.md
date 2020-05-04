@@ -195,7 +195,7 @@ You may refer to the [CLHS page][type-specifiers] for more information.
 You can use the macro [`deftype`][deftype] to define a new type-specifier.
 
 Its argument list can be understood as a direct mapping to elements of rest
-part of a compound type specifier. They are be defined as optional to allow
+part of a compound type specifier. They are defined as optional to allow
 symbol type specifier.
 
 Its body should be a macro checking whether given argument is of this type
