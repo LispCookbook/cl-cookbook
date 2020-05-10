@@ -61,14 +61,17 @@ The Cookbook has been translated to:
 <p id="two-cols"></p>
 
 * [lisp-lang.org](http://lisp-lang.org/): success stories, tutorials and style guide
-* The [Awesome-cl](https://github.com/CodyReichert/awesome-cl) list
+* [Awesome-cl](https://github.com/CodyReichert/awesome-cl), a curated list of libraries
 * [List of Lisp Communities](https://github.com/CodyReichert/awesome-cl#community)
-* [Cliki](http://www.cliki.net/), Common Lisp's wiki
-* [Articulate Common Lisp](http://articulate-lisp.com/), an initiation manual for the uninitiated
+* [Lisp Koans](https://github.com/google/lisp-koans/) - a language learning exercise, which guides the learner progressively through many language features.
+* [Learn X in Y minutes - Where X = Common Lisp](https://learnxinyminutes.com/docs/common-lisp/) - Small Common Lisp tutorial covering the essentials.
 * [lisp-tips](https://github.com/lisp-tips/lisp-tips/issues/)
+* [Articulate Common Lisp](http://articulate-lisp.com/), an initiation manual for the uninitiated
 * [Common Lisp Pitfalls](https://raw.githubusercontent.com/ebzzry/cl-pitfalls/master/cl-pitfalls.txt) by Jeff Dalton
 * [Lisp and Elements of Style](http://web.archive.org/web/20190316190256/https://www.nicklevine.org/declarative/lectures/) by Nick Levine
 * Pascal Costanza's [Highly Opinionated Guide to Lisp](http://www.p-cos.net/lisp/guide.html)
+* [Cliki](http://www.cliki.net/), Common Lisp's wiki
+
 
 Books
 
