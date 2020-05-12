@@ -390,7 +390,8 @@ If needed, import the dependencies first:
 
 (defun runner ()
   (bt:make-thread (lambda ()
-                    (swank:create-server :port 4006)))
+                    (swank:create-server :port 4006))
+                  :name "swank")
   (format t "we are past go!~%")
   (loop while t do
        (sleep 5)
@@ -399,6 +400,11 @@ If needed, import the dependencies first:
 
 (runner)
 ~~~
+
+If you check with `bt:all-threads`, you'll see your Swank server running on port 4006:
+
+    #<SB-THREAD:THREAD "Swank 4006" RUNNING {1003A19333}>
+
 
 On the server, we can run it with
 
@@ -412,8 +418,8 @@ this will securely forward port 4006 on the server at example.com to
 our local computer's port 4006 (swanks only accepts connections from
 localhost).
 
-We connect to the running swank with `M-x slime-connect`, typing in
-port 4006.
+We connect to the running Swank with `M-x slime-connect`, choosing localhost for the host
+and port 4006.
 
 We can write new code:
 
