@@ -117,6 +117,16 @@ you want.
 
 <img src="assets/editor-sublime.png"
      style="width: 800px"/>
+     
+## VSCode
+
+[VScode](https://code.visualstudio.com/) with [commonlisp-vscode] extension
+https://marketplace.visualstudio.com/items?itemName=ailisp.commonlisp-vscode
+supports running a REPL, evaluate code, auto indent, code completion, go to 
+definition, documentation on hover, etc.
+
+<img src="https://raw.githubusercontent.com/ailisp/commonlisp-vscode/master/screenshot.png"
+     style="width: 800px"/>
 
 ## Notebooks
 
