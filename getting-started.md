@@ -199,7 +199,7 @@ or
 and load it, from a REPL:
 
 ~~~lisp
-(load "/usr/share/cl-quicklisp/quicklisp.lisp")
+(load "/usr/share/common-lisp/source/quicklisp/quicklisp.lisp")
 ~~~
 
 Then, in both cases, still from the REPL:
