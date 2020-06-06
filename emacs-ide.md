@@ -23,9 +23,11 @@ straightforward way to get going.
 *   Vast number of add-on packages
 *   Emacs will probably always be around
 *   Emacs works well either with a mouse or without a mouse
+*   Emacs works well either in GUI mode or in the terminal
 *   Emacs has a large user base with multiple newsgroups
 *   Benefits of using Emacs far outweigh the effort spent in learning it
-*   [org-mode](http://orgmode.org)
+*   Because [Org-mode](http://orgmode.org)
+*   Because [Magit](https://magit.vc/)
 *   Because [Emacs Rocks !](http://emacsrocks.com)
 
 
@@ -605,8 +607,231 @@ some minor tweaking. See the
 "[Setting up an IDE with Emacs on Windows or Mac OS X](windows.html)".
 
 
-## Disclaimer
+## Appendix
 
-The original material on this page was originally presented at the [ILC 2003 conference](http://www.international-lisp-conference.org/index.html). A paper with more in-depth coverage of some of the material on this page can be found on [Bill Clementson's ILC2003](https://web.archive.org/web/20040213103100/http://home.comcast.net/~b.clementson/ilc_2003.htm) page, which is now archived.
+### All Slime REPL shortcuts
 
-It was edited in 2017.
+Here is the reference of all Slime shortcuts that work in the REPL.
+
+To see them, go in a REPL, type `C-h m` and go to the Slime REPL map section.
+
+
+```
+REPL mode defined in ‘slime-repl.el’:
+Major mode for interacting with a superior Lisp.
+key             binding
+---             -------
+
+C-c             Prefix Command
+C-j             slime-repl-newline-and-indent
+RET             slime-repl-return
+C-x             Prefix Command
+ESC             Prefix Command
+SPC             slime-space
+  (that binding is currently shadowed by another mode)
+,               slime-handle-repl-shortcut
+DEL             backward-delete-char-untabify
+<C-down>        slime-repl-forward-input
+<C-return>      slime-repl-closing-return
+<C-up>          slime-repl-backward-input
+<return>        slime-repl-return
+
+C-x C-e         slime-eval-last-expression
+
+C-c C-c         slime-interrupt
+C-c C-n         slime-repl-next-prompt
+C-c C-o         slime-repl-clear-output
+C-c C-p         slime-repl-previous-prompt
+C-c C-s         slime-complete-form
+C-c C-u         slime-repl-kill-input
+C-c C-z         other-window
+C-c ESC         Prefix Command
+C-c I           slime-repl-inspect
+
+M-RET           slime-repl-closing-return
+M-n             slime-repl-next-input
+M-p             slime-repl-previous-input
+M-r             slime-repl-previous-matching-input
+M-s             previous-line
+
+C-c C-z         run-lisp
+  (that binding is currently shadowed by another mode)
+
+C-M-x           lisp-eval-defun
+
+C-M-q           indent-sexp
+
+C-M-q           prog-indent-sexp
+  (that binding is currently shadowed by another mode)
+
+C-c M-e         macrostep-expand
+C-c M-i         slime-fuzzy-complete-symbol
+C-c M-o         slime-repl-clear-buffer
+```
+
+### All other Slime shortcuts
+
+Here are all the default shortcuts that work in a .lisp file with Slime mode.
+
+To see them, go in a REPL, type `C-h m` and go to the Slime section.
+
+```
+Commands to compile the current buffer’s source file and visually
+highlight any resulting compiler notes and warnings:
+C-c C-k	- Compile and load the current buffer’s file.
+C-c M-k	- Compile (but not load) the current buffer’s file.
+C-c C-c	- Compile the top-level form at point.
+
+Commands for visiting compiler notes:
+M-n	- Goto the next form with a compiler note.
+M-p	- Goto the previous form with a compiler note.
+C-c M-c	- Remove compiler-note annotations in buffer.
+
+Finding definitions:
+M-.
+- Edit the definition of the function called at point.
+M-,
+- Pop the definition stack to go back from a definition.
+
+Documentation commands:
+C-c C-d C-d	- Describe symbol.
+C-c C-d C-a	- Apropos search.
+C-c M-d	- Disassemble a function.
+
+Evaluation commands:
+C-M-x	- Evaluate top-level from containing point.
+C-x C-e	- Evaluate sexp before point.
+C-c C-p	- Evaluate sexp before point, pretty-print result.
+
+Full set of commands:
+key             binding
+---             -------
+
+C-c             Prefix Command
+C-x             Prefix Command
+ESC             Prefix Command
+SPC             slime-space
+
+C-c C-c         slime-compile-defun
+C-c C-j         slime-eval-last-expression-in-repl
+C-c C-k         slime-compile-and-load-file
+C-c C-s         slime-complete-form
+C-c C-y         slime-call-defun
+C-c ESC         Prefix Command
+C-c C-]         slime-close-all-parens-in-sexp
+C-c x           slime-export-symbol-at-point
+C-c ~           slime-sync-package-and-default-directory
+
+C-M-a           slime-beginning-of-defun
+C-M-e           slime-end-of-defun
+M-n             slime-next-note
+M-p             slime-previous-note
+
+C-M-,           slime-previous-location
+C-M-.           slime-next-location
+
+C-c TAB         completion-at-point
+C-c RET         slime-expand-1
+C-c C-p         slime-pprint-eval-last-expression
+C-c C-u         slime-undefine-function
+C-c ESC         Prefix Command
+
+C-c C-b         slime-interrupt
+C-c C-d         slime-doc-map
+C-c C-e         slime-interactive-eval
+C-c C-l         slime-load-file
+C-c C-r         slime-eval-region
+C-c C-t         slime-toggle-fancy-trace
+C-c C-v         Prefix Command
+C-c C-w         slime-who-map
+C-c C-x         Prefix Command
+C-c C-z         slime-switch-to-output-buffer
+C-c ESC         Prefix Command
+C-c :           slime-interactive-eval
+C-c <           slime-list-callers
+C-c >           slime-list-callees
+C-c E           slime-edit-value
+C-c I           slime-inspect
+
+C-x C-e         slime-eval-last-expression
+C-x 4           Prefix Command
+C-x 5           Prefix Command
+
+C-M-x           slime-eval-defun
+M-,             slime-pop-find-definition-stack
+M-.             slime-edit-definition
+M-?             slime-edit-uses
+M-_             slime-edit-uses
+
+C-c M-c         slime-remove-notes
+C-c M-e         macrostep-expand
+C-c M-i         slime-fuzzy-complete-symbol
+C-c M-k         slime-compile-file
+C-c M-q         slime-reindent-defun
+
+C-c M-m         slime-macroexpand-all
+
+C-c C-v C-d     slime-describe-presentation-at-point
+C-c C-v TAB     slime-inspect-presentation-at-point
+C-c C-v C-n     slime-next-presentation
+C-c C-v C-p     slime-previous-presentation
+C-c C-v C-r     slime-copy-presentation-at-point-to-repl
+C-c C-v C-w     slime-copy-presentation-at-point-to-kill-ring
+C-c C-v ESC     Prefix Command
+C-c C-v SPC     slime-mark-presentation
+C-c C-v d       slime-describe-presentation-at-point
+C-c C-v i       slime-inspect-presentation-at-point
+C-c C-v n       slime-next-presentation
+C-c C-v p       slime-previous-presentation
+C-c C-v r       slime-copy-presentation-at-point-to-repl
+C-c C-v w       slime-copy-presentation-at-point-to-kill-ring
+C-c C-v C-SPC   slime-mark-presentation
+
+C-c C-w C-a     slime-who-specializes
+C-c C-w C-b     slime-who-binds
+C-c C-w C-c     slime-who-calls
+C-c C-w RET     slime-who-macroexpands
+C-c C-w C-r     slime-who-references
+C-c C-w C-s     slime-who-sets
+C-c C-w C-w     slime-calls-who
+C-c C-w a       slime-who-specializes
+C-c C-w b       slime-who-binds
+C-c C-w c       slime-who-calls
+C-c C-w d       slime-who-depends-on
+C-c C-w m       slime-who-macroexpands
+C-c C-w r       slime-who-references
+C-c C-w s       slime-who-sets
+C-c C-w w       slime-calls-who
+
+C-c C-d C-a     slime-apropos
+C-c C-d C-d     slime-describe-symbol
+C-c C-d C-f     slime-describe-function
+C-c C-d C-g     common-lisp-hyperspec-glossary-term
+C-c C-d C-p     slime-apropos-package
+C-c C-d C-z     slime-apropos-all
+C-c C-d #       common-lisp-hyperspec-lookup-reader-macro
+C-c C-d a       slime-apropos
+C-c C-d d       slime-describe-symbol
+C-c C-d f       slime-describe-function
+C-c C-d g       common-lisp-hyperspec-glossary-term
+C-c C-d h       slime-documentation-lookup
+C-c C-d p       slime-apropos-package
+C-c C-d z       slime-apropos-all
+C-c C-d ~       common-lisp-hyperspec-format
+C-c C-d C-#     common-lisp-hyperspec-lookup-reader-macro
+C-c C-d C-~     common-lisp-hyperspec-format
+
+C-c C-x c       slime-list-connections
+C-c C-x n       slime-next-connection
+C-c C-x p       slime-prev-connection
+C-c C-x t       slime-list-threads
+
+C-c M-d         slime-disassemble-symbol
+C-c M-p         slime-repl-set-package
+
+C-x 5 .         slime-edit-definition-other-frame
+
+C-x 4 .         slime-edit-definition-other-window
+
+C-c C-v M-o     slime-clear-presentations
+```
