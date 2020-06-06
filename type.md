@@ -392,6 +392,16 @@ its argument types which appear to be incompatible with those of
 This all happens indeed *at compile time*, either in the REPL,
 either with a simple `C-c C-c` in Slime, or when we `load` a file.
 
+### Declaring &key parameters
+
+Use `&key (:argument type)`.
+
+For example:
+
+    (declaim (ftype (function (string &key (:n integer))) foo))
+    (defun foo (bar &key n) …)
+
+
 ### Declaring class slots types
 
 A class slot accepts a `:type` slot option. It is however generally
