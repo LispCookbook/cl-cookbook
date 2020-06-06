@@ -421,6 +421,33 @@ Note: see also [sanity-clause][sanity-clause], a data
 serialization/contract library to check slots' types during
 `make-instance` (which is not compile time).
 
+
+### Alternative type checking syntax: defstar, serapeum
+
+The [Serapeum](https://github.com/ruricolist/serapeum/blob/master/REFERENCE.md#types) library provides a shortcut that looks like this:
+
+```lisp
+ (-> mod-fixnum+ (fixnum fixnum) fixnum)
+ (defun mod-fixnum+ (x y) ...)
+```
+
+The [Defstar](https://github.com/lisp-mirror/defstar) library provides
+a `defun*` macro that allows to add the type declarations into the
+lambda list. It looks like this:
+
+```lisp
+(defun* sum ((a real) (b real))
+   (+ a b))
+```
+
+It also allows:
+
+* to declare the return type, either in the function definition or in its body
+* to quickly declare variables that are ignored, with the `_` placeholder
+* to add assertions for each arguments
+* to do the same with `defmethod`, `defparameter`, `defvar`, `flet`, `labels`, `let*` and `lambda`.
+
+
 ### Limitations
 
 Complex types involving `satisfies` are not checked inside a function
