@@ -256,10 +256,13 @@ And voilà !
 
 SBCL stores the command line arguments into `sb-ext:*posix-argv*`.
 
-But that variable name differs from implementations, so we may want a
-library to handle the differences for us.
+But that variable name differs from implementations, so we want a
+way to handle the differences for us.
 
-We also want to parse the arguments.
+We have `uiop:command-line-arguments`, shipped in ASDF and included in
+nearly all implementations.
+
+That's good, but we also want to parse the arguments.
 
 A quick look at the
 [awesome-cl#scripting](https://github.com/CodyReichert/awesome-cl#scripting)
@@ -272,8 +275,8 @@ We can call it with its `opts` alias (nickname).
 
 As often work happens in two phases:
 
-* declaring the options our app accepts, their optional argument, defining their type
-  (string, integer,…), long and short names, and the required ones,
+* declaring the options that our application accepts, their optional argument, defining their type
+  (string, integer,…), their long and short names, and the required ones
 * parsing them (and handling missing or malformed parameters).
 
 

@@ -64,7 +64,7 @@ systems including Windows. It is also `fset`-able.
 
 Accessing command line arguments is implementation-specific but it
 appears most implementations have a way of getting at
-them. [Roswell](https://github.com/roswell/roswell/wiki) or external
+them. UIOP with `uiop:command-line-arguments` or [Roswell](https://github.com/roswell/roswell/wiki) as well as external
 libraries (see next section) make it portable.
 
 [SBCL](http://www.sbcl.org) stores the arguments list in the special variable `sb-ext:*posix-argv*`
