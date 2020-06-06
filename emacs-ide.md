@@ -671,9 +671,9 @@ C-c M-o         slime-repl-clear-buffer
 
 ### All other Slime shortcuts
 
-Here are all the default shortcuts that work in a .lisp file with Slime mode.
+Here are all the default keybindings defined by Slime mode.
 
-To see them, go in a REPL, type `C-h m` and go to the Slime section.
+To see them, go in a .lisp file, type `C-h m` and go to the Slime section.
 
 ```
 Commands to compile the current buffer’s source file and visually
