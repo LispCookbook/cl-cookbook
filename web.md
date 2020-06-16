@@ -582,6 +582,44 @@ It is, along with its companion
 [access](https://github.com/AccelerationNet/access/) library, one of
 the most downloaded libraries of Quicklisp.
 
+### Djula filters
+
+Filters allow to modify how a variable is displayed. Djula comes with
+a good set of built-in filters and they are [well documented](https://mmontone.github.io/djula/doc/build/html/filters.html). They are not to be confused with [tags](https://mmontone.github.io/djula/doc/build/html/tags.html).
+
+They look like this: `{{ name | lower }}`, where `lower` is an
+existing filter, which renders the text into lowercase.
+
+Filters sometimes take arguments. For example: `{{ value | add:2 }}` calls
+the `add` filter with arguments `value` and 2.
+
+Moreover, it is very easy to define custom filters. All we have to do
+is to use the `def-filter` macro, which takes the variable as first
+argument, and which can take more optional arguments.
+
+Its general form is:
+
+~~~lisp
+(def-filter :myfilter-name (value arg) ;; arg is optional
+   (body))
+~~~
+
+and it is used like this: `{{ value | myfilter-name }}`.
+
+Here's how the `add` filter is defined:
+
+~~~lisp
+(def-filter :add (it n)
+  (+ it (parse-integer n)))
+~~~
+
+Once you have written a custom filter, you can use it right away
+throughout the application.
+
+Filters are very handy to move non-trivial formatting or logic from the
+templates to the backend.
+
+
 ## Spinneret - lispy templates
 
 [Spinneret](https://github.com/ruricolist/spinneret) is a "lispy"
