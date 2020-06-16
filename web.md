@@ -908,6 +908,15 @@ local swank server, loads the new code, stops and starts the app in a
 row.
 
 
+# See also
+
+- [Feather](https://hg.sr.ht/~wnortje/feather), a template for web
+  application development, shows a functioning Hello World app
+  with an HTML page, a JSON API, a passing test suite, a Postgres DB
+  and DB migrations. Uses Qlot, Buildapp, SystemD for deployment.
+- [lisp-web-template-productlist](https://github.com/vindarel/lisp-web-template-productlist),
+  a simple project template with Hunchentoot, Easy-Routes, Djula and Bulma CSS.
+
 # Credits
 
 - [https://lisp-journey.gitlab.io/web-dev/](https://lisp-journey.gitlab.io/web-dev/)
