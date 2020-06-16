@@ -546,9 +546,15 @@ setup. We must declare where our templates are with something like
 (djula:add-template-directory (asdf:system-relative-pathname "webapp" "templates/"))
 ~~~
 
+and then we can declare and compile the ones we use, for example::
 
-A Djula template looks like this, no surprises (forgive the antislash
-in `\%`, this is a Jekyll limitation):
+~~~lisp
+(defparameter +base.html+ (djula:compile-template* "base.html"))
+(defparameter +welcome.html+ (djula:compile-template* "welcome.html"))
+~~~
+
+A Djula template looks like this (forgive the antislash in `{\%`, this
+is a Jekyll limitation):
 
 ```
 {\% extends "base.html" \%}
@@ -562,7 +568,15 @@ in `\%`, this is a Jekyll limitation):
 {\% endblock \%}
 ```
 
-Djula compiles the templates before rendering them.
+At last, to render the template, call `djula:render-template*` inside a route.
+
+~~~lisp
+(easy-routes:defroute root ("/" :method :get) ()
+  (djula:render-template* +welcome.html+ nil
+                          :users (get-users)
+~~~
+
+Note that for efficiency Djula compiles the templates before rendering them.
 
 It is, along with its companion
 [access](https://github.com/AccelerationNet/access/) library, one of
