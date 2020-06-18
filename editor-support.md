@@ -117,6 +117,15 @@ you want.
 
 <img src="assets/editor-sublime.png"
      style="width: 800px"/>
+     
+## VSCode
+
+[VSCode](https://code.visualstudio.com/) with [commonlisp-vscode extension](https://marketplace.visualstudio.com/items?itemName=ailisp.commonlisp-vscode)
+supports running a REPL, evaluate code, auto indent, code completion, go to definition, documentation on hover, etc.
+It's based on [cl-lsp](https://github.com/ailisp/cl-lsp) language server and it's possible to write LSP client that works in other editors.
+
+<img src="https://raw.githubusercontent.com/ailisp/commonlisp-vscode/master/screenshot.png"
+     style="width: 800px"/>
 
 ## Notebooks
 
