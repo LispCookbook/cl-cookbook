@@ -45,6 +45,28 @@ You can import exactly the symbols you need with `:import-from`:
 Sometimes, we see `(:import-from :ppcre)`, without an explicit
 import. This helps people using ASDF's *package inferred system*.
 
+
+## About "use"-ing packages being a bad practice
+
+`:use` is a well spread idiom. You could do:
+
+~~~lisp
+(defpackage :my-package
+  (:use :cl :ppcre))
+~~~
+
+and now, **all** symbols that are exported by `cl-ppcre` (aka `ppcre`)
+are available to use directly in your package. However, this should be
+considered bad practice, unless you `use` another package of your
+project that you control. Indeed, if the external package adds a
+symbol, it could conflict with one of yours, or you could add one
+which will hide the external symbol and you might not see a warning.
+
+To quote [this thorough explanation](https://gist.github.com/phoe/2b63f33a2a4727a437403eceb7a6b4a3) (a recommended read):
+
+> USE is a bad idea in contemporary code except for internal packages that you fully control, where it is a decent idea until you forget that you mutate the symbol of some other package while making that brand new shiny DEFUN. USE is the reason why Alexandria cannot nowadays even add a new symbol to itself, because it might cause name collisions with other packages that already have a symbol with the same name from some external source.
+
+
 # List all Symbols in a Package
 
 Common Lisp provides some macros to iterate through the symbols of a
@@ -190,6 +212,10 @@ example:
 (cl-package-locks:without-package-locks
   (rename-package :alexandria :alex))
 ~~~
+
+# See also
+
+- [Package Local Nicknames in Common Lisp](https://gist.github.com/phoe/2b63f33a2a4727a437403eceb7a6b4a3) article.
 
 [guide]: http://www.flownet.com/gat/packages.pdf
 [do-sym]: http://www.lispworks.com/documentation/HyperSpec/Body/m_do_sym.htm
