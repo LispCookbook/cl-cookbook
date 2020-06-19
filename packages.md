@@ -72,66 +72,35 @@ example:
   (:nicknames :ppcre)
 ~~~
 
-## Give a Package a Local Nickname
+### Package Local Nicknames (PLN)
 
-Sometimes it is handy to give a local name to an imported package to save some
-typing, especially when the imported package does not provide nice nicknames.
+Sometimes it is handy to give a local name to an imported package to
+save some typing, especially when the imported package does not
+provide nice nicknames.
 
-This can be achieved by using [`RENAME-PACKAGE`][rename-package]. For example:
+Many implementations (SBCL, CCL, ECL, Clasp, ABCL, ACL, LispWorks >= 7.2…) support Package Local Nicknames (PLN).
 
 ~~~lisp
-(asdf:load-system :cl-ppcre)
-
 (defpackage :mypackage
-  (:use :cl))
+  (:use :cl)
+  (:local-nicknames (:nickname :original-package-name)
+                    (:alex :alexandria)
+                    (:re :cl-ppcre)))
+
 (in-package :mypackage)
 
-;; Add nickname :RE to package :CL-PPCRE.
-(rename-package :cl-ppcre :cl-ppcre '(re))
-
-;; You can use :RE instead of :CL-PPCRE now.
-(re:scan "a" "abc")
-~~~
-
-The function head of `RENAME-PACKAGE` is as follows:
-
-~~~lisp
-(rename-package package-designator name &optional (nicknames nil))
-~~~
-
-As you may guess, this function can be used to rename a package by giving it a
-new *name* instead of a new *nickname*.
-
-However, it is highly recommended **not** to do so. Because otherwise the
-package will be modified and the original name (`:CL-PPCRE` in the example
-above) will **not** be available any more after renaming. For example:
-
-~~~lisp
-;; DO NOT DO THIS!
-(rename-package :cl-ppcre :re)
-
-;; ERROR!
-(cl-ppcre:scan "a" "abc")
-~~~
-
-This might cause problems if you want to load another package that relies on
-the modified package.
-
-### Package Local Nicknames (PLN)
-Many implementations (SBCL, CCL, ECL, Clasp, ABCL, ACL, LispWorks >= 7.2) support Package Local Nicknames (PLN). 
-
-~~~lisp 
-(defpackage :mypackage 
-  (:use :cl)
-  (:local-nicknames (:nickname :original-package-name)))
-  
-(in-package :mypackage) 
-
-;; You can use :nickname instead of :original-package-name 
+;; You can use :nickname instead of :original-package-name
 (nickname:some-function "a" "b")
 ~~~
 
-Unlike `rename-package`, the effect of `PLN` is totally within `mypackage` i.e. the `nickname` won't work in other packages unless defined there too. So, you don't have to worry about unintended package name clash in other libraries.
+The effect of `PLN` is totally within `mypackage` i.e. the `nickname` won't work in other packages unless defined there too. So, you don't have to worry about unintended package name clash in other libraries.
+
+Prior to package-local-nicknames, users could define *global* ones
+with [`RENAME-PACKAGE`][rename-package]. However, the original name
+would **not** be available any more after renaming to **anyone**. If
+you renamed `cl-ppcre` to `re`, another Quicklisp library that uses
+`cl-ppcre` would fail. Use PLN.
+
 
 ## Package locks
 
