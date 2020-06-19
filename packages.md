@@ -117,6 +117,22 @@ above) will **not** be available any more after renaming. For example:
 This might cause problems if you want to load another package that relies on
 the modified package.
 
+### Package Local Nicknames (PLN)
+Many implementations (SBCL, CCL, ECL, Clasp, ABCL, ACL, LispWorks >= 7.2) support Package Local Nicknames (PLN). 
+
+~~~lisp 
+(defpackage :mypackage 
+  (:use :cl)
+  (:local-nicknames (:nickname :original-package-name)))
+  
+(in-package :mypackage) 
+
+;; You can use :nickname instead of :original-package-name 
+(nickname:some-function "a" "b")
+~~~
+
+Unlike `rename-package`, the effect of `PLN` is totally within `mypackage` i.e. the `nickname` won't work in other packages unless defined there too. So, you don't have to worry about unintended package name clash in other libraries.
+
 ## Package locks
 
 The package `common-lisp` and SBCL internal implementation packages are locked
