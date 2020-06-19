@@ -4,6 +4,47 @@ title: Packages
 
 See: [The Complete Idiot's Guide to Common Lisp Packages][guide]
 
+# Creating a package
+
+Here's an example package definition. It takes a name, and you
+probably want to `:use` the Common Lisp symbols and functions.
+
+~~~lisp
+(defpackage :my-package
+  (:use :cl))
+~~~
+
+To start writing code for this package, go inside it:
+
+~~~lisp
+(in-package :my-package)
+~~~
+
+## Accessing symbols from a package
+
+As soon as you have defined a package or loaded one (with Quicklisp,
+or if it was defined as a dependency in your `.asd` system
+definition), you can access its symbols with `package:a-symbol`, or
+with a double colon if the symbol is not exported:
+`package::non-exported-symbol`.
+
+Now we can choose to import individual symbols to access them right
+away, without the package prefix.
+
+
+## Importing symbols from another package
+
+You can import exactly the symbols you need with `:import-from`:
+
+~~~lisp
+(defpackage :my-package
+  (:import-from :ppcre :regex-replace)
+  (:use :cl))
+~~~
+
+Sometimes, we see `(:import-from :ppcre)`, without an explicit
+import. This helps people using ASDF's *package inferred system*.
+
 # List all Symbols in a Package
 
 Common Lisp provides some macros to iterate through the symbols of a
