@@ -158,11 +158,7 @@ Many implementations (SBCL, CCL, ECL, Clasp, ABCL, ACL, LispWorks >= 7.2…) sup
 
 The effect of `PLN` is totally within `mypackage` i.e. the `nickname` won't work in other packages unless defined there too. So, you don't have to worry about unintended package name clash in other libraries.
 
-Prior to package-local-nicknames, users could define *global* ones
-with [`RENAME-PACKAGE`][rename-package]. However, the original name
-would **not** be available any more after renaming to **anyone**. If
-you renamed `cl-ppcre` to `re`, another Quicklisp library that uses
-`cl-ppcre` would fail. Use PLN.
+Another facility exists for adding nicknames to packages. The function [`RENAME-PACKAGE`](http://www.lispworks.com/documentation/HyperSpec/Body/f_rn_pkg.htm) can be used to replace the name and nicknames of a package. But it's use would mean that other libraries may not be able to access the package using the original name or nicknames. There is rarely any situation to use this. Use Package Local Nicknames instead.  
 
 
 ## Package locks
