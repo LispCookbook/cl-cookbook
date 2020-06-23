@@ -4,6 +4,69 @@ title: Packages
 
 See: [The Complete Idiot's Guide to Common Lisp Packages][guide]
 
+# Creating a package
+
+Here's an example package definition. It takes a name, and you
+probably want to `:use` the Common Lisp symbols and functions.
+
+~~~lisp
+(defpackage :my-package
+  (:use :cl))
+~~~
+
+To start writing code for this package, go inside it:
+
+~~~lisp
+(in-package :my-package)
+~~~
+
+## Accessing symbols from a package
+
+As soon as you have defined a package or loaded one (with Quicklisp,
+or if it was defined as a dependency in your `.asd` system
+definition), you can access its symbols with `package:a-symbol`, or
+with a double colon if the symbol is not exported:
+`package::non-exported-symbol`.
+
+Now we can choose to import individual symbols to access them right
+away, without the package prefix.
+
+
+## Importing symbols from another package
+
+You can import exactly the symbols you need with `:import-from`:
+
+~~~lisp
+(defpackage :my-package
+  (:import-from :ppcre :regex-replace)
+  (:use :cl))
+~~~
+
+Sometimes, we see `(:import-from :ppcre)`, without an explicit
+import. This helps people using ASDF's *package inferred system*.
+
+
+## About "use"-ing packages being a bad practice
+
+`:use` is a well spread idiom. You could do:
+
+~~~lisp
+(defpackage :my-package
+  (:use :cl :ppcre))
+~~~
+
+and now, **all** symbols that are exported by `cl-ppcre` (aka `ppcre`)
+are available to use directly in your package. However, this should be
+considered bad practice, unless you `use` another package of your
+project that you control. Indeed, if the external package adds a
+symbol, it could conflict with one of yours, or you could add one
+which will hide the external symbol and you might not see a warning.
+
+To quote [this thorough explanation](https://gist.github.com/phoe/2b63f33a2a4727a437403eceb7a6b4a3) (a recommended read):
+
+> USE is a bad idea in contemporary code except for internal packages that you fully control, where it is a decent idea until you forget that you mutate the symbol of some other package while making that brand new shiny DEFUN. USE is the reason why Alexandria cannot nowadays even add a new symbol to itself, because it might cause name collisions with other packages that already have a symbol with the same name from some external source.
+
+
 # List all Symbols in a Package
 
 Common Lisp provides some macros to iterate through the symbols of a
@@ -72,66 +135,31 @@ example:
   (:nicknames :ppcre)
 ~~~
 
-## Give a Package a Local Nickname
+### Package Local Nicknames (PLN)
 
-Sometimes it is handy to give a local name to an imported package to save some
-typing, especially when the imported package does not provide nice nicknames.
+Sometimes it is handy to give a local name to an imported package to
+save some typing, especially when the imported package does not
+provide nice nicknames.
 
-This can be achieved by using [`RENAME-PACKAGE`][rename-package]. For example:
+Many implementations (SBCL, CCL, ECL, Clasp, ABCL, ACL, LispWorks >= 7.2…) support Package Local Nicknames (PLN).
 
 ~~~lisp
-(asdf:load-system :cl-ppcre)
-
 (defpackage :mypackage
-  (:use :cl))
+  (:use :cl)
+  (:local-nicknames (:nickname :original-package-name)
+                    (:alex :alexandria)
+                    (:re :cl-ppcre)))
+
 (in-package :mypackage)
 
-;; Add nickname :RE to package :CL-PPCRE.
-(rename-package :cl-ppcre :cl-ppcre '(re))
-
-;; You can use :RE instead of :CL-PPCRE now.
-(re:scan "a" "abc")
-~~~
-
-The function head of `RENAME-PACKAGE` is as follows:
-
-~~~lisp
-(rename-package package-designator name &optional (nicknames nil))
-~~~
-
-As you may guess, this function can be used to rename a package by giving it a
-new *name* instead of a new *nickname*.
-
-However, it is highly recommended **not** to do so. Because otherwise the
-package will be modified and the original name (`:CL-PPCRE` in the example
-above) will **not** be available any more after renaming. For example:
-
-~~~lisp
-;; DO NOT DO THIS!
-(rename-package :cl-ppcre :re)
-
-;; ERROR!
-(cl-ppcre:scan "a" "abc")
-~~~
-
-This might cause problems if you want to load another package that relies on
-the modified package.
-
-### Package Local Nicknames (PLN)
-Many implementations (SBCL, CCL, ECL, Clasp, ABCL, ACL, LispWorks >= 7.2) support Package Local Nicknames (PLN). 
-
-~~~lisp 
-(defpackage :mypackage 
-  (:use :cl)
-  (:local-nicknames (:nickname :original-package-name)))
-  
-(in-package :mypackage) 
-
-;; You can use :nickname instead of :original-package-name 
+;; You can use :nickname instead of :original-package-name
 (nickname:some-function "a" "b")
 ~~~
 
-Unlike `rename-package`, the effect of `PLN` is totally within `mypackage` i.e. the `nickname` won't work in other packages unless defined there too. So, you don't have to worry about unintended package name clash in other libraries.
+The effect of `PLN` is totally within `mypackage` i.e. the `nickname` won't work in other packages unless defined there too. So, you don't have to worry about unintended package name clash in other libraries.
+
+Another facility exists for adding nicknames to packages. The function [`RENAME-PACKAGE`](http://www.lispworks.com/documentation/HyperSpec/Body/f_rn_pkg.htm) can be used to replace the name and nicknames of a package. But it's use would mean that other libraries may not be able to access the package using the original name or nicknames. There is rarely any situation to use this. Use Package Local Nicknames instead.  
+
 
 ## Package locks
 
@@ -180,6 +208,10 @@ example:
 (cl-package-locks:without-package-locks
   (rename-package :alexandria :alex))
 ~~~
+
+# See also
+
+- [Package Local Nicknames in Common Lisp](https://gist.github.com/phoe/2b63f33a2a4727a437403eceb7a6b4a3) article.
 
 [guide]: http://www.flownet.com/gat/packages.pdf
 [do-sym]: http://www.lispworks.com/documentation/HyperSpec/Body/m_do_sym.htm
