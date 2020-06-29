@@ -4,7 +4,8 @@ title: Web development
 
 
 For web development as for any other task, one can leverage Common
-Lisp's advantages: the unmatched REPL and exception handling system,
+Lisp's advantages: the unmatched REPL that even helps to interact with a running web app,
+the exception handling system,
 performance, the ability to build a self-contained executable,
 stability, good threads story, strong typing, etc. We can, say, define
 a new route and try it right away, there is no need to restart any
@@ -16,6 +17,12 @@ backtraces on the browser, or display a 404 error page and print logs
 on standard output. The ability to build self-contained executables eases
 deployment tremendously (compared to, for example, npm-based apps), in
 that we just copy the executable to a server and run it.
+
+And when we have deployed our app, we can still interact with it,
+allowing for hot reload, that even works when new dependencies have to
+be installed. If you are careful and don't want to use full live
+reload, you might still enjoy this capability to reload, for example, a user's
+configuration file.
 
 We'll present here some established web frameworks and other common
 libraries to help you getting started in developing a web
@@ -787,7 +794,53 @@ library.
 
 *Credit: `/u/arvid` on [/r/learnlisp](https://www.reddit.com/r/learnlisp/comments/begcf9/can_someone_give_me_an_eli5_on_hiw_to_encrypt_and/)*.
 
-# Building
+# Runnning and building
+
+## Running the application from source
+
+To run our Lisp code from source, as a script, we can use the `--load`
+switch from our implementation.
+
+We must ensure:
+
+- to load the project's .asd system declaration (if any)
+- to install the required dependencies (this demands we have installed Quicklisp previously)
+- and to run our application's entry point.
+
+We could use such commands:
+
+~~~lisp
+;; run.lisp
+
+(load "myproject.asd")
+
+(ql:quickload "myproject")
+
+(in-package :myproject)
+(handler-case
+    ;; The START function starts the web server.
+    (myproject::start :port (ignore-errors (parse-integer (uiop:getenv "PROJECT_PORT"))))
+  (error (c)
+    (format *error-output* "~&An error occured: ~a~&" c)
+    (uiop:quit 1)))
+~~~
+
+In addition we have allowed the user to set the application's port
+with an environment variable.
+
+We can run the file like so:
+
+    sbcl --load run.lisp
+
+After loading the project, the web server is started in the
+background. We are offered the usual Lisp REPL, from which we can
+interact with the running application.
+
+We can also connect to the running application from our preferred
+editor, from home, and compile the changes in our editor to the
+running instance. See the following section
+[#connecting-to-a-remote-lisp-image](#connecting-to-a-remote-lisp-image).
+
 
 ## Building a self-contained executable
 
@@ -968,6 +1021,8 @@ row.
   and DB migrations. Uses Qlot, Buildapp, SystemD for deployment.
 - [lisp-web-template-productlist](https://github.com/vindarel/lisp-web-template-productlist),
   a simple project template with Hunchentoot, Easy-Routes, Djula and Bulma CSS.
+- [lisp-web-live-reload-example](https://github.com/vindarel/lisp-web-live-reload-example/) -
+  a toy project to show how to interact with a running web app.
 
 # Credits
 
