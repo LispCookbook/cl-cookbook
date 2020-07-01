@@ -215,7 +215,7 @@ If you wish, you can install Quicklisp to a different location.  For instance,
 to install it to a hidden folder on Unix systems:
 
 ~~~lisp
-(quicklisp-quickstart:install :path "~/.quicklisp)
+(quicklisp-quickstart:install :path "~/.quicklisp")
 ~~~
 
 If you want Quicklisp to always be loaded in your Lisp sessions, run
