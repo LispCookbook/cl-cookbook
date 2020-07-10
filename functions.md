@@ -210,6 +210,17 @@ whereas
 We might need `&allow-other-keys` when passing around arguments or
 with higher level manipulation of functions.
 
+Here's a real example. We define a function to open a file that always
+uses `:if-exists :supersede`, but still passes any other keys to the
+`open` function.
+
+~~~lisp
+(defun open-supersede (f &rest other-keys &key &allow-other-keys)
+  (apply #'open f :if-exists :supersede other-keys))
+~~~
+
+In the case of a duplicated `:if-exists` argument, our first one takes precedence.
+
 
 ## Return values
 
