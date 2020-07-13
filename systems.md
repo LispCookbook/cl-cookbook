@@ -38,6 +38,10 @@ You can also use Quicklisp:
 (ql:quickload :foobar)
 ~~~
 
+Also, you can use SLIME to load a system, using `M-x slime-load-system` Emacs command.
+The interesting thing about this way of doing it is that SLIME collects all the system warnings and errors in the process,
+and puts them in the `*slime-compilation*` buffer, from which you can interactively inspect them after the loading finishes.
+
 ### Testing a System
 
 To run the tests for a system, you may use:
