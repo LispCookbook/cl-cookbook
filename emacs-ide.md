@@ -236,7 +236,7 @@ Compile a **region** by selecting the first 2 forms in test-all and
 running `M-x slime-compile-region`.
 
 Compile a **defun** by putting the cursor inside the "test-format"
-defun and pressing `C-c C-e`.
+defun and pressing `C-c C-c`.
 
 Compile the **sexp** before the point by putting the cursor after the
 closing paren of `(test-format)` and pressing `C-c C-e`.
@@ -246,6 +246,16 @@ To **evaluate** rather than compile:
 - evaluate a defun with `C-M-x`,
 - evaluate the sexp before the point with `C-x C-e`.
 See also other commands in the menu.
+
+---
+**EVALUATION VS COMPILATION**
+
+There are a couple of pragmatic differences when choosing between compiling or evaluating.
+In general, it is better to *compile* top-level forms, for two reasons:
+* Compiling a top-level form highlights warnings and errors in the editor, evaluation does not.
+* SLIME keeps track of line-numbers of compiled forms; when a top-level form is evaluated, the file line number information is lost.
+That's problematic for code navigation afterwards.
+---
 
 <a name="Slide-12"></a>
 
