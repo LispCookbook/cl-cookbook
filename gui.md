@@ -40,9 +40,12 @@ In addition, you might want to have a look to:
   toolkit (Windows, Gtk+, Cocoa), very praised by its users. LispWorks
   also has [iOS and Android
   runtimes](http://www.lispworks.com/products/lw4mr.html). Example
-  software built with CAPI include [Opusmodus](https://opusmodus.com/)
-  or again [ScoreCloud](https://scorecloud.com/). It is possible to
+  software built with CAPI include [ScoreCloud](https://scorecloud.com/). It is possible to
   try it with the LispWorks free demo.
+- [Allegro CL's IDE and Common Graphics windowing system](https://franz.com/products/allegro-common-lisp/acl_ide.lhtml) (proprietary): Allegro's IDE is a general environment for developing applications. It works in concert with a windowing system called Common Graphics. The IDE is available for Allegro CL's Microsoft Windows, on x86 Linux platforms, and on the Mac.
+- [CCL's built-in Cocoa
+  interface](https://ccl.clozure.com/docs/ccl.html#the-objective-c-bridge),
+  used to build applications such as [Opusmodus](https://opusmodus.com/).
 - [CocoaInterface](https://github.com/plkrueger/CocoaInterface/), a
 Cocoa interface for Clozure Common Lisp. Build Cocoa user interface
 windows dynamically using Lisp code and bypass the typical Xcode
