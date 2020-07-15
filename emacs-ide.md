@@ -252,9 +252,25 @@ See also other commands in the menu.
 
 There are a couple of pragmatic differences when choosing between compiling or evaluating.
 In general, it is better to *compile* top-level forms, for two reasons:
-* Compiling a top-level form highlights warnings and errors in the editor, evaluation does not.
-* SLIME keeps track of line-numbers of compiled forms; when a top-level form is evaluated, the file line number information is lost.
-That's problematic for code navigation afterwards.
+
+* Compiling a top-level form highlights warnings and errors in the editor, whereas evaluation does not.
+* SLIME keeps track of line-numbers of compiled forms, but when a top-level form is evaluated, the file line number information is lost. That's problematic for code navigation afterwards.
+
+`eval` is still useful to observe results from individual non top-level forms. For example, say you have this function:
+
+
+~~~lisp
+(defun foo ()
+  (let ((f (open "/home/marian/test.lisp")))
+    ...))
+~~~
+
+Go to the end of the OPEN expression and evaluate it (`C-x C-e`), to observe the result:
+
+```
+=> #<SB-SYS:FD-STREAM for "file /mnt/e6b00b8f-9dad-4bf4-bd40-34b1e6d31f0a/home/marian/test.lisp" {1003AAAB53}>
+```
+
 ---
 
 <a name="Slide-12"></a>
