@@ -238,8 +238,8 @@ running `M-x slime-compile-region`.
 Compile a **defun** by putting the cursor inside the "test-format"
 defun and pressing `C-c C-c`.
 
-Compile the **sexp** before the point by putting the cursor after the
-closing paren of `(test-format)` and pressing `C-c C-e`.
+Evaluate the **sexp** before the point by putting the cursor after the
+closing paren of `(test-format)` and pressing `C-x C-e`.
 
 To **evaluate** rather than compile:
 - evaluate a region with `C-c C-r`,
