@@ -108,12 +108,17 @@ Atom into a pretty good Lisp IDE.
 
 ## Sublime Text
 
-[Sublime Text](http://www.sublimetext.com/3) supports running a Lisp
-REPL and evaluating code in it.
+[Sublime Text](http://www.sublimetext.com/3) has now good support for
+Common Lisp.
 
-You need to install the "SublimeREPL" package and then see the options
-in Tools/SublimeREPL to choose your CL implementation, and `eval` what
-you want.
+First install the "SublimeREPL" package and then see the options
+in Tools/SublimeREPL to choose your CL implementation.
+
+Then [Slyblime](https://github.com/s-clerc/slyblime) ships IDE-like
+features to interact with the running Lisp image. It is an
+implementation of SLY and it uses the same backend (SLYNK). It
+provides advanced features including a debugger with stack frame
+inspection.
 
 <img src="assets/editor-sublime.png"
      style="width: 800px"/>
