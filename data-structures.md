@@ -1205,6 +1205,20 @@ This output can be read back in to create a hash-table:
 ;; 83
 ~~~
 
+**With Rutils**
+
+The [Rutils library](https://github.com/vseloved/rutils/blob/master/docs/tutorial.md#rutilshash-table)
+has convenience functions for hash-tables. We can enable pretty
+printing of hash-tables with `(toggle-print-hash-table)`. Below, we
+also use the `#h` reader macro to create one:
+
+~~~lisp
+rutils-user> (toggle-print-hash-table)
+rutils-user> #h(:foo 42)
+#{
+  :FOO 42
+ }
+~~~
 
 
 <a name="size"></a>
