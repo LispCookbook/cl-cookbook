@@ -1139,6 +1139,34 @@ CL-USER> (hash-table-count *my-hash*)
 
 ### Printing a hash table readably
 
+**With print-object**
+
+If you consider adding the function yourself, you can use `print-object`:
+
+~~~lisp
+(defmethod print-object ((object hash-table) stream)
+  (format stream "#HASH{~{~{(~a : ~a)~}~^ ~}}"
+          (loop for key being the hash-keys of object
+                using (hash-value value)
+                collect (list key value))))
+
+;; WARNING:
+;;   redefining PRINT-OBJECT (#<STRUCTURE-CLASS COMMON-LISP:HASH-TABLE>
+;;                            #<SB-PCL:SYSTEM-CLASS COMMON-LISP:T>) in DEFMETHOD
+;; #<STANDARD-METHOD COMMON-LISP:PRINT-OBJECT (HASH-TABLE T) {1006A0D063}>
+~~~
+
+and let's try it:
+
+~~~lisp
+(let ((ht (make-hash-table)))
+  (setf (gethash :foo ht) :bar)
+  ht)
+;; #HASH{(FOO : BAR)}
+~~~
+
+Here's another custom function.
+
 This snippets prints the keys, values and the test function of a
 hash-table, and uses `alexandria:alist-hash-table` to read it back in:
 
