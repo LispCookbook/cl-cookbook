@@ -323,6 +323,12 @@ See also helm-imenu and [imenu-anywhere](https://github.com/vspinu/imenu-anywher
 Put the cursor on any symbol and press `M-.` to go to its
 definition. Press `M-,` to come back.
 
+---
+**CODEBASE NAVIGATION TIP**
+
+Use `M-- M-.` (slime-edit-definition with a prefix argument) in order to autocomplete and then navigate to any loaded definition.
+---
+
 #### Crossreferencing: find who's calling, referencing, setting a symbol
 
 Slime has a nice cross referencing facility, for example, you can see
