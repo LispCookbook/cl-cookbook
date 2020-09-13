@@ -106,7 +106,7 @@ With Prove, set `prove:*debug-on-error*` to `t`.
 
 Below is a short screencast showing all this in action (with FiveAM):
 
-<iframe width="560" height="315" sandbox="allow-same-origin allow-scripts" src="https://peertube.video/videos/embed/c0c82209-feaa-444d-962f-afa25745bfc0" frameborder="0" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/KsHxgP3SRTs" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 Note that in the debugger:
 
