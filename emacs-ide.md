@@ -320,8 +320,18 @@ See also helm-imenu and [imenu-anywhere](https://github.com/vspinu/imenu-anywher
 
 #### Go to definition
 
-Put the cursor on any symbol and press `M-.` to go to its
+Put the cursor on any symbol and press `M-.` (`slime-edit-definition`) to go to its
 definition. Press `M-,` to come back.
+
+---
+**CODEBASE NAVIGATION TIP**
+
+Use `C-u M-.` (`slime-edit-definition` with a prefix argument) to autocomplete the symbol and navigate to it. This command always asks for a symbol even if the cursor is on one. It works with any loaded definition. Here's a little [demonstration video](https://www.youtube.com/watch?v=ZAEt73JHup8).
+
+You can think of it as a `imenu` completion that always work for any Lisp symbol. Add in [Slime's fuzzy completion][slime-fuzzy] for maximum powerness!
+
+Note that the prefix argument can be given with other keys, like `M--`, which is more convenient on some keyboards.
+---
 
 #### Crossreferencing: find who's calling, referencing, setting a symbol
 
@@ -861,3 +871,5 @@ C-x 4 .         slime-edit-definition-other-window
 
 C-c C-v M-o     slime-clear-presentations
 ```
+
+[slime-fuzzy]: https://common-lisp.net/project/slime/doc/html/Fuzzy-Completion.html
