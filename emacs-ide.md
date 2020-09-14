@@ -78,6 +78,30 @@ for CL programming.
 
 Check out this **[video tutorial](https://www.youtube.com/watch?v=sBcPNr1CKKw)** ! (and the author's channel, full of great stuff)
 
+#### SLIME fancy, contrib packages and other extensions
+
+SLIME's functionalities live in packages and so-called [contrib
+modules](https://common-lisp.net/project/slime/doc/html/Contributed-Packages.html)
+must be loaded to add further functionalities. The default
+`slime-fancy` includes:
+
+
+- slime-autodoc
+- slime-c-p-c
+- slime-editing-commands
+- slime-fancy-inspector
+- slime-fancy-trace
+- slime-fontifying-fu
+- slime-fuzzy
+- slime-mdot-fu
+- slime-macrostep
+- slime-presentations
+- slime-references
+- slime-repl
+- slime-scratch
+- slime-package-fu
+- slime-trace-dialog
+
 SLIME also has some nice extensions like
 [Helm-SLIME](https://github.com/emacs-helm/helm-slime) which features, among
 others
