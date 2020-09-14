@@ -320,13 +320,17 @@ See also helm-imenu and [imenu-anywhere](https://github.com/vspinu/imenu-anywher
 
 #### Go to definition
 
-Put the cursor on any symbol and press `M-.` to go to its
+Put the cursor on any symbol and press `M-.` (`slime-edit-definition`) to go to its
 definition. Press `M-,` to come back.
 
 ---
 **CODEBASE NAVIGATION TIP**
 
-Use `M-- M-.` (slime-edit-definition with a prefix argument) in order to autocomplete and then navigate to any loaded definition.
+Use `C-u M-.` (`slime-edit-definition` with a prefix argument) to autocomplete the symbol and navigate to it. This command always asks for a symbol even if the cursor is on one. It works with any loaded definition.
+
+You can think of it as a `imenu` completion that always work for any Lisp symbol.
+
+Note that the prefix argument can be given with other keys, like `M--`, which is more convenient on some keyboards.
 ---
 
 #### Crossreferencing: find who's calling, referencing, setting a symbol
