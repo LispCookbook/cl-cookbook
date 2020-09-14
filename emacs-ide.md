@@ -355,6 +355,7 @@ Use `C-u M-.` (`slime-edit-definition` with a prefix argument) to autocomplete t
 You can think of it as a `imenu` completion that always work for any Lisp symbol. Add in [Slime's fuzzy completion][slime-fuzzy] for maximum powerness!
 
 Note that the prefix argument can be given with other keys, like `M--`, which is more convenient on some keyboards.
+
 ---
 
 #### Crossreferencing: find who's calling, referencing, setting a symbol
