@@ -296,11 +296,16 @@ handling extension on top of Hunchentoot. It provides:
 - and decorators.
 
 To use it, don't create a server with `hunchentoot:easy-acceptor` but
-with `easy-routes:routes-acceptor`:
+with `easy-routes:easy-routes-aceptor`:
 
 ~~~lisp
-(setf *server* (make-instance 'easy-routes:routes-acceptor))
+(setf *server* (make-instance 'easy-routes:easy-routes-acceptor))
 ~~~
+
+Note: there is also `routes-acceptor`. The difference is that
+`easy-routes-acceptor` iterates over Hunchentoot's `*dispatch-table*`
+if no route is found by `easy-routes`. That allows us, for example, to
+serve static content the usual way with Hunchentoot.
 
 Then define a route like this:
 
@@ -652,6 +657,28 @@ has more features under it sleeves:
 - it pretty prints html per default, with control over line breaks
 - it understands embedded markdown
 - it can tell where in the document a generator function is (see `get-html-tag`)
+
+# Serve static assets
+
+## Hunchentoot
+
+With Hunchentoot, use `create-folder-dispatcher-and-handler prefix directory`.
+
+For example:
+
+~~~lisp
+(push (hunchentoot:create-folder-dispatcher-and-handler
+       "/static/" (merge-pathnames "src/static"  ;; starts without a /
+                                   (asdf:system-source-directory :myproject)))
+      hunchentoot:*dispatch-table*))
+~~~
+
+Now our project's static files located under
+`/path/to/myproject/src/static/` are served with the `/static/` prefix:
+
+```html
+<img src="/static/img/banner.jpg" />
+```
 
 
 # Connecting to a database
