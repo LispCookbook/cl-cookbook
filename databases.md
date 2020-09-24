@@ -869,8 +869,7 @@ tables, runs the code and connects back to the original DB connection.
                                (random-string 8)
                                "/"))
           ;; Save our current DB connection.
-          (connection (when (mito.connection:connected-p)
-                        mito:*connection*)))
+          (connection mito:*connection*))
      (uiop:with-temporary-file (:pathname name :prefix prefix)
        ;; Bind our *db-name* to a new name, so as to create a new DB.
        (let* ((*db-name* name))
