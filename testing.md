@@ -123,11 +123,14 @@ parts of our code were tested or not:
 
 ![](assets/coverage.png "source: https://www.snellman.net/blog/archive/2007-05-03-code-coverage-tool-for-sbcl.html")
 
+Such capabilities are included into Lisp implementations. For example, SBCL has the
+[sb-cover](http://www.sbcl.org/manual/index.html#sb_002dcover) module
+and the feature is also built-in in [CCL](https://ccl.clozure.com/docs/ccl.html#code-coverage)
+or [LispWorks](http://www.lispworks.com/documentation/lw71/LW/html/lw-68.htm).
 
 ### Generating an html test coverage output
 
-SBCL comes with a built-in module to do code coverage analysis:
-[sb-cover](http://www.sbcl.org/manual/index.html#sb_002dcover).
+Let's do it with SBCL's [sb-cover](http://www.sbcl.org/manual/index.html#sb_002dcover).
 
 Coverage reports are only generated for code compiled using
 `compile-file` with the value of the `sb-cover:store-coverage-data`
