@@ -356,6 +356,48 @@ can be used on a list, for example from `&rest`:
 (apply #'+ '(1 2))
 ~~~
 
+### Referencing functions by name: single quote `'` or sharpsign-quote `#'`?
+
+In the example above, we used `#'`, but a single quote also works, and
+we can encounter it in the wild. Which one to use?
+
+It is generally safer to use `#'`, because it respects lexical scope.
+
+`#'` is the shortcut for `(function …)`:
+
+~~~lisp
+(function +)
+;; #<FUNCTION +>
+~~~
+
+Observe:
+
+~~~lisp
+(defun foo (x)
+  (* x 100))
+
+(flet ((foo (x) (1+ x)))
+  (funcall #'foo 1))
+;; => 2, as expected
+;;
+;; But:
+
+(flet ((foo (x) (1+ x)))
+  (funcall 'foo 1))
+;; => 100
+~~~
+
+Checking with `function`:
+
+~~~lisp
+(flet ((foo (x) (1+ x)))
+  (print (function foo))
+  (funcall (function foo) 1))
+;; #<FUNCTION (FLET FOO) {1001C0ACFB}>
+;; 2
+~~~
+
+
 ## Higher order functions: functions that return functions
 
 Writing functions that return functions is simple enough:
