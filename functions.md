@@ -361,16 +361,7 @@ can be used on a list, for example from `&rest`:
 In the example above, we used `#'`, but a single quote also works, and
 we can encounter it in the wild. Which one to use?
 
-It is generally safer to use `#'`, because it respects lexical scope.
-
-`#'` is the shortcut for `(function …)`:
-
-~~~lisp
-(function +)
-;; #<FUNCTION +>
-~~~
-
-Observe:
+It is generally safer to use `#'`, because it respects lexical scope. Observe:
 
 ~~~lisp
 (defun foo (x)
@@ -387,15 +378,22 @@ Observe:
 ;; => 100
 ~~~
 
-Checking with `function`:
+`#'` is actually the shorthand for `(function …)`:
 
 ~~~lisp
+(function +)
+;; #<FUNCTION +>
+
 (flet ((foo (x) (1+ x)))
   (print (function foo))
   (funcall (function foo) 1))
 ;; #<FUNCTION (FLET FOO) {1001C0ACFB}>
 ;; 2
 ~~~
+
+Using `function` or the `#'` shorthand allows us to refer to local
+functions. If we pass instead a symbol to `funcall`, what is
+called is always the function named by that symbol in the *global environment*.
 
 
 ## Higher order functions: functions that return functions
