@@ -46,7 +46,6 @@ title: Home
 * [Web development](web.html)
 * [Web Scraping](web-scraping.html)
 * [WebSockets](websockets.html)
-* [Experimental CL21](cl21.html)
 * [Miscellaneous](misc.html)
 
 ## Translations
