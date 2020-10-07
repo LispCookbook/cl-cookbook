@@ -1008,7 +1008,7 @@ With `~2,2f`:
 
 And we're happy with this result.
 
-## Formatting a format string
+## Formatting a format string (`~v`, `~?`)
 
 Sometimes you want to justify a string, but the length is a variable
 itself. You can't hardcode its value as in `(format nil "~30a"
@@ -1020,6 +1020,30 @@ comma-separated prefix parameters:
     (format nil "~va" padding "foo"))
 ;; "foo                           "
 ~~~
+
+Other times, you would like to insert a complete format directive
+at run time. Enters the `?` directive.
+
+~~~lisp
+(format nil "~?" "~30a" '("foo"))
+;;                       ^ a list
+~~~
+
+or, using `~@?`:
+
+~~~lisp
+(format nil "~@?" "~30a" "foo" )
+;;                       ^ not a list
+~~~
+
+Of course, it is always possible to format a format string beforehand:
+
+~~~lisp
+(let* ((length 30)
+      (directive (format nil "~~~aa" length)))
+ (format nil directive "foo"))
+~~~
+
 
 # Capturing what is is printed into a stream
 
