@@ -670,7 +670,7 @@ For example:
 (push (hunchentoot:create-folder-dispatcher-and-handler
        "/static/" (merge-pathnames "src/static"  ;; starts without a /
                                    (asdf:system-source-directory :myproject)))
-      hunchentoot:*dispatch-table*))
+      hunchentoot:*dispatch-table*)
 ~~~
 
 Now our project's static files located under
