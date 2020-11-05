@@ -20,7 +20,7 @@ don't need a SQL database and want automatic persistence of Lisp
 objects, you also have a choice of libraries.
 
 
-# The Mito ORM and SxQL
+## The Mito ORM and SxQL
 
 Mito is in Quicklisp:
 
@@ -28,7 +28,7 @@ Mito is in Quicklisp:
 (ql:quickload :mito)
 ~~~
 
-## Overview
+### Overview
 
 [Mito](https://github.com/fukamachi/mito) is "an ORM for Common Lisp
 with migrations, relationships and PostgreSQL support".
@@ -56,7 +56,7 @@ Working with Mito generally involves these steps:
 
 and iterating.
 
-## Connecting to a DB
+### Connecting to a DB
 
 Mito provides the function `connect-toplevel` to establish a
 connection to RDBMs:
@@ -88,9 +88,9 @@ Disconnect with `disconnect-toplevel`.
   (connect-toplevel :sqlite3 :database-name "myapp"))
 ~~~
 
-## Models
+### Models
 
-### Defining models
+#### Defining models
 
 In Mito, you can define a class which corresponds to a database table
 by specifying `(:metaclass mito:dao-table-class)`:
@@ -139,7 +139,7 @@ For more information on using the Common Lisp Object System, see the
 [clos](clos.html) page.
 
 
-### Creating the tables
+#### Creating the tables
 
 After defining the models, you must create the tables:
 
@@ -161,9 +161,9 @@ for a couple more ways.
 
 When you alter the model you'll need to run a DB migration, see the next section.
 
-### Fields
+#### Fields
 
-#### Fields types
+##### Fields types
 
 Field types are:
 
@@ -175,7 +175,7 @@ Field types are:
 
 `:bytea`,
 
-#### Optional fields
+##### Optional fields
 
 Use `(or <real type> :null)`:
 
@@ -186,7 +186,7 @@ Use `(or <real type> :null)`:
 ~~~
 
 
-#### Field constraints
+##### Field constraints
 
 `:unique-keys` can be used like so:
 
@@ -206,7 +206,7 @@ We already saw `:primary-key`.
 
 You can change the table name with `:table-name`.
 
-### Relationships
+#### Relationships
 
 You can define a relationship by specifying  a foreign class with `:col-type`:
 
@@ -242,13 +242,13 @@ Now you can create or retrieve a `TWEET` by a `USER` object, not a `USER-ID`.
 
 Mito doesn't add foreign key constraints for referring tables.
 
-#### One-to-one
+##### One-to-one
 
 A one-to-one relationship is simply represented with a simple foreign
 key on a slot (as `:col-type user` in the `tweet` class). Besides, we
 can add a unicity constraint, as with `(:unique-keys email)`.
 
-#### One-to-many, many-to-one
+##### One-to-many, many-to-one
 
 The tweet example above shows a one-to-many relationship between a user and
 his tweets: a user can write many tweets, and a tweet belongs to only
@@ -262,7 +262,7 @@ to edit the `user` class.
 A many-to-one relationship is actually the contrary of a one-to-many.
 You have to put the foreign key on the appropriate side.
 
-#### Many-to-many
+##### Many-to-many
 
 A many-to-many relationship needs an intermediate table, which will be
 the "many" side for the two tables it is the intermediary of.
@@ -323,7 +323,7 @@ information we can store in the join table:
 ~~~
 
 
-### Inheritance and mixin
+#### Inheritance and mixin
 
 A subclass of DAO-CLASS is allowed to be inherited. This may be useful
 when you need classes which have similar columns:
@@ -391,9 +391,9 @@ class will not create a table.
 See more examples of use in [mito-auth](https://github.com/fukamachi/mito-auth/).
 
 
-### Troubleshooting
+#### Troubleshooting
 
-#### "Cannot CHANGE-CLASS objects into CLASS metaobjects."
+##### "Cannot CHANGE-CLASS objects into CLASS metaobjects."
 
 If you get the following error message:
 
@@ -418,7 +418,7 @@ or, with the Slime inspector, click on the class and find the "remove" button.
 
 More info [here](https://stackoverflow.com/questions/38811931/how-to-change-classs-metaclass).
 
-## Migrations
+### Migrations
 
 First create the tables if needed:
 
@@ -486,9 +486,9 @@ so let's apply it:
 ~~~
 
 
-## Queries
+### Queries
 
-### Creating objects
+#### Creating objects
 
 We can create user objects with the regular `make-instance`:
 
@@ -522,7 +522,7 @@ a helper function:
   (make-instance 'user :name name))
 ~~~
 
-### Updating fields
+#### Updating fields
 
 ~~~lisp
 (setf (slot-value me 'name) "nitro_idiot")
@@ -535,7 +535,7 @@ and save it:
 (mito:save-dao me)
 ~~~
 
-### Deleting
+#### Deleting
 
 ~~~lisp
 (mito:delete-dao me)
@@ -546,21 +546,21 @@ and save it:
 ;-> ;; DELETE FROM `user` WHERE (`id` = ?) (1) [0 rows] | MITO.DAO:DELETE-DAO
 ~~~
 
-### Get the primary key value
+#### Get the primary key value
 
 ~~~lisp
 (mito:object-id me)
 ;=> 1
 ~~~
 
-### Count
+#### Count
 
 ~~~lisp
 (mito:count-dao 'user)
 ;=> 1
 ~~~
 
-### Find one
+#### Find one
 
 ~~~lisp
 (mito:find-dao 'user :id 1)
@@ -583,7 +583,7 @@ keys."))
                           (sxql:where (:= :name key-value)))))
 ~~~
 
-### Find all
+#### Find all
 
 Use the macro `select-dao`.
 
@@ -596,7 +596,7 @@ Get a list of all users:
 ~~~
 
 
-### Find by relationship
+#### Find by relationship
 
 As seen above:
 
@@ -604,7 +604,7 @@ As seen above:
 (mito:find-dao 'tweet :user *user*)
 ~~~
 
-### Custom queries
+#### Custom queries
 
 It is with `select-dao` that you can write more precise queries by
 giving it [SxQL](https://github.com/fukamachi/sxql) statements.
@@ -639,7 +639,7 @@ You can compose your queries with regular Lisp code:
 `select-dao` is a macro that expands to the right thing©.
 
 
-#### Clauses
+##### Clauses
 
 See the [SxQL documentation](https://github.com/fukamachi/sxql#sql-clauses).
 
@@ -669,7 +669,7 @@ Examples:
 and `join`s, etc.
 
 
-#### Operators
+##### Operators
 
 ~~~lisp
 :not
@@ -688,7 +688,7 @@ and `join`s, etc.
 ~~~
 
 
-## Triggers
+### Triggers
 
 Since `insert-dao`, `update-dao` and `delete-dao` are defined as generic
 functions, you can define `:before`, `:after` or `:around` methods to those, like regular [method combination](clos.html#qualifiers-and-method-combination).
@@ -703,7 +703,7 @@ functions, you can define `:before`, `:after` or `:around` methods to those, lik
 ;=> #<USER {100835FB33}>
 ~~~
 
-## Inflation/Deflation
+### Inflation/Deflation
 
 Inflation/Deflation is a function to convert values between Mito and RDBMS.
 
@@ -725,7 +725,7 @@ Inflation/Deflation is a function to convert values between Mito and RDBMS.
   (:metaclass mito:dao-table-class))
 ~~~
 
-## Eager loading
+### Eager loading
 
 One of the pains in the neck to use ORMs is the "N+1 query" problem.
 
@@ -768,7 +768,7 @@ which only sends a single WHERE IN query instead of N queries:
 ;=> #<USER {100361E813}>
 ~~~
 
-## Schema versioning
+### Schema versioning
 
 ~~~
 $ ros install mito
@@ -789,7 +789,7 @@ Options:
     --dry-run                       List SQL expressions to migrate
 ~~~
 
-## Introspection
+### Introspection
 
 Mito provides some functions for introspection.
 
@@ -815,14 +815,14 @@ Given we get a list of slots of our class:
 
 We can answer the following questions:
 
-### What is the type of this column ?
+#### What is the type of this column ?
 
 ~~~lisp
 (mito.class.column:table-column-type (first user-slots))
 ;; (:VARCHAR 64)
 ~~~
 
-### Is this column nullable ?
+#### Is this column nullable ?
 
 ~~~lisp
 (mito.class.column:table-column-not-null-p
@@ -834,7 +834,7 @@ We can answer the following questions:
 ~~~
 
 
-## Testing
+### Testing
 
 We don't want to test DB operations against the production one. We
 need to create a temporary DB before each test.

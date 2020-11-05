@@ -20,9 +20,9 @@ location information, and more.
 Note that we can similarly build self-contained executables for **web apps**.
 
 
-# Building a self-contained executable
+## Building a self-contained executable
 
-## With SBCL
+### With SBCL
 
 How to build (self-contained) executables is implementation-specific (see
 below Buildapp and Rowsell). With SBCL, as says
@@ -73,7 +73,7 @@ build:
          --eval "(sb-ext:save-lisp-and-die #p\"my-app\" :toplevel #'my-app:main :executable t)"
 ```
 
-## With ASDF
+### With ASDF
 
 Now that we've seen the basics, we need a portable method. Since its
 version 3.1, ASDF allows to do that. It introduces the [`make` command](https://common-lisp.net/project/asdf/asdf.html#Convenience-Functions),
@@ -100,7 +100,7 @@ build:
 ~~~
 
 
-## With Roswell or Buildapp
+### With Roswell or Buildapp
 
 [Roswell](https://roswell.github.io), an implementation manager and much
 more, also has the `ros build` command, that should work for many
@@ -129,7 +129,7 @@ Many applications use it (for example,
 Debian: `apt install buildapp`, but you shouldn't need it now with asdf:make or Roswell.
 
 
-## For web apps
+### For web apps
 
 We can similarly build a self-contained executable for our web-app. It
 would thus contain a web server and would be able to run on the
@@ -174,7 +174,7 @@ already loaded, in order to exit in a portable way (`uiop:quit`, with
 an optional return code, instead of `sb-ext:quit`).
 
 
-## Size and startup times of executables per implementation
+### Size and startup times of executables per implementation
 
 SBCL isn't the only Lisp implementation.
 [ECL](https://gitlab.com/embeddable-common-lisp/ecl/), Embeddable
@@ -201,7 +201,7 @@ CCL's binaries seem to be as fast as SBCL and nearly half the size.
 |        19948 | clisp.big      |  97% |        .0259 |
 ```
 
-## Building a smaller binary with SBCL's core compression
+### Building a smaller binary with SBCL's core compression
 
 Building with SBCL's core compression can dramatically reduce your
 application binary's size. In our case, we passed from 120MB to 23MB,
@@ -252,7 +252,7 @@ dependencies, such as libssl.so in the `bin` subdirectory.
 And voilà !
 
 
-# Parsing command line arguments
+## Parsing command line arguments
 
 SBCL stores the command line arguments into `sb-ext:*posix-argv*`.
 
@@ -280,7 +280,7 @@ As often work happens in two phases:
 * parsing them (and handling missing or malformed parameters).
 
 
-## Declaring arguments
+### Declaring arguments
 
 We define the arguments with `opts:define-opts`:
 
@@ -316,7 +316,7 @@ Available options:
 ~~~
 
 
-## Parsing
+### Parsing
 
 We parse and get the arguments with `opts:get-opts`, which returns two
 values: the list of valid options and the remaining free arguments. We
@@ -373,7 +373,7 @@ The  example in  the unix-opts  repository suggests  a macro  to do
 slightly better. Now to error handling.
 
 
-### Handling malformed or missing arguments
+#### Handling malformed or missing arguments
 
 There are 4 situations that unix-opts doesn't handle, but signals
 conditions for us to take care of:
@@ -410,7 +410,7 @@ be a simple one. They take the condition as argument.
 
 For more about condition handling, see [error and condition handling](error_handling.html).
 
-### Catching a C-c termination signal
+#### Catching a C-c termination signal
 
 Let's build a simple binary, run it, try a `C-c` and read the stacktrace:
 
@@ -463,7 +463,7 @@ the  implementation.  There's  also `#-`.  What `#+` does is to look for
 symbols in the `*features*` list.  We can also combine symbols with
 `and`, `or` and `not`.
 
-# Continuous delivery of executables
+## Continuous delivery of executables
 
 We can make a Continuous Integration system (Travis CI, Gitlab CI,…)
 build binaries for us at every commit, or at every tag pushed or at
@@ -471,7 +471,7 @@ whichever other policy.
 
 See [Continuous Integration](testing.html#continuous-integration).
 
-# Credit
+## Credit
 
 * [cl-torrents' tutorial](https://vindarel.github.io/cl-torrents/tutorial.html)
 * [lisp-journey/web-dev](https://lisp-journey.gitlab.io/web-dev/)

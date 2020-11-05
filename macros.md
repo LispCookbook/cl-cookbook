@@ -4,7 +4,7 @@ title: Macros
 
 The word _macro_ is used generally in computer science to mean a syntactic extension to a programming language. (Note: The name comes from the word "macro-instruction," which was a useful feature of many second-generation assembly languages. A macro-instruction looked like a single instruction, but expanded into a sequence of actual instructions. The basic idea has since been used many times, notably in the C preprocessor. The name "macro" is perhaps not ideal, since it connotes nothing relevant to what it names, but we're stuck with it.) Although many languages have a macro facility, none of them are as powerful as Lisp's. The basic mechanism of Lisp macros is simple, but has subtle complexities, so learning your way around it takes a bit of practice.
 
-# How Macros Work
+## How Macros Work
 
 A macro is an ordinary piece of Lisp code that operates on _another piece of putative Lisp code,_ translating it into (a version closer to) executable Lisp. That may sound a bit complicated, so let's give a simple example. Suppose you want a version of [`setq`](http://www.lispworks.com/documentation/HyperSpec/Body/s_setq.htm) that sets two variables to the same value. So if you write
 
@@ -30,7 +30,7 @@ then treat it as equivalent to:
 
 Actually, this isn't quite right, but it will do for now. A macro allows us to do precisely this, by specifying a program for transforming the input pattern <code>(setq2 <i>v<sub>1</sub></i> <i>v<sub>2</sub></i> <i>e</i>)</code> into the output pattern `(progn ...)`.
 
-## Quote
+### Quote
 
 Here's how we could define the `setq2` macro:
 
@@ -72,7 +72,7 @@ We can use it like this:
 We can check, `v1` and `v2` were set to `3`.
 
 
-## Macroexpand
+### Macroexpand
 
 We must start writing a macro when we know what code we want to
 generate. Once we've begun writing one, it becomes very useful to
@@ -100,7 +100,7 @@ We can confirm that our expression `e`, here `(+ z 3)`, was not
 evaluated. We will see how to control the evaluation of arguments with
 the comma: `,`.
 
-## Note: Slime tips
+### Note: Slime tips
 
 With Slime, you can call macroexpand by putting the cursor at
 the left of the parenthesis of the s-expr to expand and call the function``M-x
@@ -120,7 +120,7 @@ where the macro was expanded. Then type the usual ``C-c C-k``
 (``slime-compile-and-load-file``) to recompile all of them.
 
 
-## Macros VS functions
+### Macros VS functions
 
 Our macro is very close to the following function definition:
 
@@ -139,7 +139,7 @@ function), we would get
 
 This is a perfectly ordinary Lisp computation, whose sole point of interest is that its output is a piece of executable Lisp code. What `defmacro` does is create this function implicitly and make sure that whenever an expression of the form `(setq2 x y (+ z 3))` is seen, `setq2-function` is called with the pieces of the form as arguments, namely `x`, `y`, and `(+ z 3)`. The resulting piece of code then replaces the call to `setq2`, and execution resumes as if the new piece of code had occurred in the first place. The macro form is said to _expand_ into the new piece of code.
 
-## Evaluation context
+### Evaluation context
 
 This is all there is to it, except, of course, for the myriad subtle consequences. The main consequence is that _run time for the `setq2` macro_ is _compile time for its context._ That is, suppose the Lisp system is compiling a function, and midway through it finds the expression `(setq2 x y (+ z 3))`. The job of the compiler is, of course, to translate source code into something executable, such as machine language or perhaps byte code. Hence it doesn't execute the source code, but operates on it in various mysterious ways. However, once the compiler sees the `setq2` expression, it must suddenly switch to executing the body of the `setq2` macro. As I said, this is an ordinary piece of Lisp code, which can in principle do anything any other piece of Lisp code can do. That means that when the compiler is running, the entire Lisp (run-time) system must be present.
 
@@ -175,13 +175,14 @@ Another subtle consequence is that we must spell out how the arguments to the ma
 
 then
 
+```
 _If we call it thus ..._     |_The parameters' values are ..._
 -----------------------------|-----------------------------------
 `(foo a)`                    | `x=a`, `y=nil`, `cxt=null`
 `(foo (+ a 1) (- y 1))`      |`x=(+ a 1)`, `y=(- y 1)`, `cxt=null`
 `(foo a b :cxt (zap zip))`   |`x=a`, `y=b`, `cxt=(zap zip)`
+```
 
-<br>
 
 Note that the values of the variables are the actual expressions `(+ a 1)` and `(zap zip)`. There is no requirement that these expressions' values be known, or even that they have values. The macro can do anything it likes with them. For instance, here's an even more useless variant of `setq`: <code>(setq-reversible <i>e<sub>1</sub></i> <i>e<sub>2</sub></i> <i>d</i>)</code> behaves like <code>(setq <i>e<sub>1</sub></i> <i>e<sub>2</sub></i>)</code> if <i>d=</i><code>:normal</code>, and behaves like <code>(setq <i>e<sub>2</sub></i> <i>e<sub>1</sub></i>)</code> if _d=_`:backward`. It could be defined thus:
 
@@ -233,7 +234,7 @@ error and the debugger, but at least not when using `macroexpand`.
 
 <a name="2-backquote"></a>
 
-# Backquote and comma
+## Backquote and comma
 
 Before taking another step, we need to introduce a piece of Lisp notation that is indispensable to defining macros, even though technically it is quite independent of macros. This is the _backquote facility_. As we saw above, the main job of a macro, when all is said and done, is to define a piece of Lisp code, and that means evaluating expressions such as `(list 'prog (list 'setq ...) ...)`. As these expressions grow in complexity, it becomes hard to read them and write them. What we find ourselves wanting is a notation that provides the skeleton of an expression, with some of the pieces filled in with new expressions. That's what backquote provides. Instead of the the `list` expression given above, one writes
 
@@ -253,7 +254,7 @@ You can think of it, and use it, as data interpolation:
 
 That's mostly all there is to backquote. There are just two extra items to point out.
 
-### Comma-splice ,@
+#### Comma-splice ,@
 
 First, if you write "`,@e`" instead of "`,e`" then the value of _e_ is _spliced_ (or "joined", "combined", "interleaved") into the result. So if `v` equals `(oh boy)`, then
 
@@ -271,7 +272,7 @@ evaluates to
 
 The second occurrence of `v` is replaced by its value. The first is replaced by the elements of its value. If `v` had had value `()`, it would have disappeared entirely: the value of `(zap ,@v ,v)` would have been `(zap ())`, which is the same as `(zap nil)`.
 
-### Quote-comma ',
+#### Quote-comma ',
 
 When we are inside a backquote context and we want to print an
 expression literally, we have no choice but to use the combination of
@@ -310,11 +311,11 @@ See by yourself:
 ~~~
 
 
-### Nested backquotes
+#### Nested backquotes
 
 Second, one might wonder what happens if a backquote expression occurs inside another backquote. The answer is that the backquote becomes essentially unreadable and unwriteable; using nested backquote is usually a tedious debugging exercise. The reason, in my not-so-humble opinion, is that backquote is defined wrong. A comma pairs up with the innermost backquote when the default should be that it pairs up with the outermost. But this is not the place for a rant; consult your favorite Lisp reference for the exact behavior of nested backquote plus some examples.
 
-### Building lists with backquote
+#### Building lists with backquote
 
 One problem with backquote is that once you learn it you tend to use for every list-building occasion. For instance, you might write
 
@@ -337,7 +338,23 @@ which yields `((a) 15 15)` when `some-list` = `(a 6 15)`. The problem is that [`
         some-list)
 ~~~
 
-then backquote may well treat <code>`(low)</code> as if it were `'(low)`; the list will be allocated at load time, and every time the `lambda` is evaluated, that same chunk of storage will be returned. So if we evaluate the expression with `some-list` = `(a 6 15)`, we will get `((a) low 15 15)`, but as a side effect the constant `(low)` will get clobbered to become `(low 15 15)`. If we then evaluate the expression with, say, `some-list` = `(8 oops)`, the result will be `(low 15 15 (oops))`, and now the "constant" that started off as `'(low)` will be `(low 15 15 (oops))`. (Note: The bug exemplified here takes other forms, and has often bit newbies - as well as experienced programmers - in the ass. The general form is that a constant list is produced as the value of something that is later destructively altered. The first line of defense against this bug is never to destructively alter any list. For newbies, this is also the last line of defense. For those of us who imagine we're more sophisticated, the next line of defense is to think very carefully any time you use [`nconc`](http://www.lispworks.com/documentation/HyperSpec/Body/f_nconc.htm) or `mapcan`).
+then backquote may well treat `(low)` as if it were
+`'(low)`; the list will be allocated at load time, and every time the
+`lambda` is evaluated, that same chunk of storage will be returned. So
+if we evaluate the expression with `some-list` = `(a 6 15)`, we will
+get `((a) low 15 15)`, but as a side effect the constant `(low)` will
+get clobbered to become `(low 15 15)`. If we then evaluate the
+expression with, say, `some-list` = `(8 oops)`, the result will be
+`(low 15 15 (oops))`, and now the "constant" that started off as
+`'(low)` will be `(low 15 15 (oops))`. (Note: The bug exemplified here
+takes other forms, and has often bit newbies - as well as experienced
+programmers - in the ass. The general form is that a constant list is
+produced as the value of something that is later destructively
+altered. The first line of defense against this bug is never to
+destructively alter any list. For newbies, this is also the last line
+of defense. For those of us who imagine we're more sophisticated, the
+next line of defense is to think very carefully any time you use
+[`nconc`](http://www.lispworks.com/documentation/HyperSpec/Body/f_nconc.htm) or `mapcan`).
 
 To fix the bug, you can write `(map 'list ...)` instead of `mapcan`. However, if you are determined to use `mapcan`, write the expression this way:
 
@@ -360,7 +377,7 @@ If `sk` is being used as a stack, that is, it's going to be [`pop`](http://www.l
 
 <a name="LtohTOCentry-3"></a>
 
-# Getting Macros Right
+## Getting Macros Right
 
 I said in the first section that my definition of `setq2` wasn't quite right, and now it's time to fix it.
 
@@ -383,7 +400,7 @@ Chances are that isn't what the macro is expected to do (although you never know
 
 The solution is to evaluate the expression `e` just once, save it in a temporary variable, and then set `v1` and `v2` to it.
 
-## Gensym
+### Gensym
 
 To make temporary variables, we use the `gensym` function, which returns a fresh variable guaranteed to appear nowhere else. Here is what the macro should look like:
 
@@ -410,7 +427,7 @@ Exercise: Try writing the new version of the macro without using backquote. If y
 
 The moral of this section is to think carefully about which expressions in a macro get evaluated and when. Be on the lookout for situations where the same expression gets plugged into the output twice (as `e` was in my original macro design). For complex macros, watch out for cases where the order that expressions are evaluated differs from the order in which they are written. This is sure to trip up some user of the macro - even if you are the only user.<a name="LtohTOCentry-4"></a>
 
-# What Macros are For
+## What Macros are For
 
 Macros are for making syntactic extensions to Lisp. One often hears it said that macros are a bad idea, that users can't be trusted with them, and so forth. Balderdash. It is just as reasonable to extend a language syntactically as to extend it by defining your own procedures. It may be true that the casual reader of your code can't understand the code without seeing the macro definitions, but then the casual reader can't understand it without seeing function definitions either. Having [`defmethod`](http://www.lispworks.com/documentation/HyperSpec/Body/m_defmet.htm)s strewn around several files contributes far more to unclarity than macros ever have, but that's a different diatribe.
 
@@ -675,7 +692,7 @@ I leave the definition of `find-nth-occurrence` as an exercise. You might also w
 One caution: In general, command languages will consist of a mixture of macros and functions, with convenience for their definer (and usually sole user) being the main consideration. If a command seems to "want" to evaluate some of its arguments sometimes, you have to decide whether to define two (or more) versions of it, or just one, a function whose arguments must be quoted to prevent their being evaluated. For the `cf` command mentioned in the previous paragraph, some users might prefer `cf` to be a function, some a macro.
 
 
-# See also
+## See also
 
 * [A gentle introduction to Compile-Time Computing — Part 1](https://medium.com/@MartinCracauer/a-gentle-introduction-to-compile-time-computing-part-1-d4d96099cea0)
 

@@ -23,7 +23,7 @@ the right GUI framework and to put you on tracks. Don't hesitate to
 send more examples and to furnish the upstream documentations.
 
 
-# Introduction
+## Introduction
 
 In this recipe, we'll present the following GUI toolkits:
 
@@ -60,7 +60,7 @@ processes.
 
 as well as the other ones listed on [awesome-cl#gui](https://github.com/CodyReichert/awesome-cl#Gui) and [Cliki](https://www.cliki.net/GUI).
 
-## Tk (Ltk)
+### Tk (Ltk)
 
 [Tk][tk] (or Tcl/Tk, where Tcl is the programming language) has the
 infamous reputation of having an outdated look. This is not (so) true
@@ -137,7 +137,7 @@ dot-plot bar-chart equalizer-bar
 swap-list
 ```
 
-## Qt4 (Qtools)
+### Qt4 (Qtools)
 
 Do we need to present Qt and [Qt4][qt4]? Qt is huge and contains
 everything and the kitchen sink. Qt not only provides UI widgets, but
@@ -178,7 +178,7 @@ videos](https://www.youtube.com/playlist?list=PLkDl6Irujx9Mh3BWdBmt4JtIrwYgihTWp
   - https://github.com/shinmera/halftone - a simple image viewer
 
 
-## Gtk+3 (cl-cffi-gtk)
+### Gtk+3 (cl-cffi-gtk)
 
 [Gtk+3][gtk] is the primary library used to build [GNOME][gnome]
 applications. Its (currently most advanced) lisp bindings is
@@ -202,7 +202,7 @@ works fine under macOS and can now also be used on Windows.
   - an [Atmosphere Calculator](https://github.com/ralph-schleicher/atmosphere-calculator), built with Glade.
 
 
-## IUP (lispnik/IUP)
+### IUP (lispnik/IUP)
 
 [IUP][iup-tecgraf] is a cross-platform GUI toolkit actively developed
 at the PUC university of Rio de Janeiro, Brazil. It uses **native
@@ -251,7 +251,7 @@ drag-and-drop
 ![](/assets/iup-demo.png)
 
 
-## Nuklear (Bodge-Nuklear)
+### Nuklear (Bodge-Nuklear)
 
 [Nuklear][nuklear] is a small [immediate-mode](https://en.wikipedia.org/wiki/Immediate_mode_GUI) GUI toolkit:
 
@@ -296,9 +296,9 @@ date-picker
 
 ![](assets/gui/nuklear.png)
 
-# Getting started
+## Getting started
 
-## Tk
+### Tk
 
 Ltk is quick and easy to grasp.
 
@@ -352,7 +352,7 @@ Here's how to display a button:
 That's all there is to it.
 
 
-### Reacting to events
+#### Reacting to events
 
 Many widgets have a `:command` argument that accept a lambda which is
 executed when the widget's event is started. In the case of a button,
@@ -366,7 +366,7 @@ that will be on a click:
 ~~~
 
 
-### Interactive development
+#### Interactive development
 
 When we start the Tk process in the background with `(start-wish)`, we
 can create widgets and place them on the grid interactively.
@@ -376,7 +376,7 @@ See [the documentation](http://www.peter-herth.de/ltk/ltkdoc/node8.html).
 Once we're done, we can `(exit-wish)`.
 
 
-### Nodgui
+#### Nodgui
 
 To try the Nodgui demo, do:
 
@@ -385,7 +385,7 @@ To try the Nodgui demo, do:
 (nodgui.demo:demo)
 ~~~
 
-## Qt4
+### Qt4
 
 ~~~lisp
 (ql:quickload '(:qtools :qtcore :qtgui))
@@ -436,7 +436,7 @@ and we show them:
 
 That's cool, but we don't react to the click event yet.
 
-### Reacting to events
+#### Reacting to events
 
 Reacting to events in Qt happens through signals and slots. **Slots** are
 functions that receive or "connect to" signals, and **signals** are event carriers.
@@ -446,7 +446,7 @@ Widgets already send their own signals: for example, a button sends a
 
 However, had we extra needs, we can create our own set of signals.
 
-#### Built-in events
+##### Built-in events
 
 We want to connect our `go-button` to the `pressed` and
 `return-pressed` events and display a message box.
@@ -471,7 +471,7 @@ And voilà. Run it with
 (with-main-window (window 'main-window))
 ~~~
 
-#### Custom events
+##### Custom events
 
 We'll implement the same functionality as above, but for demonstration
 purposes we'll create our own signal named `name-set` to throw when
@@ -512,7 +512,7 @@ and run it:
 (with-main-window (window 'main-window))
 ~~~
 
-### Building and deployment
+#### Building and deployment
 
 It is possible to build a binary and bundle it together with all the
 necessary shared libraries.
@@ -522,7 +522,7 @@ Please read [https://github.com/Shinmera/qtools#deployment](https://github.com/S
 You might also like [this Travis CI script](https://github.com/phoe-trash/furcadia-post-splitter/blob/master/.travis.yml) to build a self-contained binary for the three OSes.
 
 
-## Gtk3
+### Gtk3
 
 The
 [documentation](http://www.crategus.com/books/cl-gtk/gtk-tutorial.html)
@@ -586,7 +586,7 @@ and display them all:
 (gtk-widget-show-all window)
 ~~~
 
-### Reacting to events
+#### Reacting to events
 
 Use `g-signal-connect` + the concerned widget + the event name (as a
 string) + a lambda, that takes the widget as argument:
@@ -607,7 +607,7 @@ Or again:
     (format t "Button was pressed.~%")))
 ~~~
 
-### Full example
+#### Full example
 
 ~~~lisp
 (defun hello-world ()
@@ -645,7 +645,7 @@ Or again:
 ![](assets/gui/gtk3-hello-buttons.png)
 
 
-## IUP
+### IUP
 
 Please check the installation instructions upstream. You may need one
 system dependency on GNU/Linux, and to modify an environment variable
@@ -723,7 +723,7 @@ Use `(iup:attribute widget attribute)` to get the attribute's value,
 and use `setf` on it to set it.
 
 
-### Reacting to events
+#### Reacting to events
 
 Most widgets take an `:action` parameter that takes a lambda function
 with one parameter (the handle).
@@ -807,7 +807,7 @@ and its title to hold the count. The title is an integer.
     (counter)))
 ~~~
 
-### List widget example
+#### List widget example
 
 Below we create three list widgets with simple and multiple selection, we
 set their default value (the pre-selected row) and we place them
@@ -851,7 +851,7 @@ horizontally side by side.
     (list-test)))
 ~~~
 
-## Nuklear
+### Nuklear
 
 **Disclaimer**: as per the author's words at the time of writing,
 bodge-ui is in early stages of development and not ready for general
@@ -947,7 +947,7 @@ beware: they will be called on each rendering cycle when the widget is
 on the given state, so potentially a lot of times.
 
 
-### Interactive development
+#### Interactive development
 
 If you ran the example in the REPL, you couldn't see what's cool. Put
 the code in a lisp file and run it, so than you get the window. Now
@@ -955,7 +955,7 @@ you can change the panel widgets and the layout, and your changes will
 be immediately applied while the application is running!
 
 
-# Conclusion
+## Conclusion
 
 Have fun, and don't hesitate to share your experience and your apps.
 

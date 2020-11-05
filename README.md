@@ -7,13 +7,19 @@ The CL Cookbook aims to tackle all sort of topics, for the beginner as for the m
 
 ## Contributing
 
-When adding new content, ensure it renders properly.
+Thanks for contributing to the Cookbook.
+
+You can start by having a look at the [style guide](STYLEGUIDE.md).
+
+When adding new content, please ensure it renders properly.
 
 There are two ways to do this:
 
-First option is to install [Jekyll][jekyll] and run `jekyll serve` in a folder where this repository was checked out and open `http://127.0.0.1:4000/cl-cookbook/` (the last `/` is important).
+The first option is to install [Jekyll][jekyll] globally and to run `jekyll serve` in a folder where this repository was checked out.
 
-Another option is to use github gem provided with the repo. To do this do the following:
+Then open `http://127.0.0.1:4000/cl-cookbook/` (the last `/` is important).
+
+Another option is to install the Jekyll version of this repository locally with Ruby gems. To do this do the following:
 
 1. Ensure that bundler is installed (`gem install bundler` should do; in case that doesn't work, try `gem install bundler -v '1.17.3'` as per [this SO page][bundler-v2].)
 2. `bundle install --path vendor/bundle`

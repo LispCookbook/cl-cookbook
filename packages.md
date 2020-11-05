@@ -4,7 +4,7 @@ title: Packages
 
 See: [The Complete Idiot's Guide to Common Lisp Packages][guide]
 
-# Creating a package
+## Creating a package
 
 Here's an example package definition. It takes a name, and you
 probably want to `:use` the Common Lisp symbols and functions.
@@ -20,7 +20,7 @@ To start writing code for this package, go inside it:
 (in-package :my-package)
 ~~~
 
-## Accessing symbols from a package
+### Accessing symbols from a package
 
 As soon as you have defined a package or loaded one (with Quicklisp,
 or if it was defined as a dependency in your `.asd` system
@@ -32,7 +32,7 @@ Now we can choose to import individual symbols to access them right
 away, without the package prefix.
 
 
-## Importing symbols from another package
+### Importing symbols from another package
 
 You can import exactly the symbols you need with `:import-from`:
 
@@ -46,7 +46,7 @@ Sometimes, we see `(:import-from :ppcre)`, without an explicit
 import. This helps people using ASDF's *package inferred system*.
 
 
-## About "use"-ing packages being a bad practice
+### About "use"-ing packages being a bad practice
 
 `:use` is a well spread idiom. You could do:
 
@@ -67,7 +67,7 @@ To quote [this thorough explanation](https://gist.github.com/phoe/2b63f33a2a4727
 > USE is a bad idea in contemporary code except for internal packages that you fully control, where it is a decent idea until you forget that you mutate the symbol of some other package while making that brand new shiny DEFUN. USE is the reason why Alexandria cannot nowadays even add a new symbol to itself, because it might cause name collisions with other packages that already have a symbol with the same name from some external source.
 
 
-# List all Symbols in a Package
+## List all Symbols in a Package
 
 Common Lisp provides some macros to iterate through the symbols of a
 package. The two most interesting are:
@@ -98,9 +98,9 @@ Or you can do it with [`LOOP`][loop].
   collect s)
 ~~~
 
-# Package nickname
+## Package nickname
 
-## Nickname Provided by Packages
+### Nickname Provided by Packages
 
 When defining a package, it is trivial to give it a nickname for better user
 experience. The following example is a snippet of `PROVE` package:
@@ -135,7 +135,7 @@ example:
   (:nicknames :ppcre)
 ~~~
 
-### Package Local Nicknames (PLN)
+#### Package Local Nicknames (PLN)
 
 Sometimes it is handy to give a local name to an imported package to
 save some typing, especially when the imported package does not
@@ -161,7 +161,7 @@ The effect of `PLN` is totally within `mypackage` i.e. the `nickname` won't work
 Another facility exists for adding nicknames to packages. The function [`RENAME-PACKAGE`](http://www.lispworks.com/documentation/HyperSpec/Body/f_rn_pkg.htm) can be used to replace the name and nicknames of a package. But it's use would mean that other libraries may not be able to access the package using the original name or nicknames. There is rarely any situation to use this. Use Package Local Nicknames instead.  
 
 
-## Package locks
+### Package locks
 
 The package `common-lisp` and SBCL internal implementation packages are locked
 by default, including `sb-ext`.
@@ -209,7 +209,7 @@ example:
   (rename-package :alexandria :alex))
 ~~~
 
-# See also
+## See also
 
 - [Package Local Nicknames in Common Lisp](https://gist.github.com/phoe/2b63f33a2a4727a437403eceb7a6b4a3) article.
 

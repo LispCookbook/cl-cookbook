@@ -297,7 +297,7 @@ debugging, speed or security.
 See our [debugging section](debugging.html).
 
 
-# Restarts, interactive choices in the debugger
+## Restarts, interactive choices in the debugger
 
 Restarts are the choices we get in the debugger, which always has the
 `RETRY` and `ABORT` ones.
@@ -306,7 +306,7 @@ By *handling* restarts we can start over the operation as if the error
 didn't occur (as seen in the stack).
 
 
-## Using assert's optional restart
+### Using assert's optional restart
 
 In its simple form `assert` does what we know:
 
@@ -367,7 +367,7 @@ Type a form to be evaluated:
 ```
 
 
-## Defining restarts (restart-case)
+### Defining restarts (restart-case)
 
 All this is good but we might want more custom choices.  We can add
 restarts on the top of the list by wrapping our function call inside
@@ -409,7 +409,7 @@ That's better, but we lack the ability to change an operand, as we did
 with the `assert` example above.
 
 
-## Changing a variable with restarts
+### Changing a variable with restarts
 
 The two restarts we defined didn't ask for a new value. To do this, we
 add an `:interactive` lambda function to the restart, that asks for
@@ -486,7 +486,7 @@ satisfactory.  And by *handling* restarts we can start over the
 operation as if the error didn't occur, as seen in the stack.
 
 
-## Calling restarts programmatically (handler-bind, invoke-restart)
+### Calling restarts programmatically (handler-bind, invoke-restart)
 
 We have a piece of code that we know can throw conditions. Here,
 `divide-with-restarts` can signal an error about a division by
@@ -512,7 +512,7 @@ We can do this with `handler-bind` and [invoke-restart][invoke-restart]:
 ~~~
 
 
-## Using other restarts (find-restart)
+### Using other restarts (find-restart)
 
 Use [find-restart][find-restart].
 
@@ -520,7 +520,7 @@ Use [find-restart][find-restart].
 restart with the given name, or `nil`.
 
 
-## Hiding and showing restarts
+### Hiding and showing restarts
 
 Restarts can be hidden. In `restart-case`, in addition to `:report`
 and `:interactive`, they also accept a `:test` key:
@@ -534,7 +534,7 @@ and `:interactive`, they also accept a `:test` key:
 ~~~
 
 
-# Handling conditions (handler-bind)
+## Handling conditions (handler-bind)
 
 We just saw a use for [handler-bind][handler-bind].
 
@@ -575,7 +575,7 @@ it if needed. Here we get the name of the erroneous option with the
 condition's reader `(opts:option condition)`.
 
 
-# Running some code, condition or not ("finally") (unwind-protect)
+## Running some code, condition or not ("finally") (unwind-protect)
 
 The "finally" part of others `try/catch/finally` forms is done with [unwind-protect][unwind-protect].
 
@@ -593,7 +593,7 @@ We *do* get the interactive debugger (we didn't use handler-bind or
 anything), but our message is printed afterwards anyway.
 
 
-# Conclusion
+## Conclusion
 
 You're now more than ready to write some code and to dive into other resources!
 

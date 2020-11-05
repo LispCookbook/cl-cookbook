@@ -6,7 +6,7 @@ TODO: of-type
 
 <!-- needs some text before the first heading -->
 
-# Introduction: loop, iterate, for, mapcar
+## Introduction: loop, iterate, for, mapcar
 
 **[loop](http://www.lispworks.com/documentation/lw51/CLHS/Body/m_loop.htm)**
 is the built-in macro for iteration.
@@ -147,9 +147,9 @@ this:
 ;; (1 4 9 16 25)
 ~~~
 
-# Recipes
+## Recipes
 
-## Looping forever, return
+### Looping forever, return
 
 ~~~lisp
 (loop
@@ -166,9 +166,9 @@ this:
 ~~~
 
 
-## Looping a fixed number of times
+### Looping a fixed number of times
 
-### dotimes
+#### dotimes
 
 ~~~lisp
 (dotimes (n 10)
@@ -187,7 +187,7 @@ You can use `return` inside of it:
 ~~~
 
 
-### loop… repeat
+#### loop… repeat
 
 ~~~lisp
 (loop repeat 10
@@ -203,14 +203,14 @@ This prints 10 times "hello" and returns `nil`.
 
 with `collect`, this returns a list.
 
-### Series
+#### Series
 
 ~~~lisp
 (iterate ((n (scan-range :below 10)))
   (print n))
 ~~~
 
-## Iterate's for loop
+### Iterate's for loop
 
 For lists and vectors:
 
@@ -240,9 +240,9 @@ or `(display-iterate-clauses '(for))` to know about iterating over
 - forms - or lines, or whatever-you-wish - in-file, or in-stream
 - elements in-sequence - sequences can be vectors or lists
 
-## Looping over a list
+### Looping over a list
 
-### dolist
+#### dolist
 
 ~~~lisp
 (dolist (item '(1 2 3))
@@ -251,7 +251,7 @@ or `(display-iterate-clauses '(for))` to know about iterating over
 
 `dolist` returns `nil`.
 
-### loop
+#### loop
 
 with `in`, no surprises:
 
@@ -280,7 +280,7 @@ With `on`, we loop over the cdr of the list:
 ~~~
 
 
-### mapcar
+#### mapcar
 
 ~~~lisp
 (mapcar (lambda (x)
@@ -294,7 +294,7 @@ With `on`, we loop over the cdr of the list:
 
 `mapcar` returns the results of the lambda function as a list.
 
-### Series
+#### Series
 ~~~lisp
 (iterate ((item (scan '(1 2 3))))
   (print item))
@@ -307,22 +307,22 @@ With `on`, we loop over the cdr of the list:
   (print i))
 ~~~
 
-## Looping over a vector
+### Looping over a vector
 
-### loop: `across`
+#### loop: `across`
 
 ~~~lisp
 (loop for i across #(1 2 3) do (print i))
 ~~~
 
-### Series
+#### Series
 
 ~~~lisp
 (iterate ((i (scan #(1 2 3))))
   (print i))
 ~~~
 
-## Looping over a hash-table
+### Looping over a hash-table
 
 We create a hash-table:
 
@@ -332,7 +332,7 @@ We create a hash-table:
 (setf (gethash 'b h) 2)
 ~~~
 
-### loop
+#### loop
 
 Looping over keys:
 
@@ -355,7 +355,7 @@ b 2
 a 1
 ~~~
 
-### for
+#### for
 
 the same with `for`:
 
@@ -368,7 +368,7 @@ NIL
 ~~~
 
 
-### maphash
+#### maphash
 
 The lambda function of `maphash` takes two arguments: the key and the
 value:
@@ -384,15 +384,15 @@ value:
 
 See also [with-hash-table-iterator](http://www.lispworks.com/documentation/HyperSpec/Body/m_w_hash.htm).
 
-### Series
+#### Series
 ~~~lisp
 (iterate (((k v) (scan-hash h)))
   (format t "~&~a ~a~%" k v))
 ~~~
 
-## Looping over two lists in parallel
+### Looping over two lists in parallel
 
-### loop
+#### loop
 
 ~~~lisp
 (loop for x in '(a b c)
@@ -401,7 +401,7 @@ See also [with-hash-table-iterator](http://www.lispworks.com/documentation/Hyper
 ;; ((A 1) (B 2) (C 3))
 ~~~
 
-### mapcar
+#### mapcar
 ~~~lisp
 (mapcar (lambda (x y)
            (list x y))
@@ -429,7 +429,7 @@ Return a flat list:
 ;; (A 1 B 2 C 3)
 ~~~
 
-### Series
+#### Series
 ~~~lisp
 (collect
   (#Mlist (scan '(a b c))
@@ -455,8 +455,8 @@ Return a flat list:
 ~~~
 
 
-## Nested loops
-### loop
+### Nested loops
+#### loop
 ~~~lisp
 (loop for x from 1 to 3
       collect (loop for y from 1 to x
@@ -464,7 +464,7 @@ Return a flat list:
 ;; ((1) (1 2) (1 2 3))
 ~~~
 
-### iterate
+#### iterate
 ~~~lisp
 (iter outer
    (for i below 2)
@@ -473,7 +473,7 @@ Return a flat list:
 ;; ((0 0) (0 1) (0 2) (1 0) (1 1) (1 2))
 ~~~
 
-### Series
+#### Series
 ~~~lisp
 (collect
   (mapping ((x (scan-range :from 1 :upto 3)))
@@ -481,7 +481,7 @@ Return a flat list:
 ~~~
 
 
-## Computing an intermediate value
+### Computing an intermediate value
 
 Use `=`.
 
@@ -526,8 +526,8 @@ so it turns out we can specify the type before the `=` and chain the `with` with
 ~~~
 
 
-## Loop with a counter
-### loop
+### Loop with a counter
+#### loop
 Iterate through a list, and have a counter iterate in parallel. The length of
 the list determines when the iteration ends. Two sets of actions are defined,
 one of which is executed conditionally.
@@ -561,7 +561,7 @@ A, B, C, D, E
 NIL
 ~~~
 
-### Series
+#### Series
 
 By iterating on multiple series in parallel, and using an infinite
 range, we can make a counter.
@@ -573,8 +573,8 @@ range, we can make a counter.
   (format t "~A" x))
 ~~~
 
-## Ascending, descending order, limits
-### loop
+### Ascending, descending order, limits
+#### loop
 
 `from… to…`:
 
@@ -593,7 +593,7 @@ range, we can make a counter.
 
 Similarly, use `from 10 downto 0` (10…0) and `from 10 above 0` (10…1).
 
-### Series
+#### Series
 
 `:from ... :upto`, including the upper limit:
 ~~~lisp
@@ -608,8 +608,8 @@ Similarly, use `from 10 downto 0` (10…0) and `from 10 above 0` (10…1).
 ~~~
 
 
-## Steps
-### loop
+### Steps
+#### loop
 
 with `by`:
 
@@ -627,7 +627,7 @@ if it was in a closure:
       do (print i))
 ~~~
 
-### Series
+#### Series
 with `:by`
 ~~~lisp
 (iterate ((i (scan-range :from 1 :upto 10 :by 2)))
@@ -635,8 +635,8 @@ with `:by`
 ~~~
 
 
-## Loop and conditionals
-### loop
+### Loop and conditionals
+#### loop
 
 with `if`, `else` and `finally`:
 
@@ -681,7 +681,7 @@ do`, `and count`):
 5
 ```
 
-### iterate
+#### iterate
 
 Translating (or even writing!) the above example using iterate is straight-forward:
 
@@ -698,7 +698,7 @@ Translating (or even writing!) the above example using iterate is straight-forwa
    (finally (return (values evens odds n-odds))))
 ~~~
 
-### Series
+#### Series
 
 The preceding loop would be done a bit differently in Series. `split`
 sorts one series into multiple according to provided boolean series.
@@ -720,8 +720,8 @@ written sequentially, only one iteration is performed, the same as the
 example with loop.
 
 
-## Terminate the loop with a test (until, while)
-### loop
+### Terminate the loop with a test (until, while)
+#### loop
 
 ~~~lisp
 (loop for x in '(1 2 3 4 5)
@@ -738,7 +738,7 @@ the same, with `while`:
 	collect x)
 ~~~
 
-### Series
+#### Series
 
 We truncate the series with `until-if`, then collect from its result.
 
@@ -748,8 +748,8 @@ We truncate the series with `until-if`, then collect from its result.
             (scan '(1 2 3 4 5))))
 ~~~
 
-## Loop, print and return a result
-### loop
+### Loop, print and return a result
+#### loop
 
 `do` and `collect` can be combined in one expression
 
@@ -764,7 +764,7 @@ x is 3
 (1 2 3)
 ~~~
 
-### Series
+#### Series
 By mapping we can perform a side effect and also collect items
 ~~~lisp
 (collect
@@ -775,8 +775,8 @@ By mapping we can perform a side effect and also collect items
 ~~~
 
 
-## Named loops and early exit
-### loop
+### Named loops and early exit
+#### loop
 
 The special `loop named` foo syntax allows you to create a loop that
 you can exit early from. The exit is performed using `return-from`,
@@ -794,7 +794,7 @@ and can be used from within nested loops.
 2
 ~~~
 
-### Loop shorthands for when/return
+#### Loop shorthands for when/return
 
 Several actions provide shorthands for combinations of when/return:
 
@@ -816,7 +816,7 @@ NIL
 NIL
 ~~~
 
-### Series
+#### Series
 
 A block is manually created and returned from.
 
@@ -828,20 +828,20 @@ A block is manually created and returned from.
         (return-from loop-1 (values x y))))))
 ~~~
 
-## Count
-### loop
+### Count
+#### loop
 ~~~lisp
 (loop for i from 1 to 3 count (oddp i))
 ;; 2
 ~~~
 
-### Series
+#### Series
 ~~~lisp
 (collect-length (choose-if #'oddp (scan-range :from 1 :upto 3)))
 ~~~
 
-## Summation
-### loop
+### Summation
+#### loop
 
 ~~~lisp
 (loop for i from 1 to 3 sum (* i i))
@@ -862,15 +862,15 @@ Summing into a variable:
 ~~~
 
 
-### Series
+#### Series
 
 ~~~lisp
 (collect-sum (#M(lambda (i) (* i i))
                 (scan-range :from 1 :upto 3)))
 ~~~
 
-## max, min
-### loop
+### max, min
+#### loop
 
 ~~~lisp
 (loop for i from 1 to 3 maximize (mod i 3))
@@ -879,15 +879,15 @@ Summing into a variable:
 
 and `minimize`.
 
-### Series
+#### Series
 ~~~lisp
 (collect-max (#M(lambda (i) (mod i 3))
                 (scan-range :from 1 :upto 3)))
 ~~~
 and `collect-min`.
 
-## Destructuring, aka pattern matching against the list or dotted pairs
-### loop
+### Destructuring, aka pattern matching against the list or dotted pairs
+#### loop
 
 ~~~lisp
 (loop for (a b) in '((x 1) (y 2) (z 3))
@@ -908,7 +908,7 @@ Use `nil` to ignore a term:
 ;; (X Y Z)
 ~~~
 
-#### Iterating 2 by 2 over a list
+##### Iterating 2 by 2 over a list
 
 To iterate over a list, 2 items at a time we use a combination of `on`, `by` and destructuring.
 
@@ -936,7 +936,7 @@ Then we add destructuring to bind only the first two items at each iteration:
 ~~~
 
 
-### Series
+#### Series
 In general, with `destructuring-bind`:
 ~~~lisp
 (collect
@@ -953,7 +953,7 @@ But for alists, `scan-alist` is provided:
     b))
 ~~~
 
-# Custom series scanners
+## Custom series scanners
 
 If we often scan the same type of object, we can write our own scanner
  for it: the iteration itself can be factored out. Taking the example
@@ -975,7 +975,7 @@ If we often scan the same type of object, we can write our own scanner
     (list b a)))
 ~~~
 
-# Shorter series expressions
+## Shorter series expressions
 
 Consider this series expression:
 
@@ -1004,13 +1004,13 @@ This is called implicit mapping, and can be enabled in the call to
 When using implicit mapping, the `#M` reader macro demonstrated above
 becomes redundant.
 
-# Loop gotchas
+## Loop gotchas
 
 - the keyword `it`, often used in functional constructs, can be
   recognized as a loop keyword. Don't use it inside a loop.
 
 
-# Appendix: list of loop keywords
+## Appendix: list of loop keywords
 
 **Name Clause**
 
@@ -1058,25 +1058,25 @@ Only `for` and `in` are keywords.
 
 ©Dan Robertson on [Stack Overflow](https://stackoverflow.com/questions/52236803/list-of-loop-keywords).
 
-# Credit and references
+## Credit and references
 
-## Loop
+### Loop
 
 * [Tutorial for the Common Lisp Loop Macro](http://www.ai.sri.com/~pkarp/loop.html) by Peter D. Karp
 * [http://www.unixuser.org/~euske/doc/cl/loop.html](http://www.unixuser.org/~euske/doc/cl/loop.html)
 * [riptutorial.com](https://riptutorial.com/common-lisp/)
 *
 
-## Iterate
+### Iterate
 
 * [The Iterate Manual](https://common-lisp.net/project/iterate/doc/index.html) -
 * [iterate](https://digikar99.github.io/cl-iterate-docs/) - highlights at a glance and examples
 * [Loop v Iterate - SabraOnTheHill](https://sites.google.com/site/sabraonthehill/loop-v-iter)
 
-## Series
+### Series
 
 * [SERIES for Common Lisp - Richard C. Waters](http://series.sourceforge.net/)
 
-## Others
+### Others
 
 * See also: [more functional constructs](https://lisp-journey.gitlab.io/blog/snippets-functional-style-more/) (do-repeat, take,…)

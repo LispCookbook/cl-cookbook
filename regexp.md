@@ -22,9 +22,9 @@ The description provided below is far from complete, so don't forget
 to check the reference manual that comes along with the CL-PPCRE
 library.
 
-# PPCRE
+## PPCRE
 
-## Using PPCRE
+### Using PPCRE
 
 [CL-PPCRE](https://github.com/edicl/cl-ppcre) (abbreviation for
 Portable Perl-compatible regular expressions) is a portable regular
@@ -41,7 +41,7 @@ Basic operations with the CL-PPCRE library functions are described
 below.
 
 
-## Looking for matching patterns
+### Looking for matching patterns
 
 The `scan` function tries to match the given pattern and on success
 returns four multiple-values values - the start of the match, the end
@@ -69,7 +69,7 @@ but will require less time for repeated `scan` calls as parsing the
 expression and compiling it is done only once.
 
 
-## Extracting information
+### Extracting information
 
 CL-PPCRE provides a several ways to extract matching fragments, among
 them: the `scan-to-strings` and `register-groups-bind` functions.
@@ -100,7 +100,7 @@ assigning the matching fragment to the variable:
 ;; => ("Frank" "Zappa" 1292889600)
 ~~~
 
-## Syntactic sugar
+### Syntactic sugar
 
 It might be more convenient to use CL-PPCRE with the
 [CL-INTERPOL](https://github.com/edicl/cl-interpol)

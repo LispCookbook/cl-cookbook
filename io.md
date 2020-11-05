@@ -4,7 +4,7 @@ title: Input/Output
 
 <a name="redir"></a>
 
-# Redirecting the Standard Output of your Program
+## Redirecting the Standard Output of your Program
 
 You do it like this:
 
@@ -38,7 +38,7 @@ opens the file - creating it if necessary - binds `*STANDARD-OUTPUT*`, executes
 its body, closes the file, and restores `*STANDARD-OUTPUT*` to its former
 value. It doesn't get more comfortable than this!<a name="faith"></a>
 
-# Faithful Output with Character Streams
+## Faithful Output with Character Streams
 
 By _faithful output_ I mean that characters with codes between 0 and 255 will be
 written out as is. It means, that I can `(PRINC (CODE-CHAR 0..255) s)` to a
@@ -69,7 +69,7 @@ text/plain - the default in most Apache configurations).
 
  What follows is a list of implementation dependent choices and behaviours and some code to experiment.
 
-## CLISP
+### CLISP
 
 On CLISP, faithful output is possible using
 
@@ -94,20 +94,20 @@ Characters with code > 127 cannot be represented in ASCII:
 ;*** - Character #\u0080 cannot be represented in the character set CHARSET:ASCII
 ~~~
 
-## CMUCL
+### CMUCL
 
 `:EXTERNAL-FORMAT :DEFAULT` (untested) - no unicode, so probably no problems.
 
-## AllegroCL
+### AllegroCL
 
 `#+(AND ALLEGRO UNIX) :DEFAULT` (untested) - seems enough on UNIX, but would not
 work on the MS-Windows port of AllegroCL.
 
-## LispWorks
+### LispWorks
 
 `:EXTERNAL-FORMAT '(:LATIN-1 :EOL-STYLE :LF)` (confirmed by Marc Battyani)
 
-## Example
+### Example
 
 Here's some sample code to play with:
 
@@ -167,7 +167,7 @@ Here's some sample code to play with:
 
 <a name="bulk"></a>
 
-# Fast Bulk I/O
+## Fast Bulk I/O
 
 If you need to copy a lot of data and the source and destination are both
 streams (of the same

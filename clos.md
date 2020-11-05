@@ -39,9 +39,9 @@ But see also
 - and for reference, the complete [CLOS-MOP specifications](https://clos-mop.hexstreamsoft.com/).
 
 
-#  Classes and instances
+##  Classes and instances
 
-## Diving in
+### Diving in
 
 Let's dive in with an example showing class definition, creation of
 objects, slot access, methods specialized for a given class, and
@@ -86,7 +86,7 @@ inheritance.
 ;; T
 ~~~
 
-## Defining classes (defclass)
+### Defining classes (defclass)
 
 The macro used for defining new data types in CLOS is `defclass`.
 
@@ -138,7 +138,7 @@ We could write a minimal class definition without slots options like this:
 
 or even without slots specifiers: `(defclass point () ())`.
 
-## Creating objects (make-instance)
+### Creating objects (make-instance)
 
 We create instances of a class with `make-instance`:
 
@@ -157,9 +157,9 @@ This has the direct advantage that you can control the required
 arguments. You should now export the constructor from your package and
 not the class itself.
 
-## Slots
+### Slots
 
-### A function that always works (slot-value)
+#### A function that always works (slot-value)
 
 The function to access any slot anytime is `(slot-value <object> <slot-name>)`.
 
@@ -192,7 +192,7 @@ condition:
 (slot-value pt 'x) ;; => 1
 ~~~
 
-### Initial and default values (initarg, initform)
+#### Initial and default values (initarg, initform)
 
 - `:initarg :foo` is the keyword we can pass to `make-instance` to
   give a value to this slot:
@@ -220,7 +220,7 @@ Sometimes we see the following trick to clearly require a slot:
 ~~~
 
 
-### Getters and setters (accessor, reader, writer)
+#### Getters and setters (accessor, reader, writer)
 
 - `:accessor foo`: an accessor is both a **getter** and a
   **setter**. Its argument is a name that will become a **generic
@@ -277,7 +277,7 @@ inside the macro is equivalent to a call to the accessor function.
           (format t "name: ~a, lisper: ~a" name lisper))
 ~~~
 
-### Class VS instance slots
+#### Class VS instance slots
 
 `:allocation` specifies whether this slot is *local* or *shared*.
 
@@ -327,11 +327,11 @@ class (whether or not those instances exist yet).
 ;; HOMO-LISPER
 ~~~
 
-### Slot documentation
+#### Slot documentation
 
 Each slot accepts one `:documentation` option.
 
-### Slot type
+#### Slot type
 
 The `:type` slot option may not do the job you expect it does. If you
 are new to the CLOS, we suggest you skip this section and use your own
@@ -346,7 +346,7 @@ its version 1.5.9 (November, 2019) or when safety is high (`(declaim
 To do it otherwise, see [this Stack-Overflow answer](https://stackoverflow.com/questions/51723992/how-to-force-slots-type-to-be-checked-during-make-instance), and see also [quid-pro-quo](https://github.com/sellout/quid-pro-quo), a contract programming library.
 
 
-## find-class, class-name, class-of
+### find-class, class-name, class-of
 
 ~~~lisp
 (find-class 'point)
@@ -380,7 +380,7 @@ the *metaclass* (i.e. the class of the class) of
 
 
 
-## Subclasses and inheritance
+### Subclasses and inheritance
 
 As illustrated above, `child` is a subclass of `person`.
 
@@ -461,7 +461,7 @@ then it's correct to mix them together by inheritance, but if they're
 really separate concepts then you should use slots to keep them apart.
 
 
-## Multiple inheritance
+### Multiple inheritance
 
 CLOS supports multiple inheritance.
 
@@ -477,7 +477,7 @@ that both `child` and `person` have to be defined prior to defining
 `baby` in this example.
 
 
-## Redefining and changing a class
+### Redefining and changing a class
 
 This section briefly covers two topics:
 
@@ -579,7 +579,7 @@ To change the class of an instance, use `change-class`:
 In the above example, I became a `child`, and I inherited the `can-walk-p` slot, which is true by default.
 
 
-## Pretty printing
+### Pretty printing
 
 Every time we printed an object so far we got an output like
 
@@ -635,7 +635,7 @@ For reference, the following reproduces the default behaviour:
 
 Here, `:identity` to `t` prints the `{1006234593}` address.
 
-## Classes of traditional lisp types
+### Classes of traditional lisp types
 
 Where we approach that we don't need CLOS objects to use CLOS.
 
@@ -716,7 +716,7 @@ The metaclass of a `structure-object` is the class
 |`standard-class`|None of these restrictions.|
 
 
-## Introspection
+### Introspection
 
 we already saw some introspection functions.
 
@@ -766,9 +766,9 @@ closer-mop:standard-accessor-method
 ```
 
 
-## See also
+### See also
 
-### defclass/std: write shorter classes
+#### defclass/std: write shorter classes
 
 The library [defclass/std](https://github.com/EuAndreh/defclass-std)
 provides a macro to write shorter `defclass` forms.
@@ -804,9 +804,9 @@ It does much more and it is very flexible, however it is seldom used
 by the Common Lisp community: use at your own risks©.
 
 
-# Methods
+## Methods
 
-## Diving in
+### Diving in
 Recalling our `person` and `child` classes from the beginning:
 
 ~~~lisp
@@ -982,7 +982,7 @@ Below we create methods, we specialize them, we use method combination
 ~~~
 
 
-## Generic functions (defgeneric, defmethod)
+### Generic functions (defgeneric, defmethod)
 
 A `generic function` is a lisp function which is associated
 with a set of methods and dispatches them when it's invoked. All
@@ -1114,7 +1114,7 @@ for the function call.
 
 See more about [defmethod on the CLHS](http://www.lispworks.com/documentation/lw70/CLHS/Body/m_defmet.htm).
 
-## Multimethods
+### Multimethods
 
 Multimethods explicitly specialize more than one of the generic
 function's required parameters.
@@ -1137,7 +1137,7 @@ have to in other languages.
 
 Read more on [Practical Common Lisp](http://www.gigamonkeys.com/book/object-reorientation-generic-functions.html#multimethods).
 
-## Controlling setters (setf-ing methods)
+### Controlling setters (setf-ing methods)
 
 In Lisp, we can define `setf` counterparts of functions or methods. We
 might want this to have more control on how to update an object.
@@ -1154,7 +1154,7 @@ might want this to have more control on how to update an object.
 If you know Python, this behaviour is provided by the `@property` decorator.
 
 
-## Dispatch mechanism and next methods
+### Dispatch mechanism and next methods
 
 
 When a generic function is invoked, the application cannot directly invoke a method. The dispatch mechanism proceeds as follows:
@@ -1210,7 +1210,7 @@ has lexical scope and indefinite extent).
 Note finally that the body of every method establishes a block with the same name as the method’s generic function. If you `return-from` that name you are exiting the current method, not the call to the enclosing generic function.
 
 
-## Method qualifiers (before, after, around)
+### Method qualifiers (before, after, around)
 
 In our "Diving in" examples, we saw some use of the `:before`, `:after` and `:around` *qualifiers*:
 
@@ -1287,7 +1287,7 @@ Think of it as an onion, with all the `:around`
     on the inside.
 
 
-## Other method combinations
+### Other method combinations
 
 The default method combination type we just saw is named `standard`,
 but other method combination types are available, and no need to say
@@ -1399,7 +1399,7 @@ it a lisp function, macro or special form. We'll let you refer to the
 books if you feel the need.
 
 
-## Debugging: tracing method combination
+### Debugging: tracing method combination
 
 It is possible to [trace](http://www.xach.com/clhs?q=trace) the method
 combination, but this is implementation dependent.
@@ -1443,7 +1443,7 @@ Let's trace it:
 ~~~
 
 
-# MOP
+## MOP
 
 We gather here some examples that make use of the framework provided
 by the meta-object protocol, the configurable object system that rules
@@ -1457,7 +1457,7 @@ CL libraries are built. We invite you to read the books referenced in
 the introduction.
 
 
-## Metaclasses
+### Metaclasses
 
 Metaclasses are needed to control the behaviour of other classes.
 
@@ -1540,7 +1540,7 @@ Now testing:
 It's working.
 
 
-## Controlling the initialization of instances (initialize-instance)
+### Controlling the initialization of instances (initialize-instance)
 
 To further control the creation of object instances, we can specialize the method
 `initialize-instance`. It is called by `make-instance`, just after

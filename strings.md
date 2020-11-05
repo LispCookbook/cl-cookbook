@@ -41,7 +41,7 @@ don't miss the following resources:
 * a [CLHS summary on HexstreamSoft](https://www.hexstreamsoft.com/articles/common-lisp-format-reference/clhs-summary/#subsections-summary-table)
 * plus a Slime tip: type `C-c C-d ~` plus a letter of a format directive to open up its documentation. Again more useful with `ivy-mode` or `helm-mode`.
 
-# Creating strings
+## Creating strings
 
 A string is created with double quotes, all right, but we can recall
 these other ways:
@@ -62,7 +62,7 @@ these other ways:
 ~~~
 
 
-# Accessing Substrings
+## Accessing Substrings
 
 As a string is a sequence, you can access substrings with the SUBSEQ
 function. The index into the string is, as always, zero-based. The third,
@@ -114,7 +114,7 @@ determines the number of elements that are replaced." For example:
 "Harpo Mar"
 ~~~
 
-# Accessing Individual Characters
+## Accessing Individual Characters
 
 You can use the function CHAR to access individual characters of a string. CHAR
 can also be used in conjunction with SETF.
@@ -178,7 +178,7 @@ value 255). Notice the Lisp reader can round-trip characters by name.
 Check out the UTF-8 Wikipedia article for the range of supported characters and
 their encodings.
 
-# Manipulating Parts of a String
+## Manipulating Parts of a String
 
 There's a slew of (sequence) functions that can be used to manipulate a string
 and we'll only provide some examples here. See the sequences dictionary in the
@@ -239,7 +239,7 @@ you intend to perform such an operation on very long strings, files, etc. please
 consider using cl-ppcre regular expressions and string processing library which
 is heavily optimized.
 
-# Concatenating Strings
+## Concatenating Strings
 
 The name says it all: CONCATENATE is your friend. Note that this is a generic
 sequence function and you have to provide the result type as the first argument.
@@ -331,7 +331,7 @@ should you need it.
 "Zappa, 1940 - 1993"
 ~~~
 
-# Processing a String One Character at a Time
+## Processing a String One Character at a Time
 
 Use the MAP function to process a string one character at a time.
 
@@ -362,7 +362,7 @@ Or do it with LOOP.
 (#\Z #\e #\p #\p #\o)
 ~~~
 
-# Reversing a String by Word or Character
+## Reversing a String by Word or Character
 
 Reversing a string by character is easy using the built-in REVERSE function (or
 its destructive counterpart NREVERSE).
@@ -430,12 +430,12 @@ JOIN-STRING-LIST
 "word by sentence this Reverse"
 ~~~
 
-# Dealing with unicode strings
+## Dealing with unicode strings
 
 We'll use here [SBCL's string operations](http://www.sbcl.org/manual/index.html#String-operations). More generally, see [SBCL's unicode support](http://www.sbcl.org/manual/index.html#Unicode-Support).
 
 
-## Sorting unicode strings alphabetically
+### Sorting unicode strings alphabetically
 
 Sorting unicode strings with `string-lessp` as the comparison function
 isn't satisfying:
@@ -453,7 +453,7 @@ With SBCL, use `sb-unicode:unicode<`:
 ~~~
 
 
-# Controlling Case
+## Controlling Case
 
 Common Lisp has a couple of functions to control the case of a string.
 
@@ -512,11 +512,11 @@ the following example is implementation-dependent - it may either be "BIG" or
 "BIG"
 ~~~
 
-## With the format function
+### With the format function
 
 The format function has directives to change the case of words:
 
-### To lower case: ~( ~)
+#### To lower case: ~( ~)
 
 ~~~lisp
 (format t "~(~a~)" "HELLO WORLD")
@@ -524,7 +524,7 @@ The format function has directives to change the case of words:
 ~~~
 
 
-### Capitalize every word: ~:( ~)
+#### Capitalize every word: ~:( ~)
 
 ~~~lisp
 (format t "~:(~a~)" "HELLO WORLD")
@@ -532,7 +532,7 @@ Hello World
 NIL
 ~~~
 
-### Capitalize the first word: ~@( ~)
+#### Capitalize the first word: ~@( ~)
 
 ~~~lisp
 (format t "~@(~a~)" "hello world")
@@ -540,7 +540,7 @@ Hello world
 NIL
 ~~~
 
-### To upper case: ~@:( ~)
+#### To upper case: ~@:( ~)
 
 Where we re-use the colon and the @:
 
@@ -551,7 +551,7 @@ NIL
 ~~~
 
 
-# Trimming Blanks from the Ends of a String
+## Trimming Blanks from the Ends of a String
 
 Not only can you trim blanks, but you can get rid of arbitrary characters. The
 functions STRING-TRIM, STRING-LEFT-TRIM and STRING-RIGHT-TRIM return a substring
@@ -576,7 +576,7 @@ of characters.
 Note: The caveat mentioned in the section about Controlling Case also applies
 here.
 
-# Converting between Symbols and Strings
+## Converting between Symbols and Strings
 
 The function INTERN will "convert" a string to a symbol. Actually, it will check
 whether the symbol denoted by the string (its first argument) is already
@@ -627,7 +627,7 @@ STRING.
 "HOWDY"
 ~~~
 
-# Converting between Characters and Strings
+## Converting between Characters and Strings
 
 You can use COERCE to convert a string of length 1 to a character. You can also
 use COERCE to convert any sequence of characters into a string. You can not use
@@ -660,7 +660,7 @@ instead.
    [Condition of type SIMPLE-TYPE-ERROR]
 ~~~
 
-# Finding an Element of a String
+## Finding an Element of a String
 
 Use FIND, POSITION, and their -IF counterparts to find characters in a string.
 
@@ -698,7 +698,7 @@ Or use COUNT and friends to count characters in a string.
 5
 ~~~
 
-# Finding a Substring of a String
+## Finding a Substring of a String
 
 The function SEARCH can find substrings of a string.
 
@@ -717,9 +717,9 @@ NIL
 15
 ~~~
 
-# Converting a String to a Number
+## Converting a String to a Number
 
-## To an integer: parse-integer
+### To an integer: parse-integer
 
 CL provides the `parse-integer` function to convert a string representation of an integer
 to the corresponding numeric value. The second return value is the index into
@@ -755,7 +755,7 @@ built-in function to parse other numeric types. You could use `read-from-string`
 in this case.
 
 
-## To any number: read-from-string
+### To any number: read-from-string
 
 Be aware that the full reader is in effect if you're using this
 function. This can lead to vulnerability issues.
@@ -788,7 +788,7 @@ SYMBOL
 "gotcha"
 ~~~
 
-## To a float: the parse-float library
+### To a float: the parse-float library
 
 There is no built-in function similar to `parse-integer` to parse
 other number types. The external library
@@ -807,7 +807,7 @@ LispWorks also has a [parse-float](http://www.lispworks.com/documentation/lw51/L
 See also [parse-number](https://github.com/sharplispers/parse-number).
 
 
-# Converting a Number to a String
+## Converting a Number to a String
 
 The general function WRITE-TO-STRING or one of its simpler variants
 PRIN1-TO-STRING or PRINC-TO-STRING may be used to convert a number to a
@@ -828,7 +828,7 @@ represented as quotients of two integers even when converted to strings.
 *
 ~~~
 
-# Comparing Strings
+## Comparing Strings
 
 The general functions EQUAL and EQUALP can be used to test whether two strings
 are equal. The strings are compared element-by-element, either in a
@@ -856,7 +856,7 @@ NIL
 3
 ~~~
 
-# String formatting
+## String formatting
 
 The `format` function has a lot of directives to print strings,
 numbers, lists, going recursively, even calling Lisp functions,
@@ -896,7 +896,7 @@ which prints:
 ```
 
 
-## Structure of format
+### Structure of format
 
 Format directives start with `~`. A final character like `A` or `a`
 (they are case insensitive) defines the directive. In between, it can
@@ -911,7 +911,7 @@ Other directives include:
 - `D`, `B`, `O`, `X`: Decimal, Binary, Octal, Hexadecimal.
 - `F`: fixed-format Floating point.
 
-## Basic primitive: ~A or ~a (Aesthetics)
+### Basic primitive: ~A or ~a (Aesthetics)
 
 `(format t "~a" movies)` is the most basic primitive.
 
@@ -920,20 +920,20 @@ Other directives include:
 ;; => "((1 Matrix 5) (10 Matrix Trilogy swe sub 3.3))"
 ~~~
 
-## Newlines: ~% and ~&
+### Newlines: ~% and ~&
 
 `~%` is the newline character. `~10%` prints 10 newlines.
 
 `~&` does not print a newline if the output stream is already at one.
 
-## Tabs
+### Tabs
 
 with `~T`. Also `~10T` works.
 
 Also `i` for indentation.
 
 
-## Justifying text / add padding on the right
+### Justifying text / add padding on the right
 
 Use a number as parameter, like `~2a`:
 
@@ -968,7 +968,7 @@ So, expanding:
 
 text is justified on the right (this would be with option `:`).
 
-### Justifying on the left: @
+#### Justifying on the left: @
 
 Use a `@` as in `~2@A`:
 
@@ -988,7 +988,7 @@ Use a `@` as in `~2@A`:
 10    Matrix Trilogy swe sub 3.3
 ```
 
-## Justifying decimals
+### Justifying decimals
 
 In `~,2F`, 2 is the number of decimals and F the floats directive:
 `(format t "~,2F" 20.1)` => "20.10".
@@ -1008,7 +1008,7 @@ With `~2,2f`:
 
 And we're happy with this result.
 
-## Formatting a format string (`~v`, `~?`)
+### Formatting a format string (`~v`, `~?`)
 
 Sometimes you want to justify a string, but the length is a variable
 itself. You can't hardcode its value as in `(format nil "~30a"
@@ -1045,7 +1045,7 @@ Of course, it is always possible to format a format string beforehand:
 ~~~
 
 
-# Capturing what is is printed into a stream
+## Capturing what is is printed into a stream
 
 Inside `(with-output-to-string (mystream) …)`, everything that is
 printed into the stream `mystream` is captured and returned as a
@@ -1063,7 +1063,7 @@ string:
 ;; NIL
 ~~~
 
-# Cleaning up strings
+## Cleaning up strings
 
 The following examples use the
 [cl-slug](https://github.com/EuAndreh/cl-slug/) library which,
@@ -1081,7 +1081,7 @@ Its main function is to transform a string to a slug, suitable for a website's u
 ;; "my-new-cool-article-for-the-blog-v-2"
 ~~~
 
-## Removing accentuated letters
+### Removing accentuated letters
 
 Use `slug:asciify` to replace accentuated letters by their ascii equivalent:
 
@@ -1104,7 +1104,7 @@ slug:*available-languages*
  (:CURRENCY . "Currency"))
 ~~~
 
-## Removing punctuation
+### Removing punctuation
 
 Use `(str:remove-punctuation s)` or `(str:no-case s)` (same as
 `(cl-change-case:no-case s)`):
@@ -1122,6 +1122,6 @@ They strip the punctuation with one ppcre unicode regexp
 "letter" category and `p{N}` any kind of numeric character).
 
 
-# See also
+## See also
 
 * [Pretty printing table data](https://gist.github.com/WetHat/a49e6f2140b401a190d45d31e052af8f), in ASCII art, a tutorial as a Jupyter notebook.

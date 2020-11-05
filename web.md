@@ -35,7 +35,7 @@ appreciated.
 
 <!-- Javascript -->
 
-# Overview
+## Overview
 
 [Hunchentoot][hunchentoot] and [Clack][clack] are two projects that
 you'll often hear about.
@@ -114,7 +114,7 @@ featureful static site generator, see
 [Coleslaw](https://github.com/coleslaw-org/coleslaw).
 
 
-# Installation
+## Installation
 
 Let's install the libraries we'll use:
 
@@ -128,11 +128,11 @@ Quicklisp is not yet, as of writing, the one we are interested in.
 We'll start by serving local files and we'll run more than one local
 server in the running image.
 
-# Simple webserver
+## Simple webserver
 
-## Serve local files
+### Serve local files
 
-### Hunchentoot
+#### Hunchentoot
 
 Create and start a webserver like this:
 
@@ -193,9 +193,9 @@ Note that we just created another *acceptor* on a different port on
 the same lisp image. This is already pretty cool.
 
 
-# Access your server from the internet
+## Access your server from the internet
 
-## Hunchentoot
+### Hunchentoot
 
 With Hunchentoot we have nothing to do, we can see the server from the
 internet right away.
@@ -208,11 +208,11 @@ You can see it right away on your server's IP.
 
 Stop it with `(hunchentoot:stop *)`.
 
-# Routing
+## Routing
 
-## Simple routes
+### Simple routes
 
-### Hunchentoot
+#### Hunchentoot
 
 To bind an existing function to a route, we create a "prefix dispatch"
 that we push onto the `*dispatch-table*` list:
@@ -286,7 +286,7 @@ It also has a `default-parameter-type` which we'll use in a minute to get url pa
 There are also keys to know for the lambda list. Please see the documentation.
 
 
-### Easy-routes (Hunchentoot)
+#### Easy-routes (Hunchentoot)
 
 [easy-routes](https://github.com/mmontone/easy-routes) is a route
 handling extension on top of Hunchentoot. It provides:
@@ -347,7 +347,7 @@ decoration chain and the route body finally. Examples:
 
 See `easy-routes`' readme for more.
 
-### Caveman
+#### Caveman
 
 [Caveman](caveman) provides two ways to
 define a route: the `defroute` macro and the `@route` pythonic
@@ -387,9 +387,9 @@ We must enable regexps with `:regexp t`:
 ~~~
 
 
-## Accessing GET and POST parameters
+### Accessing GET and POST parameters
 
-### Hunchentoot
+#### Hunchentoot
 
 First of all, note that we can access query parameters anytime with
 
@@ -448,14 +448,14 @@ where `<type>` is a simple type.
 
 <!-- ## Cookies -->
 
-# Error handling
+## Error handling
 
 In all frameworks, we can choose the level of interactivity. The web
 framework can return a 404 page and print output on the repl, it can
 catch errors and invoke the interactive lisp debugger, or it can show
 the lisp backtrace on the html page.
 
-## Hunchentoot
+### Hunchentoot
 
 The global variables to set are `*catch-errors-p*`,
 `*show-lisp-errors-p*` and `*show-lisp-backtraces-p*`.
@@ -465,13 +465,13 @@ Hunchentoot also defines condition classes.
 See the documentation: [https://edicl.github.io/hunchentoot/#conditions](https://edicl.github.io/hunchentoot/#conditions).
 
 
-## Clack
+### Clack
 
 Clack users might make a good use of plugins, like the clack-errors middleware: [https://github.com/CodyReichert/awesome-cl#clack-plugins](https://github.com/CodyReichert/awesome-cl#clack-plugins).
 
 <img src="https://camo.githubusercontent.com/17dd6e0a7a916c8118f0134a94404f6757bee9dc/68747470733a2f2f7261772e6769746875622e636f6d2f6575646f786961302f636c61636b2d6572726f72732f6d61737465722f73637265656e73686f742d6465762e706e67" width="800"/>
 
-# Weblocks - solving the "JavaScript problem"©
+## Weblocks - solving the "JavaScript problem"©
 
 [Weblocks][weblocks] is a widgets-based and
 server-based framework with a built-in ajax update mechanism. It
@@ -544,9 +544,9 @@ task only.
 Is it appealing ? Carry on this quickstart guide here: [http://40ants.com/weblocks/quickstart.html](http://40ants.com/weblocks/quickstart.html).
 
 
-# Templates
+## Templates
 
-## Djula - HTML markup
+### Djula - HTML markup
 
 [Djula](https://github.com/mmontone/djula) is a port of Python's
 Django template engine to Common Lisp. It has [excellent documentation](https://mmontone.github.io/djula/doc/build/html/index.html).
@@ -594,7 +594,7 @@ It is, along with its companion
 [access](https://github.com/AccelerationNet/access/) library, one of
 the most downloaded libraries of Quicklisp.
 
-### Djula filters
+#### Djula filters
 
 Filters allow to modify how a variable is displayed. Djula comes with
 a good set of built-in filters and they are [well documented](https://mmontone.github.io/djula/doc/build/html/filters.html). They are not to be confused with [tags](https://mmontone.github.io/djula/doc/build/html/tags.html).
@@ -632,7 +632,7 @@ Filters are very handy to move non-trivial formatting or logic from the
 templates to the backend.
 
 
-## Spinneret - lispy templates
+### Spinneret - lispy templates
 
 [Spinneret](https://github.com/ruricolist/spinneret) is a "lispy"
 HTML5 generator. It looks like this:
@@ -658,9 +658,9 @@ has more features under it sleeves:
 - it understands embedded markdown
 - it can tell where in the document a generator function is (see `get-html-tag`)
 
-# Serve static assets
+## Serve static assets
 
-## Hunchentoot
+### Hunchentoot
 
 With Hunchentoot, use `create-folder-dispatcher-and-handler prefix directory`.
 
@@ -681,7 +681,7 @@ Now our project's static files located under
 ```
 
 
-# Connecting to a database
+## Connecting to a database
 
 Please see the [databases section](databases.html). The Mito ORM
 supports SQLite3, PostgreSQL, MySQL, it has migrations and db schema
@@ -690,7 +690,7 @@ versioning, etc.
 In Caveman, a database connection is alive during the Lisp session and is
 reused in each HTTP requests.
 
-## Checking a user is logged-in
+### Checking a user is logged-in
 
 A framework will provide a way to work with sessions. We'll create a
 little macro to wrap our routes to check if the user is logged in.
@@ -745,9 +745,9 @@ body. We use it like this:
 and so on.
 
 
-## Encrypting passwords
+### Encrypting passwords
 
-### With cl-pass
+#### With cl-pass
 
 [cl-pass](https://github.com/eudoxia0/cl-pass) is a password hashing and verification library. It is as simple to use as this:
 
@@ -764,7 +764,7 @@ You might also want to look at
 [hermetic](https://github.com/eudoxia0/hermetic), a simple
 authentication system for Clack-based applications.
 
-### Manually (with Ironclad)
+#### Manually (with Ironclad)
 
 In this recipe we do the encryption and verification ourselves. We use the de-facto standard
 [Ironclad](https://github.com/froydnj/ironclad) cryptographic toolkit
@@ -821,9 +821,9 @@ library.
 
 *Credit: `/u/arvid` on [/r/learnlisp](https://www.reddit.com/r/learnlisp/comments/begcf9/can_someone_give_me_an_eli5_on_hiw_to_encrypt_and/)*.
 
-# Runnning and building
+## Runnning and building
 
-## Running the application from source
+### Running the application from source
 
 To run our Lisp code from source, as a script, we can use the `--load`
 switch from our implementation.
@@ -869,7 +869,7 @@ running instance. See the following section
 [#connecting-to-a-remote-lisp-image](#connecting-to-a-remote-lisp-image).
 
 
-## Building a self-contained executable
+### Building a self-contained executable
 
 As for all Common Lisp applications, we can bundle our web app in one
 single executable, including the assets. It makes deployment very
@@ -884,12 +884,12 @@ Listening on localhost:9003.
 See this recipe on [scripting#for-web-apps](scripting.html#for-web-apps).
 
 
-## Continuous delivery with Travis CI or Gitlab CI
+### Continuous delivery with Travis CI or Gitlab CI
 
 Please see the section on [testing#continuous-integration](testing.html#continuous-integration).
 
 
-## Multi-platform delivery with Electron
+### Multi-platform delivery with Electron
 
 [Ceramic](https://ceramic.github.io/) makes all the work for us.
 
@@ -921,14 +921,14 @@ There is more:
 
 Thus, no need to minify our JS.
 
-# Deployment
+## Deployment
 
-## Deploying manually
+### Deploying manually
 
 We can start our executable in a shell and send it to the background (`C-z bg`), or run it inside a `tmux` session. These are not the best but hey, it works©.
 
 
-## Daemonizing, restarting in case of crashes, handling logs with Systemd
+### Daemonizing, restarting in case of crashes, handling logs with Systemd
 
 This is actually a system-specific task. See how to do that on your system.
 
@@ -977,7 +977,7 @@ to enable it:
     sudo systemctl enable my-app.service
 
 
-## With Docker
+### With Docker
 
 There are several Docker images for Common
 Lisp. For example:
@@ -991,7 +991,7 @@ Common Lisp application as a reproducible docker image using OpenShift's
 source-to-image.
 
 
-## With Guix
+### With Guix
 
 [GNU Guix](https://www.gnu.org/software/guix/) is a transactional
 package manager, that can be installed on top of an existing OS, and a
@@ -1000,7 +1000,7 @@ to ship self-contained tarballs, which also contain system
 dependencies. For an example, see the [Next browser](https://github.com/atlas-engineer/next/).
 
 
-## Deploying on Heroku and other services
+### Deploying on Heroku and other services
 
 See [heroku-buildpack-common-lisp](https://gitlab.com/duncan-bayne/heroku-buildpack-common-lisp) and the [Awesome CL#deploy](https://github.com/CodyReichert/awesome-cl#deployment) section for interface libraries for Kubernetes, OpenShift, AWS, etc.
 
@@ -1040,7 +1040,7 @@ local swank server, loads the new code, stops and starts the app in a
 row.
 
 
-# See also
+## See also
 
 - [Feather](https://hg.sr.ht/~wnortje/feather), a template for web
   application development, shows a functioning Hello World app
@@ -1051,7 +1051,7 @@ row.
 - [lisp-web-live-reload-example](https://github.com/vindarel/lisp-web-live-reload-example/) -
   a toy project to show how to interact with a running web app.
 
-# Credits
+## Credits
 
 - [https://lisp-journey.gitlab.io/web-dev/](https://lisp-journey.gitlab.io/web-dev/)
 

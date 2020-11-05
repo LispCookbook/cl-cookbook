@@ -6,7 +6,7 @@ This is a short guide to TCP/IP and UDP/IP client/server programming in Common
 Lisp using [usockets](https://github.com/usocket/usocket).
 
 
-# TCP/IP
+## TCP/IP
 
 As usual, we will use quicklisp to load usocket.
 
@@ -83,7 +83,7 @@ Now you are ready to run the client on the second REPL
 Voila! You should see "Hello World" on the second REPL.
 
 
-# UDP/IP
+## UDP/IP
 
 As a protocol, UDP is connection-less, and therefore there is no
 concept of binding and accepting a connection. Instead we only do a
@@ -156,6 +156,6 @@ Voila! You should see a vector `#(1 2 3 4 5 6 7 8)` on the first REPL
 and `#(8 7 6 5 4 3 2 1)` on the second one.
 
 
-# Credit
+## Credit
 
 This guide originally comes from https://gist.github.com/shortsightedsid/71cf34282dfae0dd2528
