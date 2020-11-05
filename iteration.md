@@ -130,7 +130,7 @@ Here is an example with [cl-punch](https://github.com/windymelt/cl-punch/):
 and voilà :) We won't use this more in this recipe, but feel free to do.
 
 Last but not least, you might like
-**[series](https://github.com/tokenrove/series/wiki/Documentation)**,
+**[series](http://series.sourceforge.net/)**,
 a library that describes itself as combining aspects of sequences,
 streams, and loops. Series expressions look like operations on
 sequences (= functional programming), but can achieve the same high level of efficiency as a
