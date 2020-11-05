@@ -2,11 +2,9 @@
 title: Loop, iteration, mapping
 ---
 
-TODO: of-type
-
 <!-- needs some text before the first heading -->
 
-## Introduction: loop, iterate, for, mapcar
+## Introduction: loop, iterate, for, mapcar, series
 
 **[loop](http://www.lispworks.com/documentation/lw51/CLHS/Body/m_loop.htm)**
 is the built-in macro for iteration.
