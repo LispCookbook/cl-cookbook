@@ -147,6 +147,22 @@ this:
 ;; (1 4 9 16 25)
 ~~~
 
+`series` is good, but its function names are different from what we
+find in functional languages today. You might like the ["Generators
+The Way I Want Them Generated"](https://github.com/cbeo/gtwiwtg)
+library. It is a lazy sequences library, similar to `series` although
+younger and not as complete, with a "modern" API with words like `take`, `filter`,
+`for` or `fold`, and that is easy to use.
+
+~~~lisp
+(range :from 20)
+;; #<GTWIWTG::GENERATOR! {1001A90CA3}>
+
+(take 4 (range :from 20))
+;; (20 21 22 23)
+~~~
+
+
 ## Recipes
 
 ### Looping forever, return
