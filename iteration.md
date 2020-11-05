@@ -160,6 +160,8 @@ younger and not as complete, with a "modern" API with words like `take`, `filter
 ;; (20 21 22 23)
 ~~~
 
+At the time of writing, GTWIWTG is licensed under the GPLv3.
+
 
 ## Recipes
 
