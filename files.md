@@ -393,6 +393,7 @@ If it doesn't exist, you can `:error` out. See [the standard](http://www.lispwor
 
 The library [Alexandria](https://common-lisp.net/project/alexandria/draft/alexandria.html#Conses)
 has a function called [write-string-into-file](https://gitlab.common-lisp.net/alexandria/alexandria/-/blob/master/alexandria-1/io.lisp#L73)
+
 ~~~lisp
 (alexandria:write-string-into-file content "file.txt")
 ~~~
