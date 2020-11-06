@@ -498,6 +498,42 @@ string.
                    :output :string)
 ~~~
 
+
+## Get Lisp's current Process ID (PID)
+
+Implementations provide their own functions for this.
+
+On SBCL:
+
+~~~lisp
+(sb-posix:getpid)
+~~~
+
+It is possible portably with the osicat library:
+
+~~~lisp
+(osicat-posix:getpid)
+~~~
+
+Here again, we could find it by using the `apropos` function:
+
+~~~lisp
+CL-USER> (apropos "pid")
+OSICAT-POSIX:GETPID (fbound)
+OSICAT-POSIX::PID
+[…]
+SB-IMPL::PID
+SB-IMPL::WAITPID (fbound)
+SB-POSIX:GETPID (fbound)
+SB-POSIX:GETPPID (fbound)
+SB-POSIX:LOG-PID (bound)
+SB-POSIX::PID
+SB-POSIX::PID-T
+SB-POSIX:WAITPID (fbound)
+[…]
+~~~
+
+
 <a name="fork-cmucl"></a>
 
 ## Forking with CMUCL
