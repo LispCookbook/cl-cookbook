@@ -2,9 +2,13 @@
 title: Foreign Function Interfaces
 ---
 
-The ANSI Common Lisp standard doesn't mention this topic. So almost everything that can be said here depends on your OS and your implementation.<a name="clisp-gethost">### Example: Calling 'gethostname' from CLISP
+The ANSI Common Lisp standard doesn't mention this topic. So almost everything that can be said here depends on your OS and your implementation.
 
-Note: You should read the</a> [relevant chapter](http://clisp.sourceforge.net/impnotes.html#dffi) from the CLISP implementation notes before you proceed.
+<a name="clisp-gethost"></a>
+
+### Example: Calling 'gethostname' from CLISP
+
+Note: You should read the [relevant chapter](http://clisp.sourceforge.net/impnotes.html#dffi) from the CLISP implementation notes before you proceed.
 
 `int gethostname(char *name, int len)` follows a typical pattern of C "out"-parameter convention - it expects a pointer to a buffer it's going to fill. So you must view this parameter as either `:OUT` or `:IN-OUT`. Additionally, one must tell the function the size of the buffer. Here `len` is just an `:IN` parameter. Sometimes this will be an `:IN-OUT` parameter, returning the number of bytes actually filled in.
 
