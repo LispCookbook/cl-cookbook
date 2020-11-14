@@ -117,6 +117,3 @@ of its features:
 ~~~lisp
 (interpol:enable-interpol-syntax)
 ~~~
-
-A lot more syntax sugar is introduced by the [cl21](cl21.html) project
-but in a somewhat more intrusive way.

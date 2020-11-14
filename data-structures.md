@@ -197,9 +197,6 @@ The new list shares some cons cells with the `(3 4)`:
 
 http://gigamonkeys.com/book/figures/after-append.png
 
-__Note__: [cl21](cl21.htm)'s `append` is generic (for strings, lists, vectors and
-its abstract-sequence).
-
 `nconc` is the recycling equivalent.
 
 ### push (item, place)
@@ -425,8 +422,6 @@ For more, use a `lambda` that takes one parameter.
 (find 'bar my-alist :key (lambda (it) (car it)))
 ~~~
 
-_Note_: and [cl21](cl21.html#shorter-lambda) has short lambdas:
-
 ~~~lisp
 (find 'bar my-alist :key ^(car %))
 (find 'bar my-alist :key (lm (it) (car it)))
@@ -454,8 +449,6 @@ with a list of strings:
 (every #'stringp str)
 ;; => T
 (some #'(lambda (it) (= 3 (length it))) str)
-;; => T
-(some ^(= 3 (length %)) str) ;; in CL21
 ;; => T
 ~~~
 
@@ -578,8 +571,6 @@ produce either a vector or a list, use `(map 'list function vector)`.
 
 mapcar also accepts multiple lists with `&rest more-seqs`.  The
 mapping stops as soon as the shortest sequence runs out.
-
-_Note: cl21's `map` is a generic `mapcar` for lists and vectors._
 
 `map` takes the output-type as first argument (`'list`, `'vector` or
 `'string`):
@@ -831,19 +822,7 @@ Hash Tables are created using the function
 has no required argument. Its most used optional keyword argument is
 `:test`, specifying the function used to test the equality of keys.
 
-If we are using the [cl21](http://cl21.org/) extension library, we can
-create a hash table and add elements in the same time with the new
-`#H` reader syntax:
-
-~~~lisp
-(defparameter *my-hash* #H(:name "Eitaro Fukamachi"))
-~~~
-then we access an element with
-
-~~~lisp
-(getf *my-hash* :name)
-~~~
-
+_Note_: see shorter notations in the [Serapeum](https://github.com/ruricolist/serapeum/) or [Rutils](https://github.com/vseloved/rutils) libraries. For example, Serapeum has `dict`, and Rutils a `#h` reader macro.
 
 <a name="get"></a>
 
@@ -1097,8 +1076,6 @@ THIRD-KEY -> NIL
 NIL -> NIL-VALUE
 NIL
 ~~~
-
-Last, we also have [cl21](cl21.htm)'s `(doeach ((key val) *hash*) …)`.
 
 #### Traversign keys or values
 
@@ -1783,9 +1760,8 @@ The solutions presented below might help you getting started, but keep
 in mind that they'll have a performance impact and that error messages
 will be less explicit.
 
-* [CL21](cl21.html) has a generic `getf` (as well as others generic functions),
-* [rutils](https://github.com/vseloved/rutils) as a generic `generic-elt` or `?`,
 * the [access](https://github.com/AccelerationNet/access) library (battle tested, used by the Djula templating system) has a generic `(access my-var :elt)` ([blog post](https://lisp-journey.gitlab.io/blog/generice-consistent-access-of-data-structures-dotted-path/)). It also has `accesses` (plural) to access and set nested values.
+* [rutils](https://github.com/vseloved/rutils) as a generic `generic-elt` or `?`,
 
 ## Appendix B - accessing nested data structures
 
