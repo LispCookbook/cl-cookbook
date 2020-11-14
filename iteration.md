@@ -58,6 +58,7 @@ Iterate looks like this:
 (if you use loop and iterate in the same package, you might run into name conflicts)
 
 Iterate also comes with `display-iterate-clauses` that can be quite handy:
+
 ~~~lisp
 (display-iterate-clauses '(for))
 ;; FOR PREVIOUS &OPTIONAL INITIALLY BACK     Previous value of a variable
@@ -238,6 +239,7 @@ For lists and vectors:
 ~~~
 
 Looping over a hash-table is also straightforward:
+
 ~~~lisp
 (let ((h (let ((h (make-hash-table)))
            (setf (gethash 'a h) 1)
@@ -420,7 +422,7 @@ See also [with-hash-table-iterator](http://www.lispworks.com/documentation/Hyper
 #### mapcar
 ~~~lisp
 (mapcar (lambda (x y)
-           (list x y))
+          (list x y))
         '(a b c)
         '(1 2 3))
 ;; ((A 1) (B 2) (C 3))
@@ -439,9 +441,9 @@ Return a flat list:
 
 ~~~lisp
 (mapcan (lambda (x y)
-                   (list x y))
-                 '(a b c)
-                 '(1 2 3))
+          (list x y))
+        '(a b c)
+        '(1 2 3))
 ;; (A 1 B 2 C 3)
 ~~~
 
@@ -461,7 +463,9 @@ A more efficient way, when the lists are known to be of equal length:
                                   '(1 2 3))))
     (list x y)))
 ~~~
+
 Return a flat list:
+
 ~~~lisp
 (collect-append ; or collect-nconc
  (mapping (((x y) (scan-multiple 'list
@@ -473,6 +477,7 @@ Return a flat list:
 
 ### Nested loops
 #### loop
+
 ~~~lisp
 (loop for x from 1 to 3
       collect (loop for y from 1 to x
@@ -481,6 +486,7 @@ Return a flat list:
 ~~~
 
 #### iterate
+
 ~~~lisp
 (iter outer
    (for i below 2)
@@ -490,6 +496,7 @@ Return a flat list:
 ~~~
 
 #### Series
+
 ~~~lisp
 (collect
   (mapping ((x (scan-range :from 1 :upto 3)))
@@ -612,12 +619,14 @@ Similarly, use `from 10 downto 0` (10…0) and `from 10 above 0` (10…1).
 #### Series
 
 `:from ... :upto`, including the upper limit:
+
 ~~~lisp
 (iterate ((i (scan-range :from 0 :upto 10)))
   (print i))
 ~~~
 
 `:from ... :below`, excluding the upper limit:
+
 ~~~lisp
 (iterate ((i (scan-range :from 0 :below 10)))
   (print i))
@@ -644,6 +653,7 @@ if it was in a closure:
 ~~~
 
 #### Series
+
 with `:by`
 ~~~lisp
 (iterate ((i (scan-range :from 1 :upto 10 :by 2)))
@@ -782,6 +792,7 @@ x is 3
 
 #### Series
 By mapping we can perform a side effect and also collect items
+
 ~~~lisp
 (collect
   (mapping ((x (until-if (complement (lambda (x) (< x 4)))
@@ -945,6 +956,7 @@ We use `by` to skip one element at every iteration (`(cddr list)` is equivalent 
 ~~~
 
 Then we add destructuring to bind only the first two items at each iteration:
+
 ~~~lisp
 (loop for (key value) on '(a 2 b 2 c 3) by #'cddr
       collect (list key (* 2 value)))
@@ -954,6 +966,7 @@ Then we add destructuring to bind only the first two items at each iteration:
 
 #### Series
 In general, with `destructuring-bind`:
+
 ~~~lisp
 (collect
   (mapping ((l (scan '((x 1) (y 2) (z 3)))))
