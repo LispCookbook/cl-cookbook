@@ -898,3 +898,7 @@ C-c C-v M-o     slime-clear-presentations
 ```
 
 [slime-fuzzy]: https://common-lisp.net/project/slime/doc/html/Fuzzy-Completion.html
+
+## See also
+
+- [Common Lisp REPL exploration guide](https://bnmcgn.github.io/lisp-guide/lisp-exploration.html) - a concise and curated set of highlights to find one's way in the REPL.
