@@ -104,7 +104,7 @@ typical use of `with-open-file` looks like this:
     :direction <_direction_>
     :if-exists <_if-exists_>
     :if-does-not-exist <_if-does-not-exist_>)
-  <_your code here_>)
+  (your code here))
 ~~~
 
 *   `str` is a variable which'll be bound to the stream which is created by
@@ -130,8 +130,7 @@ Note that there are a lot more options to `with-open-file`. See
 [the CLHS entry for `open`](http://www.lispworks.com/documentation/HyperSpec/Body/f_open.htm)
 for all the details. You'll find some examples on how to use `with-open-file`
 below. Also note that you usually don't need to provide any keyword arguments if
-you just want to open an existing file for reading.<a name="strings">
-
+you just want to open an existing file for reading.
 
 ### Reading files
 
