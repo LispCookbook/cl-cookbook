@@ -277,6 +277,7 @@ For a complete list, see
 ~~~
 
 and
+
 ~~~lisp
 asdf:*central-registry*
 ~~~
@@ -292,7 +293,9 @@ available right-away:
 ~~~lisp
 (asdf:load-system "system")
 ~~~
+
 or
+
 ~~~lisp
 (ql:quickload "system")
 ~~~
