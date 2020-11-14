@@ -158,7 +158,7 @@ We can call it:
 ;; NIL
 ~~~
 
-### Default values
+### Default values to key parameters
 
 In the lambda list, use pairs to give a default value to an optional or a key argument, like `(happy t)` below:
 
@@ -181,11 +181,11 @@ arguments. Use `&rest <variable>`, where `<variable>` will be a list.
 
 ~~~lisp
 (mean 1)
-(mean 1 2)
-(mean 1 2 3 4 5)
+(mean 1 2)  ;; => 3/2 (yes, it is printed as a ratio)
+(mean 1 2 3 4 5) ;;  => 3
 ~~~
 
-### `&allow-other-keys`
+### Defining key arguments, and allowing more: `&allow-other-keys`
 
 Observe:
 
