@@ -2326,3 +2326,4 @@ reading, you may find the following resources useful:
 - Your Common Lisp implementation’s
   manual. [For SBCL, here is a link to the official manual](https://www.lispworks.com/documentation/HyperSpec/Front/)
 - [Common Lisp recipes](http://weitz.de/cl-recipes/) by the venerable Edi Weitz.
+- more concurrency and threading libraries on the [Awesome-cl#parallelism-and-concurrency](https://github.com/CodyReichert/awesome-cl#parallelism-and-concurrency) list.
