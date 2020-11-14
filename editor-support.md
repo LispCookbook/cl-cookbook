@@ -143,16 +143,15 @@ highlighting of errors and warnings, a REPL, and a project skeleton creator.
 
 ## Notebooks
 
-[cl-jupyter](https://github.com/fredokun/cl-jupyter) is a Common Lisp
+[common-lisp-jupyter](https://github.com/yitzchak/common-lisp-jupyter) is a Common Lisp
 kernel for Jupyter notebooks.
 
 
-[Darkmatter](https://github.com/tamamu/darkmatter) is a notebook-style
-Common Lisp environment.
-
-
-<img src="https://github.com/tamamu/darkmatter/raw/master/screenshots/screenshot.png"
+<img src="https://jupyter.org/assets/jupyterpreview.png"
      style="width: 800px"/>
+
+There is also [Darkmatter](https://github.com/tamamu/darkmatter), a notebook-style
+Common Lisp environment, built in Common Lisp.
 
 
 ## REPLs
