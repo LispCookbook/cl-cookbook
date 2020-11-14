@@ -170,6 +170,7 @@ The calculation now silently continues, without an error condition.
 
 A similar functionality to disable floating overflow errors
 exists in [CCL][CCL]:
+
 ~~~lisp
 * (set-fpu-mode :overflow nil)
 ~~~
@@ -199,6 +200,7 @@ For arbitrary high precision calculations there is the
 ~~~
 
 The precision to print is set by `*PRINT-PREC*`, by default 20
+
 ~~~lisp
 * (setq *PRINT-PREC* 50)
 * (sqrt-r 2)
