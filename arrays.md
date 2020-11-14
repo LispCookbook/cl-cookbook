@@ -457,6 +457,7 @@ calls to some functions:
 #### Scale an array
 
 scaling by a constant factor:
+
 ~~~lisp
 * (defparameter a #(1 2 3))
 * (lla:scal! 2.0 a)
@@ -468,6 +469,7 @@ scaling by a constant factor:
 
 This calculates `a * x + y` where `a` is a constant, `x` and `y` are arrays.
 The `lla:axpy!` function is destructive, modifying the last argument (`y`).
+
 ~~~lisp
 * (defparameter x #(1 2 3))
 A
@@ -497,6 +499,7 @@ number versions of these operators:
 #### Dot product
 
 The dot product of two vectors:
+
 ~~~lisp
 * (defparameter x #(1 2 3))
 * (defparameter y #(2 3 4))
@@ -513,6 +516,7 @@ To get around this, multidimensional arrays can be displaced to create
 a 1D vector.
 Displaced arrays share storage with the original array, so this is a
 fast operation which does not require copying data:
+
 ~~~lisp
 * (defparameter a #2A((1 2) (3 4)))
 A
@@ -522,6 +526,7 @@ A
 
 The `array-operations` package contains `flatten`, which returns a
 displaced array i.e doesn't copy data:
+
 ~~~lisp
 * (reduce #'max (aops:flatten a))
 ~~~
@@ -529,6 +534,7 @@ displaced array i.e doesn't copy data:
 An SBCL extension,
 [array-storage-vector](http://www.sbcl.org/manual/#index-array_002dstorage_002dvector)
 provides an efficient but not portable way to achieve the same thing:
+
 ~~~lisp
 * (reduce #'max (array-storage-vector a))
 4
@@ -597,12 +603,14 @@ defined above, a macro which does not allocate can be defined as:
 of array-operations, but not Quicklisp]
 
 Using this macro, the maximum value in an array A (of any shape) is:
+
 ~~~lisp
 * (vectorize-reduce #'max (a) a)
 ~~~
 
 The maximum absolute difference between two arrays A and B, of any
 shape as long as they have the same shape, is:
+
 ~~~lisp
 * (vectorize-reduce #'max (a b) (abs (- a b)))
 ~~~
@@ -618,6 +626,7 @@ including:
 A longer list of available packages is on [CLiki's linear algebra page](https://www.cliki.net/linear%20algebra).
 
 In the examples below the lla package is loaded:
+
 ~~~lisp
 * (ql:quickload :lla)
 
@@ -639,12 +648,14 @@ multiplication.
 
 Note that one vector is treated as a row vector, and the other as
 column:
+
 ~~~lisp
 * (lla:mm #(1 2 3) #(2 3 4))
 20
 ~~~
 
 #### Matrix-vector product
+
 ~~~lisp
 * (lla:mm #2A((1 1 1) (2 2 2) (3 3 3))  #(2 3 4))
 #(9.0d0 18.0d0 27.0d0)
@@ -652,6 +663,7 @@ column:
 which has performed the sum over `j` of `A[i j] * x[j]`
 
 #### Matrix-matrix multiply
+
 ~~~lisp
 * (lla:mm #2A((1 2 3) (1 2 3) (1 2 3))  #2A((2 3 4) (2 3 4) (2 3 4)))
 #2A((12.0d0 18.0d0 24.0d0) (12.0d0 18.0d0 24.0d0) (12.0d0 18.0d0 24.0d0))
@@ -660,6 +672,7 @@ which summed over `j` in `A[i j] * B[j k]`
 
 Note that the type of the returned arrays are simple arrays,
 specialised to element type `double-float`
+
 ~~~lisp
 * (type-of (lla:mm #2A((1 0 0) (0 1 0) (0 0 1)) #(1 2 3)))
 (SIMPLE-ARRAY DOUBLE-FLOAT (3))
@@ -670,6 +683,7 @@ specialised to element type `double-float`
 The [array-operations](https://github.com/tpapp/array-operations)
 package contains a generalised [outer product](https://en.wikipedia.org/wiki/Outer_product)
 function:
+
 ~~~lisp
 * (ql:quickload :array-operations)
 To load "array-operations":
@@ -688,11 +702,13 @@ multiple dimensions.
 ### Matrix inverse
 
 The direct inverse of a dense matrix can be calculated with `invert`
+
 ~~~lisp
 * (lla:invert #2A((1 0 0) (0 1 0) (0 0 1)))
 #2A((1.0d0 0.0d0 -0.0d0) (0.0d0 1.0d0 -0.0d0) (0.0d0 0.0d0 1.0d0))
 ~~~
 e.g
+
 ~~~lisp
 * (defparameter a #2A((1 2 3) (0 2 1) (1 3 2)))
 A
@@ -744,6 +760,7 @@ A-SVD
 
 The diagonal matrix (singular values) and vectors can be accessed with
 functions:
+
 ~~~lisp
 (lla:svd-u a-svd)
 #2A((-0.6494608633564334d0 0.7205486773948702d0 0.24292013188045855d0)
