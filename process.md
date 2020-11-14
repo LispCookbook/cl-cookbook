@@ -1222,89 +1222,31 @@ To load "lparallel":
 
 And that’s all it took! Now let’s see how this library actually works.
 
-### Preamble - get the number of cores with a call to CFFI
+### Preamble - get the number of cores
 
 First, let’s get hold of the number of threads that we are going to
 use for our parallel examples. Ideally, we’d like to have a 1:1 match
 between the number of worker threads and the number of available
 cores.
 
-We can use the wonderful **cffi** library to this end. I plan to have a
-detailed blog post for this extremely useful library soon, but for
-now, let’s get on with it:
+We can use the great **Serapeum** library to this end, which has a
+`count-cpus` function, that works on all major platforms.
 
-Install CFFI:
+Install it:
 
 ~~~lisp
-CL-USER> (ql:quickload :cffi)
-To load "cffi":
-  Load 4 ASDF systems:
-    alexandria babel trivial-features uiop
-  Install 1 Quicklisp release:
-    cffi
-; Fetching #<URL "http://beta.quicklisp.org/archive/cffi/2016-03-18/cffi_0.17.1.tgz">
-; 234.48KB
-==================================================
-240,107 bytes in 5.98 seconds (39.22KB/sec)
-; Loading "cffi"
-[package cffi-sys]................................
-[package cffi]....................................
-..................................................
-[package cffi-features]
-(:CFFI)
+CL-USER> (ql:quickload :serapeum)
 ~~~
 
-Write C code to get the number of logical cores on the machine:
-
-```
-#include <stdio.h>
-#include <sys/types.h>
-#include <sys/sysctl.h>
-
-int get_core_count();
-
-int main()
-{
-    printf("%d\n", get_core_count());
-
-    return 0;
-}
-
-int32_t get_core_count()
-{
-    const char* s = "hw.logicalcpu";
-    int32_t core_count;
-    size_t len = sizeof(core_count);
-
-    sysctlbyname(s, &core_count, &len, NULL, 0);
-
-    return core_count;
-}
-```
-
-Bundle the C code into a shared library (note, I am using Mac OS X
-which comes bundled with Clang. For pure gcc, refer to the relevant
-documentation): 1
-
-```
-Timmys-MacBook-Pro:Parallelism z0ltan$ clang -dynamiclib get_core_count.c -o libcorecount.dylib
-```
-
-Invoke the function from Common Lisp:
+and call it:
 
 ~~~lisp
-CL-USER> (cffi:use-foreign-library "libcorecount.dylib")
-#<CFFI:FOREIGN-LIBRARY LIBCORECOUNT.DYLIB-853 "libcorecount.dylib">
-CL-USER> (cffi:foreign-funcall "get_core_count" :int)
+CL-USER> (serapeum:count-cpus)
 8
 ~~~
 
-We can see that the result is 8 cores on the machine (which is
-correct) and can be verified from the command line as well:
+and check that is correct.
 
-```
-Timmys-MacBook-Pro:Parallelism z0ltan$ sysctl -n "hw.logicalcpu"
-```
 
 ### Common Setup
 
