@@ -17,20 +17,20 @@ reader.
 
 `princ` focuses on an *aesthetic* representation.
 
-`format t "~a" …)`, with the *aesthetic* directive, prints a string (in `t`, the standard output
+`(format t "~a" …)`, with the *aesthetic* directive, prints a string (in `t`, the standard output
 stream) and returns nil, whereas `format nil …` doesn't print anything
 and returns a string. With many format controls we can print several
 variables at once.
 
 ## Logging
 
-Logging is a good evolution from print debugging ;)
+Logging is already a good evolution from print debugging ;)
 
 [log4cl](https://github.com/sharplispers/log4cl/) is the popular,
 de-facto logging library but it isn't the only one. Download it:
 
 ~~~lisp
-(ql:quickload :log4cl)
+(ql:quickload "log4cl")
 ~~~
 
 and let's have a dummy variable:
@@ -74,7 +74,7 @@ menu or mouse clicks.
 
 !["changing the log level with log4slime"](https://github.com/sharplispers/log4cl/raw/master/images/screenshot-15.png)
 
-We invite you to read log4cl's readme.
+We invite you to read log4cl's README.
 
 ## Using the powerful REPL
 
@@ -85,17 +85,19 @@ them for the usual routine.
 As soon as we define a function, we can try it in the REPL. In Slime,
 compile a function with `C-c C-c` (the whole buffer with `C-c C-k`),
 switch to the REPL with `C-c C-z` and try it. Eventually enter the
-package you are working on with `(in-package :your-package)`.
+package you are working on with `(in-package :your-package)`
+or `C-c ~` (`slime-sync-package-and-default-directory`),
+(which will also change the default working directory to the package definition's directory).
 
 The feedback is immediate. There is no need to recompile everything,
 nor to restart any process, nor to create a main function and define
-command line arguments for use in the shell (we can do this later on
+command line arguments for use in the shell (which we can of course do later on
 when needed).
 
 We usually need to create some data to test our function(s). This is a
 subsequent art of the REPL existence and it may be a new discipline
 for newcomers. A trick is to write the test data alongside your
-functions but inside a `#+nil` declaration so that only you can
+functions but below a `#+nil` feature test (or safer, `+(or nil)`) so that only you can
 manually compile them:
 
 ~~~lisp
@@ -348,8 +350,9 @@ to CLOS method combination (before, after, around methods).
 `watch` will signal a condition when a thread attempts to write to an
 object being watched. It can be coupled with the display of the
 watched objects in a GUI.
+For a certain class of bugs (someone is changing this value, but I
+don't know who), this can be extremely helpful.
 
-There is a [cl-advice](https://bitbucket.org/budden/budden-tools/src/default/cl-advice/?at=default) non-published library defining a portability layer.
 
 ## Unit tests
 
@@ -360,13 +363,15 @@ be what you're looking for! See the [testing](testing.html) section and a list o
 
 ## Remote debugging
 
-Here's how to debug a running application on another machine.
+You can have your software running on a machine over the network,
+connect to it and debug it from home, from your development
+environment.
 
-The steps involved are to start a Swank server on the remote machine, create an
-ssh tunnel, and connect to the Swank server from our editor. Then we
-can browse and evaluate code of the running instance transparently.
+The steps involved are to start a **Swank server** on the remote machine (Swank is the backend companion of Slime), create an
+ssh tunnel and connect to the Swank server from our editor. Then we
+can browse and evaluate code on the running instance transparently.
 
-Let's define a function that prints forever.
+To test this, let's define a function that prints forever.
 
 If needed, import the dependencies first:
 
@@ -401,21 +406,21 @@ If needed, import the dependencies first:
 (runner)
 ~~~
 
-If you check with `bt:all-threads`, you'll see your Swank server running on port 4006:
+On the server, we can run this code with
+
+    sbcl --load demo.lisp
+
+If you check with `(bt:all-threads)`, you'll see your Swank server running on port 4006:
 
     #<SB-THREAD:THREAD "Swank 4006" RUNNING {1003A19333}>
 
 
-On the server, we can run it with
-
-    sbcl --load demo.lisp
-
-we do port forwarding on our development machine:
+We do port forwarding on our development machine:
 
     ssh -L4006:127.0.0.1:4006 username@example.com
 
 this will securely forward port 4006 on the server at example.com to
-our local computer's port 4006 (swanks only accepts connections from
+our local computer's port 4006 (Swank only accepts connections from
 localhost).
 
 We connect to the running Swank with `M-x slime-connect`, choosing localhost for the host
@@ -434,7 +439,7 @@ and eval it as usual with `C-c C-c` or `M-x slime-eval-region` for instance. The
 That's how Ron Garret debugged the Deep Space 1 spacecraft from the earth
 in 1999:
 
-> we were able to debug and fix a race condition that had not shown up during ground testing. (Debugging a program running on a $100M piece of hardware that is 100 million miles away is an interesting experience. Having a read-eval-print loop running on the spacecraft proved invaluable in finding and fixing the problem.
+> We were able to debug and fix a race condition that had not shown up during ground testing. (Debugging a program running on a $100M piece of hardware that is 100 million miles away is an interesting experience. Having a read-eval-print loop running on the spacecraft proved invaluable in finding and fixing the problem.
 
 
 ## References
