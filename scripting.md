@@ -219,8 +219,6 @@ Is it the case ?
 
 Yes, it is the case with this SBCL installed from Debian.
 
-<!-- In case you want to build from scratch, you can use `./make.sh --fancy`. -->
-
 **With SBCL**
 
 In SBCL, we would give an argument to `save-lisp-and-die`, where
