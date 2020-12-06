@@ -19,9 +19,9 @@ _"the Utilities for Implementation- and OS- Portability"_. You can read
 
 ## Simple examples
 
-### Loading a System
+### Loading a system
 
-The most trivial use of ASDF is by calling `(asdf:make :foobar)` (or `load-system`)
+The most trivial use of ASDF is by calling `(asdf:make "foobar")` (or `load-system`)
 to load your library.
 Then you can use it.
 For instance, if it exports a function `some-fun` in its package `foobar`,
@@ -35,14 +35,14 @@ then you will be able to call it with `(foobar:some-fun ...)` or with:
 You can also use Quicklisp:
 
 ~~~lisp
-(ql:quickload :foobar)
+(ql:quickload "foobar")
 ~~~
 
-Also, you can use SLIME to load a system, using `M-x slime-load-system` Emacs command.
+Also, you can use SLIME to load a system, using the `M-x slime-load-system` Emacs command.
 The interesting thing about this way of doing it is that SLIME collects all the system warnings and errors in the process,
 and puts them in the `*slime-compilation*` buffer, from which you can interactively inspect them after the loading finishes.
 
-### Testing a System
+### Testing a system
 
 To run the tests for a system, you may use:
 
@@ -62,9 +62,9 @@ strings, not symbols, as in:
 (asdf:test-system "foobar")
 ~~~
 
-### Trivial System Definition
+### How to write a trivial system definition
 
-A trivial system would have a single Lisp file called `foobar.lisp`.
+A trivial system would have a single Lisp file called `foobar.lisp`, located at the project's root.
 That file would depend on some existing libraries,
 say `alexandria` for general purpose utilities,
 and `trivia` for pattern-matching.
@@ -110,7 +110,7 @@ Instead of `using` multiple complete packages, you might want to just import par
   (:import-from #:trivia
                 #:some-function
                 #:another-function))
-...)                
+...)
 ~~~
 
 
@@ -121,10 +121,13 @@ Assuming your system is installed under `~/common-lisp/`,
 already configured for ASDF, you can load it with: `(asdf:make "foobar")`.
 
 If your Lisp was already started when you created that file,
-you may have to `(asdf:clear-configuration)` to re-process the configuration.
+you may have to, either:
+
+- load the new .asd file: `(load "path/to/foobar.asd")`, or with `C-c C-k` in Slime to compile and load the whole file.
+- `(asdf:clear-configuration)` to re-process the configuration.
 
 
-### Trivial Testing Definition
+### How to write a trivial testing definition
 
 Even the most trivial of systems needs some tests,
 if only because it will have to be modified eventually,
@@ -160,11 +163,11 @@ Obvious YMMV if you use a different library.
 
 [cl-project](https://github.com/fukamachi/cl-project) can be used to
 generate a project skeleton. It will create a default ASDF definition,
-it generates a system for unit testing, etc.
+ generate a system for unit testing, etc.
 
 Install with
 
-    (ql:quickload :cl-project)
+    (ql:quickload "cl-project")
 
 Create a project:
 
@@ -182,3 +185,5 @@ Create a project:
 ;   writing /Users/fukamachi/Programs/lib/cl-sample/t/hogehoge.lisp
 ;=> T
 ~~~
+
+And you're done.
