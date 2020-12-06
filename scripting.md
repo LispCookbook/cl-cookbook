@@ -22,12 +22,12 @@ Note that we can similarly build self-contained executables for **web apps**.
 
 ## Building a self-contained executable
 
-### With SBCL
+### With SBCL - Images and Executables
 
-How to build (self-contained) executables is implementation-specific (see
-below Buildapp and Rowsell). With SBCL, as says
+How to build (self-contained) executables is, by default, implementation-specific (see
+below for portable ways). With SBCL, as says
 [its documentation](http://www.sbcl.org/manual/index.html#Function-sb_002dext_003asave_002dlisp_002dand_002ddie),
-it is a matter of:
+it is a matter of calling `save-lisp-and-die` with the `executable` argument to T:
 
 ~~~lisp
 (sb-ext:save-lisp-and-die #P"path/name-of-executable" :toplevel #'my-app:main-function :executable t)
@@ -39,28 +39,31 @@ it is a matter of:
 
 `:executable  t`  tells  to  build  an  executable  instead  of  an
 image. We  could build an  image to save  the state of  our current
-Lisp image, to come back working with it later. Specially useful if
+Lisp image, to come back working with it later. This is especially useful if
 we made a lot of work that is computing intensive.
+In that case, we re-use the image with `sbcl --core name-of-image`.
+
+`:toplevel` gives the program's entry point, here `my-app:main-function`. Don't forget to `export` the symbol, or use `my-app::main-function` (with two colons).
 
 If you try to run this in Slime, you'll get an error about threads running:
 
 > Cannot save core with multiple threads running.
 
-Run the command from a simple SBCL repl.
+So we must run the command from a simple SBCL repl.
 
 I suppose your project has Quicklisp dependencies. You must then:
 
-* ensure Quicklisp is installed and loaded at Lisp startup (you
-  completed Quicklisp installation)
-* `load` the project's .asd
-* install dependencies
+* ensure Quicklisp is installed and loaded at the Lisp startup (you
+  completed Quicklisp installation),
+* `load` the project's .asd,
+* install the dependencies,
 * build the executable.
 
 That gives:
 
 ~~~lisp
 (load "my-app.asd")
-(ql:quickload :my-app)
+(ql:quickload "my-app")
 (sb-ext:save-lisp-and-die #p"my-app-binary" :toplevel #'my-app:main :executable t)
 ~~~
 
@@ -131,7 +134,7 @@ Debian: `apt install buildapp`, but you shouldn't need it now with asdf:make or 
 
 ### For web apps
 
-We can similarly build a self-contained executable for our web-app. It
+We can similarly build a self-contained executable for our web appplication. It
 would thus contain a web server and would be able to run on the
 command line:
 
@@ -140,8 +143,8 @@ command line:
     Listening on localhost:9003.
 
 Note that this runs the production webserver, not a development one,
-so we can run the binary on our VPS right away and access the app from
-outside.
+so we can run the binary on our VPS right away and access the application from
+the outside.
 
 We have one thing to take care of, it is to find and put the thread of
 the running web server on the foreground. In our `main` function, we
@@ -185,7 +188,8 @@ According to
 [this reddit source](https://www.reddit.com/r/lisp/comments/46k530/tackling_the_eternal_problem_of_lisp_image_size/), ECL produces indeed the smallest executables of all,
 an order of magnitude smaller than SBCL, but with a longer startup time.
 
-CCL's binaries seem to be as fast as SBCL and nearly half the size.
+CCL's binaries seem to be as fast to start up as SBCL and nearly half the size.
+
 
 ```
 | program size | implementation |  CPU | startup time |
@@ -200,6 +204,12 @@ CCL's binaries seem to be as fast as SBCL and nearly half the size.
 |        41713 | ccl.big        |  95% |        .0094 |
 |        19948 | clisp.big      |  97% |        .0259 |
 ```
+
+You'll also want to investigate the proprietary Lisps' tree shakers capabilities.
+
+Regarding compilation times, CCL is famous for being fast in that regards.
+ECL is more involved and takes the longer to compile of these three implementations.
+
 
 ### Building a smaller binary with SBCL's core compression
 
@@ -259,17 +269,22 @@ way to handle the differences for us.
 
 We have `uiop:command-line-arguments`, shipped in ASDF and included in
 nearly all implementations.
+From anywhere in your code, you can simply check if a given string is present in this list:
 
-That's good, but we also want to parse the arguments.
+~~~lisp
+(member "-h" (uiop:command-line-arguments) :test #'string-equal)
+~~~
+
+That's good, but we also want to parse the arguments, have facilities to check short and long options, build a help message automatically, etc.
 
 A quick look at the
 [awesome-cl#scripting](https://github.com/CodyReichert/awesome-cl#scripting)
-list and we'll do that with the
+list made us choose the
 [unix-opts](https://github.com/mrkkrp/unix-opts) library.
 
     (ql:quickload "unix-opts")
 
-We can call it with its `opts` alias (nickname).
+We can call it with its `opts` alias (a global nickname).
 
 As often work happens in two phases:
 
@@ -299,9 +314,9 @@ We define the arguments with `opts:define-opts`:
            :long "info"))
 ~~~
 
-Here `parse-integer` is a built-in CL function.
+Here `parse-integer` is a built-in CL function. If the argument you expect is a string, you don't have to define an `arg-parser`.
 
-Example output on the command line (auto-generated help text):
+Here is an example output on the command line after we build and run a binary of our application. The help message was auto-generated:
 
 ~~~
 $ my-app -h
@@ -345,7 +360,7 @@ error handling in a moment.
 So `options` is a
 [property list](https://lispcookbook.github.io/cl-cookbook/data-structures.html#plist). We
 use `getf` and `setf` with plists, so that's how we do our
-logic. Below we print the help with `opts:describe` and then `exit`
+logic. Below we print the help with `opts:describe` and then we `quit`
 (in a portable way).
 
 ~~~lisp
@@ -357,7 +372,7 @@ logic. Below we print the help with `opts:describe` and then `exit`
           (opts:describe
            :prefix "You're in my-app. Usage:"
            :args "[keywords]") ;; to replace "ARG" in "--nb ARG"
-          (opts:exit))) ;; <= optional return status.
+          (uiop:quit)))
     (if (getf options :nb)
        ...)
 ~~~
@@ -376,13 +391,13 @@ slightly better. Now to error handling.
 There are 4 situations that unix-opts doesn't handle, but signals
 conditions for us to take care of:
 
-* for an unknown argument: an `unknown-option` condition is signaled
-* also `missing-arg`
-* `arg-parser-failed` when, for example, it expected an integer but got text
-* `missing-required-option`
+* when it sees an unknown argument, an `unknown-option` condition is signaled.
+* when an argument is missing, it signals a `missing-arg` condition.
+* when it can't parse an argument, it signals `arg-parser-failed`. For example, if it expected an integer but got text.
+* when it doesn't see a required option, it signals `missing-required-option`.
 
 So, we must create simple functions to handle those conditions, and
-surround the parsing of the options with an `handler-bind`:
+surround the parsing of the options with an `handler-bind` form:
 
 ~~~lisp
   (multiple-value-bind (options free-args)
@@ -403,7 +418,7 @@ be a simple one. They take the condition as argument.
   (format t "Problem while parsing option ~s: ~a .~%" (opts:option condition) ;; reader to get the option from the condition.
                                                        condition)
   (opts:describe) ;; print help
-  (opts:exit)) ;; portable exit
+  (uiop:quit 1))
 ~~~
 
 For more about condition handling, see [error and condition handling](error_handling.html).
@@ -439,7 +454,7 @@ application code with a `handler-case`:
                                      (opts:exit))))
 ~~~
 
-This code only for SBCL though. We know about
+This code is only for SBCL though. We know about
 [trivial-signal](https://github.com/guicho271828/trivial-signal/),
 but we were not satisfied with our test yet. So we can use something
 like this:
