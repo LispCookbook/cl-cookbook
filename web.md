@@ -311,7 +311,7 @@ Then define a route like this:
 
 ~~~lisp
 (easy-routes:defroute name ("/foo/:x" :method :get) (y &get z)
-    (format nil "x: ~a y: ~y z: ~a" x y z))
+    (format nil "x: ~a y: ~a z: ~a" x y z))
 ~~~
 
 Here, `:x` captures the path parameter and binds it to the `x`
