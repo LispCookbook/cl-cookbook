@@ -303,7 +303,7 @@ date-picker
 Ltk is quick and easy to grasp.
 
 ~~~lisp
-(ql:quickload :ltk)
+(ql:quickload "ltk")
 (in-package :ltk-user)
 ~~~
 
@@ -381,7 +381,7 @@ Once we're done, we can `(exit-wish)`.
 To try the Nodgui demo, do:
 
 ~~~lisp
-(ql:quickload :nodgui)
+(ql:quickload "nodgui")
 (nodgui.demo:demo)
 ~~~
 
@@ -532,7 +532,7 @@ The library to quickload is `cl-cffi-gtk`. It is made of numerous
 ones, that we have to `:use` for our package.
 
 ~~~lisp
-(ql:quickload :cl-cffi-gtk)
+(ql:quickload "cl-cffi-gtk")
 
 (defpackage :gtk-tutorial
   (:use :gtk :gdk :gdk-pixbuf :gobject
@@ -654,7 +654,7 @@ on Windows.
 Finally, do:
 
 ~~~lisp
-(ql:quickload :iup)
+(ql:quickload "iup")
 ~~~
 
 We are not going to `:use` IUP (it is a bad practice generally after all).
@@ -874,13 +874,13 @@ renderer:
 Quickload `bodge-ui-window`:
 
 ~~~lisp
-(ql:quickload :bodge-ui-window)
+(ql:quickload "bodge-ui-window")
 ~~~
 
 We can run the built-in example:
 
 ~~~lisp
-(ql:quickload :bodge-ui-window/examples)
+(ql:quickload "bodge-ui-window/examples")
 (bodge-ui-window.example.basic:run)
 ~~~
 

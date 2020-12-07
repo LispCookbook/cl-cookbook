@@ -426,7 +426,7 @@ Once it is installed, Osicat also defines the `osicat-posix` system,
 which permits us to get file attributes.
 
 ~~~lisp
-(ql:quickload :osicat)
+(ql:quickload "osicat")
 
 (let ((stat (osicat-posix:stat #P"./files.md")))
   (osicat-posix:stat-size stat))  ;; => 10629

@@ -166,7 +166,7 @@ You can refer to the documentation for more details (check the
 First let’s load up the Bordeaux library using Quicklisp:
 
 ~~~lisp
-CL-USER> (ql:quickload :bt-semaphore)
+CL-USER> (ql:quickload "bt-semaphore")
 To load "bt-semaphore":
   Load 1 ASDF system:
     bt-semaphore
@@ -1190,7 +1190,7 @@ CL-USER> (ql:system-apropos "lparallel")
 Looks like it is. Let’s go ahead and install it:
 
 ~~~lisp
-CL-USER> (ql:quickload :lparallel)
+CL-USER> (ql:quickload "lparallel")
 To load "lparallel":
   Load 2 ASDF systems:
     alexandria bordeaux-threads
@@ -1235,7 +1235,7 @@ We can use the great **Serapeum** library to this end, which has a
 Install it:
 
 ~~~lisp
-CL-USER> (ql:quickload :serapeum)
+CL-USER> (ql:quickload "serapeum")
 ~~~
 
 and call it:
@@ -1256,7 +1256,7 @@ show some useful information once the setup is done.
 Load the library:
 
 ~~~lisp
-CL-USER> (ql:quickload :lparallel)
+CL-USER> (ql:quickload "lparallel")
 To load "lparallel":
   Load 1 ASDF system:
     lparallel
