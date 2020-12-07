@@ -21,7 +21,7 @@ We'll use the following libraries:
 Before starting let's install those libraries with Quicklisp:
 
 ~~~lisp
-(ql:quickload '(:dexador :plump :lquery :lparallel))
+(ql:quickload '("dexador" "plump" "lquery" "lparallel"))
 ~~~
 
 ## HTTP Requests
@@ -68,7 +68,7 @@ We first need to parse the html into an internal data structure. Use
 ;; => #<PLUMP-DOM:ROOT {1009EE5FE3}>
 ~~~
 
-lquery uses [plump](https://shinmera.github.io/plump/) internally.
+lquery uses [Plump](https://shinmera.github.io/plump/) internally.
 
 Now we'll extract the links with CSS selectors.
 
