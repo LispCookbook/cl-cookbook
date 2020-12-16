@@ -78,3 +78,7 @@ The main goal is making the Cookbook more modern and more accessible in addition
 [rbenv]: https://github.com/rbenv/rbenv
 [contributing]: CONTRIBUTING.md
 [bundler-v2]: https://stackoverflow.com/questions/54087856/cant-find-gem-bundler-0-a-with-executable-bundle-gemgemnotfoundexceptio
+
+## Support
+
+You can support the individuals that constantly improve the Cookbook. See the Github Sponsors icon. Thanks for them!

@@ -135,6 +135,19 @@ The pages here on Github are kept up to date. You can also download a
 [up to date zip file][zip] for offline browsing. More info can be found at the
 [Github project page][gh].
 
+## Support us
+
+This Cookbook is a collaborative effort driven by
+individuals. Supporting them is a push towards a better
+Cookbook. Thanks for them!
+
+The maintainers you can support are:
+
+- [vindarel](https://github.com/vindarel/) (main contributor)
+  - github sponsors: [https://github.com/sponsors/vindarel/](https://github.com/sponsors/vindarel/)
+  - ko-fi: [https://ko-fi.com/vindarel](https://ko-fi.com/vindarel)
+
+
 <div style="text-align: center">
     <img src="orly-cover.png"/>
 </div>
