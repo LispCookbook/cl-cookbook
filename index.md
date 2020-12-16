@@ -48,6 +48,24 @@ title: Home
 * [WebSockets](websockets.html)
 * [Miscellaneous](misc.html)
 
+## Download in EPUB
+
+The Cookbook is also available in EPUB format.
+
+You can download it directly, and you can **pay what you want** to further support its development:
+
+
+<br>
+
+<a style="font-size: 16px; background-color: #4CAF50; color: white; padding: 16px; cursor: pointer;" href="https://ko-fi.com/s/01fee22a32">
+  Donate and download the EPUB version
+</a>
+
+<br>
+
+Thank you!
+
+
 ## Translations
 
 The Cookbook has been translated to:
