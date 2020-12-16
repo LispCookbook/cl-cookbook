@@ -53,6 +53,15 @@ After this you can proceed as usual:
 
 Also, refer to the [CONTRIBUTING.md][contributing] file.
 
+### Building the EPUB
+
+See `make-cookbook.lisp`.
+
+To exclude regions of text of the build (for example, embedded videos), use these flags:
+
+    <!-- epub-exclude-start -->
+    <!-- epub-exclude-end -->
+
 ## Origins
 
 This is a fork of the [Common Lisp Cookbook][sf], moved from SourceForge.
