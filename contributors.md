@@ -1,3 +1,72 @@
+# APPENDIX: Contributors
+
+Thank you to all contributors, as well as to the people reviewing push requests whose name won't appear here.
+
+The contributors on Github are:
+
+<!-- (this list is generated for the EPUB rendering -->
+
+* vindarel
+* Paul Nathan
+* nhabedi [^nhabedi]
+* Fernando Borretti
+* bill_clementson
+* chuchana
+* Ben Dudson
+* Pierre Neidhardt
+* Rommel MARTINEZ
+* digikar99
+* nicklevine
+* Danny YUE
+* Dmitry Petrov
+* otjura
+* YUE Daian
+* skeptomai
+* thegoofist
+* Francis St-Amour
+* emres
+* jdcal
+* Boutade
+* airfoyle
+* mvilleneuve
+* Alex Ponomarev
+* Alexander Artemenko
+* Johan Sjölén
+* Mariano Montone
+* albertoriva
+* Nisar Ahmad
+* Nisen
+* Vityok
+* ozten
+* Amol Dosanjh
+* Andrew
+* Andrew Hill
+* Bibek Panthi
+* Bo Yao
+* Burhanuddin Baharuddin
+* Coin Okay
+* Danny Yue
+* HiPhish
+* Kevin Layer
+* LdBeth
+* Matthew Kennedy
+* Momozor
+* Paul Donnelly
+* Pavel Kulyov
+* R Primus
+* Salad Tea
+* Victor Anyakin
+* convert-repo
+* jthing
+* mwgkgk
+* paul-donnelly
+* various-and-sundry
+* Štěpán Němec
+
+(sorted by number of commits):
+
+And the contributors on the original SourceForge version are:
+
 * Marco Antoniotti
 * [Zach Beane](mailto:xach@xach.com)
 * Pierpaolo Bernardi
@@ -22,12 +91,11 @@
 * [Reini Urban](mailto:rurban@x-ray.at)
 * [Matthieu Villeneuve](mailto:matthieu@matthieu-villeneuve.net)
 * [Edi Weitz](mailto:edi@agharta.de)
-* Fernando Borretti
-
-and all contributors on the Github version.
 
 Finally, the credit for finally giving birth to the project probably goes to
-"dj_special_ed" who posted [this message][msg] to [comp.lang.lisp][cll].
+Edi Weitz who posted [this message][msg] to [comp.lang.lisp][cll].
 
 [cll]: news:comp.lang.lisp
 [msg]: http://groups.google.com/groups?selm=76be8851.0201222259.70ecbcb1%40posting.google.com
+
+[^nhabedi]: nhabedi is Edmund Weitz ;)
