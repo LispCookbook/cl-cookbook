@@ -33,12 +33,34 @@ Evaluation took:
   0 bytes consed
 ~~~
 
-By using `time` macro it is fairly easy to find out which part of your program
+By using the `time` macro it is fairly easy to find out which part of your program
 takes too much time.
 
 Please note that the timing information provided here is not guaranteed to be
 reliable enough for marketing comparisons. It should only be used for tuning
 purpose, as demonstrated in this chapter.
+
+### Know your Lisp's statistical profiler
+
+Implementations ship their own profilers. SBCL has
+[sb-profile](http://www.sbcl.org/manual/#Deterministic-Profiler), a
+"classic, per-function-call" deterministic profiler and
+[sb-sprof](http://www.sbcl.org/manual/#Statistical-Profiler), a
+statistical profiler. The latter works by taking samples of the
+program execution at regular intervals, instead of instrumenting
+functions like `sb-profile:profile` does.
+
+> You might find sb-sprof more useful than the deterministic profiler when profiling functions in the common-lisp-package, SBCL internals, or code where the instrumenting overhead is excessive.
+
+### Use flamegraphs and other tracing profilers
+
+[cl-flamegraph](https://github.com/40ants/cl-flamegraph) is a wrapper around SBCL's statistical profiler to generate FlameGraph charts. Flamegraphs are a very visual way to search for hotspots in your code:
+
+![](assets/cl-flamegraph.png)
+
+See also [tracer](https://github.com/TeMPOraL/tracer), a tracing
+profiler for SBCL. Its output is suitable for display in
+Chrome’s or Chromium’s Tracing Viewer (`chrome://tracing`).
 
 ### Checking Assembly Code
 
