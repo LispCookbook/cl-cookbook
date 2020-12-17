@@ -5,7 +5,9 @@ title: Home
 > Cookbook, n.
 > a book containing recipes and other information about the preparation and cooking of food.
 
-*now with extra Lisp*
+A Cookbook is an invaluable resource, as it shows how to do various things in a clear fashion without all the theoretical context. Sometimes you just need to look things up. While cookbooks can never replace proper documentation such as the HyperSpec or books such as Practical Common Lisp, every language deserves a good cookbook, Common Lisp included.
+
+The CL Cookbook aims to tackle all sort of topics, for the beginner as for the more advanced developer.
 
 
 # Content
