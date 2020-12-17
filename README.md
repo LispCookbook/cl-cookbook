@@ -55,7 +55,7 @@ Also, refer to the [CONTRIBUTING.md][contributing] file.
 
 ### Building the EPUB
 
-See `make-cookbook.lisp`.
+Run `make epub`. See `make-cookbook.lisp`.
 
 To exclude regions of text of the build (for example, embedded videos), use these flags:
 

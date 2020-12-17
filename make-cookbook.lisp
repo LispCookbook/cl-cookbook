@@ -8,6 +8,8 @@
 ;;
 ;; Metadata is in metadata.txt
 
+(require 'asdf)
+
 (defparameter chapters
   (list
    "foreword.md"
@@ -84,3 +86,5 @@
   (reset-target)
   (build-full-source)
   (to-epub))
+
+(generate)
