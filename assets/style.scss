@@ -145,6 +145,20 @@ footer {
     opacity: 0.9;
 }
 
+.announce {
+    // background-color: #4CAF50;
+    background-color: #8dd090;
+    // color: white;
+    padding: 1em;
+    text-align: center;
+    opacity: 0.9;
+}
+
+.announce a {
+    text-decoration: underline;
+    color: #3b3b3b;
+}
+
 ul{
     margin-left:0px;
 }
