@@ -1,6 +1,6 @@
 # APPENDIX: Contributors
 
-Thank you to all contributors, as well as to the people reviewing push requests whose name won't appear here.
+Thank you to all contributors, as well as to the people reviewing pull requests whose name won't appear here.
 
 The contributors on Github are:
 
@@ -63,7 +63,7 @@ The contributors on Github are:
 * various-and-sundry
 * Štěpán Němec
 
-(sorted by number of commits):
+(this list is sorted by number of commits)
 
 And the contributors on the original SourceForge version are:
 
