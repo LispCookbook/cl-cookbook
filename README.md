@@ -53,6 +53,15 @@ After this you can proceed as usual:
 
 Also, refer to the [CONTRIBUTING.md][contributing] file.
 
+### Building the EPUB
+
+Run `make epub`. See `make-cookbook.lisp`.
+
+To exclude regions of text of the build (for example, embedded videos), use these flags:
+
+    <!-- epub-exclude-start -->
+    <!-- epub-exclude-end -->
+
 ## Origins
 
 This is a fork of the [Common Lisp Cookbook][sf], moved from SourceForge.
@@ -69,3 +78,7 @@ The main goal is making the Cookbook more modern and more accessible in addition
 [rbenv]: https://github.com/rbenv/rbenv
 [contributing]: CONTRIBUTING.md
 [bundler-v2]: https://stackoverflow.com/questions/54087856/cant-find-gem-bundler-0-a-with-executable-bundle-gemgemnotfoundexceptio
+
+## Support
+
+You can support the individuals that constantly improve the Cookbook. See the Github Sponsors icon. Thanks for them!

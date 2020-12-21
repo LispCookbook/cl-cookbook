@@ -608,7 +608,7 @@ implementation of the
 library (in Quicklisp).
 
 ~~~lisp
-(ql:quickload :alexandria)
+(ql:quickload "alexandria")
 
 (defun adder (foo bar)
   "Add the two arguments."

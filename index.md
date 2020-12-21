@@ -5,7 +5,9 @@ title: Home
 > Cookbook, n.
 > a book containing recipes and other information about the preparation and cooking of food.
 
-*now with extra Lisp*
+A Cookbook is an invaluable resource, as it shows how to do various things in a clear fashion without all the theoretical context. Sometimes you just need to look things up. While cookbooks can never replace proper documentation such as the HyperSpec or books such as Practical Common Lisp, every language deserves a good cookbook, Common Lisp included.
+
+The CL Cookbook aims to tackle all sort of topics, for the beginner as for the more advanced developer.
 
 
 # Content
@@ -47,6 +49,24 @@ title: Home
 * [Web Scraping](web-scraping.html)
 * [WebSockets](websockets.html)
 * [Miscellaneous](misc.html)
+
+## Download in EPUB
+
+The Cookbook is also available in EPUB (and PDF) format.
+
+You can [download it directly in EPUB](common-lisp-cookbook.epub) and [PDF](common-lisp-cookbook.pdf), and you can **pay what you want** to further support its development:
+
+
+<br>
+
+<a style="font-size: 16px; background-color: #4CAF50; color: white; padding: 16px; cursor: pointer;" href="https://ko-fi.com/s/01fee22a32">
+  Donate and download the EPUB version
+</a>
+
+<br>
+
+Thank you!
+
 
 ## Translations
 
@@ -116,6 +136,19 @@ Thanks in advance for your help!
 The pages here on Github are kept up to date. You can also download a
 [up to date zip file][zip] for offline browsing. More info can be found at the
 [Github project page][gh].
+
+## Support us
+
+This Cookbook is a collaborative effort driven by
+individuals. Supporting them is a push towards a better
+Cookbook. Thanks for them!
+
+The maintainers you can support are:
+
+- [vindarel](https://github.com/vindarel/) (main contributor)
+  - github sponsors: [https://github.com/sponsors/vindarel/](https://github.com/sponsors/vindarel/)
+  - ko-fi: [https://ko-fi.com/vindarel](https://ko-fi.com/vindarel)
+
 
 <div style="text-align: center">
     <img src="orly-cover.png"/>

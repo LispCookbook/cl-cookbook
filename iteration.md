@@ -45,7 +45,7 @@ popular iteration macro that aims at being simpler, "lispier" and more
 predictable than `loop`, besides being extensible. However it isn't built-in,
 so you have to import it:
 
-    (ql:quickload :iterate)
+    (ql:quickload "iterate")
     (use-package :iterate)
 
 Iterate looks like this:

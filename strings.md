@@ -1070,7 +1070,7 @@ The following examples use the
 internally, iterates over the characters of the string and uses
 `ppcre:regex-replace-all`.
 
-    (ql:quickload :cl-slug)
+    (ql:quickload "cl-slug")
 
 Then it can be used with the `slug` prefix.
 

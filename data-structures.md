@@ -855,7 +855,7 @@ library (in Quicklisp) has the functions `hash-table-keys` and
 `hash-table-values` for that.
 
 ~~~lisp
-(ql:quickload :alexandria)
+(ql:quickload "alexandria")
 ;; […]
 (alexandria:hash-table-keys *my-hash*)
 ;; => (BAR)

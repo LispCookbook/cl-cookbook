@@ -28,7 +28,7 @@ report styles and we can extend them).
 `Prove` is in Quicklisp:
 
 ~~~lisp
-(ql:quickload :prove)
+(ql:quickload "prove")
 ~~~
 
 This command installs `prove` if necessary, and loads it.
@@ -104,15 +104,19 @@ and re-run the test from where it left off, by choosing the suggested
 
 With Prove, set `prove:*debug-on-error*` to `t`.
 
+<!-- epub-exclude-start -->
+
 Below is a short screencast showing all this in action (with FiveAM):
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/KsHxgP3SRTs" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+<!-- epub-exclude-end -->
 
 Note that in the debugger:
 
 - `<enter>` on a backtrace shows more of it
 - `v` on a backtrace goes to the corresponding line or function.
-- see more options with the menu.
+- you can discover more options with the menu.
 
 
 ## Code coverage

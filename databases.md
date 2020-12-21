@@ -25,7 +25,7 @@ objects, you also have a choice of libraries.
 Mito is in Quicklisp:
 
 ~~~lisp
-(ql:quickload :mito)
+(ql:quickload "mito")
 ~~~
 
 ### Overview

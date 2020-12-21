@@ -499,25 +499,25 @@ Weblock's unit of work is the *widget*. They look like a class definition:
 
 ~~~lisp
 (defwidget task ()
-        ((title
-          :initarg :title
-          :accessor title)
-         (done
-          :initarg :done
-          :initform nil
-          :accessor done)))
+   ((title
+     :initarg :title
+     :accessor title)
+    (done
+     :initarg :done
+     :initform nil
+     :accessor done)))
 ~~~
 
 Then all we have to do is to define the `render` method for this widget:
 
 ~~~lisp
 (defmethod render ((task task))
-        "Render a task."
-        (with-html
-              (:span (if (done task)
-                         (with-html
-                               (:s (title task)))
-                       (title task)))))
+  "Render a task."
+  (with-html
+        (:span (if (done task)
+                   (with-html
+                         (:s (title task)))
+                 (title task)))))
 ~~~
 
 It uses the Spinneret template engine by default, but we can bind any
@@ -528,11 +528,11 @@ To trigger an ajax event, we write lambdas in full Common Lisp:
 ~~~lisp
 ...
 (with-html
-          (:p (:input :type "checkbox"
-            :checked (done task)
-            :onclick (make-js-action
-                      (lambda (&key &allow-other-keys)
-                        (toggle task))))
+  (:p (:input :type "checkbox"
+    :checked (done task)
+    :onclick (make-js-action
+              (lambda (&key &allow-other-keys)
+                (toggle task))))
 ...
 ~~~
 
@@ -639,13 +639,13 @@ HTML5 generator. It looks like this:
 
 ~~~lisp
 (with-page (:title "Home page")
-     (:header
-      (:h1 "Home page"))
-     (:section
-      ("~A, here is *your* shopping list: " *user-name*)
-      (:ol (dolist (item *shopping-list*)
-             (:li (1+ (random 10)) item))))
-     (:footer ("Last login: ~A" *last-login*)))
+  (:header
+   (:h1 "Home page"))
+  (:section
+   ("~A, here is *your* shopping list: " *user-name*)
+   (:ol (dolist (item *shopping-list*)
+          (:li (1+ (random 10)) item))))
+  (:footer ("Last login: ~A" *last-login*)))
 ~~~
 
 The author finds it is easier to compose the HTML in separate
