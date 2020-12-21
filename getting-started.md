@@ -400,7 +400,7 @@ Otherwise you'll need to compile and load its system definition
 Usually you want to "enter" the system in the REPL at this stage:
 
 ~~~lisp
-(use-package :my-project)
+(in-package :my-project)
 ~~~
 
 Lastly, you can compile or eval the sources (`my-project.lisp`) with
