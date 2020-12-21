@@ -35,7 +35,7 @@
    "os.md"
    "process.md"
    "systems.md"
-   "win32.md"
+   ;; "win32.md"
    "debugging.md"
    "performance.md"
    "scripting.md"
@@ -51,7 +51,7 @@
    ))
 
 (defparameter *full-markdown* "full.md")
-(defparameter *bookname* "lispcookbook.epub")
+(defparameter *bookname* "common-lisp-cookbook.epub")
 (defparameter *epub-command-placeholder* "pandoc -S -o ~a --toc metadata.txt ~a"
   "format with book name and sources file.")
 
