@@ -183,95 +183,158 @@ go up the list. See explanations and even more on
 
 ### Editing
 
+Emacs has, of course, built-in commands to deal with s-expressions.
+
 #### Forward/Backward/Up/Down movement and selection by s-expressions
 
-~~~lisp
-{% include code/s1.lisp %}
-~~~
+Use `C-M-f` and `C-M-b` (`forward-sexp` and `backward-sexp`) to move
+in units of s-expressions.
+
+Use `C-M-t` to swap
+the first addition sexp and the second one. Put the cursor on the open
+parens of "(+ x" in defun c and press
+
+Use `C-M-@` to highlight an entire sexp. Then press `C-M-u` to expand
+the selection "upwards" and `C-M-d` to move forward down one level of
+parentheses.
 
 #### Deleting s-expressions
 
-With `C-M-k` and `C-M-backspace` (which may restart the system on gnu/linux):
+Use `C-M-k` (`kill-sexp`) and `C-M-backspace` (`backward-kill-sexp`) (but caution: this keybinding may restart the system on GNU/Linux).
+
+For example, if point is before `(progn`:
 
 ~~~lisp
-{% include code/s2.lisp %}
+(defun d ()
+  (if t
+      (+ 3 3)
+ --->|(progn
+        (+ 1 1)
+        (if t
+            (+ 2 2)
+            (+ 3 3)))
+      (+ 4 4)))
 ~~~
+
+and you press `C-M-k`, you get:
+
+~~~lisp
+(defun d ()
+  (if t
+      (+ 3 3)
+  --->|
+      (+ 4 4)))
+~~~
+
 
 #### Indenting s-expressions
 
-With `C-M-q`:
+Indentation is automatic for Lisp forms.
+
+Pressing TAB will indent incorrectly indented code. For example, put
+the point at the beginning of the `(+ 3 3)` form and press TAB:
 
 ~~~lisp
-{% include code/s3.lisp %}
+(progn
+(+ 3 3))
 ~~~
 
+you correctly get
+
+~~~lisp
+(progn
+  (+ 3 3))
+~~~
+
+Use `C-M-q` (`slime-reindent-defun`) to indent the current function definition:
+
+~~~lisp
+;; Put the cursor on the open parens of "(defun ..." and press "C-M-q"
+;; to indent the code:
+(defun e ()
+"A badly indented function."
+(let ((x 20))
+(loop for i from 0 to x
+do (loop for j from 0 below 10
+do (print j))
+(if (< i 10)
+(let ((z nil) )
+(setq z (format t "x=~d" i))
+(print z))))))
+
+;; This is the result:
+
+(defun e ()
+  "A badly indented function (now correctly indented)."
+  (let ((x 20))
+    (loop for i from 0 to x
+       do (loop for j from 0 below 10
+             do (print j))
+         (if (< i 10)
+             (let ((z nil) )
+               (setq z (format t "x=~d" i))
+               (print z))))))
+~~~
+
+You can also select a region and call `M-x indent-region`.
 
 #### Support for parenthesis
 
-`M-(` insets a pair, `M-x check-parens` to spot malformed sexps, `C-u <n> M-(` to enclose sexps with parens:
+Use `M-(` to insert a pair of parenthesis (`()`), `M-x check-parens`
+to spot malformed sexps, `C-u <n> M-(` to enclose sexps with parens:
+
+For example:
 
 ~~~lisp
-{% include code/s4.lisp %}
+--->|(- 2 2)
+;; Press C-u 1 M-( to enclose it with parens:
+((- 2 2))
 ~~~
-
-#### Automatic code indentation
-
-~~~lisp
-{% include code/s5.lisp %}
-~~~
-
-<!-- close all parenthesis example ? s6.lisp -->
 
 #### Code completion
 
 Use the built-in `C-c TAB` to complete symbols in SLIME. You can get tooltips
 with [company-mode](http://wikemacs.org/wiki/Company-mode).
 
-~~~lisp
-{% include code/s7.lisp %}
-~~~
+In the REPL, it's simply TAB.
+
+Use Emacs' hippie-expand, bound to `M-/`, to complete any string
+present in other open buffers.
 
 #### Hiding/showing code
 
-With `C-x n n` (narrow) and `C-x n w` to widen back.
+With `C-x n n` (narrow-to-region) and `C-x n w` to widen back.
 
 See also [code folding](http://wikemacs.org/wiki/Folding).
-
-~~~lisp
-{% include code/s8.lisp %}
-~~~
 
 #### Comments
 
 Insert a comment, comment a region with `M-;`, adjust text with `M-q`.
-
-~~~lisp
-{% include code/s9.lisp %}
-~~~
 
 
 <a name="Slide-11"></a>
 
 ### Evaluating and Compiling Lisp in SLIME
 
-Compile the entire **buffer** by pressing `C-c C-k`.
+Compile the entire **buffer** by pressing `C-c C-k` (`slime-compile-and-load-file`).
 
-Compile a **region** by selecting the first 2 forms in test-all and
-running `M-x slime-compile-region`.
+Compile a **region** with `M-x slime-compile-region`.
 
-Compile a **defun** by putting the cursor inside the "test-format"
-defun and pressing `C-c C-c`.
+Compile a **defun** by putting the cursor inside it and pressing `C-c C-c` (`slime-compile-defun`).
 
-Evaluate the **sexp** before the point by putting the cursor after the
-closing paren of `(test-format)` and pressing `C-x C-e`.
 
 To **evaluate** rather than compile:
+
+- evaluate the **sexp** before the point by putting the cursor after
+  its closing paren and pressing `C-x C-e`
+  (`slime-eval-last-expression`),
 - evaluate a region with `C-c C-r`,
 - evaluate a defun with `C-M-x`,
-- evaluate the sexp before the point with `C-x C-e`.
+
 See also other commands in the menu.
 
 ---
+
 **EVALUATION VS COMPILATION**
 
 There are a couple of pragmatic differences when choosing between compiling or evaluating.
@@ -285,7 +348,7 @@ In general, it is better to *compile* top-level forms, for two reasons:
 
 ~~~lisp
 (defun foo ()
-  (let ((f (open "/home/marian/test.lisp")))
+  (let ((f (open "/home/mariano/test.lisp")))
     ...))
 ~~~
 
@@ -324,39 +387,23 @@ expression search/replace
 
 #### Finding occurrences (occur, grep)
 
-With `M-x grep`, `rgrep`, `occur`,…
-
-~~~lisp
-{% include code/s13.lisp %}
-~~~
+Use `M-x grep`, `rgrep`, `occur`…
 
 See also interactive versions with
 [helm-swoop](http://wikemacs.org/wiki/Helm-swoop), helm-occur,
 [ag.el](https://github.com/Wilfred/ag.el).
-
-#### Lisp symbols in current source (imenu)
-
-~~~lisp
-{% include code/s14.lisp %}
-~~~
-
-See also helm-imenu and [imenu-anywhere](https://github.com/vspinu/imenu-anywhere).
 
 #### Go to definition
 
 Put the cursor on any symbol and press `M-.` (`slime-edit-definition`) to go to its
 definition. Press `M-,` to come back.
 
----
-**CODEBASE NAVIGATION TIP**
+#### Go to symbol, list symbols in current source
 
-Use `C-u M-.` (`slime-edit-definition` with a prefix argument) to autocomplete the symbol and navigate to it. This command always asks for a symbol even if the cursor is on one. It works with any loaded definition. Here's a little [demonstration video](https://www.youtube.com/watch?v=ZAEt73JHup8).
+Use `C-u M-.` (`slime-edit-definition` with a prefix argument, also available as `M-- M-.`) to autocomplete the symbol and navigate to it. This command always asks for a symbol even if the cursor is on one. It works with any loaded definition. Here's a little [demonstration video](https://www.youtube.com/watch?v=ZAEt73JHup8).
 
 You can think of it as a `imenu` completion that always work for any Lisp symbol. Add in [Slime's fuzzy completion][slime-fuzzy] for maximum powerness!
 
-Note that the prefix argument can be given with other keys, like `M--`, which is more convenient on some keyboards.
-
----
 
 #### Crossreferencing: find who's calling, referencing, setting a symbol
 
@@ -385,19 +432,6 @@ of the above, it lists every kind of references.
 (thanks to [Slime tips](https://slime-tips.tumblr.com/page/2))
 
 
-#### Lisp symbols in multiple source files (etags)
-
-~~~lisp
-{% include code/s16.lisp %}
-~~~
-
-#### Lisp symbols using [ECB](http://ecb.sourceforge.net/), the Emacs Code Browser ( [s17.lisp](s17.lisp) )
-
-~~~lisp
-{% include code/s17.lisp %}
-~~~
-
-
 <a name="Slide-13"></a>
 
 ## Lisp Documentation in Emacs - Learning About Lisp Symbols
@@ -409,51 +443,25 @@ in the minibuffer.
 
 ### Documentation lookup
 
-- **C-c C-d h**  looks up documentation in CLHS. But it works only on symbols, so there are two more bindings:
-- **C-c C-d #** for reader macros
-- **C-c C-d ~**  for format directives
+The main shortcut to know is:
+
+- **C-c C-d d**  shows the symbols' documentation on a new window (same result as using `describe`).
 
 Other bindings which may be useful:
 
-- **C-c C-d d**  describes a symbol using `describe`
-- **C-c C-d f**  describes a function using `describe`
-
-### Documentation
-
-~~~lisp
-{% include code/s19.lisp %}
-~~~
-
+- **C-c C-d f**  describes a function
+- **C-c C-d h**  looks up the symbol documentation in CLHS by opening the web browser. But it works only on symbols, so there are two more bindings:
+- **C-c C-d #** for reader macros
+- **C-c C-d ~**  for format directives
 
 ### Inspect
 
-~~~lisp
-{% include code/s21.lisp %}
-~~~
+You can call `(inspect 'symbol)` from the REPL or call it with `C-c I` from a source file.
 
 ### Macroexpand
 
-~~~lisp
-{% include code/s22.lisp %}
-~~~
+Use `C-c M-m` to macroexpand a macro call
 
-
-<a name="Slide-14"></a>
-
-## Lisp Documentation in Emacs - Lisp Documentation
-
-*   [CL HyperSpec (online)](http://www.lispworks.com/documentation/HyperSpec/Front/)
-*   [CL HyperSpec (tarball)](http://macports.mirror.ac.za/distfiles/lisp-hyperspec/HyperSpec-7-0.tar.gz)
-*   [CLtL2](http://www-2.cs.cmu.edu/afs/cs.cmu.edu/project/ai-repository/ai/lang/lisp/doc/cltl/cltl_ht.tgz)
-*   [ACL Documentation](https://franz.com/support/documentation/)
-*   Example code ( [s23.lisp](s23.lisp) )
-
-~~~lisp
-{% include code/s23.lisp %}
-~~~
-
-
-<a name="Slide-15"></a>
 
 ### Consult the CLHS offline
 
@@ -523,11 +531,19 @@ For defclass: `(make-instance ‘class-name )`.
 
 (thanks to [Slime tips](https://slime-tips.tumblr.com/page/2))
 
-### Send to the REPL
+### Send forms to the REPL
+
+Use `C-x C-e` (`slime-eval-last-expression`) to evaluate the s-expr preceding the point.
+
+Below, with the cursor on the "let", press "C-x C-e" to evaluate the `let`:
 
 ~~~lisp
-{% include code/s24.lisp %}
+(let ((n 20))
+  (loop for i from 0 below n
+     do (print i)))
 ~~~
+
+You should see numbers printed in the REPL.
 
 See also [eval-in-repl](https://github.com/kaz-yos/eval-in-repl) to send any form to the repl.
 
