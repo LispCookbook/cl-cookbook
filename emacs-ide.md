@@ -203,13 +203,13 @@ parentheses.
 
 Use `C-M-k` (`kill-sexp`) and `C-M-backspace` (`backward-kill-sexp`) (but caution: this keybinding may restart the system on GNU/Linux).
 
-For example, if point is before `(progn`:
+For example, if point is before `(progn` (I’ll use [] as an indication where the cursor is):
 
 ~~~lisp
 (defun d ()
   (if t
       (+ 3 3)
- --->|(progn
+     [](progn
         (+ 1 1)
         (if t
             (+ 2 2)
@@ -223,7 +223,7 @@ and you press `C-M-k`, you get:
 (defun d ()
   (if t
       (+ 3 3)
-  --->|
+      []
       (+ 4 4)))
 ~~~
 
@@ -284,18 +284,20 @@ You can also select a region and call `M-x indent-region`.
 Use `M-(` to insert a pair of parenthesis (`()`), `M-x check-parens`
 to spot malformed sexps, `C-u <n> M-(` to enclose sexps with parens:
 
-For example:
+For example (point is before the parenthesis):
 
 ~~~lisp
---->|(- 2 2)
+|(- 2 2)
 ;; Press C-u 1 M-( to enclose it with parens:
-((- 2 2))
+(|(- 2 2))
 ~~~
 
 #### Code completion
 
 Use the built-in `C-c TAB` to complete symbols in SLIME. You can get tooltips
-with [company-mode](http://wikemacs.org/wiki/Company-mode).
+with [company-mode](http://company-mode.github.io/).
+
+![](http://company-mode.github.io/images/company-elisp.png)
 
 In the REPL, it's simply TAB.
 
@@ -304,7 +306,7 @@ present in other open buffers.
 
 #### Hiding/showing code
 
-With `C-x n n` (narrow-to-region) and `C-x n w` to widen back.
+Use `C-x n n` (narrow-to-region) and `C-x n w` to widen back.
 
 See also [code folding](http://wikemacs.org/wiki/Folding).
 
@@ -358,6 +360,18 @@ Go to the end of the OPEN expression and evaluate it (`C-x C-e`), to observe the
 ```
 => #<SB-SYS:FD-STREAM for "file /mnt/e6b00b8f-9dad-4bf4-bd40-34b1e6d31f0a/home/marian/test.lisp" {1003AAAB53}>
 ```
+
+Or on this example, with the cursor on the last parentheses, press `C-x C-e` to evaluate the `let`:
+
+~~~lisp
+(let ((n 20))
+  (loop for i from 0 below n
+     do (print i)))
+~~~
+
+You should see numbers printed in the REPL.
+
+See also [eval-in-repl](https://github.com/kaz-yos/eval-in-repl) to send any form to the repl.
 
 ---
 
@@ -417,17 +431,17 @@ modifying macros, inline functions, or constants.
 
 The following bindings are also shown in Slime's menu:
 
-- **C-c C-w c** *slime-who-calls* callers of a function
-- **C-c C-w m** *slime-who-macroexpands* places where a macro is expanded
-- **C-c C-w r** *slime-who-references* global variable references
-- **C-c C-w b** *slime-who-bind* global variable bindings
-- **C-c C-w s** *slime-who-sets* global variable setters
-- **C-c C-w a** *slime-who-specializes* methods specialized on a symbol
+- **C-c C-w c** (`slime-who-calls`) callers of a function
+- **C-c C-w m** (`slime-who-macroexpands`) places where a macro is expanded
+- **C-c C-w r** (`slime-who-references`) global variable references
+- **C-c C-w b** (`slime-who-bind`) global variable bindings
+- **C-c C-w s** (`slime-who-sets`) global variable setters
+- **C-c C-w a** (`slime-who-specializes`) methods specialized on a symbol
 
 And when the `slime-asdf` contrib is enabled,
-**C-c C-w d** *slime-who-depends-on* lists dependent ASDF systems
+**C-c C-w d** (`slime-who-depends-on`) lists dependent ASDF systems
 
-And a general binding: **M-? or M-_** *slime-edit-uses** combines all
+And a general binding: **M-?** or **M-_** (`slime-edit-uses`) combines all
 of the above, it lists every kind of references.
 
 (thanks to [Slime tips](https://slime-tips.tumblr.com/page/2))
@@ -480,18 +494,17 @@ Then add this to your Emacs configuration:
 
 ### Synchronizing packages
 
-**C-c ~** (*slime-sync-package-and-default-directory*): When run in a
+**C-c ~** (`slime-sync-package-and-default-directory`): When run in a
 buffer with a lisp file it will change the current package of the REPL
 to the package of that file and also set the current directory of the REPL
 to the parent directory of the file.
 
 ### Calling code
 
-**C-c C-y** (*slime-call-defun*): When the point is inside a defun and
+**C-c C-y** (`slime-call-defun`): When the point is inside a defun and
 C-c C-y is pressed,
 
 (I’ll use [] as an indication where the cursor is)
-
 
 ~~~lisp
 (defun foo ()
@@ -532,22 +545,6 @@ For defclass: `(make-instance ‘class-name )`.
 
 (thanks to [Slime tips](https://slime-tips.tumblr.com/page/2))
 
-### Send forms to the REPL
-
-Use `C-x C-e` (`slime-eval-last-expression`) to evaluate the s-expr preceding the point.
-
-Below, with the cursor on the "let", press "C-x C-e" to evaluate the `let`:
-
-~~~lisp
-(let ((n 20))
-  (loop for i from 0 below n
-     do (print i)))
-~~~
-
-You should see numbers printed in the REPL.
-
-See also [eval-in-repl](https://github.com/kaz-yos/eval-in-repl) to send any form to the repl.
-
 ### Exporting symbols
 
 **C-c x** (*slime-export-symbol-at-point*) from the `slime-package-fu`
@@ -582,23 +579,12 @@ or strings:
  (lambda (n) (format "\"%s\"" (upcase n))))
 ~~~
 
-
 ### Project Management
 
 ASDF is the de-facto build facility. It is shipped in most Common Lisp implementations.
 
   * [ASDF](https://common-lisp.net/project/asdf/)
   * [ASDF best practices](https://gitlab.common-lisp.net/asdf/asdf/blob/master/doc/best_practices.md)
-
-### Comparing versions of code (ediff)
-
-Start the ediff utility by entering `M-x ediff`. Enter two file names, press
-the space bar to step through the changes, and `q`
-to exit.
-
-Of course, see also [magit](https://magit.vc/) for a wonderful git integration into Emacs.
-
-<a name="Slide-16"></a>
 
 ## Questions/Answers
 
@@ -623,66 +609,17 @@ This will avoid getting `ascii stream decoding error`s when you have
 non-ascii characters in files you evaluate with SLIME.
 
 
-### Standard shell
+### Default cut/copy/paste keybindings
 
-*I switch between UNIX® and Windows environments and, although
-Emacs makes this switch a lot easier, I find it inconvenient having to
-use different Shell environments on different operating systems.*
+*I am so used to C-c, C-v and friends to copy and paste text that
+the default Emacs shortcuts don't make any sense to me.*
 
-On Windows, the [Cygwin tools](http://www.cygwin.com/) provide a
-lot of the same tools that are available under UNIX® as well as a BASH
-shell. Alternatively, you might want to consider using [eshell](http://wikemacs.org/wiki/Eshell), a shell
-written in Emacs Lisp that comes as a standard feature in  Emacs.
-If you use the given Emacs configuration, you can access eshell by pressing "F12".
-
-
-### Using ACL tools with Emacs
-
-*I would like to use Emacs with Franz's ACL but find that I use the
-Franz tools so much that I can't afford to not load their IDE.*
-
-It doesn't have to be an either/or decision. On Windows, Franz
-allows you to specify (under Options) that Emacs is to be the default
-editor in place of their built-in editor. On UNIX®, Emacs also works
-very well together with the Franz tools.*
-
-### Windows-style cut/copy/paste
-
-*I want to use Emacs on a Windows machine. Unfortunately, I have
-the Windows cut/copy/paste key bindings burned into my fingertips and
-would find it very difficult to switch back and forth between the
-Windows standard for these shortcut keys and the Emacs standard.*
-
-Luckily, you don't have to! Download [cua.el](http://www.emacswiki.org/cgi-bin/wiki.pl?CuaMode) and you can continue to use the Windows
-defaults. In fact, you may find that the following commands in your .emacs file will make Emacs more
-Windows-like:
+Luckily, you have a solution! Install [cua-mode](http://www.emacswiki.org/cgi-bin/wiki.pl?CuaMode) and you can continue to use these shortcuts.
 
 ~~~lisp
-;; Windows-like mouse/arrow movement & selection (pc-selection-mode)
-(delete-selection-mode t)
 ;; C-z=Undo, C-c=Copy, C-x=Cut, C-v=Paste (needs cua.el)
 (require 'cua) (CUA-mode t)
 ~~~
-
-
-### Simplified Emacs setup
-
-*There was a lot of Emacs Lisp code presented in this paper. Do I
-really have to type in all this stuff to get started with Emacs and
-Lisp?*
-
-No, you can add yourself just what's needed to get SLIME working.
-
-You can try [Portacle](https://shinmera.github.io/portacle/) which has
-everything ready.
-
-There is also a
-[sample .emacs file](https://github.com/LispCookbook/cl-cookbook/blob/master/.emacs)
-that can be used to get started. It contains all of the configurations
-that have been described in this page and (hopefully) should work with
-some minor tweaking. See the
-[CL-Cookbook](http://lispcookbook.github.io/cl-cookbook/) page on
-"[Setting up an IDE with Emacs on Windows or Mac OS X](windows.html)".
 
 
 ## Appendix
