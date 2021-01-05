@@ -2,7 +2,9 @@
 title: Using Emacs as an IDE
 ---
 
-This page is meant to provide an introduction to using Emacs as a Lisp IDE. The key bindings used in the example code snippets assume an Emacs configuration similar to that provided by the [.emacs](https://github.com/LispCookbook/cl-cookbook/blob/master/.emacs) file that is included as part of the [Setting up an IDE with Emacs on Windows or Mac OS X](windows.html) page.
+This page is meant to provide an introduction to using [Emacs](https://www.gnu.org/software/emacs/) as a Lisp IDE.
+
+![](https://www.gnu.org/software/emacs/images/teaser.png)
 
 
 **Note**: [Portacle](https://shinmera.github.io/portacle/) is a
@@ -147,7 +149,6 @@ In this short tutorial we'll see how to:
 *   edit Lisp code
 *   evaluate and compile Lisp code
 *   search Lisp code
-*   Note: Example code assumes you are using a setup similar to what is defined in the [.emacs file](https://github.com/LispCookbook/cl-cookbook/blob/master/.emacs) from the [CL Cookbook](windows.html) site.
 
 ### Packages for structured editing
 
