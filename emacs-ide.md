@@ -2,7 +2,9 @@
 title: Using Emacs as an IDE
 ---
 
-This page is meant to provide an introduction to using Emacs as a Lisp IDE. The key bindings used in the example code snippets assume an Emacs configuration similar to that provided by the [.emacs](https://github.com/LispCookbook/cl-cookbook/blob/master/.emacs) file that is included as part of the [Setting up an IDE with Emacs on Windows or Mac OS X](windows.html) page.
+This page is meant to provide an introduction to using [Emacs](https://www.gnu.org/software/emacs/) as a Lisp IDE.
+
+![](https://www.gnu.org/software/emacs/images/teaser.png)
 
 
 **Note**: [Portacle](https://shinmera.github.io/portacle/) is a
@@ -147,7 +149,6 @@ In this short tutorial we'll see how to:
 *   edit Lisp code
 *   evaluate and compile Lisp code
 *   search Lisp code
-*   Note: Example code assumes you are using a setup similar to what is defined in the [.emacs file](https://github.com/LispCookbook/cl-cookbook/blob/master/.emacs) from the [CL Cookbook](windows.html) site.
 
 ### Packages for structured editing
 
@@ -183,95 +184,160 @@ go up the list. See explanations and even more on
 
 ### Editing
 
+Emacs has, of course, built-in commands to deal with s-expressions.
+
 #### Forward/Backward/Up/Down movement and selection by s-expressions
 
-~~~lisp
-{% include code/s1.lisp %}
-~~~
+Use `C-M-f` and `C-M-b` (`forward-sexp` and `backward-sexp`) to move
+in units of s-expressions.
+
+Use `C-M-t` to swap
+the first addition sexp and the second one. Put the cursor on the open
+parens of "(+ x" in defun c and press
+
+Use `C-M-@` to highlight an entire sexp. Then press `C-M-u` to expand
+the selection "upwards" and `C-M-d` to move forward down one level of
+parentheses.
 
 #### Deleting s-expressions
 
-With `C-M-k` and `C-M-backspace` (which may restart the system on gnu/linux):
+Use `C-M-k` (`kill-sexp`) and `C-M-backspace` (`backward-kill-sexp`) (but caution: this keybinding may restart the system on GNU/Linux).
+
+For example, if point is before `(progn` (I’ll use [] as an indication where the cursor is):
 
 ~~~lisp
-{% include code/s2.lisp %}
+(defun d ()
+  (if t
+      (+ 3 3)
+     [](progn
+        (+ 1 1)
+        (if t
+            (+ 2 2)
+            (+ 3 3)))
+      (+ 4 4)))
 ~~~
+
+and you press `C-M-k`, you get:
+
+~~~lisp
+(defun d ()
+  (if t
+      (+ 3 3)
+      []
+      (+ 4 4)))
+~~~
+
 
 #### Indenting s-expressions
 
-With `C-M-q`:
+Indentation is automatic for Lisp forms.
+
+Pressing TAB will indent incorrectly indented code. For example, put
+the point at the beginning of the `(+ 3 3)` form and press TAB:
 
 ~~~lisp
-{% include code/s3.lisp %}
+(progn
+(+ 3 3))
 ~~~
 
+you correctly get
+
+~~~lisp
+(progn
+  (+ 3 3))
+~~~
+
+Use `C-M-q` (`slime-reindent-defun`) to indent the current function definition:
+
+~~~lisp
+;; Put the cursor on the open parens of "(defun ..." and press "C-M-q"
+;; to indent the code:
+(defun e ()
+"A badly indented function."
+(let ((x 20))
+(loop for i from 0 to x
+do (loop for j from 0 below 10
+do (print j))
+(if (< i 10)
+(let ((z nil) )
+(setq z (format t "x=~d" i))
+(print z))))))
+
+;; This is the result:
+
+(defun e ()
+  "A badly indented function (now correctly indented)."
+  (let ((x 20))
+    (loop for i from 0 to x
+       do (loop for j from 0 below 10
+             do (print j))
+         (if (< i 10)
+             (let ((z nil) )
+               (setq z (format t "x=~d" i))
+               (print z))))))
+~~~
+
+You can also select a region and call `M-x indent-region`.
 
 #### Support for parenthesis
 
-`M-(` insets a pair, `M-x check-parens` to spot malformed sexps, `C-u <n> M-(` to enclose sexps with parens:
+Use `M-(` to insert a pair of parenthesis (`()`), `M-x check-parens`
+to spot malformed sexps, `C-u <n> M-(` to enclose sexps with parens:
+
+For example (point is before the parenthesis):
 
 ~~~lisp
-{% include code/s4.lisp %}
+|(- 2 2)
+;; Press C-u 1 M-( to enclose it with parens:
+(|(- 2 2))
 ~~~
-
-#### Automatic code indentation
-
-~~~lisp
-{% include code/s5.lisp %}
-~~~
-
-<!-- close all parenthesis example ? s6.lisp -->
 
 #### Code completion
 
 Use the built-in `C-c TAB` to complete symbols in SLIME. You can get tooltips
-with [company-mode](http://wikemacs.org/wiki/Company-mode).
+with [company-mode](http://company-mode.github.io/).
 
-~~~lisp
-{% include code/s7.lisp %}
-~~~
+![](http://company-mode.github.io/images/company-elisp.png)
+
+In the REPL, it's simply TAB.
+
+Use Emacs' hippie-expand, bound to `M-/`, to complete any string
+present in other open buffers.
 
 #### Hiding/showing code
 
-With `C-x n n` (narrow) and `C-x n w` to widen back.
+Use `C-x n n` (narrow-to-region) and `C-x n w` to widen back.
 
 See also [code folding](http://wikemacs.org/wiki/Folding).
-
-~~~lisp
-{% include code/s8.lisp %}
-~~~
 
 #### Comments
 
 Insert a comment, comment a region with `M-;`, adjust text with `M-q`.
-
-~~~lisp
-{% include code/s9.lisp %}
-~~~
 
 
 <a name="Slide-11"></a>
 
 ### Evaluating and Compiling Lisp in SLIME
 
-Compile the entire **buffer** by pressing `C-c C-k`.
+Compile the entire **buffer** by pressing `C-c C-k` (`slime-compile-and-load-file`).
 
-Compile a **region** by selecting the first 2 forms in test-all and
-running `M-x slime-compile-region`.
+Compile a **region** with `M-x slime-compile-region`.
 
-Compile a **defun** by putting the cursor inside the "test-format"
-defun and pressing `C-c C-c`.
+Compile a **defun** by putting the cursor inside it and pressing `C-c C-c` (`slime-compile-defun`).
 
-Evaluate the **sexp** before the point by putting the cursor after the
-closing paren of `(test-format)` and pressing `C-x C-e`.
 
 To **evaluate** rather than compile:
+
+- evaluate the **sexp** before the point by putting the cursor after
+  its closing paren and pressing `C-x C-e`
+  (`slime-eval-last-expression`),
 - evaluate a region with `C-c C-r`,
 - evaluate a defun with `C-M-x`,
-- evaluate the sexp before the point with `C-x C-e`.
+
 See also other commands in the menu.
 
 ---
+
 **EVALUATION VS COMPILATION**
 
 There are a couple of pragmatic differences when choosing between compiling or evaluating.
@@ -285,7 +351,7 @@ In general, it is better to *compile* top-level forms, for two reasons:
 
 ~~~lisp
 (defun foo ()
-  (let ((f (open "/home/marian/test.lisp")))
+  (let ((f (open "/home/mariano/test.lisp")))
     ...))
 ~~~
 
@@ -294,6 +360,18 @@ Go to the end of the OPEN expression and evaluate it (`C-x C-e`), to observe the
 ```
 => #<SB-SYS:FD-STREAM for "file /mnt/e6b00b8f-9dad-4bf4-bd40-34b1e6d31f0a/home/marian/test.lisp" {1003AAAB53}>
 ```
+
+Or on this example, with the cursor on the last parentheses, press `C-x C-e` to evaluate the `let`:
+
+~~~lisp
+(let ((n 20))
+  (loop for i from 0 below n
+     do (print i)))
+~~~
+
+You should see numbers printed in the REPL.
+
+See also [eval-in-repl](https://github.com/kaz-yos/eval-in-repl) to send any form to the repl.
 
 ---
 
@@ -324,39 +402,23 @@ expression search/replace
 
 #### Finding occurrences (occur, grep)
 
-With `M-x grep`, `rgrep`, `occur`,…
-
-~~~lisp
-{% include code/s13.lisp %}
-~~~
+Use `M-x grep`, `rgrep`, `occur`…
 
 See also interactive versions with
 [helm-swoop](http://wikemacs.org/wiki/Helm-swoop), helm-occur,
 [ag.el](https://github.com/Wilfred/ag.el).
-
-#### Lisp symbols in current source (imenu)
-
-~~~lisp
-{% include code/s14.lisp %}
-~~~
-
-See also helm-imenu and [imenu-anywhere](https://github.com/vspinu/imenu-anywhere).
 
 #### Go to definition
 
 Put the cursor on any symbol and press `M-.` (`slime-edit-definition`) to go to its
 definition. Press `M-,` to come back.
 
----
-**CODEBASE NAVIGATION TIP**
+#### Go to symbol, list symbols in current source
 
-Use `C-u M-.` (`slime-edit-definition` with a prefix argument) to autocomplete the symbol and navigate to it. This command always asks for a symbol even if the cursor is on one. It works with any loaded definition. Here's a little [demonstration video](https://www.youtube.com/watch?v=ZAEt73JHup8).
+Use `C-u M-.` (`slime-edit-definition` with a prefix argument, also available as `M-- M-.`) to autocomplete the symbol and navigate to it. This command always asks for a symbol even if the cursor is on one. It works with any loaded definition. Here's a little [demonstration video](https://www.youtube.com/watch?v=ZAEt73JHup8).
 
 You can think of it as a `imenu` completion that always work for any Lisp symbol. Add in [Slime's fuzzy completion][slime-fuzzy] for maximum powerness!
 
-Note that the prefix argument can be given with other keys, like `M--`, which is more convenient on some keyboards.
-
----
 
 #### Crossreferencing: find who's calling, referencing, setting a symbol
 
@@ -369,33 +431,20 @@ modifying macros, inline functions, or constants.
 
 The following bindings are also shown in Slime's menu:
 
-- **C-c C-w c** *slime-who-calls* callers of a function
-- **C-c C-w m** *slime-who-macroexpands* places where a macro is expanded
-- **C-c C-w r** *slime-who-references* global variable references
-- **C-c C-w b** *slime-who-bind* global variable bindings
-- **C-c C-w s** *slime-who-sets* global variable setters
-- **C-c C-w a** *slime-who-specializes* methods specialized on a symbol
+- **C-c C-w c** (`slime-who-calls`) callers of a function
+- **C-c C-w m** (`slime-who-macroexpands`) places where a macro is expanded
+- **C-c C-w r** (`slime-who-references`) global variable references
+- **C-c C-w b** (`slime-who-bind`) global variable bindings
+- **C-c C-w s** (`slime-who-sets`) global variable setters
+- **C-c C-w a** (`slime-who-specializes`) methods specialized on a symbol
 
 And when the `slime-asdf` contrib is enabled,
-**C-c C-w d** *slime-who-depends-on* lists dependent ASDF systems
+**C-c C-w d** (`slime-who-depends-on`) lists dependent ASDF systems
 
-And a general binding: **M-? or M-_** *slime-edit-uses** combines all
+And a general binding: **M-?** or **M-_** (`slime-edit-uses`) combines all
 of the above, it lists every kind of references.
 
 (thanks to [Slime tips](https://slime-tips.tumblr.com/page/2))
-
-
-#### Lisp symbols in multiple source files (etags)
-
-~~~lisp
-{% include code/s16.lisp %}
-~~~
-
-#### Lisp symbols using [ECB](http://ecb.sourceforge.net/), the Emacs Code Browser ( [s17.lisp](s17.lisp) )
-
-~~~lisp
-{% include code/s17.lisp %}
-~~~
 
 
 <a name="Slide-13"></a>
@@ -409,51 +458,25 @@ in the minibuffer.
 
 ### Documentation lookup
 
-- **C-c C-d h**  looks up documentation in CLHS. But it works only on symbols, so there are two more bindings:
-- **C-c C-d #** for reader macros
-- **C-c C-d ~**  for format directives
+The main shortcut to know is:
+
+- **C-c C-d d**  shows the symbols' documentation on a new window (same result as using `describe`).
 
 Other bindings which may be useful:
 
-- **C-c C-d d**  describes a symbol using `describe`
-- **C-c C-d f**  describes a function using `describe`
-
-### Documentation
-
-~~~lisp
-{% include code/s19.lisp %}
-~~~
-
+- **C-c C-d f**  describes a function
+- **C-c C-d h**  looks up the symbol documentation in CLHS by opening the web browser. But it works only on symbols, so there are two more bindings:
+- **C-c C-d #** for reader macros
+- **C-c C-d ~**  for format directives
 
 ### Inspect
 
-~~~lisp
-{% include code/s21.lisp %}
-~~~
+You can call `(inspect 'symbol)` from the REPL or call it with `C-c I` from a source file.
 
 ### Macroexpand
 
-~~~lisp
-{% include code/s22.lisp %}
-~~~
+Use `C-c M-m` to macroexpand a macro call
 
-
-<a name="Slide-14"></a>
-
-## Lisp Documentation in Emacs - Lisp Documentation
-
-*   [CL HyperSpec (online)](http://www.lispworks.com/documentation/HyperSpec/Front/)
-*   [CL HyperSpec (tarball)](http://macports.mirror.ac.za/distfiles/lisp-hyperspec/HyperSpec-7-0.tar.gz)
-*   [CLtL2](http://www-2.cs.cmu.edu/afs/cs.cmu.edu/project/ai-repository/ai/lang/lisp/doc/cltl/cltl_ht.tgz)
-*   [ACL Documentation](https://franz.com/support/documentation/)
-*   Example code ( [s23.lisp](s23.lisp) )
-
-~~~lisp
-{% include code/s23.lisp %}
-~~~
-
-
-<a name="Slide-15"></a>
 
 ### Consult the CLHS offline
 
@@ -471,18 +494,17 @@ Then add this to your Emacs configuration:
 
 ### Synchronizing packages
 
-**C-c ~** (*slime-sync-package-and-default-directory*): When run in a
+**C-c ~** (`slime-sync-package-and-default-directory`): When run in a
 buffer with a lisp file it will change the current package of the REPL
 to the package of that file and also set the current directory of the REPL
 to the parent directory of the file.
 
 ### Calling code
 
-**C-c C-y** (*slime-call-defun*): When the point is inside a defun and
+**C-c C-y** (`slime-call-defun`): When the point is inside a defun and
 C-c C-y is pressed,
 
 (I’ll use [] as an indication where the cursor is)
-
 
 ~~~lisp
 (defun foo ()
@@ -523,14 +545,6 @@ For defclass: `(make-instance ‘class-name )`.
 
 (thanks to [Slime tips](https://slime-tips.tumblr.com/page/2))
 
-### Send to the REPL
-
-~~~lisp
-{% include code/s24.lisp %}
-~~~
-
-See also [eval-in-repl](https://github.com/kaz-yos/eval-in-repl) to send any form to the repl.
-
 ### Exporting symbols
 
 **C-c x** (*slime-export-symbol-at-point*) from the `slime-package-fu`
@@ -565,23 +579,12 @@ or strings:
  (lambda (n) (format "\"%s\"" (upcase n))))
 ~~~
 
-
 ### Project Management
 
 ASDF is the de-facto build facility. It is shipped in most Common Lisp implementations.
 
   * [ASDF](https://common-lisp.net/project/asdf/)
   * [ASDF best practices](https://gitlab.common-lisp.net/asdf/asdf/blob/master/doc/best_practices.md)
-
-### Comparing versions of code (ediff)
-
-Start the ediff utility by entering `M-x ediff`. Enter two file names, press
-the space bar to step through the changes, and `q`
-to exit.
-
-Of course, see also [magit](https://magit.vc/) for a wonderful git integration into Emacs.
-
-<a name="Slide-16"></a>
 
 ## Questions/Answers
 
@@ -606,66 +609,17 @@ This will avoid getting `ascii stream decoding error`s when you have
 non-ascii characters in files you evaluate with SLIME.
 
 
-### Standard shell
+### Default cut/copy/paste keybindings
 
-*I switch between UNIX® and Windows environments and, although
-Emacs makes this switch a lot easier, I find it inconvenient having to
-use different Shell environments on different operating systems.*
+*I am so used to C-c, C-v and friends to copy and paste text that
+the default Emacs shortcuts don't make any sense to me.*
 
-On Windows, the [Cygwin tools](http://www.cygwin.com/) provide a
-lot of the same tools that are available under UNIX® as well as a BASH
-shell. Alternatively, you might want to consider using [eshell](http://wikemacs.org/wiki/Eshell), a shell
-written in Emacs Lisp that comes as a standard feature in  Emacs.
-If you use the given Emacs configuration, you can access eshell by pressing "F12".
-
-
-### Using ACL tools with Emacs
-
-*I would like to use Emacs with Franz's ACL but find that I use the
-Franz tools so much that I can't afford to not load their IDE.*
-
-It doesn't have to be an either/or decision. On Windows, Franz
-allows you to specify (under Options) that Emacs is to be the default
-editor in place of their built-in editor. On UNIX®, Emacs also works
-very well together with the Franz tools.*
-
-### Windows-style cut/copy/paste
-
-*I want to use Emacs on a Windows machine. Unfortunately, I have
-the Windows cut/copy/paste key bindings burned into my fingertips and
-would find it very difficult to switch back and forth between the
-Windows standard for these shortcut keys and the Emacs standard.*
-
-Luckily, you don't have to! Download [cua.el](http://www.emacswiki.org/cgi-bin/wiki.pl?CuaMode) and you can continue to use the Windows
-defaults. In fact, you may find that the following commands in your .emacs file will make Emacs more
-Windows-like:
+Luckily, you have a solution! Install [cua-mode](http://www.emacswiki.org/cgi-bin/wiki.pl?CuaMode) and you can continue to use these shortcuts.
 
 ~~~lisp
-;; Windows-like mouse/arrow movement & selection (pc-selection-mode)
-(delete-selection-mode t)
 ;; C-z=Undo, C-c=Copy, C-x=Cut, C-v=Paste (needs cua.el)
 (require 'cua) (CUA-mode t)
 ~~~
-
-
-### Simplified Emacs setup
-
-*There was a lot of Emacs Lisp code presented in this paper. Do I
-really have to type in all this stuff to get started with Emacs and
-Lisp?*
-
-No, you can add yourself just what's needed to get SLIME working.
-
-You can try [Portacle](https://shinmera.github.io/portacle/) which has
-everything ready.
-
-There is also a
-[sample .emacs file](https://github.com/LispCookbook/cl-cookbook/blob/master/.emacs)
-that can be used to get started. It contains all of the configurations
-that have been described in this page and (hopefully) should work with
-some minor tweaking. See the
-[CL-Cookbook](http://lispcookbook.github.io/cl-cookbook/) page on
-"[Setting up an IDE with Emacs on Windows or Mac OS X](windows.html)".
 
 
 ## Appendix

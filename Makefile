@@ -1,3 +1,3 @@
 
 epub:
-	sbcl --sript make-cookbook.lisp
+	sbcl --load make-cookbook.lisp --eval '(uiop:quit)'
