@@ -73,7 +73,8 @@
 
 (defun to-pdf ()
   "Needs calibre."
-  (uiop:run-program (format nil "ebook-convert ~a lispcookbook.pdf" *bookname*)))
+  (format t "~&Generating the pdf...~&")
+  (uiop:run-program (format nil "ebook-convert ~a common-lisp-cookbook.pdf" *bookname*)))
 
 (defun build-full-source ()
   (format t "Creating the full source into ~a...~&" *full-markdown*)
@@ -85,6 +86,7 @@
 (defun generate ()
   (reset-target)
   (build-full-source)
-  (to-epub))
+  (to-epub)
+  (to-pdf))
 
 (generate)

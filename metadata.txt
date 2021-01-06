@@ -1,0 +1,15 @@
+---
+title:
+- type: main
+  text: The Common Lisp Cookbook
+- type: subtitle
+  text: Diving into the programmable programming language
+creator:
+- role: author
+  text: The Common Lisp Cookbook contributors
+identifier:
+publisher:
+rights: © 2021 January, 6th, vindarel <vindarel@mailz.org>.
+  This e-book is free of charge, but you can [pay what you want](https://ko-fi.com/s/01fee22a32) for it.
+cover-image: orly-cover.png
+...
