@@ -172,7 +172,7 @@ packages will display all possible keybindings starting with the key(s) you just
 
 For example, I know there are useful keybindings under `C-x` but I don't remember which ones… I just type `C-x`, I wait for half a second, and which-key shows all the ones available.
 
-![](https://github.com/justbur/emacs-which-key/blob/master/img/which-key-minibuffer.png)
+![](https://raw.githubusercontent.com/justbur/emacs-which-key/master/img/which-key-minibuffer.png)
 
 Just try it with `C-h` too!
 
