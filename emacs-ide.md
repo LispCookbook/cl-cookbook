@@ -378,9 +378,11 @@ To **evaluate** rather than compile:
 
 - evaluate the **sexp** before the point by putting the cursor after
   its closing paren and pressing `C-x C-e`
-  (`slime-eval-last-expression`),
+  (`slime-eval-last-expression`). The result is printed in the minibuffer.
+- similarly, use `C-c C-p` (`slime-pprint-eval-last-expression`) to eval and pretty-print the expression before point. It shows the result in a new "slime-description" window.
 - evaluate a region with `C-c C-r`,
 - evaluate a defun with `C-M-x`,
+- type `C-c C-e` (`slime-interactive-eval`) to get a prompt that asks for code to eval in the current context. It prints the result in the minibuffer. With a prefix argument, insert the result into the current buffer.
 
 See also other commands in the menu.
 
