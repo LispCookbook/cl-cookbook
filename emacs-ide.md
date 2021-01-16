@@ -330,7 +330,9 @@ You can also select a region and call `M-x indent-region`.
 #### Support for parenthesis
 
 Use `M-(` to insert a pair of parenthesis (`()`), `M-x check-parens`
-to spot malformed sexps, `C-u <n> M-(` to enclose sexps with parens:
+to spot malformed sexps, `C-u <n> M-(` to enclose sexps with parens,
+and `C-c C-]` (`slime-close-all-parens-in-sexp`)
+to insert the required number of closing parenthesis.
 
 For example (point is before the parenthesis):
 
