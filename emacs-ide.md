@@ -474,14 +474,16 @@ You can think of it as a `imenu` completion that always work for any Lisp symbol
 
 #### Crossreferencing: find who's calling, referencing, setting a symbol
 
-Slime has a nice cross referencing facility, for example, you can see
-what calls a particular function or expands a macro.  It presents a
-list of places which reference a particular entity, from there you can
-recompile the thing which references by pressing **C-c C-c** on that
-line. **C-c C-k** will recompile all the references. This is useful when
+Slime has nice cross-referencing facilities. For example, you can ask
+what calls a particular function, what expands a macro, or where a global variable is being used.
+
+Results are presented in a new buffer, listing the places which reference a particular entity.
+From there, we can press Enter to go to the corresponding source line,
+or more interestingly we can recompile the place at point by pressing **C-c C-c** on that
+line. Likewise, **C-c C-k** will recompile all the references. This is useful when
 modifying macros, inline functions, or constants.
 
-The following bindings are also shown in Slime's menu:
+The bindings are the following (they are also shown in Slime's menu):
 
 - **C-c C-w c** (`slime-who-calls`) callers of a function
 - **C-c C-w m** (`slime-who-macroexpands`) places where a macro is expanded
@@ -495,9 +497,6 @@ And when the `slime-asdf` contrib is enabled,
 
 And a general binding: **M-?** or **M-_** (`slime-edit-uses`) combines all
 of the above, it lists every kind of references.
-
-(thanks to [Slime tips](https://slime-tips.tumblr.com/page/2))
-
 
 <a name="Slide-13"></a>
 
