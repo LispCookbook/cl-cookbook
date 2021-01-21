@@ -68,7 +68,7 @@ If you already know [Docker](https://docs.docker.com), you can get
 started with Common Lisp pretty quickly. The
 [daewok/lisp-devel-docker](https://github.com/daewok/lisp-devel-docker)
 image comes with recent versions of SBCL, CCL, ECL and ABCL, plus
-Quicklisp installed in the home (`/home/lisp`) so than we can
+Quicklisp installed in the home (`/home/lisp`), so than we can
 `ql:quickload` libraries straight away.
 
 Docker works on GNU/Linux, Mac and Windows.
@@ -79,7 +79,7 @@ into an SBCL REPL:
 
     docker run --rm -it -v /path/to/local/code:/usr/local/share/common-lisp/source daewok/lisp-devel:base sbcl
 
-We still want to develop using Emacs and SLIME so we need to
+We still want to develop using Emacs and SLIME, so we need to
 connect SLIME to the Lisp inside Docker. See
 [slime-docker](https://github.com/daewok/slime-docker), which is a library
 that helps on setting that up.
@@ -136,7 +136,7 @@ But we'll setup our editor to offer a better experience instead of
 working in this REPL. See [editor-support](editor-support.html).
 
 Lisp is interactive by nature, so in case of an error we enter the
-debugger. This can be annoying in certain cases so you might want to
+debugger. This can be annoying in certain cases, so you might want to
 use SBCL's `--disable-debugger` option.
 
 _Tip: the CLISP implementation has a better default REPL for the
