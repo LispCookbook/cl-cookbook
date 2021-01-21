@@ -4,7 +4,7 @@ title: Getting started
 
 We'll begin with presenting easy steps to install a development environment and to start a new Common Lisp project.
 
-Want a 2-clicks install ? Then get
+Want a 2-clicks install? Then get
 [Portacle](https://shinmera.github.io/portacle/), *a portable and
 multi-platform* Common Lisp environment. It ships Emacs25, SBCL (the
 implementation), Quicklisp (package manager), SLIME (IDE) and
@@ -14,21 +14,21 @@ Git. It's the most straightforward way to get going!
 
 ### With your package manager
 
-In doubt, just get SBCL:
+If you don't know which implementation of Common Lisp to use, try SBCL:
 
     apt-get install sbcl
 
 Common Lisp has been standardized via an ANSI document, so it can be
-implemented in different ways: see
+implemented in different ways. See
 [Wikipedia's list of implementations](https://en.wikipedia.org/wiki/Common_Lisp#Implementations).
 
-The following implementations are packaged for Debian and probably for your distro:
+The following implementations are packaged for Debian and most other popular Linux distributions:
 
 * [Steel Bank Common Lisp (SBCL)](http://www.sbcl.org/)
 * [Embeddable Common Lisp (ECL)](https://gitlab.com/embeddable-common-lisp/ecl/), which compiles to C,
 * [CLISP](https://clisp.sourceforge.io/)
 
-There is also:
+Other well-known implementations include:
 
 * [ABCL](http://abcl.org/), to interface with the JVM,
 * [ClozureCL](https://ccl.clozure.com/), a good implementation with very fast build times (see this [Debian package for Clozure CL](http://mr.gy/blog/clozure-cl-deb.html)),
@@ -71,17 +71,17 @@ image comes with recent versions of SBCL, CCL, ECL and ABCL, plus
 Quicklisp installed in the home (`/home/lisp`) so than we can
 `ql:quickload` libraries straight away.
 
-It works on GNU/Linux, Mac and Windows.
+Docker works on GNU/Linux, Mac and Windows.
 
 The following command will download the required image (around 400MB), put your
-local sources inside the Docker image where indicated and drop you
+local sources inside the Docker image where indicated, and drop you
 into an SBCL REPL:
 
     docker run --rm -it -v /path/to/local/code:/usr/local/share/common-lisp/source daewok/lisp-devel:base sbcl
 
-But we still want to develop from our Emacs and SLIME, so we need to
+We still want to develop using Emacs and SLIME so we need to
 connect SLIME to the Lisp inside Docker. See
-[slime-docker](https://github.com/daewok/slime-docker) for a library
+[slime-docker](https://github.com/daewok/slime-docker), which is a library
 that helps on setting that up.
 
 
