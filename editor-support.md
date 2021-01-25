@@ -70,7 +70,7 @@ Neovim plugins in Common Lisp.
 [quicklisp.nvim](https://gitlab.com/HiPhish/quicklisp.nvim) is a Neovim
 frontend for Quicklisp.
 
-[Slimv_box](https://github.com/justin2004/slimv_box) brings Vim, SBCL
+[Slimv_box](https://github.com/justin2004/slimv_box) brings Vim, SBCL, ABCL,
 and tmux in a Docker container for a quick installation.
 
 
