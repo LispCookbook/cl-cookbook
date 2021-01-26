@@ -204,11 +204,13 @@ public and private repositories. Let's see straight away a simple
 `.gitlab-ci.yml`:
 
 ~~~
-image: daewok/lisp-devel
+variables:
+  QUICKLISP_ADD_TO_INIT_FILE: "true"
+
+image: clfoundation/sbcl:latest
 
 before_script:
-  - apt-get update -qy
-  - apt-get install -y git-core
+  - install-quicklisp
   - git clone https://github.com/foo/bar ~/quicklisp/local-projects/
 
 test:
@@ -216,52 +218,76 @@ test:
     - make test
 ~~~
 
-Gitlab CI is based on Docker. With `image` we tell it to use the
-[daewok/lisp-devel](https://hub.docker.com/r/daewok/lisp-devel/)
-one. It includes SBCL, ECL, CCL and ABCL, and Quicklisp is installed
-in the home (`/home/lisp/`), so we can `quickload` packages right
-away. If you're interested it also has a more bare bones option. Gitlab will load the
-image, clone our project and put us at the project root with
-administrative rights to run the rest of the commands.
+Gitlab CI is based on Docker. With `image` we tell it to use the `latest` tag
+of the [clfoundation/sbcl](https://hub.docker.com/r/clfoundation/sbcl/)
+image. This includes the latest version of SBCL, many OS packages useful for CI
+purposes, and a script to install Quicklisp. Gitlab will load the image, clone
+our project and put us at the project root with administrative rights to run
+the rest of the commands.
 
 `test` is a "job" we define, `script` is a
 recognized keywords that takes a list of commands to run.
 
-Suppose we must install dependencies before running our tests:
-`before_script` will run before each job. Here we clone a library
-where Quicklisp can find it, and for doing so we must install git
-(Docker images are usually pretty bare bones).
+Suppose we must install dependencies before running our tests: `before_script`
+will run before each job. Here we install Quicklisp (adding it to SBCL's init
+file), and clone a library where Quicklisp can find it.
 
 We can try locally ourselves. If we already installed [Docker](https://docs.docker.com/) and
 started its daemon (`sudo service docker start`), we can do:
 
-    docker run --rm -it -v /path/to/local/code:/usr/local/share/common-lisp/source daewok/lisp-devel:latest bash
+    docker run --rm -it -v /path/to/local/code:/usr/local/share/common-lisp/source clfoundation/sbcl:latest bash
 
-This will download the lisp image (±400Mo), mount some local code in
-the image where indicated, and drop us in bash. Now we can try a `make
-test`.
+This will download the lisp image (±300MB compressed), mount some local code in
+the image where indicated, and drop us in bash. Now we can try a `make test`.
 
-To show you a more complete example:
+Here is a more complete example that tests against several CL implementations
+in parallel:
 
 ~~~
-image: daewok/lisp-devel
+variables:
+  IMAGE_TAG: latest
+  QUICKLISP_ADD_TO_INIT_FILE: "true"
+  QUICKLISP_DIST_VERSION: latest
+
+image: clfoundation/$LISP:$IMAGE_TAG
 
 stages:
   - test
   - build
 
 before_script:
-  - apt-get update -qy
-  - apt-get install -y git-core
+  - install-quicklisp
   - git clone https://github.com/foo/bar ~/quicklisp/local-projects/
 
-test:
+.test:
   stage: test
   script:
     - make test
 
+abcl test:
+  extends: .test
+  variables:
+    LISP: abcl
+
+ccl test:
+  extends: .test
+  variables:
+    LISP: ccl
+
+ecl test:
+  extends: .test
+  variables:
+    LISP: ecl
+
+sbcl test:
+  extends: .test
+  variables:
+    LISP: sbcl
+
 build:
   stage: build
+  variables:
+    LISP: sbcl
   only:
     - tags
   script:

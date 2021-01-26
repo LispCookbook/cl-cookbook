@@ -66,23 +66,23 @@ Windows installer, Brew/Linux Brew,…).
 
 If you already know [Docker](https://docs.docker.com), you can get
 started with Common Lisp pretty quickly. The
-[daewok/lisp-devel-docker](https://github.com/daewok/lisp-devel-docker)
+[clfoundation/cl-devel](https://hub.docker.com/r/clfoundation/cl-devel)
 image comes with recent versions of SBCL, CCL, ECL and ABCL, plus
-Quicklisp installed in the home (`/home/lisp`), so than we can
+Quicklisp installed in the home (`/home/cl`), so than we can
 `ql:quickload` libraries straight away.
 
 Docker works on GNU/Linux, Mac and Windows.
 
-The following command will download the required image (around 400MB), put your
-local sources inside the Docker image where indicated, and drop you
-into an SBCL REPL:
+The following command will download the required image (around 1.0GB
+compressed), put your local sources inside the Docker image where indicated,
+and drop you into an SBCL REPL:
 
-    docker run --rm -it -v /path/to/local/code:/usr/local/share/common-lisp/source daewok/lisp-devel:base sbcl
+    docker run --rm -it -v /path/to/local/code:/home/cl/common-lisp/source clfoundation/cl-devel:latest sbcl
 
-We still want to develop using Emacs and SLIME, so we need to
-connect SLIME to the Lisp inside Docker. See
-[slime-docker](https://github.com/daewok/slime-docker), which is a library
-that helps on setting that up.
+We still want to develop using Emacs and SLIME, so we need to connect SLIME to
+the Lisp inside Docker. See
+[slime-docker](https://gitlab.common-lisp.net/cl-docker-images/slime-docker),
+which is a library that helps on setting that up.
 
 
 ### On Windows
