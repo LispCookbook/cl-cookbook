@@ -445,13 +445,40 @@ isn't satisfying:
 ;; ("Aaa" "Zzz" "Ééé")
 ~~~
 
-With SBCL, use `sb-unicode:unicode<`:
+With [SBCL](http://www.sbcl.org/manual/#String-operations), use `sb-unicode:unicode<`:
 
 ~~~lisp
 (sort '("Aaa" "Ééé" "Zzz") #'sb-unicode:unicode<)
 ;; ("Aaa" "Ééé" "Zzz")
 ~~~
 
+### Breaking strings into graphenes, sentences, lines and words
+
+These functions use SBCL's [`sb-unicode`](http://www.sbcl.org/manual/#String-operations): they are SBCL specific.
+
+Use `sb-unicode:sentences` to break a string into sentences according
+to the default sentence breaking rules.
+
+Use `sb-unicode:lines` to break a string into lines that are no wider
+than the `:margin` keyword argument. Combining marks will always be kept together with their base characters, and spaces (but not other types of whitespace) will be removed from the end of lines. If `:margin` is unspecified, it defaults to 80 characters
+
+~~~lisp
+(sb-unicode:lines "A first sentence. A second somewhat long one." :margin 10)
+;; => ("A first"
+       "sentence."
+       "A second"
+       "somewhat"
+       "long one.")
+~~~
+
+See also `sb-unicode:words` and `sb-unicode:graphenes`.
+
+Tip: you can ensure these functions are run only in SBCL with a feature flag:
+
+    #+sbcl
+    (runs on sbcl)
+    #-sbcl
+    (runs on other implementations)
 
 ## Controlling Case
 
