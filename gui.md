@@ -67,7 +67,7 @@ infamous reputation of having an outdated look. This is not (so) true
 anymore since its version 8 of 1997 (!). It is probably better than
 you think:
 
-![](/assets/gui/ltk-on-macos.png)
+![](assets/gui/ltk-on-macos.png)
 
 Tk doesn't have a great choice of widgets, but it has a useful canvas,
 and it has a couple of unique features: we can develop a graphical
@@ -248,7 +248,7 @@ drag-and-drop
 
 <!-- editor's note: found missing a list view with columns. -->
 
-![](/assets/iup-demo.png)
+![](assets/iup-demo.png)
 
 
 ### Nuklear (Bodge-Nuklear)
@@ -432,7 +432,7 @@ and we show them:
   (window 'main-window))
 ~~~
 
-![](/assets/gui/qtools-intro.png)
+![](assets/gui/qtools-intro.png)
 
 That's cool, but we don't react to the click event yet.
 
