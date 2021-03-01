@@ -381,7 +381,7 @@ With `with-open-file`, specify `:direction :output` and use `write-sequence` ins
 (with-open-file (f <pathname> :direction :output
                               :if-exists :supersede
                               :if-does-not-exist :create)
-    (write-sequence s f)))
+    (write-sequence s f))
 ~~~
 
 If the file exists, you can also `:append` content to it.
