@@ -83,6 +83,26 @@ creates the directories if they do not exist:
 
 This may create `foo`, `bar` and `baz`. Don't forget the trailing slash.
 
+### Deleting directories
+
+Use `uiop:delete-directory-tree` with a pathname (`#p`), a trailing slash and the `:validate` key:
+
+~~~lisp
+;; mkdir dirtest
+(uiop:delete-directory-tree #p"dirtest/" :validate t)
+~~~
+
+You can use `pathname` around a string that designates a directory:
+
+~~~lisp
+(defun rmdir (path)
+  (uiop:delete-directory-tree (pathname path) :validate t))
+~~~
+
+UIOP also has `delete-empty-directory`
+
+[cl-fad][cl-fad] has `(fad:delete-directory-and-files "dirtest")`.
+
 
 ### Opening a file
 
@@ -592,3 +612,5 @@ operations.
 ~~~
 
 See also `(user-homedir-pathname)`.
+
+[cl-fad]: https://edicl.github.io/cl-fad/
