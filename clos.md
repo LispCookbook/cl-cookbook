@@ -718,7 +718,7 @@ The metaclass of a `structure-object` is the class
 
 ### Introspection
 
-we already saw some introspection functions.
+We already saw some introspection functions.
 
 Your best option is to discover the
 [closer-mop](https://github.com/pcostanza/closer-mop) library and to
