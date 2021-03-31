@@ -1,10 +1,8 @@
----
-title: Using Emacs as an IDE
----
+# Using Emacs as an IDE
 
 This page is meant to provide an introduction to using [Emacs](https://www.gnu.org/software/emacs/) as a Lisp IDE.
 
-![](https://www.gnu.org/software/emacs/images/teaser.png)
+![](assets/emacs-teaser.png)
 
 
 **Note**: [Portacle](https://shinmera.github.io/portacle/) is a
@@ -172,13 +170,13 @@ packages will display all possible keybindings starting with the key(s) you just
 
 For example, I know there are useful keybindings under `C-x` but I don't remember which ones… I just type `C-x`, I wait for half a second, and which-key shows all the ones available.
 
-![](https://raw.githubusercontent.com/justbur/emacs-which-key/master/img/which-key-minibuffer.png)
+![](assets/emacs-which-key-minibuffer.png)
 
 Just try it with `C-h` too!
 
 See also [Helpful](https://github.com/Wilfred/helpful), an alternative to the built-in Emacs help that provides much more contextual information.
 
-![](https://raw.githubusercontent.com/Wilfred/helpful/master/screenshots/helpful.png)
+<img src="assets/emacs-helpful.png" style="height: 450px"/>
 
 
 ### Learn Emacs with the built-in tutorial
@@ -347,7 +345,7 @@ For example (point is before the parenthesis):
 Use the built-in `C-c TAB` to complete symbols in SLIME. You can get tooltips
 with [company-mode](http://company-mode.github.io/).
 
-![](http://company-mode.github.io/images/company-elisp.png)
+![](assets/emacs-company-elisp.png)
 
 In the REPL, it's simply TAB.
 
