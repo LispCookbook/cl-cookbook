@@ -705,6 +705,6 @@ macros, showing simple to advanced concepts such as compiler macros:
 [https://www.youtube.com/watch?v=ygKXeLKhiTI](https://www.youtube.com/watch?v=ygKXeLKhiTI)
 It also shows how to manipulate macros (and their expansion) in Emacs.
 
-[![video](http://img.youtube.com/vi/ygKXeLKhiTI/0.jpg)](https://www.youtube.com/watch?v=ygKXeLKhiTI)
+[![video](assets/youtube-little-bits-lisp.jpg)](https://www.youtube.com/watch?v=ygKXeLKhiTI)
 
 * the article "Reader macros in Common Lisp": https://lisper.in/reader-macros

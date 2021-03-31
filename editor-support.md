@@ -93,7 +93,7 @@ and SLIME (same shortcuts). It comes with an ncurses and an Electron
 frontend, and other programming modes: Python, Go, Rust, JS, Nim,
 Scheme, HTML, CSS, directory mode, a vim layer, and more.
 
-<img src="https://github.com/cxxxr/lem/raw/master/screenshots/terminal.png"
+<img src="assets/lem-terminal.png"
      style="width: 800px"/>
 
 
@@ -129,7 +129,7 @@ inspection.
 supports running a REPL, evaluate code, auto indent, code completion, go to definition, documentation on hover, etc.
 It's based on [cl-lsp](https://github.com/ailisp/cl-lsp) language server and it's possible to write LSP client that works in other editors.
 
-<img src="https://raw.githubusercontent.com/ailisp/commonlisp-vscode/master/screenshot.png" style="width: 800px"/>
+<img src="assets/commonlisp-vscode.png" style="width: 800px"/>
 
 ## Geany (experimental)
 
@@ -147,7 +147,7 @@ highlighting of errors and warnings, a REPL, and a project skeleton creator.
 kernel for Jupyter notebooks.
 
 
-<img src="https://jupyter.org/assets/jupyterpreview.png"
+<img src="assets/jupyterpreview.png"
      style="width: 800px"/>
 
 There is also [Darkmatter](https://github.com/tamamu/darkmatter), a notebook-style

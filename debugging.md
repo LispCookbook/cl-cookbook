@@ -72,7 +72,7 @@ re-use it in another image, be it on another machine.
 We can do all this through commands, keyboard shortcuts and also through a
 menu or mouse clicks.
 
-!["changing the log level with log4slime"](https://github.com/sharplispers/log4cl/raw/master/images/screenshot-15.png)
+!["changing the log level with log4slime"](assets/log4cl.png)
 
 We invite you to read log4cl's README.
 
