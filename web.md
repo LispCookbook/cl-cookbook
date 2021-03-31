@@ -457,10 +457,28 @@ the lisp backtrace on the html page.
 
 ### Hunchentoot
 
-The global variables to set are `*catch-errors-p*`,
-`*show-lisp-errors-p*` and `*show-lisp-backtraces-p*`.
+The global variables to set to choose the error handling behaviour are:
 
-Hunchentoot also defines condition classes.
+- `*catch-errors-p*`: set to `nil` if you want errors to be caught in
+  the interactive debugger (for development only, of course):
+
+~~~lisp
+(setf hunchentoot:*catch-errors-p* nil)
+~~~
+
+See also the generic function `maybe-invoke-debugger` if you want to
+fine-tune this behaviour. You might want to specialize it on specific
+condition classes (see below) for debugging purposes. The default method [invokes
+the debugger](http://www.lispworks.com/documentation/HyperSpec/Body/f_invoke.htm)
+if `*catch-errors-p*` is `nil`.
+
+- `*show-lisp-errors-p*`: set to `t` if you want to see errors in HTML output in the browser.
+- `*show-lisp-backtraces-p*`: set to `nil` if the errors shown in HTML
+  output (when `*show-lisp-errors-p*` is `t`) should *not* contain
+  backtrace information (defaults to `t`, shows the backtrace).
+
+Hunchentoot defines condition classes. The superclass of all
+conditions is `hunchentoot-condition`. The superclass of errors is `hunchentoot-error` (itself a subclass of `hunchentoot-condition`).
 
 See the documentation: [https://edicl.github.io/hunchentoot/#conditions](https://edicl.github.io/hunchentoot/#conditions).
 
