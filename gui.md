@@ -110,6 +110,7 @@ The Lisp binding is [Ltk][ltk].
   - [cl-torrents](https://github.com/vindarel/cl-torrents) - searching torrents on popular trackers. CLI, readline and a simple Tk GUI.
 - More examples:
   - [https://peterlane.netlify.app/ltk-examples/](https://peterlane.netlify.app/ltk-examples/): LTk examples for the [tkdocs](https://tkdocs.com/tutorial/index.html) tutorial.
+  - [LTk Plotchart](https://peterlane.netlify.app/ltk-plotchart/) - A wrapper around the tklib/plotchart library to work with LTk. This includes over 20 different chart types (xy-plots, gantt charts, 3d-bar charts etc...).
 
 
 **List of widgets**
