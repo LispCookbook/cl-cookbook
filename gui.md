@@ -102,7 +102,7 @@ The Lisp binding is [Ltk][ltk].
 
 - **Bindings documentation**: short but complete. Nodgui too.
 - **Bindings stability**: very stable
-- **Bindings activity**: low to non-existent.
+- **Bindings activity**: low.
 - **Licence**: Tcl/Tk is BSD-style, Ltk is LGPL.
 - Example applications:
   - [Fulci](https://notabug.org/cage/fulci/) - a program to organise your movie collections.
