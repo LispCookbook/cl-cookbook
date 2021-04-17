@@ -35,9 +35,11 @@
         <img id="logo" src="{{ site.baseurl }}/assets/cl-logo-blue.png"/>
       </a>
 
-      <form onsubmit="duckSearch()" action="javascript:void(0)">
-        <input id="searchField" type="text" value="" placeholder="Search...">
-      </form>
+      <div id="searchform-container">
+        <form onsubmit="duckSearch()" action="javascript:void(0)">
+          <input id="searchField" type="text" value="" placeholder="Search...">
+        </form>
+      </div>
 
       <div id="toc-container" class="toc-close">
         <div id="toc-title">Table of Contents</div>

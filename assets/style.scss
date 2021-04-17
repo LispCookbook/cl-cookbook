@@ -19,6 +19,13 @@ img{
     margin-right:1%;
     position:fixed;
 }
+
+@media only screen and (max-width: 576px) {
+  #searchform-container {
+      display: none;
+  }
+}
+
 #logo{
     width:auto;
     height:70px;
