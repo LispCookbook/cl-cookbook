@@ -106,8 +106,10 @@ There is **no Vim layer**.
 ### Searching keybindings by name
 
 It is possible to search for a keybinding associated to a function, or
-a function name from its keybinding, with the Help -> Editing -> Key
-to Command / Command to Key menu entries.
+a function name from its keybinding, with the menu (Help -> Editing ->
+Key to Command / Command to Key) or with `C-h` followed by a key,
+as in Emacs. For example type `C-h k` then enter a keybinding to
+get the command name. See more with `C-h ?`.
 
 ### Tweaking the IDE
 
