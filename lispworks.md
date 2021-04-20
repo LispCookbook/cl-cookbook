@@ -199,12 +199,10 @@ in the REPL), you can double-click on its name to go back to the
 editor and have it highlight the part of your code that triggered the
 error.
 
-NB: this is equivalent of pressing `M-v` in Slime.
 
-<div class="info" style="  background-color: #e7f3fe;   border-left: 6px solid #2196F3; padding: 1em;">
-<p><strong>NB:</strong>
-  this is equivalent of pressing <code>M-v</code> in Slime.
-</p>
+<div class="info" style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 17px;">
+<!-- if inside a <p> then bootstrap adds 10px padding to the bottom -->
+<strong>NB:</strong> this is equivalent of pressing <code>M-v</code> in Slime.
 </div>
 
 
