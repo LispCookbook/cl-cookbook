@@ -822,7 +822,10 @@ Hash Tables are created using the function
 has no required argument. Its most used optional keyword argument is
 `:test`, specifying the function used to test the equality of keys.
 
-_Note_: see shorter notations in the [Serapeum](https://github.com/ruricolist/serapeum/) or [Rutils](https://github.com/vseloved/rutils) libraries. For example, Serapeum has `dict`, and Rutils a `#h` reader macro.
+<div class="info-box info">
+<strong>Note:</strong> see shorter notations in the <a href="https://github.com/ruricolist/serapeum/">Serapeum</a> or <a href="https://github.com/vseloved/rutils">Rutils</a> libraries. For example, Serapeum has <code>dict</code>, and Rutils a <code>#h</code> reader macro.
+</div>
+
 
 <a name="get"></a>
 
