@@ -184,8 +184,12 @@ able to populate it with information to be consumed later:
 ;; #<MY-DIVISION-BY-ZERO {1005C18653}>
 ~~~
 
-Note: here's a quick reminder on classes, if you are not fully operational
-on the [Common Lisp Object System](clos.html):
+<div class="info-box info">
+<p>
+<strong>Note:</strong> here's a quick reminder on classes, if you are not fully operational
+on the <a href="clos.html">Common Lisp Object System</a>.
+</p>
+</div>
 
 ~~~lisp
 (make-condition 'my-division-by-zero :dividend 3)
