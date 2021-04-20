@@ -139,16 +139,18 @@ Lisp is interactive by nature, so in case of an error we enter the
 debugger. This can be annoying in certain cases, so you might want to
 use SBCL's `--disable-debugger` option.
 
-_Tip: the CLISP implementation has a better default REPL for the
+<div class="info" style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 17px;">
+<!-- if inside a <p> then bootstrap adds 10px padding to the bottom -->
+<strong>TIP:</strong> The CLISP implementation has a better default REPL for the
 terminal (readline capabilities, completion of symbols). You can even
-use `clisp -on-error abort` to have error messages without the
+use <code>clisp -on-error abort</code> to have error messages without the
 debugger. It's handy to try things out, but we recommend to set-up
-one's editor and to use SBCL or CCL for production._
-
+your editor and to use SBCL or CCL.
+</div>
 
 ## Libraries
 
-Common Lisp has hundreds of libraries available under a free software license. See:
+Common Lisp has thousands of libraries available under a free software license. See:
 
 * [Quickdocs](http://quickdocs.org/) - the library documentation hosting for CL.
 * the [Awesome-cl](https://github.com/CodyReichert/awesome-cl) list, a
@@ -430,9 +432,12 @@ If you dislike the REPL to print all symbols upcase, add this:
 
     (setf *print-case* :downcase)
 
-Beware that this might break some packages like
-[Mito](https://github.com/fukamachi/mito/issues/45).  Avoid doing this in
-production.
+<div class="info-box warning">
+<!-- if inside a <p> then bootstrap adds 10px padding to the bottom -->
+<strong>Warning:</strong> This might break the behaviour of some packages like it happened with
+<a href="https://github.com/fukamachi/mito/issues/45">Mito</a>.
+Avoid doing this in production.
+</div>
 
 
 ## Read more

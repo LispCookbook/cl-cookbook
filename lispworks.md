@@ -200,7 +200,7 @@ editor and have it highlight the part of your code that triggered the
 error.
 
 
-<div class="info" style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 17px;">
+<div class="info-box info">
 <!-- if inside a <p> then bootstrap adds 10px padding to the bottom -->
 <strong>NB:</strong> this is equivalent of pressing <code>M-v</code> in Slime.
 </div>

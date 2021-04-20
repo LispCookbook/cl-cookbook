@@ -173,3 +173,31 @@ ul ul{
 ul ul ul{
     margin-left:-26px;
 }
+
+// Alert / Info boxes
+
+.info-box {
+    // note: if element is inside a <p> then bootstrap adds 10px padding to the bottom.
+    padding: 17px;
+}
+
+.danger {
+  background-color: #ffdddd;
+  border-left: 6px solid #f44336;
+}
+
+.success {
+  background-color: #ddffdd;
+  border-left: 6px solid #4CAF50;
+}
+
+.info {
+  background-color: #e7f3fe;
+  border-left: 6px solid #2196F3;
+}
+
+
+.warning {
+  background-color: #ffffcc;
+  border-left: 6px solid #ffeb3b;
+}
