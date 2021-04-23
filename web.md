@@ -296,7 +296,7 @@ handling extension on top of Hunchentoot. It provides:
 - and decorators.
 
 To use it, don't create a server with `hunchentoot:easy-acceptor` but
-with `easy-routes:easy-routes-aceptor`:
+with `easy-routes:easy-routes-acceptor`:
 
 ~~~lisp
 (setf *server* (make-instance 'easy-routes:easy-routes-acceptor))
