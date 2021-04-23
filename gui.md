@@ -46,10 +46,8 @@ In addition, you might want to have a look to:
 - [CCL's built-in Cocoa
   interface](https://ccl.clozure.com/docs/ccl.html#the-objective-c-bridge),
   used to build applications such as [Opusmodus](https://opusmodus.com/).
-- [CocoaInterface](https://github.com/plkrueger/CocoaInterface/), a
-Cocoa interface for Clozure Common Lisp. Build Cocoa user interface
-windows dynamically using Lisp code and bypass the typical Xcode
-processes.
+- Clozure CL's built-in [Objective-C bridge](https://ccl.clozure.com/docs/ccl.html#the-objective-c-bridge) and [CocoaInterface](https://github.com/plkrueger/CocoaInterface/), a Cocoa interface for CCL. Build Cocoa user interface windows dynamically using Lisp code and bypass the typical Xcode processes.
+  - the bridge is good at catching ObjC errors and turning them into Lisp errors, so one can have an iterative REPL-based development cycle for a macOS GUI application.
 * [McCLIM](https://common-lisp.net/project/mcclim/) and [Garnet](https://github.com/earl-ducaine/cl-garnet) are toolkit in 100% Common Lisp. McClim even has [a prototype](https://techfak.de/~jmoringe/mcclim-broadway-7.ogv) running in the browser with the Broadway protocol and Garnet has an ongoing interface to Gtk.
 * [Alloy](https://github.com/Shirakumo/alloy), another very new toolkit in 100% Common Lisp, used for example in the [Kandria](https://github.com/shinmera/kandria) game.
 * [nodgui](https://notabug.org/cage/nodgui), a fork of Ltk, with syntax sugar and additional widgets.
