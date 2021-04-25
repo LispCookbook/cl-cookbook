@@ -16,7 +16,7 @@ introduction) and [there are others](https://github.com/CodyReichert/awesome-cl#
 `Prove` for its documentation and its **extensible reporters** (it has different
 report styles and we can extend them).
 
-> warning: Prove has a couple limitations and will soon be obsolete. We advise to start with another test framework.
+> warning: Prove has a couple limitations and will soon be obsolete. We advise to start with another test framework, such as FiveAM.
 
 
 <a name="install"></a>
@@ -175,26 +175,124 @@ the capture above or like
 
 ## Continuous Integration
 
-### Travis CI and Coveralls
+Continuous Integration is important to run automatic tests after a
+commit or before a pull request, to run code quality checks, to build
+and distribute your software… well, to automate everything about software.
 
-[Travis](https://travis-ci.org/) is a service for running unit tests
-in the cloud and [Coveralls](https://coveralls.io/) shows you the
-evolution of coverage over time, and also tells you what a pull
-request will do to coverage.
+We want our programs to be portable across Lisp implementations, so
+we'll set up our CI pipeline to run our tests against several of them (it
+could be SBCL and CCL of course, but while we're at it ABCL, ECL and
+possibly more).
 
-Thanks to `cl-travis` we can easily test our program against one or many
-Lisp implementations (ABCL, Allegro CL, SBCL, CMUCL, CCL and
-ECL). `cl-coveralls` helps to post our coverage to the service. It
-supports SBCL and Clozure CL with Travis CI and Circle CI.
+We have a choice of Continuous Integration services: Travis CI, Circle, Gitlab CI, now also GitHub Actions, etc (many existed before GitHub Actions, if you wonder). We'll have a look at how to configure a CI pipeline for Common Lisp, and we'll focus a little more on Gitlab CI on the last part.
 
-We refer you to the lengthy and illustrated explanations of the
-["continuous integration" page on lisp-lang.org](http://lisp-lang.org/learn/continuous-integration).
+We'll also quickly show how to publish coverage reports to the [Coveralls](https://coveralls.io/) service. [cl-coveralls](https://github.com/fukamachi/cl-coveralls) helps to post our coverage to the service.
 
-You'll find many example projects using them in the links above, but
-if you want a quick overview of what it looks like:
+### GitHub Actions, Circle CI, Travis… with CI-Utils
 
-- Lucerne on [Coveralls](https://coveralls.io/github/eudoxia0/lucerne)
-  and [Travis](https://travis-ci.org/eudoxia0/lucerne).
+We'll use [CI-Utils](https://neil-lindquist.github.io/CI-Utils/), a set of utilities that comes with many examples. It also explains more precisely what is a CI system and compares a dozen of services.
+
+It relies on [Roswell](https://github.com/roswell/roswell/) to install the Lisp implementations and to run the tests. They all are installed with a bash one-liner:
+
+    curl -L https://raw.githubusercontent.com/roswell/roswell/release/scripts/install-for-ci.sh | bash
+
+(note that on the Gitlab CI example, we use a ready-to-use Docker image that contains them all)
+
+It also ships with a test runner for FiveAM, which eases some rough parts (like returning the right error code to the terminal). We install ci-utils with Roswell, and we get the `run-fiveam` executable.
+
+Then we can run our tests:
+
+    run-fiveam -e t -l foo/test :foo-tests  # foo is our project
+
+Following is the complete `.travis.yml` file.
+
+The first part should be self-explanatory:
+
+```yml
+### Example configuration for Travis CI ###
+language: generic
+
+addons:
+  homebrew:
+    update: true
+    packages:
+    - roswell
+  apt:
+    packages:
+      - libc6-i386 # needed for a couple implementations
+      - default-jre # needed for abcl
+
+# Runs each lisp implementation on each of the listed OS
+os:
+  - linux
+#  - osx # OSX has a long setup on travis, so it's likely easier to just run select implementations on OSX
+```
+
+This is how we configure the implementations matrix, to run our tests on several Lisp implementations. We also send the test coverage made with SBCL to Coveralls.
+
+```
+env:
+  global:
+    - PATH=~/.roswell/bin:$PATH
+    - ROSWELL_INSTALL_DIR=$HOME/.roswell
+#    - COVERAGE_EXCLUDE=t  # for prove or rove
+  jobs:
+    # The implementation and whether coverage is send to coveralls are controlled with these environmental variables
+    - LISP=sbcl-bin COVERALLS=true
+    - LISP=ccl-bin
+    - LISP=abcl
+    - LISP=ecl   # warn: in our experience, compilations times can be long on ECL.
+
+# Additional OS/Lisp combinations can be added to those generated above
+jobs:
+  include:
+    - os: osx
+      env: LISP=sbcl-bin
+    - os: osx
+      env: LISP=ccl-bin
+```
+
+Some jobs can be marked as allowed to fail:
+
+
+```
+# Note that this should only be used if there is no interest for the library to work on that system
+#  allow_failures:
+#    - env: LISP=abcl
+#    - env: LISP=ecl
+#    - env: LISP=cmucl
+#    - env: LISP=alisp
+#      os: osx
+
+  fast_finish: true
+```
+
+We finally install Roswell, the implementations, and we run our tests.
+
+```
+cache:
+  directories:
+    - $HOME/.roswell
+    - $HOME/.config/common-lisp
+
+install:
+  - curl -L https://raw.githubusercontent.com/roswell/roswell/release/scripts/install-for-ci.sh | sh
+  - ros install ci-utils #for run-fiveam
+#  - ros install prove #for run-prove
+#  - ros install rove #for [run-] rove
+
+  # If asdf 3.16 or higher is needed, uncomment the following lines
+  #- mkdir -p ~/common-lisp
+  #- if [ "$LISP" == "ccl-bin" ]; then git clone https://gitlab.common-lisp.net/asdf/asdf.git ~/common-lisp; fi
+
+script:
+  - run-fiveam -e t -l foo/test :foo-tests
+  #- run-prove foo.asd
+  #- rove foo.asd
+```
+
+Below with Gitlab CI, we'll use a Docker image that already contains the Lisp binaries and every Debian package required to build Quicklisp libraries.
+
 
 ### Gitlab CI
 
@@ -316,3 +414,7 @@ When the pipelines pass, you will see:
 
 
 You now have a ready to use Gitlab CI.
+
+# References
+
+- the [CL Foundation Docker images](https://hub.docker.com/u/clfoundation)
