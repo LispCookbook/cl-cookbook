@@ -91,12 +91,15 @@ The LispWorks IDE is self-contained, but it is also possible to use LispWorks fr
 
 ### The editor
 
-The editor experience was okay in our tests, only a bit minimal. It
+The editing experience was okay in our tests, only a bit minimal. It
 offers a TAB-completion pop-up, syntax highlighting, Emacs-like
 keybindings (including the `M-x` extended command). The menus help
 the discovery.
 
-We had an issue though, in that the go-to-source function did not work out for built-in Lisp symbols.
+We had an issue, in that the go-to-source function did not work out for built-in Lisp symbols.
+
+The editor provides an interesting tab: Changed Definitions. It lists the functions and methods that were redefined since, at our choosing: the first edit of the session, the last save, the last compile.
+
 
 See also:
 
@@ -114,10 +117,16 @@ Similar ones include:
 - `C-g` to cancel what you're doing,
 - `M-w` and `C-y` to copy and paste,
 - `M-b`, `M-f`, `C-a`, `C-e`… to move around words, to go to the beginning or the end of the line,
-- `C-k` to kill until the end of the line,
+- `C-k` to kill until the end of the line, `C-w` to kill a selected region,
 - `M-.` to find the source of a symbol,
 - `C-x C-e` to evaluate the current defun,
 - …
+
+Some useful functions don't have a keybinding by default, for example:
+
+<!-- - delete selected text with `M-x delete-region` (or kill the region with `C-w`) -->
+- clear the REPL with `M-x Clear Listener`
+- `Backward Kill Line`
 
 It is possible to use **classical keybindings**, à la KDE/Gnome. Go to the
 Preferences menu, Environment and in the Emulation tab.
