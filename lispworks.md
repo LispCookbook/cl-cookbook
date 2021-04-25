@@ -16,9 +16,11 @@ Slime.
 
 LispWorks also provides more integrated tools (the Process browser
 lists all processes running in the Lisp image and we can
-stop/break/debug… them) and presents many information in the form of
+stop, break or debug them) and presents many information in the form of
 graphs (for example, a graph of function calls or a graph of all the
 created windows).
+
+![LispWorks' listener and editor in the Mate desktop environment](assets/lispworks/two-sided-view.png "The LispWorks listener an the editor in the Mate desktop environment")
 
 ## LispWorks features
 
@@ -49,7 +51,7 @@ You get a warning and if you continue, LispWorks closes.
 
 - There is a **time limit of 5 hours** for each session, after which LispWorks Personal exits, possibly without saving your work or performing cleanups such as removing temporary files. You are warned after 4 hours of use.
 
-- It is **impossible to build a binary**. Indeed, the functions [save-image](http://www.lispworks.com/documentation/lw71/LW/html/lw-95.htm), [deliver](http://www.lispworks.com/documentation/lw71/DV/html/delivery-4.htm#pgfId-852223) (*the* function to create a stand-alone executable, remove Lisp development functionalities like the IDE, and optionally apply a tree-shaker to make the image smaller), and load-all-patches are not available.
+- It is **impossible to build a binary**. Indeed, the functions [save-image](http://www.lispworks.com/documentation/lw71/LW/html/lw-95.htm), [deliver](http://www.lispworks.com/documentation/lw71/DV/html/delivery-4.htm#pgfId-852223) (*the* function to create a stand-alone executable), and load-all-patches are not available.
 
 - **Initialization files are not loaded**.
   => if you are used to initializing Quicklisp from your `~/.sbclrc` on Emacs, you'll have to load an init file manually every time you start LispWorks (`(load #p"~/.your-init-file`)).
@@ -77,7 +79,7 @@ LispWorks actually comes in four paid editions. It's all explained by themselves
 
 - a Hobbyist edition with `save-image` and `load-all-patches`, to apply updates of minor versions, without the obvious limitations, for non-commercial and non-academic use,
 - a HobbyistDV edition with the `deliver` function to create executables (still for non-commercial and non-academic uses),
-- a Professional edition,
+- a Professional edition, with the `deliver` function, for commercial and academic uses,
 - an Enterprise one, with their enterprise modules: the Common SQL interface, LispWorks ORB, KnowledgeWorks.
 
 At the time of writing, the licence of the hobbyist edition costs 750 USD, the pro version the double. They are bought for a LW version, per platform. They have no limit of time.
@@ -255,7 +257,62 @@ The next time your code is executed, you'll get a comprehensive Stepper pop-up w
 
 ![](assets/lispworks/stepper.gif)
 
+### The class browser
+
+The class browser allows us to examine a class's slots, parent classes, available methods, and some more.
+
+Let's create a simple class:
+
+~~~lisp
+(defclass person ()
+  ((name :accessor name
+         :initarg :name
+         :initform "")
+   (lisper :accessor lisperp
+           :initform t)))
+~~~
+
+Now call the class browser:
+
+- use the "Class" button from the listener,
+- or use the menu Expression -> Class,
+- or put the cursor on the class and call `M-x Describe class`.
+
+![](assets/lispworks/class-browser.png)
+
+It is composed of several panes:
+
+- the **class hierarchy**, showing the superclasses on the left and the subclasses on the right, with their description to the bottom,
+- the **superclasses viewer**, in the form of a simple schema, and the same for subclasses,
+- the **slots pane** (the default),
+- the available **initargs**,
+- the existing **generic functions** for that class
+- and the **class precedence list**.
+
+The Functions pane lists all methods applicable to that class, so we can discover public methods provided by the CLOS object system: `initialize-instance`, `print-object`, `shared-initialize`, etc. We can double-click on them to go to their source. We can choose not to include the inherited methods too (see the "include inherited" checkbox).
+
+You'll find buttons on the toolbar (for example, Inspect a generic
+function) and more actions on the Methods menu, such as a way to see
+the **functions calls**, a menu to **undefine** or **trace** a function.
+
+See more:
+
+* [Chapter 8 of the documentation: the Class Browser](http://www.lispworks.com/documentation/lw71/IDE-U/html/ide-u-55.htm#pgfId-871798)
+
+### The tracer
+
+### The function call browser
+
+with graphs !
+
+http://www.lispworks.com/documentation/lw71/IDE-U/html/ide-u-114.htm#pgfId-852601
+
+### The Process browser
+
+http://www.lispworks.com/documentation/lw71/IDE-U/html/ide-u-178.htm#pgfId-852666
+
+
 ## See also
 
-- [LispWorks IDE User Guide](http://www.lispworks.com/documentation/lw71/IDE-U/html/ide-u.htm)
+- [LispWorks IDE User Guide](http://www.lispworks.com/documentation/lw71/IDE-U/html/ide-u.htm) (check out the sections we didn't cover)
 - the [Awesome LispWorks](https://github.com/fourier/awesome-lispworks) list
