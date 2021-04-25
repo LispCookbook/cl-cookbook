@@ -31,7 +31,7 @@ We can see TODO URL
 
 - tree shaker
 
-## Free edition limitations
+### Free edition limitations
 
 The download instructions and the limitations are given [on the download page](http://www.lispworks.com/downloads/index.html).
 
@@ -49,11 +49,10 @@ You get a warning and if you continue, LispWorks closes.
 
 - There is a **time limit of 5 hours** for each session, after which LispWorks Personal exits, possibly without saving your work or performing cleanups such as removing temporary files. You are warned after 4 hours of use.
 
-- The functions [save-image](http://www.lispworks.com/documentation/lw71/LW/html/lw-95.htm), [deliver](http://www.lispworks.com/documentation/lw71/DV/html/delivery-4.htm#pgfId-852223), and load-all-patches are not available.
-  => it is **impossible to build a binary**.
+- It is **impossible to build a binary**. Indeed, the functions [save-image](http://www.lispworks.com/documentation/lw71/LW/html/lw-95.htm), [deliver](http://www.lispworks.com/documentation/lw71/DV/html/delivery-4.htm#pgfId-852223) (*the* function to create a stand-alone executable, remove Lisp development functionalities like the IDE, and optionally apply a tree-shaker to make the image smaller), and load-all-patches are not available.
 
 - **Initialization files are not loaded**.
-  => if you are used to initializing Quicklisp from your `~/.sbclrc` on Emacs, you'll have to load an init file manually every time you start LispWorks.
+  => if you are used to initializing Quicklisp from your `~/.sbclrc` on Emacs, you'll have to load an init file manually every time you start LispWorks (`(load #p"~/.your-init-file`)).
 
 For the record, the snippet provided by Quicklisp to put in one's startup file is the following:
 
@@ -71,6 +70,20 @@ You'll have to paste it to the listener window (with the `C-y` key (y means yank
 The installation process requires you to fill an HTML form to receive
 a download link, then to run a first script that makes you accept the
 terms and the licence, then to run a second script that installs the software.
+
+### Licencing model
+
+LispWorks actually comes in four paid editions. It's all explained by themselves here: [http://www.lispworks.com/products/lispworks.html](http://www.lispworks.com/products/lispworks.html). In short, there is:
+
+- a Hobbyist edition with `save-image` and `load-all-patches`, to apply updates of minor versions, without the obvious limitations, for non-commercial and non-academic use,
+- a HobbyistDV edition with the `deliver` function to create executables (still for non-commercial and non-academic uses),
+- a Professional edition,
+- an Enterprise one, with their enterprise modules: the Common SQL interface, LispWorks ORB, KnowledgeWorks.
+
+At the time of writing, the licence of the hobbyist edition costs 750 USD, the pro version the double. They are bought for a LW version, per platform. They have no limit of time.
+
+*Please double check their upstream resources and don't hesitate to contact them.*
+
 
 ## LispWorks IDE
 
