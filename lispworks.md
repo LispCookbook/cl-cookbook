@@ -11,13 +11,21 @@ Here, we will mainly explore its IDE, asking ourselves what it can
 offer to a seasoned lisper used to Emacs and Slime. The short answer
 is: more graphical tools, such as an easy to use graphical stepper, a
 tracer, a code coverage browser or again a class browser. Setting and
-using breakpoints was a much more pleasing experience than on Slime.
+using breakpoints was a much more pleasing experience than on
+Slime.
+
+LispWorks also provides more integrated tools (the Process browser
+lists all processes running in the Lisp image and we can
+stop/break/debug… them) and presents many information in the form of
+graphs (for example, a graph of function calls or a graph of all the
+created windows).
 
 ## LispWorks features
 
 We can see TODO URL
 
 - CAPI GUI toolkit: provides native look-and-feel on Windows, Cocoa, GTK+ and Motif.
+  - comes with a graphical "Interface Builder" (think QtCreator).
 
 - [LispWorks for mobile](http://www.lispworks.com/products/lw4mr.html) runtime, for Android and iOS.
 
