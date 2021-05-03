@@ -178,11 +178,13 @@ value 255). Notice the Lisp reader can round-trip characters by name.
 Check out the UTF-8 Wikipedia article for the range of supported characters and
 their encodings.
 
-## Manipulating Parts of a String
+## Remove or replace characters from a string
 
 There's a slew of (sequence) functions that can be used to manipulate a string
 and we'll only provide some examples here. See the sequences dictionary in the
 HyperSpec for more.
+
+`remove` one character from a string:
 
 ~~~lisp
 * (remove #\o "Harpo Marx")
@@ -193,6 +195,11 @@ HyperSpec for more.
 "Harpo Mrx"
 * (remove-if #'upper-case-p "Harpo Marx")
 "arpo arx"
+~~~
+
+Replace one character with `substitute` (non destructive) or `replace` (destructive):
+
+~~~lisp
 * (substitute #\u #\o "Groucho Marx")
 "Gruuchu Marx"
 * (substitute-if #\_ #'upper-case-p "Groucho Marx")
@@ -205,39 +212,6 @@ HyperSpec for more.
 "Harpo Marx"
 ~~~
 
-Another function that can be frequently used (but not part of the ANSI standard)
-is replace-all. This function provides an easy functionality for search/replace
-operations on a string, by returning a new string in which all the occurrences of
-the 'part' in string is replaced with 'replacement'".
-
-~~~lisp
-* (replace-all "Groucho Marx Groucho" "Groucho" "ReplacementForGroucho")
-"ReplacementForGroucho Marx ReplacementForGroucho"
-~~~
-
-One of the implementations of replace-all is as follows:
-
-~~~lisp
-(defun replace-all (string part replacement &key (test #'char=))
-"Returns a new string in which all the occurrences of the part
-is replaced with replacement."
-    (with-output-to-string (out)
-      (loop with part-length = (length part)
-            for old-pos = 0 then (+ pos part-length)
-            for pos = (search part string
-                              :start2 old-pos
-                              :test test)
-            do (write-string string out
-                             :start old-pos
-                             :end (or pos (length string)))
-            when pos do (write-string replacement out)
-            while pos)))
-~~~
-
-However, bear in mind that the above code is not optimized for long strings; if
-you intend to perform such an operation on very long strings, files, etc. please
-consider using cl-ppcre regular expressions and string processing library which
-is heavily optimized.
 
 ## Concatenating Strings
 
