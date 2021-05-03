@@ -522,6 +522,9 @@ Other bindings which may be useful:
 - **C-c C-d #** for reader macros
 - **C-c C-d ~**  for format directives
 
+You can enhance the help buffer with the Slime extension [slime-doc-contribs](https://github.com/mmontone/slime-doc-contribs). It will show more information in a nice looking buffer.
+
+
 #### Inspect
 
 You can call `(inspect 'symbol)` from the REPL or call it with `C-c I` from a source file.
@@ -638,6 +641,13 @@ ASDF is the de-facto build facility. It is shipped in most Common Lisp implement
 
   * [ASDF](https://common-lisp.net/project/asdf/)
   * [ASDF best practices](https://gitlab.common-lisp.net/asdf/asdf/blob/master/doc/best_practices.md)
+
+#### Searching Quicklisp libraries
+
+From the REPL, we can use `,ql` to install a package known by name already.
+
+In addition, we can use the [Quicklisp-systems](https://github.com/mmontone/quicklisp-systems) Slime extension to search, browse and load Quicklisp systems from Emacs.
+
 
 ### Questions/Answers
 
