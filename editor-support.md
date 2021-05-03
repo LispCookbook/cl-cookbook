@@ -47,10 +47,6 @@ See also:
 
 See ["Using Emacs as an IDE"](emacs-ide.html).
 
-### Setting up Emacs on Windows or Mac
-
-See ["Setting up Emacs on Windows or Mac"](windows.html).
-
 
 ## Vim & Neovim
 
