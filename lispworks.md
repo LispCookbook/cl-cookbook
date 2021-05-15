@@ -31,14 +31,19 @@ We highlight:
 - [CAPI portable GUI toolkit](http://www.lispworks.com/documentation/lw61/CAPRM/html/capiref.htm): provides native look-and-feel on Windows, Cocoa, GTK+ and Motif.
   - comes with a graphical "Interface Builder" (think QtCreator).
 - [LispWorks for mobile runtime](http://www.lispworks.com/products/lw4mr.html), for Android and iOS,
-- optimized application delivery (LispWorks can ship lighter binaries than existing open-source implementations) and ability to deliver a dynamic library,
+- optimized application delivery: LispWorks can use a tree shaker to
+  remove unused lisp code from the delivered applicatiion, thus
+  shipping lighter binaries than existing open-source implementations.
+  and ability to deliver a dynamic library,
 - a [Java interface](http://www.lispworks.com/documentation/lw71/LW/html/lw-113.htm), allowing to call from Lisp to Java or the other way around,
 - an Objective-C and Cocoa interface, with drag and drop and multi-touch support,
 - a Foreign Language Interface,
 - TCP/UDP sockets with SSL & IPv6 support,
-- multiprocessing, unicode support, and all other Common Lisp features, and all other LispWorks Enterprise features.
+- natived threads and symmetric multiprocessing, unicode support, and all other Common Lisp features, and all other LispWorks Enterprise features.
 
 And, of course, a built-in IDE.
+
+LispWorks was used in diverse areas in the industry. They maintain [a list of success stories](http://www.lispworks.com/success-stories/index.html).
 
 
 ### Free edition limitations
@@ -368,4 +373,5 @@ See more:
 ## See also
 
 - [LispWorks IDE User Guide](http://www.lispworks.com/documentation/lw71/IDE-U/html/ide-u.htm) (check out the sections we didn't cover)
+- [LispWorks on Wikipedia](https://en.wikipedia.org/wiki/LispWorks)
 - the [Awesome LispWorks](https://github.com/fourier/awesome-lispworks) list
