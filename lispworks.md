@@ -303,11 +303,41 @@ See more:
 
 ### The function call browser
 
-with graphs !
+The function call browser allows us to see a graph of the callers and
+the callees of a function. It provides several ways to filter the
+displayed information and to further inspect the call stack.
 
-http://www.lispworks.com/documentation/lw71/IDE-U/html/ide-u-114.htm#pgfId-852601
+<div class="info-box info">
+<!-- if inside a <p> then bootstrap adds 10px padding to the bottom -->
+<strong>NB:</strong> The Slime functions to find such cross-references are <code>slime-who-[calls, references, binds, sets, depends-on, specializes, macroexpands]</code>.
+</div>
 
-### The Process browser
+After loading a couple packages, here's a simple example showing who calls the `string-trim` function.
+
+![The function call browser](assets/lispworks/function-call-browser.png)
+
+It shows functions from all packages, but there is a select box to restrict it further, for example to the "current and used" or only to the current packages.
+
+Double click on a function shown in the graph to go to its source. Again, as in many LispWorks views, the Function menu allows to further manipulate selected functions: trace, undefine, listen (paste the object to the Listener)…
+
+The Text tab shows the same information, but textually, the callers and callees side by side.
+
+We can see cross references for compiled code, and we must ensure the feature is on. When we you compile code, LispWorks shows a compilation output likes this:
+
+```
+;;; Safety = 3, Speed = 1, Space = 1, Float = 1, Interruptible = 1
+;;; Compilation speed = 1, Debug = 2, Fixnum safety = 3
+;;; Source level debugging is on
+;;; Source file recording is  on
+;;; Cross referencing is on
+```
+
+We see that cross referencing is on. Otherwise, activate it with `(toggle-source-debugging t)`.
+
+See more:
+
+- [Chapter 15: the function call browser](http://www.lispworks.com/documentation/lw71/IDE-U/html/ide-u-114.htm#pgfId-852601)
+
 
 ### The Process Browser
 
