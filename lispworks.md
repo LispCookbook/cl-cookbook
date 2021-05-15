@@ -11,8 +11,7 @@ Here, we will mainly explore its IDE, asking ourselves what it can
 offer to a seasoned lisper used to Emacs and Slime. The short answer
 is: more graphical tools, such as an easy to use graphical stepper, a
 tracer, a code coverage browser or again a class browser. Setting and
-using breakpoints was a much more pleasing experience than on
-Slime.
+using breakpoints was easier than on Slime.
 
 LispWorks also provides more integrated tools (the Process browser
 lists all processes running in the Lisp image and we can
@@ -41,20 +40,17 @@ The limitations are the following:
 
 - There is a **heap size limit** which, if exceeded, causes the image to exit. A warning is provided when the limit is approached.
 
-What does it prevent us to do? As an illustration, we can not load this set of libraries together in the same image, it is too much:
+What does it prevent us to do? As an illustration, we can not load this set of libraries together in the same image:
 
 ~~~lisp
 (ql:quickload '("alexandria" "serapeum" "bordeaux-threads" "lparallel" "dexador" "hunchentoot" "quri" "ltk" "cl-ppcre" "mito"))
 ~~~
 
-You get a warning and if you continue, LispWorks closes.
-
 - There is a **time limit of 5 hours** for each session, after which LispWorks Personal exits, possibly without saving your work or performing cleanups such as removing temporary files. You are warned after 4 hours of use.
 
 - It is **impossible to build a binary**. Indeed, the functions [save-image](http://www.lispworks.com/documentation/lw71/LW/html/lw-95.htm), [deliver](http://www.lispworks.com/documentation/lw71/DV/html/delivery-4.htm#pgfId-852223) (*the* function to create a stand-alone executable), and load-all-patches are not available.
 
-- **Initialization files are not loaded**.
-  => if you are used to initializing Quicklisp from your `~/.sbclrc` on Emacs, you'll have to load an init file manually every time you start LispWorks (`(load #p"~/.your-init-file`)).
+- **Initialization files are not loaded**. If you are used to initializing Quicklisp from your `~/.sbclrc` on Emacs, you'll have to load an init file manually every time you start LispWorks (`(load #p"~/.your-init-file`)).
 
 For the record, the snippet provided by Quicklisp to put in one's startup file is the following:
 
@@ -65,7 +61,7 @@ For the record, the snippet provided by Quicklisp to put in one's startup file i
     (load quicklisp-init)))
 ~~~
 
-You'll have to paste it to the listener window (with the `C-y` key (y means yank)).
+You'll have to paste it to the listener window (with the `C-y` key, y as "yank").
 
 - Layered products that are part of LispWorks Professional and Enterprise Editions (CLIM, KnowledgeWorks, Common SQL and LispWorks ORB) are not included. But **we can try the CAPI toolkit**.
 
@@ -84,24 +80,33 @@ LispWorks actually comes in four paid editions. It's all explained by themselves
 
 At the time of writing, the licence of the hobbyist edition costs 750 USD, the pro version the double. They are bought for a LW version, per platform. They have no limit of time.
 
-*Please double check their upstream resources and don't hesitate to contact them.*
+<div class="info-box info">
+<!-- if inside a <p> then bootstrap adds 10px padding to the bottom -->
+<strong>NB:</strong> Please double check their upstream resources and don't hesitate to contact them.
+</div>
 
 
 ## LispWorks IDE
 
-The LispWorks IDE is self-contained, but it is also possible to use LispWorks from Emacs and Slime.
+The LispWorks IDE is self-contained, but it is also possible to use LispWorks-the-implementation from Emacs and Slime.
 
 ### The editor
 
-The editing experience was okay in our tests, only a bit minimal. It
-offers a TAB-completion pop-up, syntax highlighting, Emacs-like
-keybindings (including the `M-x` extended command). The menus help
-the discovery.
+The editor offers what's expected: a TAB-completion pop-up, syntax
+highlighting, Emacs-like keybindings (including the `M-x` extended
+command). The menus help the discovery.
 
-We had an issue, in that the go-to-source function did not work out for built-in Lisp symbols.
+We personally found the editing experience a bit "raw". For example:
+- indention after a new line is not automatic, one has to press TAB
+again.
+- the auto-completion is not fuzzy.
+- there are no plugins similar to Paredit or Lispy, nor a Vim layer.
+
+We also had an issue, in that the go-to-source function bound to `M-.`
+did not work out for built-in Lisp symbols. This is probably a free
+edition limitation too.
 
 The editor provides an interesting tab: Changed Definitions. It lists the functions and methods that were redefined since, at our choosing: the first edit of the session, the last save, the last compile.
-
 
 See also:
 
@@ -117,6 +122,7 @@ Most of the keybindings are similar to Emacs, but not all. Here are some differe
 Similar ones include:
 
 - `C-g` to cancel what you're doing,
+- `C-x C-s` to save the current buffer,
 - `M-w` and `C-y` to copy and paste,
 - `M-b`, `M-f`, `C-a`, `C-e`… to move around words, to go to the beginning or the end of the line,
 - `C-k` to kill until the end of the line, `C-w` to kill a selected region,
