@@ -23,14 +23,23 @@ created windows).
 
 ## LispWorks features
 
-We can see TODO URL
+We can see a matrix of LispWorks features by edition and platform here: [http://www.lispworks.com/products/features.html](http://www.lispworks.com/products/features.html).
 
-- CAPI GUI toolkit: provides native look-and-feel on Windows, Cocoa, GTK+ and Motif.
+We highlight:
+
+- 32-bit, 64-bit and ARM support on Windows, MacOS, Linux, Solaris, FreeBSD,
+- [CAPI portable GUI toolkit](http://www.lispworks.com/documentation/lw61/CAPRM/html/capiref.htm): provides native look-and-feel on Windows, Cocoa, GTK+ and Motif.
   - comes with a graphical "Interface Builder" (think QtCreator).
+- [LispWorks for mobile runtime](http://www.lispworks.com/products/lw4mr.html), for Android and iOS,
+- optimized application delivery (LispWorks can ship lighter binaries than existing open-source implementations) and ability to deliver a dynamic library,
+- a [Java interface](http://www.lispworks.com/documentation/lw71/LW/html/lw-113.htm), allowing to call from Lisp to Java or the other way around,
+- an Objective-C and Cocoa interface, with drag and drop and multi-touch support,
+- a Foreign Language Interface,
+- TCP/UDP sockets with SSL & IPv6 support,
+- multiprocessing, unicode support, and all other Common Lisp features, and all other LispWorks Enterprise features.
 
-- [LispWorks for mobile](http://www.lispworks.com/products/lw4mr.html) runtime, for Android and iOS.
+And, of course, a built-in IDE.
 
-- tree shaker
 
 ### Free edition limitations
 
