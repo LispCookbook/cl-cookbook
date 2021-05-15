@@ -309,7 +309,15 @@ http://www.lispworks.com/documentation/lw71/IDE-U/html/ide-u-114.htm#pgfId-85260
 
 ### The Process browser
 
-http://www.lispworks.com/documentation/lw71/IDE-U/html/ide-u-178.htm#pgfId-852666
+### The Process Browser
+
+The Process Browser shows us a list of all threads running. The input area allows to filter by name. It accepts regular expressions. Then we can stop, inspect, listen, break into these processes.
+
+!["The process browser"](assets/lispworks/process-browser.png)
+
+See more:
+
+* [Chapter 28: the Process Browser](http://www.lispworks.com/documentation/lw71/IDE-U/html/ide-u-178.htm#pgfId-852666)
 
 
 ## See also
