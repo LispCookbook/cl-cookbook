@@ -34,7 +34,7 @@ We highlight:
 - optimized application delivery: LispWorks can use a tree shaker to
   remove unused lisp code from the delivered applicatiion, thus
   shipping lighter binaries than existing open-source implementations.
-  and ability to deliver a dynamic library,
+- ability to deliver a dynamic library,
 - a [Java interface](http://www.lispworks.com/documentation/lw71/LW/html/lw-113.htm), allowing to call from Lisp to Java or the other way around,
 - an Objective-C and Cocoa interface, with drag and drop and multi-touch support,
 - a Foreign Language Interface,
@@ -102,7 +102,7 @@ At the time of writing, the licence of the hobbyist edition costs 750 USD, the p
 
 ## LispWorks IDE
 
-The LispWorks IDE is self-contained, but it is also possible to use LispWorks-the-implementation from Emacs and Slime.
+The LispWorks IDE is self-contained, but it is also possible to use LispWorks-the-implementation from Emacs and Slime (see below).
 
 ### The editor
 
@@ -125,6 +125,7 @@ The editor provides an interesting tab: Changed Definitions. It lists the functi
 See also:
 
 - the [Editor User Guide](http://www.lispworks.com/documentation/lw71/EDUG-U/html/eduser-u.htm).
+
 
 ### Keybindings
 
@@ -368,6 +369,37 @@ The Process Browser shows us a list of all threads running. The input area allow
 See more:
 
 * [Chapter 28: the Process Browser](http://www.lispworks.com/documentation/lw71/IDE-U/html/ide-u-178.htm#pgfId-852666)
+
+## Using LispWorks from Emacs and Slime
+
+To do that, start LispWorks normally, start a Swank server and connect to it from Emacs (Swank is the backend part of Slime).
+
+First, let's load the dependencies:
+
+~~~lisp
+(ql:quickload "swank")
+;; or
+(load "~/.emacs.d/elpa/slime-20xx/swank-loader.lisp")
+~~~
+
+Start a server:
+
+~~~lisp
+(swank:create-server :port 9876)
+;; Swank started at port: 9876.
+9876
+~~~
+
+From Emacs, run `M-x slime-connect`, choose `localhost` and `9876` for the port.
+
+You should be connected. Check with: `(lisp-implementation-type)`. You are now able to use LispWorks' features:
+
+~~~lisp
+(setq button
+      (make-instance 'capi:push-button
+                     :data "Button"))
+(capi:contain button)
+~~~
 
 
 ## See also
