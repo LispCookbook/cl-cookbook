@@ -43,7 +43,7 @@ We highlight:
 
 And, of course, a built-in IDE.
 
-LispWorks was used in diverse areas in the industry. They maintain [a list of success stories](http://www.lispworks.com/success-stories/index.html).
+LispWorks is used in diverse areas of the industry. They maintain [a list of success stories](http://www.lispworks.com/success-stories/index.html).
 
 
 ### Free edition limitations
@@ -231,7 +231,7 @@ And here's how you can change indentation for special forms:
 
 See also:
 
-- a list of LispWork keybindings: https://www.nicklevine.org/declarative/lectures/additional/key-binds.html
+- a list of LispWork keybindings: [https://www.nicklevine.org/declarative/lectures/additional/key-binds.html](https://www.nicklevine.org/declarative/lectures/additional/key-binds.html)
 
 ### The listener
 
@@ -278,6 +278,65 @@ The next time your code is executed, you'll get a comprehensive Stepper pop-up w
 
 ![](assets/lispworks/stepper.gif)
 
+That's not all. The non-visual, REPL-oriented stepper is also nice. It shows the forms that are being evaluated and their results.
+
+In this example, we use `:s` to "step" though the current form and its subforms. We are using the usual listener, we can write any Lisp code after the prompt (the little ` -> ` here), and we have access to the local variables (`X`).
+
+~~~lisp
+CL-USER 4 > (defun my-abs (x) (cond ((> x 0) x) ((< x 0) (- x)) (t 0)))
+CL-USER 5 > (step (my-abs -5))
+(MY-ABS -5) -> :s
+   -5 -> :s
+   -5
+   (COND ((> X 0) X) ((< X 0) (- X)) (T 0)) <=> (IF (> X 0) (PROGN X) (IF (< X 0) (- X) (PROGN 0)))
+   ;; Access to the local variables:
+   (IF (> X 0) (PROGN X) (IF (< X 0) (- X) (PROGN 0))) -> (format t "Is X equal to -5? ~a~&" (if (equal x -5) "yes" "no"))
+Is X equal to -5? yes
+   (IF (> X 0) (PROGN X) (IF (< X 0) (- X) (PROGN 0))) -> :s
+      (> X 0) -> :s
+         X -> :s
+         -5
+         0 -> :s
+         0
+      NIL
+      (IF (< X 0) (- X) (PROGN 0)) -> :s
+         (< X 0) -> :s
+            X -> :s
+            -5
+            0 -> :s
+            0
+         T
+         (- X) -> :s
+            X -> :s
+            -5
+         5
+      5
+   5
+5
+~~~
+
+Here are the available stepper commands (see `:?`):
+
+~~~
+:s       Step this form and all of its subforms (optional +ve integer arg)
+:st      Step this form without stepping its subforms
+:si      Step this form without stepping its arguments if it is a function call
+:su      Step up out of this form without stepping its subforms
+:sr      Return a value to use for this form
+:sq      Quit from the current stepper level
+:bug-form <subject> &key <filename>
+         Print out a bug report form, optionally to a file.
+:get <variable> <command identifier>
+         Get a previous command (found by its number or a symbol/subform within it) and put it in a variable.
+:help    Produce this list.
+:his &optional <n1> <n2>
+         List the command history, optionally the last n1 or range n1 to n2.
+:redo &optional <command identifier>
+         Redo a previous command, found by its number or a symbol/subform within it.
+:use <new> <old> &optional <command identifier>
+         Do variant of a previous command, replacing old symbol/subform with new symbol/subform.
+~~~
+
 ### The class browser
 
 The class browser allows us to examine a class's slots, parent classes, available methods, and some more.
@@ -320,7 +379,6 @@ See more:
 
 * [Chapter 8 of the documentation: the Class Browser](http://www.lispworks.com/documentation/lw71/IDE-U/html/ide-u-55.htm#pgfId-871798)
 
-### The tracer
 
 ### The function call browser
 
@@ -343,7 +401,7 @@ Double click on a function shown in the graph to go to its source. Again, as in 
 
 The Text tab shows the same information, but textually, the callers and callees side by side.
 
-We can see cross references for compiled code, and we must ensure the feature is on. When we you compile code, LispWorks shows a compilation output likes this:
+We can see cross references for compiled code, and we must ensure the feature is on. When we compile code, LispWorks shows a compilation output likes this:
 
 ```
 ;;; Safety = 3, Speed = 1, Space = 1, Float = 1, Interruptible = 1
