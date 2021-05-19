@@ -29,7 +29,7 @@ We highlight:
 
 - 32-bit, 64-bit and ARM support on Windows, MacOS, Linux, Solaris, FreeBSD,
 - [CAPI portable GUI toolkit](http://www.lispworks.com/documentation/lw61/CAPRM/html/capiref.htm): provides native look-and-feel on Windows, Cocoa, GTK+ and Motif.
-  - comes with a graphical "Interface Builder" (think QtCreator).
+  - comes with a graphical "Interface Builder" (think QtCreator) (though not available on MacOS (nor on mobile))
 - [LispWorks for mobile runtime](http://www.lispworks.com/products/lw4mr.html), for Android and iOS,
 - optimized application delivery: LispWorks can use a tree shaker to
   remove unused lisp code from the delivered applicatiion, thus
