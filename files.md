@@ -2,7 +2,7 @@
 title: Files and Directories
 ---
 
-We'll see here a handfull of functions and libraries to operate on files and directories.
+We'll see here a handful of functions and libraries to operate on files and directories.
 
 In this chapter, we use mainly
 [namestrings](http://www.lispworks.com/documentation/HyperSpec/Body/19_aa.htm)
