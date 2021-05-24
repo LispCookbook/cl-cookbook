@@ -43,7 +43,7 @@ We highlight:
 
 And, of course, a built-in IDE.
 
-LispWorks is used in diverse areas of the industry. They maintain [a list of success stories](http://www.lispworks.com/success-stories/index.html).
+LispWorks is used in diverse areas of the industry. They maintain [a list of success stories](http://www.lispworks.com/success-stories/index.html). As for software that we can use ourselves, we find [ScoreCloud](https://scorecloud.com/) amazing (a music notation software: you play an instrument, sing or whistle and it writes the music) or [OpenMusic](https://github.com/openmusic-project/openmusic/) (opensource composition environment).
 
 
 ### Free edition limitations
