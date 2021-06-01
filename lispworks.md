@@ -102,7 +102,7 @@ At the time of writing, the licence of the hobbyist edition costs 750 USD, the p
 
 ## LispWorks IDE
 
-The LispWorks IDE is self-contained, but it is also possible to use LispWorks-the-implementation from Emacs and Slime (see below).
+The LispWorks IDE is self-contained, but it is also possible to use LispWorks-the-implementation from Emacs and Slime (see below). The IDE runs *inside* the Common Lisp image, unlike Emacs which is an external program that communicates with the Lisp image through Swank and Slime. User code runs in the same process.
 
 ### The editor
 
@@ -117,8 +117,9 @@ again.
 - there are no plugins similar to ~~Paredit~~ (there is a brand new (2021) [Paredit for LispWorks](https://github.com/g000001/lw-paredit) or Lispy, nor a Vim layer.
 
 We also had an issue, in that the go-to-source function bound to `M-.`
-did not work out for built-in Lisp symbols. This is probably a free
-edition limitation too.
+did not work out for built-in Lisp symbols. Apparently, LispWorks
+doesn't provide much source code, and mostly code of the editor. Some
+other commercial Lisps, like Allegro CL, provide more source code
 
 The editor provides an interesting tab: Changed Definitions. It lists the functions and methods that were redefined since, at our choosing: the first edit of the session, the last save, the last compile.
 
@@ -235,7 +236,21 @@ See also:
 
 ### The listener
 
-The listener is the REPL.
+The listener is the REPL we are expecting to find, but it has a slight
+difference from Slime.
+
+It doesn't evaluate the input line by line or form by form, instead it
+parses the input while typing. So we get some errors instantly. For
+example, we type `(abc`. So far so good. Once we type a colon to get
+`(abc:`, an error message is printed just above our input:
+
+```
+Error while reading: Reader cannot find package ABC.
+
+CL-USER 1 > (abc:
+```
+
+Indeed, now `abc:` references a package, but such a package doesn't exist.
 
 Its interactive debugger is primarily textual but you can also
 interact with it with graphical elements. For example, you can use the
@@ -257,6 +272,26 @@ error.
 <!-- if inside a <p> then bootstrap adds 10px padding to the bottom -->
 <strong>NB:</strong> this is equivalent of pressing <code>M-v</code> in Slime.
 </div>
+
+It is possible to choose the graphical debugger to appear by default, instead of the textual one.
+
+The listener provides some helper commands, not unlike Slime's ones starting with a comma `,`:
+
+```
+CL-USER 1 > :help
+
+:bug-form <subject> &key <filename>
+         Print out a bug report form, optionally to a file.
+:get <variable> <command identifier>
+         Get a previous command (found by its number or a symbol/subform within it) and put it in a variable.
+:help    Produce this list.
+:his &optional <n1> <n2>
+         List the command history, optionally the last n1 or range n1 to n2.
+:redo &optional <command identifier>
+         Redo a previous command, found by its number or a symbol/subform within it.
+:use <new> <old> &optional <command identifier>
+         Do variant of a previous command, replacing old symbol/subform with new symbol/subform.
+```
 
 
 ### The stepper. Breakpoints.
@@ -427,6 +462,20 @@ The Process Browser shows us a list of all threads running. The input area allow
 See more:
 
 * [Chapter 28: the Process Browser](http://www.lispworks.com/documentation/lw71/IDE-U/html/ide-u-178.htm#pgfId-852666)
+
+### Misc
+
+We like the `Search Files` functionality. It is like a recursive
+`grep`, but we get a typical LispWorks graphical window
+that displays the results, allows to double-click on them and that offers
+some more actions.
+
+Last but not least, have a look at the **compilation conditions
+browser**. LispWorks puts all warnings and errors into a special
+browser when we compile a system. From now on we can work on fixing
+them and see them disappear from the browser. That helps keeping track
+of warnings and errors during development.
+
 
 ## Using LispWorks from Emacs and Slime
 
