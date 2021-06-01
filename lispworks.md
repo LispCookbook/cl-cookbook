@@ -114,7 +114,7 @@ We personally found the editing experience a bit "raw". For example:
 - indention after a new line is not automatic, one has to press TAB
 again.
 - the auto-completion is not fuzzy.
-- there are no plugins similar to Paredit or Lispy, nor a Vim layer.
+- there are no plugins similar to ~~Paredit~~ (there is a brand new (2021) [Paredit for LispWorks](https://github.com/g000001/lw-paredit) or Lispy, nor a Vim layer.
 
 We also had an issue, in that the go-to-source function bound to `M-.`
 did not work out for built-in Lisp symbols. This is probably a free
