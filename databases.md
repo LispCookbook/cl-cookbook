@@ -420,13 +420,17 @@ More info [here](https://stackoverflow.com/questions/38811931/how-to-change-clas
 
 ### Migrations
 
-First create the tables if needed:
+We can run database migrations manually, as shown below, and we can
+automatically run migrations after a change to the model
+definitions. To do that, set `mito:*auto-migration-mode*` to `t`.
+
+The first step is to create the tables, if needed:
 
 ~~~lisp
 (ensure-table-exists 'user)
 ~~~
 
-then alter the tables, if needed:
+then alter the tables:
 
 ~~~lisp
 (mito:migrate-table 'user)
