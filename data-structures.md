@@ -822,7 +822,45 @@ Hash Tables are created using the function
 has no required argument. Its most used optional keyword argument is
 `:test`, specifying the function used to test the equality of keys.
 
-_Note_: see shorter notations in the [Serapeum](https://github.com/ruricolist/serapeum/) or [Rutils](https://github.com/vseloved/rutils) libraries. For example, Serapeum has `dict`, and Rutils a `#h` reader macro.
+<div class="info-box info">
+<strong>Note:</strong> see shorter notations in the <a href="https://github.com/ruricolist/serapeum/">Serapeum</a> or <a href="https://github.com/vseloved/rutils">Rutils</a> libraries. For example, Serapeum has <code>dict</code>, and Rutils a <code>#h</code> reader macro.
+</div>
+
+<a name="add"></a>
+
+### Adding an Element to a Hash Table
+
+If you want to add an element to a hash table, you can use `gethash`,
+the function to retrieve elements from the hash table, in conjunction
+with
+[`setf`](http://www.lispworks.com/documentation/HyperSpec/Body/m_setf_.htm).
+
+~~~lisp
+CL-USER> (defparameter *my-hash* (make-hash-table))
+*MY-HASH*
+CL-USER> (setf (gethash 'one-entry *my-hash*) "one")
+"one"
+CL-USER> (setf (gethash 'another-entry *my-hash*) 2/4)
+1/2
+CL-USER> (gethash 'one-entry *my-hash*)
+"one"
+T
+CL-USER> (gethash 'another-entry *my-hash*)
+1/2
+T
+~~~
+
+With Serapeum's `dict`, we can create a hash-table and add elements to
+it in one go:
+
+~~~lisp
+(defparameter *my-hash* (dict :one-entry "one" :another-entry 2/4))
+;; =>
+ (dict
+  :ONE-ENTRY "one"
+  :ANOTHER-ENTRY 1/2
+ )
+~~~
 
 <a name="get"></a>
 
@@ -859,30 +897,6 @@ library (in Quicklisp) has the functions `hash-table-keys` and
 ;; […]
 (alexandria:hash-table-keys *my-hash*)
 ;; => (BAR)
-~~~
-
-<a name="add"></a>
-
-### Adding an Element to a Hash Table
-
-If you want to add an element to a hash table, you can use `gethash`,
-the function to retrieve elements from the hash table, in conjunction
-with
-[`setf`](http://www.lispworks.com/documentation/HyperSpec/Body/m_setf_.htm).
-
-~~~lisp
-CL-USER> (defparameter *my-hash* (make-hash-table))
-*MY-HASH*
-CL-USER> (setf (gethash 'one-entry *my-hash*) "one")
-"one"
-CL-USER> (setf (gethash 'another-entry *my-hash*) 2/4)
-1/2
-CL-USER> (gethash 'one-entry *my-hash*)
-"one"
-T
-CL-USER> (gethash 'another-entry *my-hash*)
-1/2
-T
 ~~~
 
 

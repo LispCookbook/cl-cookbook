@@ -2,7 +2,9 @@
 title: Files and Directories
 ---
 
-Note: In this chapter, we use mainly
+We'll see here a handful of functions and libraries to operate on files and directories.
+
+In this chapter, we use mainly
 [namestrings](http://www.lispworks.com/documentation/HyperSpec/Body/19_aa.htm)
 to
 [specify filenames](http://www.lispworks.com/documentation/HyperSpec/Body/19_.htm). The
@@ -30,6 +32,9 @@ either `nil` if the file doesn't exists, or its
 [truename](http://www.lispworks.com/documentation/HyperSpec/Body/20_ac.htm)
 (which might be different from the argument you supplied).
 
+For more portability, use `uiop:probe-file*` or `uiop:file-exists-p`
+which will return the file pathname (if it exists).
+
 ~~~lisp
 $ ln -s /etc/passwd foo
 
@@ -42,9 +47,6 @@ $ ln -s /etc/passwd foo
 * (probe-file "bar")
 NIL
 ~~~
-
-For more portability, use `uiop:probe-file*` or `uiop:file-exists-p`
-which will return the file pathname (if it exists).
 
 ### Expanding a file or a directory name with a tilde (`~`)
 
