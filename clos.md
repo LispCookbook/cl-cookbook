@@ -129,14 +129,14 @@ So, our `person` class doesn't explicitly inherit from another class
 the class `t` and from `standard-object`. See below under
 "inheritance".
 
-We could write a minimal class definition without slots options like this:
+We could write a minimal class definition without slot options like this:
 
 ~~~lisp
 (defclass point ()
   (x y z))
 ~~~
 
-or even without slots specifiers: `(defclass point () ())`.
+or even without slot specifiers: `(defclass point () ())`.
 
 ### Creating objects (make-instance)
 
@@ -406,7 +406,7 @@ The [closer-mop](https://github.com/pcostanza/closer-mop) library is *the*
 portable way to do CLOS/MOP operations.
 
 
-A subclass inherits all of its parents slots, and it can override any
+A subclass inherits all of its parents' slots, and it can override any
 of their slot options. Common Lisp makes this process dynamic, great
 for REPL session, and we can even control parts of it (like, do
 something when a given slot is removed/updated/added, etc).
