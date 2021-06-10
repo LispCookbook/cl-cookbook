@@ -105,12 +105,19 @@ build:
 
 ### With Roswell or Buildapp
 
-[Roswell](https://roswell.github.io), an implementation manager and much
-more, also has the `ros build` command, that should work for many
+[Roswell](https://roswell.github.io), an implementation manager, script launcher and
+much more, has the `ros build` command, that should work for many
 implementations.
 
-We can also make our app installable with Roswell by a `ros install
-my-app`. See its documentation.
+This is how we can make our application easily installable by others, with a `ros install
+my-app`. See Roswell's documentation.
+
+Be aware that `ros build` adds core compression by default. That adds
+a significant startup overhead of the order of 150ms (for a simple
+app, startup time went from about 30ms to 180ms). You can disable it
+with `ros build --disable-compression <app.ros>`. Of course, core
+completion reduces your binary size significantly. See the table
+below, "Size and startup times of executables per implementation".
 
 We'll finish with a word on
 [Buildapp](http://www.xach.com/lisp/buildapp/), a battle-tested and
