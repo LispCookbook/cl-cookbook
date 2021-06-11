@@ -642,6 +642,8 @@ You can compose your queries with regular Lisp code:
 
 `select-dao` is a macro that expands to the right thing©.
 
+Note: if you didn't `use` SXQL, then write `(sxql:where …)` and `(sxql:order-by …)`.
+
 
 ##### Clauses
 
