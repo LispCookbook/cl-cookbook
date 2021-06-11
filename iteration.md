@@ -419,6 +419,16 @@ See also [with-hash-table-iterator](http://www.lispworks.com/documentation/Hyper
 ;; ((A 1) (B 2) (C 3))
 ~~~
 
+To return a flat list, use `nconcing` instead of `collect`:
+
+~~~lisp
+(loop for x in '(a b c)
+      for y in '(1 2 3)
+      nconcing (list x y))
+(A 1 B 2 C 3)
+~~~
+
+
 #### mapcar
 ~~~lisp
 (mapcar (lambda (x y)
@@ -484,6 +494,8 @@ Return a flat list:
 		    collect y))
 ;; ((1) (1 2) (1 2 3))
 ~~~
+
+To return a flat list, use `nconcing` instead of the first `collect`.
 
 #### iterate
 
