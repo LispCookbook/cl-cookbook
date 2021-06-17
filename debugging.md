@@ -376,7 +376,7 @@ To test this, let's define a function that prints forever.
 If needed, import the dependencies first:
 
 ~~~lisp
-(ql:quickload '(:swank :bordeaux-threads))
+(ql:quickload '("swank" "bordeaux-threads"))
 ~~~
 
 
@@ -394,14 +394,14 @@ If needed, import the dependencies first:
   (format t "hello world ~a!~%" *counter*))
 
 (defun runner ()
-  (bt:make-thread (lambda ()
-                    (swank:create-server :port 4006))
-                  :name "swank")
+  (swank:create-server :port 4006)
   (format t "we are past go!~%")
-  (loop while t do
-       (sleep 5)
-       (dostuff)
-       (incf *counter*)))
+  (bt:make-thread (lambda ()
+                    (loop while t do
+                          (sleep 5)
+                          (dostuff)
+                          (incf *counter*)))
+                  :name "do-stuff"))
 
 (runner)
 ~~~
@@ -410,10 +410,15 @@ On the server, we can run this code with
 
     sbcl --load demo.lisp
 
-If you check with `(bt:all-threads)`, you'll see your Swank server running on port 4006:
+If you check with `(bt:all-threads)`, you'll see your Swank server running on port 4006, as well
+as the other thread ready to do stuff:
 
-    #<SB-THREAD:THREAD "Swank 4006" RUNNING {1003A19333}>
-
+    (#<SB-THREAD:THREAD "do-stuff" RUNNING {10027CEDC3}>
+     #<SB-THREAD:THREAD "Swank Sentinel" waiting on:
+          #<WAITQUEUE  {10027D0003}>
+        {10027CE8B3}>
+     #<SB-THREAD:THREAD "Swank 4006" RUNNING {10027CEB63}>
+     #<SB-THREAD:THREAD "main thread" RUNNING {1007C40393}>)
 
 We do port forwarding on our development machine:
 
