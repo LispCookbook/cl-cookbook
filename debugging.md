@@ -397,7 +397,7 @@ If needed, import the dependencies first:
   (swank:create-server :port 4006)
   (format t "we are past go!~%")
   (bt:make-thread (lambda ()
-                    (loop while t do
+                    (loop repeat 5 do
                           (sleep 5)
                           (dostuff)
                           (incf *counter*)))
