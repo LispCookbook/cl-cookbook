@@ -560,6 +560,29 @@ so it turns out we can specify the type before the `=` and chain the `with` with
       collect (list x foo bar))
 ~~~
 
+We can also give `for` an `else` clause that will be called at each iteration:
+
+~~~lisp
+(loop for x in '(1 2 3)
+      for intermediate = 10 then (incf intermediate)
+      do (print intermediate))
+10
+11
+12
+~~~
+
+Here's a trick to alternate a boolean:
+
+~~~lisp
+(loop for x in '(1 2 3 4)
+      for up = t then (not up)
+      do (print up))
+
+T
+NIL
+T
+NIL
+~~~
 
 ### Loop with a counter
 #### loop
