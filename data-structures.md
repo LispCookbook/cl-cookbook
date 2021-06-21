@@ -986,6 +986,34 @@ NIL
 ~~~
 
 
+<a name="del-tab"></a>
+
+### Deleting a Hash Table
+
+Use
+[`clrhash`](http://www.lispworks.com/documentation/HyperSpec/Body/f_clrhas.htm)
+to delete a hash table. This will remove all of the data from the hash table and return the deleted table. 
+
+~~~lisp
+CL-USER> (defparameter *my-hash* (make-hash-table))
+*MY-HASH*
+CL-USER> (setf (gethash 'first-key *my-hash*) 'one)
+ONE
+CL-USER> (setf (gethash 'second-key *my-hash*) 'two)
+TWO
+CL-USER> *my-hash*
+#<hash-table :TEST eql :COUNT 2 {10097BF4E3}>
+CL-USER> (clrhash *my-hash*)
+#<hash-table :TEST eql :COUNT 0 {10097BF4E3}>
+CL-USER> (gethash 'first-key *my-hash*)
+NIL
+NIL
+CL-USER> (gethash 'second-key *my-hash*)
+NIL
+NIL
+~~~
+
+
 <a name="traverse"></a>
 
 ### Traversing a Hash Table
