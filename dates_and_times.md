@@ -8,7 +8,10 @@ computer's CPU. We will deal with both of them separately.
 
 <a name="univ"></a>
 
-## Universal Time
+
+## Built-in time functions
+
+### Universal Time
 
 Universal time is represented as the number of seconds that have elapsed since
 00:00 of January 1, 1900 in the GMT time zone. The function
@@ -63,7 +66,7 @@ is equivalent to
 CL-USER> (decode-universal-time (get-universal-time))
 ~~~
 
-Here is an example of how to use these functions in a program:
+Here is an example of how to use these functions in a program (but frankly, use the `local-time` library instead):
 
 ~~~lisp
 CL-USER> (defconstant *day-names*
@@ -106,73 +109,36 @@ Since universal times are simply numbers, they are easier and safer to manipulat
 
 ### Internal Time
 
-Internal time is the time as measured by your Lisp environment, using your computer's clock. It differs from universal time in three important respects. First, internal time is not measured starting from a specified point in time: it could be measured from the instant you started your Lisp, from the instant you booted your machine, or from any other arbitrary time point in the past. As we will see shortly, the absolute value of an internal time is almost always meaningless; only differences between internal times are useful. The second difference is that internal time is not measured in seconds, but in a (usually smaller) unit whose value can be deduced from [`INTERNAL-TIME-UNITS-PER-SECOND`](http://www.lispworks.com/documentation/HyperSpec/Body/v_intern.htm):
+Internal time is the time as measured by your Lisp environment, using your computer's clock. It differs from universal time in three important respects. First, internal time is not measured starting from a specified point in time: it could be measured from the instant you started your Lisp, from the instant you booted your machine, or from any other arbitrary time point in the past. As we will see shortly, the absolute value of an internal time is almost always meaningless; only differences between internal times are useful. The second difference is that internal time is not measured in seconds, but in a (usually smaller) unit whose value can be deduced from [`internal-time-units-per-second`](http://www.lispworks.com/documentation/HyperSpec/Body/v_intern.htm):
 
 ~~~lisp
 CL-USER> internal-time-units-per-second
 1000
 ~~~
 
-This means that in the Lisp environment used in this example, internal time is measured in milliseconds. Finally, what is being measured by the "internal time" clock? There are actually two different internal time clocks in your Lisp: one of them measures the passage of "real" time (the same time that universal time measures, but in different units), and the other one measures the passage of CPU time, that is, the time your CPU spends doing actual computation for the current Lisp process. On most modern computers these two times will be different, since your CPU will never be entirely dedicated to your program (even on single-user machines, the CPU has to devote part of its time to processing interrupts, performing I/O, etc). The two functions used to retrieve internal times are called [`GET-INTERNAL-REAL-TIME`](http://www.lispworks.com/documentation/HyperSpec/Body/f_get_in.htm) and [`GET-INTERNAL-RUN-TIME`](http://www.lispworks.com/documentation/HyperSpec/Body/f_get__1.htm) respectively. Using them, we can solve the above problem about measuring a function's run time:
+This means that in the Lisp environment used in this example, internal time is measured in milliseconds.
+
+Finally, what is being measured by the "internal time" clock? There are actually two different internal time clocks in your Lisp:
+
+- one of them measures the passage of "real" time (the same time that universal time measures, but in different units), and
+- the other one measures the passage of CPU time, that is, the time your CPU spends doing actual computation for the current Lisp process.
+
+On most modern computers these two times will be different, since your CPU will never be entirely dedicated to your program (even on single-user machines, the CPU has to devote part of its time to processing interrupts, performing I/O, etc). The two functions used to retrieve internal times are called [`get-internal-real-time`](http://www.lispworks.com/documentation/HyperSpec/Body/f_get_in.htm) and [`get-internal-run-time`](http://www.lispworks.com/documentation/HyperSpec/Body/f_get__1.htm) respectively. Using them, we can solve the above problem about measuring a function's run time, which is what the `time` built-in macro does.
 
 ~~~lisp
-CL-USER> (let ((real1 (get-internal-real-time))
-	           (run1 (get-internal-run-time)))
-	       (... your call here ...)
-	       (let ((run2 (get-internal-run-time))
-		         (real2 (get-internal-real-time)))
-	         (format t "Computation took:~%")
-	         (format t "  ~f seconds of real time~%"
-		       (/ (- real2 real1) internal-time-units-per-second))
-	         (format t "  ~f seconds of run time~%"
-		       (/ (- run2 run1) internal-time-units-per-second))))
-~~~
-
-A good way to see the difference between real time and run time is to test the above code using a call such as `(SLEEP 3)`. The [`SLEEP`](http://www.lispworks.com/documentation/HyperSpec/Body/f_sleep.htm) function suspends the execution of your code for the specified number of seconds. You should therefore see a real time very close to the argument of `SLEEP` and a run time very close to zero. Let's turn the above code into a macro in order to make it more general:
-
-~~~lisp
-CL-USER> (defmacro timing (&body forms)
-	       (let ((real1 (gensym))
-		         (real2 (gensym))
-		         (run1 (gensym))
-		         (run2 (gensym))
-		         (result (gensym)))
-	         `(let* ((,real1 (get-internal-real-time))
-		             (,run1 (get-internal-run-time))
-		             (,result (progn ,@forms))
-		             (,run2 (get-internal-run-time))
-		             (,real2 (get-internal-real-time)))
-		       (format *debug-io* ";;; Computation took:~%")
-	       	   (format *debug-io* ";;;  ~f seconds of real time~%"
-			     (/ (- ,real2 ,real1) internal-time-units-per-second))
-		       (format t ";;;  ~f seconds of run time~%"
-			     (/ (- ,run2 ,run1) internal-time-units-per-second))
-		,result)))
-TIMING
-
-CL-USER> (timing (sleep 1))
-;;; Computation took: 0.994 seconds of real time 0.0 seconds of run
-;;; time
-NIL
-~~~
-
-The built-in macro [`TIME`](http://www.lispworks.com/documentation/HyperSpec/Body/m_time.htm) does roughly the same as the above macro (it executes a form and prints timing information at the end), but it also usually provides information about memory usage, time spent in garbage collection, page faults, etc. The format of the output is implementation-dependent, but in general it's pretty useful and informative. This is an example under Allegro Common Lisp 6.0: we generate a list of 100 real numbers and we measure the time it takes to sort them in ascending order.
-
-~~~lisp
-CL-USER> (let ((numbers (loop for i from 1 to 100 collect (random 1.0))))
-           (time (sort numbers #'<)))
-; cpu time (non-gc) 0 msec user, 10 msec system
-; cpu time (gc)     0 msec user, 0 msec system
-; cpu time (total)  0 msec user, 10 msec system
-; real time  9 msec
-; space allocation:
-;  3,586 cons cells, 11,704 other bytes, 0 static bytes
+CL-USER> (time (sleep 1))
+Evaluation took:
+  1.000 seconds of real time
+  0.000049 seconds of total run time (0.000044 user, 0.000005 system)
+  0.00% CPU
+  2,594,553,447 processor cycles
+  0 bytes consed
 ~~~
 
 
 ## The `local-time` library
 
-The `local-time` library (available on Quicklisp) is a very handy extension to
+The [local-time](https://common-lisp.net/project/local-time/) library ([GitHub](https://github.com/dlowe-net/local-time/)) is a very handy extension to
 the somewhat limited functionalities as defined by the standard.
 
 In particular, it can
