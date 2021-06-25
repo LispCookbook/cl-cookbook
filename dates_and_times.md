@@ -98,24 +98,7 @@ CL-USER> (encode-universal-time 6 22 19 25 1 2002)
 
 Note that the result is automatically adjusted for daylight savings time if the time zone is not supplied. If it is supplied, than Lisp assumes that the specified time zone already accounts for daylight savings time, and no adjustment is performed.
 
-Since universal times are simply numbers, they are easier and safer to manipulate than calendar times. Dates and times should always be stored as universal times if possible, and only converted to string representations for output purposes. For example, it is straightforward to know which of two dates came before the other, by simply comparing the two corresponding universal times with <. Another typical problem is how to compute the "temporal distance" between two given dates. Let's see how to do this with an example: specifically, we will calculate the temporal distance between the first landing on the moon (4:17pm EDT, July 20 1969) and the last takeoff of the space shuttle Challenger (11:38 a.m. EST, January 28, 1986).
-
-~~~lisp
-CL-USER> (setq *moon* (encode-universal-time 0 17 16 20 7 1969 4))
-2194805820
-
-CL-USER> (setq *takeoff* (encode-universal-time 0 38 11 28 1 1986 5))
-2716303080
-
-CL-USER> (- *takeoff* *moon*)
-521497260
-~~~
-
-That's a bit over 52 million seconds, corresponding to 6035 days, 20 hours and 21 minutes (you can verify this by dividing that number by 60, 60 and 24 in succession). Going beyond days is a bit harder because months and years don't have a fixed length, but the above is approximately 16 and a half years.
-
-You can in theory use differences between universal times to measure how long the execution of a part of your program took, but the universal times are represented in seconds, and this resolution will usually be too low to be useful. We will see a better method of doing this in the section about internal time.
-
-To sum up, we have seen how to turn a universal time into a calendar time and vice-versa, how to perform calculations on universal times, and how to format calendar times in a human-readable way. The last piece that is missing is how to parse a string represented as a human-readable string (e.g. "03/11/1997") and turn it into a calendar time. Unfortunately this turns out to be very difficult in the general case, due to the multitude of different ways of writing dates and times that we use. In some cases it might not even be possible without context information: the above example can be correctly parsed both as March 11th or as November 3rd according to where you are living. In conclusion, either force your users to write dates in a fixed format, or be prepared to write a very intelligent parsing function!<a name="intern"></a>
+Since universal times are simply numbers, they are easier and safer to manipulate than calendar times. Dates and times should always be stored as universal times if possible, and only converted to string representations for output purposes. For example, it is straightforward to know which of two dates came before the other, by simply comparing the two corresponding universal times with `<`.
 
 ### Internal Time
 
