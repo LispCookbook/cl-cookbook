@@ -182,50 +182,6 @@ CL-USER> (let ((numbers (loop for i from 1 to 100 collect (random 1.0))))
 ;  3,586 cons cells, 11,704 other bytes, 0 static bytes
 ~~~
 
-<a name="weekday"></a>
-
-### Computing the day of the week
-
-In the section about [Universal Time](#univ) we've learned enough to write a small function that computes the day of the week. Unfortunately, by definition, this function won't work for dates before January 1, 1900.
-
-~~~lisp
-CL-USER> (defun day-of-week (day month year)
-           "Returns the day of the week as an integer. Monday is 0."
-	       (nth-value
-	         6
-	         (decode-universal-time
-	           (encode-universal-time 0 0 0 day month year 0)
-	     0)))
-DAY-OF-WEEK
-CL-USER> (day-of-week 23 12 1965)
-3
-CL-USER> (day-of-week 1 1 1900)
-0
-CL-USER> (day-of-week 31 12 1899)
-
-Type-error in KERNEL::OBJECT-NOT-TYPE-ERROR-HANDLER:
-   1899 is not of type (OR (MOD 100) (INTEGER 1900))
-~~~
-
-If this is a problem for you, here's a small function by Gerald Doussot (adapted from the comp.lang.c FAQ) that will help you:
-
-~~~lisp
-(defun day-of-week (day month year)
-  "Returns the day of the week as an integer. Sunday is 0. Works for years after 1752."
-  (let ((offset '(0 3 2 5 0 3 5 1 4 6 2 4)))
-    (when (< month 3)
-      (decf year 1))
-    (mod
-     (truncate (+ year
-                  (/ year 4)
-                  (/ (- year)
-                     100)
-                  (/ year 400)
-                  (nth (1- month) offset)
-                  day
-                  -1))
-     7)))
-~~~
 
 ## The `local-time` library
 
