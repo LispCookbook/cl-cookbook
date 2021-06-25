@@ -234,25 +234,53 @@ the somewhat limited functionalities as defined by the standard.
 
 In particular, it can
 
-- print timestamp in various standard or custom formats (e.g. RFC1123 or RFC3339)
+- print timestamps in various standard or custom formats (e.g. RFC1123 or RFC3339)
 - parse timestrings,
 - perform time arithmetic,
-- convert Unix times, timestamps, and universal times to and fro.
+- convert Unix times, timestamps, and universal times to and from.
 
-For example, here is a function that returns Unix times as a human readable string:
+We present below what we find the most useful functions. See its [manual](https://common-lisp.net/project/local-time/manual.html) for the full details.
+
+It is available in Quicklisp:
 
 ~~~lisp
-(defun unix-time-to-human-string (unix-time)
-  (local-time:format-timestring
-   nil
-   (local-time:unix-to-timestamp unix-time)
-   :format local-time:+asctime-format+))
+CL-USER> (ql:quickload "local-time")
 ~~~
 
-See the [manual](https://common-lisp.net/project/local-time/manual.html) for
-the full details.
+### Create timestamps (encode-timestamp, universal-to-timestamp)
 
-### Get today's date
+Create a timestamp with `encode-timestamp`, giving it its number of nanoseconds, seconds, minutes, days, months and years:
+
+~~~lisp
+(local-time:encode-timestamp 0 0 0 0 1 1 1984)
+@1984-01-01T00:00:00.000000+01:00
+~~~
+
+The complete signature is:
+
+    **encode-timestamp** nsec sec minute hour day month year &key timezone offset into
+
+    The offset is the number of seconds offset from UTC of the locale. If offset is not specified, the offset will be guessed from the timezone. If a timestamp is passed as the into argument, its value will be set and that timestamp will be returned. Otherwise, a new timestamp is created.
+
+Create a timestamp from a universal time with `universal-to-timestamp`:
+
+~~~lisp
+(get-universal-time)
+3833588757
+(local-time:universal-to-timestamp (get-universal-time))
+@2021-06-25T07:45:59.000000+02:00
+~~~
+
+You can also parse a human-readable time string:
+
+~~~lisp
+(local-time:parse-timestring "1984-01-01")
+@1984-01-01T01:00:00.000000+01:00
+~~~
+
+But see the section on parsing timestrings for more.
+
+### Get today's date (now, today)
 
 Use `now` or `today`:
 
@@ -266,8 +294,141 @@ Use `now` or `today`:
 
 "today" is the midnight of the current day in the UTC zone.
 
+To compute "yesterday" and "tomorrow", see below.
 
-### Formatting time strings
+### Add or substract times (timestamp+, timestamp-)
+
+Use `timestamp+` and `timestamp-`. Each takes 3 arguments: a date, a number and a unit (and optionally a timezone and an offset):
+
+~~~lisp
+(local-time:now)
+@2021-06-25T07:19:39.836973+02:00
+
+(local-time:timestamp+ (local-time:now) 1 :day)
+@2021-06-26T07:16:58.086226+02:00
+
+(local-time:timestamp- (local-time:now) 1 :day)
+@2021-06-24T07:17:02.861763+02:00
+~~~
+
+The available units are `:sec :minute :hour :day :year`.
+
+This operation is also possible with `adjust-timestamp`, which can do a bit more as we'll see right in the next section (it can do many operations at once).
+
+~~~lisp
+(local-time:timestamp+ (today) 3 :day)
+@2021-06-28T02:00:00.000000+02:00
+
+(local-time:adjust-timestamp (today) (offset :day 3))
+@2021-06-28T02:00:00.000000+02:00
+~~~
+
+Here's `yesterday` and `tomorrow` defined from `today`:
+
+~~~lisp
+(defun yesterday ()
+  "Returns a timestamp representing the day before today."
+  (timestamp- (today) 1 :day))
+
+(defun tomorrow ()
+  "Returns a timestamp representing the day after today."
+  (timestamp+ (today) 1 :day))
+~~~
+
+### Modify timestamps with any offset (adjust-timestamp)
+
+`adjust-timestamp`'s first argument is the timestamp we operate on, and then it accepts a full `&body changes` where a "change" is in the form `(offset :part value)`:
+
+Please point to the previous Monday:
+
+~~~lisp
+(local-time:adjust-timestamp (today) (offset :day-of-week :monday))
+@2021-06-21T02:00:00.000000+02:00
+~~~
+
+We can apply many changes at once. Travel in time:
+
+~~~lisp
+(local-time:adjust-timestamp (today)
+  (offset :day 3)
+  (offset :year 110)
+  (offset :month -1))
+@2131-05-28T02:00:00.000000+01:00
+~~~
+
+There is a destructive version, `adjust-timestamp!`.
+
+
+### Compare timestamps (timestamp<, timestamp<, timestamp= …)
+
+These should be self-explanatory.
+
+~~~lisp
+timestamp< time-a time-b
+timestamp<= time-a time-b
+timestamp> time-a time-b
+timestamp>= time-a time-b
+timestamp= time-a time-b
+timestamp/= time-a time-b
+~~~
+
+### Find the minimum or maximum timestamp
+
+Use `timestamp-minimum` and `timestamp-maximum`. They accept any number of arguments.
+
+~~~lisp
+(local-time:timestamp-minimum (local-time:today)
+                              (local-time:timestamp- (local-time:today) 100 :year))
+@1921-06-25T02:00:00.000000+01:00
+~~~
+
+If you have a list of timestamps, use `(apply #'timestamp-minimum <your list of timestamps>)`.
+
+### Maximize or minimize a timestamp according to a time unit (timestamp-maximize-part, timestamp-minimize-part)
+
+We can answer quite a number of questions with this handy function.
+
+Here's an example: please give me the last day of this month:
+
+~~~lisp
+(let ((in-february (local-time:parse-timestring "1984-02-01")))
+  (local-time:timestamp-maximize-part in-february :day))
+
+@1984-02-29T23:59:59.999999+01:00
+~~~
+
+
+### Querying timestamp objects (get the day, the day of week, the days in month…)
+
+Use:
+
+~~~lisp
+timestamp-[year, month, day, hour, minute, second, millisecond, microsecond,
+           day-of-week (starts at 0 for sunday),
+           millenium, century, decade]
+~~~
+
+Get all the values at once with `decode-timestamp`.
+
+Bind a variable to a value of your choice with this convenient macro:
+
+~~~lisp
+(local-time:with-decoded-timestamp (:hour h)
+     (now)
+   (print h))
+
+8
+8
+~~~
+
+You can of course bind each time unit (`:sec :minute :day`) to its variable, in any order.
+
+See also `(days-in-month <month> <year>)`.
+
+
+### Formatting time strings (format, format-timestring, +iso-8601-format+)
+
+local-time's date representation starts with `@`. We can `format` them as usual, with the aesthetic directive for instance, to get a usual date representation.
 
 ~~~lisp
 (local-time:now)
@@ -279,7 +440,7 @@ Use `now` or `today`:
 "2019-11-13T18:08:23.312664+01:00"
 ~~~
 
-`format-timestring` takes a stream argument like `format`:
+We can use `format-timestring`, which can be used like `format` (thus it takes a stream as first argument):
 
 ~~~lisp
 (local-time:format-timestring nil (local-time:now))
@@ -288,9 +449,10 @@ Use `now` or `today`:
 
 Here `nil` returns a new string. `t` would print to `*standard-output*`.
 
-It also accepts a `:format` argument. Its default value is
-`+iso-8601-format+`, with the output shown above. The
-`+rfc3339-format+` format defaults to it.
+But `format-timestring` also accepts a `:format` argument. We can use predefined date formats as well as give our own in s-expression friendly way (see next section).
+
+Its default value is
+`+iso-8601-format+`, with the output shown above. The `+rfc3339-format+` format defaults to it.
 
 With `+rfc-1123-format+`:
 
@@ -314,7 +476,21 @@ With `+iso-week-date-format+`:
 ~~~
 
 
-### Defining format strings
+Putting all this together, here is a function that returns Unix times as a human readable string:
+
+~~~lisp
+(defun unix-time-to-human-string (unix-time)
+  (local-time:format-timestring
+   nil
+   (local-time:unix-to-timestamp unix-time)
+   :format local-time:+asctime-format+))
+
+(unix-time-to-human-string (get-universal-time))
+"Mon Jun 25 06:46:49 2091"
+~~~
+
+
+### Defining format strings (format-timestring (:year "-" :month "-" :day))
 
 We can pass a custom `:format` argument to `format-timestring`.
 
@@ -326,7 +502,7 @@ The syntax consists of a list made of symbols with special meanings
 "2019-11-13"
 ~~~
 
-The list of symbols is available in the documentation: https://common-lisp.net/project/local-time/manual.html#Parsing-and-Formatting
+The list of symbols is available in the documentation: [https://common-lisp.net/project/local-time/manual.html#Parsing-and-Formatting](https://common-lisp.net/project/local-time/manual.html#Parsing-and-Formatting)
 
 There are `:year :month :day :weekday :hour :min :sec :msec`, long and
 short notations ("Monday", "Mo."), gmt offset, timezone markers and
@@ -342,7 +518,7 @@ The `+rfc-1123-format+` itself is defined like this:
   "See the RFC 1123 for the details about the possible values of the timezone field.")
 ~~~
 
-We see the form `(:day 2)`: the 2 is for padding, to ensure that the
+We see the form `(:day 2)`: the 2 is for **padding**, to ensure that the
 day is printed with two digits (not only `1`, but `01`). There could be
 an optional third argument, the character with which to fill the
 padding (by default, `#\0`).
@@ -411,3 +587,7 @@ local-time library:
 (local-time:universal-to-timestamp *)
 ;; @2019-11-13T19:13:15.000000+01:00
 ~~~
+
+### Misc
+
+To find out if it's Alice anniversary, use `timestamp-whole-year-difference time-a time-b`.
