@@ -12,7 +12,7 @@ computer's CPU. We will deal with both of them separately.
 
 Universal time is represented as the number of seconds that have elapsed since
 00:00 of January 1, 1900 in the GMT time zone. The function
-[`GET-UNIVERSAL-TIME`](http://www.lispworks.com/documentation/HyperSpec/Body/f_get_un.htm)
+[`get-universal-time`](http://www.lispworks.com/documentation/HyperSpec/Body/f_get_un.htm)
 returns the current universal time:
 
 ~~~lisp
@@ -21,7 +21,7 @@ CL-USER> (get-universal-time)
 ~~~
 
 Of course this value is not very readable, so you can use the function
-[`DECODE-UNIVERSAL-TIME`](http://www.lispworks.com/documentation/HyperSpec/Body/f_dec_un.htm)
+[`decode-universal-time`](http://www.lispworks.com/documentation/HyperSpec/Body/f_dec_un.htm)
 to turn it into a "calendar time" representation:
 
 ~~~lisp
@@ -37,16 +37,20 @@ NIL
 5
 ~~~
 
-This call returns nine values: seconds, minutes, hours, day, month, year, day of
-the week, daylight savings time flag and time zone. Note that the day of the
+**NB**: in the next section we'll use the `local-time` library to get more user-friendy functions, such as `(local-time:universal-to-timestamp (get-universal-time))` which returns `@2021-06-25T09:16:29.000000+02:00`.
+
+This call to `decode-universal-time` returns nine values: `seconds, minutes, hours, day, month, year, day of
+the week, daylight savings time flag and time zone`. Note that the day of the
 week is represented as an integer in the range 0..6 with 0 being Monday and 6
-being Sunday. Also, the time zone is represented as the number of hours you need
-to add to the current time in order to get GMT time. So in this example the
-decoded time would be 19:22:06 of Friday, January 25, 2002, in the EST time
+being Sunday. Also, the **time zone** is represented as the number of hours you need
+to add to the current time in order to get GMT time.
+
+So in this example the
+decoded time would be `19:22:06 of Friday, January 25, 2002`, in the EST time
 zone, with no daylight savings in effect. This, of course, relies on the
 computer's own clock, so make sure that it is set correctly (including the time
 zone you are in and the DST flag). As a shortcut, you can use
-[`GET-DECODED-TIME`](http://www.lispworks.com/documentation/HyperSpec/Body/f_get_un.htm)
+[`get-decoded-time`](http://www.lispworks.com/documentation/HyperSpec/Body/f_get_un.htm)
 to get the calendar time representation of the current time directly:
 
 ~~~lisp
@@ -83,10 +87,10 @@ CL-USER> (multiple-value-bind
 It is now 17:07:17 of Saturday, 1/26/2002 (GMT-5)
 ~~~
 
-Of course the call to `GET-DECODED-TIME` above could be replaced by
-`(DECODE-UNIVERSAL-TIME n)`, where n is any integer number, to print an
+Of course the call to `get-decoded-time` above could be replaced by
+`(decode-universal-time n)`, where n is any integer number, to print an
 arbitrary date. You can also go the other way around: the function
-[`ENCODE-UNIVERSAL-TIME`](http://www.lispworks.com/documentation/HyperSpec/Body/f_encode.htm)
+[`encode-universal-time`](http://www.lispworks.com/documentation/HyperSpec/Body/f_encode.htm)
 lets you encode a calendar time into the corresponding universal time. This
 function takes six mandatory arguments (seconds, minutes, hours, day, month and
 year) and one optional argument (the time zone) and it returns a universal time:
