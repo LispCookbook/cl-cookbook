@@ -892,8 +892,8 @@ format constructs.
 which prints:
 
 ```
-1 fooo baaar 5
-10 last 3.3
+1 Matrix 5
+10 Matrix Trilogy swe sub 3.3
 ```
 
 
