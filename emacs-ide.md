@@ -387,6 +387,7 @@ To **evaluate** rather than compile:
 - evaluate a region with `C-c C-r`,
 - evaluate a defun with `C-M-x`,
 - type `C-c C-e` (`slime-interactive-eval`) to get a prompt that asks for code to eval in the current context. It prints the result in the minibuffer. With a prefix argument, insert the result into the current buffer.
+- type `C-c C-j` (`slime-eval-last-expression-in-repl`), when the cursor is after the closing parenthesis of an expression, to send this expression to the REPL and evaluate it.
 
 See also other commands in the menu.
 
