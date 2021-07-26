@@ -101,7 +101,7 @@ In Mito, you can define a class which corresponds to a database table with the `
 ~~~
 Alternatively, you can specify `(:metaclass mito:dao-table-class)` in a regular class definition.
 
-The `deftable` macro automatically adds some slots: a primary key named `id` if there's no primary key, and `created_at` and `updated_at` for recording timestamps. Specifying `(:auto-pk nil)` and `(:record-timestamps nil)` in the `deftable` form will disable these behaviours. A `deftable` class will also come with initializers and accessors for each named slot.
+The `deftable` macro automatically adds some slots: a primary key named `id` if there's no primary key, and `created_at` and `updated_at` for recording timestamps. Specifying `(:auto-pk nil)` and `(:record-timestamps nil)` in the `deftable` form will disable these behaviours. A `deftable` class will also come with initializers, named after the slot, and accessors, of form `<class-name>-<slot-name>`, for each named slot.
 
 You can inspect the new class:
 
