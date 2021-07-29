@@ -34,30 +34,41 @@ The contributors on Github are:
 * Johan Sjölén
 * Mariano Montone
 * albertoriva
+* Daniel Keogh
+* Matteo Landi
 * Nisar Ahmad
 * Nisen
 * Vityok
 * ozten
+* Ahmad Edrisy
 * Amol Dosanjh
 * Andrew
 * Andrew Hill
+* André Alexandre Gomes
 * Bibek Panthi
+* Blue
 * Bo Yao
+* Brandon Hale
 * Burhanuddin Baharuddin
 * Coin Okay
 * Danny Yue
+* Eric Timmons
 * HiPhish
+* Justin
 * Kevin Layer
 * LdBeth
 * Matthew Kennedy
 * Momozor
+* Noor
 * Paul Donnelly
 * Pavel Kulyov
 * R Primus
 * Salad Tea
 * Victor Anyakin
 * convert-repo
+* jgart
 * jthing
+* mavis
 * mwgkgk
 * paul-donnelly
 * various-and-sundry
