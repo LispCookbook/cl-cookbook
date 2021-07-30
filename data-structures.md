@@ -486,9 +486,21 @@ length of the one to replace.
 
 #### sort, stable-sort (sequence, test [, key function])
 
-These sort functions are destructive, so one may prefer to copy the sequence before sorting:
+These sort functions are destructive, so one may prefer to copy the sequence with `copy-seq` before sorting:
 
-    (sort (copy-seq seq) :test #'string<)
+~~~lisp
+(sort (copy-seq seq) :test #'string<)
+~~~
+
+Unlike `sort`, `stable-sort` guarantees to keep the order of the argument.
+In theory, the result of this:
+
+~~~lisp
+(sort '((1 :a) (1 :b)) #'< :key #'first)
+~~~
+
+could be either `((1 :A) (1 :B))`, either `((1 :B) (1 :A))`. On my tests, the order is preserved, but the standard does not guarantee it.
+
 
 #### find, position (foo, sequence) - get index
 
