@@ -560,7 +560,7 @@ so it turns out we can specify the type before the `=` and chain the `with` with
       collect (list x foo bar))
 ~~~
 
-We can also give `for` an `else` clause that will be called at each iteration:
+We can also give `for` a `then` clause that will be called at each iteration:
 
 ~~~lisp
 (loop for x in '(1 2 3)
