@@ -937,6 +937,37 @@ and can be used from within nested loops.
 2
 ~~~
 
+Sometimes, you want to return early but execute the `finally` clause
+anyways. Use [`loop-finish`](http://www.lispworks.com/documentation/HyperSpec/Body/m_loop_f.htm#loop-finish).
+
+~~~lisp
+(loop for x from 0 to 100
+  do (print x)
+  when (>= x 3)
+  return x
+  finally (print :done))  ;; <-- not printed
+;; 0
+;; 1
+;; 2
+;; 3
+;; 3
+
+(loop for x from 0 to 100
+  do (print x)
+  when (>= x 3)
+  do (loop-finish)
+  finally (print :done)
+     (return x))
+;; 0
+;; 1
+;; 2
+;; 3
+;; :DONE
+;; 3
+~~~
+
+It is most needed when some computation must take place in the `finally` clause.
+
 #### Loop shorthands for when/return
 
 Several actions provide shorthands for combinations of when/return:
@@ -1174,7 +1205,7 @@ initially finally for as with
 ```
 do collect collecting append
 appending nconc nconcing into count
-counting sum summing maximize return
+counting sum summing maximize return loop-finish
 maximizing minimize minimizing doing
 thereis always never if when
 unless repeat while until
