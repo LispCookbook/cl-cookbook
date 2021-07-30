@@ -676,6 +676,16 @@ We can use sets functions.
 
 ## Set
 
+We show below how to use set operations on lists.
+
+A set doesn't contain twice the same element and is unordered.
+
+Most of these functions have recycling (modifying) counterparts, starting with "n": `nintersection`,… They all accept the usual `:key` and `:test` arguments, so use the test `#'string=` or `#'equal` if you are working with strings.
+
+For more, see functions in
+[Alexandria](https://common-lisp.net/project/alexandria/draft/alexandria.html#Conses):
+`setp`, `set-equal`,… and the FSet library, shown in the next section.
+
 ### `intersection` of lists
 
 What elements are both in list-a and list-b ?
@@ -687,9 +697,7 @@ What elements are both in list-a and list-b ?
 ;; => (2 0)
 ~~~
 
-### Remove the elements of list-b from list-a
-
-`set-difference`
+### Remove the elements of list-b from list-a (`set-difference`)
 
 ~~~lisp
 (set-difference list-a list-b)
@@ -698,29 +706,48 @@ What elements are both in list-a and list-b ?
 ;; => (4)
 ~~~
 
-### Join two lists
-
-`union`
+### Join two lists with uniq elements (`union`)
 
 ~~~lisp
 (union list-a list-b)
 ;; => (3 1 0 2 4) ;; order can be different in your lisp
 ~~~
 
-### Remove elements that are in both lists
-
-`set-exclusive-or`
+### Remove elements that are in both lists (`set-exclusive-or`)
 
 ~~~lisp
 (set-exclusive-or list-a list-b)
 ;; => (4 3 1)
 ~~~
 
-and their recycling "n" counterpart (`nintersection`,…).
+### Add an element to a set (`adjoin`)
 
-See also functions in
-[Alexandria](https://common-lisp.net/project/alexandria/draft/alexandria.html#Conses):
-`setp`, `set-equal`,…
+~~~lisp
+(adjoin 3 list-a)
+;; => (0 1 2 3) <-- nothing was changed, 3 was already there.
+
+(adjoin 5 list-a)
+;; => (5 0 1 2 3)
+
+list-a
+;; => (0 1 2 3)
+~~~
+
+### Check if this is a subset (`subsetp`)
+
+~~~lisp
+(subsetp '(1 2 3) list-a)
+;; => T
+
+(subsetp '(1 1 1) list-a)
+;; => T
+
+(subsetp '(3 2 1) list-a)
+;; => T
+
+(subsetp '(0 3) list-a)
+;; => T
+~~~
 
 ## Fset - immutable data structure
 
