@@ -85,7 +85,7 @@ data structures (lists, vectors, hash-tables…): in doubt, just use
 
 You also have to quickload it:
 
-    (ql:quickload :for)
+    (ql:quickload "for")
 
 
 We'll also give examples with **`mapcar`** and `map`, and eventually
