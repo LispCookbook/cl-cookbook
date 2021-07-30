@@ -479,6 +479,34 @@ To return a flat list, use `nconcing` instead of `collect`:
 (A 1 B 2 C 3)
 ~~~
 
+If a list is smaller than the other one, loop stops at the end of the small one:
+
+~~~lisp
+(loop for x in '(a b c)
+      for y in '(1 2 3 4 5)
+      collect (list x y))
+;; ((A 1) (B 2) (C 3))
+~~~
+
+We could loop over the biggest list and manually access the elements
+of the smaller one by index, but it would quickly be
+inefficient. Instead, we can tell `loop` to extend the short list.
+
+~~~lisp
+(loop for y in '(1 2 3 4 5)
+      for x-list = '(a b c) then (cdr x-list)
+      for x = (or (car x-list) 'z)
+      collect (list x y))
+;; ((A 1) (B 2) (C 3) (Z 4) (Z 5))
+~~~
+
+The trick is that the notation `for … = … then (cdr …)` (note the `=`
+and the role of `then`) shortens our intermediate list at each
+iteration (thanks to `cdr`). It will first be `'(a b c)`, the initial
+value, then we will get the `cdr`: `(2 3)`, then `(3)`, then
+`NIL`. And both `(car NIL)` and `(cdr NIL)` return `NIL`, so we are
+good.
+
 
 #### mapcar
 ~~~lisp
@@ -737,6 +765,8 @@ if it was in a closure:
    (loop for i from 1 to 10 by (+ 1 step)
       do (print i))
 ~~~
+
+The step must always be a positive number. If you want to count down, see above.
 
 #### Series
 
