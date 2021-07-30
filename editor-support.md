@@ -92,6 +92,16 @@ Scheme, HTML, CSS, directory mode, a vim layer, and more.
 <img src="assets/lem-terminal.png"
      style="width: 800px"/>
 
+It can be started as a REPL right away in the terminal. Run it with:
+
+    lem --eval "(lem-lisp-mode:start-lisp-repl t)"
+
+So you probably want a shell alias:
+
+    alias ilem='lem --eval "(lem-lisp-mode:start-lisp-repl t)"'
+
+<img src="assets/lem1.png" style="width: 800px" title="Lem's REPL"/>
+
 
 ## Atom
 
@@ -154,6 +164,7 @@ highlighting of errors and warnings, a REPL, and a project skeleton creator.
 [common-lisp-jupyter](https://github.com/yitzchak/common-lisp-jupyter) is a Common Lisp
 kernel for Jupyter notebooks.
 
+You can [see a live Jupyter notebook written in Lisp here](https://nbviewer.jupyter.org/github/yitzchak/common-lisp-jupyter/blob/master/examples/about.ipynb). It is easy to install (Roswell, repo2docker and Docker recipes).
 
 <img src="assets/jupyterpreview.png"
      style="width: 800px"/>
