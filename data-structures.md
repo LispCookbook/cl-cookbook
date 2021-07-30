@@ -514,11 +514,35 @@ sequence)*. See `:key` and `:test` parameters.
 ;; 1
 ~~~
 
-#### search (sequence-a, sequence-b)
+#### search and mismatch (sequence-a, sequence-b)
 
-Search sequence-b for a subsequence matching sequence-a. Return
-position in sequence-b, or NIL. Has the `from-end`, `end1/2` and others
+`search` searches in sequence-b for a subsequence that matches sequence-a. It returns the
+*position* in sequence-b, or NIL. It has the `from-end`, `end1`, `end2` and the usual `test` and `key`
 parameters.
+
+~~~lisp
+(search '(20 30) '(10 20 30 40))
+;; 1
+(search '("b" "c") '("a" "b" "c"))
+;; NIL
+(search '("b" "c") '("a" "b" "c") :test #'equal)
+;; 1
+(search "bc" "abc")
+;; 1
+~~~
+
+`mismatch` returns the position where the two sequences start to differ:
+
+~~~lisp
+(mismatch '(10 20 99) '(10 20 30))
+;; 2
+(mismatch "hellolisper" "helloworld")
+;; 5
+(mismatch "same" "same")
+;; NIL
+(mismatch "foo" "bar")
+;; 0
+~~~
 
 #### substitute, nsubstitute[if,if-not]
 
