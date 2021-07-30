@@ -127,6 +127,18 @@ It's based on [cl-lsp](https://github.com/ailisp/cl-lsp) language server and it'
 
 <img src="assets/commonlisp-vscode.png" style="width: 800px"/>
 
+## LispWorks (proprietary)
+
+[LispWorks](http://www.lispworks.com/) is a Common Lisp implementation
+that comes with its own Integrated Development Environment (IDE) and
+its share of unique features, such as the CAPI GUI toolkit.  It is
+**proprietary** and provides a **free limited version**.
+
+You can [read our LispWorks review here](lispworks.html).
+
+<img src="assets/lispworks/two-sided-view.png" style="width: 800px" title="The LispWorks listener an the editor in the Mate desktop environment"/>
+
+
 ## Geany (experimental)
 
 [Geany-lisp](https://github.com/jasom/geany-lisp) is an experimental
@@ -162,6 +174,5 @@ You might also like [sbcli](https://github.com/hellerve/sbcli), an even simpler 
 
 ## Others
 
-For reviews of plugins for more editors, including free versions of
-proprietary ones (LispWorks, Allegro), see
-[Articulate Common Lisp](http://articulate-lisp.com/ides/summary.html).
+There are some more editors out there, more or less discontinued, and
+free versions of other Lisp vendors, such as Allegro CL.
