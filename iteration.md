@@ -227,6 +227,57 @@ with `collect`, this returns a list.
   (print n))
 ~~~
 
+### Looping an infinite number of times, cycling over a circular list
+
+We can build an infinite list by setting its last element to the list itself:
+
+~~~lisp
+(loop with list-a = '(1 2 3)
+      with infinite-list = (setf (cdr (last list-a)) list-a)
+      for item in infinite-list
+      repeat 8
+      collect item)
+;; (1 2 3 1 2 3 1 2)
+~~~
+
+Illustration: `(last '(1 2 3))` is `(3)`, a list, or rather a cons cell, whose `car` is 3 and `cdr` is NIL. See the [data-structures chapter](data-structures.html) for a reminder. This is the representation of `(list 3)`:
+
+~~~
+[o|/]
+ |
+ 3
+~~~
+
+The representation of `(list 1 2 3)`:
+
+```
+[o|o]---[o|o]---[o|/]
+ |       |       |
+ 1       2       3
+```
+
+By setting the `cdr` of the last element to the list itself, we make it reccur on itself.
+
+A notation shortcut is possible with the `#=` syntax:
+
+~~~lisp
+(defparameter *list-a* '#1=(1 2 3 . #1#))
+(setf *print-circle* t)  ;; don't print circular lists forever
+*list-a*
+~~~
+
+If you need to alternate only between two values, use `for … then`:
+
+~~~lisp
+(loop repeat 4
+      for up = t then (not up)
+      do (print up))
+T
+NIL
+T
+NIL
+~~~
+
 ### Iterate's for loop
 
 For lists and vectors:
@@ -563,7 +614,7 @@ so it turns out we can specify the type before the `=` and chain the `with` with
 We can also give `for` a `then` clause that will be called at each iteration:
 
 ~~~lisp
-(loop for x in '(1 2 3)
+(loop repeat 3
       for intermediate = 10 then (incf intermediate)
       do (print intermediate))
 10
@@ -574,7 +625,7 @@ We can also give `for` a `then` clause that will be called at each iteration:
 Here's a trick to alternate a boolean:
 
 ~~~lisp
-(loop for x in '(1 2 3 4)
+(loop repeat 4
       for up = t then (not up)
       do (print up))
 
