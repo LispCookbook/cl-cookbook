@@ -990,6 +990,15 @@ NIL
 NIL
 ~~~
 
+They correspond to the functions `some`, `notany` and `every`:
+
+~~~lisp
+(some #'numberp '(foo 2))
+(notany #'numberp '(foo 2))
+(every #'numberp '(foo 2))
+~~~
+
+
 #### Series
 
 A block is manually created and returned from.
