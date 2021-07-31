@@ -96,7 +96,7 @@ and we use `name` as a regular variable in the function body. They are
   "If `happy' is `t', print a smiley"
   (format t "hello ~a " name)
   (when happy
-    (format t ":)~&"))
+    (format t ":)~&")))
 ~~~
 
 The following calls are possible:
@@ -121,6 +121,16 @@ it can be called with zero or more key parameters, in any order:
 (hello "me" :lisper t)
 (hello "me" :lisper t :happy t)
 (hello "me" :cookbook-contributor-p t :happy t)
+~~~
+
+Last but not least, you would quickly realize it, but we can choose the keys programmatically (they can be variables):
+
+~~~lisp
+(let ((key :happy)
+      (val t))
+  (hello "me" key val))
+;; hello me :)
+;; NIL
 ~~~
 
 #### Mixing optional and key parameters
@@ -167,6 +177,39 @@ In the lambda list, use pairs to give a default value to an optional or a key ar
 ~~~
 
 Now `happy` is true by default.
+
+### Was a key parameter specified?
+
+You can skip this tip for now if you want, but come back later to it as it can turn handy.
+
+We saw that a default key parameter is `nil` by default (`(defun hello
+(name &key happy) …)`). But how can be distinguish between "the value
+is NIL by default" and "the user wants it to be NIL"?
+
+We saw how to use a tuple to set its default value:
+
+`&key (:happy t)`
+
+To answer our question, use a triple like this:
+
+`&key (happy t happy-p)`
+
+where `happy-p` serves as a *predicate* variable (using `-p` is only a
+convention, give it the name you want) to know if the key was
+supplied. If it was, then it will be `T`.
+
+So now, we will print a sad face if `:happy` was explicitely set to
+NIL. We don't print it by default.
+
+~~~lisp
+(defun hello (name &key (happy nil happy-p))
+  (format t "Key supplied? ~a~&" happy-p)
+  (format t "hello ~a " name)
+  (when happy-p
+    (if happy
+      (format t ":)")
+      (format t ":("))))
+~~~
 
 ### Variable number of arguments: `&rest`
 
