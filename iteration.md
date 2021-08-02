@@ -396,7 +396,7 @@ With `on`, we loop over the cdr of the list:
 We create a hash-table:
 
 ~~~lisp
-(setf h (make-hash-table))
+(defparameter h (make-hash-table))
 (setf (gethash 'a h) 1)
 (setf (gethash 'b h) 2)
 ~~~
@@ -422,6 +422,15 @@ Looping over key-values pairs:
     do (format t "~a ~a~%" k v))
 b 2
 a 1
+~~~
+
+#### iterate
+
+Use `in-hashtable`:
+
+~~~lisp
+(iter (for (key value) in-hashtable h)
+  (collect (list key value)))
 ~~~
 
 #### for
