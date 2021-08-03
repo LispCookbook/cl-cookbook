@@ -462,6 +462,15 @@ value:
 
 See also [with-hash-table-iterator](http://www.lispworks.com/documentation/HyperSpec/Body/m_w_hash.htm).
 
+#### dohash
+
+Only because we like this topic, we introduce another library, [trivial-do](https://github.com/yitzchak/trivial-do/). It has the `dohash` macro, that ressembles `dolist`:
+
+~~~lisp
+(dohash (key value h)
+  (format t "key: ~A, value: ~A~%" key value))
+~~~
+
 #### Series
 ~~~lisp
 (iterate (((k v) (scan-hash h)))
