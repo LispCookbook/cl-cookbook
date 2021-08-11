@@ -585,10 +585,48 @@ You can compose your queries with regular Lisp code:
 
 `select-dao` is a macro that expands to the right thing©.
 
-Note: if you didn't `use` SXQL, then write `(sxql:where …)` and `(sxql:order-by …)`.
+<div class="info-box info">
+<strong>Note:</strong> if you didn't <code>use</code> SXQL, then write <code>(sxql:where …)</code> and <code>(sxql:order-by …)</code>.
+</div>
+<br>
+
+You can compose your queries further with the backquote syntax.
+
+Imagine you receive a `query` string, maybe composed of
+space-separated words, and you want to search for books that have
+either one of these words in their title or in their author's
+name. Searching for "bob adventure" would return a book that has
+"adventure" in its title and "bob" in its author name, or both in the
+title.
+
+For the example sake, an author is a string, not a link to another table:
+
+~~~lisp
+(mito:deftable book ()
+    ((title :col-type (:varchar 128))
+     (author :col-type (:varchar 128))
+     (ean :col-type (or (:varchar 128) :null))))
+~~~
+
+You want to add a clause that searches on both fields for each word.
+
+~~~lisp
+(defun find-books (&key query (order :desc))
+  "Return a list of books. If a query string is given, search on both the title and the author fields."
+  (mito:select-dao 'book
+    (when (str:non-blank-string-p query)
+      (sxql:where
+       `(:and
+         ,@(loop for word in (str:words query)
+              :collect `(:or (:like :title ,(str:concat "%" word "%"))
+                             (:like :authors ,(str:concat "%" word "%")))))))
+       (sxql:order-by `(,order :created-at))))
+~~~
+
+By the way, we are still using a `LIKE` statement, but with a non-small dataset you'll want to use your database's full text search engine.
 
 
-##### Clauses
+#### Clauses
 
 See the [SxQL documentation](https://github.com/fukamachi/sxql#sql-clauses).
 
@@ -618,7 +656,7 @@ Examples:
 and `join`s, etc.
 
 
-##### Operators
+#### Operators
 
 ~~~lisp
 :not
@@ -635,7 +673,6 @@ and `join`s, etc.
 :+, :-, :* :/ :%
 :raw
 ~~~
-
 
 ### Triggers
 
