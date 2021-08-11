@@ -481,8 +481,30 @@ See also `count-if`, `count-not` *(test-function sequence)*.
 
 #### subseq (sequence start, [end])
 
-It is "setf"able, but only works if the new sequence has the same
+~~~lisp
+(subseq (list 1 2 3) 0)
+;; (1 2 3)
+(subseq (list 1 2 3) 1 2)
+;; (2)
+~~~
+
+However, watch out if the `end` is larger than the list:
+
+~~~lisp
+(subseq (list 1 2 3) 0 99)
+;; => Error: the bounding indices 0 and 99 are bad for a sequence of length 3.
+~~~
+
+To this end, use `alexandria-2:subseq*`:
+
+~~~lisp
+(alexandria-2:subseq* (list 1 2 3) 0 99)
+;; (1 2 3)
+~~~
+
+`subseq` is "setf"able, but only works if the new sequence has the same
 length of the one to replace.
+
 
 #### sort, stable-sort (sequence, test [, key function])
 
