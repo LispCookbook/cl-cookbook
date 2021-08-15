@@ -1274,6 +1274,7 @@ Only `for` and `in` are keywords.
 ### Iterate
 
 * [The Iterate Manual](https://common-lisp.net/project/iterate/doc/index.html) -by Jonathan Amsterdam and Luís Oliveira
+* [iterate - Psuedocodic Iteration](https://common-lisp-libraries.readthedocs.io/iterate/) - by Shubhamkar Ayare 
 * [Loop v Iterate - SabraOnTheHill](https://sites.google.com/site/sabraonthehill/loop-v-iter)
 
 ### Series
