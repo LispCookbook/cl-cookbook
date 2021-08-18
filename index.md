@@ -86,7 +86,7 @@ The Cookbook has been translated to:
 * [List of Lisp Communities](https://github.com/CodyReichert/awesome-cl#community)
 * [Lisp Koans](https://github.com/google/lisp-koans/) - a language learning exercise, which guides the learner progressively through many language features.
 * [Learn X in Y minutes - Where X = Common Lisp](https://learnxinyminutes.com/docs/common-lisp/) - Small Common Lisp tutorial covering the essentials.
-* [Common Lisp Read the Docs](https://digikar99.github.io/common-lisp.readthedocs/) - the documentation of popular libraries ported to the modern and good looking Read The Docs style.
+* [Common Lisp Libraries Read the Docs](https://common-lisp-libraries.readthedocs.io/) - the documentation of popular libraries ported to the modern and good looking Read The Docs style.
 * [lisp-tips](https://github.com/lisp-tips/lisp-tips/issues/)
 * [Articulate Common Lisp](http://articulate-lisp.com/), an initiation manual for the uninitiated
 * [Common Lisp Pitfalls](https://raw.githubusercontent.com/ebzzry/cl-pitfalls/master/cl-pitfalls.txt) by Jeff Dalton
