@@ -25,7 +25,7 @@ you will.
 The ANSI Common Lisp standard doesn't mention this topic. We will
 present here the portable
 [bordeaux-threads](https://github.com/sionescu/bordeaux-threads)
-library, [SBCL threads](http://www.sbcl.org/manual/index.html#sb_002dconcurrency) and the [lparallel](https://lparallel.org)
+library, an example implementation via [SBCL threads](http://www.sbcl.org/manual/#Threading) from the [SBCL Manual](http://www.sbcl.org/manual/), and the [lparallel](https://lparallel.org)
 library.
 
 Bordeaux-threads is a de-facto standard portable library, that exposes
@@ -43,8 +43,8 @@ rather low-level primitives. Lparallel builds on it and features:
 -  task killing by category
 -  integrated timeouts
 
-For more libraries on parallelism and concurrency, see the [awesome CL list](https://github.com/CodyReichert/awesome-cl#parallelism-and-concurrency)
-and [Quickdocs](http://quickdocs.org/).
+For more libraries on parallelism and concurrency, see the [Awesome CL list](https://github.com/CodyReichert/awesome-cl#parallelism-and-concurrency)
+and [Quickdocs](http://quickdocs.org/) such as quickdocks on [thread](https://quickdocs.org/-/search?q=thread) and [concurrency](https://quickdocs.org/-/search?q=concurrency).
 
 <a name="why_bother"></a>
 
@@ -151,7 +151,7 @@ interesting bit is that it itself does not really create any native
 threads — it relies entirely on the underlying implementation to do
 so.
 
-On there other hand, it does provide some useful extra features in its
+On the other hand, it does provide some useful extra features in its
 own abstractions over the lower-level threads.
 
 Also, you can see from the demo programs that a lot of the Bordeaux
@@ -679,7 +679,7 @@ cover most of the basic programming scenarios:
 
 ## SBCL threads
 
-SBCL provides support for native threads via its [sb-thread](http://www.sbcl.org/manual/index.html#Threading)
+[SBCL](http://www.sbcl.org/) provides support for native threads via its [sb-thread](http://www.sbcl.org/manual/#Threading)
 package. These are very low-level functions, but we can build our own
 abstractions on top of these as shown in the demo examples.
 
@@ -1127,7 +1127,7 @@ topic. I share some of my own references here:
 
 -    [Common Lisp Recipes](http://weitz.de/cl-recipes/)
 -    [Bordeaux API Reference](https://trac.common-lisp.net/bordeaux-threads/wiki/ApiDocumentation)
--    [SBCL Manual](http://www.sbcl.org/manual/#Threading%E2%80%9D)
+-    [SBCL Manual](http://www.sbcl.org/manual/) on [Threading](http://www.sbcl.org/manual/#Threading) 
 -    [The Common Lisp Hyperspec](https://www.lispworks.com/documentation/HyperSpec/Front/)
 
 Next up, the final post in this mini-series: parallelism in Common
@@ -2320,10 +2320,10 @@ library. This post barely scratches the surface on those. However, the
 general flow of operation is amply demonstrated here, and for further
 reading, you may find the following resources useful:
 
-- [The API docs hosted on Quickdoc](http://quickdocs.org/lparallel/api#package-LPARALLEL)
+- [The lparallel API docs hosted on Quickdoc](http://quickdocs.org/lparallel/api#package-LPARALLEL)
 - [The official homepage of the lparallel library](https://lparallel.org/)
 - [The Common Lisp Hyperspec](https://www.lispworks.com/documentation/HyperSpec/Front/), and, of course
 - Your Common Lisp implementation’s
-  manual. [For SBCL, here is a link to the official manual](https://www.lispworks.com/documentation/HyperSpec/Front/)
+  manual. [For SBCL, here is a link to the official manual](http://www.sbcl.org/manual/)
 - [Common Lisp recipes](http://weitz.de/cl-recipes/) by the venerable Edi Weitz.
 - more concurrency and threading libraries on the [Awesome-cl#parallelism-and-concurrency](https://github.com/CodyReichert/awesome-cl#parallelism-and-concurrency) list.
