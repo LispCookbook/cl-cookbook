@@ -17,6 +17,7 @@
    "editor-support.md"
    "emacs-ide.md"
    "functions.md"
+   "data-structures.md"
    "strings.md"
    "numbers.md"
    "iteration.md"
@@ -49,6 +50,7 @@
    ;; "awesome-cl.md"
    "contributors.md"
    ))
+   
 
 (defparameter *full-markdown* "full.md")
 (defparameter *bookname* "common-lisp-cookbook.epub")
