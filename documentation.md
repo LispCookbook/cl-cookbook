@@ -263,13 +263,14 @@ The following resources are sourced from the [Awesome Common Lisp](https://githu
 updated version of the CL X3J13 ANSI standard, with comments and examples.
 * [The X3J13 Draft version of the Common Lisp Standard](https://gitlab.com/vancan1ty/clstandard_build). The draft version is the only one legally available on the
   Internet. Compiled by Currell Berry, the resource contains individual documents and means to build them. You can also download a [single file
-PDF](https://gitlab.com/vancan1ty/clstandard_build/-/blob/master/cl-ansi-standard-draft-w-sidebar.pdf).
+PDF](https://gitlab.com/vancan1ty/clstandard_build/-/blob/master/cl-ansi-standard-draft-w-sidebar.pdf). See [Environment
+25–17] for `DOCUMENTATION` function and its *doc-type*, and [Environment 25–9] for `DESCRIBE`. 
 * [The Common Lisp HyperSpec](http://www.lispworks.com/documentation/common-lisp.html). -Based on the CL standard, the HyperSpec is available online or for [download](http://ftp.lispworks.com/pub/software_tools/reference/HyperSpec-7-0.tar.gz), encompassing 15MB of disk storage in about 2300 files. It is copyrighted and has [specific terms of use](http://www.lispworks.com/documentation/HyperSpec/Front/Help.htm#Legal). 
 
 * [DuckDuckGo](https://duckduckgo.com/bang_lite.html) the search engine (DDG) has a convenient !bang search command for the HyperSpec. Begin your DDG search with `!clhs`, such as
   `!clhs describe`, and you will be redirected to the relevant LispWorks HyperSpec search results.
 
-### Documentation Resources
+### Misc. Resources
 
 * The Common-Lisp.net [Documentation section](https://www.common-lisp.net/documentation). Provides information on related books and misc. resources. 
 * [Quickdocs](https://quickdocs.org/) - List & search Common Lisp libraries shipped by Quicklisp, including their documentation.
