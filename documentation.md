@@ -2,7 +2,7 @@
 title: Using and Creating Documentation
 ---
 
-* NB!: This draft document is under active development, comments and additions are requested. The structure and contents will be changed during draft updates. More direct *recipes*, *tips* and *suggested quick-starts* must be added. Proposed key areas of interest:
+* NB!: This draft is under active development, comments and additions are requested. More direct *recipes*, *tips* and *suggested quick-starts* must be added to the proposed key areas of interest:
 
 * Interactive REPL CL Documentation use
 * IDE CL Documentation use
@@ -55,9 +55,7 @@ Several REPL-centric editors with tab-completion and other perks are described i
 ;; TODO: [ ]check if clhs has a usable lookup function or if :hyperspec is required
 
 (defun ch (str)
-  "CH-ecks if 'STR  is in HyperSpec index, 
-  bringing match up in a terminal browser, or NIL. 
-  (CH 'DOCUMENTATION) => match HyperSpec & launch lynx"
+  "CH-ecks if STR  is in HyperSpec index, bringing match up in a terminal browser with inferior-shell, or NIL." 
   (let* ((root (namestring(clhs:hyperspec-root)))
          (lookup (hyperspec:lookup str))
          ;; Only tested in console for now, with lynx.
@@ -110,15 +108,67 @@ SLIME-INFO uses Emacs info-mode for displaying Common Lisp documentation.
   (function body))
 ~~~
 
-As Common Lisp evolved, best documentation practices changed, and there is no set standard accepted by all. Some suggestions and approaches follow.
+As Lisp and then Common Lisp evolved, best documentation practices changed, and there is no set standard accepted by all. Some of the popular approaches follow.
 
-* **Long and to the point**. A popular approach is keeping docstrings in one unbroken line of text. Friendly to whatever program displays the string in the future. Not pretty in Emacs, but perhaps closer to the original historical spirit. [Quil](https://github.com/quil-lang) is one [example](https://github.com/quil-lang/quilc/blob/master/src/analysis/fusion.lisp), with some caveats.  
+* **Long and to the point**. One approach is keeping docstrings in one unbroken line of text. Friendly to whatever program displays the string in the future. Not pretty in Emacs or terminal, but perhaps closer to the original historical spirit. [Quil](https://github.com/quil-lang) is one [example](https://github.com/quil-lang/quilc/blob/master/src/analysis/fusion.lisp), with some caveats.  
 
 ~~~lisp
 (defun fuse-gate-sequence (gate-sequence)
   "Given a list of gates GATE-SEQUENCE containing *only* fuseable gates, perform gate fusion, returning a new list of gates that is purportedly mathematically equivalent."
   (...))
 ~~~~
+* **Terminal friendly & portable.** The community favorite [Alexandria library](https://common-lisp.net/project/alexandria/) of public domain utilities for CL, celebrated for its style. Check out the [code](https://gitlab.common-lisp.net/alexandria/alexandria) and documentation, as well as how the docs are generated from the code. Note that the docstring is of terminal-friendly width, unlike the previous example.  
+
+A short documentation string in Alexandria:
+~~~lisp
+
+(defun ensure-list (list)
+ "If LIST is a list, it is returned. Otherwise returns the list designated by LIST."
+ (if (listp list)
+     list
+     (list list)))
+~~~
+
+A longer docstring with an example:
+
+~~~lisp
+(defun ensure-symbol (name &optional (package *package*))
+  "Returns a symbol with name designated by NAME, accessible in package
+designated by PACKAGE. If symbol is not already accessible in PACKAGE, it is
+interned there. Returns a secondary value reflecting the status of the symbol
+in the package, which matches the secondary return value of INTERN.
+
+Example:
+
+  (ensure-symbol :cons :cl) => cl:cons, :external
+"
+  (intern (string name) package))
+~~~ 
+* **Doc Generation Aware.** [Serapeum](https://github.com/ruricolist/serapeum), a CL utility library that aims to be less conservative than Alexandria, including utilities of non-CL pedigree. The project's docstrings include formating for documentation generation.
+
+~~~lisp
+(defun juxt (&rest fns)
+  "Clojure's `juxt'.
+
+Return a function of one argument, which, in turn, returns a list
+where each element is the result of applying one of FNS to the
+argument.
+
+It’s actually quite simple, but easier to demonstrate than to explain.
+The classic example is to use `juxt` to implement `partition`:
+
+    (defalias partition* (juxt #'filter #'remove-if))
+    (partition* #'evenp '(1 2 3 4 5 6 7 8 9 10))
+    => '((2 4 6 8 10) (1 3 5 7 9))
+
+The general idea is that `juxt` takes things apart."
+  (lambda (&rest args)
+    (declare (dynamic-extent args))
+    (loop for fn in fns
+          collect (apply fn args))))
+
+~~~ 
+
 * **Emacs-style**. If you edit your Common Lisp in Emacs and expect the majority of your future users to do so also, adapting the Emacs approach is something to ponder. [The Emacs Documentation tips](https://www.gnu.org/software/emacs/manual/html_node/elisp/Documentation-Tips.html#Documentation-Tips) are verbose. 
 
 ~~~lisp
