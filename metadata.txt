@@ -9,7 +9,7 @@ creator:
   text: The Common Lisp Cookbook contributors
 identifier:
 publisher:
-rights: © 2021 July, 29, vindarel <vindarel@mailz.org>.
+rights: © 2021 August, 23rd, vindarel <vindarel@mailz.org>.
   This e-book is free of charge, but you can [pay what you want](https://ko-fi.com/s/01fee22a32) for it.
 cover-image: orly-cover.png
 ...

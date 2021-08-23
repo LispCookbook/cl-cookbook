@@ -88,12 +88,14 @@ Before working with circular lists, tell the printer to recognise them
 and not try to print the whole list by setting
 [\*print-circle\*](http://clhs.lisp.se/Body/v_pr_cir.htm)
 to `T`:
+
 ~~~lisp
 (setf *print-circle* t)
 ~~~
 
 A function which modifies a list, so that the last `cdr` points to the
 start of the list is:
+
 ~~~lisp
 (defun circular! (items)
   "Modifies the last cdr of list ITEMS, returning a circular list"
@@ -120,6 +122,7 @@ expression:
 '#42=(1 2 3 . #42#)
 ;; => #1=(1 2 3 . #1#)
 ~~~
+
 Note that the label given to the reader (`n=42`) is discarded after
 reading, and the printer defines a new label (`n=1`).
 
@@ -1613,6 +1616,7 @@ Remove only one element with `:count`:
 ### Update entries
 
 Replace a value:
+
 ~~~lisp
 *my-alist*
 ;; => '((:FOO . "foo") (:BAR . "bar"))
@@ -1625,6 +1629,7 @@ Replace a value:
 ~~~
 
 Replace a key:
+
 ~~~lisp
 *my-alist*
 ;; => '((:FOO . "foo") (:BAR . "bar")))
