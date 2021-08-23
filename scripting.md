@@ -115,7 +115,7 @@ my-app`. See Roswell's documentation.
 Be aware that `ros build` adds core compression by default. That adds
 a significant startup overhead of the order of 150ms (for a simple
 app, startup time went from about 30ms to 180ms). You can disable it
-with `ros build --disable-compression <app.ros>`. Of course, core
+with `ros build <app.ros> --disable-compression`. Of course, core
 compression reduces your binary size significantly. See the table
 below, "Size and startup times of executables per implementation".
 
