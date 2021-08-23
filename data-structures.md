@@ -454,10 +454,6 @@ with a list of strings:
 
 `some`, `notany` *(test, sequence)*: return either the value of the test, or nil.
 
-`mismatch` *(sequence-a, sequence-b)*: Return position in sequence-a where
-sequence-a and sequence-b begin to mismatch. Return NIL if they match
-entirely. Other parameters: `:from-end bool`, `:start1`, `:start2` and
-their `:end[1,2]`.
 
 ### Functions
 
@@ -581,10 +577,37 @@ except that all elements equal to `old` are replaced with `new`.
 
 (see above)
 
-#### replace (sequence-a, sequence-b)
+#### replace (sequence-a, sequence-b, &key start1, end1)
 
-Replace elements of sequence-a with elements of
+Destructively replace elements of sequence-a with elements of
 sequence-b.
+
+The full signature is:
+
+~~~lisp
+(replace sequence1 sequence2 &rest args &key (start1 0) (end1 nil) (start2 0)
+ (end2 nil))
+~~~
+
+Elements are copied to the subseqeuence bounded by START1 and END1,
+from the subsequence bounded by START2 and END2. If these subsequences
+are not of the same length, then the shorter length determines how
+many elements are copied.
+
+~~~lisp
+(replace "xxx" "foo")
+"foo"
+
+(replace "xxx" "foo" :start1 1)
+"xfo"
+
+(replace "xxx" "foo" :start1 1 :start2 1)
+"xoo"
+
+(replace "xxx" "foo" :start1 1 :start2 1 :end2 2)
+"xox"
+~~~
+
 
 #### remove, delete (foo sequence)
 
@@ -1204,7 +1227,7 @@ NIL -> NIL-VALUE
 NIL
 ~~~
 
-#### Traversign keys or values
+#### Traversing keys or values
 
 To map over keys or values we can again rely on Alexandria with
 `maphash-keys` and `maphash-values`.
