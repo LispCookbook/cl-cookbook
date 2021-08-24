@@ -18,7 +18,7 @@ also have many more details:
 Don't miss the appendix and when you need more data structures, have a
 look at the
 [awesome-cl](https://github.com/CodyReichert/awesome-cl#data-structures)
-list and [Quickdocs](http://quickdocs.org/search?q=data+structure).
+list and [Quickdocs](https://quickdocs.org/-/search?q=data%20structure).
 
 ## Lists
 
