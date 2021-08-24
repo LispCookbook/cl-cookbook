@@ -2320,8 +2320,7 @@ library. This post barely scratches the surface on those. However, the
 general flow of operation is amply demonstrated here, and for further
 reading, you may find the following resources useful:
 
-- [The lparallel API docs hosted on Quickdoc](http://quickdocs.org/lparallel/api#package-LPARALLEL)
-- [The official homepage of the lparallel library](https://lparallel.org/)
+- [The official homepage of the lparallel library, including documentation](https://lparallel.org/)
 - [The Common Lisp Hyperspec](https://www.lispworks.com/documentation/HyperSpec/Front/), and, of course
 - Your Common Lisp implementation’s
   manual. [For SBCL, here is a link to the official manual](http://www.sbcl.org/manual/)
