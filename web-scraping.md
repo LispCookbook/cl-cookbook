@@ -333,4 +333,4 @@ More helpful libraries:
   network, parallelism and concurrency libraries to see on the
   [awesome-cl](https://github.com/CodyReichert/awesome-cl) list,
   [Cliki](http://www.cliki.net/) or
-  [Quickdocs](http://quickdocs.org/search?q=web).
+  [Quickdocs](https://quickdocs.org/-/search?q=web).
