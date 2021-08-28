@@ -51,7 +51,7 @@ it is returned as is:
 - the quote character, `'`, is a shortcut for `quote`, a *special operator* (not a function nor a macro, but one of a few special operators forming the core of Lisp).
 - so, `'foo` evaluates to `foo`.
 
-So, our macro retourns the following bits:
+So, our macro returns the following bits:
 
 - the symbol `progn`,
 - a second list, that contains
