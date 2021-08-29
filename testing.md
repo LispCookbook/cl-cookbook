@@ -7,21 +7,217 @@ recipes cover how to write automated tests and see their code
 coverage. We also give pointers to plug those in modern continuous
 integration services like Travis CI and Coveralls.
 
-We will use an established and well-designed regression testing
-framework called [Prove](https://github.com/fukamachi/prove). It is
-not the only possibility though,
-[FiveAM](http://quickdocs.org/fiveam/api) is a popular one (see
-[this blogpost](http://turtleware.eu/posts/Tutorial-Working-with-FiveAM.html) for an
-introduction) and [there are others](https://github.com/CodyReichert/awesome-cl#unit-testing) (and more again). We prefer
-`Prove` for its documentation and its **extensible reporters** (it has different
-report styles and we can extend them).
+[Prove](https://github.com/fukamachi/prove) used to be a widely liked testing framework but its repository was later archived. Its successor [Rove](https://github.com/fukamachi/rove) is not stable enough, so we will be using a mature testing framework called [FiveAM](https://github.com/lispci/fiveam). There are also some [other testing frameworks](https://github.com/CodyReichert/awesome-cl#unit-testing) to explore.
 
-> warning: Prove has a couple limitations and will soon be obsolete. We advise to start with another test framework, such as FiveAM.
+FiveAM does not have many documentation resources, yet [this blogpost](http://turtleware.eu/posts/Tutorial-Working-with-FiveAM.html) provides a detailed introduction to it. Here we will introduce it from another perspective.
+
+## Testing with FiveAM
+
+FiveAM has 3 levels of abstraction: check, test and suite. As you may have guessed:
+1. A check is a single assertion that asserts a boolean value. 
+2. A test is the smallest runnable unit. A test case that may contain multiple checks. Any check failure leads to failure of the whole test.
+3. A suite is a collection of tests. When a suite is run, all tests inside would be performed. Suite allows paternity, which means that running a suite will run all the tests defined in it and in its children suites.
+
+It is totally up to the user to decide the hierarchy of tests and suites. Here we mainly focus on the usage of FiveAM.
+
+Suppose we have built a rather complex system and the following functions is part of it:
+
+~~~lisp
+(define-condition file-not-existing-error (error)
+  ((filename :type string :initarg :filename :reader filename)))
+
+(defun read-file-as-string (filename &key (error-if-not-exists t))
+  "Read file content as string. FILENAME specifies the path of file. 
+  
+Keyword ERROR-IF-NOT-EXISTS specifies the operation to perform when the file 
+is not found. T (by default) means an error will be signaled. When given NIL, 
+the function will return NIL in that case."
+  (cond
+    ((uiop:file-exists-p filename)
+     (uiop:read-file-string filename))
+    (error-if-not-exists
+     (error 'file-not-existing-error :filename filename))
+    (t nil)))
+~~~
+
+### Install and load
+
+`FiveAM` is in Quicklisp and can be loaded with the following command:
+
+~~~lisp
+(ql:quickload "fiveam")
+~~~
+
+The package is named `fiveam` with a nickname `5am`. For the sake of simplicity, we will ignore the package prefix in the following code samples.
+
+### Defining suites
+
+Testing in FiveAM usually starts by defining a suite. A suite helps separating tests to smaller collections that makes them more organized. It is highly recommended to define a single *root* suite for the sake of ASDF integration. We will talk about it later, now let's focus on the testing itself.
+
+The code below defines a suite named `my-system`. We will use it as the root suite for the whole system.
+
+~~~lisp
+(def-suite my-system)
+~~~
+
+Then let's define another suite for testing `read-file-as-string` function.
+
+~~~lisp
+;; Define a suite and set it as the default for the following tests.
+(def-suite read-file-as-string :in my-system)
+(in-suite read-file-as-string)
+
+;; Alternatively, the following line is a combination of the 2 lines above.
+(def-suite* read-file-as-string :in my-system)
+~~~
+
+Here a new suite named `read-file-as-string` has been defined. It is declared to be a child suite of `my-system` as specified by the `:in` keyword. The macro `in-suite` sets it as the default suite for test defined later.
+
+### Defining tests
+
+The macro `test` provides a simple way to define a test with given name:
+
+~~~lisp
+(test read-file-as-string-non-existing-file
+  ;; IS accepts a boolean expression with optional reason.
+  (let ((result (read-file-as-string "/tmp/non-existing-file.txt"
+                                     :error-if-not-exists nil)))
+    (is (null result)
+      "Should return NIL when :ERROR-IF-NOT-EXISTS is set to NIL"))
+  ;; SIGNALS accepts unquoted name of condition and body to evaluate.
+  ;; Here it checks if FILE-NOT-EXISTING-ERROR is signaled.
+  (signals file-not-existing-error
+    (read-file-as-string "/tmp/non-existing-file.txt"
+                         :error-if-not-exists t)))
+
+(test read-file-as-string-empty-file 
+  (let ((result (read-file-as-string "/tmp/empty.txt")))
+    ;; The reason can be omitted.
+    (is (not (null result)))
+    ;; The reason can be used to provide formatted text.
+    (is (= 0 (length result)))
+    "Empty string expected but got \"~a\""))
 
 
-<a name="install"></a>
+(test read-file-as-string-normal-file
+  (let ((result (read-file-as-string "/tmp/hello.txt")))
+    ;; Convention: put expected value as the first arg of =, or equal, string= etc.
+    ;; FiveAM generates a more readable report following this convention.
+    (is (string= "hello" result))))
+~~~
+
+In the above code, 3 test was defined with 5 checks in total. Some checks are actually redundant for the sake of demonstration. You may put all the checks in one big test, or in multiple scenarios. It is up to you.
+
+The macro `test` is a convenience for `def-test` to define simple tests. You may read its docstring for a more complete introduction, but please note that it is not recommended to use its fixture feature according to [this issue](https://github.com/lispci/fiveam/issues/31).
+
+### Running tests
+
+FiveAm provides multiple ways to run tests. The macro `run!` is a good start point during development. It accepts a name of suite or test and run it, then prints testing report in standard output. Let's run the tests now!
+
+~~~lisp
+(run! 'my-system)
+; Running test suite MY-SYSTEM
+;  Running test READ-FILE-AS-STRING-EMPTY-FILE ..
+;  Running test READ-FILE-AS-STRING-NON-EXISTING-FILE ..
+;  Running test READ-FILE-AS-STRING-NORMAL-FILE .
+;  Did 5 checks.
+;     Pass: 5 (100%)
+;     Skip: 0 ( 0%)
+;     Fail: 0 ( 0%)
+;  => T, NIL, NIL
+~~~
+
+If we mess `read-file-as-string-non-existing-file` up by replacing `/tmp/non-existing-file.txt` with `/tmp/hello.txt`, the test would fail (sure!) as expected:
+
+~~~lisp
+(run! 'read-file-as-string-non-existing-file)
+; Running test READ-FILE-AS-STRING-NON-EXISTING-FILE ff
+;  Did 2 checks.
+;     Pass: 0 ( 0%)
+;     Skip: 0 ( 0%)
+;     Fail: 2 (100%)
+;  Failure Details:
+;  --------------------------------
+;  READ-FILE-AS-STRING-NON-EXISTING-FILE []: 
+;       Should return NIL when :ERROR-IF-NOT-EXISTS is set to NIL.
+;  --------------------------------
+;  --------------------------------
+;  READ-FILE-AS-STRING-NON-EXISTING-FILE []: 
+;       Failed to signal a FILE-NOT-EXISTING-ERROR.
+;  --------------------------------
+;  => NIL
+; (#<IT.BESE.FIVEAM::TEST-FAILURE {10064485F3}>
+;  #<IT.BESE.FIVEAM::TEST-FAILURE {1006438663}>)
+; NIL
+~~~
+
+The behavior of suite/test runner can be customized by the `*on-failure*` variable, which controls what to do when check failure happens. It can be set to one of the following values:
+- `:debug` to drop to debugger.
+- `:backtrace` to print a backtrace.
+- `NIl` (default) to simply continue.
+
+### ASDF integration
+
+So it would be nice to provide a one-line trigger to test our `my-system` system. Recall that we said it is better to provide a root suite? Here is the reason:
+
+~~~lisp
+(defsystem my-system
+  ;; Parts omitted.
+  :in-order-to ((test-op (test-op :my-system/test))))
+
+(defsystem mitogrator/test
+  ;; Parts omitted.
+  :perform (test-op (op c)
+                    (symbol-call :fiveam :run!
+                                 (find-symbol* :my-system :my-system/test))))
+~~~
+
+The last line tells ASDF to load symbol `:my-system` from `my-system/test` package and call `fiveam:run!`. It fact, it is equivalent to `(run! 'my-system)` as mentioned above.
+
+### Testing report customization
+
+It is possible to generate our own testing report. The macro `run!` is nothing more than a composition of `explain!` and `run`. 
+
+Instead of generating a testing report like its cousin `run!`, the function `run` runs suite or test passed in and returns a list of `test-result` instance, usually instances of `test-failure` or `test-passed` sub-classes.
+
+A class `text-explainer` is defined as a basic class for testing report generator. A generic function `explain` is defined to take a `text-plainer` instance and a `test-result` instance (returned by `run`) and generate testing report. The following 2 code snippets are equivalent:
+
+~~~lisp
+(run! 'read-file-as-string-non-existing-file)
+
+(explain (make-instance '5am::detailed-text-explainer)
+         (run 'read-file-as-string-non-existing-file))
+~~~
+
+By creating a new sub-class of `text-explainer` and a method `explain` for it, it is possible to define a new test reporting system.
+
+The following code just provides a proof-of-concept implementation. You may need to read the source code of `5am::detailed-text-explainer` to fully understand it.
+
+~~~lisp
+(defclass my-explainer (5am::text-explainer)
+  ())
+
+(defmethod 5am:explain ((explainer my-explainer) results &optional (stream *standard-output*) recursive-deps)
+  (loop for result in results
+        do (case (type-of result)
+             ('5am::test-passed
+              (format stream "~%Test ~a passed" (5am::name (5am::test-case result))))
+             ('5am::test-failure
+              (format stream "~%Test ~a failed" (5am::name (5am::test-case result)))))))
+
+(explain (make-instace 'my-explainer)
+         (run 'read-file-as-string-non-existing-file))
+; Test READ-FILE-AS-STRING-NON-EXISTING-FILE failed
+; Test READ-FILE-AS-STRING-NON-EXISTING-FILE passed => NIL
+~~~
+
+## Mocking with Mockingbird
+
+TODO
 
 ## Testing with Prove
+
+> Warning: Prove is obsolete. This section is kept but it is not encouraged to use it.
 
 ### Install and load
 
@@ -32,8 +228,6 @@ report styles and we can extend them).
 ~~~
 
 This command installs `prove` if necessary, and loads it.
-
-<a name="writetest"></a>
 
 ### Write a test file
 
