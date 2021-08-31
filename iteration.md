@@ -1156,6 +1156,174 @@ But for alists, `scan-alist` is provided:
     b))
 ~~~
 
+## Iterate unique features lacking in loop
+
+`iterate` has some other things unique to it.
+
+If you are a newcomer in Lisp, it's perfectly OK to keep you this section for
+later. You could very well spend your career in Lisp without resorting
+to those features… although they might turn useful one day.
+
+
+### No rigid order for clauses
+
+`loop` requires that all `for` clauses appear before the loop body,
+for example before a `while`. It's ok for `iter` to not follow this
+order:
+
+~~~lisp
+(iter (for x in '(1 2 99)
+  (while (< x 10))
+  (for y = (print x))
+  (collect (list x y)))
+~~~
+
+### Accumulating clauses can be nested
+
+`collect`, `appending` and other accumulating clauses can appear anywhere:
+
+~~~lisp
+(iter (for x in '(1 2 3))
+  (case x
+    (1 (collect :a))
+    ;;  ^^ iter keyword, nested in a s-expression.
+    (2 (collect :b))))
+~~~
+
+### Finders: `finding`
+
+`iterate` has [finders](https://common-lisp.net/project/iterate/doc/Finders.html#Finders).
+
+> A finder is a clause whose value is an expression that meets some condition.
+
+We can use `finding` followed by `maximizing`, `minimizing` or `such-that`.
+
+Here's how to find the longest list in a list of lists:
+
+~~~lisp
+(iter (for elt in '((a) (b c d) (e f)))
+      (finding elt maximizing (length elt)))
+=> (B C D)
+~~~
+
+The rough equivalent in LOOP would be:
+
+~~~lisp
+(loop with max-elt = nil
+      with max-key = 0
+      for elt in '((a) (b c d) (e f))
+      for key = (length elt)
+      do
+      (when (> key max-key)
+        (setf max-elt elt
+              max-key key))
+      finally (return max-elt))
+=> (B C D)
+~~~
+
+There could be more than one `such-that` clause:
+
+~~~lisp
+ (iter (for i in '(7 -4 2 -3))
+       (if (plusp i)
+    (finding i such-that #'evenp)
+        (finding (- i) such-that (oddp i))))
+;; => 2
+~~~
+
+We can also write `such-that #'evenp` and `such-that #'oddp`.
+
+
+### Control flow: `next-iteration`
+
+It is like "continue" and loop doesn't have it.
+
+> Skips the remainder of the loop body and begins the next iteration of the loop.
+
+`iterate` also has `first-iteration-p` and `(if-first-time then else)`.
+
+See [control flow](https://common-lisp.net/project/iterate/doc/Control-Flow.html#Control-Flow
+
+
+### Generators
+
+Use `generate` and `next`. A generator is lazy, it goes to the next value when said explicitly.
+
+~~~lisp
+(iter (for i in '(1 2 3 4 5))
+      (generate c in-string "black")
+      (if (oddp i) (next c))
+      (format t "~a " c))
+;; b b l l a
+;; NIL
+~~~
+
+### Variable backtracking (`previous`) VS parallel binding
+
+~~~lisp
+(iter (for el in '(a b c d e))
+      (for prev-el previous el)
+      (collect (list el prev-el)))
+;; => ((A NIL) (B A) (C B) (D C) (E D))
+~~~
+
+although it is doable with `loop`'s parallel binding `and`, which is unsupported in `iterate`:
+
+~~~lisp
+(loop for el in '(a b c d e)
+      and prev-el = nil then el
+      collect (list el prev-el))
+~~~
+
+### More clauses
+
+- `in-string` can be used explicitely to iterate character by character over a string. With loop, use `across`.
+
+~~~lisp
+(iter (for c in-string "hello")
+      (collect c))
+;; => (#\h #\e #\l #\l #\o)
+~~~
+
+- `loop` offers `collecting`, `nconcing`, and `appending`. `iterate` has these and also `adjoining`, `unioning`, `nunioning`, and `accumulating`.
+
+~~~lisp
+(iter (for el in '(a b c a d b))
+      (adjoining el))
+;; => (A B C D)
+~~~
+
+(`adjoin` is a set operation)
+
+- `loop` has summing, counting, maximizing, and minimizing. `iterate` also includes `multiplying` and `reducing`. reducing is the generalized reduction builder:
+
+~~~lisp
+(iter (with dividend = 100)
+      (for divisor in '(10 5 2))
+      (reducing divisor by #'/ initial-value dividend))
+;; => 1
+~~~
+
+
+### Iterate is extensible
+
+~~~lisp
+(defmacro dividing-by (num &keys (initial-value 0))
+  `(reducing ,num by #'/ initial-value ,initial-value))
+
+(iter (for i in '(10 5 2))
+      (dividing-by i :initial-value 100))
+=> 1
+~~~
+
+but [there is more to it, see the documentation](https://common-lisp.net/project/iterate/doc/Rolling-Your-Own.html#Rolling-Your-Own).
+
+We saw libraries extending `loop`, for example CLSQL, but they are
+full of feature flag checks (`#+(or allegro clisp-aloop cmu openmcl
+sbcl scl)`) and they call internal modules
+(`ansi-loop::add-loop-path`, `sb-loop::add-loop-path` etc).
+
+
 ## Custom series scanners
 
 If we often scan the same type of object, we can write our own scanner
@@ -1273,8 +1441,9 @@ Only `for` and `in` are keywords.
 ### Iterate
 
 * [The Iterate Manual](https://common-lisp.net/project/iterate/doc/index.html) -by Jonathan Amsterdam and Luís Oliveira
-* [iterate - Pseudocodic Iteration](https://common-lisp-libraries.readthedocs.io/iterate/) - by Shubhamkar Ayare 
+* [iterate - Pseudocodic Iteration](https://common-lisp-libraries.readthedocs.io/iterate/) - by Shubhamkar Ayare
 * [Loop v Iterate - SabraOnTheHill](https://sites.google.com/site/sabraonthehill/loop-v-iter)
+* [Comparing loop and iterate](https://web.archive.org/web/20170713081006/https://items.sjbach.com/211/comparing-loop-and-iterate) - by Stephen Bach (web archive)
 
 ### Series
 
