@@ -879,6 +879,18 @@ Note that although `iterate` and the three `collect` expressions are
 written sequentially, only one iteration is performed, the same as the
 example with loop.
 
+### Begin the loop with a clause (initially)
+
+~~~lisp
+(loop initially
+      (format t "~a " 'loop-begin)
+      for x below 3
+      do (format t "~a " x))
+;; LOOP-BEGIN 0 1 2
+~~~
+
+`initially` also exists with `iterate`.
+
 
 ### Terminate the loop with a test (until, while)
 #### loop
@@ -1226,7 +1238,7 @@ There could be more than one `such-that` clause:
 ~~~lisp
  (iter (for i in '(7 -4 2 -3))
        (if (plusp i)
-    (finding i such-that #'evenp)
+    (finding i such-that (evenp i))
         (finding (- i) such-that (oddp i))))
 ;; => 2
 ~~~
