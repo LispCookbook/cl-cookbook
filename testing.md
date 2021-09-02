@@ -9,7 +9,7 @@ integration services like Travis CI and Coveralls.
 
 [Prove](https://github.com/fukamachi/prove) used to be a widely liked testing framework but its repository was later archived. Its successor [Rove](https://github.com/fukamachi/rove) is not stable enough, so we will be using a mature testing framework called [FiveAM](https://github.com/lispci/fiveam). There are also some [other testing frameworks](https://github.com/CodyReichert/awesome-cl#unit-testing) to explore.
 
-FiveAM does not have many documentation resources, yet [this blogpost](http://turtleware.eu/posts/Tutorial-Working-with-FiveAM.html) provides a detailed introduction to it. Here we will introduce it from another perspective.
+FiveAM does not have many documentation resources. However, it has really good docstrings built-in. Most of the time, they would provide sufficient information that answers your questions. 
 
 ## Testing with FiveAM
 
@@ -17,6 +17,15 @@ FiveAM has 3 levels of abstraction: check, test and suite. As you may have guess
 1. A check is a single assertion that asserts a boolean value. 
 2. A test is the smallest runnable unit. A test case that may contain multiple checks. Any check failure leads to failure of the whole test.
 3. A suite is a collection of tests. When a suite is run, all tests inside would be performed. Suite allows paternity, which means that running a suite will run all the tests defined in it and in its children suites.
+
+A simplest code sample containing 3 basic blocks mentioned above can shown as below:
+
+~~~lisp
+(def-suite* my-suite)
+
+(test my-test
+  (is (= 2 (+ 1 1))))
+~~~
 
 It is totally up to the user to decide the hierarchy of tests and suites. Here we mainly focus on the usage of FiveAM.
 
@@ -74,6 +83,14 @@ Then let's define another suite for testing `read-file-as-string` function.
 Here a new suite named `read-file-as-string` has been defined. It is declared to be a child suite of `my-system` as specified by the `:in` keyword. The macro `in-suite` sets it as the default suite for test defined later.
 
 ### Defining tests
+
+Before diving into tests, here is a brief introduction of checks you may use inside tests:
+
+* The macro `is` might be the mostly used check. It simply checks if given expression returns a true value and generates a `test-passed` or `test-failure` result accordingly.
+* The macro `skip` takes a reason and generates a `test-skipped` result.
+* The macro `signals` checks if given condition is signaled during execution.
+
+Please note that all the checks accepts an optional reason that can be formatted. When omitted, FiveAM generates a report according to arguments passed to the function. You may read the `check.lisp` file for more helpers.
 
 The macro `test` provides a simple way to define a test with given name:
 
@@ -612,3 +629,4 @@ You now have a ready to use Gitlab CI.
 # References
 
 - the [CL Foundation Docker images](https://hub.docker.com/u/clfoundation)
+- [Tutorial: Working with FiveAM](http://turtleware.eu/posts/Tutorial-Working-with-FiveAM.html)
