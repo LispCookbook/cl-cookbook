@@ -17,7 +17,6 @@ The contributors on Github are:
 * Rommel MARTINEZ
 * digikar99
 * nicklevine
-* Danny YUE
 * Dmitry Petrov
 * otjura
 * YUE Daian
@@ -51,7 +50,6 @@ The contributors on Github are:
 * Brandon Hale
 * Burhanuddin Baharuddin
 * Coin Okay
-* Danny Yue
 * Eric Timmons
 * HiPhish
 * Justin
