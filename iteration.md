@@ -1278,6 +1278,7 @@ Only `for` and `in` are keywords.
 
 ### Series
 
+* [Common Lisp the Language (2nd Edition) - Appendix A. Series](https://www.cs.cmu.edu/Groups/AI/html/cltl/clm/node347.html)
 * [SERIES for Common Lisp - Richard C. Waters](http://series.sourceforge.net/)
 
 ### Others
