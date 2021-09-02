@@ -590,7 +590,7 @@ build:
 ~~~
 
 Here we defined two `stages` (see
-[environments](https://docs.gitlab.com/ce/ci/environments.html)),
+[environments](https://docs.gitlab.com/ee/ci/environments/)),
 "test" and "build", defined to run one after another. A "build" stage
 will start only if the "test" one succeeds.
 

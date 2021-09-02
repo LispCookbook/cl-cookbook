@@ -72,7 +72,7 @@ are given on the [github web pages](https://github.com/rigetticomputing/magicl).
 Low-level routines wrap foreign functions, so have the Fortran names
 e.g `magicl.lapack-cffi::%zgetrf`. Higher-level interfaces to some of
 these functions also exist, see the
-[source code](https://github.com/rigetti/magicl/blob/master/src/high-level/high-level.lisp).
+[source directory](https://github.com/rigetti/magicl/blob/master/src/high-level/) and [documentation](https://github.com/quil-lang/magicl/blob/master/doc/high-level.md).
 
 Taking this further, domain specific languages have been built on Common
 Lisp, which can be used for numerical calculations with arrays.
