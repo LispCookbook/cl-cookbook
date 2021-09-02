@@ -29,7 +29,7 @@ If you want to return a list, use `collect`:
 ~~~
 
 The Loop macro is different than most Lisp expressions in having a complex
-internal domain specific language that doesn't use s-expressions.
+internal domain-specific language that doesn't use s-expressions.
 So you need to read Loop expressions with half of your brain in Lisp mode, and
 the other half in Loop mode. You love it or you hate it.
 
@@ -256,7 +256,7 @@ The representation of `(list 1 2 3)`:
  1       2       3
 ```
 
-By setting the `cdr` of the last element to the list itself, we make it reccur on itself.
+By setting the `cdr` of the last element to the list itself, we make it recur on itself.
 
 A notation shortcut is possible with the `#=` syntax:
 
@@ -937,7 +937,7 @@ x is 3
 ~~~
 
 #### Series
-By mapping we can perform a side effect and also collect items
+By mapping, we can perform a side effect and also collect items
 
 ~~~lisp
 (collect
@@ -1174,7 +1174,7 @@ But for alists, `scan-alist` is provided:
 
 If you are a newcomer in Lisp, it's perfectly OK to keep you this section for
 later. You could very well spend your career in Lisp without resorting
-to those features… although they might turn useful one day.
+to those features… although they might turn out useful one day.
 
 
 ### No rigid order for clauses
@@ -1289,7 +1289,7 @@ although it is doable with `loop`'s parallel binding `and`, which is unsupported
 
 ### More clauses
 
-- `in-string` can be used explicitely to iterate character by character over a string. With loop, use `across`.
+- `in-string` can be used explicitly to iterate character by character over a string. With loop, use `across`.
 
 ~~~lisp
 (iter (for c in-string "hello")
@@ -1341,7 +1341,7 @@ sbcl scl)`) and they call internal modules
 If we often scan the same type of object, we can write our own scanner
  for it: the iteration itself can be factored out. Taking the example
  above, of scanning a list of two-element lists, we'll write a scanner
- that returns a series of the first elements, and a series of the
+ that returns a series of the first elements and a series of the
  second.
 
 ~~~lisp
@@ -1368,16 +1368,16 @@ Consider this series expression:
                     (* i 2)))
 ~~~
 
-It's a bit longer than it needs to be—the `mapping` form's only
+It's a bit longer than it needs to be, the `mapping` form's only
 purpose is to bind the variable `i`, and `i` is used in only one
-place. Series has a "hidden feature" which allows us to simplify this
+place. Series has a "hidden feature" that allows us to simplify this
 expression to the following:
 
 ~~~lisp
 (collect-sum (* 2 (scan-range :length 5)))
 ~~~
 
-This is called implicit mapping, and can be enabled in the call to
+This is called implicit mapping and can be enabled in the call to
 `series::install`:
 
 ~~~lisp
