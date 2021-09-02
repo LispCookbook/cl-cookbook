@@ -173,6 +173,14 @@ The behavior of suite/test runner can be customized by the `*on-failure*` variab
 - `:backtrace` to print a backtrace.
 - `NIl` (default) to simply continue.
 
+### (Optional) Running tests using Slite
+
+[Slite](https://github.com/tdrhq/slite) stands for SLIme TEst runner. It lets you run FiveAM tests through Emacs. After install it and press keystroke `C-c v` and input `(slite:run-all-fiveam-tests)` for running all tests, or `(fiveam:run test-suite-name)` for running a specific suite/test.
+
+It consists of an ASDF system and a Emacs package. As for September 2021, neither can be installed via Quicklisp or MELPA.
+
+Please refer to its [repo page](https://github.com/tdrhq/slite) for instructions.
+
 ### ASDF integration
 
 So it would be nice to provide a one-line trigger to test our `my-system` system. Recall that we said it is better to provide a root suite? Here is the reason:
