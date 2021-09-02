@@ -1339,22 +1339,25 @@ This output can be read back in to create a hash-table:
 ;; 83
 ~~~
 
-**With Rutils** (non portable)
+**With Serapeum** (readable and portable)
 
-The [Rutils library](https://github.com/vseloved/rutils/blob/master/docs/tutorial.md#rutilshash-table)
-has convenience functions for hash-tables. We can enable pretty
-printing of hash-tables with `(toggle-print-hash-table)`. Below, we
-also use the `#h` reader macro to create one:
+The [Serapeum library](https://github.com/ruricolist/serapeum/blob/master/REFERENCE.md#hash-tables)
+has the `dict` constructor, the function `pretty-print-hash-table` and
+the `toggle-pretty-print-hash-table` switch, all which do *not* use
+`print-object` under the hood.
 
 ~~~lisp
-rutils-user> (toggle-print-hash-table)
-rutils-user> #h(:foo 42)
-#{
-  :FOO 42
- }
+CL-USER> (serapeum:toggle-pretty-print-hash-table)
+T
+CL-USER> (serapeum:dict :a 1 :b 2 :c 3)
+(dict
+  :A 1
+  :B 2
+  :C 3
+ )
 ~~~
 
-This method is quick and convenient, but is actually not portable because it redefines `print-object` under the hood.
+This printed representation can be read back in.
 
 
 <a name="size"></a>
