@@ -1267,7 +1267,7 @@ CL-USER> (hash-table-count *my-hash*)
 0
 ~~~
 
-### Printing a hash table readably
+### Printing a Hash Table readably
 
 **With print-object** (non portable)
 
@@ -1361,6 +1361,48 @@ This printed representation can be read back in.
 
 
 <a name="size"></a>
+
+### Thread-safe Hash Tables
+
+The standard hash-table in Common Lisp is not thread-safe. That means
+that simple access operations can be interrupted in the middle and
+return a wrong result.
+
+Implementations offer different solutions.
+
+With **SBCL**, we can create thread-safe hash tables with the `:synchronized` keyword to `make-hash-table`: [http://www.sbcl.org/manual/#Hash-Table-Extensions](http://www.sbcl.org/manual/#Hash-Table-Extensions).
+
+> If nil (the default), the hash-table may have multiple concurrent readers, but results are undefined if a thread writes to the hash-table concurrently with another reader or writer. If t, all concurrent accesses are safe, but note that [clhs 3.6 (Traversal Rules and Side Effects)](http://www.lispworks.com/documentation/HyperSpec/Body/03_f.htm) remains in force. See also: sb-ext:with-locked-hash-table.
+
+~~~lisp
+(defparameter *my-hash* (make-hash-table :synchronized t))
+~~~
+
+But, operations that expand to two accesses, like the modify macros (`incf`) or this:
+
+~~~lisp
+(setf (gethash :a *my-hash*) :new-value)
+~~~
+
+need to be wrapped around `sb-ext:with-locked-hash-table`:
+
+> Limits concurrent accesses to HASH-TABLE for the duration of BODY.  If HASH-TABLE is synchronized, BODY will execute with exclusive ownership of the table. If HASH-TABLE is not synchronized, BODY will execute with other WITH-LOCKED-HASH-TABLE bodies excluded -- exclusion of hash-table accesses not surrounded by WITH-LOCKED-HASH-TABLE is unspecified.
+
+~~~lisp
+(sb-ext:with-locked-hash-table (*my-hash*)
+  (setf (gethash :a *my-hash*) :new-value))
+~~~
+
+In **LispWorks**, hash-tables are thread-safe by default. But
+likewise, there is no guarantee of atomicity *between* access
+operations, so we can use
+[with-hash-table-locked](http://www.lispworks.com/documentation/lw71/LW/html/lw-144.htm#pgfId-900768).
+
+Ultimately, you might like what the [**cl-gserver library**](https://mdbergmann.github.io/cl-gserver/index.html#toc-2-4-1-hash-table-agent)
+proposes. It offers helper functions around hash-tables and its
+actors/agent system to allow thread-safety. They also maintain the
+order of updates and reads.
+
 
 ### Performance Issues: The Size of your Hash Table
 
