@@ -43,6 +43,12 @@ and older implementations:
 * and there is more!
 
 
+### With the asdf-vm package manager
+
+The [asdf-vm](http://asdf-vm.com/) tool can be used to manage a large ecosystem of runtimes and tools.
+
+* [Steel Bank Common Lisp (SBCL)](http://www.sbcl.org/) is available via [this plugin](https://github.com/smashedtoatoms/asdf-sbcl) for [asdf-vm](http://asdf-vm.com/)
+
 ### With Roswell
 
 [Roswell](https://github.com/roswell/roswell/wiki) is:
@@ -309,7 +315,7 @@ fetch the system from the Internet if it is not already installed.
 
 If we need libraries to be installed locally, for only one project, or
 in order to easily ship a list of dependencies with an application, we
-can use [Qlot](https://github.com/fukamachi/qlot).
+can use [Qlot](https://github.com/fukamachi/qlot) or [CLPM](https://clpm.dev).
 
 Quicklisp also provides
 [Quicklisp bundles](https://www.quicklisp.org/beta/bundles.html). They

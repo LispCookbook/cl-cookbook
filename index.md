@@ -19,6 +19,7 @@ The CL Cookbook aims to tackle all sort of topics, for the beginner as for the m
 * [Editor support](editor-support.html)
   * [Using Emacs as an IDE](emacs-ide.html)
   * [The LispWorks IDE](lispworks.html)
+  * [Using VSCode with Alive](vscode-alive.html)
 * [Functions](functions.html)
 * [Data Structures](data-structures.html)
 * [Strings](strings.html)
