@@ -69,6 +69,51 @@ frontend for Quicklisp.
 [Slimv_box](https://github.com/justin2004/slimv_box) brings Vim, SBCL, ABCL,
 and tmux in a Docker container for a quick installation.
 
+## VSCode
+
+[Alive](https://marketplace.visualstudio.com/items?itemName=rheller.alive)
+makes VSCode a powerful Common Lisp development. It hooks directly into
+the Swank server that Emacs Slime uses and is fully compatible with
+VSCode's ability to develop remotely in containers, WSL, Remote
+machines, etc.  It has no dependencies beyond a version of Common Lisp
+on which to run the Swank server.  It can be configured to run with
+Quicklisp, CLPM, and Roswell. It currently supports:
+- Syntax highlighting
+- Code completion
+- Code formatter
+- Jump to definition
+- Snippets
+- REPL integration
+- Interactive Debugger
+- REPL history
+- Inline evaluation
+- Macro expand
+- Disassemble
+- Inspector
+- Hover Text
+- Rename function args and let bindings
+- Code folding
+
+<img src="assets/commonlisp-vscode-alive.png" style="width: 800px"/>
+
+[commonlisp-vscode
+extension](https://marketplace.visualstudio.com/items?itemName=ailisp.commonlisp-vscode)
+works via the [cl-lsp](https://github.com/ailisp/cl-lsp) language server
+and it's possible to write LSP client that works in other editors.  It
+depends heavily on [Roswell](https://roswell.github.io/Home.html). It
+currently supports:
+- running a REPL
+- evaluate code
+- auto indent,
+- code completion
+- go to definition
+- documentation on hover
+
+<img src="assets/commonlisp-vscode.png" style="width: 800px"/>
+
+### Using VSCode with Alive
+
+See ["Using VSCode with Alive"](vscode-alive.html).
 
 ## Eclipse
 
@@ -100,7 +145,7 @@ So you probably want a shell alias:
 
     alias ilem='lem --eval "(lem-lisp-mode:start-lisp-repl t)"'
 
-<img src="assets/lem1.png" style="width: 800px" title="Lem's REPL"/>
+<img src="assets/lem-terminal.png" style="width: 800px" title="Lem's REPL"/>
 
 
 ## Atom
@@ -128,14 +173,6 @@ inspection.
 
 <img src="assets/editor-sublime.png"
      style="width: 800px"/>
-
-## VSCode
-
-[VSCode](https://code.visualstudio.com/) with [commonlisp-vscode extension](https://marketplace.visualstudio.com/items?itemName=ailisp.commonlisp-vscode)
-supports running a REPL, evaluate code, auto indent, code completion, go to definition, documentation on hover, etc.
-It's based on [cl-lsp](https://github.com/ailisp/cl-lsp) language server and it's possible to write LSP client that works in other editors.
-
-<img src="assets/commonlisp-vscode.png" style="width: 800px"/>
 
 ## LispWorks (proprietary)
 
