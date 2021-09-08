@@ -1254,7 +1254,7 @@ It is like "continue" and loop doesn't have it.
 
 `iterate` also has `first-iteration-p` and `(if-first-time then else)`.
 
-See [control flow](https://common-lisp.net/project/iterate/doc/Control-Flow.html#Control-Flow
+See [control flow](https://common-lisp.net/project/iterate/doc/Control-Flow.html#Control-Flow).
 
 
 ### Generators
@@ -1272,6 +1272,8 @@ Use `generate` and `next`. A generator is lazy, it goes to the next value when s
 
 ### Variable backtracking (`previous`) VS parallel binding
 
+`iterate` allows us to get the previous value of a variable:
+
 ~~~lisp
 (iter (for el in '(a b c d e))
       (for prev-el previous el)
@@ -1279,7 +1281,7 @@ Use `generate` and `next`. A generator is lazy, it goes to the next value when s
 ;; => ((A NIL) (B A) (C B) (D C) (E D))
 ~~~
 
-although it is doable with `loop`'s parallel binding `and`, which is unsupported in `iterate`:
+In this case however we can do it with `loop`'s parallel binding `and`, which is unsupported in `iterate`:
 
 ~~~lisp
 (loop for el in '(a b c d e)
@@ -1307,7 +1309,7 @@ although it is doable with `loop`'s parallel binding `and`, which is unsupported
 
 (`adjoin` is a set operation)
 
-- `loop` has summing, counting, maximizing, and minimizing. `iterate` also includes `multiplying` and `reducing`. reducing is the generalized reduction builder:
+- `loop` has `summing`, `counting`, `maximizing`, and `minimizing`. `iterate` also includes `multiplying` and `reducing`. reducing is the generalized reduction builder:
 
 ~~~lisp
 (iter (with dividend = 100)
@@ -1330,7 +1332,7 @@ although it is doable with `loop`'s parallel binding `and`, which is unsupported
 
 but [there is more to it, see the documentation](https://common-lisp.net/project/iterate/doc/Rolling-Your-Own.html#Rolling-Your-Own).
 
-We saw libraries extending `loop`, for example CLSQL, but they are
+We saw libraries extending `loop`, for example [CLSQL](http://clsql.kpe.io/manual/loop-tuples.html), but they are
 full of feature flag checks (`#+(or allegro clisp-aloop cmu openmcl
 sbcl scl)`) and they call internal modules
 (`ansi-loop::add-loop-path`, `sb-loop::add-loop-path` etc).
