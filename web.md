@@ -1015,7 +1015,7 @@ source-to-image.
 package manager, that can be installed on top of an existing OS, and a
 whole distro that supports declarative system configuration. It allows
 to ship self-contained tarballs, which also contain system
-dependencies. For an example, see the [Next browser](https://github.com/atlas-engineer/next/).
+dependencies. For an example, see the [Nyxt browser](https://github.com/atlas-engineer/nyxt/).
 
 
 ### Deploying on Heroku and other services
