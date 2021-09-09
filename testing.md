@@ -9,7 +9,7 @@ integration services like Travis CI and Coveralls.
 
 [Prove](https://github.com/fukamachi/prove) used to be a widely liked testing framework but its repository was later archived. Its successor [Rove](https://github.com/fukamachi/rove) is not stable enough, so we will be using a mature testing framework called [FiveAM](https://github.com/lispci/fiveam). There are also some [other testing frameworks](https://github.com/CodyReichert/awesome-cl#unit-testing) to explore.
 
-FiveAM does not have many documentation resources. However, it has really good docstrings built-in. Most of the time, they would provide sufficient information that answers your questions. 
+FiveAM only has an [API doc](https://common-lisp.net/project/fiveam/docs/index.html) as official documentation. You may inspect it or simply read the docstrings in code. Most of the time, they would provide sufficient information that answers your questions. 
 
 ## Testing with FiveAM
 
@@ -125,7 +125,9 @@ The macro `test` provides a simple way to define a test with given name:
 
 In the above code, 3 test was defined with 5 checks in total. Some checks are actually redundant for the sake of demonstration. You may put all the checks in one big test, or in multiple scenarios. It is up to you.
 
-The macro `test` is a convenience for `def-test` to define simple tests. You may read its docstring for a more complete introduction, but please note that it is not recommended to use its fixture feature according to [this issue](https://github.com/lispci/fiveam/issues/31).
+The macro `test` is a convenience for `def-test` to define simple tests. You may read its docstring for a more complete introduction.
+
+FiveAM also provides a feature called fixture for setting up testing context. It is nothing more than a macro and is not fully-featured compared with other libraries such as Mockingbird, so it is not recommended to use it.
 
 ### Running tests
 
