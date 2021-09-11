@@ -963,8 +963,7 @@ Description=stupid simple example
 WorkingDirectory=/path/to/your/app
 ExecStart=/usr/local/bin/sthg sthg
 Type=simple
-Restart=always
-RestartSec=10
+Restart=on-failure
 ```
 
 Then we have a command to start it:
@@ -983,7 +982,7 @@ and Systemd can handle **logging** (we write to stdout or stderr, it writes logs
 
 and it handles crashes and **restarts the app**:
 
-    Restart=always
+    Restart=on-failure
 
 and it can **start the app after a reboot**:
 
@@ -994,12 +993,16 @@ to enable it:
 
     sudo systemctl enable my-app.service
 
+See more: [https://www.freedesktop.org/software/systemd/man/systemd.service.html](https://www.freedesktop.org/software/systemd/man/systemd.service.html).
 
 ### With Docker
 
 There are several Docker images for Common
 Lisp. For example:
 
+- [clfoundation/sbcl](https://hub.docker.com/r/clfoundation/sbcl/)
+includes the latest version of SBCL, many OS packages useful for CI
+purposes, and a script to install Quicklisp.
 - [40ants/base-lisp-image](https://github.com/40ants/base-lisp-image)
 is based on Ubuntu LTS and includes SBCL, CCL, Quicklisp, Qlot and
 Roswell.
