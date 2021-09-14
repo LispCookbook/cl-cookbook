@@ -244,7 +244,7 @@ TODO
 
 ## Testing with Prove
 
-> Warning: Prove is obsolete. This section is kept but it is not encouraged to use it.
+> Warning: Prove is obsolete and superseded by Rove, by the same author. Both have similar APIs. This section is kept as an overview of Prove until a rewrite is done for Rove.
 
 ### Install and load
 
