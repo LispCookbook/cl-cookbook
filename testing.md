@@ -201,10 +201,11 @@ If we mess `read-file-as-string-non-existing-file` up by replacing `/tmp/non-exi
 ; NIL
 ~~~
 
-The behavior of suite/test runner can be customized by the `*on-failure*` variable, which controls what to do when check failure happens. It can be set to one of the following values:
-- `:debug` to drop to debugger.
-- `:backtrace` to print a backtrace.
-- `NIl` (default) to simply continue.
+The behavior of the suite/test runner can be customized by the `*on-failure*` variable, which controls what to do when a check failure happens. It can be set to one of the following values:
+
+- `:debug` to drop to the debugger.
+- `:backtrace` to print a backtrace and continue.
+- `NIl` (default) to simply continue and print the report.
 
 ### Custom and shorter tests explanations
 
@@ -438,11 +439,21 @@ inspect the stack trace and go to the erroneous line instantly, fix it
 and re-run the test from where it left off, by choosing the suggested
 *restart*.
 
-With Prove, set `prove:*debug-on-error*` to `t`.
+With FiveAM, set `fiveam:*on-failure*` to `:debug`:
+
+~~~lisp
+(setf fiveam:*on-failure* :debug)
+~~~
+
+You will be dropped into the interactive debugger if an error occurs.
+
+Use `:backtrace` to print a backtrace, continue to run the following tests and print FiveAM's report.
+
+The default is `nil`: carry on the tests execution and print the report.
 
 <!-- epub-exclude-start -->
 
-Below is a short screencast showing all this in action (with FiveAM):
+Below is a short screencast showing all this in action:
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/KsHxgP3SRTs" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
