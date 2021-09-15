@@ -206,6 +206,74 @@ The behavior of suite/test runner can be customized by the `*on-failure*` variab
 - `:backtrace` to print a backtrace.
 - `NIl` (default) to simply continue.
 
+### Custom and shorter tests explanations
+
+We said earlier that a check accepts an optional custom reason that can be formatted with `format` directives. Here's a simple example.
+
+We are testing a math function:
+
+~~~lisp
+(test simple-maths
+  (is (= 3 (+ 1 1))))
+~~~
+
+When we `run!` it, we see this somewhat lengthy but informative output (and that's very important):
+
+```
+Running test suite NIL
+ Running test SIMPLE-MATHS f
+ Did 1 check.
+    Pass: 0 ( 0%)
+    Skip: 0 ( 0%)
+    Fail: 1 (100%)
+
+ Failure Details:
+ --------------------------------
+ SIMPLE-MATHS []:
+
+(+ 1 1)
+
+ evaluated to
+
+2
+
+ which is not
+
+=
+
+ to
+
+3
+
+
+ --------------------------------
+```
+
+Now, we can give it a custom reason:
+
+~~~lisp
+(test simple-maths
+  (is (= 3 (+ 1 1))
+      "Maths should work, right? ~a. Another parameter is: ~S" t :foo))
+~~~
+
+
+And we will see:
+
+~~~
+Running test suite NIL
+ Running test SIMPLE-MATHS f
+ Did 1 check.
+    Pass: 0 ( 0%)
+    Skip: 0 ( 0%)
+    Fail: 1 (100%)
+
+ Failure Details:
+ --------------------------------
+ SIMPLE-MATHS []:
+      Maths should work, right? T. Another parameter is: :FOO
+ --------------------------------
+~~~
 
 ### Fixtures
 
