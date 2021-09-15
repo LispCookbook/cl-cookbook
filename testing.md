@@ -121,53 +121,44 @@ Before diving into tests, here is a brief introduction of the available checks y
 * The macro `skip` takes a reason and generates a `test-skipped` result.
 * The macro `signals` checks if the given condition was signaled during execution.
 
-Please note that all the checks accept an optional reason, as string, that can be formatted with format directives, as in:
+Please note that all the checks accept an optional reason, as string, that can be formatted with format directives (see more below). When omitted, FiveAM generates a report that explains the failure according to the arguments passed to the function.
+
+The `test` macro provides a simple way to define a test with a name.
+
+*Note that below, we expect two files to exist: `/tmp/hello.txt` should contain "hello" and `/tmp/empty.txt` should be empty.*
 
 ~~~lisp
-(is (null result)
-  "Should return NIL when :ERROR-IF-NOT-EXISTS is set to NIL")
-~~~
+;; Our first "base" case: we read a file that contains "hello".
+(test read-file-as-string-normal-file
+  (let ((result (read-file-as-string "/tmp/hello.txt")))
+    ;; Tip: put the expected value as the first argument of = or equal, string= etc.
+    ;; FiveAM generates a more readable report following this convention.
+    (is (string= "hello" result))))
 
-See more below.
+;; We read an empty file.
+(test read-file-as-string-empty-file
+  (let ((result (read-file-as-string "/tmp/empty.txt")))
+    (is (not (null result)))
+    ;; The reason can be used to provide formatted text.
+    (is (= 0 (length result)))
+        "Empty string expected but got ~a" result))
 
-When omitted, FiveAM generates a report according to arguments passed to the function. You may read the `check.lisp` file for more helpers.
-
-The macro `test` provides a simple way to define a test with given name:
-
-~~~lisp
+;; Now we test that reading a non-existing file signals our condition.
 (test read-file-as-string-non-existing-file
-  ;; IS accepts a boolean expression with optional reason.
   (let ((result (read-file-as-string "/tmp/non-existing-file.txt"
                                      :error-if-not-exists nil)))
     (is (null result)
-      "Should return NIL when :ERROR-IF-NOT-EXISTS is set to NIL"))
-  ;; SIGNALS accepts unquoted name of condition and body to evaluate.
+      "Reading a file should return NIL when :ERROR-IF-NOT-EXISTS is set to NIL"))
+  ;; SIGNALS accepts the unquoted name of a condition and a body to evaluate.
   ;; Here it checks if FILE-NOT-EXISTING-ERROR is signaled.
   (signals file-not-existing-error
     (read-file-as-string "/tmp/non-existing-file.txt"
                          :error-if-not-exists t)))
-
-(test read-file-as-string-empty-file 
-  (let ((result (read-file-as-string "/tmp/empty.txt")))
-    ;; The reason can be omitted.
-    (is (not (null result)))
-    ;; The reason can be used to provide formatted text.
-    (is (= 0 (length result)))
-    "Empty string expected but got \"~a\""))
-
-
-(test read-file-as-string-normal-file
-  (let ((result (read-file-as-string "/tmp/hello.txt")))
-    ;; Convention: put expected value as the first arg of =, or equal, string= etc.
-    ;; FiveAM generates a more readable report following this convention.
-    (is (string= "hello" result))))
 ~~~
 
-In the above code, 3 test was defined with 5 checks in total. Some checks are actually redundant for the sake of demonstration. You may put all the checks in one big test, or in multiple scenarios. It is up to you.
+In the above code, 3 test were defined with 5 checks in total. Some checks were actually redundant for the sake of demonstration. You may put all the checks in one big test, or in multiple scenarios. It is up to you.
 
-The macro `test` is a convenience for `def-test` to define simple tests. You may read its docstring for a more complete introduction.
-
-FiveAM also provides a feature called fixture for setting up testing context. It is nothing more than a macro and is not fully-featured compared with other libraries such as Mockingbird, so it is not recommended to use it.
+The macro `test` is a convenience for `def-test` to define simple tests. You may read its docstring for a more complete introduction, for example to read about `:depends-on`.
 
 ### Running tests
 
