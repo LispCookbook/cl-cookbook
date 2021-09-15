@@ -121,6 +121,12 @@ Before diving into tests, here is a brief introduction of the available checks y
 * The macro `skip` takes a reason and generates a `test-skipped` result.
 * The macro `signals` checks if the given condition was signaled during execution.
 
+There is also:
+
+* `finishes`: passes if the assertion body executes to normal completion. In other words if body does signal, return-from or throw, then this test fails.
+* `pass`: just make the test pass.
+* `is-true`: like `is`, but unlike it this check does not inspect the assertion body to determine how to report the failure. Similarly, there is `is-false`.
+
 Please note that all the checks accept an optional reason, as string, that can be formatted with format directives (see more below). When omitted, FiveAM generates a report that explains the failure according to the arguments passed to the function.
 
 The `test` macro provides a simple way to define a test with a name.
