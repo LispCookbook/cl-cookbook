@@ -207,6 +207,19 @@ The behavior of the suite/test runner can be customized by the `*on-failure*` va
 - `:backtrace` to print a backtrace and continue.
 - `NIl` (default) to simply continue and print the report.
 
+There is also `*on-error*`.
+
+#### Running tests as they are compiled
+
+Under normal circumstances, a test is written and compiled (with the
+usual `C-c C-c` in Slime) separately from the moment it is run. If you
+want to run the test when it is defined (with `C-c C-c`), set this:
+
+~~~lisp
+(setf fiveam:*run-test-when-defined* t)
+~~~
+
+
 ### Custom and shorter tests explanations
 
 We said earlier that a check accepts an optional custom reason that can be formatted with `format` directives. Here's a simple example.
@@ -350,77 +363,6 @@ The following code just provides a proof-of-concept implementation. You may need
 ; Test READ-FILE-AS-STRING-NON-EXISTING-FILE passed => NIL
 ~~~
 
-## Testing with Prove
-
-> Warning: Prove is obsolete and superseded by Rove, by the same author. Both have similar APIs. This section is kept as an overview of Prove until a rewrite is done for Rove.
-
-### Install and load
-
-`Prove` is in Quicklisp:
-
-~~~lisp
-(ql:quickload "prove")
-~~~
-
-This command installs `prove` if necessary, and loads it.
-
-### Write a test file
-
-~~~lisp
-(in-package :cl-user)
-(defpackage my-test
-  (:use :cl
-        :prove))
-(in-package :my-test)
-
-(subtest "Showing off Prove"
-  (ok (not (find 4 '(1 2 3))))
-  (is 4 4)
-  (isnt 1 #\1))
-
-~~~
-
-Prove's API contains the following testing functions: `ok`, `is`,
-`isnt`, `is-values`, `is-type`, `like` (for regexps), `is-print`
-(checks the standard output), `is-error`, `is-expand`, `pass`, `fail`,
-`skip`, `subtest`.
-
-
-### Run a test file
-
-~~~lisp
-(prove:run #P"myapp/tests/my-test.lisp")
-(prove:run #P"myapp/tests/my-test.lisp" :reporter :list)
-~~~
-
-We get an output like:
-
-<img src="assets/prove-report.png"
-     style="max-width: 800px"/>
-
-### Run one test
-
-You can directly run one test by compiling it. With Slime, use the
-usual `C-c C-c`.
-
-
-### More about Prove
-
-`Prove` can also:
-
-* be run on **Travis CI**,
-* **colorize** the output,
-* report **tests duration**,
-* change the default test function,
-* set a threshold for slow tests,
-* invoke the **CL debugger** whenever getting an error during running tests,
-* integrate with **ASDF** so than we can execute `(asdf:test-system)` or
-  `(prove:run)` in the REPL (such configuration is provided by
-  [cl-project](https://github.com/fukamachi/cl-project), by the same
-  author).
-
-See [Prove's documentation](https://github.com/fukamachi/prove)!
-
 
 ## Interactively fixing unit tests
 
@@ -491,7 +433,7 @@ optimization quality set to 3.
 (asdf:oos 'asdf:load-op :cl-ppcre-test :force t)
 
 ;;; Run the test suite.
-(prove:run :yoursystem-test)
+(fiveam:run! yoursystem-test)
 ~~~
 
 Produce a coverage report, set the output directory:
@@ -574,7 +516,7 @@ env:
   global:
     - PATH=~/.roswell/bin:$PATH
     - ROSWELL_INSTALL_DIR=$HOME/.roswell
-#    - COVERAGE_EXCLUDE=t  # for prove or rove
+#    - COVERAGE_EXCLUDE=t  # for rove
   jobs:
     # The implementation and whether coverage is send to coveralls are controlled with these environmental variables
     - LISP=sbcl-bin COVERALLS=true
@@ -617,7 +559,6 @@ cache:
 install:
   - curl -L https://raw.githubusercontent.com/roswell/roswell/release/scripts/install-for-ci.sh | sh
   - ros install ci-utils #for run-fiveam
-#  - ros install prove #for run-prove
 #  - ros install rove #for [run-] rove
 
   # If asdf 3.16 or higher is needed, uncomment the following lines
@@ -626,7 +567,6 @@ install:
 
 script:
   - run-fiveam -e t -l foo/test :foo-tests
-  #- run-prove foo.asd
   #- rove foo.asd
 ```
 
