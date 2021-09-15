@@ -238,10 +238,6 @@ The following code just provides a proof-of-concept implementation. You may need
 ; Test READ-FILE-AS-STRING-NON-EXISTING-FILE passed => NIL
 ~~~
 
-## Mocking with Mockingbird
-
-TODO
-
 ## Testing with Prove
 
 > Warning: Prove is obsolete and superseded by Rove, by the same author. Both have similar APIs. This section is kept as an overview of Prove until a rewrite is done for Rove.
