@@ -295,14 +295,6 @@ Mockingbird (and maybe other libraries), in addition to the basic
 feature descibed above, also allows to count the number of times a
 function was called, with what arguments, and so on.
 
-### (Optional) Running tests using Slite
-
-[Slite](https://github.com/tdrhq/slite) stands for SLIme TEst runner. It lets you run FiveAM tests through Emacs. After install it and press keystroke `C-c v` and input `(slite:run-all-fiveam-tests)` for running all tests, or `(fiveam:run test-suite-name)` for running a specific suite/test.
-
-It consists of an ASDF system and a Emacs package. As for September 2021, neither can be installed via Quicklisp or MELPA.
-
-Please refer to its [repo page](https://github.com/tdrhq/slite) for instructions.
-
 ### ASDF integration
 
 So it would be nice to provide a one-line trigger to test our `my-system` system. Recall that we said it is better to provide a root suite? Here is the reason:
@@ -762,7 +754,13 @@ When the pipelines pass, you will see:
 
 You now have a ready to use Gitlab CI.
 
-# References
+## Emacs integration: running tests using Slite
+
+[Slite](https://github.com/tdrhq/slite) stands for SLIme TEst runner. It allows you to see the summary of test failures, jump to test definitions, rerun tests with the debugger… all from inside Emacs. We get a dashboard-like buffer with green and red badges, from where we can act on tests. It makes the testing process *even more* integrated and interactive.
+
+It consists of an ASDF system and an Emacs package. It is a new project (it appeared mid 2021) so, as of September 2021, neither can be installed via Quicklisp or MELPA yet. Please refer to its [repository](https://github.com/tdrhq/slite) for instructions.
+
+## References
 
 - the [CL Foundation Docker images](https://hub.docker.com/u/clfoundation)
 - [Tutorial: Working with FiveAM](http://turtleware.eu/posts/Tutorial-Working-with-FiveAM.html)
