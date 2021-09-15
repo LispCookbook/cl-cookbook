@@ -206,6 +206,26 @@ The behavior of suite/test runner can be customized by the `*on-failure*` variab
 - `:backtrace` to print a backtrace.
 - `NIl` (default) to simply continue.
 
+
+### Fixtures
+
+FiveAM also provides a feature called **fixtures** for setting up
+testing context. The goal is to ensure that some functions are not
+called and always return the same result. Think functions hitting the
+network: you want to isolate the network call in a small function and
+write a fixture so that in your tests, this function always returns
+the same, known result. (But if you do so, you might also need an "end
+to end" test that tests with real data and all your code…)
+
+However, FiveAM's fixture system is nothing more than a macro, it is
+not fully-featured compared to other libraries such as
+[Mockingbird](https://github.com/Chream/mockingbird), and even
+FiveAM's maintainer encourages to "just use a macro" instead.
+
+Mockingbird (and maybe other libraries), in addition to the basic
+feature descibed above, also allows to count the number of times a
+function was called, with what arguments, and so on.
+
 ### (Optional) Running tests using Slite
 
 [Slite](https://github.com/tdrhq/slite) stands for SLIme TEst runner. It lets you run FiveAM tests through Emacs. After install it and press keystroke `C-c v` and input `(slite:run-all-fiveam-tests)` for running all tests, or `(fiveam:run test-suite-name)` for running a specific suite/test.
