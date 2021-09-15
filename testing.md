@@ -308,6 +308,45 @@ Mockingbird (and maybe other libraries), in addition to the basic
 feature descibed above, also allows to count the number of times a
 function was called, with what arguments, and so on.
 
+### Random checking
+
+The goal of random testing is to assist the developer in generating
+test cases, and thus, to find cases that the developer would not have
+thought about.
+
+We have a few data generators at our disposal, for example:
+
+~~~lisp
+(gen-float)
+#<CLOSURE (LAMBDA () :IN GEN-FLOAT) {1005A906AB}>
+
+(funcall (gen-float))
+9.220082e37
+
+(funcall (gen-integer :max 27 :min -16))
+26
+~~~
+
+or again, `gen-string`, `gen-list`, `gen-tree`, `gen-buffer`, `gen-character`.
+
+And we have a function to run 100 checks, taking each turn a new value from the given generators: `for-all`:
+
+~~~lisp
+(test randomtest
+  (for-all ((a (gen-integer :min 1 :max 10))
+            (b (gen-integer :min 1 :max 10)))
+    "Test random tests."
+    (is (<= a b))))
+~~~
+
+When you `run! 'randomtest` this, I expect you will hit an error. You can't
+possibly always get `a` lower than `b`, can you?
+
+For more, see [FiveAM's documentation](https://common-lisp.net/project/fiveam/docs/Checks.html#Random_0020_0028QuickCheck-ish_0029_0020testing).
+
+See also [cl-quickcheck](https://github.com/mcandre/cl-quickcheck) and [Check-it](https://github.com/DalekBaldwin/check-it), inspired by Haskell's [QuickCheck](https://en.wikipedia.org/wiki/QuickCheck) test framework.
+
+
 ### ASDF integration
 
 So it would be nice to provide a one-line trigger to test our `my-system` system. Recall that we said it is better to provide a root suite? Here is the reason:
