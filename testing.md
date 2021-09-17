@@ -20,7 +20,7 @@ FiveAM has an [API documentation](https://common-lisp.net/project/fiveam/docs/in
 
 FiveAM has 3 levels of abstraction: check, test and suite. As you may have guessed:
 
-1. A **check** is a single assertion that asserts a boolean value. The most used check is `is`, followed by an assertion of yours. For example, `(is (= 2 (+ 1 1)))`.
+1. A **check** is a single assertion that checks that its argument is truthy. The most used check is `is`. For example, `(is (= 2 (+ 1 1)))`.
 2. A **test** is the smallest runnable unit. A test case may contain multiple checks. Any check failure leads to the failure of the whole test.
 3. A **suite** is a collection of tests. When a suite is run, all tests inside would be performed. A suite allows paternity, which means that running a suite will run all the tests defined in it and in its children suites.
 
@@ -58,10 +58,10 @@ the function will return NIL in that case."
     (t nil)))
 ~~~
 
-We will test that code:
+We will write tests for that code. In particular, we must ensure:
 
-- we must ensure that the content read in a file is the expected content,
-- we must test that the condition is signaled if the file doesn't exist.
+- that the content read in a file is the expected content,
+- that the condition is signaled if the file doesn't exist.
 
 
 ### Install and load
