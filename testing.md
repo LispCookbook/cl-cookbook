@@ -117,9 +117,9 @@ Here a new suite named `read-file-as-string` has been defined. It is declared to
 
 Before diving into tests, here is a brief introduction of the available checks you may use inside tests:
 
-* The macro `is` might be the mostly used check. It simply checks if the given expression returns a true value and generates a `test-passed` or `test-failure` result accordingly.
-* The macro `skip` takes a reason and generates a `test-skipped` result.
-* The macro `signals` checks if the given condition was signaled during execution.
+* The `is` macro is likely the most used check. It simply checks if the given expression returns a true value and generates a `test-passed` or `test-failure` result accordingly.
+* The `skip` macro takes a reason and generates a `test-skipped` result.
+* The `signals` macro checks if the given condition was signaled during execution.
 
 There is also:
 
