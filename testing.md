@@ -3,22 +3,28 @@ title: Testing
 ---
 
 So you want to easily test the code you're writing? The following
-recipes cover how to write automated tests and see their code
+recipe covers how to write automated tests and see their code
 coverage. We also give pointers to plug those in modern continuous
-integration services like Travis CI and Coveralls.
+integration services like GitHub Actions, Gitlab CI, Travis CI or Coveralls.
 
-[Prove](https://github.com/fukamachi/prove) used to be a widely liked testing framework but its repository was later archived. Its successor [Rove](https://github.com/fukamachi/rove) is not stable enough, so we will be using a mature testing framework called [FiveAM](https://github.com/lispci/fiveam). There are also some [other testing frameworks](https://github.com/CodyReichert/awesome-cl#unit-testing) to explore.
+We will be using a mature testing framework called
+[FiveAM](https://github.com/lispci/fiveam). It supports test suites,
+random testing, test fixtures (to a certain extent) and, of course,
+interactive development.
 
-FiveAM only has an [API doc](https://common-lisp.net/project/fiveam/docs/index.html) as official documentation. You may inspect it or simply read the docstrings in code. Most of the time, they would provide sufficient information that answers your questions. 
+Previously on the Cookbook, the recipe was cooked with [Prove](https://github.com/fukamachi/prove). It used to be a widely liked testing framework but, because of some shortcomings, its repository was later archived. Its successor [Rove](https://github.com/fukamachi/rove) is not stable enough and lacks some features, so we didn't pick it. There are also some [other testing frameworks](https://github.com/CodyReichert/awesome-cl#unit-testing) to explore if you feel like it.
+
+FiveAM has an [API documentation](https://common-lisp.net/project/fiveam/docs/index.html). You may inspect it or simply read the docstrings in code. Most of the time, they would provide sufficient information that answers your questions… if you didn't find them here. Let's get started.
 
 ## Testing with FiveAM
 
 FiveAM has 3 levels of abstraction: check, test and suite. As you may have guessed:
-1. A check is a single assertion that asserts a boolean value. 
-2. A test is the smallest runnable unit. A test case that may contain multiple checks. Any check failure leads to failure of the whole test.
-3. A suite is a collection of tests. When a suite is run, all tests inside would be performed. Suite allows paternity, which means that running a suite will run all the tests defined in it and in its children suites.
 
-A simplest code sample containing 3 basic blocks mentioned above can shown as below:
+1. A **check** is a single assertion that checks that its argument is truthy. The most used check is `is`. For example, `(is (= 2 (+ 1 1)))`.
+2. A **test** is the smallest runnable unit. A test case may contain multiple checks. Any check failure leads to the failure of the whole test.
+3. A **suite** is a collection of tests. When a suite is run, all tests inside would be performed. A suite allows paternity, which means that running a suite will run all the tests defined in it and in its children suites.
+
+A simple code sample containing the 3 basic blocks mentioned above can be shown as follows:
 
 ~~~lisp
 (def-suite* my-suite)
@@ -29,17 +35,20 @@ A simplest code sample containing 3 basic blocks mentioned above can shown as be
 
 It is totally up to the user to decide the hierarchy of tests and suites. Here we mainly focus on the usage of FiveAM.
 
-Suppose we have built a rather complex system and the following functions is part of it:
+Suppose we have built a rather complex system and the following functions are part of it:
 
 ~~~lisp
+;; We have a custom "file doesn't exist" condition.
 (define-condition file-not-existing-error (error)
   ((filename :type string :initarg :filename :reader filename)))
 
+;; We have a function that tries to read a file and signals the above condition
+;; if the file doesn't exist.
 (defun read-file-as-string (filename &key (error-if-not-exists t))
-  "Read file content as string. FILENAME specifies the path of file. 
-  
-Keyword ERROR-IF-NOT-EXISTS specifies the operation to perform when the file 
-is not found. T (by default) means an error will be signaled. When given NIL, 
+  "Read file content as string. FILENAME specifies the path of file.
+
+Keyword ERROR-IF-NOT-EXISTS specifies the operation to perform when the file
+is not found. T (by default) means an error will be signaled. When given NIL,
 the function will return NIL in that case."
   (cond
     ((uiop:file-exists-p filename)
@@ -48,6 +57,12 @@ the function will return NIL in that case."
      (error 'file-not-existing-error :filename filename))
     (t nil)))
 ~~~
+
+We will write tests for that code. In particular, we must ensure:
+
+- that the content read in a file is the expected content,
+- that the condition is signaled if the file doesn't exist.
+
 
 ### Install and load
 
@@ -59,75 +74,97 @@ the function will return NIL in that case."
 
 The package is named `fiveam` with a nickname `5am`. For the sake of simplicity, we will ignore the package prefix in the following code samples.
 
-### Defining suites
+It is like we `:use`d fiveam in our test package definition. You
+can also follow along in the REPL with `(use-package :fiveam)`.
+
+Here is a package definition you can use:
+
+```lisp
+(in-package :cl-user)
+(defpackage my-fiveam-test
+  (:use :cl
+        :fiveam))
+(in-package :my-fiveam-test)
+```
+
+### Defining suites (`def-suite`, `def-suite*`)
 
 Testing in FiveAM usually starts by defining a suite. A suite helps separating tests to smaller collections that makes them more organized. It is highly recommended to define a single *root* suite for the sake of ASDF integration. We will talk about it later, now let's focus on the testing itself.
 
 The code below defines a suite named `my-system`. We will use it as the root suite for the whole system.
 
 ~~~lisp
-(def-suite my-system)
+(def-suite my-system
+  :description "Test my system")
 ~~~
 
-Then let's define another suite for testing `read-file-as-string` function.
+Then let's define another suite for testing the `read-file-as-string` function.
 
 ~~~lisp
 ;; Define a suite and set it as the default for the following tests.
-(def-suite read-file-as-string :in my-system)
+(def-suite read-file-as-string
+  :description "Test the read-file-as-string function."
+  :in my-system)
 (in-suite read-file-as-string)
 
 ;; Alternatively, the following line is a combination of the 2 lines above.
 (def-suite* read-file-as-string :in my-system)
 ~~~
 
-Here a new suite named `read-file-as-string` has been defined. It is declared to be a child suite of `my-system` as specified by the `:in` keyword. The macro `in-suite` sets it as the default suite for test defined later.
+Here a new suite named `read-file-as-string` has been defined. It is declared to be a child suite of `my-system` as specified by the `:in` keyword. The macro `in-suite` sets it as the default suite for the tests defined later.
 
 ### Defining tests
 
-Before diving into tests, here is a brief introduction of checks you may use inside tests:
+Before diving into tests, here is a brief introduction of the available checks you may use inside tests:
 
-* The macro `is` might be the mostly used check. It simply checks if given expression returns a true value and generates a `test-passed` or `test-failure` result accordingly.
-* The macro `skip` takes a reason and generates a `test-skipped` result.
-* The macro `signals` checks if given condition is signaled during execution.
+* The `is` macro is likely the most used check. It simply checks if the given expression returns a true value and generates a `test-passed` or `test-failure` result accordingly.
+* The `skip` macro takes a reason and generates a `test-skipped` result.
+* The `signals` macro checks if the given condition was signaled during execution.
 
-Please note that all the checks accepts an optional reason that can be formatted. When omitted, FiveAM generates a report according to arguments passed to the function. You may read the `check.lisp` file for more helpers.
+There is also:
 
-The macro `test` provides a simple way to define a test with given name:
+* `finishes`: passes if the assertion body executes to normal completion. In other words if body does signal, return-from or throw, then this test fails.
+* `pass`: just make the test pass.
+* `is-true`: like `is`, but unlike it this check does not inspect the assertion body to determine how to report the failure. Similarly, there is `is-false`.
+
+Please note that all the checks accept an optional reason, as string, that can be formatted with format directives (see more below). When omitted, FiveAM generates a report that explains the failure according to the arguments passed to the function.
+
+The `test` macro provides a simple way to define a test with a name.
+
+*Note that below, we expect two files to exist: `/tmp/hello.txt` should contain "hello" and `/tmp/empty.txt` should be empty.*
 
 ~~~lisp
+;; Our first "base" case: we read a file that contains "hello".
+(test read-file-as-string-normal-file
+  (let ((result (read-file-as-string "/tmp/hello.txt")))
+    ;; Tip: put the expected value as the first argument of = or equal, string= etc.
+    ;; FiveAM generates a more readable report following this convention.
+    (is (string= "hello" result))))
+
+;; We read an empty file.
+(test read-file-as-string-empty-file
+  (let ((result (read-file-as-string "/tmp/empty.txt")))
+    (is (not (null result)))
+    ;; The reason can be used to provide formatted text.
+    (is (= 0 (length result)))
+        "Empty string expected but got ~a" result))
+
+;; Now we test that reading a non-existing file signals our condition.
 (test read-file-as-string-non-existing-file
-  ;; IS accepts a boolean expression with optional reason.
   (let ((result (read-file-as-string "/tmp/non-existing-file.txt"
                                      :error-if-not-exists nil)))
     (is (null result)
-      "Should return NIL when :ERROR-IF-NOT-EXISTS is set to NIL"))
-  ;; SIGNALS accepts unquoted name of condition and body to evaluate.
+      "Reading a file should return NIL when :ERROR-IF-NOT-EXISTS is set to NIL"))
+  ;; SIGNALS accepts the unquoted name of a condition and a body to evaluate.
   ;; Here it checks if FILE-NOT-EXISTING-ERROR is signaled.
   (signals file-not-existing-error
     (read-file-as-string "/tmp/non-existing-file.txt"
                          :error-if-not-exists t)))
-
-(test read-file-as-string-empty-file 
-  (let ((result (read-file-as-string "/tmp/empty.txt")))
-    ;; The reason can be omitted.
-    (is (not (null result)))
-    ;; The reason can be used to provide formatted text.
-    (is (= 0 (length result)))
-    "Empty string expected but got \"~a\""))
-
-
-(test read-file-as-string-normal-file
-  (let ((result (read-file-as-string "/tmp/hello.txt")))
-    ;; Convention: put expected value as the first arg of =, or equal, string= etc.
-    ;; FiveAM generates a more readable report following this convention.
-    (is (string= "hello" result))))
 ~~~
 
-In the above code, 3 test was defined with 5 checks in total. Some checks are actually redundant for the sake of demonstration. You may put all the checks in one big test, or in multiple scenarios. It is up to you.
+In the above code, 3 test were defined with 5 checks in total. Some checks were actually redundant for the sake of demonstration. You may put all the checks in one big test, or in multiple scenarios. It is up to you.
 
-The macro `test` is a convenience for `def-test` to define simple tests. You may read its docstring for a more complete introduction.
-
-FiveAM also provides a feature called fixture for setting up testing context. It is nothing more than a macro and is not fully-featured compared with other libraries such as Mockingbird, so it is not recommended to use it.
+The macro `test` is a convenience for `def-test` to define simple tests. You may read its docstring for a more complete introduction, for example to read about `:depends-on`.
 
 ### Running tests
 
@@ -170,18 +207,151 @@ If we mess `read-file-as-string-non-existing-file` up by replacing `/tmp/non-exi
 ; NIL
 ~~~
 
-The behavior of suite/test runner can be customized by the `*on-failure*` variable, which controls what to do when check failure happens. It can be set to one of the following values:
-- `:debug` to drop to debugger.
-- `:backtrace` to print a backtrace.
-- `NIl` (default) to simply continue.
+The behavior of the suite/test runner can be customized by the `*on-failure*` variable, which controls what to do when a check failure happens. It can be set to one of the following values:
 
-### (Optional) Running tests using Slite
+- `:debug` to drop to the debugger.
+- `:backtrace` to print a backtrace and continue.
+- `NIl` (default) to simply continue and print the report.
 
-[Slite](https://github.com/tdrhq/slite) stands for SLIme TEst runner. It lets you run FiveAM tests through Emacs. After install it and press keystroke `C-c v` and input `(slite:run-all-fiveam-tests)` for running all tests, or `(fiveam:run test-suite-name)` for running a specific suite/test.
+There is also `*on-error*`.
 
-It consists of an ASDF system and a Emacs package. As for September 2021, neither can be installed via Quicklisp or MELPA.
+#### Running tests as they are compiled
 
-Please refer to its [repo page](https://github.com/tdrhq/slite) for instructions.
+Under normal circumstances, a test is written and compiled (with the
+usual `C-c C-c` in Slime) separately from the moment it is run. If you
+want to run the test when it is defined (with `C-c C-c`), set this:
+
+~~~lisp
+(setf fiveam:*run-test-when-defined* t)
+~~~
+
+
+### Custom and shorter tests explanations
+
+We said earlier that a check accepts an optional custom reason that can be formatted with `format` directives. Here's a simple example.
+
+We are testing a math function:
+
+~~~lisp
+(test simple-maths
+  (is (= 3 (+ 1 1))))
+~~~
+
+When we `run!` it, we see this somewhat lengthy but informative output (and that's very important):
+
+```
+Running test suite NIL
+ Running test SIMPLE-MATHS f
+ Did 1 check.
+    Pass: 0 ( 0%)
+    Skip: 0 ( 0%)
+    Fail: 1 (100%)
+
+ Failure Details:
+ --------------------------------
+ SIMPLE-MATHS []:
+
+(+ 1 1)
+
+ evaluated to
+
+2
+
+ which is not
+
+=
+
+ to
+
+3
+
+
+ --------------------------------
+```
+
+Now, we can give it a custom reason:
+
+~~~lisp
+(test simple-maths
+  (is (= 3 (+ 1 1))
+      "Maths should work, right? ~a. Another parameter is: ~S" t :foo))
+~~~
+
+
+And we will see:
+
+~~~
+Running test suite NIL
+ Running test SIMPLE-MATHS f
+ Did 1 check.
+    Pass: 0 ( 0%)
+    Skip: 0 ( 0%)
+    Fail: 1 (100%)
+
+ Failure Details:
+ --------------------------------
+ SIMPLE-MATHS []:
+      Maths should work, right? T. Another parameter is: :FOO
+ --------------------------------
+~~~
+
+### Fixtures
+
+FiveAM also provides a feature called **fixtures** for setting up
+testing context. The goal is to ensure that some functions are not
+called and always return the same result. Think functions hitting the
+network: you want to isolate the network call in a small function and
+write a fixture so that in your tests, this function always returns
+the same, known result. (But if you do so, you might also need an "end
+to end" test that tests with real data and all your code…)
+
+However, FiveAM's fixture system is nothing more than a macro, it is
+not fully-featured compared to other libraries such as
+[Mockingbird](https://github.com/Chream/mockingbird), and even
+FiveAM's maintainer encourages to "just use a macro" instead.
+
+Mockingbird (and maybe other libraries), in addition to the basic
+feature descibed above, also allows to count the number of times a
+function was called, with what arguments, and so on.
+
+### Random checking
+
+The goal of random testing is to assist the developer in generating
+test cases, and thus, to find cases that the developer would not have
+thought about.
+
+We have a few data generators at our disposal, for example:
+
+~~~lisp
+(gen-float)
+#<CLOSURE (LAMBDA () :IN GEN-FLOAT) {1005A906AB}>
+
+(funcall (gen-float))
+9.220082e37
+
+(funcall (gen-integer :max 27 :min -16))
+26
+~~~
+
+or again, `gen-string`, `gen-list`, `gen-tree`, `gen-buffer`, `gen-character`.
+
+And we have a function to run 100 checks, taking each turn a new value from the given generators: `for-all`:
+
+~~~lisp
+(test randomtest
+  (for-all ((a (gen-integer :min 1 :max 10))
+            (b (gen-integer :min 1 :max 10)))
+    "Test random tests."
+    (is (<= a b))))
+~~~
+
+When you `run! 'randomtest` this, I expect you will hit an error. You can't
+possibly always get `a` lower than `b`, can you?
+
+For more, see [FiveAM's documentation](https://common-lisp.net/project/fiveam/docs/Checks.html#Random_0020_0028QuickCheck-ish_0029_0020testing).
+
+See also [cl-quickcheck](https://github.com/mcandre/cl-quickcheck) and [Check-it](https://github.com/DalekBaldwin/check-it), inspired by Haskell's [QuickCheck](https://en.wikipedia.org/wiki/QuickCheck) test framework.
+
 
 ### ASDF integration
 
@@ -238,77 +408,6 @@ The following code just provides a proof-of-concept implementation. You may need
 ; Test READ-FILE-AS-STRING-NON-EXISTING-FILE passed => NIL
 ~~~
 
-## Testing with Prove
-
-> Warning: Prove is obsolete and superseded by Rove, by the same author. Both have similar APIs. This section is kept as an overview of Prove until a rewrite is done for Rove.
-
-### Install and load
-
-`Prove` is in Quicklisp:
-
-~~~lisp
-(ql:quickload "prove")
-~~~
-
-This command installs `prove` if necessary, and loads it.
-
-### Write a test file
-
-~~~lisp
-(in-package :cl-user)
-(defpackage my-test
-  (:use :cl
-        :prove))
-(in-package :my-test)
-
-(subtest "Showing off Prove"
-  (ok (not (find 4 '(1 2 3))))
-  (is 4 4)
-  (isnt 1 #\1))
-
-~~~
-
-Prove's API contains the following testing functions: `ok`, `is`,
-`isnt`, `is-values`, `is-type`, `like` (for regexps), `is-print`
-(checks the standard output), `is-error`, `is-expand`, `pass`, `fail`,
-`skip`, `subtest`.
-
-
-### Run a test file
-
-~~~lisp
-(prove:run #P"myapp/tests/my-test.lisp")
-(prove:run #P"myapp/tests/my-test.lisp" :reporter :list)
-~~~
-
-We get an output like:
-
-<img src="assets/prove-report.png"
-     style="max-width: 800px"/>
-
-### Run one test
-
-You can directly run one test by compiling it. With Slime, use the
-usual `C-c C-c`.
-
-
-### More about Prove
-
-`Prove` can also:
-
-* be run on **Travis CI**,
-* **colorize** the output,
-* report **tests duration**,
-* change the default test function,
-* set a threshold for slow tests,
-* invoke the **CL debugger** whenever getting an error during running tests,
-* integrate with **ASDF** so than we can execute `(asdf:test-system)` or
-  `(prove:run)` in the REPL (such configuration is provided by
-  [cl-project](https://github.com/fukamachi/cl-project), by the same
-  author).
-
-See [Prove's documentation](https://github.com/fukamachi/prove)!
-
 
 ## Interactively fixing unit tests
 
@@ -319,11 +418,21 @@ inspect the stack trace and go to the erroneous line instantly, fix it
 and re-run the test from where it left off, by choosing the suggested
 *restart*.
 
-With Prove, set `prove:*debug-on-error*` to `t`.
+With FiveAM, set `fiveam:*on-failure*` to `:debug`:
+
+~~~lisp
+(setf fiveam:*on-failure* :debug)
+~~~
+
+You will be dropped into the interactive debugger if an error occurs.
+
+Use `:backtrace` to print a backtrace, continue to run the following tests and print FiveAM's report.
+
+The default is `nil`: carry on the tests execution and print the report.
 
 <!-- epub-exclude-start -->
 
-Below is a short screencast showing all this in action (with FiveAM):
+Below is a short screencast showing all this in action:
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/KsHxgP3SRTs" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
@@ -369,7 +478,7 @@ optimization quality set to 3.
 (asdf:oos 'asdf:load-op :cl-ppcre-test :force t)
 
 ;;; Run the test suite.
-(prove:run :yoursystem-test)
+(fiveam:run! yoursystem-test)
 ~~~
 
 Produce a coverage report, set the output directory:
@@ -452,7 +561,7 @@ env:
   global:
     - PATH=~/.roswell/bin:$PATH
     - ROSWELL_INSTALL_DIR=$HOME/.roswell
-#    - COVERAGE_EXCLUDE=t  # for prove or rove
+#    - COVERAGE_EXCLUDE=t  # for rove
   jobs:
     # The implementation and whether coverage is send to coveralls are controlled with these environmental variables
     - LISP=sbcl-bin COVERALLS=true
@@ -495,7 +604,6 @@ cache:
 install:
   - curl -L https://raw.githubusercontent.com/roswell/roswell/release/scripts/install-for-ci.sh | sh
   - ros install ci-utils #for run-fiveam
-#  - ros install prove #for run-prove
 #  - ros install rove #for [run-] rove
 
   # If asdf 3.16 or higher is needed, uncomment the following lines
@@ -504,7 +612,6 @@ install:
 
 script:
   - run-fiveam -e t -l foo/test :foo-tests
-  #- run-prove foo.asd
   #- rove foo.asd
 ```
 
@@ -632,7 +739,14 @@ When the pipelines pass, you will see:
 
 You now have a ready to use Gitlab CI.
 
-# References
+## Emacs integration: running tests using Slite
 
+[Slite](https://github.com/tdrhq/slite) stands for SLIme TEst runner. It allows you to see the summary of test failures, jump to test definitions, rerun tests with the debugger… all from inside Emacs. We get a dashboard-like buffer with green and red badges, from where we can act on tests. It makes the testing process *even more* integrated and interactive.
+
+It consists of an ASDF system and an Emacs package. It is a new project (it appeared mid 2021) so, as of September 2021, neither can be installed via Quicklisp or MELPA yet. Please refer to its [repository](https://github.com/tdrhq/slite) for instructions.
+
+## References
+
+- [Tutorial: Working with FiveAM](http://turtleware.eu/posts/Tutorial-Working-with-FiveAM.html), by Tomek "uint" Kurcz
+- [Comparison of Common Lisp Testing Frameworks](https://sabracrolleton.github.io/testing-framework), by Sabra Crolleton.
 - the [CL Foundation Docker images](https://hub.docker.com/u/clfoundation)
-- [Tutorial: Working with FiveAM](http://turtleware.eu/posts/Tutorial-Working-with-FiveAM.html)
