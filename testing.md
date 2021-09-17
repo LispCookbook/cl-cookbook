@@ -371,9 +371,64 @@ So it would be nice to provide a one-line trigger to test our `my-system` system
 
 The last line tells ASDF to load symbol `:my-system` from `my-system/test` package and call `fiveam:run!`. It fact, it is equivalent to `(run! 'my-system)` as mentioned above.
 
+### Running tests on the terminal
+
+Until now, we ran our tests from our editor's REPL. How can we run them from a terminal window?
+
+As always, the required steps are as follow:
+
+- start our Lisp
+- make sure Quicklisp is enabled (if we have external dependencies)
+- load our main system
+- load the test system
+- run the FiveAM tests.
+
+You could put them in a new `run-tests.lisp` file:
+
+~~~lisp
+(load "mysystem.lisp")
+(load "mysystem-tests.lisp") ;; <-- where all the FiveAM tests are written.
+(in-package :mysystem-tests)
+
+(run!)  ;; <-- run all the tests and print the report.
+~~~
+
+and you could invoke it like so, from a source file or from a Makefile:
+
+~~~lisp
+rlwrap sbcl --non-interactive --load mysystem.asd --eval '(ql:quickload :mysystem)' --load run-tests.lisp
+;; we assume Quicklisp is installed and loaded. This can be done in the Lisp startup file like .sbclrc.
+~~~
+
+Before going that route however, have a look at the `CI-Utils` tool
+that we use in the Continuous Integration section below. It provides a
+`run-fiveam` command that can do all that for you.
+
+But let us highlight something you'll have to take care of if you ran
+your tests like this: the **exit code**. Indeed, `(run!)` prints a
+report, but it doesn't say to your Lisp wether the tests were
+successful or not, and wether to exit with an exit code of 0 (for
+success) or more (for errors). So, if your testst were run on a CI
+system, the CI status would be always green, even if tests failed. To
+remedy that, replace `run!` by:
+
+~~~lisp
+(let ((result (run!)))
+  (cond
+    ((null result)
+     (log:info "Tests failed!")  ;; FiveAM printed the report already.
+     (uiop:quit 1))
+    (t
+     (log:info "All pass.")
+     (uiop:quit))))
+~~~
+
+Check with `echo $?` on your shell that the exit code is correct.
+
+
 ### Testing report customization
 
-It is possible to generate our own testing report. The macro `run!` is nothing more than a composition of `explain!` and `run`. 
+It is possible to generate our own testing report. The macro `run!` is nothing more than a composition of `explain!` and `run`.
 
 Instead of generating a testing report like its cousin `run!`, the function `run` runs suite or test passed in and returns a list of `test-result` instance, usually instances of `test-failure` or `test-passed` sub-classes.
 
