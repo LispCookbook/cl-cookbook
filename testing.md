@@ -211,7 +211,7 @@ The behavior of the suite/test runner can be customized by the `*on-failure*` va
 
 - `:debug` to drop to the debugger.
 - `:backtrace` to print a backtrace and continue.
-- `NIl` (default) to simply continue and print the report.
+- `NIL` (default) to simply continue and print the report.
 
 There is also `*on-error*`.
 
