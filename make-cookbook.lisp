@@ -17,6 +17,7 @@
    "editor-support.md"
    "emacs-ide.md"
    "vscode-alive.md"
+   "lispworks.md"
    "functions.md"
    "data-structures.md"
    "strings.md"
