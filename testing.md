@@ -805,3 +805,7 @@ It consists of an ASDF system and an Emacs package. It is a new project (it appe
 - [Tutorial: Working with FiveAM](http://turtleware.eu/posts/Tutorial-Working-with-FiveAM.html), by Tomek "uint" Kurcz
 - [Comparison of Common Lisp Testing Frameworks](https://sabracrolleton.github.io/testing-framework), by Sabra Crolleton.
 - the [CL Foundation Docker images](https://hub.docker.com/u/clfoundation)
+
+## See also
+
+- [cl-cookieproject](https://github.com/vindarel/cl-cookieproject), a project skeleton with a FiveAM tests structure.
