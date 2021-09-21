@@ -16,6 +16,7 @@
    "getting-started.md"
    "editor-support.md"
    "emacs-ide.md"
+   "vscode-alive.md"
    "functions.md"
    "data-structures.md"
    "strings.md"

@@ -10,6 +10,10 @@ generation.
 
 - if you refer to functions, use markdown syntax too (backtics).
 
+## Lists
+
+- numbered bullet lists (`1.`) should be used only at the first level. For the next nested levels, use normal non-numbered lists.
+
 
 ## Code formatting
 
@@ -18,6 +22,8 @@ generation.
 ## Code snippets
 
 - use `~~~lisp` for code snippets.
+
+- snippets must start at the beginning of a line. Don't indent the `~~~lisp` code fence.
 
 - code snippets must be preceded and followed by a newline:
 
