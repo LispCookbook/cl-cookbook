@@ -78,6 +78,7 @@ VSCode's ability to develop remotely in containers, WSL, Remote
 machines, etc.  It has no dependencies beyond a version of Common Lisp
 on which to run the Swank server.  It can be configured to run with
 Quicklisp, CLPM, and Roswell. It currently supports:
+
 - Syntax highlighting
 - Code completion
 - Code formatter
@@ -102,6 +103,7 @@ works via the [cl-lsp](https://github.com/ailisp/cl-lsp) language server
 and it's possible to write LSP client that works in other editors.  It
 depends heavily on [Roswell](https://roswell.github.io/Home.html). It
 currently supports:
+
 - running a REPL
 - evaluate code
 - auto indent,
@@ -113,7 +115,7 @@ currently supports:
 
 ### Using VSCode with Alive
 
-See ["Using VSCode with Alive"](vscode-alive.html).
+See [Using VSCode with Alive](vscode-alive.html).
 
 ## Eclipse
 
