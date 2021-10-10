@@ -194,6 +194,8 @@ and the backtrace. A few remarks:
   in our editor. See the "break" section below for a few
   more commands (eval in frame, etc).
 
+### Compile with maximum debugging information
+
 Usually your compiler will optimize things out and this will reduce
 the amount of information available to the debugger. For example
 sometimes we can't see intermediate variables of computations. We can
@@ -203,7 +205,7 @@ change the optimization choices with:
 (declaim (optimize (speed 0) (space 0) (debug 3)))
 ~~~
 
-and recompile our code.
+and recompile our code. You can achieve the same with a handy shortcut: `C-u C-c C-c`: the form is compiled with maximum debug settings. You can on the contrary use a negative prefix argument (`M--`) to compile for speed. And use a numeric argument to set the setting to it (you should read the docstring of `slime-compile-defun`).
 
 
 ## Trace
