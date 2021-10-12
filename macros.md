@@ -260,7 +260,7 @@ That's mostly all there is to backquote. There are just two extra items to point
 First, if you write "`,@e`" instead of "`,e`" then the value of _e_ is _spliced_ (or "joined", "combined", "interleaved") into the result. So if `v` equals `(oh boy)`, then
 
 ~~~lisp
-(zap ,@v ,v)
+`(zap ,@v ,v)
 ~~~
 
 evaluates to
