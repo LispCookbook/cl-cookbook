@@ -44,12 +44,13 @@ It takes as parameters two variables and one expression.
 Then it returns a piece of code. In Lisp, because code is represented
 as lists, we can simply return a list that represents code.
 
-We also use the *quote*: each *quoted* symbol evaluates to itself, aka
-it is returned as is:
+We also use the *quote*, a *special operator* (not a function nor a macro, but one of a few special operators forming the core of Lisp).
 
-- `(quote foo bar baz)` returns `(foo bar baz)`
-- the quote character, `'`, is a shortcut for `quote`, a *special operator* (not a function nor a macro, but one of a few special operators forming the core of Lisp).
-- so, `'foo` evaluates to `foo`.
+Each *quoted* object evaluates to itself, aka it is returned as is:
+
+- `(+ 1 2)` evaluates to `3` but `(quote (+ 1 2))` evaluates to `(+ 1 2)`
+- `(quote (foo bar baz))` evaluates to `(foo bar baz)`
+- `'` is a shortcut for `quote`: `(quote foo)` and `'foo` are equvalent - both evaluate to `foo`.
 
 So, our macro returns the following bits:
 
