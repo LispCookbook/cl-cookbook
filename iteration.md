@@ -1394,6 +1394,25 @@ becomes redundant.
 - the keyword `it`, often used in functional constructs, can be
   recognized as a loop keyword. Don't use it inside a loop.
 
+## Iterate gotchas
+
+It breaks on the function `count`:
+
+~~~lisp
+(iter (for i from 1 to 10)
+      (sum (count i '(1 3 5))))
+~~~
+
+It doesn't recognize the built-in `count` function and instead signals a condition.
+
+It works in loop:
+
+~~~lisp
+(loop for i from 1 to 10
+    sum (count i '(1 3 5 99)))
+;; 3
+~~~
+
 
 ## Appendix: list of loop keywords
 
