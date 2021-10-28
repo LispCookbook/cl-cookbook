@@ -911,6 +911,7 @@ Other directives include:
 - `$`: monetary: `(format t "~$" 21982)` => 21982.00
 - `D`, `B`, `O`, `X`: Decimal, Binary, Octal, Hexadecimal.
 - `F`: fixed-format Floating point.
+- `P`: plural: `(format nil "~D famil~:@P/~D famil~:@P" 7 1)` => "7 families/1 family"
 
 ### Basic primitive: ~A or ~a (Aesthetics)
 
@@ -1009,6 +1010,36 @@ With `~2,2f`:
 
 And we're happy with this result.
 
+### Iteration
+
+Create a string from a list with iteration construct `~{str~}`:
+
+~~~lisp
+(format nil "~{~A, ~}" '(a b c))
+;; "A, B, C, "
+~~~
+
+using `~^` to avoid printing the comma and space after the last element:
+
+~~~lisp
+(format nil "~{~A~^, ~}" '(a b c))
+;; "A, B, C"
+~~~
+
+`~:{str~}` is similar but for a list of sublists:
+
+~~~lisp
+(format nil "~:{~S are ~S. ~}" '((pigeons birds) (dogs mammals) (bees insects)))
+;; "PIGEONS are BIRDS. DOGS are MAMMALS. BEES are INSECTS. "
+~~~
+
+`~@{str~}` is similar to `~{str~}`, but instead of using one argument that is a list, all the remaining arguments are used as the list of arguments for the iteration:
+
+~~~lisp
+(format nil "~@{~S are ~S. ~}" 'pigeons 'birds 'dogs 'mammals 'bees 'insects)
+;; "PIGEONS are BIRDS. DOGS are MAMMALS. BEES are INSECTS. "
+~~~
+
 ### Formatting a format string (`~v`, `~?`)
 
 Sometimes you want to justify a string, but the length is a variable
@@ -1045,6 +1076,32 @@ Of course, it is always possible to format a format string beforehand:
  (format nil directive "foo"))
 ~~~
 
+### Conditional Formatting
+
+Choose one value out of many options by specifying a number:
+
+~~~lisp
+(format nil "~[dog~;cat~;bird~:;default~]" 0)
+;; "dog"
+
+(format nil "~[dog~;cat~;bird~:;default~]" 1)
+;; "cat"
+~~~
+
+If the number is out of range, the default option (after `~:;`) is returned:
+
+~~~lisp
+(format nil "~[dog~;cat~;bird~:;default~]" 9)
+;; "default"
+~~~
+
+Combine it with `~:*` to implement irregular plural:
+
+~~~lisp
+(format nil "I saw ~r el~:*~[ves~;f~:;ves~]." 0) ==> "I saw zero elves."
+(format nil "I saw ~r el~:*~[ves~;f~:;ves~]." 1) ==> "I saw one elf."
+(format nil "I saw ~r el~:*~[ves~;f~:;ves~]." 2) ==> "I saw two elves."
+~~~
 
 ## Capturing what is is printed into a stream
 
