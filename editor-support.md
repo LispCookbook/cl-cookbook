@@ -2,7 +2,7 @@
 title: Editor support
 ---
 
-The editor of choice is still Emacs, but it is not the only one.
+The editor of choice is still [Emacs](https://www.gnu.org/software/emacs/), but it is not the only one.
 
 ## Emacs
 
@@ -12,7 +12,7 @@ running Common Lisp process for compilation, debugging, documentation
 lookup, cross-references, and so on. It works with many implementations.
 
 [Portacle](https://shinmera.github.io/portacle/) is a portable and
-multi-platform Common Lisp environment. It ships Emacs25, SBCL,
+multi-platform Common Lisp environment. It ships Emacs, SBCL,
 Quicklisp, SLIME and Git.
 
 <img src="assets/portacle.png"
