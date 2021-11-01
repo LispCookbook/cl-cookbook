@@ -130,7 +130,7 @@ with restarts, macro-expansion, parenthesis matching,…
 
 ## Lem
 
-Lem is an editor tailored for Common Lisp development. Once you
+[Lem](https://github.com/lem-project/lem/wiki) is an editor tailored for Common Lisp development. Once you
 install it, you can start developing. Its interface resembles Emacs
 and SLIME (same shortcuts). It comes with an ncurses and an Electron
 frontend, and other programming modes: Python, Go, Rust, JS, Nim,
