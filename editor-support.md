@@ -69,6 +69,15 @@ frontend for Quicklisp.
 [Slimv_box](https://github.com/justin2004/slimv_box) brings Vim, SBCL, ABCL,
 and tmux in a Docker container for a quick installation.
 
+## Atom
+
+See [SLIMA](https://github.com/neil-lindquist/slima). This package
+allows you to interactively develop Common Lisp code, turning
+Atom into a pretty good Lisp IDE.
+
+<img src="assets/atom-slime.png"
+     style="width: 800px"/>
+
 ## VSCode
 
 [Alive](https://marketplace.visualstudio.com/items?itemName=rheller.alive)
@@ -149,15 +158,6 @@ So you probably want a shell alias:
 
 <img src="assets/lem-terminal.png" style="width: 800px" title="Lem's REPL"/>
 
-
-## Atom
-
-See [SLIMA](https://github.com/neil-lindquist/slima). This package
-allows you to interactively develop Common Lisp code, turning
-Atom into a pretty good Lisp IDE.
-
-<img src="assets/atom-slime.png"
-     style="width: 800px"/>
 
 ## Sublime Text
 
