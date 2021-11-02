@@ -249,14 +249,14 @@ MAX-WITH-SPEED-3
 ; 95:       EBC6             jmp L0
 ~~~
 
-As you can see, the generated assembly code is much shorter (92 bytes
-VS 144).  The compiler was able to perform optimizations. Yet we
-can do better by declaring types.
+As you can see, the generated assembly code is much shorter (92 bytes VS 144).
+The compiler was able to perform optimizations. Yet we can do better by
+declaring types.
 
 
 ### Type Hints
 
-As mentioned in the [*Type System*][sec:type] chapter, Lisp has a relatively
+As mentioned in the [*Type System*](type.html) chapter, Lisp has a relatively
 powerful type system. You may provide type hints so that the compiler may
 reduce the size of the generated code.
 

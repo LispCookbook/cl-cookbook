@@ -9,7 +9,7 @@ Common Lisp development platform. Alive hooks directly into the Swank
 server that Emacs Slime uses and is fully compatible with VSCode's
 ability to develop remotely in containers, WSL, Remote machines, etc.
 It has no dependencies beyond a version of Common Lisp running on the
-target platform that can run the Swank server.  It currently supports:
+target platform that can run the Swank server. It currently supports:
 
 - Syntax highlighting
 - Code completion
@@ -33,7 +33,7 @@ target platform that can run the Swank server.  It currently supports:
 
 The Alive extension in VSCode is compatible with ANSI Common Lisp,
 and these instructions should work for any of them as long as the Alive
-REPL starts up successfully.  The examples all use SBCL.
+REPL starts up successfully. The examples all use SBCL.
 
 - [VsCode](https://code.visualstudio.com) with [command
   line](https://code.visualstudio.com/docs/setup/mac#_launching-from-the-command-line)
@@ -60,7 +60,7 @@ REPL starts up successfully.  The examples all use SBCL.
      out what might be going wrong.
 
 Congrats, You now have a VSCode instance running a REPL attached to a
-Swank server running on port 4005 of a running SBCL image.  You can
+Swank server running on port 4005 of a running SBCL image. You can
 now evaluate statements in your file and they will be processed in
 your running SBCL instance.
 
@@ -96,7 +96,7 @@ s-expression that you wish to evaluate._
    #b100)`, which is the result
 
    _Evaluating a statement in-line is exactly the same as sending it to
-   the REPL.  The only difference is how it is displayed._
+   the REPL. The only difference is how it is displayed._
 
 #### Evaluate a statement
 
@@ -170,7 +170,7 @@ CL-USER>
    Open the Command Palette on the menu at the top `View/Command
    Palette` and choose `Alive: Inline Eval` to run your divide function
    in your image.
-5. You will see the Interactive Debugger pop up.  In the `Restarts`
+5. You will see the Interactive Debugger pop up. In the `Restarts`
    section, choose option 2 to Abort.
 6. You're now back to your editor and still-running REPL and can
    continue like it never happened.
@@ -427,7 +427,7 @@ swank as a dev dependency, [modify your vscode
 settings](https://code.visualstudio.com/docs/getstarted/settings) to
 look like this:
 
-1. Add the following to to your VSCode settings:
+1. Add the following to your VSCode settings:
 
 ```json
   "alive.swank.startupCommand":[
@@ -472,7 +472,7 @@ look like this:
 _These instructions will work for remote connections, wsl connections,
 and github Codespaces as well using the `Remote - SSH` and `Remote -
 WSL`, and `Github Codespaces` extensions, respectively assuming you have
-the extensions installed.  For this example, make sure you have the
+the extensions installed. For this example, make sure you have the
 [Containers extension installed and
 configured](https://code.visualstudio.com/docs/remote/containers)._
 
@@ -496,7 +496,7 @@ docker run -it clfoundation/sbcl bash
    on `Explorer`.  _You may need to tell it to view the files in your
    container if it isn't already showing them._
 6. Once you're viewing the files in the container, right click in the
-   VSCode `Side Bar` and choose `New File`.  Name the file `hello.lisp`
+   VSCode `Side Bar` and choose `New File`. Name the file `hello.lisp`
 7. In the VSCode Site Bar, click the `Extensions` icon
 8. Click the `Install in Container...` button for the `Alive` plugin
 9. Open up your `hello.lisp` file and follow the "Connect VSCode to a

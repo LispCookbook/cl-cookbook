@@ -6,7 +6,7 @@ The Common Lisp ecosystem boasts a few approaches to building WebSocket servers.
 First, there is the excellent
 [Hunchensocket](https://github.com/joaotavora/hunchensocket) that is written as
 an extension to [Hunchentoot](https://edicl.github.io/hunchentoot/), the classic
-web server for Common Lisp.  I have used both and I find them to be wonderful.
+web server for Common Lisp. I have used both and I find them to be wonderful.
 
 Today, however, you will be using the equally excellent
 [websocket-driver](https://github.com/fukamachi/websocket-driver) to build a WebSocket server with
@@ -147,7 +147,7 @@ You may now start your server, running on port `12345`:
 ## A Quick HTML Chat Client
 
 So now you need a way to talk to your server. Using Clack, define a simple
-application that serves a web page to display and send chats.  First the web page:
+application that serves a web page to display and send chats. First the web page:
 
 ~~~lisp
 

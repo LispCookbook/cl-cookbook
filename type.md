@@ -32,7 +32,7 @@ For example:
 The function [`type-of`][type-of] returns the type of the given object. The
 returned result is a [type-specifier][type-specifiers]. In this case the first
 element is the type and the remaining part is extra information (lower and
-upper bound) of that type.  You can safely ignore it for now. Also remember
+upper bound) of that type. You can safely ignore it for now. Also remember
 that integers in Lisp have no limit!
 
 Now let's try to [`setf`][setf] the variable:

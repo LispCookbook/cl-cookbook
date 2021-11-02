@@ -3,20 +3,19 @@ title: Web development
 ---
 
 
-For web development as for any other task, one can leverage Common
-Lisp's advantages: the unmatched REPL that even helps to interact with a running web app,
-the exception handling system,
-performance, the ability to build a self-contained executable,
-stability, good threads story, strong typing, etc. We can, say, define
-a new route and try it right away, there is no need to restart any
-running server. We can change and compile *one function at a time*
-(the usual `C-c C-c` in Slime) and try it. The feedback is
-immediate. We can choose the degree of interactivity: the web server
-can catch exceptions and fire the interactive debugger, or print lisp
-backtraces on the browser, or display a 404 error page and print logs
-on standard output. The ability to build self-contained executables eases
-deployment tremendously (compared to, for example, npm-based apps), in
-that we just copy the executable to a server and run it.
+For web development as for any other task, one can leverage Common Lisp's
+advantages: the unmatched REPL that even helps to interact with a running web
+app, the exception handling system, performance, the ability to build a
+self-contained executable, stability, good threads story, strong typing, etc. We
+can, say, define a new route and try it right away, there is no need to restart
+any running server. We can change and compile *one function at a time* (the
+usual `C-c C-c` in Slime) and try it. The feedback is immediate. We can choose
+the degree of interactivity: the web server can catch exceptions and fire the
+interactive debugger, or print lisp backtraces on the browser, or display a 404
+error page and print logs on standard output. The ability to build
+self-contained executables eases deployment tremendously (compared to, for
+example, npm-based apps), in that we just copy the executable to a server and
+run it.
 
 And when we have deployed our app, we can still interact with it,
 allowing for hot reload, that even works when new dependencies have to

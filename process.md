@@ -1690,11 +1690,10 @@ result which is fulfilled by providing it with a value. The promise
 object itself is created using `lparallel:promise`, and the promise is
 given a value using the `lparallel:fulfill` macro.
 
-To check whether the promise has been fulfilled yet or not, we can use
-the `lparallel:fulfilledp` predicate function.  Finally, the
-`lparallel:force` function is used to extract the value out of the
-promise. Note that this function blocks until the operation is
-complete.
+To check whether the promise has been fulfilled yet or not, we can use the
+`lparallel:fulfilledp` predicate function. Finally, the `lparallel:force`
+function is used to extract the value out of the promise. Note that this
+function blocks until the operation is complete.
 
 Let’s solidify these concepts with a very simple example first:
 

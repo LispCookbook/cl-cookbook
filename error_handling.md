@@ -144,7 +144,7 @@ interactively or programmatically.
 If some library doesn't catch all conditions and lets some bubble out
 to us, we can see the restarts (established by `restart-case`)
 anywhere deep in the stack, including restarts established by other
-libraries that this library called.  And *we can see the stack
+libraries that this library called. And *we can see the stack
 trace*, with every frame that was called and, in some lisps, even see
 local variables and such. Once we `handler-case`, we "forget" about
 this, everything is unwound. `handler-bind` does *not* rewind the
@@ -485,9 +485,9 @@ Now try again and you should get a little window asking for a new number:
 ![](assets/zenity-prompt.png)
 
 
-That's fun, but that's not all. Choosing restarts manually is not always (or often?)
-satisfactory.  And by *handling* restarts we can start over the
-operation as if the error didn't occur, as seen in the stack.
+That's fun, but that's not all. Choosing restarts manually is not always (or
+often?) satisfactory. And by *handling* restarts we can start over the operation
+as if the error didn't occur, as seen in the stack.
 
 
 ### Calling restarts programmatically (handler-bind, invoke-restart)

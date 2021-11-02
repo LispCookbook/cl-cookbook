@@ -80,13 +80,13 @@ Atom into a pretty good Lisp IDE.
 
 ## VSCode
 
-[Alive](https://marketplace.visualstudio.com/items?itemName=rheller.alive)
-makes VSCode a powerful Common Lisp development. It hooks directly into
-the Swank server that Emacs Slime uses and is fully compatible with
-VSCode's ability to develop remotely in containers, WSL, Remote
-machines, etc.  It has no dependencies beyond a version of Common Lisp
-on which to run the Swank server.  It can be configured to run with
-Quicklisp, CLPM, and Roswell. It currently supports:
+[Alive](https://marketplace.visualstudio.com/items?itemName=rheller.alive) makes
+VSCode a powerful Common Lisp development. It hooks directly into the Swank
+server that Emacs Slime uses and is fully compatible with VSCode's ability to
+develop remotely in containers, WSL, Remote machines, etc. It has no
+dependencies beyond a version of Common Lisp on which to run the Swank server.
+It can be configured to run with Quicklisp, CLPM, and Roswell. It currently
+supports:
 
 - Syntax highlighting
 - Code completion
@@ -108,10 +108,10 @@ Quicklisp, CLPM, and Roswell. It currently supports:
 
 [commonlisp-vscode
 extension](https://marketplace.visualstudio.com/items?itemName=ailisp.commonlisp-vscode)
-works via the [cl-lsp](https://github.com/ailisp/cl-lsp) language server
-and it's possible to write LSP client that works in other editors.  It
-depends heavily on [Roswell](https://roswell.github.io/Home.html). It
-currently supports:
+works via the [cl-lsp](https://github.com/ailisp/cl-lsp) language server and
+it's possible to write LSP client that works in other editors. It depends
+heavily on [Roswell](https://roswell.github.io/Home.html). It currently
+supports:
 
 - running a REPL
 - evaluate code
@@ -178,10 +178,10 @@ inspection.
 
 ## LispWorks (proprietary)
 
-[LispWorks](http://www.lispworks.com/) is a Common Lisp implementation
-that comes with its own Integrated Development Environment (IDE) and
-its share of unique features, such as the CAPI GUI toolkit.  It is
-**proprietary** and provides a **free limited version**.
+[LispWorks](http://www.lispworks.com/) is a Common Lisp implementation that
+comes with its own Integrated Development Environment (IDE) and its share of
+unique features, such as the CAPI GUI toolkit. It is **proprietary** and
+provides a **free limited version**.
 
 You can [read our LispWorks review here](lispworks.html).
 

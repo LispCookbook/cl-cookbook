@@ -402,7 +402,7 @@ An exit code to 0 means success (use `zerop`).
 The exit code is also stored in the `exit-code` slot of our
 `process-info` object. We see from the class definition above that it
 has no accessor, so we'll use `slot-value`. It has an `initform` to
-nil, so we don't have to check if the slot is bound.  We can do:
+nil, so we don't have to check if the slot is bound. We can do:
 
 ~~~lisp
 (slot-value *my-process* 'uiop/launch-program::exit-code)
