@@ -119,7 +119,7 @@ featureful static site generator, see
 Let's install the libraries we'll use:
 
 ~~~lisp
-(ql:quickload '("hunchentoot" "caveman" "spinneret" "djula"))
+(ql:quickload '("hunchentoot" "caveman2" "spinneret" "djula"))
 ~~~
 
 To try Weblocks, please see its documentation. The Weblocks in
