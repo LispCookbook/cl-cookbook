@@ -396,7 +396,7 @@ The content of those files is as follows:
 Assuming that you have quicklisp installed and configured to load on
 init, quicklisp just works.
 
-#### Configuring VSCode Alive to work with CLPM
+#### Configuring VSCode Alive to work with CLPM in the default context
 
 Assuming that you have [CLPM](https://clpm.dev) installed and
 configured, [modify your vscode settings](https://code.visualstudio.com/docs/getstarted/settings) to
@@ -408,8 +408,6 @@ look like this:
   "alive.swank.startupCommand":[
     "clpm",
     "exec",
-    "--with-client",
-    "--context=$(sbcl \"--noinform\" \"--eval\" \"(require :asdf)\" \"--eval\" \"(write-string (car (last (remove-if (lambda (s) (= (length s) 0)) (uiop/utility:split-string (namestring (uiop:getcwd)) :separator (string (uiop:directory-separator-for-host)))))))\" --eval \"(exit)\")",
     "--",
     "sbcl",
     "--eval",
@@ -419,13 +417,33 @@ look like this:
   ],
 ```
 
-_This will start up a clpm context named after the directory of the
-workspace or containing directory of the file on which you're working.
-That context line looks the way it does because it is effectively
-"scripting" in SBCL.  Instead of using bash or powerscript and leaving
-some users out, this example uses lisp to determine the folder name of
-the current working directory.  This is convenient because its
-cross-platform.  This config works on mac, linux, and windows._
+_This will start up sbcl in the default clpm context_
+
+#### Configuring VSCode Alive to work with CLPM using a bundle clpmfile
+
+Assuming that you have [CLPM](https://clpm.dev) installed and configured
+and a bundle configured in the root of your home directory that contains
+swank as a dev dependency, [modify your vscode
+settings](https://code.visualstudio.com/docs/getstarted/settings) to
+look like this:
+
+1. Add the following to to your VSCode settings:
+
+```json
+  "alive.swank.startupCommand":[
+    "clpm",
+    "bundle",
+    "exec",
+    "--",
+    "sbcl",
+    "--eval",
+    "(asdf:load-system :swank)",
+    "--eval",
+    "(swank:create-server)"
+  ],
+```
+
+_This will start up sbcl in your bundle's clpm context_
 
 #### Configuring VSCode Alive to work with Roswell
 
