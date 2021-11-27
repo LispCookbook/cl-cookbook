@@ -69,6 +69,15 @@ but will require less time for repeated `scan` calls as parsing the
 expression and compiling it is done only once.
 
 
+### Replacing text
+
+~~~lisp
+(ppcre:regex-replace "a" "abc" "A") ;; => "Abc"
+;; or
+(let ((pat (ppcre:create-scanner "a")))
+  (ppcre:regex-replace pat "abc" "A"))
+~~~
+
 ### Extracting information
 
 CL-PPCRE provides a several ways to extract matching fragments, among
