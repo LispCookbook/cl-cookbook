@@ -208,7 +208,7 @@ To avoid an `ASCII stream decoding error` you might want to specify an UTF-8 enc
 #### Set SBCL's default encoding format to utf-8
 
 Sometimes you don't control the internals of a library, so you'd
-better set the default encoding to utf-8.  Add this line to your
+better set the default encoding to utf-8. Add this line to your
 `~/.sbclrc`:
 
     (setf sb-impl::*default-external-format* :utf-8)

@@ -108,9 +108,9 @@ implementation dependent.
 #### Floating point literals
 
 When reading floating point numbers, the default type is set by the special
-variable [`*read-default-float-format*`][read-default-float-format].  By
-default this is `SINGLE-FLOAT`, so if you want to ensure that a number is read
-as double precision then put a `d0` suffix at the end
+variable [`*read-default-float-format*`][read-default-float-format]. By default
+this is `SINGLE-FLOAT`, so if you want to ensure that a number is read as double
+precision then put a `d0` suffix at the end
 
 ~~~lisp
 * (type-of 1.24)

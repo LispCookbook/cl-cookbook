@@ -80,7 +80,7 @@ Now you are ready to run the client on the second REPL
 
     (create-client 12321)
 
-Voila! You should see "Hello World" on the second REPL.
+Voilà! You should see "Hello World" on the second REPL.
 
 
 ## UDP/IP
@@ -152,7 +152,7 @@ Now you are ready to run the client on the second REPL
 
     (create-client 12321 (make-array 8 :element-type '(unsigned-byte 8)))
 
-Voila! You should see a vector `#(1 2 3 4 5 6 7 8)` on the first REPL
+Voilà! You should see a vector `#(1 2 3 4 5 6 7 8)` on the first REPL
 and `#(8 7 6 5 4 3 2 1)` on the second one.
 
 

@@ -168,7 +168,7 @@ Some Emacs packages give even more help.
 #### More help and discoverability packages
 
 Sometimes, you start typing a key sequence but you can't remember it
-completely. Or, you wonder what other keybindings are related.  Comes
+completely. Or, you wonder what other keybindings are related. Comes
 [which-key-mode](https://github.com/justbur/emacs-which-key). This
 packages will display all possible keybindings starting with the key(s) you just typed.
 

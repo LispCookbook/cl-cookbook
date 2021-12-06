@@ -33,7 +33,7 @@ it is a matter of calling `save-lisp-and-die` with the `executable` argument to 
 (sb-ext:save-lisp-and-die #P"path/name-of-executable" :toplevel #'my-app:main-function :executable t)
 ~~~
 
-`sb-ext` is an SBCL extension to run external processes.  See other
+`sb-ext` is an SBCL extension to run external processes. See other
 [SBCL extensions](http://www.sbcl.org/manual/index.html#Extensions)
 (many of them are made implementation-portable in other libraries).
 

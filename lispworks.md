@@ -2,10 +2,10 @@
 title: LispWorks
 ---
 
-[LispWorks](http://www.lispworks.com/) is a Common Lisp implementation
-that comes with its own Integrated Development Environment (IDE) and
-its share of unique features, such as the CAPI GUI toolkit.  It is
-**proprietary** and provides a **free limited version**.
+[LispWorks](http://www.lispworks.com/) is a Common Lisp implementation that
+comes with its own Integrated Development Environment (IDE) and its share of
+unique features, such as the CAPI GUI toolkit. It is **proprietary** and
+provides a **free limited version**.
 
 Here, we will mainly explore its IDE, asking ourselves what it can
 offer to a seasoned lisper used to Emacs and Slime. The short answer

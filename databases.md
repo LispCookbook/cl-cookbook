@@ -41,11 +41,10 @@ with migrations, relationships and PostgreSQL support".
 - permits DB **schema versioning**,
 - is tested under SBCL and CCL.
 
-As an ORM, it allows to write class definitions, to specify
-relationships, and provides functions to query the database.  For
-custom queries, it relies on
-[SxQL](https://github.com/fukamachi/sxql), an SQL generator that
-provides the same interface for several backends.
+As an ORM, it allows to write class definitions, to specify relationships, and
+provides functions to query the database. For custom queries, it relies on
+[SxQL](https://github.com/fukamachi/sxql), an SQL generator that provides the
+same interface for several backends.
 
 Working with Mito generally involves these steps:
 
