@@ -256,7 +256,7 @@ declaring types.
 
 ### Type Hints
 
-As mentioned in the [*Type System*][sec:type] chapter, Lisp has a relatively
+As mentioned in the [*Type System*][type] chapter, Lisp has a relatively
 powerful type system. You may provide type hints so that the compiler may
 reduce the size of the generated code.
 
@@ -610,7 +610,7 @@ unless it is declared `notinline`.
 [trace-output]: http://www.lispworks.com/documentation/lw71/CLHS/Body/v_debug_.htm#STtrace-outputST
 [disassemble]: http://www.lispworks.com/documentation/lw60/CLHS/Body/f_disass.htm
 [inlined-generic-function]: https://github.com/guicho271828/inlined-generic-function
-[sec:type]: type.html
+[type]: type.html
 [declare]: http://www.lispworks.com/documentation/lw71/CLHS/Body/s_declar.htm
 [declare-scope]: http://www.lispworks.com/documentation/lw71/CLHS/Body/03_cd.htm
 [optimize]: http://www.lispworks.com/documentation/lw71/CLHS/Body/d_optimi.htm
