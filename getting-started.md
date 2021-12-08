@@ -6,7 +6,7 @@ We'll begin with presenting easy steps to install a development environment and 
 
 Want a 2-clicks install? Then get
 [Portacle](https://shinmera.github.io/portacle/), *a portable and
-multi-platform* Common Lisp environment. It ships Emacs25, SBCL (the
+multi-platform* Common Lisp environment. It ships Emacs, SBCL (the
 implementation), Quicklisp (package manager), SLIME (IDE) and
 Git. It's the most straightforward way to get going!
 
