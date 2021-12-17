@@ -202,6 +202,8 @@ works fine under macOS and can now also be used on Windows.
 - **Licence**: LGPL
 - Example applications:
   - an [Atmosphere Calculator](https://github.com/ralph-schleicher/atmosphere-calculator), built with Glade.
+- more documentation and examples:
+  - [Learn Common Lisp by Example: GTK GUI with SBCL](https://dev.to/goober99/learn-common-lisp-by-example-gtk-gui-with-sbcl-5e5c)
 
 
 ### IUP (lispnik/IUP)
