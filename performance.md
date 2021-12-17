@@ -606,6 +606,64 @@ It can be enabled globally by adding `:inline-generic-function` flag in
 When this feature is present, all inlinable generic functions are inlined
 unless it is declared `notinline`.
 
+## Block compilation
+
+SBCL [got block compilation on version 2.0.2](https://mstmetent.blogspot.com/2020/02/block-compilation-fresh-in-sbcl-202.html), which was in CMUCL since 1991 but a little forgotten since.
+
+You can enable block compilation with a one-liner:
+
+~~~lisp
+(setq *block-compile-default* t)
+~~~
+
+But what is it?
+
+Block compilation addresses a known aspect of dynamic languages: function calls to global, top-level functions are expensive.
+
+> Much more expensive than in a statically compiled language. They're slow because of the late-bound nature of top-level defined functions, allowing arbitrary redefinition while the program is running and forcing runtime checks on whether the function is being called with the right number or types of arguments. This type of call is known as a "full call" in Python (the compiler used in CMUCL and SBCL, not to be confused with the programming language), and their calling convention permits the most runtime flexibility.
+
+But local calls, the ones inside a top-level functions (for example `lambda`s, `labels` and `flet`s) are fast.
+
+> These calls are more 'static' in the sense that they are treated more like function calls in static languages, being compiled "together" and at the same time as the local functions they reference, allowing them to be optimized at compile-time. For example, argument checking can be done at compile time because the number of arguments of the callee is known at compile time, unlike in the full call case where the function, and hence the number of arguments it takes, can change dynamically at runtime at any point. Additionally, the local call calling convention can allow for passing unboxed values like floats around, as they are put into unboxed registers never used in the full call convention, which must use boxed argument  and return value registers.
+
+So enabling block compilation kind of turns your code into a giant `labels` form.
+
+One evident possible drawback, dependending on your application, is that you can't redefine functions at runtime anymore.
+
+We can also enable block compilation with the `:block-compile` keyword to `compile-file`:
+
+~~~lisp
+(defun foo (x y)
+  (print (bar x y))
+  (bar x y))
+
+(defun bar (x y)
+  (+ x y))
+
+(defun fact (n)
+  (if (zerop n)
+      1
+      (* n (fact (1- n)))))
+
+> (compile-file "foo.lisp" :block-compile t :entry-points nil)
+> (load "foo.fasl")
+
+> (sb-disassem:disassemble-code-component #'foo)
+~~~
+
+If you inspect the assembly,
+
+> you [will] see that FOO and BAR are now compiled into the same component (with local calls), and both have valid external entry points. This improves locality of code quite a bit and still allows calling both FOO and BAR externally from the file (e.g. in the REPL). […]
+
+But there is one more goody block compilation adds...
+
+> Notice we specified `:entry-points` nil above. That's telling the compiler to still create external entry points to every function in the file, since we'd like to be able to call them normally from outside the code component (i.e. the compiled compilation unit, here the entire file).
+
+For more explanations, I refer you to the mentioned blog post, the current de-facto documentation for SBCL, in addition to [CMUCL's documentation](https://cmucl.org/docs/cmu-user/html/Block-Compilation.html) (note that the form-by-form level granularity in CMUCL (` (declaim (start-block ...)) ... (declaim (end-block ..))`) is missing in SBCL, at the time of writing).
+
+Finally, be aware that "block compiling and inlining currently does not interact very well [in SBCL]".
+
+
 [time]: http://www.lispworks.com/documentation/lw51/CLHS/Body/m_time.htm
 [trace-output]: http://www.lispworks.com/documentation/lw71/CLHS/Body/v_debug_.htm#STtrace-outputST
 [disassemble]: http://www.lispworks.com/documentation/lw60/CLHS/Body/f_disass.htm
