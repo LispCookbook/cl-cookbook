@@ -94,7 +94,7 @@ The Cookbook has been translated to:
 * [Lisp and Elements of Style](http://web.archive.org/web/20190316190256/https://www.nicklevine.org/declarative/lectures/) by Nick Levine
 * Pascal Costanza's [Highly Opinionated Guide to Lisp](http://www.p-cos.net/lisp/guide.html)
 * [Cliki](http://www.cliki.net/), Common Lisp's wiki
-* 📹 [Common Lisp programming: from novice to effective developer](https://www.udemy.com/course/common-lisp-programming/?referralCode=2F3D698BBC4326F94358), a video course on the Udemy platform (paywall), by one of the main Cookbook contributor. A [-50% coupon for December, 2021](https://www.udemy.com/course/common-lisp-programming/?couponCode=HALF-50-CHRISTMAS21). *"Thanks for supporting my work on Udemy. You can ask me for a free coupon if the course is not affordable for you. -vindarel"*
+* 📹 [Common Lisp programming: from novice to effective developer](https://www.udemy.com/course/common-lisp-programming/?referralCode=2F3D698BBC4326F94358), a video course on the Udemy platform (paywall), by one of the main Cookbook contributor. *"Thanks for supporting my work on Udemy. You can ask me for a free coupon if the course is not affordable for you. See also on the lisp-journey website for regular offers. -vindarel"*
 
 
 Books
