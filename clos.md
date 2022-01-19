@@ -538,13 +538,13 @@ Changing, adding, removing slots,...
    (lisper
     :initform nil
     :accessor lisper)
-   (age
+   (age               ;; <-- new slot
     :initarg :arg
-    :initform 18
+    :initform 18      ;; <-- default value
     :accessor age)))
 
 (age p1)
-;; => slot unbound error. This is different from "slot missing":
+;; => 18. Correct. This is the default initform for this new slot.
 
 (slot-value p1 'bwarf)
 ;; => "the slot bwarf is missing from the object #<person…>"
