@@ -82,6 +82,10 @@ The main goal is making the Cookbook more modern and more accessible in addition
 [contributing]: CONTRIBUTING.md
 [bundler-v2]: https://stackoverflow.com/questions/54087856/cant-find-gem-bundler-0-a-with-executable-bundle-gemgemnotfoundexceptio
 
+## Using GNU Guix
+
+To enter an environment in which all the required software dependencies are available, run `guix shell` in the project root directory.
+
 ## Support
 
 You can support the individuals that constantly improve the Cookbook. See the Github Sponsors icon. Thanks for them!
