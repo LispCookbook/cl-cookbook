@@ -82,9 +82,9 @@ The main goal is making the Cookbook more modern and more accessible in addition
 [contributing]: CONTRIBUTING.md
 [bundler-v2]: https://stackoverflow.com/questions/54087856/cant-find-gem-bundler-0-a-with-executable-bundle-gemgemnotfoundexceptio
 
-## Using GNU Guix
+## Development with GNU Guix
 
-To enter an environment in which all the required software dependencies are available, run `guix shell` in the project root directory.
+To enter a development environment in which all the required software dependencies are made available, run `guix shell` in the project's root directory. The provided Guix [manifest file](manifest.scm) will be automatically sourced after giving [authorization](https://guix.gnu.org/manual/devel/en/html_node/Invoking-guix-shell.html) for Guix to do so.
 
 ## Support
 
