@@ -770,15 +770,17 @@ What elements are both in list-a and list-b ?
 
 ### Add an element to a set (`adjoin`)
 
+A new set is returned, the original set is not modified.
+
 ~~~lisp
 (adjoin 3 list-a)
-;; => (0 1 2 3) <-- nothing was changed, 3 was already there.
+;; => (0 1 2 3)   ;; <-- nothing was changed, 3 was already there.
 
 (adjoin 5 list-a)
-;; => (5 0 1 2 3)
+;; => (5 0 1 2 3) ;; <-- element added in front.
 
 list-a
-;; => (0 1 2 3)
+;; => (0 1 2 3)  ;; <-- original list unmodified.
 ~~~
 
 ### Check if this is a subset (`subsetp`)
