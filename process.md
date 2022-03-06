@@ -209,7 +209,7 @@ instead of the common check mentioned above.
 
 For instance, in our case, we are interested in using the Bordeaux
 library. To check whether there is support for threads using this
-library, we can see whether the *supports-threads-p* global variable
+library, we can see whether the `*supports-threads-p*` global variable
 is set to NIL (no support) or T (support available):
 
 ~~~lisp
@@ -386,12 +386,12 @@ And the output:
     NIL
 ~~~
 
-So it works, but what’s the deal with the eval-when and what is that
-strange #. symbol before `*standard-output*`?
+So it works, but what’s the deal with the `eval-when` and what is that
+strange `#.` symbol before `*standard-output*`?
 
-eval-when controls when evaluation of Lisp expressions takes place. We
-can have three targets — :compile-toplevel, :load-toplevel, and
-:execute.
+`eval-when` controls when evaluation of Lisp expressions takes place. We
+can have three targets — `:compile-toplevel`, `:load-toplevel`, and
+`:execute`.
 
 The `#.` symbol is what is called a “Reader macro”. A reader (or read)
 macro is called so because it has special meaning to the Common Lisp
@@ -404,10 +404,10 @@ Binding the value at read-time ensures that the original value of
 `*standard-output*` is maintained when the thread is run, and the output
 is shown on the correct top-level.
 
-Now this is where the eval-when bit comes into play. By wrapping the
-whole function definition inside the eval-when, and ensuring that
+Now this is where the `eval-when` bit comes into play. By wrapping the
+whole function definition inside the `eval-when`, and ensuring that
 evaluation takes place during compile time, the correct value of
-`*standard-output*` is bound. If we had skipped the eval-when, we would
+`*standard-output*` is bound. If we had skipped the `eval-when`, we would
 see the following error:
 
 ~~~lisp
@@ -526,7 +526,7 @@ Let’s rest the balance for the account back to 0 first:
     0
 ~~~
 
-Now let’s modify the demo-race-condition function to access the shared resource using locks (created using bt:make-lock and used as shown):
+Now let’s modify the `demo-race-condition` function to access the shared resource using locks (created using `bt:make-lock` and used as shown):
 
 ~~~lisp
     (defvar *lock* (bt:make-lock))
@@ -901,7 +901,7 @@ The code:
 ~~~
 
 The only difference here is that instead of make-lock as in Bordeaux,
-we have make-mutex and that is used along with the macro with-mutex as
+we have `make-mutex` and that is used along with the macro `with-mutex` as
 shown in the example.
 
 And the output:
@@ -990,8 +990,8 @@ This is the reason for the bizarre construct used in the
 `atomic-deposit` and `atomic-decf` methods.
 
 One major incentive to use atomic operations as much as possible is
-performance. Let’s do a quick run of the demo-race-condition-locks and
-demo-race-condition-atomics functions over 1000 times and check the
+performance. Let’s do a quick run of the `demo-race-condition-locks` and
+`demo-race-condition-atomics` functions over 1000 times and check the
 difference in performance (if any):
 
 With locks:
