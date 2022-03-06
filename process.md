@@ -334,7 +334,8 @@ The same code would have run fine if we had not run it in a separate
     `*standard-output*`, which being a global variable, we would assume
     should be available to all threads, is rebound inside each thread!
     This is similar to the concept of ThreadLocal storage in Java.
-    Print a message onto the top-level — fixed:
+
+### Print a message onto the top-level — fixed
 
 So how do we fix the problem of the previous example? By binding the top-level at the time of thread creation of course. Pure lexical scoping to the rescue!
 
