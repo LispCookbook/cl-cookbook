@@ -188,19 +188,39 @@ At the time of writing, GTWIWTG is licensed under the GPLv3.
 #### dotimes
 
 ~~~lisp
-(dotimes (n 10)
+(dotimes (n 3)
   (print n))
+;; =>
+;; 0
+;; 1
+;; 2
+;; NIL
 ~~~
 
-Here `dotimes` returns `nil`. The return value is evaluated at the end of the loop.
-
-You can use `return` inside of it:
+Here `dotimes` returns `nil`. There are two ways to return a value. First, you can set a result form in the lambda list:
 
 ~~~lisp
-(dotimes (i 10)
-   (if (> i 3)
-       (return)
+(dotimes (n 3 :done)
+  ;;          ^^^^^ result form. It can be a s-expression.
+  (print n))
+;; =>
+;; 0
+;; 1
+;; 2
+;; :DONE
+~~~
+
+Or you can use `return` with return values:
+
+~~~lisp
+(dotimes (i 3)
+   (if (> i 1)
+       (return :early-exit!)
        (print i)))
+;; =>
+;; 0
+;; 1
+;; :EARLY-EXIT!
 ~~~
 
 
@@ -228,6 +248,9 @@ with `collect`, this returns a list.
 ~~~
 
 ### Looping an infinite number of times, cycling over a circular list
+
+First, as shown above, we can simply use `(loop ...)` to loop
+infinitely. Here we show how to loop on a list forever.
 
 We can build an infinite list by setting its last element to the list itself:
 
