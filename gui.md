@@ -42,7 +42,8 @@ In addition, you might want to have a look to:
   runtimes](http://www.lispworks.com/products/lw4mr.html). Example
   software built with CAPI include [ScoreCloud](https://scorecloud.com/). It is possible to
   try it with the LispWorks free demo.
-- [Allegro CL's IDE and Common Graphics windowing system](https://franz.com/products/allegro-common-lisp/acl_ide.lhtml) (proprietary): Allegro's IDE is a general environment for developing applications. It works in concert with a windowing system called Common Graphics. The IDE is available for Allegro CL's Microsoft Windows, on x86 Linux platforms, and on the Mac.
+- [Allegro CL's IDE and Common Graphics windowing system](https://franz.com/products/allegro-common-lisp/acl_ide.lhtml) (proprietary): Allegro's IDE is a general environment for developing applications. It works in concert with a windowing system called Common Graphics. The IDE is available for Allegro CL's Microsoft Windows, on Linux platforms, Free BSD and on the Mac.
+  - NEW! 🎉 since Allegro CL 10.1 (released in March of 2022), the IDE, and the Common Graphics GUI toolkit, runs in the browser. It is called [CG/JS](https://franz.com/ftp/pri/acl/cgjs/doc.html).
 - [CCL's built-in Cocoa
   interface](https://ccl.clozure.com/docs/ccl.html#the-objective-c-bridge),
   used to build applications such as [Opusmodus](https://opusmodus.com/).
