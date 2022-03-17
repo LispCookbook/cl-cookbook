@@ -7,10 +7,9 @@ We'll see here a handful of functions and libraries to operate on files and dire
 In this chapter, we use mainly
 [namestrings](http://www.lispworks.com/documentation/HyperSpec/Body/19_aa.htm)
 to
-[specify filenames](http://www.lispworks.com/documentation/HyperSpec/Body/19_.htm). The
-issue of
-[pathnames](http://www.lispworks.com/documentation/HyperSpec/Body/19_ab.htm)
-needs to be covered separately.
+[specify filenames](http://www.lispworks.com/documentation/HyperSpec/Body/19_.htm).
+In a recipe or two we also use
+[pathnames](http://www.lispworks.com/documentation/HyperSpec/Body/19_ab.htm).
 
 Many functions will come from UIOP, so we suggest you have a look directly at it:
 
@@ -104,6 +103,64 @@ You can use `pathname` around a string that designates a directory:
 UIOP also has `delete-empty-directory`
 
 [cl-fad][cl-fad] has `(fad:delete-directory-and-files "dirtest")`.
+
+### Merging files and directories
+
+Use `merge-pathnames`, with one thing to note: if you want to append
+directories, the second argument must have a trailing `/`.
+
+As always, look at UIOP functions. We have a `uiop:merge-pathnames*`
+equivalent which fixes corner cases.
+
+So, here's how to append a directory to another one:
+
+~~~lisp
+(merge-pathnames "otherpath" "/home/vince/projects/")
+;;                                             ^^ a trailing / denotes a directory.
+;; => #P"/home/vince/projects/otherpath"
+~~~
+
+Look at the difference: if you don't include a trailing slash to
+either paths, `otherpath` and `projects` are seen as files, so `otherpath` is appended to the base directory containing `projects`:
+
+~~~lisp
+(merge-pathnames "otherpath" "/home/vince/projects")
+;; #P"/home/vince/otherpath"
+;;               ^^ no "projects", because it was seen as a file.
+~~~
+
+or again, with `otherpath/` (a trailing `/`) but `projects` seen as a file:
+
+~~~lisp
+(merge-pathnames "otherpath/" "/home/vince/projects")
+;; #P"/home/vince/otherpath/projects"
+;;                ^^ inserted here
+~~~
+
+### Get the current working directory (CWD)
+
+Use `uiop/os:getcwd`:
+
+~~~lisp
+(uiop/os:getcwd)
+;; #P"/home/vince/projects/cl-cookbook/"
+;;                                    ^ with a trailing slash, useful for merge-pathnames
+~~~
+
+### Get the current directory relative to a Lisp project
+
+Use `asdf:system-relative-pathname system path`.
+
+Say you are working inside `mysystem`. It has an ASDF system
+declaration, the system is loaded in your Lisp image. This ASDF file
+is somewhere on your filesystem and you want the path to `src/web/`. Do this:
+
+~~~lisp
+(asdf:system-relative-pathname "mysystem" "src/web/")
+;; => #P"/home/vince/projects/mysystem/src/web/"
+~~~
+
+This will work on another user's machine, where the system sources are located in another location.
 
 
 ### Opening a file
