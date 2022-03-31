@@ -331,18 +331,29 @@ You can also select a region and call `M-x indent-region`.
 
 ##### Support for parenthesis
 
-Use `M-(` to insert a pair of parenthesis (`()`), `M-x check-parens`
-to spot malformed sexps, `C-u <n> M-(` to enclose sexps with parens,
-and `C-c C-]` (`slime-close-all-parens-in-sexp`)
-to insert the required number of closing parenthesis.
+Use `M-(` to insert a pair of parenthesis (`()`) and the same
+keybinding with a prefix argument, `C-u M-(`, to enclose the
+expression in front of the cursor with a pair of parens.
 
-For example (point is before the parenthesis):
+For example, we start with the cursor before the first paren:
 
 ~~~lisp
-|(- 2 2)
-;; Press C-u 1 M-( to enclose it with parens:
-(|(- 2 2))
+CL-USER> |(- 2 2)
 ~~~
+
+Press `C-u M-(` to enclose it with parens:
+
+~~~lisp
+CL-USER> (|(- 2 2))
+;; now write anything.
+CL-USER> (zerop (- 2 2))
+~~~
+
+With a numbered prefix argument (`C-u 2 M-(`), wrap around this number of s-expressions.
+
+Additionnaly, use `M-x check-parens` to spot malformed s-exps and `C-c
+C-]` (`slime-close-all-parens-in-sexp`) to insert the required number
+of closing parenthesis.
 
 ##### Code completion
 
