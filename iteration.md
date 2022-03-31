@@ -312,6 +312,9 @@ For lists and vectors:
   (print i))
 ~~~
 
+or, a generalized iteration clause for lists and vectors, use
+`in-sequence` (you'll pay a speed penalty).
+
 Looping over a hash-table is also straightforward:
 
 ~~~lisp
