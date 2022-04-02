@@ -57,7 +57,7 @@ The CL Cookbook aims to tackle all sort of topics, for the beginner as for the m
 
 The Cookbook is also available in EPUB (and PDF) format.
 
-You can [download it directly in EPUB](https://github.com/LispCookbook/cl-cookbook/releases/download/2022-03-23/common-lisp-cookbook.epub) and [PDF](https://github.com/LispCookbook/cl-cookbook/releases/download/2023-03-23/common-lisp-cookbook.pdf), and you can **pay what you want** to further support its development:
+You can [download it directly in EPUB](https://github.com/LispCookbook/cl-cookbook/releases/download/2022-03-23/common-lisp-cookbook.epub) and [PDF](https://github.com/LispCookbook/cl-cookbook/releases/download/2022-03-23/common-lisp-cookbook.pdf), and you can **pay what you want** to further support its development:
 
 
 <br>
@@ -75,7 +75,7 @@ Thank you!
 
 The Cookbook has been translated to:
 
-* [Chinese](https://oneforalone.github.io/cl-cookbook-cn/#/) ([Github](https://github.com/oneforalone/cl-cookbook-cn))
+* [Chinese simplified](https://oneforalone.github.io/cl-cookbook-cn/#/) ([Github](https://github.com/oneforalone/cl-cookbook-cn))
 * [Portuguese (Brazilian)](https://book.lisp.com.br/) ([Github](https://github.com/commonlispbr/cl-cookbook))
 
 # Other CL Resources
