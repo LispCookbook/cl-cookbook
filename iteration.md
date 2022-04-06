@@ -1391,7 +1391,6 @@ If we often scan the same type of object, we can write our own scanner
 Consider this series expression:
 
 ~~~lisp
-
 (collect-sum (mapping ((i (scan-range :length 5)))
                     (* i 2)))
 ~~~
