@@ -829,6 +829,31 @@ represented as quotients of two integers even when converted to strings.
 *
 ~~~
 
+## Converting a List to a String
+
+A general function to convert a list of strings to a string, concatenated with a delimiter character can be constructed as seen below. The library *cl-str* has a function called [join](https://github.com/vindarel/cl-str#join-separator-list-of-strings) that can be used as well. 
+
+~~~lisp
+(defun join (list &optional (delimiter #\&))
+  (with-output-to-string (stream)
+    (join-to-stream stream list delimiter)))
+
+(defun join-to-stream (stream list &optional (delimiter #\&))
+  (destructuring-bind (&optional first &rest rest) list
+    (when first
+      (write-string first stream)
+      (when rest
+        (write-char delimiter stream)
+        (join-to-stream stream rest delimiter)))))
+~~~
+
+Sample usage:
+
+~~~lisp
+* (join '("foo" "bar" "baz") #\-)
+"foo-bar-baz"
+~~~
+
 ## Comparing Strings
 
 The general functions EQUAL and EQUALP can be used to test whether two strings
