@@ -154,6 +154,13 @@ debugger. It's handy to try things out, but we recommend to set-up
 your editor and to use SBCL or CCL.
 </div>
 
+
+<div class="info" style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 17px; margin-top:1em;">
+<!-- if inside a <p> then bootstrap adds 10px padding to the bottom -->
+<strong>TIP:</strong>
+ By adding the <code>-c</code> switch to rlwrap, you can autocomplete file names.
+</div>
+
 ## Libraries
 
 Common Lisp has thousands of libraries available under a free software license. See:
