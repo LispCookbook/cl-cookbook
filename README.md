@@ -26,7 +26,7 @@ Another option is to install the Jekyll version of this repository locally with 
 3. Run `rbenv install 2.5.0` to install Ruby 2.5.0. Run `which gem` to make sure it points to `~/.rbenv/shims/gem`.
 4. Run gem install bundler -v `1.17.3` to install bundler.
 5. `cd` to the `cl-cookbook` directory and run `bundle install --path vendor/bundle` to install Jekyll locally.
-6. Run `budnle exec jekyll serve` to generate the site and host it.
+6. Run `bundle exec jekyll serve` to generate the site and host it.
 
 ### Troubleshooting
 
