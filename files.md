@@ -163,6 +163,18 @@ is somewhere on your filesystem and you want the path to `src/web/`. Do this:
 This will work on another user's machine, where the system sources are located in another location.
 
 
+### Setting the current working directory
+
+Use [`uiop/os:chdir`](https://asdf.common-lisp.dev/uiop.html#Function-uiop_002fos_003achdir) _`path`_:
+
+~~~lisp
+(uiop/os:chdir "/bin/")
+0
+~~~
+
+The trailing slash in _path_ is optional.
+
+
 ### Opening a file
 
 Common Lisp has
