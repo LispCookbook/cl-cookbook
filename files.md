@@ -165,10 +165,10 @@ This will work on another user's machine, where the system sources are located i
 
 ### Setting the current working directory
 
-Use [`uiop/os:chdir`](https://asdf.common-lisp.dev/uiop.html#Function-uiop_002fos_003achdir) _`path`_:
+Use [`uiop:chdir`](https://asdf.common-lisp.dev/uiop.html#Function-uiop_002fos_003achdir) _`path`_:
 
 ~~~lisp
-(uiop/os:chdir "/bin/")
+(uiop:chdir "/bin/")
 0
 ~~~
 
