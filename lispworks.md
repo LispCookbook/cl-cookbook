@@ -479,7 +479,7 @@ of warnings and errors during development.
 
 ## Using LispWorks from Emacs and Slime
 
-To do that, start LispWorks normally, start a Swank server and connect to it from Emacs (Swank is the backend part of Slime).
+To do that, you have two possibilities. The first one is to start LispWorks normally, start a Swank server and connect to it from Emacs (Swank is the backend part of Slime).
 
 First, let's load the dependencies:
 
@@ -508,6 +508,26 @@ You should be connected. Check with: `(lisp-implementation-type)`. You are now a
 (capi:contain button)
 ~~~
 
+The second possibility is to create a non-GUI LispWorks image, with
+Swank loaded, and to run this image from SLIME or SLY. For example, to
+create a so-called `console` image with multiprocessing enabled:
+
+~~~lisp
+(in-package "CL-USER")
+(load-all-patches)
+(save-image "~/lw-console"
+            :console t
+            :multiprocessing t
+            :environment nil)
+~~~
+
+and run LispWorks like this to create the new image ~/lw-console:
+
+    lispworks-7-0-0-x86-linux -build /tmp/resave.lisp
+
+However: `console` is implemented **only for Windows and Mac**.
+
+See LispWorks' documentation.
 
 ## See also
 
