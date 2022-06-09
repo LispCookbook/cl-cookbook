@@ -290,9 +290,12 @@ There are also keys to know for the lambda list. Please see the documentation.
 [easy-routes](https://github.com/mmontone/easy-routes) is a route
 handling extension on top of Hunchentoot. It provides:
 
-- dispatch based on HTTP method (otherwise cumbersome in Hunchentoot)
-- arguments extraction from the url path
-- and decorators.
+- **dispatch** based on the HTTP method, such as GET or POST (which is otherwise cumbersome to do in Hunchentoot)
+- **arguments extraction** from the url path
+- **decorators** (functions to run before the route body, typically used to add a layer of authentication or changing the returned content type)
+- **URL generation** from route names and given URL parameters
+- visualization of routes
+- and more
 
 To use it, don't create a server with `hunchentoot:easy-acceptor` but
 with `easy-routes:easy-routes-acceptor`:
@@ -309,7 +312,7 @@ serve static content the usual way with Hunchentoot.
 Then define a route like this:
 
 ~~~lisp
-(easy-routes:defroute name ("/foo/:x" :method :get) (y &get z)
+(easy-routes:defroute my-route-name ("/foo/:x" :method :get) (y &get z)
     (format nil "x: ~a y: ~a z: ~a" x y z))
 ~~~
 
@@ -320,6 +323,19 @@ body.
 
 These parameters can take an `:init-form` and `:parameter-type`
 options as in `define-easy-handler`.
+
+Now, imagine that we are deeper in our web application logic, and we
+want to redirect our user to the route "/foo/3". Instead of hardcoding
+the URL, we can **generate the URL from its name**. Use
+`easy-routes:genurl` like this:
+
+~~~lisp
+(easy-routes:genurl my-route-name :id 3)
+;; => /foo/3
+
+(easy-routes:genurl my-route-name :id 3 :y "yay")
+;; => /foo/3?y=yay
+~~~
 
 **Decorators** are functions that are executed before the route body. They
 should call the `next` parameter function to continue executing the
