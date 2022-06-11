@@ -27,7 +27,7 @@ Note that we can similarly build self-contained executables for **web apps**.
 How to build (self-contained) executables is, by default, implementation-specific (see
 below for portable ways). With SBCL, as says
 [its documentation](http://www.sbcl.org/manual/index.html#Function-sb_002dext_003asave_002dlisp_002dand_002ddie),
-it is a matter of calling `save-lisp-and-die` with the `executable` argument to T:
+it is a matter of calling `save-lisp-and-die` with the `:executable` argument to T:
 
 ~~~lisp
 (sb-ext:save-lisp-and-die #P"path/name-of-executable" :toplevel #'my-app:main-function :executable t)
@@ -49,7 +49,7 @@ If you try to run this in Slime, you'll get an error about threads running:
 
 > Cannot save core with multiple threads running.
 
-So we must run the command from a simple SBCL repl.
+We must run the command from a simple SBCL repl, from the terminal.
 
 I suppose your project has Quicklisp dependencies. You must then:
 
@@ -84,7 +84,7 @@ that reads parameters from the .asd. Add this to your .asd declaration:
 
 ~~~
 :build-operation "program-op" ;; leave as is
-:build-pathname "<binary-name>"
+:build-pathname "<here your final binary name>"
 :entry-point "<my-package:main-function>"
 ~~~
 
@@ -101,6 +101,73 @@ build:
 		--eval '(asdf:make :my-app)' \
 		--eval '(quit)'
 ~~~
+
+### With Deploy - ship foreign libraries dependencies
+
+All this is good, you can create binaries that work on your machine…
+but maybe not on someone else's or on your server. Your program
+probably relies on C shared libraries that are defined somewhere on
+your filesystem. For example, `libssl` might be located on
+
+    /usr/lib/x86_64-linux-gnu/libssl.so.1.1
+
+but on your VPS, maybe somewhere else.
+
+[Deploy](https://github.com/Shinmera/deploy) to the rescue.
+
+It will create a `bin/` directory with your binary and the required
+foreign libraries. It will auto-discover the ones your program needs,
+but you can also help it (or tell it to not do so much).
+
+Its use is very close to the above recipe with `asdf:make` and the
+`.asd` project configuration. Use this:
+
+~~~lisp
+:defsystem-depends-on (:deploy)  ;; (ql:quickload "deploy") before
+:build-operation "deploy-op"     ;; instead of "program-op"
+:build-pathname "my-application-name"  ;; doesn't change
+:entry-point "my-package:my-start-function"  ;; doesn't change
+~~~
+
+and build your binary with `(asdf:make :my-app)` like before.
+
+Now, ship the `bin/` directory to your users.
+
+When you run the binary, you'll see it uses the shipped libraries:
+
+~~~lisp
+$ ./my-app
+ ==> Performing warm boot.
+   -> Runtime directory is /home/debian/projects/my-app/bin/
+   -> Resource directory is /home/debian/projects/my-app/bin/
+ ==> Running boot hooks.
+ ==> Reloading foreign libraries.
+   -> Loading foreign library #<LIBRARY LIBRT>.
+   -> Loading foreign library #<LIBRARY LIBMAGIC>.
+ ==> Launching application.
+ […]
+~~~
+
+Success!
+
+A last note regarding `libssl`. It's easier, on Linux at least, to
+rely on your OS' current installation, so we'll tell Deploy to not
+bother shipping it (nor `libcrypto`):
+
+~~~lisp
+#+linux (deploy:define-library cl+ssl::libssl :dont-deploy T)
+#+linux (deploy:define-library cl+ssl::libcrypto :dont-deploy T)
+~~~
+
+The day you want to ship a foreign library that Deploy doesn't find, you can instruct it like this:
+
+~~~lisp
+(deploy:define-library cl+ssl::libcrypto
+  ;;                   ^^^ CFFI system name. Find it with a call to "apropos".
+  :path "/usr/lib/x86_64-linux-gnu/libcrypto.so.1.1")
+~~~
+
+But there is more, so we refer you to Deploy's documentation.
 
 
 ### With Roswell or Buildapp
