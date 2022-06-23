@@ -9,7 +9,7 @@ What is a condition ?
 
 > Just like in languages that support exception handling (Java, C++,
 > Python, etc.), a condition represents, for the most part, an
-> “exceptional” situation. However, even more so that those languages,
+> “exceptional” situation. However, even more so than those languages,
 > *a condition in Common Lisp can represent a general situation where
 > some branching in program logic needs to take place*, not
 > necessarily due to some error condition. Due to the highly
