@@ -1013,7 +1013,10 @@ Now keep in mind a couple things:
 - Systemd will, by default, run your app as root. If you rely on your
   Lisp to read your startup file (`~/.sbclrc`), especially to setup
   Quicklisp, you will need to use the `--userinit` flag, or to set the
-  Systemd user with `User=xyz` in the `[service]` section.
+  Systemd user with `User=xyz` in the `[service]` section. And if you
+  use a startup file, be aware that the line `(user-homedir-pathname)`
+  will not return the same result depending on the user, so the snippet
+  might not find Quicklisp's setup.lisp file.
 
 
 See more: [https://www.freedesktop.org/software/systemd/man/systemd.service.html](https://www.freedesktop.org/software/systemd/man/systemd.service.html).
