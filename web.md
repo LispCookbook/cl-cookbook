@@ -961,7 +961,7 @@ Thus, no need to minify our JS.
 We can start our executable in a shell and send it to the background (`C-z bg`), or run it inside a `tmux` session. These are not the best but hey, it works©.
 
 
-### Daemonizing, restarting in case of crashes, handling logs with Systemd
+### Systemd: Daemonizing, restarting in case of crashes, handling logs
 
 This is actually a system-specific task. See how to do that on your system.
 
@@ -970,43 +970,51 @@ Most GNU/Linux distros now come with Systemd, so here's a little example.
 Deploying an app with Systemd is as simple as writing a configuration file:
 
 ```
-$ emacs -nw /etc/systemd/system/my-app.service
+$ sudo emacs -nw /etc/systemd/system/my-app.service
 [Unit]
-Description=stupid simple example
+Description=your lisp app on systemd example
 
 [Service]
-WorkingDirectory=/path/to/your/app
-ExecStart=/usr/local/bin/sthg sthg
+WorkingDirectory=/path/to/your/project/directory/
+ExecStart=/usr/bin/make run  # or anything
 Type=simple
 Restart=on-failure
+
+[Install]
+WantedBy=network.target
 ```
 
-Then we have a command to start it:
+Then we have a command to `start` it, only now:
 
     sudo systemctl start my-app.service
 
-a command to check its status:
+and a command to install the service, to **start the app after a boot
+or reboot** (that's the "[Install]" part):
+
+    sudo systemctl enable my-app.service
+
+Then we can check its `status`:
 
     systemctl status my-app.service
 
+and see our application's **logs** (we can write to stdout or stderr,
+and Systemd handles the logging):
 
-and Systemd can handle **logging** (we write to stdout or stderr, it writes logs):
+    journalctl -u my-app.service
 
-    journalctl -f -u my-app.service
+(you can also use the `-f` option to see log updates in real time, and in that case augment the number of lines with `-n 50` or `--lines`).
 
+Systemd handles crashes and **restarts the application**. That's the `Restart=on-failure` line.
 
-and it handles crashes and **restarts the app**:
+Now keep in mind a couple things:
 
-    Restart=on-failure
+- we want our app to crash so that it can be re-started automatically:
+  you'll want the `--disable-debugger` flag with SBCL.
+- Systemd will, by default, run your app as root. If you rely on your
+  Lisp to read your startup file (`~/.sbclrc`), especially to setup
+  Quicklisp, you will need to use the `--userinit` flag, or to set the
+  Systemd user with `User=xyz` in the `[service]` section.
 
-and it can **start the app after a reboot**:
-
-    [Install]
-    WantedBy=basic.target
-
-to enable it:
-
-    sudo systemctl enable my-app.service
 
 See more: [https://www.freedesktop.org/software/systemd/man/systemd.service.html](https://www.freedesktop.org/software/systemd/man/systemd.service.html).
 
