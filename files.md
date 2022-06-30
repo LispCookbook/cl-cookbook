@@ -22,7 +22,9 @@ Of course, do not miss:
 
 
 ### Getting the components of a pathname
+
 #### File extension
+
 The file extension is called "pathname type" in Lisp parlance:
 
 ~~~lisp
@@ -30,6 +32,7 @@ The file extension is called "pathname type" in Lisp parlance:
 ~~~
 
 #### File basename
+
 The basename is called the "name" -
 
 ~~~lisp
