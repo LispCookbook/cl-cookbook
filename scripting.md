@@ -290,7 +290,12 @@ ECL is more involved and takes the longer to compile of these three implementati
 Building with SBCL's core compression can dramatically reduce your
 application binary's size. In our case, we passed from 120MB to 23MB,
 for a loss of a dozen milliseconds of start-up time, which was still
-under 50ms!
+under 50ms.
+
+<div class="info-box info">
+    <strong>Note:</strong> SBCL 2.2.6 switched to compression with zstd instead of zlib, which provides smaller binaries and faster compression and decompression times.
+</div>
+
 
 Your SBCL must be built with core compression, see the documentation: [http://www.sbcl.org/manual/#Saving-a-Core-Image](http://www.sbcl.org/manual/#Saving-a-Core-Image)
 
