@@ -21,6 +21,38 @@ Of course, do not miss:
 * [Files and File I/O in Practical Common Lisp](http://gigamonkeys.com/book/files-and-file-io.html)
 
 
+### Getting the components of a pathname
+
+#### File extension
+
+The file extension is called "pathname type" in Lisp parlance:
+
+~~~lisp
+(pathname-type "~/foo.org")  ;; => "org"
+~~~
+
+#### File basename
+
+The basename is called the "name" -
+
+~~~lisp
+(pathname-name "~/foo.org")  ;; => "foo"
+(pathname-name "~/foo")      ;; => "foo"
+~~~
+
+If a directory pathname has a trailing slash, `pathname-name` may return `nil`; use `pathname-directory` instead -
+
+~~~lisp
+(pathname-name "~/foo/")     ;; => NIL
+(first (last (pathname-directory #P"~/foo/"))) ;; => "foo"
+~~~
+
+#### Parent directory
+
+~~~lisp
+(uiop:pathname-parent-directory-pathname #P"/foo/bar/quux/")     ;; => #P"/foo/bar/"
+~~~
+
 ### Testing whether a file exists
 
 Use the function
@@ -495,15 +527,6 @@ Alternatively, the library [str](https://github.com/vindarel/cl-str) has the `to
 ~~~
 
 Both `alexandria:write-string-into-file` and `str:to-file` take the same keyword arguments as `cl:open` that controls file creation: `:if-exists` and `if-does-not-exists`.
-
-### Getting the file extension
-
-The file extension is a pathname type in Lisp parlance:
-
-~~~lisp
-(pathname-type "~/foo.org")  ;; => "org"
-~~~
-
 
 ### Getting file attributes (size, access time,...)
 
