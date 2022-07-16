@@ -346,7 +346,7 @@ So how do we fix the problem of the previous example? By binding the top-level a
         (bt:make-thread
          (lambda ()
            (format top-level "Hello from thread!"))
-         :name "hello")))
+         :name "hello"))
       nil)
 ~~~
 
