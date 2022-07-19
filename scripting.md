@@ -55,14 +55,14 @@ I suppose your project has Quicklisp dependencies. You must then:
 
 * ensure Quicklisp is installed and loaded at the Lisp startup (you
   completed Quicklisp installation),
-* `load` the project's .asd,
+* `asdf:load-asd` the project's .asd (recommended instead of just `load`),
 * install the dependencies,
 * build the executable.
 
 That gives:
 
 ~~~lisp
-(load "my-app.asd")
+(asdf:load-asd "my-app.asd")
 (ql:quickload "my-app")
 (sb-ext:save-lisp-and-die #p"my-app-binary" :toplevel #'my-app:main :executable t)
 ~~~
