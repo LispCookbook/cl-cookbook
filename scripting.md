@@ -150,7 +150,7 @@ $ ./my-app
 
 Success!
 
-A last note regarding `libssl`. It's easier, on Linux at least, to
+A note regarding `libssl`. It's easier, on Linux at least, to
 rely on your OS' current installation, so we'll tell Deploy to not
 bother shipping it (nor `libcrypto`):
 
@@ -166,6 +166,20 @@ The day you want to ship a foreign library that Deploy doesn't find, you can ins
   ;;                   ^^^ CFFI system name. Find it with a call to "apropos".
   :path "/usr/lib/x86_64-linux-gnu/libcrypto.so.1.1")
 ~~~
+
+A last remark. Once you built your binary and you run it for the first
+time, you might get a funny message from ASDF that tries to upgrade
+itself, finds nothing into a `~/common-lisp/asdf/` repository, and
+quits. To tell it to not upgrade itself, add this into your .asd:
+
+~~~lisp
+;; Tell ASDF to not update itself.
+(deploy:define-hook (:deploy asdf) (directory)
+  (declare (ignorable directory))
+  #+asdf (asdf:clear-source-registry)
+  #+asdf (defun asdf:upgrade-asdf () nil))
+~~~
+
 
 But there is more, so we refer you to Deploy's documentation.
 
