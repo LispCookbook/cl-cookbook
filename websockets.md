@@ -217,7 +217,7 @@ Now open up two browser tabs and point them to `http://localhost:8080` and you
 should see your chat app!
 
 <img src="assets/sockets-lisp-chat.gif"
-     width="470" height="247"/>
+     width="470" height="247" alt="Chat app demo between two browser windows"/>
 
 ## All The Code
 

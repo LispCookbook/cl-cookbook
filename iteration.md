@@ -1109,6 +1109,7 @@ Summing into a variable:
 ~~~
 
 ### max, min
+
 #### loop
 
 ~~~lisp
@@ -1119,6 +1120,7 @@ Summing into a variable:
 and `minimize`.
 
 #### Series
+
 ~~~lisp
 (collect-max (#M(lambda (i) (mod i 3))
                 (scan-range :from 1 :upto 3)))
@@ -1126,6 +1128,7 @@ and `minimize`.
 and `collect-min`.
 
 ### Destructuring, aka pattern matching against the list or dotted pairs
+
 #### loop
 
 ~~~lisp

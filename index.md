@@ -143,7 +143,7 @@ The pages here on Github are kept up to date. You can also download a
 
 
 <div style="text-align: center">
-    <img src="orly-cover.png"/>
+    <img src="orly-cover.png" alt="Oh, really? book cover"/>
 </div>
 
 [cll]: news:comp.lang.lisp
