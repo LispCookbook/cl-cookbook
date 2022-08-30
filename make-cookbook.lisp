@@ -55,7 +55,7 @@
 
 (defparameter *full-markdown* "full.md")
 (defparameter *bookname* "common-lisp-cookbook.epub")
-(defparameter *epub-command-placeholder* "pandoc -S -o ~a --toc metadata.txt ~a"
+(defparameter *epub-command-placeholder* "pandoc -o ~a --toc metadata.txt ~a"
   "format with book name and sources file.")
 
 (defun reset-target ()
