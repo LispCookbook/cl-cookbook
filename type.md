@@ -104,6 +104,7 @@ T
 
 The function [`subtypep`][subtypep] can be used to inspect if a type inherits
 from the another one. It returns 2 values:
+
 - `T, T` means first argument is sub-type of the second one.
 - `NIL, T` means first argument is *not* sub-type of the second one.
 - `NIL, NIL` means "not determined".

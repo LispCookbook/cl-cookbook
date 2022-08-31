@@ -174,6 +174,7 @@ and [row-major-aref](http://clhs.lisp.se/Body/f_row_ma.htm#row-major-aref) funct
 The [aref](http://clhs.lisp.se/Body/f_aref.htm) function takes the same number of index arguments as the
 array has dimensions. Indexing is from 0 and row-major as in C, but
 not Fortran.
+
 ~~~lisp
 * (defparameter *a* #(1 2 3 4))
 *A*
@@ -201,6 +202,7 @@ The range of these indices can be found using
 
 or the rank of the array can be found, and then the size of each
 dimension queried:
+
 ~~~lisp
 * (array-rank *a*)
 1
@@ -214,7 +216,8 @@ dimension queried:
 3
 ~~~
 
-To loop over an array nested loops can be used, such as
+To loop over an array nested loops can be used, such as:
+
 ~~~lisp
 * (defparameter a #2A((1 2 3) (4 5 6)))
 A
@@ -269,10 +272,10 @@ A utility macro which does this for multiple dimensions is `nested-loop`:
            (unless (integerp dim) (error "Dimensions must be integers: ~S" dim)))
          (destructuring-bind ,(reverse dims-rev) ,dims ; Dimensions reversed so that innermost is last
            ,result)))))
-
 ~~~
 
-so that the contents of a 2D array can be printed using
+so that the contents of a 2D array can be printed using:
+
 ~~~lisp
 * (defparameter a #2A((1 2 3) (4 5 6)))
 A
@@ -343,6 +346,7 @@ ARR
 ~~~
 
 A matrix-matrix multiply operation can be implemented as:
+
 ~~~lisp
 (let ((A #2A((1 2) (3 4)))
       (B #2A((5 6) (7 8)))
@@ -354,6 +358,7 @@ A matrix-matrix multiply operation can be implemented as:
                        #i(result[i j] += A[i k] * B[k j]))))
       result)
 ~~~
+
 See the section below on linear algebra, for alternative
 matrix-multiply implementations.
 
@@ -421,6 +426,7 @@ fork](https://github.com/bendudson/array-operations) of array-operations, but
 not Quicklisp]
 
 This can be used as:
+
 ~~~lisp
 * (defparameter *a* #(1 2 3 4))
 *A*
@@ -441,7 +447,8 @@ B
 #(0.9092974 0.28224 -2.2704074 -3.8356972)
 ~~~
 
-and combined with `cmu-infix`
+and combined with `cmu-infix`:
+
 ~~~lisp
 * (vectorize (a b) #i(a * sin(b)) )
 #(0.9092974 0.28224 -2.2704074 -3.8356972)
@@ -482,6 +489,7 @@ B
 * y
 #(2.5d0 4.0d0 5.5d0)
 ~~~
+
 If the `y` array is complex, then this operation calls the complex
 number versions of these operators:
 
@@ -599,6 +607,7 @@ defined above, a macro which does not allocate can be defined as:
          ,result))))
 
 ~~~
+
 [Note: This macro is available in [this fork](https://github.com/bendudson/array-operations)
 of array-operations, but not Quicklisp]
 
@@ -660,6 +669,7 @@ column:
 * (lla:mm #2A((1 1 1) (2 2 2) (3 3 3))  #(2 3 4))
 #(9.0d0 18.0d0 27.0d0)
 ~~~
+
 which has performed the sum over `j` of `A[i j] * x[j]`
 
 #### Matrix-matrix multiply
@@ -668,6 +678,7 @@ which has performed the sum over `j` of `A[i j] * x[j]`
 * (lla:mm #2A((1 2 3) (1 2 3) (1 2 3))  #2A((2 3 4) (2 3 4) (2 3 4)))
 #2A((12.0d0 18.0d0 24.0d0) (12.0d0 18.0d0 24.0d0) (12.0d0 18.0d0 24.0d0))
 ~~~
+
 which summed over `j` in `A[i j] * B[j k]`
 
 Note that the type of the returned arrays are simple arrays,
@@ -695,6 +706,7 @@ To load "array-operations":
 * (aops:outer #'* #(1 2 3) #(2 3 4))
 #2A((2 3 4) (4 6 8) (6 9 12))
 ~~~
+
 which has created a new 2D array `A[i j] = B[i] * C[j]`. This `outer`
 function can take an arbitrary number of inputs, and inputs with
 multiple dimensions.
@@ -707,6 +719,7 @@ The direct inverse of a dense matrix can be calculated with `invert`
 * (lla:invert #2A((1 0 0) (0 1 0) (0 0 1)))
 #2A((1.0d0 0.0d0 -0.0d0) (0.0d0 1.0d0 -0.0d0) (0.0d0 0.0d0 1.0d0))
 ~~~
+
 e.g
 
 ~~~lisp

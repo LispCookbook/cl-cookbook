@@ -156,9 +156,6 @@ So you probably want a shell alias:
 
     alias ilem='lem --eval "(lem-lisp-mode:start-lisp-repl t)"'
 
-<img src="assets/lem1.png" style="width: 800px" title="Lem's REPL" alt="Lem running in the terminal with the Lisp REPL full screen, showing a completion window."/>
-
-
 ## Sublime Text
 
 [Sublime Text](http://www.sublimetext.com/3) has now good support for

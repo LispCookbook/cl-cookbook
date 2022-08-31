@@ -311,7 +311,7 @@ under 50ms.
 </div>
 
 
-Your SBCL must be built with core compression, see the documentation: [http://www.sbcl.org/manual/#Saving-a-Core-Image](http://www.sbcl.org/manual/#Saving-a-Core-Image)
+Your SBCL must be built with core compression, see the documentation: [Saving-a-Core-Image](http://www.sbcl.org/manual/#Saving-a-Core-Image)
 
 Is it the case ?
 
