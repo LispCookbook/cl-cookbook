@@ -814,7 +814,8 @@ The step must always be a positive number. If you want to count down, see above.
 
 #### Series
 
-with `:by`
+with `:by`:
+
 ~~~lisp
 (iterate ((i (scan-range :from 1 :upto 10 :by 2)))
   (print i))
@@ -1201,7 +1202,7 @@ But for alists, `scan-alist` is provided:
 
 `iterate` has some other things unique to it.
 
-If you are a newcomer in Lisp, it's perfectly OK to keep you this section for
+If you are a newcomer in Lisp, it's perfectly OK to keep this section for
 later. You could very well spend your career in Lisp without resorting
 to those features… although they might turn out useful one day.
 

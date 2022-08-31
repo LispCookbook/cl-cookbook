@@ -111,8 +111,8 @@ highlighting, Emacs-like keybindings (including the `M-x` extended
 command). The menus help the discovery.
 
 We personally found the editing experience a bit "raw". For example:
-- indention after a new line is not automatic, one has to press TAB
-again.
+
+- indention after a new line is not automatic, one has to press TAB again.
 - the auto-completion is not fuzzy.
 - there are no plugins similar to ~~Paredit~~ (there is a brand new (2021) [Paredit for LispWorks](https://github.com/g000001/lw-paredit)) or Lispy, nor a Vim layer.
 

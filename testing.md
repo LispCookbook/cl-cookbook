@@ -162,7 +162,7 @@ The `test` macro provides a simple way to define a test with a name.
                          :error-if-not-exists t)))
 ~~~
 
-In the above code, 3 test were defined with 5 checks in total. Some checks were actually redundant for the sake of demonstration. You may put all the checks in one big test, or in multiple scenarios. It is up to you.
+In the above code, three tests were defined with 5 checks in total. Some checks were actually redundant for the sake of demonstration. You may put all the checks in one big test, or in multiple scenarios. It is up to you.
 
 The macro `test` is a convenience for `def-test` to define simple tests. You may read its docstring for a more complete introduction, for example to read about `:depends-on`.
 
