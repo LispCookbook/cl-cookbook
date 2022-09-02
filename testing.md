@@ -1,5 +1,5 @@
 ---
-title: Testing
+title: Testing the code
 ---
 
 So you want to easily test the code you're writing? The following
