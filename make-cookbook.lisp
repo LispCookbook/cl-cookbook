@@ -68,7 +68,7 @@
   "Transform markdown frontmatters to a title, etc."
   (format t "Edit the markdown...~&")
   (uiop:run-program (format nil "sed -i \"s/title:/# /g\" ~a" *full-markdown*))
-  (uiop:run-program (format nil "sed -i \"s/---/ /g\" ~a" *full-markdown*))
+  (uiop:run-program (format nil "sed -i \"/^---/s/---/ /g\" ~a" *full-markdown*))
   ;; Exclude regions that don't export correctly, like embedded videos.
   (uiop:run-program (format nil "sed -i \"/<\!-- epub-exclude-start -->/,/<\!-- epub-exclude-end -->/d\" ~a" *full-markdown*))
   ;; Make internal links work in the generated EPUB.
