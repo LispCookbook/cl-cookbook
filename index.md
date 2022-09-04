@@ -60,13 +60,17 @@ The Cookbook is also available in EPUB (and PDF) format.
 You can [download it directly in EPUB](https://github.com/LispCookbook/cl-cookbook/releases/download/2022-03-23/common-lisp-cookbook.epub) and [PDF](https://github.com/LispCookbook/cl-cookbook/releases/download/2022-03-23/common-lisp-cookbook.pdf), and you can **pay what you want** to further support its development:
 
 
+<!-- epub-exclude-start -->
 <br>
+<!-- epub-exclude-end -->
 
 <a style="font-size: 16px; background-color: #4CAF50; color: white; padding: 16px; cursor: pointer;" href="https://ko-fi.com/s/01fee22a32">
   Donate and download the EPUB version
 </a>
 
+<!-- epub-exclude-start -->
 <br>
+<!-- epub-exclude-end -->
 
 Thank you!
 
