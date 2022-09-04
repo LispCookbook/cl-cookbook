@@ -560,7 +560,9 @@ th {
     </tr>
   </tbody>
 </table>
+<!-- epub-exclude-start -->
 <br>
+<!-- epub-exclude-end -->
 
 Negative numbers are treated as two's-complements. If you have forgotten this,
 please refer to the [Wiki page][twos-complements].

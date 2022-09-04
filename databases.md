@@ -587,7 +587,9 @@ You can compose your queries with regular Lisp code:
 <div class="info-box info">
 <strong>Note:</strong> if you didn't <code>use</code> SXQL, then write <code>(sxql:where …)</code> and <code>(sxql:order-by …)</code>.
 </div>
+<!-- epub-exclude-start -->
 <br>
+<!-- epub-exclude-end -->
 
 You can compose your queries further with the backquote syntax.
 
