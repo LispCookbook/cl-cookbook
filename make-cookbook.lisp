@@ -41,7 +41,7 @@
    "ffi.md"
    "process.md"
    "systems.md"
-   "win32.md"
+   ;; "win32.md" ; Excluded because: Out of date
    "debugging.md"
    "performance.md"
    "scripting.md"
@@ -51,7 +51,7 @@
    "web.md"
    "web-scraping.md"
    "websockets.md"
-   "misc.md"
+   ;; "misc.md" ; Excluded because: Lack of relevant content
    ;; "awesome-cl.md"
    "contributors.md"
    ))

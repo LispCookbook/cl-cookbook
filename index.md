@@ -41,7 +41,9 @@ The CL Cookbook aims to tackle all sort of topics, for the beginner as for the m
 * [Foreign Function Interfaces](ffi.html)
 * [Threads](process.html)
 * [Defining Systems](systems.html)
+<!-- epub-exclude-start -->
 * [Using the Win32 API](win32.html)
+<!-- epub-exclude-end -->
 * [Debugging](debugging.html)
 * [Performance Tuning](performance.html)
 * [Scripting. Building executables](scripting.html)
@@ -51,7 +53,9 @@ The CL Cookbook aims to tackle all sort of topics, for the beginner as for the m
 * [Web development](web.html)
 * [Web Scraping](web-scraping.html)
 * [WebSockets](websockets.html)
+<!-- epub-exclude-start -->
 * [Miscellaneous](misc.html)
+<!-- epub-exclude-end -->
 
 ## Download in EPUB
 
@@ -146,9 +150,11 @@ The pages here on Github are kept up to date. You can also download a
 [Github project page][gh].
 
 
+<!-- epub-exclude-start -->
 <div style="text-align: center">
     <img src="orly-cover.png" alt="Oh, really? book cover"/>
 </div>
+<!-- epub-exclude-end -->
 
 [cll]: news:comp.lang.lisp
 [perl]: http://www.oreilly.com/catalog/cookbook/
