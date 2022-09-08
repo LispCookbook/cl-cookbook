@@ -587,7 +587,9 @@ You can compose your queries with regular Lisp code:
 <div class="info-box info">
 <strong>Note:</strong> if you didn't <code>use</code> SXQL, then write <code>(sxql:where …)</code> and <code>(sxql:order-by …)</code>.
 </div>
+<!-- epub-exclude-start -->
 <br>
+<!-- epub-exclude-end -->
 
 You can compose your queries further with the backquote syntax.
 
@@ -893,6 +895,8 @@ Use it like this:
 - [mito-attachment](https://github.com/fukamachi/mito-attachment)
 - [mito-auth](https://github.com/fukamachi/mito-auth)
 - [can](https://github.com/fukamachi/can/) a role-based access right control library
+<!-- epub-exclude-start -->
 - an advanced ["defmodel" macro](drafts/defmodel.lisp.html).
+<!-- epub-exclude-end -->
 
 <!-- # todo: Generating models for an existing DB -->

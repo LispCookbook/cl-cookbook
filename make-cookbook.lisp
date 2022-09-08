@@ -12,6 +12,8 @@
 
 (defparameter chapters
   (list
+   "index.md"
+   "license.md"
    "foreword.md"
    "getting-started.md"
    "editor-support.md"
@@ -36,9 +38,10 @@
    "type.md"
    "sockets.md"
    "os.md"
+   "ffi.md"
    "process.md"
    "systems.md"
-   ;; "win32.md"
+   ;; "win32.md" ; Excluded because: Out of date
    "debugging.md"
    "performance.md"
    "scripting.md"
@@ -48,7 +51,7 @@
    "web.md"
    "web-scraping.md"
    "websockets.md"
-   ;; "misc.md"
+   ;; "misc.md" ; Excluded because: Lack of relevant content
    ;; "awesome-cl.md"
    "contributors.md"
    ))
@@ -68,6 +71,8 @@
   (uiop:run-program (format nil "sed -i \"/^---/s/---/ /g\" ~a" *full-markdown*))
   ;; Exclude regions that don't export correctly, like embedded videos.
   (uiop:run-program (format nil "sed -i \"/<\!-- epub-exclude-start -->/,/<\!-- epub-exclude-end -->/d\" ~a" *full-markdown*))
+  ;; Make internal links work in the generated EPUB.
+  (uiop:run-program (format nil "sed -i -f fix-epub-links.sed ~a" *full-markdown*))
   )
 
 (defun to-epub ()

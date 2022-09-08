@@ -735,7 +735,9 @@ th {
     </tr>
   </tbody>
 </table>
+<!-- epub-exclude-start -->
 <br>
+<!-- epub-exclude-end -->
 
 Note that not all "traditional" lisp types are included in this
 list. (Consider: `atom`, `fixnum`, `short-float`, and any type not
