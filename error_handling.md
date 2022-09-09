@@ -95,24 +95,6 @@ The general form of `handler-case` is
        ...))
 ~~~
 
-We can also catch all conditions by matching `t`, like in a `cond`:
-
-~~~lisp
-(handler-case
-    (progn
-      (format t "This won't work…~%")
-      (/ 3 0))
-  (t (c)
-    (format t "Got an exception: ~a~%" c)
-    (values 0 c)))
-;; …
-;; This won't work…
-;; Got an exception: arithmetic error DIVISION-BY-ZERO signalled
-;; Operation was (/ 3 0).
-;; 0
-;; #<DIVISION-BY-ZERO {100608F0F3}>
-~~~
-
 
 ## Catching a specific condition
 
