@@ -24,5 +24,5 @@ documentation, even if advised of the possibility of such damage.
 LispCookbook Github Group addendum: this document is now managed in a modified format.
 
 Copyright:
-2015-2017 LispCookbook Github Group
+2015-2022 LispCookbook Github Group
 2002-2007 The Common Lisp Cookbook Project,
