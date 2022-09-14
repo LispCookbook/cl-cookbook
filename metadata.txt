@@ -7,7 +7,7 @@ title:
 creator:
 - role: author
   text: The Common Lisp Cookbook contributors
-rights: © 2022 March, 23th, vindarel <vindarel@mailz.org>.
+rights: © 2022 September, 14th, vindarel <vindarel@mailz.org>.
   This e-book is free of charge, but you can [pay what you want](https://ko-fi.com/s/01fee22a32) for it.
 cover-image: orly-cover.png
 ...
