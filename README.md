@@ -56,14 +56,28 @@ After this you can proceed as usual:
 
 Also, refer to the [CONTRIBUTING.md][contributing] file.
 
-### Building the EPUB
+### Building the EPUB and the PDF
 
 Run `make epub`. See `make-cookbook.lisp`.
 
-To exclude regions of text of the build (for example, embedded videos), use these flags:
+You need a decently recent version of [Calibre](https://calibre-ebook.com/). They provide an easy binary installation.
+
+To exclude regions of text of the build (for example, embedded videos that makes no sense in a print format), use these flags:
 
     <!-- epub-exclude-start -->
     <!-- epub-exclude-end -->
+
+Our build script roughly does the following:
+
+- concatenate all markdown content into one file
+- change yaml frontmatters to a markdown title
+- delete the mark regions from the file
+- make internal links work on the EPUB.
+
+It uses some metadata in `metadata.txt`.
+
+We can check the resulting EPUB with `epubcheck`.
+
 
 ## Origins
 
