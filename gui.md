@@ -31,6 +31,8 @@ In this recipe, we'll present the following GUI toolkits:
 - [Qt4][qt4] with [Qtools][qtools]
 - [IUP][iup-tecgraf] with [lispnik/iup][iup-lisp]
 - [Gtk3][gtk] with [cl-cffi-gtk][cl-cffi-gtk]
+  - if you want Gtk4 bindings, see [cl-gtk4](https://github.com/bohonghuang/cl-gtk4). They are new bindings, released in September, 2022.
+
 - [Nuklear][nuklear] with [Bodge-Nuklear][bodge-nuklear]
 
 In addition, you might want to have a look to:
