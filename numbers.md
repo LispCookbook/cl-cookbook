@@ -134,6 +134,7 @@ DOUBLE-FLOAT
 
 Note that unlike in some languages, appending a single decimal point
 to the end of a number does not make it a float:
+
 ~~~lisp
 * (type-of 10.)
 (INTEGER 0 4611686018427387903)
@@ -505,15 +506,63 @@ Common Lisp also provides many functions to perform bit-wise arithmetic
 operations. Some commonly used ones are listed below, together with their
 C/C++ equivalence.
 
-{:class="table table-bordered table-stripped"}
-| Common  Lisp     | C/C++       | Description                                      |
-|------------------|-------------|--------------------------------------------------|
-| `(logand a b c)` | `a & b & c` | Bit-wise AND of multiple operands                |
-| `(logior a b c)` | `a | b | c` | Bit-wise OR of multiple arguments                |
-| `(lognot a)`     | `~a`        | Bit-wise NOT of single operand                   |
-| `(logxor a b c)` | `a ^ b ^ c` | Bit-wise exclusive or (XOR) or multiple operands |
-| `(ash a 3)`      | `a << 3`    | Bit-wise left shift                              |
-| `(ash a -3)`     | `a >> 3`    | Bit-wise right shift                             |
+<style>
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 5px;
+}
+th {
+  text-align: left;
+}
+</style>
+
+<table>
+  <thead>
+    <tr>
+      <th>Common Lisp</th>
+      <th>C/C++</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>(logand a b c)</td>
+      <td>a & b & c</td>
+      <td>Bit-wise AND of multiple operands</td>
+    </tr>
+    <tr>
+      <td>(logior a b c)</td>
+      <td>a | b | c</td>
+      <td>Bit-wise OR of multiple operands</td>
+    </tr>
+    <tr>
+      <td>(lognot a)</td>
+      <td>~a</td>
+      <td>Bit-wise NOT of single operands</td>
+    </tr>
+    <tr>
+      <td>(logxor a b c)</td>
+      <td>a ^ b ^ c</td>
+      <td>Bit-wise exclusive or (XOR) of multiple operands</td>
+    </tr>
+    <tr>
+      <td>(ash a 3)</td>
+      <td>a << 3</td>
+      <td>Bit-wise left shift</td>
+    </tr>
+    <tr>
+      <td>(ash a -3)</td>
+      <td>a >> 3</td>
+      <td>Bit-wise right shift</td>
+    </tr>
+  </tbody>
+</table>
+<!-- epub-exclude-start -->
+<br>
+<!-- epub-exclude-end -->
 
 Negative numbers are treated as two's-complements. If you have forgotten this,
 please refer to the [Wiki page][twos-complements].

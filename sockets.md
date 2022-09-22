@@ -23,6 +23,7 @@ that is specific to that connection. We can then use that connection to
 communicate with our client.
 
 So, what were the problems I faced due to my mistakes?
+
 Mistake 1 - My initial understanding was that `socket-accept` would return
 a stream object. NO.... It returns a socket object. In hindsight, its correct
 and my own mistake cost me time. So, if you want to write to the socket, you
@@ -97,7 +98,7 @@ Instead, you pass `nil` but you set `:local-host` and `:local-port` to the addre
 and port that you want to receive data on. This part took some time to
 figure out, because the documentation didn't cover it. Instead reading
 a bit of code from
-https://code.google.com/p/blackthorn-engine-3d/source/browse/src/examples/usocket/usocket.lisp helped a lot.
+[blackthorn-engine-3d](https://code.google.com/p/blackthorn-engine-3d/source/browse/src/examples/usocket/usocket.lisp) helped a lot.
 
 Also, since UDP is connectionless, anyone can send data to it at any
 time. So, we need to know which host/port did we get data from so
@@ -158,4 +159,4 @@ and `#(8 7 6 5 4 3 2 1)` on the second one.
 
 ## Credit
 
-This guide originally comes from https://gist.github.com/shortsightedsid/71cf34282dfae0dd2528
+This guide originally comes from [shortsightedsid](https://gist.github.com/shortsightedsid/71cf34282dfae0dd2528)

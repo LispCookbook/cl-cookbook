@@ -104,6 +104,7 @@ T
 
 The function [`subtypep`][subtypep] can be used to inspect if a type inherits
 from the another one. It returns 2 values:
+
 - `T, T` means first argument is sub-type of the second one.
 - `NIL, T` means first argument is *not* sub-type of the second one.
 - `NIL, NIL` means "not determined".
@@ -537,5 +538,5 @@ code into small functions.
 [declaim]: http://www.lispworks.com/documentation/HyperSpec/Body/m_declai.htm
 [declare]: http://www.lispworks.com/documentation/HyperSpec/Body/s_declar.htm
 [safety]: http://www.lispworks.com/documentation/HyperSpec/Body/d_optimi.htm#speed
-[sbcl159]: http://www.sbcl.org/news.html#1.5.9
+[sbcl159]: http://www.sbcl.org/all-news.html#1.5.9
 [sanity-clause]: https://github.com/fisxoj/sanity-clause

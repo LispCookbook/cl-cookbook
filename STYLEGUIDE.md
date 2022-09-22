@@ -46,3 +46,19 @@ This snippet...
 ~~~
 
 If the result is large, use another code block, without comments.
+
+## EPUB gotchas
+
+### Embedded content
+
+We should not abuse from embedded content, such as youtube videos.
+
+Please exclude them from the EPUB generation with these flags:
+
+    <!-- epub-exclude-start -->
+    <!-- epub-exclude-end -->
+
+### Internal links (for the EPUB)
+
+We must tweak the markdown links so that internal links work in the
+EPUB reader. See `fix-epub-links.sed` to add your link or just ping us on GitHub.

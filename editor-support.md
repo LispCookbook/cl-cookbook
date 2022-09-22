@@ -16,7 +16,7 @@ multi-platform Common Lisp environment. It ships Emacs, SBCL,
 Quicklisp, SLIME and Git.
 
 <img src="assets/portacle.png"
-     style="width: 800px"/>
+     style="width: 800px" alt="Portacle with an open Slime REPL"/>
 
 ### Installing SLIME
 
@@ -58,7 +58,7 @@ environment for Vim (and Neovim), similar to SLIME for Emacs and SLIMV
 for Vim.
 
 <img src="assets/slimv.jpg"
-     style="width: 800px"/>
+     style="width: 800px" alt="The Slimv plugin with an open REPL"/>
 
 [cl-neovim](https://github.com/adolenc/cl-neovim/) makes it possible to write
 Neovim plugins in Common Lisp.
@@ -76,7 +76,7 @@ allows you to interactively develop Common Lisp code, turning
 Atom into a pretty good Lisp IDE.
 
 <img src="assets/atom-slime.png"
-     style="width: 800px"/>
+     style="width: 800px" alt="The SLIMA extension for Atom with an open Lisp REPL"/>
 
 ## VSCode
 
@@ -104,7 +104,7 @@ supports:
 - Rename function args and let bindings
 - Code folding
 
-<img src="assets/commonlisp-vscode-alive.png" style="width: 800px"/>
+<img src="assets/commonlisp-vscode-alive.png" style="width: 800px" alt="The Alive VSCode plugin showing the interactive debugger."/>
 
 [commonlisp-vscode
 extension](https://marketplace.visualstudio.com/items?itemName=ailisp.commonlisp-vscode)
@@ -120,7 +120,7 @@ supports:
 - go to definition
 - documentation on hover
 
-<img src="assets/commonlisp-vscode.png" style="width: 800px"/>
+<img src="assets/commonlisp-vscode.png" style="width: 800px" alt="The VSCode extension with a Lisp REPL, code completion and a mini-map."/>
 
 ### Using VSCode with Alive
 
@@ -135,7 +135,7 @@ Available for Windows, Mac and Linux, built-in SBCL and CLISP support
 and possibility to connect other environments, interactive debugger
 with restarts, macro-expansion, parenthesis matching,…
 
-<img src="dandelion.png" style="width: 800px"/>
+<img src="dandelion.png" style="width: 800px" alt="Dandelion, a simple Common Lisp plugin for Eclipse"/>
 
 ## Lem
 
@@ -146,7 +146,7 @@ frontend, and other programming modes: Python, Go, Rust, JS, Nim,
 Scheme, HTML, CSS, directory mode, a vim layer, and more.
 
 <img src="assets/lem-terminal.png"
-     style="width: 800px"/>
+     style="width: 800px" alt="Lem running in the terminal with a REPL and the interactive debugger"/>
 
 It can be started as a REPL right away in the terminal. Run it with:
 
@@ -156,8 +156,7 @@ So you probably want a shell alias:
 
     alias ilem='lem --eval "(lem-lisp-mode:start-lisp-repl t)"'
 
-<img src="assets/lem-terminal.png" style="width: 800px" title="Lem's REPL"/>
-
+<img src="assets/lem1.png" style="width: 800px" title="Lem's REPL" alt="Lem running in the terminal with the Lisp REPL full screen, showing a completion window."/>
 
 ## Sublime Text
 
@@ -174,7 +173,7 @@ provides advanced features including a debugger with stack frame
 inspection.
 
 <img src="assets/editor-sublime.png"
-     style="width: 800px"/>
+     style="width: 800px" alt="A Lisp REPL in Sublime Text"/>
 
 ## LispWorks (proprietary)
 
@@ -185,7 +184,7 @@ provides a **free limited version**.
 
 You can [read our LispWorks review here](lispworks.html).
 
-<img src="assets/lispworks/two-sided-view.png" style="width: 800px" title="The LispWorks listener an the editor in the Mate desktop environment"/>
+<img src="assets/lispworks/two-sided-view.png" style="width: 800px" title="The LispWorks IDE" alt="The LispWorks listener and the editor in the Mate desktop environment"/>
 
 
 ## Geany (experimental)
@@ -195,7 +194,7 @@ lisp mode for the [Geany](https://geany.org/) editor. It features completion of 
 smart indenting, jump to definition, compilation of the current file and
 highlighting of errors and warnings, a REPL, and a project skeleton creator.
 
-<img src="assets/geany.png" style="width: 800px"/>
+<img src="assets/geany.png" style="width: 800px" alt="The Geany Lisp plugin showing compilation warnings"/>
 
 
 ## Notebooks
@@ -206,7 +205,7 @@ kernel for Jupyter notebooks.
 You can [see a live Jupyter notebook written in Lisp here](https://nbviewer.jupyter.org/github/yitzchak/common-lisp-jupyter/blob/master/examples/about.ipynb). It is easy to install (Roswell, repo2docker and Docker recipes).
 
 <img src="assets/jupyterpreview.png"
-     style="width: 800px"/>
+     style="width: 800px" alt="A Jupyter notebook running a Common Lisp kernel, exploring the Lorentz system of differential equations, showing a colorful 3D plot with interactive controls (note: the code in the screenshot is actually not Lisp!)"/>
 
 There is also [Darkmatter](https://github.com/tamamu/darkmatter), a notebook-style
 Common Lisp environment, built in Common Lisp.
@@ -219,7 +218,7 @@ Common Lisp environment, built in Common Lisp.
 You might also like [sbcli](https://github.com/hellerve/sbcli), an even simpler REPL with readline capabilities. It handles errors gracefully instead of showing a debugger.
 
 <img src="assets/cl-repl.png"
-     style="width: 500px"/>
+     style="width: 500px" alt="cl-repl 0.4.1 runnning in the terminal, built with Roswell, featuring multi-line prompts and syntax highlighting."/>
 
 
 ## Others

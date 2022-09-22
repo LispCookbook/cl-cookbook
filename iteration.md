@@ -814,7 +814,8 @@ The step must always be a positive number. If you want to count down, see above.
 
 #### Series
 
-with `:by`
+with `:by`:
+
 ~~~lisp
 (iterate ((i (scan-range :from 1 :upto 10 :by 2)))
   (print i))
@@ -1109,6 +1110,7 @@ Summing into a variable:
 ~~~
 
 ### max, min
+
 #### loop
 
 ~~~lisp
@@ -1119,6 +1121,7 @@ Summing into a variable:
 and `minimize`.
 
 #### Series
+
 ~~~lisp
 (collect-max (#M(lambda (i) (mod i 3))
                 (scan-range :from 1 :upto 3)))
@@ -1126,6 +1129,7 @@ and `minimize`.
 and `collect-min`.
 
 ### Destructuring, aka pattern matching against the list or dotted pairs
+
 #### loop
 
 ~~~lisp
@@ -1198,7 +1202,7 @@ But for alists, `scan-alist` is provided:
 
 `iterate` has some other things unique to it.
 
-If you are a newcomer in Lisp, it's perfectly OK to keep you this section for
+If you are a newcomer in Lisp, it's perfectly OK to keep this section for
 later. You could very well spend your career in Lisp without resorting
 to those features… although they might turn out useful one day.
 

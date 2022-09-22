@@ -1,5 +1,5 @@
 ---
-title: Getting started
+title: Getting started with Common Lisp
 ---
 
 We'll begin with presenting easy steps to install a development environment and to start a new Common Lisp project.

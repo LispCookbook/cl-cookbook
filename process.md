@@ -346,7 +346,7 @@ So how do we fix the problem of the previous example? By binding the top-level a
         (bt:make-thread
          (lambda ()
            (format top-level "Hello from thread!"))
-         :name "hello")))
+         :name "hello"))
       nil)
 ~~~
 
@@ -2040,10 +2040,10 @@ through an example:
 #### lparallel:pmap: parallel version of map.
 
 Note that all the mapping functions (`lparallel:pmap`,
-**lparallel:pmapc**,`lparallel:pmapcar`, etc.) take two special keyword
-arguments
+**lparallel:pmapc**,`lparallel:pmapcar`, etc.) take two special keyword arguments:
+
 - `:size`, specifying the number of elements of the input
-sequence(s) to process, and
+sequence(s) to process.
 - `:parts` which specifies the number of parallel parts to divide the
 sequence(s) into.
 
@@ -2290,7 +2290,7 @@ them by age in non-decreasing order.
 
 To see how lparallel handles error handling (hint: with
 `lparallel:task-handler-bind`), please read
-[https://z0ltan.wordpress.com/2016/09/10/basic-concurrency-and-parallelism-in-common-lisp-part-4b-parallelism-using-lparallel-error-handling/](https://z0ltan.wordpress.com/2016/09/10/basic-concurrency-and-parallelism-in-common-lisp-part-4b-parallelism-using-lparallel-error-handling/).
+[lparallel-error-handling](https://z0ltan.wordpress.com/2016/09/10/basic-concurrency-and-parallelism-in-common-lisp-part-4b-parallelism-using-lparallel-error-handling/).
 
 
 ## Monitoring and controlling threads with Slime

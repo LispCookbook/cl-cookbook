@@ -663,19 +663,81 @@ might or might not be built using CLOS classes in any given
 implementation). However, 33 correspondences remain relating to
 "traditional" lisp types:
 
+<style>
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 5px;
+}
+th {
+  text-align: left;
+}
+</style>
 
-|`array`|`hash-table`|`readtable`|
-|`bit-vector`|`integer`|`real`|
-|`broadcast-stream`|`list`|`sequence`|
-|`character`|`logical-pathname`|`stream`|
-|`complex`|`null`|`string`|
-|`concatenated-stream`|`number`|`string-stream`|
-|`cons`|`package`|`symbol`|
-|`echo-stream`|`pathname`|`synonym-stream`|
-|`file-stream`|`random-state`|`t`|
-|`float`|`ratio`|`two-way-stream`|
-|`function`|`rational`|`vector`|
-
+<table>
+  <tbody>
+    <tr>
+      <td>array</td>
+      <td>hash-table</td>
+      <td>readtable</td>
+    </tr>
+    <tr>
+      <td>bit-vector</td>
+      <td>integer</td>
+      <td>real</td>
+    </tr>
+    <tr>
+      <td>broadcast-stream</td>
+      <td>list</td>
+      <td>sequence</td>
+    </tr>
+    <tr>
+      <td>character</td>
+      <td>logical-pathname</td>
+      <td>stream</td>
+    </tr>
+    <tr>
+      <td>complex</td>
+      <td>null</td>
+      <td>string</td>
+    </tr>
+    <tr>
+      <td>concatenated-stream</td>
+      <td>number</td>
+      <td>string-stream</td>
+    </tr>
+    <tr>
+      <td>cons</td>
+      <td>package</td>
+      <td>symbol</td>
+    </tr>
+    <tr>
+      <td>echo-stream</td>
+      <td>pathname</td>
+      <td>synonym-stream</td>
+    </tr>
+    <tr>
+      <td>file-stream</td>
+      <td>random-state</td>
+      <td>t</td>
+    </tr>
+    <tr>
+      <td>float</td>
+      <td>ratio</td>
+      <td>two-way-stream</td>
+    </tr>
+    <tr>
+      <td>function</td>
+      <td>rational</td>
+      <td>vector</td>
+    </tr>
+  </tbody>
+</table>
+<!-- epub-exclude-start -->
+<br>
+<!-- epub-exclude-end -->
 
 Note that not all "traditional" lisp types are included in this
 list. (Consider: `atom`, `fixnum`, `short-float`, and any type not
@@ -705,16 +767,15 @@ FOO
 ;; #<STRUCTURE-CLASS FOO 21DE8714>
 ~~~
 
-The metaclass of a `structure-object` is the class
-    `structure-class`. It is implementation-dependent whether
-    the metaclass of a "traditional" lisp object is
-    `standard-class`, `structure-class`, or
-    `built-in-class`. Restrictions:
+The metaclass of a `structure-object` is the class `structure-class`. It is implementation-dependent whether
+the metaclass of a "traditional" lisp object is `standard-class`, `structure-class`, or `built-in-class`.
+Restrictions:
 
-|`built-in-class`| May not use `make-instance`, may not use `slot-value`, may not use `defclass` to modify, may not create subclasses.|
-|`structure-class`| May not use `make-instance`, might work with `slot-value` (implementation-dependent). Use `defstruct` to subclass application structure types. Consequences of modifying an existing `structure-class` are undefined: full recompilation may be necessary.|
-|`standard-class`|None of these restrictions.|
+`built-in-class`: May not use `make-instance`, may not use `slot-value`, may not use `defclass` to modify, may not create subclasses.
 
+`structure-class`: May not use `make-instance`, might work with `slot-value` (implementation-dependent). Use `defstruct` to subclass application structure types. Consequences of modifying an existing `structure-class` are undefined: full recompilation may be necessary.
+
+`standard-class`: None of these restrictions.
 
 ### Introspection
 
@@ -801,7 +862,7 @@ expands to:
 ~~~
 
 It does much more and it is very flexible, however it is seldom used
-by the Common Lisp community: use at your own risks©.
+by the Common Lisp community: use at your own risk©.
 
 
 ## Methods

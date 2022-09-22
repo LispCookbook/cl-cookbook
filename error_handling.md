@@ -9,7 +9,7 @@ What is a condition ?
 
 > Just like in languages that support exception handling (Java, C++,
 > Python, etc.), a condition represents, for the most part, an
-> “exceptional” situation. However, even more so that those languages,
+> “exceptional” situation. However, even more so than those languages,
 > *a condition in Common Lisp can represent a general situation where
 > some branching in program logic needs to take place*, not
 > necessarily due to some error condition. Due to the highly
@@ -93,24 +93,6 @@ The general form of `handler-case` is
       (code))
    (another-condition (the-condition)
        ...))
-~~~
-
-We can also catch all conditions by matching `t`, like in a `cond`:
-
-~~~lisp
-(handler-case
-    (progn
-      (format t "This won't work…~%")
-      (/ 3 0))
-  (t (c)
-    (format t "Got an exception: ~a~%" c)
-    (values 0 c)))
-;; …
-;; This won't work…
-;; Got an exception: arithmetic error DIVISION-BY-ZERO signalled
-;; Operation was (/ 3 0).
-;; 0
-;; #<DIVISION-BY-ZERO {100608F0F3}>
 ~~~
 
 

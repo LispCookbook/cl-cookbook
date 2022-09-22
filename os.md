@@ -10,7 +10,7 @@ available through [Quicklisp](https://www.quicklisp.org/beta/). These include:
 * ASDF3, which is included with almost all Common Lisp implementations,
   includes [Utilities for Implementation- and OS- Portability (UIOP)](https://common-lisp.net/project/asdf/uiop.html).
 * [osicat](https://common-lisp.net/project/osicat/)
-* [unix-opts](http://quickdocs.org/unix-opts/) is a command-line argument parser, similar to Python's `argparse`.
+* [unix-opts](http://quickdocs.org/unix-opts/) or the newer [clingon](https://github.com/dnaeon/clingon) are a command-line argument parsers, similar to Python's `argparse`.
 
 
 <a name="env"></a>

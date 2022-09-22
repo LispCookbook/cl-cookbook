@@ -290,9 +290,12 @@ There are also keys to know for the lambda list. Please see the documentation.
 [easy-routes](https://github.com/mmontone/easy-routes) is a route
 handling extension on top of Hunchentoot. It provides:
 
-- dispatch based on HTTP method (otherwise cumbersome in Hunchentoot)
-- arguments extraction from the url path
-- and decorators.
+- **dispatch** based on the HTTP method, such as GET or POST (which is otherwise cumbersome to do in Hunchentoot)
+- **arguments extraction** from the url path
+- **decorators** (functions to run before the route body, typically used to add a layer of authentication or changing the returned content type)
+- **URL generation** from route names and given URL parameters
+- visualization of routes
+- and more
 
 To use it, don't create a server with `hunchentoot:easy-acceptor` but
 with `easy-routes:easy-routes-acceptor`:
@@ -309,7 +312,7 @@ serve static content the usual way with Hunchentoot.
 Then define a route like this:
 
 ~~~lisp
-(easy-routes:defroute name ("/foo/:x" :method :get) (y &get z)
+(easy-routes:defroute my-route-name ("/foo/:x" :method :get) (y &get z)
     (format nil "x: ~a y: ~a z: ~a" x y z))
 ~~~
 
@@ -320,6 +323,19 @@ body.
 
 These parameters can take an `:init-form` and `:parameter-type`
 options as in `define-easy-handler`.
+
+Now, imagine that we are deeper in our web application logic, and we
+want to redirect our user to the route "/foo/3". Instead of hardcoding
+the URL, we can **generate the URL from its name**. Use
+`easy-routes:genurl` like this:
+
+~~~lisp
+(easy-routes:genurl my-route-name :id 3)
+;; => /foo/3
+
+(easy-routes:genurl my-route-name :id 3 :y "yay")
+;; => /foo/3?y=yay
+~~~
 
 **Decorators** are functions that are executed before the route body. They
 should call the `next` parameter function to continue executing the
@@ -945,7 +961,7 @@ Thus, no need to minify our JS.
 We can start our executable in a shell and send it to the background (`C-z bg`), or run it inside a `tmux` session. These are not the best but hey, it works©.
 
 
-### Daemonizing, restarting in case of crashes, handling logs with Systemd
+### Systemd: Daemonizing, restarting in case of crashes, handling logs
 
 This is actually a system-specific task. See how to do that on your system.
 
@@ -954,43 +970,54 @@ Most GNU/Linux distros now come with Systemd, so here's a little example.
 Deploying an app with Systemd is as simple as writing a configuration file:
 
 ```
-$ emacs -nw /etc/systemd/system/my-app.service
+$ sudo emacs -nw /etc/systemd/system/my-app.service
 [Unit]
-Description=stupid simple example
+Description=your lisp app on systemd example
 
 [Service]
-WorkingDirectory=/path/to/your/app
-ExecStart=/usr/local/bin/sthg sthg
+WorkingDirectory=/path/to/your/project/directory/
+ExecStart=/usr/bin/make run  # or anything
 Type=simple
 Restart=on-failure
+
+[Install]
+WantedBy=network.target
 ```
 
-Then we have a command to start it:
+Then we have a command to `start` it, only now:
 
     sudo systemctl start my-app.service
 
-a command to check its status:
+and a command to install the service, to **start the app after a boot
+or reboot** (that's the "[Install]" part):
+
+    sudo systemctl enable my-app.service
+
+Then we can check its `status`:
 
     systemctl status my-app.service
 
+and see our application's **logs** (we can write to stdout or stderr,
+and Systemd handles the logging):
 
-and Systemd can handle **logging** (we write to stdout or stderr, it writes logs):
+    journalctl -u my-app.service
 
-    journalctl -f -u my-app.service
+(you can also use the `-f` option to see log updates in real time, and in that case augment the number of lines with `-n 50` or `--lines`).
 
+Systemd handles crashes and **restarts the application**. That's the `Restart=on-failure` line.
 
-and it handles crashes and **restarts the app**:
+Now keep in mind a couple things:
 
-    Restart=on-failure
+- we want our app to crash so that it can be re-started automatically:
+  you'll want the `--disable-debugger` flag with SBCL.
+- Systemd will, by default, run your app as root. If you rely on your
+  Lisp to read your startup file (`~/.sbclrc`), especially to setup
+  Quicklisp, you will need to use the `--userinit` flag, or to set the
+  Systemd user with `User=xyz` in the `[service]` section. And if you
+  use a startup file, be aware that the line `(user-homedir-pathname)`
+  will not return the same result depending on the user, so the snippet
+  might not find Quicklisp's setup.lisp file.
 
-and it can **start the app after a reboot**:
-
-    [Install]
-    WantedBy=basic.target
-
-to enable it:
-
-    sudo systemctl enable my-app.service
 
 See more: [https://www.freedesktop.org/software/systemd/man/systemd.service.html](https://www.freedesktop.org/software/systemd/man/systemd.service.html).
 

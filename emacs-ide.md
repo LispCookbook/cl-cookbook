@@ -107,7 +107,8 @@ must be loaded to add further functionalities. The default
 
 SLIME also has some nice extensions like
 [Helm-SLIME](https://github.com/emacs-helm/helm-slime) which features, among
-others
+others:
+
 - Fuzzy completion,
 - REPL and connection listing,
 - Fuzzy-search of the REPL history,
