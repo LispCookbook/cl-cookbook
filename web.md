@@ -118,7 +118,7 @@ featureful static site generator, see
 Let's install the libraries we'll use:
 
 ~~~lisp
-(ql:quickload '("hunchentoot" "caveman2" "spinneret" "djula"))
+(ql:quickload '("hunchentoot" "caveman2" "spinneret" "djula" "easy-routes"))
 ~~~
 
 To try Weblocks, please see its documentation. The Weblocks in
