@@ -229,7 +229,7 @@ IUP stands as a great solution in between Tk and Gtk or Qt.
 - **Portability**: Windows and Linux, work started for
   Cocoa, iOS, Android, WASM.
 
-- **Widgets choice**: medium.
+- **Widgets choice**: medium. Includes a web browser window (WebkitGTK on Linux, IE's WebBrowser on Windows).
 
 - **Graphical builder**: yes: [IupVisualLED](http://webserver2.tecgraf.puc-rio.br/iup/en/iupvisualled.html)
 
@@ -251,6 +251,7 @@ listDialog, Alarm, Color, Message, Font, Scintilla, file-dialog…
 Cells, Matrix, MatrixEx, MatrixList,
 GLCanvas, Plot, MglPlot, OleControl, WebBrowser (WebKit/Gtk+)…
 drag-and-drop
+WebBrowser
 ```
 
 <!-- editor's note: found missing a list view with columns. -->
