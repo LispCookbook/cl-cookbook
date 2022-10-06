@@ -151,8 +151,7 @@ numerous other layers (networking, D-BUS…).
 Qt is free for open-source software, however you'll want to check the
 conditions to ship proprietary ones.
 
-The [Qtools][qtools] bindings target Qt4. The Qt5 Lisp bindings are
-yet to be created.
+The [Qtools][qtools] bindings target Qt4. The Qt5 Lisp bindings are [https://github.com/commonqt/commonqt5/](in the works) and not ready for prime time..
 
 A companion library for Qtools, that you'll want to check out once you
 made your first Qtool application, is
