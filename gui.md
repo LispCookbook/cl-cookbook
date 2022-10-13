@@ -75,7 +75,7 @@ and it has a couple of unique features: we can develop a graphical
 interface **fully interactively** and we can run the GUI **remotely**
 from the core app.
 
-So, Tk isn't fancy, but it is an used and proven GUI toolkit (and
+So, Tk isn't fancy, but it is a used and proven GUI toolkit (and
 programming language) still used in the industry. It can be a great
 choice to quickly create simple GUIs, to leverage its ease of deployment, or
 when stability is required.
