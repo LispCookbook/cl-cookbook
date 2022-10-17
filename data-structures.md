@@ -451,7 +451,7 @@ with a list of strings:
 (defparameter str '("foo" "bar" "team"))
 (every #'stringp str)
 ;; => T
-(some #'(lambda (it) (= 3 (length it))) str)
+(some (lambda (it) (= 3 (length it))) str)
 ;; => T
 ~~~
 
@@ -1624,7 +1624,7 @@ If the alist has repeating (duplicate) keys, you can use `remove-if-not`, for ex
 
 ~~~lisp
 (remove-if-not
-  #'(lambda (entry)
+  (lambda (entry)
       (eq :a entry))
   *alist-with-duplicate-keys*
   :key #'car)
