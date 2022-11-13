@@ -312,7 +312,7 @@ Use the MAP function to process a string one character at a time.
 ~~~lisp
 * (defparameter *my-string* (string "Groucho Marx"))
 *MY-STRING*
-* (map 'string #'(lambda (c) (print c)) *my-string*)
+* (map 'string (lambda (c) (print c)) *my-string*)
 #\G
 #\r
 #\o

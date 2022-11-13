@@ -329,7 +329,15 @@ class (whether or not those instances exist yet).
 
 #### Slot documentation
 
-Each slot accepts one `:documentation` option.
+Each slot accepts one `:documentation` option. To obtain its documentation via `documentation`, you need to obtain the slot object. This can be done compatibly using a library such as [closer-mop](https://github.com/pcostanza/closer-mop). For instance:
+
+~~~lisp
+(closer-mop:class-direct-slots (find-class 'my-class)) ; list of slots (objects)
+(find 'my-slot * :key #'closer-mop:slot-definition-name) ; find desired slot by name
+(documentation * t) ; obtain its documentation
+~~~
+
+Note however that generally it may be better to document slot accessors instead, as a popular viewpoint is that slots are implementation details and not part of the public interface.
 
 #### Slot type
 

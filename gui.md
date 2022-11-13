@@ -75,7 +75,7 @@ and it has a couple of unique features: we can develop a graphical
 interface **fully interactively** and we can run the GUI **remotely**
 from the core app.
 
-So, Tk isn't fancy, but it is an used and proven GUI toolkit (and
+So, Tk isn't fancy, but it is a used and proven GUI toolkit (and
 programming language) still used in the industry. It can be a great
 choice to quickly create simple GUIs, to leverage its ease of deployment, or
 when stability is required.
@@ -151,8 +151,7 @@ numerous other layers (networking, D-BUS…).
 Qt is free for open-source software, however you'll want to check the
 conditions to ship proprietary ones.
 
-The [Qtools][qtools] bindings target Qt4. The Qt5 Lisp bindings are
-yet to be created.
+The [Qtools][qtools] bindings target Qt4. The Qt5 Lisp bindings are [https://github.com/commonqt/commonqt5/](in the works) and not ready for prime time..
 
 A companion library for Qtools, that you'll want to check out once you
 made your first Qtool application, is
@@ -229,7 +228,7 @@ IUP stands as a great solution in between Tk and Gtk or Qt.
 - **Portability**: Windows and Linux, work started for
   Cocoa, iOS, Android, WASM.
 
-- **Widgets choice**: medium.
+- **Widgets choice**: medium. Includes a web browser window (WebkitGTK on Linux, IE's WebBrowser on Windows).
 
 - **Graphical builder**: yes: [IupVisualLED](http://webserver2.tecgraf.puc-rio.br/iup/en/iupvisualled.html)
 
@@ -251,6 +250,7 @@ listDialog, Alarm, Color, Message, Font, Scintilla, file-dialog…
 Cells, Matrix, MatrixEx, MatrixList,
 GLCanvas, Plot, MglPlot, OleControl, WebBrowser (WebKit/Gtk+)…
 drag-and-drop
+WebBrowser
 ```
 
 <!-- editor's note: found missing a list view with columns. -->

@@ -159,15 +159,21 @@ footer {
     opacity: 0.9;
 }
 .announce {
-    background-color: #8dd090;
+    // background-color: #8dd090;
     padding: 1em;
     text-align: center;
     opacity: 0.9;
+
+    // Orange announce:
+    background-color: #f48224;
+    color: white;
+    margin: 1em 0 1em 0;
 }
 
 .announce a {
     text-decoration: underline;
-    color: #3b3b3b;
+    // color: #3b3b3b;
+    color: white;
 }
 
 ul{
