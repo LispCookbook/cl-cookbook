@@ -19,7 +19,7 @@ Some libraries available on [Quicklisp](https://www.quicklisp.org/beta/) for man
   functions `generate`, `permute`, `displace`, `flatten`, `split`,
   `combine`, `reshape`. It also defines `each`, for element-wise
   operations. This library is not maintained by the original author,
-  but there is an [actively maintained fork](https://github.com/bendudson/array-operations).
+  but there is a maintained [fork by @Symbolics](https://github.com/Lisp-Stat/array-operations).
 - [cmu-infix](https://github.com/rigetticomputing/cmu-infix) includes
   array indexing syntax for multidimensional arrays.
 - [lla](https://github.com/tpapp/lla) is a library for linear algebra, calling BLAS and LAPACK
