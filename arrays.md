@@ -15,11 +15,13 @@ section on [Arrays and vectors](data-structures.html).
 
 Some libraries available on [Quicklisp](https://www.quicklisp.org/beta/) for manipulating arrays:
 
-- [array-operations](https://github.com/tpapp/array-operations) defines
+- [array-operations](https://github.com/Lisp-Stat/array-operations) maintained by @Symbolics defines
   functions `generate`, `permute`, `displace`, `flatten`, `split`,
   `combine`, `reshape`. It also defines `each`, for element-wise
-  operations. This library is not maintained by the original author,
-  but there is an [actively maintained fork](https://github.com/bendudson/array-operations).
+  operations. This was a fork of [bendudson/array-operations on
+  github](https://github.com/bendudson/array-operations) which is a fork of
+  [tpapp/array-operations on github](https://github.com/tpapp/array-operations) by the original
+  author.
 - [cmu-infix](https://github.com/rigetticomputing/cmu-infix) includes
   array indexing syntax for multidimensional arrays.
 - [lla](https://github.com/tpapp/lla) is a library for linear algebra, calling BLAS and LAPACK
@@ -124,7 +126,7 @@ To load "array-operations":
 Note that the nickname for `array-operations` is `aops`. The
 `generate` function can also iterate over the array subscripts by
 passing the key `:subscripts`. See the
-[github repository](https://github.com/tpapp/array-operations) for
+[Array Operations  manual on generate](https://lisp-stat.dev/docs/manuals/array-operations/#generate) for
 more examples.
 
 ### Random numbers
@@ -365,7 +367,7 @@ matrix-multiply implementations.
 ## Element-wise operations
 
 To multiply two arrays of numbers of the same size, pass a function
-to `each` in the [array-operations](https://github.com/tpapp/array-operations) library:
+to `each` in the [array-operations](https://github.com/Lisp-Stat/array-operations) library:
 
 ~~~lisp
 * (aops:each #'* #(1 2 3) #(2 3 4))
@@ -691,7 +693,7 @@ specialised to element type `double-float`
 
 #### Outer product
 
-The [array-operations](https://github.com/tpapp/array-operations)
+The [array-operations](https://github.com/Lisp-Stat/array-operations)
 package contains a generalised [outer product](https://en.wikipedia.org/wiki/Outer_product)
 function:
 
