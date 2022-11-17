@@ -126,7 +126,7 @@ To load "array-operations":
 Note that the nickname for `array-operations` is `aops`. The
 `generate` function can also iterate over the array subscripts by
 passing the key `:subscripts`. See the
-[Array Operations  manual on generate](https://lisp-stat.dev/docs/manuals/array-operations/#generate) for
+[Array Operations manual on generate](https://lisp-stat.dev/docs/manuals/array-operations/#generate) for
 more examples.
 
 ### Random numbers
