@@ -18,7 +18,7 @@ Some libraries available on [Quicklisp](https://www.quicklisp.org/beta/) for man
 - [array-operations](https://github.com/Lisp-Stat/array-operations) maintained by @Symbolics defines
   functions `generate`, `permute`, `displace`, `flatten`, `split`,
   `combine`, `reshape`. It also defines `each`, for element-wise
-  operations. This was a fork of [bendudson/array-operations on
+  operations. This is a fork of [bendudson/array-operations on
   github](https://github.com/bendudson/array-operations) which is a fork of
   [tpapp/array-operations on github](https://github.com/tpapp/array-operations) by the original
   author.
