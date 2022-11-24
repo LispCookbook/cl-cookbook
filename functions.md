@@ -478,6 +478,8 @@ If we bind the caller with `'foo`, a single quote, the function will be resolved
 ;; 2
 ~~~
 
+The behaviour you want depends on your use case. Generally, using sharpsign-quote is less surprising. But if you are running a tight loop and you want live-update mechanisms (think a game or live visualisations), you might want to use a single quote so that your loop picks up the user's new function definition.
+
 
 ## Higher order functions: functions that return functions
 
