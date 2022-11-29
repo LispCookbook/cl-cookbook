@@ -394,6 +394,7 @@ your implementation's documentation:
 - [SBCL trace](http://www.sbcl.org/manual/index.html#Function-Tracing)
 - [CCL trace](https://ccl.clozure.com/manual/chapter4.2.html)
 - [LispWorks trace](http://www.lispworks.com/documentation/lw80/lw/lw-tracer-ug-2.htm)
+- [Allegro trace](https://franz.com/support/documentation/current/doc/debugging.htm#tracer-1)
 
 
 ### Tracing method invocation
