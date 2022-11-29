@@ -36,7 +36,7 @@ statements in the middle of your algorithm, it won't break it.
 Logging is already a good evolution from print debugging ;)
 
 [log4cl](https://github.com/sharplispers/log4cl/) is the popular,
-de-facto logging library but it isn't the only one. Download it:
+de-facto logging library although it isn't the only one. Download it:
 
 ~~~lisp
 (ql:quickload "log4cl")
@@ -95,8 +95,8 @@ As soon as we define a function, we can try it in the REPL. In Slime,
 compile a function with `C-c C-c` (the whole buffer with `C-c C-k`),
 switch to the REPL with `C-c C-z` and try it. Eventually enter the
 package you are working on with `(in-package :your-package)`
-or `C-c ~` (`slime-sync-package-and-default-directory`),
-(which will also change the default working directory to the package definition's directory).
+or `C-c ~` (`slime-sync-package-and-default-directory`,
+which will also change the default working directory to the package definition's directory).
 
 The feedback is immediate. There is no need to recompile everything,
 nor to restart any process, nor to create a main function and define
@@ -106,7 +106,7 @@ when needed).
 We usually need to create some data to test our function(s). This is a
 subsequent art of the REPL existence and it may be a new discipline
 for newcomers. A trick is to write the test data alongside your
-functions but below a `#+nil` feature test (or safer, `+(or nil)`) so that only you can
+functions but below a `#+nil` feature test (or safer, `+(or)`: it is still possible that someone pushed `NIL` to the `*features*` list) so that only you can
 manually compile them:
 
 ~~~lisp
@@ -143,7 +143,8 @@ The object is a proper list of length 3.
 ~~~
 
 We can also, in editors that support it, right-click on any object in
-the REPL and `inspect` them. We are presented a screen where we can
+the REPL and `inspect` them (or `C-c I` on the object to inspect in Slime).
+We are presented a screen where we can
 dive deep inside the data structure and even change it.
 
 Let's have a quick look with a more interesting structure, an object:
@@ -160,20 +161,7 @@ Let's have a quick look with a more interesting structure, an object:
 We right-click on the `#<FOO` object and choose "inspect". We are
 presented an interactive pane (in Slime):
 
-```
-#<FOO {100F2B6183}>
---------------------
-Class: #<STANDARD-CLASS FOO>
---------------------
- Group slots by inheritance [ ]
- Sort slots alphabetically  [X]
-
-All Slots:
-[ ]  A = (:A :B :C)
-[ ]  B = :B
-
-[set value]  [make unbound]
-```
+!["Slime's inspector, a textual window with buttons"](assets/slime-inspector.png)
 
 When we click or press enter on the line of slot A, we inspect it further:
 
@@ -185,6 +173,11 @@ A proper list:
 1: :B
 2: :C
 ```
+
+In LispWorks, we can use a graphical inspector:
+
+!["The LispWorks inspector window"](assets/lispworks-graphical-inspector.png)
+
 
 ## The interactive debugger
 
@@ -387,14 +380,14 @@ See the [CLOS](clos.html) section for a tad more information.
 
 ## Step
 
-[step](http://www.xach.com/clhs?q=step) is an interactive command with
+[step](http://www.lispworks.com/documentation/HyperSpec/Body/m_step.htm) is an interactive command with
 similar scope than `trace`. This:
 
 ~~~lisp
 (step (factorial 2))
 ~~~
 
-gives an interactive pane with the available restarts:
+gives an interactive pane with the available restarts and the backtrace:
 
 ```
 Evaluating call:
@@ -423,7 +416,7 @@ Stepping is useful, however it may be a sign that you need to simplify your func
 
 ## Break
 
-A call to [break](http://www.xach.com/clhs?q=break) makes the program
+A call to [break](http://www.lispworks.com/documentation/HyperSpec/Body/f_break.htm) makes the program
 enter the debugger, from which we can inspect the call stack.
 
 
@@ -444,12 +437,11 @@ where it stopped (using the "step-continue" restart).
 
 ## Advise and watch
 
-*advise* and
-[watch](http://www.xach.com/clhs?q=watch) are available in some
+*advise* and *watch* are available in some
 implementations, like CCL
 ([advise](https://ccl.clozure.com/manual/chapter4.3.html#Advising) and
 [watch](https://ccl.clozure.com/manual/chapter4.12.html#watched-objects))
-and [LispWorks](http://www.lispworks.com/). They do exist in
+and LispWorks. They do exist in
 SBCL but are not exported. `advise` allows to modify a function without changing its
 source, or to do something before or after its execution, similar
 to CLOS method combination (before, after, around methods).
