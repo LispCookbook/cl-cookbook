@@ -210,7 +210,7 @@ and recompile our code. You can achieve the same with a handy shortcut: `C-u C-c
 
 ## Trace
 
-[trace](http://www.xach.com/clhs?q=trace) allows us to see when a
+[trace](http://www.lispworks.com/documentation/HyperSpec/Body/m_tracec.htm) allows us to see when a
 function was called, what arguments it received, and the value it
 returned.
 
@@ -220,6 +220,9 @@ returned.
     (* n (factorial (1- n)))
     1))
 ~~~
+
+To start tracing a function, just call `trace` with the function name
+(or several function names):
 
 ~~~lisp
 (trace factorial)
@@ -240,7 +243,9 @@ returned.
 
 To untrace all functions, just evaluate `(untrace)`.
 
-In Slime we also have the shortcut `C-c M-t` to trace or untrace a
+To get a list of currently traced functions, evaluate `(trace)` with no arguments.
+
+In Slime we have the shortcut `C-c M-t` to trace or untrace a
 function.
 
 If you don't see recursive calls, that may be because of the
@@ -248,13 +253,102 @@ compiler's optimizations. Try this before defining the function to be
 traced:
 
 ~~~lisp
-(declaim (optimize (debug 3)))
+(declaim (optimize (debug 3)))  ;; or C-u C-c C-c to compile with maximal debug settings.
 ~~~
 
 The output is printed to `*trace-output*` (see the CLHS).
 
 In Slime, we also have an interactive trace dialog with ``M-x
 slime-trace-dialog`` bound to `C-c T`.
+
+
+### Trace options: break
+
+`trace` accepts options. For example, you can use `:break t` to invoke
+the debugger at the start of the function:
+
+    (trace factorial :break t)
+    (factorial 2)
+
+We can define many things in one call to `trace`. For instance,
+options that appear before the first function name to trace are
+*global*, they affect all traced functions that we add afterwards. Here,
+`:break t` is set for every function that follows: `factorial`, `foo`
+and `bar`:
+
+    (trace :break t factorial foo bar)
+
+On the contrary, if an option comes after a function name, it acts as
+a *local* option, only for its *preceding* function. That's how we first
+did. Below `foo` and `bar` come after, they are not affected by `:break`:
+
+    (trace factorial :break t foo bar)
+
+But do you actually want to `break` *before* the function call or just
+*after* it? With `:break` as with many options, you can choose. These
+are the options for `:break`:
+
+```
+:break form  ;; before
+:break-after form
+:break-all form ;; before and after
+```
+
+`form` can be any form that evaluates to true.
+
+Note that we explained the trace function of SBCL. Other
+implementations may have the same feature with another syntax and
+other option names.  For example, in LispWorks it is ":break-on-exit"
+instead of ":break-after", and we write `(trace (factorial :break t))`.
+
+Below are some other options.
+
+### Trace options: trace on conditions, trace if called from another function
+
+`:condition` enables tracing only if the condition in `form` evaluates to true.
+
+```
+:condition form
+:condition-after form
+:condition-all form
+```
+
+> If :condition is specified, then trace does nothing unless Form
+> evaluates to true at the time of the call. :condition-after is
+> similar, but suppresses the initial printout, and is tested when the
+> function returns. :condition-all tries both before and after.
+
+`:wherein` can be super useful:
+
+```
+:wherein Names
+```
+
+> If specified, Names is a function name or list of names. trace does nothing unless a call to one of those functions encloses the call to this function (i.e. it would appear in a backtrace.) Anonymous functions have string names like "DEFUN FOO".
+
+
+```
+:report Report-Type
+```
+
+> If Report-Type is trace (the default) then information is reported
+> by printing immediately. If Report-Type is nil, then the only effect
+> of the trace is to execute other options (e.g. print or
+> break). Otherwise, Report-Type is treated as a function designator
+> and, for each trace event, funcalled with 5 arguments: trace depth
+> (a non-negative integer), a function name or a function object, a
+> keyword (:enter, :exit or :non-local-exit), a stack frame, and a
+> list of values (arguments or return values).
+
+See also `:print` to enrich the trace output.
+
+It is expected that implementations extend `trace` with non-standard
+options. And we didn't list all available options, so please refer to
+your implementation's documentation:
+
+- [SBCL trace](http://www.sbcl.org/manual/index.html#Function-Tracing)
+- [CCL trace](https://ccl.clozure.com/manual/chapter4.2.html)
+- [LispWorks trace](http://www.lispworks.com/documentation/lw80/lw/lw-tracer-ug-2.htm)
 
 
 ### Tracing method invocation
@@ -277,6 +371,8 @@ In SBCL, we can use `(trace foo :methods t)` to trace the execution order of met
   0: FOO returned 9
 9
 ~~~
+
+It is also possible in CCL.
 
 See the [CLOS](clos.html) section for a tad more information.
 
