@@ -269,8 +269,10 @@ slime-trace-dialog`` bound to `C-c T`.
 `trace` accepts options. For example, you can use `:break t` to invoke
 the debugger at the start of the function, before it is called (more on break below):
 
-    (trace factorial :break t)
-    (factorial 2)
+~~~lisp
+(trace factorial :break t)
+(factorial 2)
+~~~
 
 We can define many things in one call to `trace`. For instance,
 options that appear before the first function name to trace are
@@ -278,13 +280,17 @@ options that appear before the first function name to trace are
 `:break t` is set for every function that follows: `factorial`, `foo`
 and `bar`:
 
-    (trace :break t factorial foo bar)
+~~~lisp
+(trace :break t factorial foo bar)
+~~~
 
 On the contrary, if an option comes after a function name, it acts as
 a *local* option, only for its *preceding* function. That's how we first
 did. Below `foo` and `bar` come after, they are not affected by `:break`:
 
-    (trace factorial :break t foo bar)
+~~~lisp
+(trace factorial :break t foo bar)
+~~~
 
 But do you actually want to `break` *before* the function call or just
 *after* it? With `:break` as with many options, you can choose. These
@@ -497,6 +503,11 @@ you the available actions, in addition to the step window.
   program execution, you just restarted your program from a precise
   point. Use `R` to return from a stackframe, by giving its return
   value.
+
+<div class="info-box info" style="margin-bottom: 1em">
+<!-- if inside a <p> then bootstrap adds 10px padding to the bottom -->
+<strong>NB:</strong> let's think about it, <strong>this is awesome!</strong> We just restarted our program from any point in time. If we work with long-running computations, we don't need to restart it from the start. We can change, re-compile our erroneous code and resume execution from where it is needed to pass, no more.
+</div>
 
 Stepping is precious. However, if you find yourself inspecting the
 behaviour of a function a lot, it may be a sign that you need to
