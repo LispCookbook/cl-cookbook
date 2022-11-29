@@ -556,6 +556,19 @@ and so on. For example, `slime-who-calls` (`C-c C-w C-c` or the Slime > Cross-Re
 
 See our Emacs page for a complete list of commands.
 
+## SLY stepper and SLY stickers
+
+SLY has an improved
+[stepper](https://github.com/joaotavora/sly-stepper) and a unique
+feature, [stickers](https://joaotavora.github.io/sly/#Stickers). You
+mark a piece of code, you run your code, SLY captures the results for
+each sticker and lets you examine the program execution
+interactively. It allows to see what sticker was captured, or
+not, so we can see at a glance the code coverage of that function
+call.
+
+They are a non-intrusive alternative to `print` and `break`.
+
 ## Unit tests
 
 Last but not least, automatic testing of functions in isolation might
