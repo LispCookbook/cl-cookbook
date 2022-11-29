@@ -264,10 +264,10 @@ In Slime, we also have an interactive trace dialog with ``M-x
 slime-trace-dialog`` bound to `C-c T`.
 
 
-### Trace options: break
+### Trace options
 
 `trace` accepts options. For example, you can use `:break t` to invoke
-the debugger at the start of the function:
+the debugger at the start of the function, before it is called (more on break below):
 
     (trace factorial :break t)
     (factorial 2)
@@ -303,7 +303,44 @@ implementations may have the same feature with another syntax and
 other option names.  For example, in LispWorks it is ":break-on-exit"
 instead of ":break-after", and we write `(trace (factorial :break t))`.
 
-Below are some other options.
+Below are some other options but first, a trick with `:break`.
+
+### Trace options: break
+
+The argument to an option can be any form. Here's a trick, on SBCL, to
+get the break window when we are about to call `factorial`
+with 0. `(sb-debug:arg 0)` refers to `n`, the first argument.
+
+~~~lisp
+CL-USER> (trace factorial :break (equal 0 (sb-debug:arg 0)))
+;; WARNING: FACTORIAL is already TRACE'd, untracing it first.
+;; (FACTORIAL)
+~~~
+
+Running it again:
+
+```
+CL-USER> (factorial 3)
+  0: (FACTORIAL 3)
+    1: (FACTORIAL 2)
+      2: (FACTORIAL 1)
+        3: (FACTORIAL 0)
+
+breaking before traced call to FACTORIAL:
+   [Condition of type SIMPLE-CONDITION]
+
+Restarts:
+ 0: [CONTINUE] Return from BREAK.
+ 1: [RETRY] Retry SLIME REPL evaluation request.
+ 2: [*ABORT] Return to SLIME's top level.
+ 3: [ABORT] abort thread (#<THREAD "repl-thread" RUNNING {1003551BC3}>)
+
+Backtrace:
+  0: (FACTORIAL 1)
+      Locals:
+        N = 1   <---------- before calling (factorial 0), n equals 1.
+```
+
 
 ### Trace options: trace on conditions, trace if called from another function
 
