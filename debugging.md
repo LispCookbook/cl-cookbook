@@ -13,7 +13,7 @@ debugging". Let's just recap a few print functions.
 
 `print` works, it prints a `read`able representation of its argument,
 which means what is `print`ed can be `read` back in by the Lisp
-reader.
+reader. It accepts only one argument.
 
 `princ` focuses on an *aesthetic* representation.
 
@@ -21,6 +21,15 @@ reader.
 stream) and returns nil, whereas `format nil …` doesn't print anything
 and returns a string. With many format controls we can print several
 variables at once.
+
+`print` has this useful debugging feature that it prints *and* returns
+the result form it was given as argument. You can intersperse `print`
+statements in the middle of your algorithm, it won't break it.
+
+~~~lisp
+(+ 2 (print 40))
+~~~
+
 
 ## Logging
 
