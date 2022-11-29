@@ -548,6 +548,13 @@ watched objects in a GUI.
 For a certain class of bugs (someone is changing this value, but I
 don't know who), this can be extremely helpful.
 
+## Cross-referencing
+
+Your Lisp can tell you all the places where a function is referenced
+or called, where a global variable is set, where a macro is expanded,
+and so on. For example, `slime-who-calls` (`C-c C-w C-c` or the Slime > Cross-Reference menu) will show you all the places where a function is called.
+
+See our Emacs page for a complete list of commands.
 
 ## Unit tests
 
