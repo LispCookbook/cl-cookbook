@@ -191,10 +191,10 @@ and the backtrace. A few remarks:
 - the restarts are programmable, we can create our own
 - in Slime, press `v` on a stack trace frame to view the corresponding
   source file location
-- hit enter on a frame for more details
+- hit enter on a frame for more details, evaluate code from within that frame
+- hit `r` to restart a given frame (see the "step" section below)
 - we can explore the functionality with the menu that should appear
-  in our editor. See the "break" section below for a few
-  more commands (eval in frame, etc).
+  in our editor.
 
 ### Compile with maximum debugging information
 
@@ -380,24 +380,24 @@ See the [CLOS](clos.html) section for a tad more information.
 
 ## Step
 
-[step](http://www.lispworks.com/documentation/HyperSpec/Body/m_step.htm) is an interactive command with
-similar scope than `trace`. This:
+[step](http://www.lispworks.com/documentation/HyperSpec/Body/m_step.htm) is an interactive command with similar scope than `trace`. This:
 
 ~~~lisp
-(step (factorial 2))
+;; note: we copied factorial over to a file, to have more debug information.
+(step (factorial 3))
 ~~~
 
-gives an interactive pane with the available restarts and the backtrace:
+gives an interactive pane with available actions (restarts) and the backtrace:
 
 ```
 Evaluating call:
-  (FACTORIAL 2)
+  (FACTORIAL 3)
 With arguments:
-  2
+  3
    [Condition of type SB-EXT:STEP-FORM-CONDITION]
 
 Restarts:
- 0: [STEP-CONTINUE] Resume normal execution
+ 0: [STEP-CONTINUE] Resume normal execution   <---------- stepping actions
  1: [STEP-OUT] Resume stepping after returning from this function
  2: [STEP-NEXT] Step over call
  3: [STEP-INTO] Step into call
@@ -406,18 +406,74 @@ Restarts:
  --more--
 
 Backtrace:
-  0: ((LAMBDA ()))
+  0: (FACTORIAL 3)     <----------- press Enter to fold/unfold.
+      Locals:
+        N = 3          <----------- want to check? Move the point here and
+                                    press "e" to evaluate code on that frame.
+
   1: (SB-INT:SIMPLE-EVAL-IN-LEXENV (LET ((SB-IMPL::*STEP-OUT* :MAYBE)) (UNWIND-PROTECT (SB-IMPL::WITH-STEPPING-ENABLED #))) #S(SB-KERNEL:LEXENV :FUNS NIL :VARS NIL :BLOCKS NIL :TAGS NIL :TYPE-RESTRICTIONS ..
-  2: (SB-INT:SIMPLE-EVAL-IN-LEXENV (STEP (FACTORIAL 2)) #<NULL-LEXENV>)
-  3: (EVAL (STEP (FACTORIAL 2)))
+  2: (SB-INT:SIMPLE-EVAL-IN-LEXENV (STEP (FACTORIAL 3)) #<NULL-LEXENV>)
+  3: (EVAL (STEP (FACTORIAL 3)))
+ --more--
+
 ```
 
-Stepping is useful, however it may be a sign that you need to simplify your function.
+*(again, be sure you compiled your function with maximum debug
+settings (see above). Otherwise, your compiler might do optimizations
+under the hood and you might not see useful information such as local
+variables, or you might not be able to step at all.)*
+
+You have many options here. If you are using Emacs (or any other
+editor actually), keep in mind that you have a "SLDB" menu that shows
+you the available actions, in addition to the step window.
+
+- follow the restarts to **continue stepping**: continue the
+  execution, step out of this function, step into the function call
+  the point is on, step over to the next function call, or abort
+  everything. The shortcuts are:
+  - `c`: continue
+  - `s`: step
+  - `x`: step next
+  - `o`: step out
+
+- **inspect the backtrace** and the source code. You can go to the
+  source file with `v`, on each stackframe (each line of the
+  backtrace). Press `Enter` or `t` ("toggle details") on the
+  stackframe to see more information, such as the function parameters
+  for this call. Use `n` and `p` to navigate, use `M-n` and `M-p` to
+  navigate to the next or previous stackframe *and* to open the
+  corresponding source file at the same time. The point will be placed
+  on the function being called.
+
+- **evaluate code from within the context** of that stackframe. In
+  Slime, use `e` ("eval in frame" and `d` to pretty-pint the result) and
+  type a Lisp form. It will be executed in the context of the
+  stackframe the point is on. Look, you can even inspect variables and
+  have Slime open another inspector window. If you are on the first
+  frame (`0:`), press `i`, then "n" to inspect the intermediate
+  variable.
+
+- **resume execution** from where you want. Use `r` to restart the
+  frame the point is on. For example, go change the source code
+  (without quitting the interactive debugger), re-compile it, re-run
+  the frame to see if it works better. You didn't restart all the
+  program execution, you just restarted your program from a precise
+  point. Use `R` to return from a stackframe, by giving its return
+  value.
+
+Stepping is precious. However, if you find yourself inspecting the
+behaviour of a function a lot, it may be a sign that you need to
+simplify it and divide it in smaller pieces.
+
+And again, LispWorks has a graphical stepper.
+
 
 ## Break
 
-A call to [break](http://www.lispworks.com/documentation/HyperSpec/Body/f_break.htm) makes the program
-enter the debugger, from which we can inspect the call stack.
+A call to
+[break](http://www.lispworks.com/documentation/HyperSpec/Body/f_break.htm)
+makes the program enter the debugger, from which we can inspect the
+call stack, and do everything described above in the stepper.
 
 
 ### Breakpoints in Slime
@@ -432,7 +488,10 @@ actions. Of which:
 
 Once we are in a frame and detect a suspicious behavior, we can even
 re-compile a function at runtime and resume the program execution from
-where it stopped (using the "step-continue" restart).
+where it stopped (using the "step-continue" restart
+or using `r` ("restart frame") on a given stackframe).
+
+See also the [Slime-star](https://github.com/mmontone/slime-star) Emacs extension to set breakpoints without code annotations.
 
 
 ## Advise and watch
