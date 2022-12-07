@@ -516,6 +516,20 @@ simplify it and divide it in smaller pieces.
 
 And again, LispWorks has a graphical stepper.
 
+### Resume a program execution from anywhere in the stack
+
+In [this video](https://www.youtube.com/watch?v=jBBS4FeY7XM) you will
+find a demo that shows the process explained above: how to fix a buggy
+function and how to resume the program execution from anywhere in the
+stack, without running everything from zero again. The video shows it
+with Emacs and Slime, the Lem editor, both with SBCL.
+
+<!-- epub-exclude-start -->
+
+<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/jBBS4FeY7XM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+<!-- epub-exclude-end -->
+
 
 ## Break
 
