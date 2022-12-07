@@ -179,36 +179,6 @@ In LispWorks, we can use a graphical inspector:
 !["The LispWorks inspector window"](assets/lispworks-graphical-inspector.png)
 
 
-## The interactive debugger
-
-Whenever an exceptional situation happens (see
-[error handling](error_handling.html)), the interactive debugger pops
-up.
-
-It presents the error message, available actions (*restarts*),
-and the backtrace. A few remarks:
-
-- the restarts are programmable, we can create our own
-- in Slime, press `v` on a stack trace frame to view the corresponding
-  source file location
-- hit enter on a frame for more details, evaluate code from within that frame
-- hit `r` to restart a given frame (see the "step" section below)
-- we can explore the functionality with the menu that should appear
-  in our editor.
-
-### Compile with maximum debugging information
-
-Usually your compiler will optimize things out and this will reduce
-the amount of information available to the debugger. For example
-sometimes we can't see intermediate variables of computations. We can
-change the optimization choices with:
-
-~~~lisp
-(declaim (optimize (speed 0) (space 0) (debug 3)))
-~~~
-
-and recompile our code. You can achieve the same with a handy shortcut: `C-u C-c C-c`: the form is compiled with maximum debug settings. You can on the contrary use a negative prefix argument (`M--`) to compile for speed. And use a numeric argument to set the setting to it (you should read the docstring of `slime-compile-defun`).
-
 
 ## Trace
 
@@ -421,6 +391,39 @@ In SBCL, we can use `(trace foo :methods t)` to trace the execution order of met
 It is also possible in CCL.
 
 See the [CLOS](clos.html) section for a tad more information.
+
+
+## The interactive debugger
+
+Whenever an exceptional situation happens (see
+[error handling](error_handling.html)), or when you ask for it (using `step` or `break`),
+the interactive debugger pops up.
+
+It presents the error message, the available actions (*restarts*),
+and the backtrace. A few remarks:
+
+- the restarts are programmable, we can create our own.
+- in Slime, press `v` on a stack trace frame to view the corresponding
+  source file location.
+- hit Enter (or `t`) on a frame to toggle more details,
+- use `e` to evaluate some code from within that frame,
+- hit `r` to restart a given frame (see below).
+- we can explore the functionality with the menu that should appear
+  in our editor.
+
+### Compile with maximum debugging information
+
+Usually your compiler will optimize things out and this will reduce
+the amount of information available to the debugger. For example
+sometimes we can't see intermediate variables of computations. We can
+change the optimization choices with:
+
+~~~lisp
+(declaim (optimize (speed 0) (space 0) (debug 3)))
+~~~
+
+and recompile our code. You can achieve the same with a handy shortcut: `C-u C-c C-c`: the form is compiled with maximum debug settings. You can on the contrary use a negative prefix argument (`M--`) to compile for speed. And use a numeric argument to set the setting to it (you should read the docstring of `slime-compile-defun`).
+
 
 ## Step
 
