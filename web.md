@@ -148,7 +148,7 @@ By default, Hunchentoot serves the files from the `www/` directory in
 its source tree. Thus, if you go to the source of
 `easy-acceptor` (`M-.` in Slime), which is probably
 `~/quicklisp/dists/quicklisp/software/hunchentoot-v1.2.38/`, you'll
-find the `root/` directory. It contains:
+find the `www/` directory. It contains:
 
 - an `errors/` directory, with the error templates `404.html` and `500.html`,
 - an `img/` directory,
