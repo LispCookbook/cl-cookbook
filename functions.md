@@ -413,7 +413,7 @@ It is generally safer to use `#'`, because it respects lexical scope. Observe:
 (flet ((foo (x) (1+ x)))
   (funcall #'foo 1))
 ;; => 2, as expected
-;;
+
 ;; But:
 
 (flet ((foo (x) (1+ x)))
@@ -437,6 +437,48 @@ It is generally safer to use `#'`, because it respects lexical scope. Observe:
 Using `function` or the `#'` shorthand allows us to refer to local
 functions. If we pass instead a symbol to `funcall`, what is
 called is always the function named by that symbol in the *global environment*.
+
+In addition, `#'` catches the function by value. If the function is redefined, bindings that refered to this function by `#'` will still run its original behaviour.
+
+Let's assign a function to a parameter:
+
+~~~lisp
+(defparameter *foo-caller* #'foo)
+(funcall *foo-caller* 1)
+;; => 100
+~~~
+
+Now, if we redefine `foo`, the behaviour of `*foo-caller*` will *not* change:
+
+~~~lisp
+(defun foo (x) (1+ x))
+;; WARNING: redefining CL-USER::FOO in DEFUN
+;; FOO
+
+(funcall *foo-caller* 1)
+;; 100  ;; and not 2
+~~~
+
+If we bind the caller with `'foo`, a single quote, the function will be resolved at runtime:
+
+~~~lisp
+(defun foo (x) (* x 100))  ;; back to original behavior.
+(defparameter *foo-caller-2* 'foo)
+;; *FOO-CALLER-2*
+(funcall *foo-caller-2* 1)
+;; 100
+
+;; We change the definition:
+(defun foo (x) (1+ x))
+;; WARNING: redefining CL-USER::FOO in DEFUN
+;; FOO
+
+;; We try again:
+(funcall *foo-caller-2* 1)
+;; 2
+~~~
+
+The behaviour you want depends on your use case. Generally, using sharpsign-quote is less surprising. But if you are running a tight loop and you want live-update mechanisms (think a game or live visualisations), you might want to use a single quote so that your loop picks up the user's new function definition.
 
 
 ## Higher order functions: functions that return functions

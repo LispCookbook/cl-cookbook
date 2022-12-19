@@ -125,7 +125,7 @@ Advanced books
 Specifications
 
 * [The Common Lisp HyperSpec](http://www.lispworks.com/documentation/HyperSpec/Front/index.htm) by Kent M. Pitman (also available in [Dash](https://kapeli.com/dash), [Zeal](https://zealdocs.org/) and [Velocity](https://velocity.silverlakesoftware.com/))
-* [The Common Lisp UltraSpec](http://phoe.tymoon.eu/clus/doku.php)
+* [The Common Lisp Community Spec](https://cl-community-spec.github.io/pages/index.html) - a new rendering produced from the ANSI specification draft, that everyone has the right to edit.
 
 # Further remarks
 
