@@ -427,7 +427,7 @@ We create a hash-table:
 (setf (gethash 'b h) 2)
 ~~~
 
-#### loop
+#### Looping over keys and values
 
 Looping over keys:
 
@@ -437,7 +437,13 @@ Looping over keys:
 ;; a
 ~~~
 
-same with `hash-value`.
+Looping over values uses the same concept but with the `hash-value` keyword instead of `hash-key`:
+
+~~~lisp
+(loop for k being the hash-value of h do (print k))
+;; 1
+;; 2
+~~~
 
 Looping over key-values pairs:
 

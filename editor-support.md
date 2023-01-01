@@ -50,7 +50,7 @@ See ["Using Emacs as an IDE"](emacs-ide.html).
 
 ## Vim & Neovim
 
-[Slimv](https://www.vim.org/scripts/script.php?script_id=2531) is a full-blown
+[Slimv](https://github.com/kovisoft/slimv) is a full-blown
 environment for Common Lisp inside of Vim.
 
 [Vlime](https://github.com/vlime/vlime) is a Common Lisp dev
@@ -68,6 +68,11 @@ frontend for Quicklisp.
 
 [Slimv_box](https://github.com/justin2004/slimv_box) brings Vim, SBCL, ABCL,
 and tmux in a Docker container for a quick installation.
+
+See also:
+
+* [Lisp in Vim](https://susam.net/blog/lisp-in-vim.html) demonstrates usage and
+  compares both Slimv and Vlime
 
 ## Atom
 
