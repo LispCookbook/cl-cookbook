@@ -262,7 +262,7 @@ Evaluation took:
 
 21 seconds ! Obviously this synchronous method isn't efficient. We
 wait 10 seconds for links that time out. It's time to write and
-measure and async version.
+measure an async version.
 
 After installing `lparallel` and looking at
 [its documentation](https://lparallel.org/), we see that the parallel
