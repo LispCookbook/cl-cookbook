@@ -98,11 +98,13 @@ The Cookbook has been translated to:
 * [Common Lisp Libraries Read the Docs](https://common-lisp-libraries.readthedocs.io/) - the documentation of popular libraries ported to the modern and good looking Read The Docs style.
 * [lisp-tips](https://github.com/lisp-tips/lisp-tips/issues/)
 * [Articulate Common Lisp](http://articulate-lisp.com/), an initiation manual for the uninitiated
-* [Common Lisp Pitfalls](https://raw.githubusercontent.com/ebzzry/cl-pitfalls/master/cl-pitfalls.txt) by Jeff Dalton
 * [Lisp and Elements of Style](http://web.archive.org/web/20190316190256/https://www.nicklevine.org/declarative/lectures/) by Nick Levine
 * Pascal Costanza's [Highly Opinionated Guide to Lisp](http://www.p-cos.net/lisp/guide.html)
 * [Cliki](http://www.cliki.net/), Common Lisp's wiki
 * 📹 [Common Lisp programming: from novice to effective developer](https://www.udemy.com/course/common-lisp-programming/?referralCode=2F3D698BBC4326F94358), a video course on the Udemy platform (paywall), by one of the main Cookbook contributor. *"Thanks for supporting my work on Udemy. You can ask me for a free coupon if the course is not affordable for you."* vindarel
+
+and also: [Common Lisp Pitfalls](https://github.com/LispCookbook/cl-cookbook/issues/479) by Jeff Dalton.
+
 
 
 Books
