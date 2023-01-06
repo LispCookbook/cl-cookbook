@@ -154,7 +154,7 @@ find the `www/` directory. It contains:
 - an `img/` directory,
 - an `index.html` file.
 
-To serve another directory, we give the option `document-root` to
+To serve another directory, we give the option `:document-root` to
 `easy-acceptor`. We can also set the slot with its accessor:
 
 ~~~lisp
