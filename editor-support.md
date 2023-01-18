@@ -131,6 +131,26 @@ supports:
 
 See [Using VSCode with Alive](vscode-alive.html).
 
+## JetBrains - NEW in Jan, 2023!
+
+[SLT](https://github.com/Enerccio/SLT) is a new (published on January,
+2023) plugin for the suite of JetBrains' IDEs. It uses a modified SLIME/Swank
+protocol to commmunicate with SBCL, providing IDE capabilities for
+Common Lisp.
+
+At the time of writing, for its version 0.1.1, it supports:
+
+- REPL
+- send expressions to the REPL
+- interactive debugging
+- documentation
+- find symbol by name
+
+The version 0.1.1 does not support symbol completion.
+
+<img src="assets/jetbrains-slt.png" style="width: 800px" alt="SLT, a good Common Lisp plugin for JetBrains IDEs."/>
+
+
 ## Eclipse
 
 [Dandelion](https://github.com/Ragnaroek/dandelion) is a plugin for the
