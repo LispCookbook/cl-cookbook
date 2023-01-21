@@ -206,6 +206,14 @@ Use [`uiop:chdir`](https://asdf.common-lisp.dev/uiop.html#Function-uiop_002fos_0
 
 The trailing slash in _path_ is optional.
 
+Or, to set for the current directory for the next operation only, use `uiop:with-current-directory`:
+
+~~~lisp
+(let ((dir "/path/to/another/directory/"))
+  (uiop:with-current-directory (dir)
+      (directory-files "./")))
+~~~
+
 
 ### Opening a file
 
