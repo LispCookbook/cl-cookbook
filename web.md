@@ -582,7 +582,7 @@ Is it appealing ? Carry on this quickstart guide here: [http://40ants.com/webloc
 ### Djula - HTML markup
 
 [Djula](https://github.com/mmontone/djula) is a port of Python's
-Django template engine to Common Lisp. It has [excellent documentation](https://mmontone.github.io/djula/doc/build/html/index.html).
+Django template engine to Common Lisp. It has [excellent documentation](https://mmontone.github.io/djula/djula/).
 
 Caveman uses it by default, but otherwise it is not difficult to
 setup. We must declare where our templates are with something like
