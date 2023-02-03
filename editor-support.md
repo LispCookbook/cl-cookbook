@@ -138,14 +138,19 @@ See [Using VSCode with Alive](vscode-alive.html).
 protocol to commmunicate with SBCL, providing IDE capabilities for
 Common Lisp.
 
+It has a very good [user guide](https://github.com/Enerccio/SLT/wiki/User-Guide).
+
 At the time of writing, for its version 0.2.1, it supports:
 
 - REPL
-- send expressions to the REPL (see the right click menu)
+- symbol completion
+- send expressions to the REPL
 - interactive debugging
 - documentation
 - find symbol by name
-- symbol completion
+- references
+- global class/symbol search
+- SDK support, automatic download for Windows users
 - inspector (read-only)
 
 <img src="assets/jetbrains-slt.png" style="width: 800px" alt="SLT, a good Common Lisp plugin for JetBrains IDEs."/>
