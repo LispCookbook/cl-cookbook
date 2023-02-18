@@ -140,18 +140,19 @@ Common Lisp.
 
 It has a very good [user guide](https://github.com/Enerccio/SLT/wiki/User-Guide).
 
-At the time of writing, for its version 0.2.1, it supports:
+At the time of writing, for its version 0.4, it supports:
 
 - REPL
 - symbol completion
 - send expressions to the REPL
-- interactive debugging
-- documentation
-- find symbol by name
-- references
-- global class/symbol search
-- SDK support, automatic download for Windows users
+- interactive debugging, breakpoints
+- documentation display
+- cross-references
+- find symbol by name, global class/symbol search
 - inspector (read-only)
+- graphical threads list
+- SDK support, automatic download for Windows users
+- multiple implementations support: SBCL, CCL, ABCL and AllegroCL.
 
 <img src="assets/jetbrains-slt.png" style="width: 800px" alt="SLT, a good Common Lisp plugin for JetBrains IDEs."/>
 
