@@ -176,13 +176,9 @@ Another subtle consequence is that we must spell out how the arguments to the ma
 
 then
 
-```
-_If we call it thus ..._     |_The parameters' values are ..._
------------------------------|-----------------------------------
-`(foo a)`                    | `x=a`, `y=nil`, `cxt=null`
-`(foo (+ a 1) (- y 1))`      |`x=(+ a 1)`, `y=(- y 1)`, `cxt=null`
-`(foo a b :cxt (zap zip))`   |`x=a`, `y=b`, `cxt=(zap zip)`
-```
+- if we call it with `(foo a)`, the parameters' values are: `x=a`, `y=nil`, `cxt=null`.
+- calling  `(foo (+ a 1) (- y 1))` gives: `x=(+ a 1)`, `y=(- y 1)`, `cxt=null`.
+- and `(foo a b :cxt (zap zip))` gives: `x=a`, `y=b`, `cxt=(zap zip)`.
 
 
 Note that the values of the variables are the actual expressions `(+ a 1)` and `(zap zip)`. There is no requirement that these expressions' values be known, or even that they have values. The macro can do anything it likes with them. For instance, here's an even more useless variant of `setq`: <code>(setq-reversible <i>e<sub>1</sub></i> <i>e<sub>2</sub></i> <i>d</i>)</code> behaves like <code>(setq <i>e<sub>1</sub></i> <i>e<sub>2</sub></i>)</code> if <i>d=</i><code>:normal</code>, and behaves like <code>(setq <i>e<sub>2</sub></i> <i>e<sub>1</sub></i>)</code> if _d=_`:backward`. It could be defined thus:
