@@ -547,7 +547,30 @@ You can call `(inspect 'symbol)` from the REPL or call it with `C-c I` from a so
 Use `C-c M-m` to macroexpand a macro call
 
 
-#### Consult the CLHS offline
+#### Consult the Hyper Spec (CLHS) offline
+
+The [Common Lisp Hyper Spec](http://www.lispworks.com/documentation/common-lisp.html) is the
+official online version of the ANSI Common Lisp standard. We can start
+browsing it from [starting points](http://www.lispworks.com/documentation/HyperSpec/Front/StartPts.htm):
+a shortened [table of contents of highlights](http://www.lispworks.com/documentation/HyperSpec/Front/Hilights.htm),
+a [symbols index](http://www.lispworks.com/documentation/HyperSpec/Front/Hilights.htm),
+a glossary, a master index.
+
+Since January of 2023, we have the Common Lisp Community Spec: [https://cl-community-spec.github.io/pages/index.html](https://cl-community-spec.github.io/pages/index.html), a new web rendering of the specification. It is a more modern rendering:
+
+* it has a *search box*
+* it has *syntax highlihgting*
+* it is hosted on GitHub and we have the right to modify it: https://github.com/fonol/cl-community-spec
+
+If you want other tools to do a quick look-up of symbols on the CLHS,
+since the official website doesn't have a search bar, you can use:
+* Xach's website search utility: [https://www.xach.com/clhs?q=with-open-file](https://www.xach.com/clhs?q=with-open-file)
+* the l1sp.org website: [http://l1sp.org/search?q=with-open-file](http://l1sp.org/search?q=with-open-file),
+* and we can use Duckduckgo's or Brave Search's `!clhs` "bang".
+
+We can **browse the CLHS offline** with [Dash](https://kapeli.com/dash) on MacOS, [Zeal](https://zealdocs.org/) on GNU/Linux and [Velocity](https://velocity.silverlakesoftware.com/) on Windows.
+
+But we can also browse it offline from Emacs. We have to install a CL package and to configure the Emacs side with one command:
 
 ~~~lisp
 (ql:quickload "clhs")
@@ -559,6 +582,21 @@ Then add this to your Emacs configuration:
 ~~~lisp
 (load "~/quicklisp/clhs-use-local.el" 'noerror)
 ~~~
+
+Now, you can use `C-c C-d h` to look-up the symbol at point in the
+HyperSpec. This will open your browser, but look at its URL starting
+with "file://home/": it opens a local file.
+
+Other commands are available:
+
+* when you want to look-up a reader macro, such as `#'`
+  (sharpsign-quote) or `(` (left-parenthesis), use
+  `M-x common-lisp-hyperspec-lookup-reader-macro`, bound to `C-c C-d #`.
+* to look-up a `format` directive, such as `~A`, use `M-x
+  common-lisp-hyperspec-format`, bound to `C-c C-d ~`.
+  * of course, you can TAB-complete on Emacs' minibuffer prompt to see all the available format directives.
+* you can also look-up glossary terms (for example, you can look-up "function" instead of "defun"), use `M-x common-lisp-hyperspec-glossary-term`, bound to `C-c C-d g`.
+
 
 ### Miscellaneous
 
