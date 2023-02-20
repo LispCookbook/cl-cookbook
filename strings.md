@@ -39,7 +39,8 @@ don't miss the following resources:
 * the official [CLHS documentation](http://www.lispworks.com/documentation/HyperSpec/Body/22_c.htm)
 * a [quick reference](http://clqr.boundp.org/)
 * a [CLHS summary on HexstreamSoft](https://www.hexstreamsoft.com/articles/common-lisp-format-reference/clhs-summary/#subsections-summary-table)
-* plus a Slime tip: type `C-c C-d ~` plus a letter of a format directive to open up its documentation. Again more useful with `ivy-mode` or `helm-mode`.
+* the list of all format directives at the end of this document.
+* plus a Slime tip: type `C-c C-d ~` plus a letter of a format directive to open up its documentation. Use TAB-completion to list them all. Again more useful with `ivy-mode` or `helm-mode`.
 
 ## Creating strings
 
@@ -1179,6 +1180,52 @@ They strip the punctuation with one ppcre unicode regexp
 (`(ppcre:regex-replace-all "[^\\p{L}\\p{N}]+"` where `p{L}` is the
 "letter" category and `p{N}` any kind of numeric character).
 
+## Appendix
+
+### All format directives
+
+All directives are case-insensivite: `~A` is the same as `~a`.
+
+```
+$ - Monetary Floating-Point
+% - Newline
+& - Fresh-line
+( - Case Conversion
+) - End of Case Conversion
+* - Go-To
+/ - Call Function
+; - Clause Separator
+< - Justification
+< - Logical Block
+> - End of Justification
+? - Recursive Processing
+A - Aesthetic
+B - Binary
+C - Character
+D - Decimal
+E - Exponential Floating-Point
+F - Fixed-Format Floating-Point
+G - General Floating-Point
+I - Indent
+Missing and Additional FORMAT Arguments
+Nesting of FORMAT Operations
+Newline: Ignored Newline
+O - Octal
+P - Plural
+R - Radix
+S - Standard
+T - Tabulate
+W - Write
+X - Hexadecimal
+[ - Conditional Expression
+] - End of Conditional Expression
+^ - Escape Upward
+_ - Conditional Newline
+{ - Iteration
+| - Page
+} - End of Iteration
+~ - Tilde
+```
 
 ## See also
 
