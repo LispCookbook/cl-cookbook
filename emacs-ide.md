@@ -551,12 +551,13 @@ Use `C-c M-m` to macroexpand a macro call
 
 ~~~lisp
 (ql:quickload "clhs")
+(clhs:install-clhs-use-local)
 ~~~
 
 Then add this to your Emacs configuration:
 
 ~~~lisp
-(load "~/.quicklisp/clhs-use-local.el" 'noerror)
+(load "~/quicklisp/clhs-use-local.el" 'noerror)
 ~~~
 
 ### Miscellaneous
