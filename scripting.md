@@ -577,6 +577,11 @@ whichever other policy.
 
 See [Continuous Integration](testing.html#continuous-integration).
 
+## See also
+
+* [SBCL-GOODIES](https://github.com/sionescu/sbcl-goodies) - Allows to distribute SBCL binaries with foreign libraries: `libssl`, `libcrypto` and `libfixposix` are statically baked in. This removes the need of Deploy, when only these three foreign libraries are used.
+  * it was released on February, 2023.
+
 ## Credit
 
 * [cl-torrents' tutorial](https://vindarel.github.io/cl-torrents/tutorial.html)
