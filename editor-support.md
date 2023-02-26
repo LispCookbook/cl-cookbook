@@ -74,11 +74,24 @@ See also:
 * [Lisp in Vim](https://susam.net/blog/lisp-in-vim.html) demonstrates usage and
   compares both Slimv and Vlime
 
-## Atom
+## Pulsar (ex Atom)
 
 See [SLIMA](https://github.com/neil-lindquist/slima). This package
-allows you to interactively develop Common Lisp code, turning
-Atom into a pretty good Lisp IDE.
+allows you to interactively develop Common Lisp code, turning Atom, or
+now [Pulsar](https://github.com/pulsar-edit/pulsar), into a pretty
+good Lisp IDE. It features:
+
+* REPL
+* integrated debugger
+  * (not a stepping debugger yet)
+* jump to definition
+* autocomplete suggestions based on your code
+* compile this function, compile this file
+* function arguments order
+* integrated profiler
+* interactive object inspection.
+
+It is based on the Swank backend, like Slime for Emacs.
 
 <img src="assets/atom-slime.png"
      style="width: 800px" alt="The SLIMA extension for Atom with an open Lisp REPL"/>
