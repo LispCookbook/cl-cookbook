@@ -38,7 +38,7 @@ You can import exactly the symbols you need with `:import-from`:
 
 ~~~lisp
 (defpackage :my-package
-  (:import-from :ppcre :regex-replace)
+  (:import-from :ppcre #:regex-replace)
   (:use :cl))
 ~~~
 
@@ -108,9 +108,9 @@ experience. The following example is a snippet of `PROVE` package:
 ~~~lisp
 (defpackage prove
   (:nicknames :cl-test-more :test-more)
-  (:export :run
-           :is
-           :ok)
+  (:export #:run
+           #:is
+           #:ok)
 ~~~
 
 Afterwards, a user may use nickname instead of the package name to refer to this
