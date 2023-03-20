@@ -4,6 +4,44 @@ title: Packages
 
 See: [The Complete Idiot's Guide to Common Lisp Packages][guide]
 
+## Using packages
+
+To install and use a package with a single command, use `ql:quickload` as follows:
+~~~lisp
+(ql:quickload :package)
+
+(package:function ...)
+~~~
+where package can be specified as a string or as a keyword. Packages available using Quicklisp can be found on [https://quickdocs.org/](Quickdocs).
+
+Instead, if you have installed the package separately, you can use:
+~~~lisp
+(require :package)
+
+(package:function ...)
+~~~
+As before you can use the keyword `:package` or string `"package"`. Note that if the package is not found, it will fail to compile.
+
+You can import individual symbols from a package:
+~~~lisp
+(require :package)
+(import 'package:function)
+
+; can now use it directly
+(function ...)
+~~~
+
+You can import all symbols from a package:
+~~~lisp
+(require :package)
+(use-package 'package)
+
+(function ...)
+~~~
+As discussed in detail below, this is a bad idea.
+
+For anything more than quick one-off scripts, you should use the `defpackage` mechanism described below.
+
 ## Creating a package
 
 Here's an example package definition. It takes a name, and you
