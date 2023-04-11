@@ -16,6 +16,10 @@ The CL Cookbook aims to tackle all sort of topics, for the beginner as for the m
 
 * [License](license.html)
 * [Getting started](getting-started.html)
+  * How to install a Common Lisp implementation
+  * How to start a Lisp REPL
+  * How to install third-party libraries with Quicklisp
+  * How to work with projects
 * [Editor support](editor-support.html)
   * [Using Emacs as an IDE](emacs-ide.html)
   * [The LispWorks IDE](lispworks.html)
