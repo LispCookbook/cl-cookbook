@@ -12,7 +12,7 @@ The CL Cookbook aims to tackle all sort of topics, for the beginner as for the m
 
 # Content
 
-<p id="two-cols"></p>
+### Getting started
 
 * [License](license.html)
 * [Getting started](getting-started.html)
@@ -24,6 +24,11 @@ The CL Cookbook aims to tackle all sort of topics, for the beginner as for the m
   * [Using Emacs as an IDE](emacs-ide.html)
   * [The LispWorks IDE](lispworks.html)
   * [Using VSCode with Alive](vscode-alive.html)
+
+### Language basics
+
+<p id="two-cols"></p>
+
 * [Functions](functions.html)
 * [Data Structures](data-structures.html)
 * [Strings](strings.html)
@@ -35,31 +40,42 @@ The CL Cookbook aims to tackle all sort of topics, for the beginner as for the m
 * [Pattern Matching](pattern_matching.html)
 * [Input/Output](io.html)
 * [Files and Directories](files.html)
-* [Error and condition handling](error_handling.html)
-* [Packages](packages.html)
-* [Macros and Backquote](macros.html)
 * [CLOS (the Common Lisp Object System)](clos.html)
-* [Type System](type.html)
-* [Sockets](sockets.html)
-* [Interfacing with your OS](os.html)
-* [Foreign Function Interfaces](ffi.html)
-* [Threads](process.html)
+
+### Advanced topics
+
+<p id="two-cols"></p>
+
+* [Packages](packages.html)
 * [Defining Systems](systems.html)
-<!-- epub-exclude-start -->
-* [Using the Win32 API](win32.html)
-<!-- epub-exclude-end -->
+* [Error and condition handling](error_handling.html)
 * [Debugging](debugging.html)
+* [Macros and Backquote](macros.html)
+* [Type System](type.html)
+* [Threads](process.html)
 * [Performance Tuning](performance.html)
-* [Scripting. Building executables](scripting.html)
 * [Testing and Continuous Integration](testing.html)
-* [Databases](databases.html)
-* [GUI programming](gui.html)
-* [Web development](web.html)
-* [Web Scraping](web-scraping.html)
-* [WebSockets](websockets.html)
+* [Scripting. Building executables](scripting.html)
 <!-- epub-exclude-start -->
 * [Miscellaneous](misc.html)
 <!-- epub-exclude-end -->
+
+### Outside world
+
+<p id="two-cols"></p>
+
+* [Interfacing with your OS](os.html)
+* [Databases](databases.html)
+* [Foreign Function Interfaces](ffi.html)
+* [GUI programming](gui.html)
+* [Sockets](sockets.html)
+* [WebSockets](websockets.html)
+* [Web development](web.html)
+* [Web Scraping](web-scraping.html)
+<!-- epub-exclude-start -->
+* [Using the Win32 API](win32.html)
+<!-- epub-exclude-end -->
+
 
 ## Download in EPUB
 
