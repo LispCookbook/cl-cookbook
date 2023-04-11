@@ -254,20 +254,47 @@ It adds the following in your (for example) `~/.sbclrc`:
 In the REPL:
 
 ~~~lisp
-(ql:quickload "package-name")
+(ql:quickload "system-name")
 ~~~
 
-and voilà. See Quicklisp's documentation for more commands.
+For example, this installs the "[str](https://github.com/vindarel/cl-str/)" string manipulation library:
 
+~~~lisp
+(ql:quickload "str")
+~~~
+
+and voilà. You can use it right away:
+
+~~~lisp
+(str:title-case "HELLO LISP!")
+~~~
+
+<div class="info" style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 17px; margin: 1em;">
+<strong>SEE MORE:</strong> To understand the <code>package:a-symbol</code> notation, read the <a href="packages.html">packages page</a>, section "Accessing symbols from a package".
+</div>
+
+We can install more than one library at once. Here we install
+[cl-ppcre](https://edicl.github.io/cl-ppcre/) for regular-expressions, and
+[Alexandria](https://alexandria.common-lisp.dev/draft/alexandria.html),
+a utility library:
+
+~~~lisp
+(ql:quickload '("str" "cl-ppcre" "alexandria"))
+~~~
+
+Anytime you want to use a third-party library in your Lisp REPL, you
+can run this `ql:quickload` command. It will not hit the network a second
+time if it finds that the library is already installed on your file
+system. Libraries are by default installed in
+`~/quicklisp/dist/quicklisp/`.
 
 Note also that dozens of Common Lisp libraries are packaged in
 Debian. The package names usually begin with the cl- prefix (use
 `apt-cache search --names-only "^cl-.*"` to list them all).
 
-For example, in order to use the CL-PPCRE library (for regular
-expressions), one should first install the `cl-ppcre` package.
+For example, in order to use the `cl-ppcre` library, one should first install the `cl-ppcre` package.
 
-Then, in SBCL and ECL, it can be used with:
+Then, in SBCL, it can be used like this:
 
 ~~~lisp
 (require "asdf")
@@ -275,17 +302,22 @@ Then, in SBCL and ECL, it can be used with:
 (cl-ppcre:regex-replace "fo+" "foo bar" "frob")
 ~~~
 
-See more: https://wiki.debian.org/CommonLisp
+Here we pretend we don't have Quicklisp installed and we use `require` to load a module that is available on the file system. In doubt, you can use `ql:quickload`.
+
+See Quicklisp's documentation for more commands. For instance, see how to upgrade or rollback your Quicklisp's distribution.
+
 
 ### Advanced dependencies management
 
 You can drop Common Lisp projects into any of those folders:
 
+- `~/quicklisp/local-projects`
 - `~/common-lisp`,
 - `~/.local/share/common-lisp/source`,
-- `~/quicklisp/local-projects`
 
-For a complete list, see
+A library installed here is automatically available for every project.
+
+For a complete list, see the values of:
 
 ~~~lisp
 (asdf/source-registry:default-user-source-registry)
@@ -297,12 +329,10 @@ and
 asdf:*central-registry*
 ~~~
 
-A library installed here is automatically available for every project.
-
 #### Providing our own version of a library. Cloning projects.
 
 Given the property above, we can clone any library into the
-local-projects directory and it will be found by ASDF (and Quicklisp) and
+`~/quicklisp/local-projects/` directory and it will be found by ASDF (and Quicklisp) and
 available right-away:
 
 ~~~lisp
@@ -317,6 +347,8 @@ or
 
 The practical different between the two is that `ql:quickload` first tries to
 fetch the system from the Internet if it is not already installed.
+
+Note that symlinks in local-projects to another location of your liking works too.
 
 #### How to work with local versions of libraries
 
