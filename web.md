@@ -1046,6 +1046,50 @@ whole distro that supports declarative system configuration. It allows
 to ship self-contained tarballs, which also contain system
 dependencies. For an example, see the [Nyxt browser](https://github.com/atlas-engineer/nyxt/).
 
+### Running behind Nginx
+
+There is nothing CL-specific to run your Lisp web app behind Nginx. Here's an example to get you started.
+
+We suppose you are running your Lisp app on a web server, with the IP
+address 1.2.3.4, on the port 8001. Nothing special here. We want to
+access our app with a real domain name (and eventuall benefit of other
+Nginx's advantages, such as rate limiting etc). We bought our domain
+name and we created a DNS record of type A that links the domain name
+to the server's IP address.
+
+We must configure our server with Nginx to tell it that all
+connections coming from "your-domain-name.org", on port 80, are to be
+sent to the Lisp app running locally.
+
+Create a new file: `/etc/nginx/sites-enabled/my-lisp-app.conf` and add this proxy directive:
+
+~~~lisp
+server {
+    listen www.your-domain-name.org:80;
+    server_name your-domain-name.org www.your-domain-name.org;  # with and without www
+    location / {
+        proxy_pass http://1.2.3.4:8001/;
+    }
+
+    # Optional: serve static files with nginx, not the Lisp app.
+    location /files/ {
+        proxy_pass http://1.2.3.4:8001/files/;
+    }
+}
+~~~
+
+Note that on the proxy_pass directive: `proxy_pass
+http://1.2.3.4:8001/;` we are using our server's public IP
+address. Oten, your Lisp webserver such as Hunchentoot directly
+listens on it. You might want, for security reasons, to run the Lisp
+app on localhost.
+
+Reload nginx (send the "reload" signal):
+
+    $ nginx -s reload
+
+and that's it: you can access your Lisp app from the outside through `http://www.your-domain-name.org`.
+
 
 ### Deploying on Heroku and other services
 
