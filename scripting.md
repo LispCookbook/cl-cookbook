@@ -180,8 +180,11 @@ quits. To tell it to not upgrade itself, add this into your .asd:
   #+asdf (defun asdf:upgrade-asdf () nil))
 ~~~
 
+You can also silence Deploy's start-up messages by adding this in your build script, before `asdf:make` is called:
 
-But there is more, so we refer you to Deploy's documentation.
+    (push :deploy-console *features*)
+
+And there is more, so we refer you to Deploy's documentation.
 
 
 ### With Roswell or Buildapp
