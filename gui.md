@@ -389,7 +389,7 @@ To try the Nodgui demo, do:
 
 ~~~lisp
 (ql:quickload "nodgui")
-(nodgui.demo:demo)
+(nodgui.demo::demo)
 ~~~
 
 ### Qt4
