@@ -478,6 +478,19 @@ Note that due to issues like buffering, and the timing of when the
 other process is executed, there is no guarantee that all data sent
 will be received before `listen` or `read-char-no-hang` return `nil`.
 
+### Running visual commands (htop)
+
+Use `uiop:run-program` and set both `:input` and `:output` to `:interactive`:
+
+~~~lisp
+(uiop:run-program "htop" :output :interactive :input :interactive)
+~~~
+
+This will spawn `htop` in full screen, as it should.
+
+It works for more commands (`sudo`, `vim`…), however not for all interactive
+programs, such as `less` or `fzf`.
+
 ## Piping
 
 Here's an example to do the equivalent of `ls | sort`. Note that "ls"
