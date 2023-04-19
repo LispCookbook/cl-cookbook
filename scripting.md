@@ -363,7 +363,7 @@ SBCL stores the command line arguments into `sb-ext:*posix-argv*`.
 But that variable name differs from implementations, so we want a
 way to handle the differences for us.
 
-We have `uiop:command-line-arguments`, shipped in ASDF and included in
+We have `(uiop:command-line-arguments)`, shipped in ASDF and included in
 nearly all implementations.
 From anywhere in your code, you can simply check if a given string is present in this list:
 
@@ -373,155 +373,268 @@ From anywhere in your code, you can simply check if a given string is present in
 
 That's good, but we also want to parse the arguments, have facilities to check short and long options, build a help message automatically, etc.
 
-A quick look at the
-[awesome-cl#scripting](https://github.com/CodyReichert/awesome-cl#scripting)
-list made us choose the
-[unix-opts](https://github.com/mrkkrp/unix-opts) library.
+We chose the [Clingon](https://github.com/dnaeon/clingon) library,
+because it may have the richest feature set:
 
-    (ql:quickload "unix-opts")
+- it handles subcommands,
+- it supports various kinds of options (flags, integers, booleans, counters, enums…),
+- it generates Bash and Zsh completion files as well as man pages,
+- it is extensible in many ways,
+- we can easily try it out on the REPL
+- etc
 
-We can call it with its `opts` alias (a global nickname).
+Let's download it:
 
-As often work happens in two phases:
+    (ql:quickload "clingon")
 
-* declaring the options that our application accepts, their optional argument, defining their type
-  (string, integer,…), their long and short names, and the required ones
-* parsing them (and handling missing or malformed parameters).
+As often, work happens in two phases:
 
-
-### Declaring arguments
-
-We define the arguments with `opts:define-opts`:
-
-~~~lisp
-(opts:define-opts
-    (:name :help
-           :description "print this help text"
-           :short #\h
-           :long "help")
-    (:name :nb
-           :description "here we want a number argument"
-           :short #\n
-           :long "nb"
-           :arg-parser #'parse-integer) ;; <- takes an argument
-    (:name :info
-           :description "info"
-           :short #\i
-           :long "info"))
-~~~
-
-Here `parse-integer` is a built-in CL function. If the argument you expect is a string, you don't have to define an `arg-parser`.
-
-Here is an example output on the command line after we build and run a binary of our application. The help message was auto-generated:
-
-~~~
-$ my-app -h
-my-app. Usage:
-
-Available options:
-  -h, --help               print this help text
-  -n, --nb ARG             here we want a number argument
-  -i, --info               info
-~~~
+* we first declare the options that our application accepts, their
+  kind (flag, string, integer…), their long and short names and the
+  required ones.
+* we ask Clingon to parse the command-line options and run our app.
 
 
-### Parsing
+### Declaring options
 
-We parse and get the arguments with `opts:get-opts`, which returns two
-values: the list of valid options and the remaining free arguments. We
-then must use `multiple-value-bind` to assign both into variables:
+We want to represent a command-line tool with this possible usage:
+
+    $ myscript [-h, --help] [-n, --name NAME]
+
+Ultimately, we need to create a Clingon command (with
+`clingon:make-command`) to represent our application. A command is
+composed of options and of a handler function, to do the logic.
+
+So first, let's create options. Clingon already handles "--help" for us, but not the short version. Here's how we use `clingon:make-option` to create an option:
 
 ~~~lisp
-  (multiple-value-bind (options free-args)
-      ;; There is no error handling yet.
-      (opts:get-opts)
-      ...
+(clingon:make-option
+ :flag                ;; <--- option kind. A "flag" does not expect a parameter on the CLI.
+ :description "short help"
+ ;; :long-name "help" ;; <--- long name, sans the "--" prefix, but here it's a duplicate.
+ :short-name #\h      ;; <--- short name, a character
+ ;; :required t       ;; <--- is this option always required? In our case, no.
+ :key :help)          ;; <--- the internal reference to use with getopt, see later.
 ~~~
 
-We can test this by giving a list of strings to `get-opts`:
+This is a **flag**: if "-h" is present on the command-line, the
+option's value will be truthy, otherwise it will be falsy. A flag does
+not expect an argument, it's here for itself.
+
+Similar kind of options would be:
+
+- `:boolean`: that one expects an argument, which can be "true" or 1 to be truthy. Anything else is considered falsy.
+- `:counter`: a counter option counts how many times the option is provided on the command line. Typically, use it with `-v` / `--verbose`, so the user could use `-vvv` to have extra verbosity. In that case, the option value would be 3. When this option is not provided on the command line, Clingon sets its value to 0.
+
+We'll create a second option ("--name" or "-n" with a parameter) and we put everything in a litle function.
 
 ~~~lisp
-(multiple-value-bind (options free-args)
-                   (opts:get-opts '("hello" "-h" "-n" "1"))
-                 (format t "Options: ~a~&" options)
-                 (format t "free args: ~a~&" free-args))
-Options: (HELP T NB-RESULTS 1)
-free args: (hello)
+;; The naming with a "/" is just our convention.
+(defun cli/options ()
+  "Returns a list of options for our main command"
+  (list
+   (clingon:make-option
+    :flag
+    :description "short help."
+    :short-name #\h
+    :key :help)
+   (clingon:make-option
+    :string              ;; <--- string type: expects one parameter on the CLI.
+    :description "Name to greet"
+    :short-name #\n
+    :long-name "name"
+    :env-vars '("USER")     ;; <-- takes this default value if the env var exists.
+    :initial-value "lisper" ;; <-- default value if nothing else is set.
+    :key :name)))
+~~~
+
+The second option we created is of kind `:string`. This option expects one argument, which will be parsed as a string. There is also `:integer`, to parse the argument as an integer.
+
+There are more option kinds of Clingon, which you will find on its good documentation: `:choice`, `:enum`, `:list`, `:filepath`, `:switch` and so on.
+
+### Top-level command
+
+We have to tell Clingon about our top-level command.
+`clingon:make-command` accepts some descriptive fields, and two important ones:
+
+- `:options` is a list of Clingon options, each created with `clingon:make-option`
+- `:handler` is the function that will do the app's logic.
+
+And finally, we'll use `clingon:run` in our main function (the entry
+point of our binary) to parse the command-line arguments, and apply
+our command's logic. During development, we can also manually call
+`clingon:parse-command-line` to try things out.
+
+Here's a minimal command. We'll define our handler function afterwards:
+
+~~~lisp
+(defun cli/command ()
+  "A command to say hello to someone"
+  (clingon:make-command
+   :name "hello"
+   :description "say hello"
+   :version "0.1.0"
+   :authors '("John Doe <john.doe@example.org")
+   :license "BSD 2-Clause"
+   :options (cli/options) ;; <-- our options
+   :handler #'null))  ;; <--  to change. See below.
+~~~
+
+At this point, we can already test things out on the REPL.
+
+### Testing options parsing on the REPL
+
+Use `clingon:parse-command-line`: it wants a top-level command, and a list of command-line arguments (strings):
+
+~~~lisp
+CL-USER> (clingon:parse-command-line (cli/command) '("-h" "-n" "me"))
+#<CLINGON.COMMAND:COMMAND name=hello options=5 sub-commands=0>
+~~~
+
+It works!
+
+We can even `inspect` this command object, we would see its properties (name, hooks, description, context…), its list of options, etc.
+
+Let's try again with an unknown option:
+
+~~~lisp
+CL-USER> (clingon:parse-command-line (cli/command) '("-x"))
+;; => debugger: Unknown option -x of kind SHORT
+~~~
+
+In that case, we are dropped into the interactive debugger, which says
+
+```
+Unknown option -x of kind SHORT
+   [Condition of type CLINGON.CONDITIONS:UNKNOWN-OPTION]
+```
+
+and we are provided a few restarts:
+
+```
+Restarts:
+ 0: [DISCARD-OPTION] Discard the unknown option
+ 1: [TREAT-AS-ARGUMENT] Treat the unknown option as a free argument
+ 2: [SUPPLY-NEW-VALUE] Supply a new value to be parsed
+ 3: [RETRY] Retry SLIME REPL evaluation request.
+ 4: [*ABORT] Return to SLIME's top level.
+```
+
+which are very practical. If we needed, we could create an `:around`
+method for `parse-command-line`, handle Clingon's conditions with
+`handler-bind` and use its restarts, to do something different with
+unknown options. But we don't need that yet, if ever: we want our
+command-line parsing engine to warn us on invalid options.
+
+Last but not least, we can see how Clingon prints our CLI tool's usage information:
+
+```
+CL-USER> (clingon:print-usage (cli/command) t)
+NAME:
+  hello - say hello
+
+USAGE:
+  hello [options] [arguments ...]
+
+OPTIONS:
+      --help          display usage information and exit
+      --version       display version and exit
+  -h                  short help.
+  -n, --name <VALUE>  Name to greet [default: lisper] [env: $USER]
+
+AUTHORS:
+  John Doe <john.doe@example.org
+
+LICENSE:
+  BSD 2-Clause
+```
+
+We can tweak the "USAGE" part with the `:usage` key parameter of the lop-level command.
+
+
+### Handling options
+
+When the parsing of command-line arguments succeeds, we need to do something with them. We introduce two new Clingon functions:
+
+- `clingon:getopt` is used to get an option's value by its `:key`
+- `clingon:command-arguments` gets use the free arguments remaining on the command-line.
+
+Here's how to use them:
+
+~~~lisp
+CL-USER> (let ((command (clingon:parse-command-line (cli/command) '("-n" "you" "last"))))
+           (format t "name is: ~a~&" (clingon:getopt command :name))
+           (format t "free args are: ~s~&" (clingon:command-arguments command)))
+name is: you
+free args are: ("last")
 NIL
 ~~~
 
-If we  put an unknown option,  we get into the  debugger. We'll see
-error handling in a moment.
-
-So `options` is a
-[property list](https://lispcookbook.github.io/cl-cookbook/data-structures.html#plist). We
-use `getf` and `setf` with plists, so that's how we do our
-logic. Below we print the help with `opts:describe` and then we `quit`
-(in a portable way).
+It is with them that we will write the handler of our top-level command:
 
 ~~~lisp
-  (multiple-value-bind (options free-args)
-      (opts:get-opts)
-
-    (if (getf options :help)
-        (progn
-          (opts:describe
-           :prefix "You're in my-app. Usage:"
-           :args "[keywords]") ;; to replace "ARG" in "--nb ARG"
-          (uiop:quit)))
-    (if (getf options :nb)
-       ...)
+(defun cli/handler (cmd)
+  "The handler function of our top-level command"
+  (let ((free-args (clingon:command-arguments cmd))
+        (name (clingon:getopt cmd :name)))  ;; <-- using the option's :key
+    (format t "Hello, ~a!~%" name)
+    (format t "You have provided ~a more free arguments~%" (length free-args))
+    (format t "Bye!~%")))
 ~~~
 
-For a full example, see its
-[official example](https://github.com/mrkkrp/unix-opts/blob/master/example/example.lisp)
-and
-[cl-torrents' tutorial](https://vindarel.github.io/cl-torrents/tutorial.html).
-
-The  example in  the unix-opts  repository suggests  a macro  to do
-slightly better. Now to error handling.
-
-
-#### Handling malformed or missing arguments
-
-There are 4 situations that unix-opts doesn't handle, but signals
-conditions for us to take care of:
-
-* when it sees an unknown argument, an `unknown-option` condition is signaled.
-* when an argument is missing, it signals a `missing-arg` condition.
-* when it can't parse an argument, it signals `arg-parser-failed`. For example, if it expected an integer but got text.
-* when it doesn't see a required option, it signals `missing-required-option`.
-
-So, we must create simple functions to handle those conditions, and
-surround the parsing of the options with an `handler-bind` form:
+We must tell our top-level command to use this handler:
 
 ~~~lisp
-  (multiple-value-bind (options free-args)
-      (handler-bind ((opts:unknown-option #'unknown-option) ;; the condition / our function
-                     (opts:missing-arg #'missing-arg)
-                     (opts:arg-parser-failed #'arg-parser-failed)
-                     (opts:missing-required-option))
-         (opts:get-opts))
-    …
-    ;; use "options" and "free-args"
+;; from above:
+(defun cli/command ()
+  "A command to say hello to someone"
+  (clingon:make-command
+   ...
+   :handler #'cli/handler))  ;; <-- changed.
 ~~~
 
-Here we suppose we want one function to handle each case, but it could
-be a simple one. They take the condition as argument.
+We now only have to write the main entry point of our binary and we're done.
+
+By the way, `clingon:getopt` returns 3 values:
+
+- the option's value
+- a boolean, indicating wether this option was provided on the command-line
+- the command which provided the option for this value.
+
+See also `clingon:opt-is-set-p`.
+
+
+### Main entry point
+
+This can be any function, but to use Clingon, use its `run` function:
 
 ~~~lisp
-(defun handle-arg-parser-condition (condition)
-  (format t "Problem while parsing option ~s: ~a .~%" (opts:option condition) ;; reader to get the option from the condition.
-                                                       condition)
-  (opts:describe) ;; print help
-  (uiop:quit 1))
+(defun main ()
+  "The main entrypoint of our CLI program"
+  (clingon:run (cli/command)))
 ~~~
 
-For more about condition handling, see [error and condition handling](error_handling.html).
+To use this main function as your binary entry point, see above how to build a Common Lisp binary. A reminder: set it in your .asd system declaration:
 
-#### Catching a C-c termination signal
+~~~lisp
+:entry-point "my-package::main"
+~~~
 
-Let's build a simple binary, run it, try a `C-c` and read the stacktrace:
+And that's about it. Congratulations, you can now properly parse command-line arguments!
+
+Go check Clingon's documentation, because there is much more to it: sub-commands, contexts, hooks, handling a C-c, developing new options such as an email kind, Bash and Zsh completion…
+
+
+## Catching a C-c termination signal
+
+By default, **Clingon provides a handler for SIGINT signals**. It makes the
+application to immediately exit with the status code 130.
+
+If your application needs some clean-up logic, you can use an `unwind-protect` form. However, it might not be appropriate for all cases, so Clingon advertises to use the [with-user-abort](https://github.com/compufox/with-user-abort) helper library.
+
+Below we show how to catch a C-c manually. Because by default, you would get a Lisp stacktrace.
+
+We built a simple binary, we ran it and pressed `C-c`. Let's read the stacktrace:
 
 ~~~
 $ ./my-app
