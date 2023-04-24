@@ -274,6 +274,16 @@ provide nice nicknames.
 
 Many implementations (SBCL, CCL, ECL, Clasp, ABCL, ACL, LispWorks >= 7.2…) support Package Local Nicknames (PLN).
 
+
+To use a PLN you can simply do the following, for example, if you'd like to try out a local nickname in an ad-hoc fashion:
+
+~~~lisp
+(uiop:add-package-local-nickname :a :alexandria)
+(a:iota 12) ; (0 1 2 3 4 5 6 7 8 9 10 11)
+~~~
+
+You can also set up a PLN in a `defpackage` form. The effect of PLN is totally within `mypackage` i.e. the `nickname` won't work in other packages unless defined there too. So, you don't have to worry about unintended package name clash in other libraries.
+
 ~~~lisp
 (defpackage :mypackage
   (:use :cl)
@@ -286,8 +296,6 @@ Many implementations (SBCL, CCL, ECL, Clasp, ABCL, ACL, LispWorks >= 7.2…) sup
 ;; You can use :nickname instead of :original-package-name
 (nickname:some-function "a" "b")
 ~~~
-
-The effect of `PLN` is totally within `mypackage` i.e. the `nickname` won't work in other packages unless defined there too. So, you don't have to worry about unintended package name clash in other libraries.
 
 Another facility exists for adding nicknames to packages. The function [`RENAME-PACKAGE`](http://www.lispworks.com/documentation/HyperSpec/Body/f_rn_pkg.htm) can be used to replace the name and nicknames of a package. But it's use would mean that other libraries may not be able to access the package using the original name or nicknames. There is rarely any situation to use this. Use Package Local Nicknames instead.
 
