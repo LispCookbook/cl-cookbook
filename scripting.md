@@ -330,7 +330,7 @@ Yes, it is the case with this SBCL installed from Debian.
 In SBCL, we would give an argument to `save-lisp-and-die`, where
 `:compression`
 
-> may be an integer from -1 to 9, corresponding to zlib compression levels, or t (which is equivalent to the default compression level, -1).
+> may be an integer from -7 to 22, corresponding to zstd compression levels, or t (which is equivalent to the default compression level, 9).
 
 We experienced a 1MB difference between levels -1 and 9.
 
