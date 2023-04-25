@@ -332,7 +332,27 @@ In SBCL, we would give an argument to `save-lisp-and-die`, where
 
 > may be an integer from -7 to 22, corresponding to zstd compression levels, or t (which is equivalent to the default compression level, 9).
 
-We experienced a 1MB difference between levels -1 and 9.
+For a simple "Hello, world" program:
+
+```
+| Program size | Compression level   |
+|--------------|---------------------|
+| 46MB         | Without compression |
+| 22MB         | -7                  |
+| 12MB         | 9                   |
+| 11MB         | 22                  |
+```
+
+For a bigger project like StumpWM, an X window manager written in Lisp:
+
+```
+| Program size | Compression level   |
+|--------------|---------------------|
+| 58MB         | Without compression |
+| 27MB         | -7                  |
+| 15MB         | 9                   |
+| 13MB         | 22                  |
+```
 
 **With ASDF**
 
