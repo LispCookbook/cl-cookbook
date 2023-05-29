@@ -622,8 +622,8 @@ Returns a list of pathnames:
 See `uiop/filesystem:collect-sub*directories`. It takes as arguments:
 
 - a `directory`
-- a `recursep` function
 - a `collectp` function
+- a `recursep` function
 - a `collector` function
 
 Given a directory, when `collectp` returns true with the directory,
