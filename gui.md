@@ -27,7 +27,7 @@ send more examples and to furnish the upstream documentations.
 
 In this recipe, we'll present the following GUI toolkits:
 
-- [Tk][tk] with [Ltk][ltk]
+- [Tk][tk] with [Ltk][ltk] and [nodgui][nodgui]
 - [Qt4][qt4] with [Qtools][qtools]
 - [IUP][iup-tecgraf] with [lispnik/iup][iup-lisp]
 - [Gtk3][gtk] with [cl-cffi-gtk][cl-cffi-gtk]
@@ -53,7 +53,6 @@ In addition, you might want to have a look to:
   - the bridge is good at catching ObjC errors and turning them into Lisp errors, so one can have an iterative REPL-based development cycle for a macOS GUI application.
 * [McCLIM](https://common-lisp.net/project/mcclim/) and [Garnet](https://github.com/earl-ducaine/cl-garnet) are toolkit in 100% Common Lisp. McClim even has [a prototype](https://techfak.de/~jmoringe/mcclim-broadway-7.ogv) running in the browser with the Broadway protocol and Garnet has an ongoing interface to Gtk.
 * [Alloy](https://github.com/Shirakumo/alloy), another very new toolkit in 100% Common Lisp, used for example in the [Kandria](https://github.com/shinmera/kandria) game.
-* [nodgui](https://notabug.org/cage/nodgui), a fork of Ltk, with syntax sugar and additional widgets.
 * [eql, eql5, eql5-android](https://gitlab.com/eql), embedded Qt4 and Qt5 Lisp, embedded in ECL, embeddable in Qt. Port of EQL5 to the Android platform.
 * this [demo using Java Swing from ABCL](https://github.com/defunkydrummer/abcl-jazz)
 * [examples of using Gtk without C files with SBCL](https://github.com/mifpasoti/Gtk-Demos), as well as GTK-server.
@@ -61,34 +60,56 @@ In addition, you might want to have a look to:
 
 as well as the other ones listed on [awesome-cl#gui](https://github.com/CodyReichert/awesome-cl#Gui) and [Cliki](https://www.cliki.net/GUI).
 
-### Tk (Ltk)
+### Tk (Ltk and nodgui)
 
 [Tk][tk] (or Tcl/Tk, where Tcl is the programming language) has the
 infamous reputation of having an outdated look. This is not (so) true
 anymore since its version 8 of 1997 (!). It is probably better than
-you think:
+you think.
+
+This is a simple GUI with nodgui's built-in theme (more on that below):
+
+![](assets/gui/nodgui-feet2meters-yaru.png)
+
+This is a treeview, with the same theme:
+
+![](assets/gui/nodgui-treeview-yaru.png)
+
+A toy mediaplayer, showing a tree list, checkboxes, buttons and labels, with the Arc theme:
+
+![](assets/gui/mediaplayer-nodgui-arc.png)
+
+This is a demo with a Macos theme:
 
 ![](assets/gui/ltk-on-macos.png)
 
-Tk doesn't have a great choice of widgets, but it has a useful canvas,
+In addition to those, we can use many of the [ttkthemes](https://ttkthemes.readthedocs.io/en/latest/themes.html), the [Forest theme](https://github.com/rdbende/Forest-ttk-theme), and more. See [this tcl/tk list](https://wiki.tcl-lang.org/page/List+of+ttk+Themes).
+
+But what is Tk good for? Tk doesn't have a great choice of widgets, but it has a useful canvas,
 and it has a couple of unique features: we can develop a graphical
 interface **fully interactively** and we can run the GUI **remotely**
-from the core app.
+from the core app. It is also cross-platform.
 
-So, Tk isn't fancy, but it is a used and proven GUI toolkit (and
+So, Tk isn't native and doesn't have the most advanced features,
+but it is a used and proven GUI toolkit (and
 programming language) still used in the industry. It can be a great
 choice to quickly create simple GUIs, to leverage its ease of deployment, or
 when stability is required.
 
-The Lisp binding is [Ltk][ltk].
+There are two Lisp bindings: [Ltk][ltk] and [nodgui][nodgui]. Nodgui
+("No Drama GUI") is a fork of Ltk, with added widgets (such as an
+auto-completion list widget), an asynchronous event loop and, what we
+really enjoy, the surprisingly nice-looking "Yaru" theme that comes
+with the library. It is also very easy to install and use any other of
+our choice, see below.
 
-- **Written in**: Tcl
+- **Tk is Written in**: Tcl
 - **Portability**: cross-platform (Windows, macOS, Linux).
 
 - **Widgets**: this is not the fort of Tk. It has a **small set** of
-  default widgets, and misses important ones, for example a calendar. We
+  default widgets, and misses important ones, for example a date picker. We
   can find some in extensions (such as in **Nodgui**), but they don't
-  feel native, at all.
+  feel native, at all. The calendar is brought by a Tk extension and looks better.
 
 - **Interactive development**: very much.
 
@@ -103,7 +124,7 @@ The Lisp binding is [Ltk][ltk].
 
 - **Bindings documentation**: short but complete. Nodgui too.
 - **Bindings stability**: very stable
-- **Bindings activity**: low.
+- **Bindings activity**: low for Ltk (mostly maintenance), active for nodgui (new features).
 - **Licence**: Tcl/Tk is BSD-style, Ltk is LGPL.
 - Example applications:
   - [Fulci](https://notabug.org/cage/fulci/) - a program to organise your movie collections.
@@ -133,7 +154,7 @@ Ltk-megawidgets:
     menu-entry
 ```
 
-Nodgui adds:
+nodgui adds:
 
 ```
 treelist tooltip searchable-listbox date-picker calendar autocomplete-listbox
@@ -389,8 +410,69 @@ To try the Nodgui demo, do:
 
 ~~~lisp
 (ql:quickload "nodgui")
-(nodgui.demo::demo)
+(nodgui.demo:demo)
 ~~~
+
+but hey, to load the demo with the better looking theme, do:
+
+~~~lisp
+(nodgui.demo:demo :theme "yaru")
+~~~
+
+or
+
+~~~lisp
+(setf nodgui:*default-theme* "yaru")
+(nodgui.demo:demo)
+~~~
+
+#### Nodgui UI themes
+
+To use the "yaru" theme that comes with nodgui, we can simply do:
+
+~~~lisp
+(with-nodgui ()
+  (use-theme "yaru")
+  …)
+~~~
+
+or
+
+~~~lisp
+(with-nodgui (:theme "yaru")
+  …)
+~~~
+
+or
+
+~~~lisp
+(setf nodgui:*default-theme* "yaru")
+(with-nodgui ()
+  …)
+~~~
+
+It is also possible to install and load another tcl theme. For example, clone the [Forest ttk theme](https://github.com/rdbende/Forest-ttk-theme) or the [ttkthemes](https://github.com/TkinterEP/ttkthemes/). Your project directory would look like this:
+
+```
+yourgui.asd
+yourgui.lisp
+ttkthemes/
+```
+
+Inside `ttkthemes/`, you will find themes under the `png/` directory (the other ones are currently not supported):
+
+    /ttkthemes/ttkthemes/png/arc/arc.tcl
+
+You need to load the .tcl file with nodgui, and tell it to use this theme:
+
+~~~lisp
+(with-nodgui ()
+   (eval-tcl-file "/ttkthemes/ttkthemes/png/arc/arc.tcl")
+   (use-theme "arc")
+   … code here …)
+~~~
+
+and that's it. Your application now uses a new and decently looking GUI theme.
 
 ### Qt4
 
@@ -989,6 +1071,7 @@ Have fun, and don't hesitate to share your experience and your apps.
 
 [tk]: https://www.tcl.tk
 [ltk]: http://www.peter-herth.de/ltk/ltkdoc/
+[nodgui]: https://notabug.org/cage/nodgui
 [qt4]: https://doc.qt.io/archives/qt-4.8/index.html
 [gtk]: https://www.gtk.org/
 [qtools]: https://github.com/Shinmera/qtools
