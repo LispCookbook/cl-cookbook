@@ -463,6 +463,25 @@ See more:
 
 * [Chapter 28: the Process Browser](http://www.lispworks.com/documentation/lw71/IDE-U/html/ide-u-178.htm#pgfId-852666)
 
+### Saving images
+
+Saving images with LispWorks is different than with SBCL:
+
+- we can save an image now, or schedule snapshots later in time
+- the new created image becomes the default core image for our LispWorks environment
+- the REPL session is saved
+- the windows configuration is saved
+- threads are saved
+
+So, effectively, we can save an image and have our development
+environment back to the same state, effectively allowing to take
+snapshots of our current work and to continue where we left of.
+
+For example, we can start a game from the REPL, play a little bit in
+its window, save an image, and when restored we will get the game and
+its state back.
+
+
 ### Misc
 
 We like the `Search Files` functionality. It is like a recursive
@@ -534,3 +553,4 @@ See LispWorks' documentation.
 - [LispWorks IDE User Guide](http://www.lispworks.com/documentation/lw71/IDE-U/html/ide-u.htm) (check out the sections we didn't cover)
 - [LispWorks on Wikipedia](https://en.wikipedia.org/wiki/LispWorks)
 - the [Awesome LispWorks](https://github.com/fourier/awesome-lispworks) list
+- [Real Image-based approach in Common Lisp](https://www.youtube.com/watch?v=nsKx40ab9SY) - differences between SBCL and LispWorks.
