@@ -635,7 +635,9 @@ superseding the functionality of `cl-fad:walk-directory`.
 
 The behavior in presence of symlinks is not portable. Use IOlib to handle such situations.
 
-Example:
+Examples:
+
+- this collects only subdirectories:
 
 ~~~lisp
 (defparameter *dirs* nil "All recursive directories.")
@@ -646,7 +648,25 @@ Example:
     (lambda (it) (push it *dirs*)))
 ~~~
 
-With `cl-fad:walk-directory`, we can also collect files, not only subdirectories:
+- this collects files and subdirectories:
+
+~~~lisp
+(let ((results))
+    (uiop:collect-sub*directories
+     "./"
+     (constantly t)
+     (constantly t)
+     (lambda (subdir)
+       (setf results
+             (nconc results
+                    ;; A detail: we return strings, not pathnames.
+                    (loop for path in (append (uiop:subdirectories subdir)
+                                              (uiop:directory-files subdir))
+                          collect (namestring path))))))
+    results)
+~~~
+
+- we can do the same with the `cl-fad` library:
 
 ~~~lisp
 (cl-fad:walk-directory "./"
@@ -654,7 +674,6 @@ With `cl-fad:walk-directory`, we can also collect files, not only subdirectories
      (format t "~A~%" name))
    :directories t)
 ~~~
-
 
 
 #### Finding files matching a pattern
