@@ -617,7 +617,7 @@ Returns a list of pathnames:
  #P"/home/vince/projects/cl-cookbook/assets/")
 ```
 
-#### Traversing (walking) directories
+#### Traversing (walking) directories recursively
 
 See `uiop/filesystem:collect-sub*directories`. It takes as arguments:
 
@@ -674,6 +674,16 @@ Examples:
      (format t "~A~%" name))
    :directories t)
 ~~~
+
+- and of course, we can use an external tool: the good ol' unix `find`, or the newer `fd` (`fdfind` on Debian) that has a simpler syntax and filters out a set of common files and directories by default (node_modules, .git…):
+
+~~~lisp
+(str:lines (uiop:run-program (list "find" ".") :output :string))
+;; or
+(str:lines (uiop:run-program (list "fdfind") :output :string))
+~~~
+
+Here with the help of the `str` library.
 
 
 #### Finding files matching a pattern
