@@ -183,14 +183,14 @@ with restarts, macro-expansion, parenthesis matching,…
 
 ## Lem
 
-[Lem](https://github.com/lem-project/lem/wiki) is an editor tailored for Common Lisp development. Once you
+[Lem](https://github.com/lem-project/lem/) is an editor tailored for Common Lisp development. Once you
 install it, you can start developing. Its interface resembles Emacs
-and SLIME (same shortcuts). It comes with an ncurses and an Electron
-frontend, and other programming modes: Python, Go, Rust, JS, Nim,
-Scheme, HTML, CSS, directory mode, a vim layer, and more.
+and SLIME (same shortcuts). It comes with an ncurses and an SDL2
+frontend, and other programming modes thanks to its built-in LSP client:
+Python, Go, Rust, JS, Nim, Scheme, HTML, CSS, plus a directory mode, a **vim layer**, and more.
 
-<img src="assets/lem-terminal.png"
-     style="width: 800px" alt="Lem running in the terminal with a REPL and the interactive debugger"/>
+<img src="assets/lem-sdl2.png"
+     style="width: 800px" alt="Lem running in a SDL2 GUI."/>
 
 It can be started as a REPL right away in the terminal. Run it with:
 
