@@ -659,24 +659,56 @@ with another approach.
 Now let’s move onto some more comprehensive examples which tie
 together all the concepts discussed thus far.
 
+### Timeouts
+
+We can use `bt:with-timeout`.
+
+Sometimes we want to run a background operation, but we want to ensure
+that it doesn't take a maximum time limit. We can use `bt:with-timeout
+(n)` where n is a number of seconds. In case of a timeout,
+Bordeaux-threads signals a `bt:timeout` error.
+
+In our scenario below, we create a thread that launches a potentially
+long operation, we `join` the thread with a timeout, and we handle any
+timeout error. In our case, we destroy the running thread. This also
+kills its underlying processes (were they run with
+`uiop:run-program`).
+
+~~~lisp
+(defun maybe-costly-operation ()
+  (print "working hard...")
+  (sleep 10))
+
+(let ((thread (bt:make-thread                ;; <--- create a thread
+                 (lambda ()
+                   (maybe-costly-operation)) ;; <--- maybe long operation
+                 :name "maybe-costly-thread")))
+    (handler-case
+        (bt:with-timeout (timeout)           ;; <-- with-timeout
+          (bt:join-thread thread))           ;; <-- join the thread
+      (bt:timeout ()                         ;; <-- handle timeout.
+        (bt:destroy-thread thread))))
+~~~
+
+
 ### Useful functions
 
 Here is a summary of the functions, macros and global variables which
 were used in the demo examples along with some extras. These should
 cover most of the basic programming scenarios:
 
--    `bt:*supports-thread-p*` (to check for basic thread support)
--    `bt:make-thread` (create a new thread)
--    `bt:current-thread` (return the current thread object)
--    `bt:all-threads` (return a list of all running threads)
--    `bt:thread-alive-p` (checks if the thread is still alive)
--    `bt:thread-name` (return the name of the thread)
--    `bt:join-thread` (join on the supplied thread)
--    `bt:interrupt-thread` (interrupt the given thread)
--    `bt:destroy-thread` (attempt to abort the thread)
--    `bt:make-lock` (create a mutex)
--    `bt:with-lock-held` (use the supplied lock to protect critical code)
-
+- `bt:*supports-thread-p*` (to check for basic thread support)
+- `bt:make-thread` (create a new thread)
+- `bt:current-thread` (return the current thread object)
+- `bt:all-threads` (return a list of all running threads)
+- `bt:thread-alive-p` (checks if the thread is still alive)
+- `bt:thread-name` (return the name of the thread)
+- `bt:join-thread` (join on the supplied thread)
+- `bt:interrupt-thread` (interrupt the given thread)
+- `bt:destroy-thread` (attempt to abort the thread)
+- `bt:make-lock` (create a mutex)
+- `bt:with-lock-held` (use the supplied lock to protect critical code)
+- `bt:with-timeout` (to signal a timeout error)
 
 ## SBCL threads
 
