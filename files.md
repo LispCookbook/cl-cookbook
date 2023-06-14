@@ -538,13 +538,22 @@ Both `alexandria:write-string-into-file` and `str:to-file` take the same keyword
 
 ### Getting file attributes (size, access time,...)
 
-[Osicat](https://www.common-lisp.net/project/osicat/) (in Quicklisp)
+[Osicat](https://www.common-lisp.net/project/osicat/)
 is a lightweight operating system interface for Common Lisp on
 POSIX-like systems, including Windows. With Osicat we can get and set
-**environment variables**, manipulate **files and directories**,
+**environment variables** (now doable with `uiop:getenv`),
+manipulate **files and directories**,
 **pathnames** and a bit more.
 
-Once it is installed, Osicat also defines the `osicat-posix` system,
+[file-attributes](https://github.com/Shinmera/file-attributes/) is a
+newer and lighter OS portability library specifically for getting file attributes,
+using system calls (cffi).
+
+SBCL with its `sb-posix` contrib can be used too.
+
+#### File attributes (Osicat)
+
+Once Osicat is installed, it also defines the `osicat-posix` system,
 which permits us to get file attributes.
 
 ~~~lisp
@@ -571,6 +580,53 @@ osicat-posix:stat-nlink
 osicat-posix:stat-blocks
 osicat-posix:stat-blksize
 ~~~
+
+#### File attributes (file-attributes)
+
+Install the library with
+
+    (ql:quickload "file-attributes")
+
+Its package is `org.shirakumo.file-attributes`. You can use a
+package-local nickname for a shorter access to its functions, for example:
+
+~~~lisp
+(uiop:add-package-local-nickname :file-attributes :org.shirakumo.file-attributes)
+~~~
+
+Then simply use the functions:
+
+- `access-time`, `modification-time`, `creation-time`. You can `setf` them.
+- `owner`, `group`, and `attributes`. The values used are OS specific
+for these functions. The attributes flag can be decoded and
+encoded via a standardised form with `decode-attributes` and
+`encode-attributes`.
+
+~~~lisp
+CL-USER> (file-attributes:decode-attributes
+           (file-attributes:attributes #p"test.txt"))
+(:READ-ONLY NIL :HIDDEN NIL :SYSTEM-FILE NIL :DIRECTORY NIL :ARCHIVED T :DEVICE
+ NIL :NORMAL NIL :TEMPORARY NIL :SPARSE NIL :LINK NIL :COMPRESSED NIL :OFFLINE
+ NIL :NOT-INDEXED NIL :ENCRYPTED NIL :INTEGRITY NIL :VIRTUAL NIL :NO-SCRUB NIL
+ :RECALL NIL)
+~~~
+
+See [its documentation](https://shinmera.github.io/file-attributes).
+
+#### File attributes (sb-posix)
+
+This contrib is loaded by default on POSIX systems.
+
+First get a stat object for a file, then get the stat you want:
+
+~~~lisp
+CL-USER> (sb-posix:stat "test.txt")
+#<SB-POSIX:STAT {10053FCBE3}>
+
+CL-USER> (sb-posix:stat-mtime *)
+1686671405
+~~~
+
 
 ### Listing files and directories
 
