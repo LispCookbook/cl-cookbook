@@ -478,6 +478,49 @@ Note that due to issues like buffering, and the timing of when the
 other process is executed, there is no guarantee that all data sent
 will be received before `listen` or `read-char-no-hang` return `nil`.
 
+### Capturing standard and error output
+
+Capturing standard output, as seen above, is easily done by telling
+`:output` to be `:string`.
+
+You can ask the same to `:error-output` and, in addition, you can ask
+`uiop:run-program` to *not* signal an error, thus to not enter the
+interactive debugger, with `:ignore-error-status t`.
+
+In that case, you can check the success or the failure of the program
+with the returned `exit-code`. 0 is success.
+
+Here's everything together:
+
+~~~lisp
+(uiop:run-program (list "git"
+                        "checkout"
+                        "me/does-not-exist")
+                  :output :string
+                  :error-output :string
+                  :ignore-error-status t)
+;; =>
+""
+"error: pathspec 'me/does-not-exist did not match any file(s) known to git
+"
+1
+~~~
+
+`uiop:run-program` returns 3 values:
+
+- the standard output (here, as a blank string)
+- the error output (here, as a string with our error message)
+- the exit code
+
+We can bind them with `multiple-value-bind`:
+
+~~~lisp
+(multiple-value-bind (output error-output exit-code)
+    (uiop:run-program (list …))
+  (unless (zerop exit-code)
+    (format t "error output is: ~a" error-output)))
+~~~
+
 ### Running visual commands (htop)
 
 Use `uiop:run-program` and set both `:input` and `:output` to `:interactive`:
