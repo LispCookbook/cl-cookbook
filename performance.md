@@ -384,7 +384,7 @@ than one `ftype` declaration associated with it. A `ftype` declaration restricts
 the type of the argument every time the function is called. It has the following form:
 
 ~~~lisp
- (declare (ftype (function (arg1 arg2 ...) return-value) function-name1))
+ (declaim (ftype (function (arg1 arg2 ...) return-value) function-name1))
 ~~~~
 
 If the function returns `nil`, its return type is `null`.
