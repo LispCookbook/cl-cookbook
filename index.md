@@ -52,7 +52,7 @@ The CL Cookbook aims to tackle all sort of topics, for the beginner as for the m
 * [Debugging](debugging.html)
 * [Macros and Backquote](macros.html)
 * [Type System](type.html)
-* [Threads](process.html)
+* [Concurrency and Parallelism](process.html)
 * [Performance Tuning](performance.html)
 * [Testing and Continuous Integration](testing.html)
 * [Scripting. Building executables](scripting.html)
