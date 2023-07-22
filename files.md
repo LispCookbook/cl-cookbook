@@ -23,6 +23,14 @@ Of course, do not miss:
 
 ### Getting the components of a pathname
 
+#### File name (sans directory)
+
+Use `file-namestring` to get a file name from a pathname:
+
+~~~lisp
+(file-namestring #p"/path/to/file.lisp") ;; => "file.lisp"
+~~~
+
 #### File extension
 
 The file extension is called "pathname type" in Lisp parlance:
@@ -33,7 +41,7 @@ The file extension is called "pathname type" in Lisp parlance:
 
 #### File basename
 
-The basename is called the "name" -
+The basename is called the "pathname name" -
 
 ~~~lisp
 (pathname-name "~/foo.org")  ;; => "foo"
