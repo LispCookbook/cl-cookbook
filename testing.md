@@ -791,8 +791,51 @@ When the pipelines pass, you will see:
 
 ![](assets/img-ci-build.png)
 
-
 You now have a ready to use Gitlab CI.
+
+### SourceHut
+
+It's very easy to set up [SourceHut](https://sr.ht/)'s CI system for Common
+Lisp. Here is a minimal `.build.yml` file that you can test via the [build
+manifest tester](https://builds.sr.ht/):
+
+```yaml
+image: archlinux
+packages:
+- sbcl
+- quicklisp
+sources:
+- https://git.sr.ht/~fosskers/cl-transducers
+tasks:
+# If our project isn't in the special `common-lisp` directory, quicklisp won't
+# be able to find it for loading.
+- move: |
+    mkdir common-lisp
+    mv cl-transducers ~/common-lisp
+- quicklisp: |
+    sbcl --non-interactive --load /usr/share/quicklisp/quicklisp.lisp --eval "(quicklisp-quickstart:install)"
+- test: |
+    cd common-lisp/cl-transducers
+    sbcl --non-interactive --load ~/quicklisp/setup.lisp --load run-tests.lisp
+```
+
+Since the Docker image we're given is nearly empty, we need to install `sbcl`
+and `quicklisp` manually. Notice also that we're running a `run-tests.lisp` file
+to drive the tests. Here's what it could look like:
+
+```lisp
+(ql:quickload :transducers/tests)
+(in-package :transducers/tests)
+
+(let ((status (parachute:status (parachute:test 'transducers/tests))))
+  (cond ((eq :PASSED status) (uiop:quit))
+        (t (uiop:quit 1))))
+```
+
+Here, examples of the [Parachute](https://shinmera.github.io/parachute/) testing
+library are shown. As shown elsewhere, in order for the CI job to fail when any
+test fails, we manually check the test result status and return `1` when there's
+a problem.
 
 ## Emacs integration: running tests using Slite
 
