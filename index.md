@@ -129,11 +129,12 @@ and also: [Common Lisp Pitfalls](https://github.com/LispCookbook/cl-cookbook/iss
 
 Books
 
-* [Practical Common Lisp](http://www.gigamonkeys.com/book/) by Peter Seibel
+* [Practical Common Lisp](http://www.gigamonkeys.com/book/) by Peter Seibel, [Chinese simplified](https://binghe.github.io/pcl-cn/).
 * [Common Lisp Recipes](http://weitz.de/cl-recipes/) by Edmund Weitz, published in 2016,
 * [Common Lisp: A Gentle Introduction to Symbolic Computation](http://www-2.cs.cmu.edu/~dst/LispBook/) by David S. Touretzky
 * [Successful Lisp: How to Understand and Use Common Lisp](https://successful-lisp.blogspot.com/p/httpsdrive.html) by David B. Lamkins
-* [On Lisp](http://www.paulgraham.com/onlisptext.html) by Paul Graham
+* [On Lisp](http://www.paulgraham.com/onlisptext.html) by Paul Graham, [Chinese simplified](https://sourceforge.net/projects/onlisp-cn/files/onlisp-cn_20140217.pdf/download).
+* [Let Over Lambda](https://letoverlambda.com./) by Doug Hoyte, [Chinese simplified](https://oneforalone.github.io/lol-zh/)
 * [Common Lisp the Language, 2nd Edition](http://www-2.cs.cmu.edu/Groups/AI/html/cltl/cltl2.html) by Guy L. Steele
 * [A Tutorial on Good Lisp Style](https://www.cs.umd.edu/%7Enau/cmsc421/norvig-lisp-style.pdf) by Peter Norvig and Kent Pitman
 
