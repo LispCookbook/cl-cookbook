@@ -19,7 +19,23 @@ _"the Utilities for Implementation- and OS- Portability"_. You can read
 
 ## Simple examples
 
+### Loading a system definition
+
+When you start your Lisp, it knows about its internal modules and, by
+default, it has no way to know that your shiny new project is located
+under your `~/code/foo/bar/new-ideas/` directory. So, in order to load
+your project in your image, you have one of three ways:
+
+- use ASDF or Quicklisp defaults
+- configure where ASDF or Quicklisp look for project definitions
+- load your project definition explicitely.
+
+Please read our section on the [getting started#how-to-load-an-existing-project](https://lispcookbook.github.io/cl-cookbook/getting-started.html#how-to-load-an-existing-project) page.
+
+
 ### Loading a system
+
+Once your Lisp knows what your system is and where it lives, you can load it.
 
 The most trivial use of ASDF is by calling `asdf:load-system` to load your library.
 Then you can use it.

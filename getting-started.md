@@ -444,6 +444,8 @@ Otherwise you'll need to compile and load its system definition
 (*slime-compile-and-load-file*) in the `.asd`, then you can
 `(ql:quickload …)` it.
 
+You can use `(asdf:load-asd "my-project.asd")` programmatically instead of `C-c C-k`.
+
 Usually you want to "enter" the system in the REPL at this stage:
 
 ~~~lisp
@@ -457,10 +459,11 @@ result in the REPL.
 Another solution is to use ASDF's list of known projects:
 
 ~~~lisp
+;; startup file like ~/.sbclrc
 (pushnew "~/path-to-project/root/" asdf:*central-registry* :test #'equal)
 ~~~
 
-and since ASDF is integrated into Quicklisp, we can `quickload` our project.
+and since ASDF is integrated into Quicklisp, we can `quickload` our project right away.
 
 Happy hacking !
 
