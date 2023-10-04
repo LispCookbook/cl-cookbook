@@ -77,7 +77,7 @@ you create a system definition file called `foobar.asd`,
 with the following contents:
 
 ~~~lisp
-(defsystem "foobar"
+(asdf:defsystem "foobar"
   :depends-on ("alexandria" "trivia")
   :components ((:file "foobar")))
 ~~~
@@ -143,12 +143,12 @@ The simplest way to write tests is to have a file `foobar-tests.lisp`
 and modify the above `foobar.asd` as follows:
 
 ~~~lisp
-(defsystem "foobar"
+(asdf:defsystem "foobar"
     :depends-on ("alexandria" "trivia")
     :components ((:file "foobar"))
     :in-order-to ((test-op (test-op "foobar/tests"))))
 
-(defsystem "foobar/tests"
+(asdf:defsystem "foobar/tests"
     :depends-on ("foobar" "fiveam")
     :components ((:file "foobar-tests"))
     :perform (test-op (o c) (symbol-call :fiveam '#:run! :foobar)))

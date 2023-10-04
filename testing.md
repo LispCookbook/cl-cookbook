@@ -358,11 +358,11 @@ See also [cl-quickcheck](https://github.com/mcandre/cl-quickcheck) and [Check-it
 So it would be nice to provide a one-line trigger to test our `my-system` system. Recall that we said it is better to provide a root suite? Here is the reason:
 
 ~~~lisp
-(defsystem my-system
+(asdf:defsystem my-system
   ;; Parts omitted.
   :in-order-to ((test-op (test-op :my-system/test))))
 
-(defsystem mitogrator/test
+(asdf:defsystem mitogrator/test
   ;; Parts omitted.
   :perform (test-op (op c)
                     (symbol-call :fiveam :run!

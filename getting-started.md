@@ -403,7 +403,7 @@ it will create a directory structure like this:
 Where `my-project.asd` resembles this:
 
 ~~~lisp
-(defsystem "my-project"
+(asdf:defsystem "my-project"
   :version "0.1.0"
   :author ""
   :license ""
