@@ -111,6 +111,16 @@ argument, with the tilde.
 With files that exist, you can also use `truename`. But, at least on
 SBCL, it returns an error if the path doesn't exist.
 
+### Turning a pathname into a string with Windows' directory separator
+
+Use again `uiop:native-namestring`:
+
+~~~lisp
+CL-USER> (uiop:native-namestring #p"~/foo/")
+"C:\\Users\\You\\foo\\"
+~~~
+
+See also `uiop:parse-native-namestring` for the inverse operation.
 
 ### Creating directories
 
