@@ -407,7 +407,8 @@ will be received before `listen` or `read-char-no-hang` return `nil`.
 ### Capturing standard and error output
 
 Capturing standard output, as seen above, is easily done by telling
-`:output` to be `:string`.
+`:output` to be `:string`, or using `:output '(:string :stripped t)` to
+strip any ending newline.
 
 You can ask the same to `:error-output` and, in addition, you can ask
 `uiop:run-program` to *not* signal an error, thus to not enter the
