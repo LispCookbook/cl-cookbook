@@ -23,6 +23,14 @@ Of course, do not miss:
 
 ### Getting the components of a pathname
 
+#### File name (sans directory)
+
+Use `file-namestring` to get a file name from a pathname:
+
+~~~lisp
+(file-namestring #p"/path/to/file.lisp") ;; => "file.lisp"
+~~~
+
 #### File extension
 
 The file extension is called "pathname type" in Lisp parlance:
@@ -33,7 +41,7 @@ The file extension is called "pathname type" in Lisp parlance:
 
 #### File basename
 
-The basename is called the "name" -
+The basename is called the "pathname name" -
 
 ~~~lisp
 (pathname-name "~/foo.org")  ;; => "foo"
@@ -103,6 +111,16 @@ argument, with the tilde.
 With files that exist, you can also use `truename`. But, at least on
 SBCL, it returns an error if the path doesn't exist.
 
+### Turning a pathname into a string with Windows' directory separator
+
+Use again `uiop:native-namestring`:
+
+~~~lisp
+CL-USER> (uiop:native-namestring #p"~/foo/")
+"C:\\Users\\You\\foo\\"
+~~~
+
+See also `uiop:parse-native-namestring` for the inverse operation.
 
 ### Creating directories
 

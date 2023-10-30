@@ -158,7 +158,7 @@ When you alter the model you'll need to run a DB migration, see the next section
 
 Field types are:
 
-`(:varchar <integer>)` ,
+`(:varchar <integer>)`, `text`,
 
 `:serial`, `:bigserial`, `:integer`, `:bigint`, `:unsigned`,
 

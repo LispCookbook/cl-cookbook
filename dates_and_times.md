@@ -413,9 +413,9 @@ The syntax consists of a list made of symbols with special meanings
 
 The list of symbols is available in the documentation: [https://common-lisp.net/project/local-time/manual.html#Parsing-and-Formatting](https://common-lisp.net/project/local-time/manual.html#Parsing-and-Formatting)
 
-There are `:year :month :day :weekday :hour :min :sec :msec`, long and
-short notations ("Monday", "Mo."), gmt offset, timezone markers and
-more.
+There are `:year :month :day :weekday :hour :hour12 :min :sec :msec`, long and
+short notations (`:long-weekday` for "Monday", `:short-weekday` for
+"Mon.", `:minimal-weekday` for "Mo." as well as `:long-month` for "January" and `:short-month` for "Jan."), gmt offset, timezone markers, `:ampm`, `:ordinal-day` (1st, 23rd), iso numbers and more.
 
 The `+rfc-1123-format+` itself is defined like this:
 

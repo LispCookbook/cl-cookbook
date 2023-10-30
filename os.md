@@ -107,83 +107,9 @@ them according to a schema definition.
 
 We have a look at the
 [Awesome CL list#scripting](https://github.com/CodyReichert/awesome-cl#scripting)
-section and we'll show how to use [unix-opts](https://github.com/mrkkrp/unix-opts).
+section and we'll show how to use [clingon](https://github.com/dnaeon/clingon).
 
-~~~lisp
-(ql:quickload "unix-opts")
-~~~
-
-We can now refer to it with its `opts` nickname.
-
-We first declare our arguments with `opts:define-opts`, for example
-
-~~~lisp
-(opts:define-opts
-    (:name :help
-           :description "print this help text"
-           :short #\h
-           :long "help")
-    (:name :level
-           :description "The level of something (integer)."
-           :short #\l
-           :long "level"
-           :arg-parser #'parse-integer))
-~~~
-
-Everything should be self-explanatory. Note that `#'parse-integer` is
-a built-in CL function.
-
-Now we can parse and get them with `opts:get-opts`, which returns two
-values: the first is the list of valid options and the second the
-remaining free arguments. We then must use multiple-value-bind to
-catch everything:
-
-~~~lisp
-(multiple-value-bind (options free-args)
-    ;; There is no error handling yet (specially for options not having their argument).
-    (opts:get-opts)
-~~~
-
-We can explore this by giving a list of strings (as options) to
-`get-opts`:
-
-
-~~~lisp
-(multiple-value-bind (options free-args)
-                   (opts:get-opts '("hello" "-h" "-l" "1"))
-                 (format t "Options: ~a~&" options)
-                 (format t "free args: ~a~&" free-args))
-Options: (HELP T LEVEL 1)
-free args: (hello)
-NIL
-~~~
-
-If we put an unknown option, we get into the debugger. We refer you to
-unix-opts' documentation and code sample to deal with erroneous
-options and other errors.
-
-We can access the arguments stored in `options` with `getf` (it is a
-property list), and we can exit (in a portable way) with
-`opts:exit`. So, for example:
-
-~~~lisp
-(multiple-value-bind (options free-args)
-    ;; No error handling.
-    (opts:get-opts)
-
-  (if (getf options :help)
-      (progn
-        (opts:describe
-         :prefix "My app. Usage:"
-         :args "[keywords]")
-        (exit))) ;; <= exit takes an optional return status.
-    ...
-~~~
-
-And that's it for now, you know the essential. See the documentation
-for a complete example, and the Awesome CL list for useful packages to
-use in the terminal (ansi colors, printing tables and progress bars,
-interfaces to readline,…).
+Please see our [scripting recipe](https://lispcookbook.github.io/cl-cookbook/scripting.html#parsing-command-line-arguments).
 
 
 ## Running external programs
@@ -481,7 +407,8 @@ will be received before `listen` or `read-char-no-hang` return `nil`.
 ### Capturing standard and error output
 
 Capturing standard output, as seen above, is easily done by telling
-`:output` to be `:string`.
+`:output` to be `:string`, or using `:output '(:string :stripped t)` to
+strip any ending newline.
 
 You can ask the same to `:error-output` and, in addition, you can ask
 `uiop:run-program` to *not* signal an error, thus to not enter the

@@ -456,6 +456,24 @@ or a compound list:
 
 where `<type>` is a simple type.
 
+### Accessing a JSON request body
+
+#### Hunchentoot
+
+To read a request body, use `hunchentoot:raw-post-data`, to which you
+can add `:force-text t` to always get a string (and not a vector of
+octets).
+
+Then you can parse this string to JSON with the library of your choice ([jzon](https://github.com/Zulu-Inuoe/jzon/), [shasht](https://github.com/yitzchak/shasht)…).
+
+~~~lisp
+(easy-routes route-api-demo ("/api/:id/update" :method :post) ()
+   (let ((json (ignore-errors
+                (jzon:parse (hunchentoot:raw-post-data :force-text t)))))
+     (when json
+        …)))
+~~~
+
 
 <!-- ## Sessions -->
 

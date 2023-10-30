@@ -1,5 +1,5 @@
 ---
-title: Threads
+title: Threads, concurrency, parallelism
 ---
 
 
@@ -26,7 +26,7 @@ The ANSI Common Lisp standard doesn't mention this topic. We will
 present here the portable
 [bordeaux-threads](https://github.com/sionescu/bordeaux-threads)
 library, an example implementation via [SBCL threads](http://www.sbcl.org/manual/#Threading) from the [SBCL Manual](http://www.sbcl.org/manual/), and the [lparallel](https://lparallel.org)
-library.
+library ([GitHub](https://github.com/sharplispers/lparallel)).
 
 Bordeaux-threads is a de-facto standard portable library, that exposes
 rather low-level primitives. Lparallel builds on it and features:
