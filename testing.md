@@ -233,7 +233,7 @@ We said earlier that a check accepts an optional custom reason that can be forma
 We are testing a math function:
 
 ~~~lisp
-(test simple-maths
+(fiveam:test simple-maths
   (is (= 3 (+ 1 1))))
 ~~~
 
@@ -272,7 +272,7 @@ Running test suite NIL
 Now, we can give it a custom reason:
 
 ~~~lisp
-(test simple-maths
+(fiveam:test simple-maths
   (is (= 3 (+ 1 1))
       "Maths should work, right? ~a. Another parameter is: ~S" t :foo))
 ~~~
