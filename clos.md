@@ -1467,7 +1467,6 @@ CLOS allows us to define a new operator as a method combination type, be
 it a lisp function, macro or special form. We'll let you refer to the
 books if you feel the need.
 
-
 ### Debugging: tracing method combination
 
 It is possible to [trace](http://www.xach.com/clhs?q=trace) the method
@@ -1510,6 +1509,94 @@ Let's trace it:
   0: FOO returned 9
 9
 ~~~
+
+### Difference between defgeneric and defmethod: redefinition
+
+There is a difference between declaring methods inside a `defgeneric`
+body or by writing multiple `defmethod`s: the two methods handle
+re-definition of methods differently. `defgeneric` will delete methods
+that are not in its body anymore.
+
+Below we define a new generic function, using two `defmethod` that
+specialize on `person` and `child`:
+
+~~~lisp
+(defmethod goodbye ((p person))
+  (format t "goodbye ~a.~&" (name p)))
+
+(defmethod goodbye ((c child))
+  (format t "love you lil' one <3~&"))
+~~~
+
+You can try them with `(goodbye (make-instance 'person :name "you"))`.
+
+Now, later in your work session, you decide that you don't need the
+one specializing on `child` any more. You delete its source code. But
+**the method still exists in the image**. You have to programmatically
+remove the method, see below.
+
+Had you used `defgeneric`, all the methods would have been updated,
+added or deleted. We have defined the `tidy` generic function already
+with three methods:
+
+~~~lisp
+(defgeneric tidy (obj)
+  (:method-combination list)
+  (:method list (obj)
+    :foo)
+  (:method list ((obj person))
+    :books)
+  (:method list ((obj child))
+    :toys))
+~~~
+
+It works for any object type, a person or a child. Try it on a string:
+`(tidy "tidy what?")`, it works.
+
+Now remove this declaration from the `defgeneric`:
+
+
+~~~lisp
+(defgeneric tidy (obj)
+  (:method-combination list)
+  ;;(:method list (obj)  ;; <--- commented out
+  ;;  :foo)
+  (:method list ((obj person))
+    :books)
+  (:method list ((obj child))
+    :toys))
+~~~
+
+Try to call it again: you get a "no applicable method" error:
+
+```
+There is no applicable method for the generic function
+  #<STANDARD-GENERIC-FUNCTION TRADESIGNAL::TIDY (2)>
+when called with arguments
+  ("tidy what?").
+```
+
+This might or might not be important to you during development, but
+knowing this can help you keep your lisp image in sync with your
+source code. Otherwise, you can remove an old method when it gets on
+your way.
+
+### Removing a method
+
+First, we need to find the method object:
+
+~~~lisp
+(find-method #'goodbye nil (list (find-class 'child)))
+;; => #<STANDARD-METHOD GOODBYE (CHILD) {10073EFD73}>
+~~~
+
+`find-method` takes as arguments: a function reference, a qualifier
+(like before, after or around), and a list of class specializers.
+
+Once you found the method, use `remove-method`.
+
+You could use `(fmakunbound 'goodbye)`, but this makes *all* methods
+unbound.
 
 
 ## MOP
