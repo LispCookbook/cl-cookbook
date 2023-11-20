@@ -1774,4 +1774,75 @@ Another rationale. The CLOS implementation of
 initialize-instance instance &rest initargs &key &allow-other-keys
 ~~~
 
-See more in the books !
+### Controlling the update of instances (update-instance-for-redefined-class)
+
+Suppose you created a "circle" class, with coordinates and a
+diameter. Later on, you decide to replace the diameter by a
+radius. You want all the existing objects to be cleverly updated:
+the radius should have the diameter value, divided by 2. Use
+`update-instance-for-redefined-class`.
+
+Its parameters are:
+
+- instance:	the object instance that is being updated
+- added-slots:	a list of added slots
+- discarded-slots: a list of discarded slots
+- property-list: a plist that captured the slot names and values of all the discarded-slots with values in the original instance.
+- initargs: an initialization argument list. `&key` catches them below.
+
+and it returns an object.
+
+We actually don't call the method direcly, but we use a `:before` method:
+
+~~~lisp
+(defmethod update-instance-for-redefined-class
+    :before ((obj circle) added deleted plist-values &key)
+  (format t "plist values: ~a~&" plist-values)
+  (let ((diameter (getf plist-values 'diameter)))
+    (setf (radius obj) (/ diameter 2))))
+~~~
+
+Here's how to try it. Start with a `circle` class:
+
+~~~lisp
+(defclass circle ()
+  ((diameter :accessor diameter :initform 9)))
+~~~
+
+and create a circle object:
+
+~~~lisp
+(make-instance 'circle)
+~~~
+
+inspect it or check its diameter value.
+
+Now write and compile a new class definition:
+
+~~~lisp
+(defclass circle ()
+  ((radius :accessor radius)))
+~~~
+
+Nothing happens yet, you don't see the output of our "plist values" print.
+
+Inspect or `describe` the object: now it will be updated, and you'll
+find the `radius` slot.
+
+Existing objects are updated lazily.
+
+See more on the [HyperSpec](https://www.lispworks.com/documentation/HyperSpec/Body/f_upda_1.htm)
+or on the [Community Spec](https://cl-community-spec.github.io/pages/update_002dinstance_002dfor_002dredefined_002dclass.html).
+
+### Controlling the update of instances to new classes (update-instance-for-different-class)
+
+Now imagine you are working with the `circle` class, but you realize
+you only need a `surface` kind of objects. You will discard the circle
+class altogether, but you want your existing objects to be updated -to
+this new class, and compute new slots intelligently. Use
+`update-instance-for-different-class`.
+
+See more on the [HyperSpec](https://www.lispworks.com/documentation/HyperSpec/Body/f_update.htm) or on the [Community Spec](https://cl-community-spec.github.io/pages/update_002dinstance_002dfor_002ddifferent_002dclass.html).
+
+
+And see more in the books!
