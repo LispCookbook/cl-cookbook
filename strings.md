@@ -169,11 +169,11 @@ value 255). Notice the Lisp reader can round-trip characters by name.
 * (char-code #\LATIN_CAPITAL_LETTER_E_WITH_GRAVE)
 
 200
-* (code-char 1488)
-#\HEBREW_LETTER_ALEF
+* (code-char 2048)
+#\SAMARITAN_LETTER_ALAF
 
-* (char-code #\HEBREW_LETTER_ALEF)
-1488
+* (char-code #\SAMARITAN_LETTER_ALAF)
+2048
 ~~~
 
 Check out the UTF-8 Wikipedia article for the range of supported characters and
