@@ -231,46 +231,11 @@ Or you can do it with [`LOOP`][loop].
 
 ## Package nickname
 
-### Nickname Provided by Packages
-
-When defining a package, it is trivial to give it a nickname for better user
-experience. The following example is a snippet of `PROVE` package:
-
-~~~lisp
-(defpackage prove
-  (:nicknames :cl-test-more :test-more)
-  (:export #:run
-           #:is
-           #:ok)
-~~~
-
-Afterwards, a user may use nickname instead of the package name to refer to this
-package. For example:
-
-~~~lisp
-(prove:run)
-(cl-test-more:is)
-(test-more:ok)
-~~~
-
-Please note that although Common Lisp allows defining multiple nicknames for
-one package, too many nicknames may bring maintenance complexity to the
-users. Thus the nicknames shall be meaningful and straightforward. For
-example:
-
-~~~lisp
-(defpackage #:iterate
-  (:nicknames #:iter))
-
-(defpackage :cl-ppcre
-  (:nicknames :ppcre)
-~~~
-
 #### Package Local Nicknames (PLN)
 
 Sometimes it is handy to give a local name to an imported package to
 save some typing, especially when the imported package does not
-provide nice nicknames.
+provide nice global nicknames.
 
 Many implementations (SBCL, CCL, ECL, Clasp, ABCL, ACL, LispWorks >= 7.2…) support Package Local Nicknames (PLN).
 
@@ -298,6 +263,47 @@ You can also set up a PLN in a `defpackage` form. The effect of PLN is totally w
 ~~~
 
 Another facility exists for adding nicknames to packages. The function [`RENAME-PACKAGE`](http://www.lispworks.com/documentation/HyperSpec/Body/f_rn_pkg.htm) can be used to replace the name and nicknames of a package. But it's use would mean that other libraries may not be able to access the package using the original name or nicknames. There is rarely any situation to use this. Use Package Local Nicknames instead.
+
+### Nickname Provided by Packages
+
+When defining a package, it is trivial to give it a nickname for
+better user experience. But this mechanism is *global*, a nickname
+defined here is visible by all other packages everywhere. If you were
+thinking in giving a short name to a package you use often, you can
+get a conflict with another package. That's why *package-local*
+nicknames appeared. You should use them instead.
+
+Here's an example anyways, from the `prove` package:
+
+~~~lisp
+(defpackage prove
+  (:nicknames :cl-test-more :test-more)
+  (:export #:run
+           #:is
+           #:ok)
+~~~
+
+Afterwards, a user may use a nickname instead of the package name to refer to this
+package. For example:
+
+~~~lisp
+(prove:run)
+(cl-test-more:is)
+(test-more:ok)
+~~~
+
+Please note that although Common Lisp allows defining multiple nicknames for
+one package, too many nicknames may bring maintenance complexity to the
+users. Thus the nicknames shall be meaningful and straightforward. For
+example:
+
+~~~lisp
+(defpackage #:iterate
+  (:nicknames #:iter))
+
+(defpackage :cl-ppcre
+  (:nicknames :ppcre)
+~~~
 
 
 ### Package locks
