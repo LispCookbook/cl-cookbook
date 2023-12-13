@@ -28,7 +28,8 @@ act much like additional parameters that are passed to every function.)
 If the output of the program should go to a file, you can do the following:
 
 ~~~lisp
-(with-open-file (*standard-output* "somefile.dat" :direction :output
+(with-open-file (*standard-output* "somefile.dat"
+                                   :direction :output
                                    :if-exists :supersede)
   ...)
 ~~~
@@ -75,7 +76,8 @@ On CLISP, faithful output is possible using
 
 ~~~lisp
 :external-format
-(ext:make-encoding :charset 'charset:iso-8859-1 :line-terminator :unix)
+(ext:make-encoding :charset 'charset:iso-8859-1
+                   :line-terminator :unix)
 ~~~
 
 You can also use `(SETF (STREAM-ELEMENT-TYPE F) '(UNSIGNED-BYTE 8))`, where the
@@ -84,19 +86,15 @@ will cause portability problems, since the default character set on MS-Windows
 is `CHARSET:CP1252`. `CHARSET:CP1252` doesn't allow output of e.g. `(CODE-CHAR
 #x81)`:
 
-~~~lisp
+~~~
 ;*** - Character #\u0080 cannot be represented in the character set CHARSET:CP1252
 ~~~
 
 Characters with code > 127 cannot be represented in ASCII:
 
-~~~lisp
+~~~
 ;*** - Character #\u0080 cannot be represented in the character set CHARSET:ASCII
 ~~~
-
-### CMUCL
-
-`:EXTERNAL-FORMAT :DEFAULT` (untested) - no unicode, so probably no problems.
 
 ### AllegroCL
 
@@ -118,7 +116,8 @@ Here's some sample code to play with:
 			  #+CLISP (charset 'charset:iso-8859-1)
                           external-format)
   (let ((e (or external-format
-	       #+CLISP (ext:make-encoding :charset charset :line-terminator :unix))))
+	       #+CLISP (ext:make-encoding :charset charset
+                           :line-terminator :unix))))
     (describe e)
     (with-open-file (f filename :direction :output
 		     :external-format e)

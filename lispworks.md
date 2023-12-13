@@ -57,7 +57,9 @@ The limitations are the following:
 What does it prevent us to do? As an illustration, we can not load this set of libraries together in the same image:
 
 ~~~lisp
-(ql:quickload '("alexandria" "serapeum" "bordeaux-threads" "lparallel" "dexador" "hunchentoot" "quri" "ltk" "cl-ppcre" "mito"))
+(ql:quickload '("alexandria" "serapeum" "bordeaux-threads"
+    "lparallel" "dexador" "hunchentoot" "quri"
+    "cl-ppcre" "mito"))
 ~~~
 
 - There is a **time limit of 5 hours** for each session, after which LispWorks Personal exits, possibly without saving your work or performing cleanups such as removing temporary files. You are warned after 4 hours of use.
@@ -70,7 +72,8 @@ For the record, the snippet provided by Quicklisp to put in one's startup file i
 
 ~~~lisp
 ;; provided you installed quicklisp in ~/quicklisp/
-(let ((quicklisp-init (merge-pathnames "quicklisp/setup.lisp" (user-homedir-pathname))))
+(let ((quicklisp-init (merge-pathnames "quicklisp/setup.lisp"
+                                       (user-homedir-pathname))))
   (when (probe-file quicklisp-init)
     (load quicklisp-init)))
 ~~~
@@ -192,8 +195,10 @@ Here's how you can bind keys:
 (editor:bind-key "Indent New Line" #\Return :mode "Lisp")
 
 ;; Insert pairs.
-(editor:bind-key "Insert Parentheses For Selection" #\( :mode "Lisp") ;;
-(editor:bind-key "Insert Double Quotes For Selection" #\" :mode "Lisp")
+(editor:bind-key "Insert Parentheses For Selection" #\( :mode "Lisp")
+(editor:bind-key "Insert Double Quotes For Selection"
+   #\"
+  :mode "Lisp")
 ~~~
 
 Here's how to define a new command. We make the `)` key
@@ -318,7 +323,8 @@ That's not all. The non-visual, REPL-oriented stepper is also nice. It shows the
 In this example, we use `:s` to "step" though the current form and its subforms. We are using the usual listener, we can write any Lisp code after the prompt (the little ` -> ` here), and we have access to the local variables (`X`).
 
 ~~~lisp
-CL-USER 4 > (defun my-abs (x) (cond ((> x 0) x) ((< x 0) (- x)) (t 0)))
+CL-USER 4 > (defun my-abs (x)
+              (cond ((> x 0) x) ((< x 0) (- x)) (t 0)))
 CL-USER 5 > (step (my-abs -5))
 (MY-ABS -5) -> :s
    -5 -> :s

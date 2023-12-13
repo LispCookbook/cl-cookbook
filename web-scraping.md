@@ -169,7 +169,10 @@ We remove the elements that start with "mailto:": (a quick look at the
 [strings](strings.html) page will help)
 
 ~~~lisp
-(remove-if (lambda (it) (string= it "mailto:" :start1 0 :end1 (length "mailto:"))) *urls*)
+(remove-if (lambda (it)
+              (string= it "mailto:" :start1 0
+                                    :end1 (length "mailto:")))
+           *urls*)
 ;; => #("license.html" "editor-support.html" "strings.html" "dates_and_times.html"
 ;;  […]
 ;;  "process.html" "systems.html" "win32.html" "testing.html" "misc.html"
@@ -189,7 +192,9 @@ As a side note, there is a handy `starts-with` function in
 available in Quicklisp. So we could do:
 
 ~~~lisp
-(map 'vector (lambda (it) (cl-strings:starts-with it "mailto:")) *urls*)
+(map 'vector (lambda (it)
+                (cl-strings:starts-with it "mailto:"))
+             *urls*)
 ~~~
 
 it also has an option to ignore or respect the case.
@@ -198,7 +203,9 @@ While we're at it, we'll only consider links starting with "http", in
 order not to write too much stuff irrelevant to web scraping:
 
 ~~~lisp
-(remove-if-not (lambda (it) (string= it "http" :start1 0 :end1 (length "http"))) *) ;; note the remove-if-NOT
+(remove-if-not (lambda (it)
+                 (string= it "http" :start1 0 :end1 (length "http")))
+               *)
 ~~~
 
 All right, we put this result in another variable:
@@ -215,7 +222,7 @@ that) or return an error code.
 To be in real conditions we'll add a link that times out in our list:
 
 ~~~lisp
-(setf (aref *filtered-urls* 0) "http://lisp.org")  ;; too bad indeed
+(setf (aref *filtered-urls* 0) "http://lisp.org")  ;; :/
 ~~~
 
 We'll take the simple approach to ignore errors and return `nil` in
@@ -272,7 +279,8 @@ want. And it's only a one word edit. Let's try:
 ~~~lisp
 (time (lparallel:pmap 'vector
   (lambda (it)
-    (ignore-errors (let ((status (nth-value 1 (dex:get it)))) status)))
+    (ignore-errors
+      (let ((status (nth-value 1 (dex:get it)))) status)))
   *filtered-urls*)
 ;;  Evaluation took:
 ;;  11.584 seconds of real time

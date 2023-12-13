@@ -61,7 +61,10 @@ Mito provides the function `connect-toplevel` to establish a
 connection to RDBMs:
 
 ~~~lisp
-(mito:connect-toplevel :mysql :database-name "myapp" :username "fukamachi" :password "c0mon-1isp")
+(mito:connect-toplevel :mysql
+                       :database-name "myapp"
+                       :username "fukamachi"
+                       :password "c0mon-1isp")
 ~~~
 
 The driver type can be of `:mysql`, `:sqlite3` and `:postgres`.
@@ -613,14 +616,18 @@ You want to add a clause that searches on both fields for each word.
 
 ~~~lisp
 (defun find-books (&key query (order :desc))
-  "Return a list of books. If a query string is given, search on both the title and the author fields."
+  "Return a list of books.
+If a query string is given, search on both the title
+and the author fields."
   (mito:select-dao 'book
     (when (str:non-blank-string-p query)
       (sxql:where
        `(:and
          ,@(loop for word in (str:words query)
-              :collect `(:or (:like :title ,(str:concat "%" word "%"))
-                             (:like :authors ,(str:concat "%" word "%")))))))
+              :collect `(:or (:like :title
+                                    ,(str:concat "%" word "%"))
+                             (:like :authors
+                                    ,(str:concat "%" word "%")))))))
        (sxql:order-by `(,order :created-at))))
 ~~~
 
@@ -853,10 +860,12 @@ tables, runs the code and connects back to the original DB connection.
      (uiop:with-temporary-file (:pathname name :prefix prefix)
        ;; Bind our *db-name* to a new name, so as to create a new DB.
        (let* ((*db-name* name))
-         ;; Always re-connect to our real DB even in case of error in body.
+         ;; Always re-connect to our real DB even in case of
+         ;; error in body.
          (unwind-protect
            (progn
-             ;; our functions to connect to the DB, create the tables and run the migrations.
+             ;; our functions to connect to the DB, create the tables
+             ;; and run the migrations.
              (connect)
              (ensure-tables-exist)
              (migrate-all)

@@ -142,17 +142,17 @@ This function has the following optional arguments:
 
 ~~~lisp
 run-program (command &rest keys &key
-                         ignore-error-status
-                         (force-shell nil force-shell-suppliedp)
-                         input
-                         (if-input-does-not-exist :error)
-                         output
-                         (if-output-exists :supersede)
-                         error-output
-                         (if-error-output-exists :supersede)
-                         (element-type #-clozure *default-stream-element-type* #+clozure 'character)
-                         (external-format *utf-8-external-format*)
-                       &allow-other-keys)
+               ignore-error-status
+               (force-shell nil force-shell-suppliedp)
+               input
+               (if-input-does-not-exist :error)
+               output
+               (if-output-exists :supersede)
+               error-output
+               (if-error-output-exists :supersede)
+               (element-type *default-stream-element-type*)
+               (external-format *utf-8-external-format*)
+              allow-other-keys)
 ~~~
 
 It will always call a shell (rather than directly executing the command when possible)
@@ -226,20 +226,18 @@ With [`uiop:launch-program`](https://common-lisp.net/project/asdf/uiop.html#UIOP
 Its signature is the following:
 
 ~~~lisp
-launch-program (command &rest keys
-                         &key
-                           input
-                           (if-input-does-not-exist :error)
-                           output
-                           (if-output-exists :supersede)
-                           error-output
-                           (if-error-output-exists :supersede)
-                           (element-type #-clozure *default-stream-element-type*
-                                         #+clozure 'character)
-                           (external-format *utf-8-external-format*)
-                           directory
-                           #+allegro separate-streams
-                           &allow-other-keys)
+launch-program (command &rest keys &key
+                    input
+                    (if-input-does-not-exist :error)
+                    output
+                    (if-output-exists :supersede)
+                    error-output
+                    (if-error-output-exists :supersede)
+                    (element-type *default-stream-element-type*)
+                    (external-format *utf-8-external-format*)
+                    directory
+                    #+allegro separate-streams
+                    &allow-other-keys)
 ~~~
 
 Output (stdout) from the launched program is set using the `output`
@@ -255,7 +253,7 @@ keyword:
  - If it's `:stream`, a new stream will be made available that can be accessed via
    `process-info-output` and read from.
  - Otherwise, `output` should be a value that the underlying lisp
-   implementation knows how to handle. 
+   implementation knows how to handle.
 
 `if-output-exists`, which is only meaningful if `output` is a string or a
 pathname, can take the values `:error`, `:append`, and `:supersede` (the
@@ -298,7 +296,8 @@ See the [docstrings](https://gitlab.common-lisp.net/asdf/asdf/blob/master/uiop/l
 `process-info` object returned by `launch-program`:
 
 ~~~lisp
-* (defparameter *shell* (uiop:launch-program "bash" :input :stream :output :stream))
+* (defparameter *shell* (uiop:launch-program "bash"
+                            :input :stream :output :stream))
 
 ;; inferior shell process now running
 * (uiop:process-alive-p *shell*)
@@ -363,9 +362,11 @@ accessed using `uiop:process-info-input`:
 
 ~~~lisp
 ;; Start the inferior shell, with input and output streams
-* (defparameter *shell* (uiop:launch-program "bash" :input :stream :output :stream))
+* (defparameter *shell* (uiop:launch-program "bash"
+                           :input :stream :output :stream))
 ;; Write a line to the shell
-* (write-line "find . -name '*.md'" (uiop:process-info-input *shell*))
+* (write-line "find . -name '*.md'"
+     (uiop:process-info-input *shell*))
 ;; Flush stream
 * (force-output (uiop:process-info-input *shell*))
 ~~~
@@ -453,7 +454,9 @@ We can bind them with `multiple-value-bind`:
 Use `uiop:run-program` and set both `:input` and `:output` to `:interactive`:
 
 ~~~lisp
-(uiop:run-program "htop" :output :interactive :input :interactive)
+(uiop:run-program "htop"
+                  :output :interactive
+                  :input :interactive)
 ~~~
 
 This will spawn `htop` in full screen, as it should.

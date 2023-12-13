@@ -54,7 +54,8 @@ Call the function:
 ~~~lisp
 (hello "me")
 ;; hello me !  <-- this is printed by `format`
-;; NIL         <-- return value: `format t` prints a string to standard output and returns nil.
+;; NIL         <-- return value: `format t` prints a string
+;;                 to standard output and returns nil.
 ~~~
 
 If you don't specify the right amount of arguments, you'll be trapped
@@ -78,7 +79,8 @@ This function:
 must be called like this:
 
 ~~~lisp
-(hello "me") ;; a value for the required argument, zero optional arguments
+(hello "me") ;; a value for the required argument,
+             ;; zero optional arguments
 (hello "me" "7")  ;; a value for age
 (hello "me" 7 :h) ;; a value for age and gender
 ~~~
@@ -146,7 +148,7 @@ It is generally a style warning, but it is possible.
 
 In SBCL, this yields:
 
-~~~lisp
+~~~
 ; in: DEFUN HELLO
 ;     (SB-INT:NAMED-LAMBDA HELLO
 ;         (&OPTIONAL NAME &KEY HAPPY)
@@ -321,7 +323,8 @@ with `nth-value`:
 ~~~lisp
 (multiple-value-bind (res1 res2 res3)
     (foo :a :b :c)
-  (format t "res1 is ~a, res2 is ~a, res2 is ~a~&" res1 res2 res3))
+  (format t "res1 is ~a, res2 is ~a, res2 is ~a~&"
+     res1 res2 res3))
 ;; res1 is A, res2 is B, res2 is C
 ;; NIL
 ~~~

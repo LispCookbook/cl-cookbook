@@ -301,8 +301,8 @@ you correctly get
 Use `C-M-q` (`slime-reindent-defun`) to indent the current function definition:
 
 ~~~lisp
-;; Put the cursor on the open parens of "(defun ..." and press "C-M-q"
-;; to indent the code:
+;; Put the cursor on the open parens of "(defun ..."
+;; and press "C-M-q" to indent the code:
 (defun e ()
 "A badly indented function."
 (let ((x 20))
@@ -715,9 +715,9 @@ You might want to set this to your init file:
 and for Sly:
 
 ~~~lisp
-(setq sly-lisp-implementations
-          '((sbcl ("/usr/local/bin/sbcl") :coding-system utf-8-unix)
-            ))
+(setf sly-lisp-implementations
+      '((sbcl ("/usr/local/bin/sbcl") :coding-system utf-8-unix)
+        ))
 ~~~
 
 This will avoid getting `ascii stream decoding error`s when you have

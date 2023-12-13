@@ -256,22 +256,32 @@ A utility macro which does this for multiple dimensions is `nested-loop`:
 
   ;; Generate gensyms for dimension sizes
   (let* ((rank (length syms))
-         (syms-rev (reverse syms)) ; Reverse, since starting with innermost
-         (dims-rev (loop for i from 0 below rank collecting (gensym))) ; innermost dimension first
-         (result `(progn ,@body))) ; Start with innermost expression
+         ;; reverse our symbols list,
+         ;; since we start from the innermost.
+         (syms-rev (reverse syms))
+         ;; innermost dimension first:
+         (dims-rev (loop for i from 0 below rank
+                         collecting (gensym)))
+         ;; start with innermost expression
+         (result `(progn ,@body)))
     ;; Wrap previous result inside a loop for each dimension
     (loop for sym in syms-rev for dim in dims-rev do
-         (unless (symbolp sym) (error "~S is not a symbol. First argument to nested-loop must be a list of symbols" sym))
+         (unless (symbolp sym)
+           (error "~S is not a symbol. First argument to nested-loop must be a list of symbols" sym))
          (setf result
                `(loop for ,sym from 0 below ,dim do
                      ,result)))
-    ;; Add checking of rank and dimension types, and get dimensions into gensym list
+    ;; Add checking of rank and dimension types,
+    ;; and get dimensions into gensym list.
     (let ((dims (gensym)))
       `(let ((,dims ,dimensions))
-         (unless (= (length ,dims) ,rank) (error "Incorrect number of dimensions: Expected ~a but got ~a" ,rank (length ,dims)))
+         (unless (= (length ,dims) ,rank)
+           (error "Incorrect number of dimensions: Expected ~a but got ~a" ,rank (length ,dims)))
          (dolist (dim ,dims)
-           (unless (integerp dim) (error "Dimensions must be integers: ~S" dim)))
-         (destructuring-bind ,(reverse dims-rev) ,dims ; Dimensions reversed so that innermost is last
+           (unless (integerp dim)
+             (error "Dimensions must be integers: ~S" dim)))
+         ;; dimensions reversed so that innermost is last:
+         (destructuring-bind ,(reverse dims-rev) ,dims
            ,result)))))
 ~~~
 

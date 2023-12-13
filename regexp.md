@@ -127,10 +127,12 @@ CL-PPCRE also provides a shortcut for calling a function before
 assigning the matching fragment to the variable:
 
 ~~~lisp
-(ppcre:register-groups-bind (fname lname (#'parse-integer date month year))
-      ("(\\w+)\\s+(\\w+)\\s+(\\d{1,2})\\.(\\d{1,2})\\.(\\d{4})" "Frank Zappa 21.12.1940")
-    (list fname lname (encode-universal-time 0 0 0 date month year 0)))
-;; => ("Frank" "Zappa" 1292889600)
+(ppcre:register-groups-bind
+  (fname lname (#'parse-integer date month year))
+      ("(\\w+)\\s+(\\w+)\\s+(\\d{1,2})\\.(\\d{1,2})\\.(\\d{4})"
+       "Frank Zappa 21.12.1940")
+    (list fname lname date month year))
+;; => ("Frank" "Zappa" 21 12 1940)
 ~~~
 
 ### Replacing text: regex-replace, regex-replace-all

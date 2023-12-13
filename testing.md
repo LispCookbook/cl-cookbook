@@ -194,11 +194,11 @@ If we mess `read-file-as-string-non-existing-file` up by replacing `/tmp/non-exi
 ;     Fail: 2 (100%)
 ;  Failure Details:
 ;  --------------------------------
-;  READ-FILE-AS-STRING-NON-EXISTING-FILE []: 
+;  READ-FILE-AS-STRING-NON-EXISTING-FILE []:
 ;       Should return NIL when :ERROR-IF-NOT-EXISTS is set to NIL.
 ;  --------------------------------
 ;  --------------------------------
-;  READ-FILE-AS-STRING-NON-EXISTING-FILE []: 
+;  READ-FILE-AS-STRING-NON-EXISTING-FILE []:
 ;       Failed to signal a FILE-NOT-EXISTING-ERROR.
 ;  --------------------------------
 ;  => NIL
@@ -525,11 +525,12 @@ optimization quality set to 3.
 ;;; Load SB-COVER
 (require :sb-cover)
 
-;;; Turn on generation of code coverage instrumentation in the compiler
+;;; Turn on generation of code coverage instrumentation
+;;; in the compiler
 (declaim (optimize sb-cover:store-coverage-data))
 
-;;; Load some code, ensuring that it's recompiled with the new optimization
-;;; policy.
+;;; Load some code, ensuring that it's recompiled
+;;; with the new optimization policy.
 (asdf:oos 'asdf:load-op :cl-ppcre-test :force t)
 
 ;;; Run the test suite.
@@ -606,25 +607,30 @@ addons:
 # Runs each lisp implementation on each of the listed OS
 os:
   - linux
-#  - osx # OSX has a long setup on travis, so it's likely easier to just run select implementations on OSX
+#  - osx # OSX has a long setup on travis, so it's likely easier
+#          to just run select implementations on OSX.
 ```
 
 This is how we configure the implementations matrix, to run our tests on several Lisp implementations. We also send the test coverage made with SBCL to Coveralls.
 
-```
+```yml
 env:
   global:
     - PATH=~/.roswell/bin:$PATH
     - ROSWELL_INSTALL_DIR=$HOME/.roswell
 #    - COVERAGE_EXCLUDE=t  # for rove
   jobs:
-    # The implementation and whether coverage is send to coveralls are controlled with these environmental variables
+    # The implementation and whether coverage
+    # is sent to coveralls are controlled
+    # with these environmental variables
     - LISP=sbcl-bin COVERALLS=true
     - LISP=ccl-bin
     - LISP=abcl
-    - LISP=ecl   # warn: in our experience, compilations times can be long on ECL.
+    - LISP=ecl   # warn: in our experience,
+    # compilations times can be long on ECL.
 
-# Additional OS/Lisp combinations can be added to those generated above
+# Additional OS/Lisp combinations can be added
+# to those generated above
 jobs:
   include:
     - os: osx
@@ -636,8 +642,9 @@ jobs:
 Some jobs can be marked as allowed to fail:
 
 
-```
-# Note that this should only be used if there is no interest for the library to work on that system
+```yml
+# Note that this should only be used if there is no interest
+# for the library to work on that system
 #  allow_failures:
 #    - env: LISP=abcl
 #    - env: LISP=ecl
@@ -650,7 +657,7 @@ Some jobs can be marked as allowed to fail:
 
 We finally install Roswell, the implementations, and we run our tests.
 
-```
+```yml
 cache:
   directories:
     - $HOME/.roswell
@@ -720,7 +727,7 @@ the image where indicated, and drop us in bash. Now we can try a `make test`.
 Here is a more complete example that tests against several CL implementations
 in parallel:
 
-~~~
+~~~yml
 variables:
   IMAGE_TAG: latest
   QUICKLISP_ADD_TO_INIT_FILE: "true"

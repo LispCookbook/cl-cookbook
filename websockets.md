@@ -122,7 +122,8 @@ that the connection has been made. Here's how it works:
                          (lambda () (handle-new-connection ws)))
 
     (websocket-driver:on :message ws
-                         (lambda (msg) (broadcast-to-room ws msg)))
+                         (lambda (msg)
+                           (broadcast-to-room ws msg)))
 
     (websocket-driver:on :close ws
                          (lambda (&key code reason)
@@ -250,7 +251,8 @@ should see your chat app!
                          (lambda () (handle-new-connection ws)))
 
     (websocket-driver:on :message ws
-                         (lambda (msg) (broadcast-to-room ws msg)))
+                         (lambda (msg)
+                           (broadcast-to-room ws msg)))
 
     (websocket-driver:on :close ws
                          (lambda (&key code reason)
