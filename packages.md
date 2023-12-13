@@ -126,12 +126,12 @@ You can also use the `export` function:
 
 ~~~lisp
 (in-package :my-package)
-(export #'hello)
+(export #:hello)
 ~~~
 
 Observation:
 
-- exporting `:hello` without the sharpsign (`#:hello`) works too, but it will always create a new symbol. The `#:` notation does not create a new symbol. It's a detail and at this point, a personal preference to use it or not. It is helpful to not clutter our symbols namespace, specially when we import and re-export symbols from other libraries. So it is not useful for us at this point.
+- exporting `:hello` without the sharpsign (`#:hello`) works too, but it will always create a new symbol. The `#:` notation does not create a new symbol. More precisely: it doesn't *intern* a new symbol in our current package. It is a detail and at this point, a personal preference to use it or not. It can be helpful to not clutter our symbols namespace, specially when we import and re-export symbols from other libraries. That way, our editor's symbols completion only shows relevant results. It is not useful for us at this point, don't worry.
 
 Now we might want to import individual symbols in order to access them right
 away, without the package prefix.
