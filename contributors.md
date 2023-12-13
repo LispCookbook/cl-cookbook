@@ -13,58 +13,87 @@ The contributors on Github are:
 * bill_clementson
 * chuchana
 * Ben Dudson
+* YUE Daian
 * Pierre Neidhardt
 * Rommel MARTINEZ
 * digikar99
 * nicklevine
 * Dmitry Petrov
 * otjura
-* YUE Daian
 * skeptomai
+* alx-a
+* jgart
 * thegoofist
 * Francis St-Amour
+* Johan Widén
 * emres
 * jdcal
 * Boutade
 * airfoyle
+* contrapunctus
 * mvilleneuve
 * Alex Ponomarev
 * Alexander Artemenko
 * Johan Sjölén
 * Mariano Montone
 * albertoriva
+* Blue
 * Daniel Keogh
+* David Pflug
+* David Sun
+* Jason Legler
+* Jiho Sung
+* Kilian M. Haemmerle
 * Matteo Landi
+* Nikolaos Chatzikonstantinou
 * Nisar Ahmad
 * Nisen
 * Vityok
+* ctoid
 * ozten
+* reflektoin
 * Ahmad Edrisy
+* Alberto Ferreira
 * Amol Dosanjh
 * Andrew
 * Andrew Hill
 * André Alexandre Gomes
+* Ankit Chandawala
+* August Feng
+* B1nj0y
 * Bibek Panthi
-* Blue
 * Bo Yao
 * Brandon Hale
 * Burhanuddin Baharuddin
 * Coin Okay
+* Colin Woodbury
+* Daniel Uber
 * Eric Timmons
+* Giorgos Makris
 * HiPhish
+* Inc0n
+* John Zhang
 * Justin
 * Kevin Layer
+* Kevin Secretan
 * LdBeth
 * Matthew Kennedy
 * Momozor
+* NCM
 * Noor
 * Paul Donnelly
 * Pavel Kulyov
+* Phi-Long Nguyen
 * R Primus
+* Ralf Doering
 * Salad Tea
 * Victor Anyakin
+* alaskasquirrel
+* blackeuler
+* contrapunctus-1
 * convert-repo
-* jgart
+* dangerdyke
+* grobe0ba
 * jthing
 * mavis
 * mwgkgk
