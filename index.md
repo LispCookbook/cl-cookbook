@@ -81,7 +81,7 @@ The CL Cookbook aims to tackle all sort of topics, for the beginner as for the m
 
 The Cookbook is also available in EPUB (and PDF) format.
 
-You can [download it directly in EPUB](https://github.com/LispCookbook/cl-cookbook/releases/download/2022-03-23/common-lisp-cookbook.epub) and [PDF](https://github.com/LispCookbook/cl-cookbook/releases/download/2022-03-23/common-lisp-cookbook.pdf), and you can **pay what you want** to further support its development:
+You can [download it directly in EPUB](https://github.com/LispCookbook/cl-cookbook/releases/download/2023-12-13/common-lisp-cookbook.epub) and [PDF](https://github.com/LispCookbook/cl-cookbook/releases/download/2023-12-13/common-lisp-cookbook.pdf), and you can **pay what you want** to further support its development:
 
 
 <!-- epub-exclude-start -->
@@ -121,7 +121,7 @@ The Cookbook has been translated to:
 * [Lisp and Elements of Style](http://web.archive.org/web/20190316190256/https://www.nicklevine.org/declarative/lectures/) by Nick Levine
 * Pascal Costanza's [Highly Opinionated Guide to Lisp](http://www.p-cos.net/lisp/guide.html)
 * [Cliki](http://www.cliki.net/), Common Lisp's wiki
-* 📹 [Common Lisp programming: from novice to effective developer](https://www.udemy.com/course/common-lisp-programming/?referralCode=2F3D698BBC4326F94358), a video course on the Udemy platform (paywall), by one of the main Cookbook contributor. *"Thanks for supporting my work on Udemy. You can ask me for a free coupon if the course is not affordable for you."* vindarel
+* 📹 [Common Lisp programming: from novice to effective developer](https://www.udemy.com/course/common-lisp-programming/?referralCode=2F3D698BBC4326F94358), a video course on the Udemy platform (paywall), by one of the main Cookbook contributor. *"Thanks for supporting my work on Udemy. You can ask me for a free coupon if you are a student."* vindarel
 
 and also: [Common Lisp Pitfalls](https://github.com/LispCookbook/cl-cookbook/issues/479) by Jeff Dalton.
 
