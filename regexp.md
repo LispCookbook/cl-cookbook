@@ -24,8 +24,6 @@ library.
 
 ## PPCRE
 
-### Using PPCRE
-
 [CL-PPCRE](https://github.com/edicl/cl-ppcre) (abbreviation for
 Portable Perl-compatible regular expressions) is a portable regular
 expression library for Common Lisp with a broad set of features and
