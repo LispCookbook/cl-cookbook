@@ -626,7 +626,8 @@ If needed, import the dependencies first:
 
 ~~~lisp
 ;; a little common lisp swank demo
-;; while this program is running, you can connect to it from another terminal or machine
+;; while this program is running, you can connect to it from
+;; another terminal or machine
 ;; and change the definition of doprint to print something else out!
 
 (require :swank)

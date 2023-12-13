@@ -597,18 +597,20 @@ A simple demo:
 
     (defun join-destroy-thread ()
       (let* ((s *standard-output*)
-            (joiner-thread (bt:make-thread
-                            (lambda ()
-                              (loop for i from 1 to 10
-                                 do
-                                   (format s "~%[Joiner Thread]  Working...")
-                                   (sleep (* 0.01 (random 100)))))))
-            (destroyer-thread (bt:make-thread
-                               (lambda ()
-                                 (loop for i from 1 to 1000000
-                                    do
-                                      (format s "~%[Destroyer Thread] Working...")
-                                      (sleep (* 0.01 (random 10000))))))))
+            (joiner-thread
+              (bt:make-thread
+                (lambda ()
+                  (loop for i from 1 to 10
+                     do
+                       (format s "~%[Joiner Thread]  Working...")
+                       (sleep (* 0.01 (random 100)))))))
+            (destroyer-thread
+                (bt:make-thread
+                   (lambda ()
+                    (loop for i from 1 to 1000000
+                       do
+                         (format s "~%[Destroyer Thread] Working...")
+                         (sleep (* 0.01 (random 10000))))))))
         (format t "~%[Main Thread] Waiting on joiner thread...")
         (bt:join-thread joiner-thread)
         (format t "~%[Main Thread] Done waiting on joiner thread")
@@ -679,14 +681,15 @@ kills its underlying processes (were they run with
   (print "working hard...")
   (sleep 10))
 
-(let ((thread (bt:make-thread                ;; <--- create a thread
+(let ((thread (bt:make-thread            ;; <--- create a thread
                  (lambda ()
-                   (maybe-costly-operation)) ;; <--- maybe long operation
+                   ;; maybe a long operation:
+                   (maybe-costly-operation))
                  :name "maybe-costly-thread")))
     (handler-case
-        (bt:with-timeout (timeout)           ;; <-- with-timeout
-          (bt:join-thread thread))           ;; <-- join the thread
-      (bt:timeout ()                         ;; <-- handle timeout.
+        (bt:with-timeout (timeout)       ;; <-- with-timeout
+          (bt:join-thread thread))       ;; <-- join the thread
+      (bt:timeout ()                     ;; <-- handle timeout.
         (bt:destroy-thread thread))))
 ~~~
 
@@ -1067,43 +1070,46 @@ atomics version took just 2s! This is a massive difference indeed!
 The code:
 
 ~~~lisp
-    ;;; Joining on and destroying a thread
+;;; Joining on and destroying a thread
 
-    (defmacro until (condition &body body)
-      (let ((block-name (gensym)))
-        `(block ,block-name
-           (loop
-               (if ,condition
-                   (return-from ,block-name nil)
-                   (progn
-                       ,@body))))))
+(defmacro until (condition &body body)
+  (let ((block-name (gensym)))
+    `(block ,block-name
+       (loop
+           (if ,condition
+               (return-from ,block-name nil)
+               (progn
+                   ,@body))))))
 
-    (defun join-destroy-thread ()
-      (let* ((s *standard-output*)
-            (joiner-thread (sb-thread:make-thread
-                            (lambda ()
-                              (loop for i from 1 to 10
-                                 do
-                                   (format s "~%[Joiner Thread]  Working...")
-                                   (sleep (* 0.01 (random 100)))))))
-            (destroyer-thread (sb-thread:make-thread
-                               (lambda ()
-                                 (loop for i from 1 to 1000000
-                                    do
-                                      (format s "~%[Destroyer Thread] Working...")
-                                      (sleep (* 0.01 (random 10000))))))))
-        (format t "~%[Main Thread] Waiting on joiner thread...")
-        (bt:join-thread joiner-thread)
-        (format t "~%[Main Thread] Done waiting on joiner thread")
-        (if (sb-thread:thread-alive-p destroyer-thread)
-            (progn
-              (format t "~%[Main Thread] Destroyer thread alive... killing it")
-              (sb-thread:terminate-thread destroyer-thread))
-            (format t "~%[Main Thread] Destroyer thread is already dead"))
-        (until (sb-thread:thread-alive-p destroyer-thread)
-               (format t "[Main Thread] Waiting for destroyer thread to die..."))
-        (format t "~%[Main Thread] Destroyer thread dead")
-        (format t "~%[Main Thread] Adios!~%")))
+(defun join-destroy-thread ()
+  (let* ((s *standard-output*)
+        (joiner-thread
+           (sb-thread:make-thread
+              (lambda ()
+                (loop for i from 1 to 10
+                   do
+                     (format s "~%[Joiner Thread]  Working...")
+                     (sleep (* 0.01 (random 100)))))))
+        (destroyer-thread
+           (sb-thread:make-thread
+              (lambda ()
+                (loop for i from 1 to 1000000
+                   do
+                     (format s "~%[Destroyer Thread] Working...")
+                     (sleep (* 0.01 (random 10000))))))))
+
+    (format t "~%[Main Thread] Waiting on joiner thread...")
+    (bt:join-thread joiner-thread)
+    (format t "~%[Main Thread] Done waiting on joiner thread")
+    (if (sb-thread:thread-alive-p destroyer-thread)
+        (progn
+          (format t "~%[Main Thread] Destroyer thread alive... killing it")
+          (sb-thread:terminate-thread destroyer-thread))
+        (format t "~%[Main Thread] Destroyer thread is already dead"))
+    (until (sb-thread:thread-alive-p destroyer-thread)
+       (format t "[Main Thread] Waiting for destroyer thread to die..."))
+    (format t "~%[Main Thread] Destroyer thread dead")
+    (format t "~%[Main Thread] Adios!~%")))
 ~~~
 
 And the output:
@@ -1160,7 +1166,7 @@ topic. I share some of my own references here:
 
 -    [Common Lisp Recipes](http://weitz.de/cl-recipes/)
 -    [Bordeaux API Reference](https://trac.common-lisp.net/bordeaux-threads/wiki/ApiDocumentation)
--    [SBCL Manual](http://www.sbcl.org/manual/) on [Threading](http://www.sbcl.org/manual/#Threading) 
+-    [SBCL Manual](http://www.sbcl.org/manual/) on [Threading](http://www.sbcl.org/manual/#Threading)
 -    [The Common Lisp Hyperspec](https://www.lispworks.com/documentation/HyperSpec/Front/)
 
 Next up, the final post in this mini-series: parallelism in Common
@@ -1301,7 +1307,8 @@ To load "lparallel":
 Initialise the lparallel kernel:
 
 ~~~lisp
-CL-USER> (setf lparallel:*kernel* (lparallel:make-kernel 8 :name "custom-kernel"))
+CL-USER> (setf lparallel:*kernel*
+               (lparallel:make-kernel 8 :name "custom-kernel"))
 #<LPARALLEL.KERNEL:KERNEL :NAME "custom-kernel" :WORKER-COUNT 8 :USE-CALLER NIL :ALIVE T :SPIN-COUNT 2000 {1003141F03}>
 ~~~
 
@@ -1608,9 +1615,11 @@ can be dynamically bound to different values (as we shall see).
   (let ((channel (make-channel))
         (stream *query-io*))
     (dotimes (i 10)
-      (submit-task channel (lambda (x)
-                               (sleep (random 10))
-                               (format stream "~d~%" (* x x))) (random 10)))
+      (submit-task
+          channel
+          (lambda (x)
+            (sleep (random 10))
+            (format stream "~d~%" (* x x))) (random 10)))
     (sleep (random 2))
     (kill-tasks :default)))
 ~~~
@@ -1659,14 +1668,18 @@ Here is the code:
         (stream *query-io*))
     (let ((*task-category* 'squaring-tasks))
       (dotimes (i 5)
-        (submit-task channel (lambda (x)
-                                 (sleep (random 5))
-                                 (format stream "~%[Squaring] ~d = ~d" x (* x x))) i)))
+        (submit-task channel
+                     (lambda (x)
+                       (sleep (random 5))
+                       (format stream "~%[Squaring] ~d = ~d"
+                               x (* x x))) i)))
     (let ((*task-category* 'cubing-tasks))
       (dotimes (i 5)
-        (submit-task channel (lambda (x)
-                                 (sleep (random 5))
-                                 (format stream "~%[Cubing] ~d = ~d" x (* x x x))) i)))
+        (submit-task channel
+                    (lambda (x)
+                       (sleep (random 5))
+                       (format stream "~%[Cubing] ~d = ~d"
+                               x (* x x x))) i)))
     (sleep 1)
     (if (evenp (random 10))
         (progn
@@ -1789,7 +1802,8 @@ available.
             do (progn
                  (format stream "~d~%" (random 100))
                  (sleep (* 0.01 (random 100)))))))
-    (format t "Inside main function, received value: ~d~%" (force p))))
+    (format t "Inside main function, received value: ~d~%"
+            (force p))))
 ~~~
 
 And the output:
@@ -1936,7 +1950,8 @@ Here’s how the code looks:
               (sleep (random 10))
               (fulfill p (* n n))
               (force (future
-                       (format stream "Square of ~d = ~d~%" n (force p)))))))
+                       (format stream "Square of ~d = ~d~%"
+                               n (force p)))))))
     (loop
        when (fulfilledp f)
        do (return)
@@ -2280,9 +2295,11 @@ Sample run:
       age)
 
     (defun test-psort ()
-      (let* ((names (list "Rich" "Peter" "Sybil" "Basil" "Candy" "Slava" "Olga"))
+      (let* ((names (list "Peter" "Sybil" "Basil" "Candy" "Olga"))
              (people (loop for name in names
-                        collect (make-person :name name :age (+ (random 20) 20)))))
+                        collect (make-person :name name
+                                             :age (+ (random 20)
+                                                     20)))))
         (print "Before sorting...")
         (print people)
         (fresh-line)
@@ -2301,16 +2318,14 @@ Sample run:
     LPARALLEL-USER> (test-psort)
 
     "Before sorting..."
-    (#S(PERSON :NAME "Rich" :AGE 38) #S(PERSON :NAME "Peter" :AGE 24)
-     #S(PERSON :NAME "Sybil" :AGE 20) #S(PERSON :NAME "Basil" :AGE 22)
-     #S(PERSON :NAME "Candy" :AGE 23) #S(PERSON :NAME "Slava" :AGE 37)
+    (#S(PERSON :NAME "Peter" :AGE 24) #S(PERSON :NAME "Sybil" :AGE 20)
+     #S(PERSON :NAME "Basil" :AGE 22) #S(PERSON :NAME "Candy" :AGE 23)
      #S(PERSON :NAME "Olga" :AGE 33))
 
     "After sorting..."
     (#S(PERSON :NAME "Sybil" :AGE 20) #S(PERSON :NAME "Basil" :AGE 22)
      #S(PERSON :NAME "Candy" :AGE 23) #S(PERSON :NAME "Peter" :AGE 24)
-     #S(PERSON :NAME "Olga" :AGE 33) #S(PERSON :NAME "Slava" :AGE 37)
-     #S(PERSON :NAME "Rich" :AGE 38))
+     #S(PERSON :NAME "Olga" :AGE 33))
 ~~~
 
 In this example, we first define a structure of type person for

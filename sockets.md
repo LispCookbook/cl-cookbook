@@ -43,10 +43,12 @@ the connections and the server socket and boom you are done!
 ~~~lisp
 (defun create-server (port)
   (let* ((socket (usocket:socket-listen "127.0.0.1" port))
-	 (connection (usocket:socket-accept socket :element-type 'character)))
+	 (connection (usocket:socket-accept socket :element-type
+                     'character)))
     (unwind-protect
         (progn
-	      (format (usocket:socket-stream connection) "Hello World~%")
+	      (format (usocket:socket-stream connection)
+                  "Hello World~%")
 	      (force-output (usocket:socket-stream connection)))
       (progn
 	    (format t "Closing sockets~%")
@@ -63,7 +65,8 @@ and fix it.
 
 ~~~lisp
 (defun create-client (port)
-  (usocket:with-client-socket (socket stream "127.0.0.1" port :element-type 'character)
+  (usocket:with-client-socket (socket stream "127.0.0.1" port
+                                      :element-type 'character)
     (unwind-protect
          (progn
            (usocket:wait-for-input socket)

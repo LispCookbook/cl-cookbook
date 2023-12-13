@@ -556,17 +556,17 @@ Obviously, `build-symbol` can't be implemented as a function; it has to be a mac
 
 (defun symstuff (list)
   `(concatenate 'string
-                ,@(for (x :in list)
-                       (cond ((stringp x)
-                              `',x)
-                             ((atom x)
-                              `',(format nil "~a" x))
-                             ((eq (car x) ':<)
-                              `(format nil "~a" ,(second x)))
-                             ((eq (car x) ':++)
-                              `(format nil "~a" (incf ,(second x))))
-                             (t
-                              `(format nil "~a" ,x))))))
+     ,@(for (x :in list)
+            (cond ((stringp x)
+                   `',x)
+                  ((atom x)
+                   `',(format nil "~a" x))
+                  ((eq (car x) ':<)
+                   `(format nil "~a" ,(second x)))
+                  ((eq (car x) ':++)
+                   `(format nil "~a" (incf ,(second x))))
+                  (t
+                   `(format nil "~a" ,x))))))
 ~~~
 
 (Another approach would be have `symstuff` return a single call of the form <code>(format nil <em>format-string -forms-</em>)</code>, where the _forms_ are derived from the _pieces_, and the _format-string_ consists of interleaved ~a's and strings.)
@@ -617,18 +617,19 @@ If all the uses of this macro are collected in this one place, it might be clear
 
 ~~~lisp
 (macrolet ((odd-define (name buildargs)
-             `(progn (defun ,(build-symbol make-a- (:< name))
-                                           ,buildargs
-                       (vector ,(length buildargs)
-                               ',name
-                                ,@buildargs))
-                     (defun ,(build-symbol test-whether- (:< name))
-                            (x)
-                       (and (vectorp x) (eq (aref x 1) ',name))
-                     (defun ,(build-symbol (:< name) -copy) (x)
-                       ...)
-                     (defun ,(build-symbol (:< name) -deactivate) (x)
-                       ...)))))
+             `(progn
+                (defun ,(build-symbol make-a- (:< name))
+                                        ,buildargs
+                    (vector ,(length buildargs)
+                            ',name
+                             ,@buildargs))
+                  (defun ,(build-symbol test-whether- (:< name))
+                         (x)
+                    (and (vectorp x) (eq (aref x 1) ',name))
+                  (defun ,(build-symbol (:< name) -copy) (x)
+                    ...)
+                  (defun ,(build-symbol (:< name) -deactivate) (x)
+                    ...)))))
 (odd-define zip (y z))
 (odd-define zap (u v w))
 (odd-define zep ()))

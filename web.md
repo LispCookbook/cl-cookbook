@@ -118,7 +118,8 @@ featureful static site generator, see
 Let's install the libraries we'll use:
 
 ~~~lisp
-(ql:quickload '("hunchentoot" "caveman2" "spinneret" "djula" "easy-routes"))
+(ql:quickload '("hunchentoot" "caveman2" "spinneret"
+                "djula" "easy-routes"))
 ~~~
 
 To try Weblocks, please see its documentation. The Weblocks in
@@ -136,7 +137,8 @@ server in the running image.
 Create and start a webserver like this:
 
 ~~~lisp
-(defvar *acceptor* (make-instance 'hunchentoot:easy-acceptor :port 4242))
+(defvar *acceptor* (make-instance 'hunchentoot:easy-acceptor
+                                  :port 4242))
 (hunchentoot:start *acceptor*)
 ~~~
 
@@ -158,7 +160,8 @@ To serve another directory, we give the option `:document-root` to
 `easy-acceptor`. We can also set the slot with its accessor:
 
 ~~~lisp
-(setf (hunchentoot:acceptor-document-root *acceptor*) #p"path/to/www")
+(setf (hunchentoot:acceptor-document-root *acceptor*)
+      #p"path/to/www")
 ~~~
 
 Let's create our `index.html` first. Put this in a new
@@ -181,8 +184,9 @@ Let's create our `index.html` first. Put this in a new
 Let's start a new acceptor on a new port:
 
 ~~~lisp
-(defvar *my-acceptor* (make-instance 'hunchentoot:easy-acceptor :port 4444
-                                   :document-root #p"www/"))
+(defvar *my-acceptor* (make-instance 'hunchentoot:easy-acceptor
+                                     :port 4444
+                                     :document-root #p"www/"))
 (hunchentoot:start *my-acceptor*)
 ~~~
 
@@ -316,8 +320,12 @@ Then define a route like this:
     (format nil "x: ~a y: ~a z: ~a" x y z))
 ~~~
 
+the route signature is made up of two parts:
+
+    ("/foo/:x" :method :get) (y &get z)
+
 Here, `:x` captures the path parameter and binds it to the `x`
-variable into the route body. `y` and `&get z` define url parameters,
+variable into the route body. `y` and `&get z` define URL parameters,
 and we can have `&post` parameters to extract from the HTTP request
 body.
 
@@ -719,8 +727,9 @@ For example:
 
 ~~~lisp
 (push (hunchentoot:create-folder-dispatcher-and-handler
-       "/static/" (merge-pathnames "src/static"  ;; starts without a /
-                                   (asdf:system-source-directory :myproject)))
+       "/static/" (merge-pathnames
+                     "src/static" ; <-- starts without a /
+                     (asdf:system-source-directory :myproject)))
       hunchentoot:*dispatch-table*)
 ~~~
 
@@ -897,7 +906,9 @@ We could use such commands:
 (in-package :myproject)
 (handler-case
     ;; The START function starts the web server.
-    (myproject::start :port (ignore-errors (parse-integer (uiop:getenv "PROJECT_PORT"))))
+    (myproject::start :port (ignore-errors
+                              (parse-integer
+                                (uiop:getenv "PROJECT_PORT"))))
   (error (c)
     (format *error-output* "~&An error occured: ~a~&" c)
     (uiop:quit 1)))

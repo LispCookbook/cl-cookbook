@@ -291,7 +291,8 @@ The `&whole` parameter is bound to the whole list. It must be the
 first one and others can follow.
 
 ~~~lisp
-(destructuring-bind (&whole whole-list &key x y z) (list :z 1 :y 2 :x 3)
+(destructuring-bind (&whole whole-list &key x y z)
+    (list :z 1 :y 2 :x 3)
   (list :x x :y y :z z :whole whole-list))
 ;; => (:X 3 :Y 2 :Z 1 :WHOLE-LIST (:Z 1 :Y 2 :X 3))
 ~~~
@@ -356,8 +357,8 @@ or subexpression in a tree (when it satisfies the optional `test`):
 (subst 'one 1 '(1 2 3))
 ;; => (ONE 2 3)
 
-(subst  '(1 . one) '(1 . 1) '((1 . 1) (2 . 2) (3 . 3)) :test #'equal)
-;; ((1 . ONE) (2 . 2) (3 . 3))
+(subst  '(1 . one) '(1 . 1) '((1 . 1) (2 . 2)) :test #'equal)
+;; ((1 . ONE) (2 . 2))
 ~~~
 
 [sublis](http://www.lispworks.com/documentation/HyperSpec/Body/f_sublis.htm)
@@ -491,7 +492,8 @@ However, watch out if the `end` is larger than the list:
 
 ~~~lisp
 (subseq (list 1 2 3) 0 99)
-;; => Error: the bounding indices 0 and 99 are bad for a sequence of length 3.
+;; => Error: the bounding indices 0 and 99
+;; are bad for a sequence of length 3.
 ~~~
 
 To this end, use `alexandria-2:subseq*`:
@@ -573,7 +575,8 @@ except that all elements equal to `old` are replaced with `new`.
 ~~~lisp
 (substitute #\o #\x "hellx") ;; => "hello"
 (substitute :a :x '(:a :x :x)) ;; => (:A :A :A)
-(substitute "a" "x" '("a" "x" "x") :test #'string=) ;; => ("a" "a" "a")
+(substitute "a" "x" '("a" "x" "x") :test #'string=)
+;; => ("a" "a" "a")
 ~~~
 
 #### sort, stable-sort, merge
@@ -588,8 +591,9 @@ sequence-b.
 The full signature is:
 
 ~~~lisp
-(replace sequence1 sequence2 &rest args &key (start1 0) (end1 nil) (start2 0)
- (end2 nil))
+(replace sequence1 sequence2
+      &rest args
+      &key (start1 0) (end1 nil) (start2 0) (end2 nil))
 ~~~
 
 Elements are copied to the subseqeuence bounded by START1 and END1,
@@ -967,7 +971,8 @@ With Serapeum's `dict`, we can create a hash-table and add elements to
 it in one go:
 
 ~~~lisp
-(defparameter *my-hash* (dict :one-entry "one" :another-entry 2/4))
+(defparameter *my-hash* (dict :one-entry "one"
+                              :another-entry 2/4))
 ;; =>
  (dict
   :ONE-ENTRY "one"
@@ -1105,7 +1110,7 @@ NIL
 
 Use
 [`clrhash`](http://www.lispworks.com/documentation/HyperSpec/Body/f_clrhas.htm)
-to delete a hash table. This will remove all of the data from the hash table and return the deleted table. 
+to delete a hash table. This will remove all of the data from the hash table and return the deleted table.
 
 ~~~lisp
 CL-USER> (defparameter *my-hash* (make-hash-table))
@@ -1155,7 +1160,8 @@ NIL
 CL-USER> (setf (gethash nil *my-hash*) 'nil-value)
 NIL-VALUE
 CL-USER> (defun print-hash-entry (key value)
-    (format t "The value associated with the key ~S is ~S~%" key value))
+    (format t "The value associated with the key ~S is ~S~%"
+            key value))
 PRINT-HASH-ENTRY
 CL-USER> (maphash #'print-hash-entry *my-hash*)
 The value associated with the key FIRST-KEY is ONE
@@ -1209,7 +1215,8 @@ NIL
 NIL
 CL-USER> (loop for key being the hash-keys of *my-hash*
            using (hash-value value)
-           do (format t "The value associated with the key ~S is ~S~%" key value))
+           do (format t "The value associated with the key ~S is ~S~%"
+                      key value))
 The value associated with the key FIRST-KEY is ONE
 The value associated with the key SECOND-KEY is TWO
 The value associated with the key THIRD-KEY is NIL
@@ -1283,7 +1290,11 @@ standard doesn't permit to do so, so this is undefined behaviour.
           (loop for key being the hash-keys of object
                 using (hash-value value)
                 collect (list key value))))
+~~~
 
+gives:
+
+~~~
 ;; WARNING:
 ;;   redefining PRINT-OBJECT (#<STRUCTURE-CLASS COMMON-LISP:HASH-TABLE>
 ;;                            #<SB-PCL:SYSTEM-CLASS COMMON-LISP:T>) in DEFMETHOD
@@ -1309,7 +1320,8 @@ hash-table, and uses `alexandria:alist-hash-table` to read it back in:
 ~~~lisp
 ;; https://github.com/phoe/phoe-toolbox/blob/master/phoe-toolbox.lisp
 (defun print-hash-table-readably (hash-table
-                                  &optional (stream *standard-output*))
+                                  &optional
+                                  (stream *standard-output*))
   "Prints a hash table readably using ALEXANDRIA:ALIST-HASH-TABLE."
   (let ((test (hash-table-test hash-table))
         (*print-circle* t)
@@ -1422,7 +1434,8 @@ CL-USER> (hash-table-size *my-hash*)
 65
 CL-USER> (hash-table-rehash-size *my-hash*)
 1.5
-CL-USER> (time (dotimes (n 100000) (setf (gethash n *my-hash*) n)))
+CL-USER> (time (dotimes (n 100000)
+                 (setf (gethash n *my-hash*) n)))
 Compiling LAMBDA NIL:
 Compiling Top-Level Form:
 
@@ -1433,7 +1446,8 @@ Evaluation took:
   0 page faults and
   8754768 bytes consed.
 NIL
-CL-USER> (time (dotimes (n 100000) (setf (gethash n *my-hash*) n)))
+CL-USER> (time (dotimes (n 100000)
+                 (setf (gethash n *my-hash*) n)))
 Compiling LAMBDA NIL:
 Compiling Top-Level Form:
 
@@ -1458,7 +1472,10 @@ hash until we reach the final size...
 ~~~lisp
 CL-USER> (log (/ 100000 65) 1.5)
 18.099062
-CL-USER> (let ((size 65)) (dotimes (n 20) (print (list n size)) (setq size (* 1.5 size))))
+CL-USER> (let ((size 65))
+           (dotimes (n 20)
+             (print (list n size))
+             (setq size (* 1.5 size))))
 (0 65)
 (1 97.5)
 (2 146.25)
@@ -1496,7 +1513,8 @@ CL-USER> (defparameter *my-hash* (make-hash-table :size 100000))
 *MY-HASH*
 CL-USER> (hash-table-size *my-hash*)
 100000
-CL-USER> (time (dotimes (n 100000) (setf (gethash n *my-hash*) n)))
+CL-USER> (time (dotimes (n 100000)
+                 (setf (gethash n *my-hash*) n)))
 Compiling LAMBDA NIL:
 Compiling Top-Level Form:
 
@@ -1523,7 +1541,8 @@ CL-USER> (hash-table-size *my-hash*)
 65
 CL-USER> (hash-table-rehash-size *my-hash*)
 100000
-CL-USER> (time (dotimes (n 100000) (setf (gethash n *my-hash*) n)))
+CL-USER> (time (dotimes (n 100000)
+                 (setf (gethash n *my-hash*) n)))
 Compiling LAMBDA NIL:
 Compiling Top-Level Form:
 
@@ -1608,17 +1627,31 @@ Alists are just lists, so you can have the same key multiple times in the same a
 
 To get a key, we have `assoc` (use `:test 'equal` when your keys are
 strings, as usual). It returns the whole cons cell, so you may want to
-use `cdr` or `second` to get the value or even better `assoc-value list key` from `Alexandria`.
+use `cdr` or `second`  to get the value, or even `assoc-value list key` from `Alexandria`.
 
+~~~lisp
+(assoc :foo *my-alist*)
+;; (:FOO . "foo")
+(cdr *)
+;; "foo"
+~~~
 
 ~~~lisp
 (alexandria:assoc-value *my-alist* :foo)
-;; it actually returns 2 values
 ;; "foo"
 ;; (:FOO . "FOO")
+;; It actually returned 2 values.
 ~~~
 
-There is `assoc-if`, and `rassoc` to get a cons cell by its value.
+There is `assoc-if`, and `rassoc` to get a cons cell by its value:
+
+~~~lisp
+(rassoc "foo" *my-alist*)
+;; NIL
+;; bummer! The value "foo" is a string, so use:
+(rassoc "foo" *my-alist* :test #'equal)
+;; (:FOO . "foo")
+~~~
 
 If the alist has repeating (duplicate) keys, you can use `remove-if-not`, for example, to retrieve all of them.
 
@@ -1643,21 +1676,27 @@ We can use `pop` and other functions that operate on lists, like `remove`:
 
 ~~~lisp
 (remove :team *my-alist*)
-;; => ((:TEAM . "team") (FOO . "foo") (BAR . "bar")) ;; didn't remove anything
+;; ((:TEAM . "team") (FOO . "foo") (BAR . "bar"))
+;; => didn't remove anything
 (remove :team *my-alist* :key 'car)
-;; => ((FOO . "foo") (BAR . "bar")) ;; returns a copy
+;; ((FOO . "foo") (BAR . "bar"))
+;; => returns a copy
 ~~~
 
 Remove only one element with `:count`:
 
 ~~~lisp
 (push (cons 'bar "bar2") *my-alist*)
-;; => ((BAR . "bar2") (TEAM . "team") (FOO . "foo") (BAR . "bar")) ;; twice the 'bar key
+;; ((BAR . "bar2") (TEAM . "team") (FOO . "foo") (BAR . "bar"))
+;; => twice the 'bar key
+
 (remove 'bar *my-alist* :key 'car :count 1)
-;; => ((TEAM . "team") (FOO . "foo") (BAR . "bar"))
+;; ((TEAM . "team") (FOO . "foo") (BAR . "bar"))
+
 ;; because otherwise:
 (remove 'bar *my-alist* :key 'car)
-;; => ((TEAM . "team") (FOO . "foo")) ;; no more 'bar
+;; ((TEAM . "team") (FOO . "foo"))
+;; => no more 'bar
 ~~~
 
 ### Update entries
@@ -1874,7 +1913,11 @@ code.
        (name "john doe" :type string)
        age
        email)
+~~~
 
+gives an error and we drop in the debugger:
+
+~~~
 attempt to redefine the STRUCTURE-OBJECT class PERSON
 incompatibly with the current definition
    [Condition of type SIMPLE-ERROR]
@@ -1948,7 +1991,9 @@ choose the depth to print:
 (let ((*print-level* 2))
   (print '(:a (:b (:c (:d :e))))))
 ;; (:A (:B #))             <= *print-level* in action
-;; (:A (:B (:C (:D :E))))  <= the list is returned, the let binding is not in effect anymore.
+;; (:A (:B (:C (:D :E))))
+;; => the list is returned,
+;; the let binding is not in effect anymore.
 ~~~
 
 `*print-length*` will be applied at each level.

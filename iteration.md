@@ -59,7 +59,7 @@ Iterate looks like this:
 
 Iterate also comes with `display-iterate-clauses` that can be quite handy:
 
-~~~lisp
+~~~
 (display-iterate-clauses '(for))
 ;; FOR PREVIOUS &OPTIONAL INITIALLY BACK     Previous value of a variable
 ;; FOR FIRST THEN            Set var on first, and then on subsequent iterations
@@ -834,7 +834,6 @@ with `:by`:
 with `if`, `else` and `finally`:
 
 ~~~lisp
-;; https://riptutorial.com/common-lisp/example/11095/conditionally-executing-loop-clauses
 (loop repeat 10
       for x = (random 100)
       if (evenp x)

@@ -243,8 +243,9 @@ It adds the following in your (for example) `~/.sbclrc`:
 
 ~~~lisp
 #-quicklisp
-  (let ((quicklisp-init (merge-pathnames "quicklisp/setup.lisp"
-                                         (user-homedir-pathname))))
+  (let ((quicklisp-init (merge-pathnames
+                          "quicklisp/setup.lisp"
+                          (user-homedir-pathname))))
     (when (probe-file quicklisp-init)
       (load quicklisp-init)))
 ~~~
@@ -460,7 +461,7 @@ Another solution is to use ASDF's list of known projects:
 
 ~~~lisp
 ;; startup file like ~/.sbclrc
-(pushnew "~/path-to-project/root/" asdf:*central-registry* :test #'equal)
+(pushnew "~/path-to/project/" asdf:*central-registry* :test #'equal)
 ~~~
 
 and since ASDF is integrated into Quicklisp, we can `quickload` our project right away.

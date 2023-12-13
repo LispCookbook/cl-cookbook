@@ -592,7 +592,8 @@ parameter type.
 ~~~lisp
 (define-slot (main-window name-set) ((new-name string))
   (declare (connected main-window (name-set string)))
-  (q+:qmessagebox-information main-window "Greetings" (format NIL "Good day to you, ~a!" new-name)))
+  (q+:qmessagebox-information main-window "Greetings"
+        (format NIL "Good day to you, ~a!" new-name)))
 ~~~
 
 and run it:
@@ -654,7 +655,8 @@ The constructors end with (or contain) "new":
 **How to create a layout**
 
 ~~~lisp
-(let ((box (make-instance 'gtk-box :orientation :horizontal :spacing 6))) ...)
+(let ((box (make-instance 'gtk-box :orientation :horizontal
+                                   :spacing 6))) ...)
 ~~~
 
 then pack a widget onto the box:
@@ -723,9 +725,9 @@ Or again:
         (gtk-box-pack-start box button))
       (let ((button (gtk-button-new-with-label "Button 2")))
         (g-signal-connect button "clicked"
-                          (lambda (widget)
-                            (declare (ignore widget))
-                            (format t "Button 2 was pressed.~%")))
+                        (lambda (widget)
+                          (declare (ignore widget))
+                          (format t "Button 2 was pressed.~%")))
         (gtk-box-pack-start box button))
       (gtk-container-add window box)
       (gtk-widget-show-all window))))
@@ -759,10 +761,12 @@ The following snippet creates a dialog frame to display a text label.
 ~~~lisp
 (defun hello ()
   (iup:with-iup ()
-    (let* ((label (iup:label :title (format nil "Hello, World!~%IUP ~A~%~A ~A"
-                                            (iup:version)
-                                            (lisp-implementation-type)
-                                            (lisp-implementation-version))))
+    (let* ((label (iup:label
+                     :title
+                     (format nil "Hello, World!~%IUP ~A~%~A ~A"
+                       (iup:version)
+                       (lisp-implementation-type)
+                       (lisp-implementation-version))))
            (dialog (iup:dialog label :title "Hello, World!")))
       (iup:show dialog)
       (iup:main-loop))))
@@ -832,17 +836,20 @@ message dialog when we click on the button.
 ~~~lisp
 (defun click-button ()
   (iup:with-iup ()
-    (let* ((label (iup:label :title (format nil "Hello, World!~%IUP ~A~%~A ~A"
-                                            (iup:version)
-                                            (lisp-implementation-type)
-                                            (lisp-implementation-version))))
+    (let* ((label (iup:label :title
+                      (format nil "Hello, World!~%IUP ~A~%~A ~A"
+                          (iup:version)
+                          (lisp-implementation-type)
+                          (lisp-implementation-version))))
            (button (iup:button :title "Click me"
                                :expand :yes
                                :tip "yes, click me"
-                               :action (lambda (handle)
-                                         (declare (ignorable handle))
-                                         (iup:message "title" "button clicked")
-                                         iup:+default+)))
+                               :action
+                               (lambda (handle)
+                                 (declare (ignorable handle))
+                                 (iup:message "title"
+                                              "button clicked")
+                                 iup:+default+)))
            (vbox
             (iup:vbox (list label button)
                       :gap "10"
@@ -865,8 +872,9 @@ and its title to hold the count. The title is an integer.
 (defun counter ()
   (iup:with-iup ()
     (let* ((counter (iup:label :title 0))
-           (label (iup:label :title (format nil "The button was clicked ~a time(s)."
-                                            (iup:attribute counter :title))))
+           (label (iup:label :title
+                     (format nil "The button was clicked ~a time(s)."
+                             (iup:attribute counter :title))))
            (button (iup:button :title "Click me"
                                :expand :yes
                                :tip "yes, click me"

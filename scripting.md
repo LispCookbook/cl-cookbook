@@ -30,7 +30,9 @@ below for portable ways). With SBCL, as says
 it is a matter of calling `save-lisp-and-die` with the `:executable` argument to T:
 
 ~~~lisp
-(sb-ext:save-lisp-and-die #P"path/name-of-executable" :toplevel #'my-app:main-function :executable t)
+(sb-ext:save-lisp-and-die #P"path/name-of-executable"
+                         :toplevel #'my-app:main-function
+                         :executable t)
 ~~~
 
 `sb-ext` is an SBCL extension to run external processes. See other
@@ -64,7 +66,9 @@ That gives:
 ~~~lisp
 (asdf:load-asd "my-app.asd")
 (ql:quickload "my-app")
-(sb-ext:save-lisp-and-die #p"my-app-binary" :toplevel #'my-app:main :executable t)
+(sb-ext:save-lisp-and-die #p"my-app-binary"
+                          :toplevel #'my-app:main
+                          :executable t)
 ~~~
 
 From the command line, or from a Makefile, use `--load` and `--eval`:
@@ -163,7 +167,8 @@ The day you want to ship a foreign library that Deploy doesn't find, you can ins
 
 ~~~lisp
 (deploy:define-library cl+ssl::libcrypto
-  ;;                   ^^^ CFFI system name. Find it with a call to "apropos".
+  ;;                   ^^^ CFFI system name.
+  ;;                   Find it with a call to "apropos".
   :path "/usr/lib/x86_64-linux-gnu/libcrypto.so.1.1")
 ~~~
 
@@ -246,6 +251,7 @@ can do something like this:
   (start-app :port 9003) ;; our start-app, for example clack:clack-up
   ;; let the webserver run.
   ;; warning: hardcoded "hunchentoot".
+  ;; You can simply run (sleep most-positive-fixnum)
   (handler-case (bt:join-thread (find-if (lambda (th)
                                             (search "hunchentoot" (bt:thread-name th)))
                                          (bt:all-threads)))
@@ -361,7 +367,9 @@ However, we prefer to do this with ASDF (or rather, UIOP). Add this in your .asd
 ~~~lisp
 #+sb-core-compression
 (defmethod asdf:perform ((o asdf:image-op) (c asdf:system))
-  (uiop:dump-image (asdf:output-file o c) :executable t :compression t))
+  (uiop:dump-image (asdf:output-file o c)
+                   :executable t
+                   :compression t))
 ~~~
 
 **With Deploy**
@@ -598,7 +606,8 @@ It is with them that we will write the handler of our top-level command:
   (let ((free-args (clingon:command-arguments cmd))
         (name (clingon:getopt cmd :name)))  ;; <-- using the option's :key
     (format t "Hello, ~a!~%" name)
-    (format t "You have provided ~a more free arguments~%" (length free-args))
+    (format t "You have provided ~a more free arguments~%"
+            (length free-args))
     (format t "Bye!~%")))
 ~~~
 
@@ -678,9 +687,10 @@ application code with a `handler-case`:
 ~~~lisp
 (handler-case
     (run-my-app free-args)
-  (sb-sys:interactive-interrupt () (progn
-                                     (format *error-output* "Abort.~&")
-                                     (opts:exit))))
+  (sb-sys:interactive-interrupt ()
+      (progn
+        (format *error-output* "Abort.~&")
+        (opts:exit))))
 ~~~
 
 This code is only for SBCL though. We know about

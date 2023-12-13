@@ -253,7 +253,9 @@ We can do better by giving a `:report` function in our condition declaration:
              :accessor dividend))
   ;; the :report is the message into the debugger:
   (:report (lambda (condition stream)
-     (format stream "You were going to divide ~a by zero.~&" (dividend condition)))))
+     (format stream
+             "You were going to divide ~a by zero.~&"
+             (dividend condition)))))
 ~~~
 
 Now:
@@ -422,9 +424,9 @@ use the regular `read`.
       (divide-with-restarts x value))))
 
 (defun prompt-new-value (prompt)
-  (format *query-io* prompt)  ;; *query-io*: the special stream to make user queries.
-  (force-output *query-io*)   ;; Ensure the user sees what he types.
-  (list (read *query-io*)))   ;; We must return a list.
+  (format *query-io* prompt) ;; *query-io*: the special stream to make user queries.
+  (force-output *query-io*)  ;; Ensure the user sees what he types.
+  (list (read *query-io*)))  ;; We must return a list.
 
 (divide-with-restarts 3 0)
 ~~~
@@ -532,6 +534,11 @@ Its general form is:
     (code that can...)
     (...error out))
 ~~~
+
+If the handler returns normally (it declines to handle the condition),
+the condition continues to bubble up, searching for another handler,
+and it will find the interactive debugger (when it's an error, not
+when it's a simple condition).
 
 
 We can study a real example with the

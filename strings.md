@@ -71,13 +71,13 @@ optional, argument is the index of the first character which is not a part of
 the substring, it is not the length of the substring.
 
 ~~~lisp
-* (defparameter *my-string* (string "Groucho Marx"))
+(defparameter *my-string* (string "Groucho Marx"))
 *MY-STRING*
-* (subseq *my-string* 8)
+(subseq *my-string* 8)
 "Marx"
-* (subseq *my-string* 0 7)
+(subseq *my-string* 0 7)
 "Groucho"
-* (subseq *my-string* 1 5)
+(subseq *my-string* 1 5)
 "rouc"
 ~~~
 
@@ -249,9 +249,9 @@ VECTOR-PUSH-EXTEND.)
 
 ~~~lisp
 * (defparameter *my-string* (make-array 0
-                                        :element-type 'character
-                                        :fill-pointer 0
-                                        :adjustable t))
+                              :element-type 'character
+                              :fill-pointer 0
+                              :adjustable t))
 *MY-STRING*
 * *my-string*
 ""
@@ -664,58 +664,63 @@ instead.
 
 ## Finding an Element of a String
 
-Use FIND, POSITION, and their -IF counterparts to find characters in a string.
+Use `find`, `position`, and their `…-if` counterparts to find characters in a string, with the appropriate `:test` parameter:
 
 ~~~lisp
-* (find #\t "The Hyperspec contains approximately 110,000 hyperlinks." :test #'equal)
+(find #\t "Tea time." :test #'equal)
 #\t
-* (find #\t "The Hyperspec contains approximately 110,000 hyperlinks." :test #'equalp)
+* (find #\t "Tea time." :test #'equalp)
 #\T
-* (find #\z "The Hyperspec contains approximately 110,000 hyperlinks." :test #'equalp)
+* (find #\z "Tea time." :test #'equalp)
 NIL
-* (find-if #'digit-char-p "The Hyperspec contains approximately 110,000 hyperlinks.")
+* (find-if #'digit-char-p "Tea time.")
 #\1
-* (find-if #'digit-char-p "The Hyperspec contains approximately 110,000 hyperlinks." :from-end t)
+* (find-if #'digit-char-p "Tea time." :from-end t)
 #\0
-* (position #\t "The Hyperspec contains approximately 110,000 hyperlinks." :test #'equal)
-17
-* (position #\t "The Hyperspec contains approximately 110,000 hyperlinks." :test #'equalp)
-0
-* (position-if #'digit-char-p "The Hyperspec contains approximately 110,000 hyperlinks.")
-37
-* (position-if #'digit-char-p "The Hyperspec contains approximately 110,000 hyperlinks." :from-end t)
-43
+
+(position #\t "Tea time." :test #'equal)
+4   ;; <= the first lowercase t
+(position #\t "Tea time." :test #'equalp)
+0    ;; <= the first capital T
+(position-if #'digit-char-p "Tea time is at 5'00.")
+15
+(position-if #'digit-char-p "Tea time is at 5'00." :from-end t)
+18
 ~~~
 
-Or use COUNT and friends to count characters in a string.
+Or use `count` and friends to count characters in a string:
 
 ~~~lisp
-* (count #\t "The Hyperspec contains approximately 110,000 hyperlinks." :test #'equal)
-2
-* (count #\t "The Hyperspec contains approximately 110,000 hyperlinks." :test #'equalp)
+(count #\t "Tea time." :test #'equal)
+1  ;; <= equal ignores the capital T
+(count #\t "Tea time." :test #'equalp)
+2  ;; <= equalp counts the capital T
+(count-if #'digit-char-p "Tea time is at 5'00.")
 3
-* (count-if #'digit-char-p "The Hyperspec contains approximately 110,000 hyperlinks.")
-6
-* (count-if #'digit-char-p "The Hyperspec contains approximately 110,000 hyperlinks." :start 38)
-5
+(count-if #'digit-char-p "Tea time is at 5'00." :start 18)
+1
 ~~~
 
 ## Finding a Substring of a String
 
-The function SEARCH can find substrings of a string.
+The function `search` can find substrings of a string.
 
 ~~~lisp
 * (search "we" "If we can't be free we can at least be cheap")
 3
-* (search "we" "If we can't be free we can at least be cheap" :from-end t)
+* (search "we" "If we can't be free we can at least be cheap"
+          :from-end t)
 20
-* (search "we" "If we can't be free we can at least be cheap" :start2 4)
+* (search "we" "If we can't be free we can at least be cheap"
+          :start2 4)
 20
-* (search "we" "If we can't be free we can at least be cheap" :end2 5 :from-end t)
+* (search "we" "If we can't be free we can at least be cheap"
+          :end2 5 :from-end t)
 3
 * (search "FREE" "If we can't be free we can at least be cheap")
 NIL
-* (search "FREE" "If we can't be free we can at least be cheap" :test #'char-equal)
+* (search "FREE" "If we can't be free we can at least be cheap"
+          :test #'char-equal)
 15
 ~~~
 
@@ -728,25 +733,25 @@ to the corresponding numeric value. The second return value is the index into
 the string where the parsing stopped.
 
 ~~~lisp
-* (parse-integer "42")
+(parse-integer "42")
 42
 2
-* (parse-integer "42" :start 1)
+(parse-integer "42" :start 1)
 2
 2
-* (parse-integer "42" :end 1)
+(parse-integer "42" :end 1)
 4
 1
-* (parse-integer "42" :radix 8)
+(parse-integer "42" :radix 8)
 34
 2
-* (parse-integer " 42 ")
+(parse-integer " 42 ")
 42
 3
-* (parse-integer " 42 is forty-two" :junk-allowed t)
+(parse-integer " 42 is forty-two" :junk-allowed t)
 42
 3
-* (parse-integer " 42 is forty-two")
+(parse-integer " 42 is forty-two")
 
 Error in function PARSE-INTEGER:
    There's junk in this string: " 42 is forty-two".
@@ -756,37 +761,49 @@ Error in function PARSE-INTEGER:
 built-in function to parse other numeric types. You could use `read-from-string`
 in this case.
 
+### Extracting many integers from a string: `ppcre:all-matches-as-strings`
+
+We show this in the Regular Expressions chapter but while we are on this topic, you can find it super useful:
+
+~~~lisp
+* (ppcre:all-matches-as-strings "-?\\d+" "42 is 41 plus 1")
+;; ("42" "41" "1")
+
+* (mapcar #'parse-integer *)
+;; (42 41 1)
+~~~
 
 ### To any number: read-from-string
 
 Be aware that the full reader is in effect if you're using this
-function. This can lead to vulnerability issues.
+function. This can lead to vulnerability issues. You should use a
+library like `parse-number` or `parse-float` instead.
 
 ~~~lisp
-* (read-from-string "#X23")
+(read-from-string "#X23")
 35
 4
-* (read-from-string "4.5")
+(read-from-string "4.5")
 4.5
 3
-* (read-from-string "6/8")
+(read-from-string "6/8")
 3/4
 3
-* (read-from-string "#C(6/8 1)")
+(read-from-string "#C(6/8 1)")
 #C(3/4 1)
 9
-* (read-from-string "1.2e2")
+(read-from-string "1.2e2")
 120.00001
 5
-* (read-from-string "symbol")
+(read-from-string "symbol")
 SYMBOL
 6
-* (defparameter *foo* 42)
+(defparameter *foo* 42)
 *FOO*
-* (read-from-string "#.(setq *foo* \"gotcha\")")
+(read-from-string "#.(setq *foo* \"gotcha\")")
 "gotcha"
 23
-* *foo*
+*foo*
 "gotcha"
 ~~~
 
@@ -819,13 +836,13 @@ the output base for a single call. To change the output base globally, set
 represented as quotients of two integers even when converted to strings.
 
 ~~~lisp
-* (write-to-string 250)
+(write-to-string 250)
 "250"
-* (write-to-string 250.02)
+(write-to-string 250.02)
 "250.02"
-* (write-to-string 250 :base 5)
+(write-to-string 250 :base 5)
 "2000"
-* (write-to-string (/ 1 3))
+(write-to-string (/ 1 3))
 "1/3"
 *
 ~~~
@@ -842,19 +859,19 @@ documentation in this case.
 Here are a few examples. Note that all functions that test for inequality return the position of the first mismatch as a generalized boolean. You can also use the generic sequence function MISMATCH if you need more versatility.
 
 ~~~lisp
-* (string= "Marx" "Marx")
+(string= "Marx" "Marx")
 T
-* (string= "Marx" "marx")
+(string= "Marx" "marx")
 NIL
-* (string-equal "Marx" "marx")
+(string-equal "Marx" "marx")
 T
-* (string< "Groucho" "Zeppo")
+(string< "Groucho" "Zeppo")
 0
-* (string< "groucho" "Zeppo")
+(string< "groucho" "Zeppo")
 NIL
-* (string-lessp "groucho" "Zeppo")
+(string-lessp "groucho" "Zeppo")
 0
-* (mismatch "Harpo Marx" "Zeppo Marx" :from-end t :test #'char=)
+(mismatch "Harpo Marx" "Zeppo Marx" :from-end t :test #'char=)
 3
 ~~~
 
@@ -1030,15 +1047,15 @@ using `~^` to avoid printing the comma and space after the last element:
 `~:{str~}` is similar but for a list of sublists:
 
 ~~~lisp
-(format nil "~:{~S are ~S. ~}" '((pigeons birds) (dogs mammals) (bees insects)))
-;; "PIGEONS are BIRDS. DOGS are MAMMALS. BEES are INSECTS. "
+(format nil "~:{~S are ~S. ~}" '((pigeons birds) (dogs mammals)))
+;; "PIGEONS are BIRDS. DOGS are MAMMALS. "
 ~~~
 
 `~@{str~}` is similar to `~{str~}`, but instead of using one argument that is a list, all the remaining arguments are used as the list of arguments for the iteration:
 
 ~~~lisp
-(format nil "~@{~S are ~S. ~}" 'pigeons 'birds 'dogs 'mammals 'bees 'insects)
-;; "PIGEONS are BIRDS. DOGS are MAMMALS. BEES are INSECTS. "
+(format nil "~@{~S are ~S. ~}" 'pigeons 'birds 'dogs 'mammals)
+;; "PIGEONS are BIRDS. DOGS are MAMMALS. "
 ~~~
 
 ### Formatting a format string (`~v`, `~?`)
@@ -1099,9 +1116,12 @@ If the number is out of range, the default option (after `~:;`) is returned:
 Combine it with `~:*` to implement irregular plural:
 
 ~~~lisp
-(format nil "I saw ~r el~:*~[ves~;f~:;ves~]." 0) ==> "I saw zero elves."
-(format nil "I saw ~r el~:*~[ves~;f~:;ves~]." 1) ==> "I saw one elf."
-(format nil "I saw ~r el~:*~[ves~;f~:;ves~]." 2) ==> "I saw two elves."
+(format nil "I saw ~r el~:*~[ves~;f~:;ves~]." 0)
+;; => "I saw zero elves."
+(format nil "I saw ~r el~:*~[ves~;f~:;ves~]." 1)
+;; => "I saw one elf."
+(format nil "I saw ~r el~:*~[ves~;f~:;ves~]." 2)
+;; => "I saw two elves."
 ~~~
 
 ## Capturing what is is printed into a stream
@@ -1151,7 +1171,7 @@ Use `slug:asciify` to replace accentuated letters by their ascii equivalent:
 
 This function supports many (western) languages:
 
-~~~lisp
+~~~
 slug:*available-languages*
 ((:TR . "Türkçe (Turkish)") (:SV . "Svenska (Swedish)") (:FI . "Suomi (Finnish)")
  (:UK . "українська (Ukrainian)") (:RU . "Ру́сский (Russian)") (:RO . "Română (Romanian)")

@@ -332,8 +332,10 @@ class (whether or not those instances exist yet).
 Each slot accepts one `:documentation` option. To obtain its documentation via `documentation`, you need to obtain the slot object. This can be done compatibly using a library such as [closer-mop](https://github.com/pcostanza/closer-mop). For instance:
 
 ~~~lisp
-(closer-mop:class-direct-slots (find-class 'my-class)) ; list of slots (objects)
-(find 'my-slot * :key #'closer-mop:slot-definition-name) ; find desired slot by name
+(closer-mop:class-direct-slots (find-class 'my-class))
+;; => list of slots (objects)
+(find 'my-slot * :key #'closer-mop:slot-definition-name)
+;; => find desired slot by name
 (documentation * t) ; obtain its documentation
 ~~~
 
@@ -1707,7 +1709,8 @@ It is recommended (Keene) to create an after method, since creating a
 primary method would prevent slots' initialization.
 
 ~~~lisp
-(defmethod initialize-instance :after ((obj person) &key) ;; note &key
+(defmethod initialize-instance :after ((obj person) &key)
+;; note the &key in the arglist:                    ^^^^
   (do something with obj))
 ~~~
 
@@ -1723,7 +1726,7 @@ check that the person's name is longer than 3 characters:
 So this call doesn't work anymore:
 
 ~~~lisp
-(make-instance 'person :name "me" )
+(make-instance 'person :name "me")
 ;; The assertion (>= #1=(LENGTH NAME) 3) failed with #1# = 2.
 ;;   [Condition of type SIMPLE-ERROR]
 ~~~
@@ -1732,13 +1735,14 @@ We are prompted into the interactive debugger and we are given a
 choice of restarts (continue, retry, abort).
 
 So while we're at it, here's an assertion that uses the debugger
-features to offer to change "name":
+features to offer to change "name". We give `assert` a list of places
+that can be changed from the debugger:
 
 ~~~lisp
 (defmethod INITIALIZE-INSTANCE :after ((obj person) &key)
   (with-slots (name) obj
     (assert (>= (length name) 3)
-            (name)  ;; creates a restart that offers to change "name"
+            (name)  ;; <-- list of places
             "The value of name is ~a. It should be longer than 3 characters." name)))
 ~~~
 
@@ -1749,7 +1753,8 @@ The value of name is me. It should be longer than 3 characters.
    [Condition of type SIMPLE-ERROR]
 
 Restarts:
- 0: [CONTINUE] Retry assertion with new value for NAME.    <--- new restart
+ 0: [CONTINUE] Retry assertion with new value for NAME.
+                               ^^^^^^^^^^^^ our new restart
  1: [RETRY] Retry SLIME REPL evaluation request.
  2: [*ABORT] Return to SLIME's top level.
 ```

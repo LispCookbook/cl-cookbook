@@ -58,7 +58,8 @@ If a directory pathname has a trailing slash, `pathname-name` may return `nil`; 
 #### Parent directory
 
 ~~~lisp
-(uiop:pathname-parent-directory-pathname #P"/foo/bar/quux/")     ;; => #P"/foo/bar/"
+(uiop:pathname-parent-directory-pathname #P"/foo/bar/quux/")
+;; => #P"/foo/bar/"
 ~~~
 
 ### Testing whether a file exists
@@ -166,7 +167,8 @@ So, here's how to append a directory to another one:
 
 ~~~lisp
 (merge-pathnames "otherpath" "/home/vince/projects/")
-;;                                             ^^ a trailing / denotes a directory.
+;; important:                                     ^^
+;; a trailing / denotes a directory.
 ;; => #P"/home/vince/projects/otherpath"
 ~~~
 

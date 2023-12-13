@@ -134,7 +134,7 @@ CL-USER>
 3. You will see details about the compile in your repl, and a fasl file
    in your filesystem.
 
-~~~lisp
+~~~
 CL-USER>
 
 ; compiling file "/Users/jason/Desktop/hello.lisp" (written 14 SEP 2021 04:24:37 AM):
@@ -185,7 +185,7 @@ CL-USER>
 (defun divide (x y)
   (assert (not (zerop y))
           (y)
-          "The second argument can not be zero. Please change it.")
+          "The second argument can not be zero.")
   (/ x y))
 ~~~
 
@@ -235,7 +235,8 @@ _More ideas for what can be done with the debugger can be found on the [error ha
 (BLOCK NIL
   (LET ((X NIL)
         (#:LOOP-LIST-559
-         (SB-KERNEL:THE* (LIST :USE-ANNOTATIONS T :SOURCE-FORM '(A B C D E))
+         (SB-KERNEL:THE* (LIST :USE-ANNOTATIONS T
+                               :SOURCE-FORM '(A B C D E))
                          '(A B C D E))))
     (DECLARE (IGNORABLE #:LOOP-LIST-559)
              (IGNORABLE X))

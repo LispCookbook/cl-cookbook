@@ -75,19 +75,19 @@ PLUS
 * (disassemble 'plus)
 ; disassembly for PLUS
 ; Size: 37 bytes. Origin: #x52B8063B
-; 3B:       498B5D60         MOV RBX, [R13+96]                ; no-arg-parsing entry point
-                                                              ; thread.binding-stack-pointer
-; 3F:       48895DF8         MOV [RBP-8], RBX
-; 43:       498BD0           MOV RDX, R8
-; 46:       488BFE           MOV RDI, RSI
-; 49:       FF1425B0001052   CALL QWORD PTR [#x521000B0]      ; GENERIC-+
-; 50:       488B75E8         MOV RSI, [RBP-24]
-; 54:       4C8B45F0         MOV R8, [RBP-16]
-; 58:       488BE5           MOV RSP, RBP
-; 5B:       F8               CLC
-; 5C:       5D               POP RBP
-; 5D:       C3               RET
-; 5E:       CC0F             BREAK 15                         ; Invalid argument count trap
+; 3B:  498B5D60     MOV RBX, [R13+96]  ; no-arg-parsing entry point
+                                       ; thread.binding-stack-pointer
+; 3F:  48895DF8     MOV [RBP-8], RBX
+; 43:  498BD0       MOV RDX, R8
+; 46:  488BFE       MOV RDI, RSI
+; 49:  FF14250102   CALL QWORD PTR [#x52100] ; GENERIC-+
+; 50:  488B75E8     MOV RSI, [RBP-24]
+; 54:  4C8B45F0     MOV R8, [RBP-16]
+; 58:  488BE5       MOV RSP, RBP
+; 5B:  F8           CLC
+; 5C:  5D           POP RBP
+; 5D:  C3           RET
+; 5E:  CC0F         BREAK 15   ; Invalid argument count trap
 ~~~
 
 The code above was evaluated in SBCL. In some other implementations such as
@@ -152,63 +152,63 @@ MAX-ORIGINAL
 * (disassemble 'max-original)
 ; disassembly for MAX-ORIGINAL
 ; Size: 144 bytes. Origin: #x52D450EF
-; 7A7:       8D46F1           lea eax, [rsi-15]               ; no-arg-parsing entry point
-; 7AA:       A801             test al, 1
-; 7AC:       750E             jne L0
-; 7AE:       3C0A             cmp al, 10
-; 7B0:       740A             jeq L0
-; 7B2:       A80F             test al, 15
-; 7B4:       7576             jne L5
-; 7B6:       807EF11D         cmp byte ptr [rsi-15], 29
-; 7BA:       7770             jnbe L5
-; 7BC: L0:   8D43F1           lea eax, [rbx-15]
-; 7BF:       A801             test al, 1
-; 7C1:       750E             jne L1
-; 7C3:       3C0A             cmp al, 10
-; 7C5:       740A             jeq L1
-; 7C7:       A80F             test al, 15
-; 7C9:       755A             jne L4
-; 7CB:       807BF11D         cmp byte ptr [rbx-15], 29
-; 7CF:       7754             jnbe L4
-; 7D1: L1:   488BD3           mov rdx, rbx
-; 7D4:       488BFE           mov rdi, rsi
-; 7D7:       B9C1030020       mov ecx, 536871873              ; generic->
-; 7DC:       FFD1             call rcx
-; 7DE:       488B75F0         mov rsi, [rbp-16]
-; 7E2:       488B5DF8         mov rbx, [rbp-8]
-; 7E6:       7E09             jle L3
-; 7E8:       488BD3           mov rdx, rbx
-; 7EB: L2:   488BE5           mov rsp, rbp
-; 7EE:       F8               clc
-; 7EF:       5D               pop rbp
-; 7F0:       C3               ret
-; 7F1: L3:   4C8BCB           mov r9, rbx
-; 7F4:       4C894DE8         mov [rbp-24], r9
-; 7F8:       4C8BC6           mov r8, rsi
-; 7FB:       4C8945E0         mov [rbp-32], r8
-; 7FF:       488BD3           mov rdx, rbx
-; 802:       488BFE           mov rdi, rsi
-; 805:       B929040020       mov ecx, 536871977              ; generic-=
-; 80A:       FFD1             call rcx
-; 80C:       4C8B45E0         mov r8, [rbp-32]
-; 810:       4C8B4DE8         mov r9, [rbp-24]
-; 814:       488B75F0         mov rsi, [rbp-16]
-; 818:       488B5DF8         mov rbx, [rbp-8]
-; 81C:       498BD0           mov rdx, r8
-; 81F:       490F44D1         cmoveq rdx, r9
-; 823:       EBC6             jmp L2
-; 825: L4:   CC0A             break 10                        ; error trap
-; 827:       04               byte #X04
-; 828:       13               byte #X13                       ; OBJECT-NOT-REAL-ERROR
-; 829:       FE9B01           byte #XFE, #X9B, #X01           ; RBX
-; 82C: L5:   CC0A             break 10                        ; error trap
-; 82E:       04               byte #X04
-; 82F:       13               byte #X13                       ; OBJECT-NOT-REAL-ERROR
-; 830:       FE1B03           byte #XFE, #X1B, #X03           ; RSI
-; 833:       CC0A             break 10                        ; error trap
-; 835:       02               byte #X02
-; 836:       19               byte #X19                       ; INVALID-ARG-COUNT-ERROR
-; 837:       9A               byte #X9A                       ; RCX
+; 7A7:       8D46F1      lea eax, [rsi-15]               ; no-arg-parsing entry point
+; 7AA:       A801        test al, 1
+; 7AC:       750E        jne L0
+; 7AE:       3C0A        cmp al, 10
+; 7B0:       740A        jeq L0
+; 7B2:       A80F        test al, 15
+; 7B4:       7576        jne L5
+; 7B6:       807EF11D    cmp byte ptr [rsi-15], 29
+; 7BA:       7770        jnbe L5
+; 7BC: L0:   8D43F1      lea eax, [rbx-15]
+; 7BF:       A801        test al, 1
+; 7C1:       750E        jne L1
+; 7C3:       3C0A        cmp al, 10
+; 7C5:       740A        jeq L1
+; 7C7:       A80F        test al, 15
+; 7C9:       755A        jne L4
+; 7CB:       807BF11D    cmp byte ptr [rbx-15], 29
+; 7CF:       7754        jnbe L4
+; 7D1: L1:   488BD3      mov rdx, rbx
+; 7D4:       488BFE      mov rdi, rsi
+; 7D7:       B9C1030020  mov ecx, 536871873   ; generic->
+; 7DC:       FFD1        call rcx
+; 7DE:       488B75F0    mov rsi, [rbp-16]
+; 7E2:       488B5DF8    mov rbx, [rbp-8]
+; 7E6:       7E09        jle L3
+; 7E8:       488BD3      mov rdx, rbx
+; 7EB: L2:   488BE5      mov rsp, rbp
+; 7EE:       F8          clc
+; 7EF:       5D          pop rbp
+; 7F0:       C3          ret
+; 7F1: L3:   4C8BCB      mov r9, rbx
+; 7F4:       4C894DE8    mov [rbp-24], r9
+; 7F8:       4C8BC6      mov r8, rsi
+; 7FB:       4C8945E0    mov [rbp-32], r8
+; 7FF:       488BD3      mov rdx, rbx
+; 802:       488BFE      mov rdi, rsi
+; 805:       B929040020  mov ecx, 536871977   ; generic-=
+; 80A:       FFD1        call rcx
+; 80C:       4C8B45E0    mov r8, [rbp-32]
+; 810:       4C8B4DE8    mov r9, [rbp-24]
+; 814:       488B75F0    mov rsi, [rbp-16]
+; 818:       488B5DF8    mov rbx, [rbp-8]
+; 81C:       498BD0      mov rdx, r8
+; 81F:       490F44D1    cmoveq rdx, r9
+; 823:       EBC6        jmp L2
+; 825: L4:   CC0A        break 10            ; error trap
+; 827:       04          byte #X04
+; 828:       13          byte #X13           ; OBJECT-NOT-REAL-ERROR
+; 829:       FE9B01      byte #XFE, #X9B, #X01      ; RBX
+; 82C: L5:   CC0A        break 10            ; error trap
+; 82E:       04          byte #X04
+; 82F:       13          byte #X13           ; OBJECT-NOT-REAL-ERROR
+; 830:       FE1B03      byte #XFE, #X1B, #X03           ; RSI
+; 833:       CC0A        break 10            ; error trap
+; 835:       02          byte #X02
+; 836:       19          byte #X19           ; INVALID-ARG-COUNT-ERROR
+; 837:       9A          byte #X9A           ; RCX
 
 * (defun max-with-speed-3 (a b)
     (declare (optimize (speed 3) (safety 0)))
@@ -222,7 +222,7 @@ MAX-WITH-SPEED-3
 ; 3F:       488945E8         mov [rbp-24], rax
 ; 43:       488BD0           mov rdx, rax
 ; 46:       488BFB           mov rdi, rbx
-; 49:       B9C1030020       mov ecx, 536871873               ; generic->
+; 49:       B9C1030020       mov ecx, 536871873     ; generic->
 ; 4E:       FFD1             call rcx
 ; 50:       488B45E8         mov rax, [rbp-24]
 ; 54:       488B5DE0         mov rbx, [rbp-32]
@@ -240,7 +240,7 @@ MAX-WITH-SPEED-3
 ; 74:       4C8945F8         mov [rbp-8], r8
 ; 78:       488BD0           mov rdx, rax
 ; 7B:       488BFB           mov rdi, rbx
-; 7E:       B929040020       mov ecx, 536871977               ; generic-=
+; 7E:       B929040020       mov ecx, 536871977      ; generic-=
 ; 83:       FFD1             call rcx
 ; 85:       488B45E8         mov rax, [rbp-24]
 ; 89:       488B75F0         mov rsi, [rbp-16]
@@ -275,7 +275,7 @@ MAX-WITH-TYPE
 ; 22:       488BD8           mov rbx, rax
 ; 25:       48895DF8         mov [rbp-8], rbx
 ; 29:       488BD0           mov rdx, rax
-; 2C:       B98C030020       mov ecx, 536871820               ; generic-<
+; 2C:       B98C030020       mov ecx, 536871820    ; generic-<
 ; 31:       FFD1             call rcx
 ; 33:       488B75F0         mov rsi, [rbp-16]
 ; 37:       488B5DF8         mov rbx, [rbp-8]
@@ -384,7 +384,8 @@ than one `ftype` declaration associated with it. A `ftype` declaration restricts
 the type of the argument every time the function is called. It has the following form:
 
 ~~~lisp
- (declaim (ftype (function (arg1 arg2 ...) return-value) function-name1))
+ (declaim (ftype (function (arg1 arg2 ...) return-value)
+                 function-name1))
 ~~~~
 
 If the function returns `nil`, its return type is `null`.
@@ -433,18 +434,18 @@ Now let's try to optimize the speed. The compiler will state that there is type 
       (disassemble 'do-some-arithmetic)
 ; disassembly for DO-SOME-ARITHMETIC
 ; Size: 53 bytes. Origin: #x52CD1D1A
-; 1A:       488945F8         MOV [RBP-8], RAX                 ; no-arg-parsing entry point
+; 1A:       488945F8         MOV [RBP-8], RAX   ; no-arg-parsing entry point
 ; 1E:       488BD0           MOV RDX, RAX
 ; 21:       4883EC10         SUB RSP, 16
 ; 25:       B902000000       MOV ECX, 2
 ; 2A:       48892C24         MOV [RSP], RBP
 ; 2E:       488BEC           MOV RBP, RSP
-; 31:       E8C2737CFD       CALL #x504990F8                  ; #<FDEFN SQUARE>
+; 31:       E8C2737CFD       CALL #x504990F8    ; #<FDEFN SQUARE>
 ; 36:       480F42E3         CMOVB RSP, RBX
 ; 3A:       488B45F8         MOV RAX, [RBP-8]
 ; 3E:       488BFA           MOV RDI, RDX
 ; 41:       488BD0           MOV RDX, RAX
-; 44:       E807EE42FF       CALL #x52100B50                  ; GENERIC-+
+; 44:       E807EE42FF       CALL #x52100B50    ; GENERIC-+
 ; 49:       488BE5           MOV RSP, RBP
 ; 4C:       F8               CLC
 ; 4D:       5D               POP RBP
@@ -466,13 +467,13 @@ that the expression `(square x)` is a `fixnum`, and use the fixnum-specific `+`:
 
 ; disassembly for DO-SOME-ARITHMETIC
 ; Size: 48 bytes. Origin: #x52C084DA
-; 4DA:       488945F8         MOV [RBP-8], RAX                ; no-arg-parsing entry point
+; 4DA:       488945F8         MOV [RBP-8], RAX   ; no-arg-parsing entry point
 ; 4DE:       4883EC10         SUB RSP, 16
 ; 4E2:       488BD0           MOV RDX, RAX
 ; 4E5:       B902000000       MOV ECX, 2
 ; 4EA:       48892C24         MOV [RSP], RBP
 ; 4EE:       488BEC           MOV RBP, RSP
-; 4F1:       E8020C89FD       CALL #x504990F8                 ; #<FDEFN SQUARE>
+; 4F1:       E8020C89FD       CALL #x504990F8    ; #<FDEFN SQUARE>
 ; 4F6:       480F42E3         CMOVB RSP, RBX
 ; 4FA:       488B45F8         MOV RAX, [RBP-8]
 ; 4FE:       4801D0           ADD RAX, RDX
