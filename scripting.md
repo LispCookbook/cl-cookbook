@@ -2,8 +2,12 @@
 title: Scripting. Command line arguments. Executables.
 ---
 
-Using a program from a REPL is fine and well, but if we want to
-distribute our program easily, we'll want to build an executable.
+Using a program from a REPL is fine and well, but once it's ready
+we'll surely want to call it from the terminal. We can run Lisp
+**scripts** for this.
+
+Next, if we want to distribute our program easily, we'll want to build
+an **executable**.
 
 Lisp implementations differ in their processes, but they all create
 **self-contained executables**, for the architecture they are built on. The
@@ -18,6 +22,79 @@ argument lists to functions, the compiler, the debugger, source code
 location information, and more.
 
 Note that we can similarly build self-contained executables for **web apps**.
+
+## Scripting with Common Lisp
+
+Create a file named `hello` (you can drop the .lisp extension) and add this:
+
+```
+#!/usr/bin/env -S sbcl --script
+(require :uiop)
+(format t "hello ~a!~&" (uiop:getenv "USER"))
+```
+
+Make the script executable (`chmod +x hello`) and run it:
+
+```
+$ ./hello
+hello me!
+```
+
+Nice! We can use this to a great extent already.
+
+In addition, the script was quite fast to start, 0.03s on my system.
+
+However, we will get longer startup times as soon as we add
+dependencies. The solution is to build a binary. They start even
+faster, with all dependencies compiled.
+
+### Quickloading dependencies from a script
+
+Say you don't bother with an .asd project definition yet, you just
+want to write a quick script, but you need to load a quicklisp
+dependency. You'll need a bit more ceremony:
+
+```lisp
+#!/usr/bin/env -S sbcl --script
+
+(require :uiop)
+
+;; We want quicklisp, which is loaded from our initfile,
+;; after a classical installation.
+;; However the --script flag doesn't load our init file:
+;; it implies --no-sysinit --no-userinit --disable-debugger --end-toplevel-options
+;; So, please load it:
+(load "~/.sbclrc")
+
+;; Load a quicklisp dependency silently.
+(ql:quickload "str" :silent t)
+
+(princ (str:concat "hello " (uiop:getenv "USER") "!"))
+```
+
+Accordingly, you could only use `require`, if the quicklisp dependency is already installed:
+
+~~~lisp
+;; replace loading sbclrc and ql:quickload.
+(require :str)
+~~~
+
+Also note that when you put a `ql:quickload` in the middle of your
+code, you can't load the file anymore, you can't `C-c C-k` from your
+editor. This is because the reader will see the "quickload" without
+running it yet, then sees "str:concat", a call to a package that
+doesn't exist (it wasn't loaded yet). Common Lisp has you covered,
+with a form that executes code during the read phase:
+
+~~~lisp
+;; you shouldn't need this. Use an .asd system definition!
+(eval-when (:load-toplevel :compile-toplevel :execute)
+  (ql:quickload "str" :silent t))
+~~~
+
+but ASDF project definitions are here for a reason. Find me another
+language that makes you install dependencies in the middle of the
+application code.
 
 
 ## Building a self-contained executable
