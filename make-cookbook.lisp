@@ -7,6 +7,7 @@
 ;; (generate)
 ;;
 ;; Metadata is in metadata.txt
+;; -> change the date
 
 (require 'asdf)
 
