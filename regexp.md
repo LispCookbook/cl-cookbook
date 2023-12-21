@@ -144,27 +144,6 @@ assigning the matching fragment to the variable:
   (ppcre:regex-replace pat "abc" "A"))
 ~~~
 
-
-### Syntactic sugar
-
-You might like to use CL-PPCRE with the
-[**cl-interpol**](https://edicl.github.io/cl-interpol/#regular)
-library. cl-interpol is a library for Common Lisp which modifies the
-reader in a way that introduces interpolation within strings similar
-to Perl, Scala, or Unix Shell scripts.
-
-In addition to loading the CL-INTERPOL library, initialization call
-must be made to properly configure the Lisp reader. This is
-accomplished by either calling the `enable-interpol-syntax` function
-from the REPL or placing that call in the source file before using any
-of its features:
-
-~~~lisp
-(interpol:enable-interpol-syntax)
-~~~
-
-In this mode you can write regular expressions in-between `#?/` and `/`.
-
 ## See more
 
 - [cl-ppcre on common-lisp-libraries.readthedocs.io](https://common-lisp-libraries.readthedocs.io/cl-ppcre/) and read on: `do-matches`, `do-matches-as-strings`,
