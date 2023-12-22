@@ -148,7 +148,7 @@ this:
 
 `series` is good, but its function names are different from what we
 find in functional languages today. You might like the ["Generators
-The Way I Want Them Generated"](https://github.com/cbeo/gtwiwtg)
+The Way I Want Them Generated"](https://cicadas.surf/cgit/colin/gtwiwtg.git/about/)
 library. It is a lazy sequences library, similar to `series` although
 younger and not as complete, with a "modern" API with words like `take`, `filter`,
 `for` or `fold`, and that is easy to use.
