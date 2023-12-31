@@ -461,7 +461,7 @@ Another solution is to use ASDF's list of known projects:
 
 ~~~lisp
 ;; startup file like ~/.sbclrc
-(pushnew "~/path-to/project/" asdf:*central-registry* :test #'equal)
+(pushnew "~/to/project/" asdf:*central-registry* :test #'equal)
 ~~~
 
 and since ASDF is integrated into Quicklisp, we can `quickload` our project right away.

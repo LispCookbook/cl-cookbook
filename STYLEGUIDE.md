@@ -47,6 +47,9 @@ This snippet...
 
 If the result is large, use another code block, without comments.
 
+- lines should not exceed 64 characters, otherwise the PDF will truncate them and show an horizontal scrollbar.
+
+
 ## EPUB gotchas
 
 ### Embedded content

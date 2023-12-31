@@ -132,15 +132,15 @@ that the connection has been made. Here's how it works:
 
     (lambda (responder)
       (declare (ignore responder))
-      (websocket-driver:start-connection ws)))) ; send the handshake
-
+      ;; Send the handshake:
+      (websocket-driver:start-connection ws))))
 ~~~
 
 You may now start your server, running on port `12345`:
 
 ~~~lisp
-;; keep the handler around so that you can stop your server later on
-
+;; Keep the handler around so that
+;; you can stop your server later on:
 (defvar *chat-handler* (clack:clackup #'chat-server :port 12345))
 ~~~
 
