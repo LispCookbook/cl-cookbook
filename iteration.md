@@ -4,7 +4,9 @@ title: Loop, iteration, mapping
 
 <!-- needs some text before the first heading -->
 
-## Introduction: loop, iterate, for, mapcar, series
+## Introduction: loop, iterate, for, mapcar, series, transducers
+
+### The `loop` macro
 
 **[loop](http://www.lispworks.com/documentation/lw51/CLHS/Body/m_loop.htm)**
 is the built-in macro for iteration.
@@ -40,6 +42,8 @@ do something right before the Loop exits.  In addition, Loop expressions can
 return a value.  It is very rare to use all of these parts in a given Loop
 expression, but you can combine them in many ways.
 
+### The `iterate` macro
+
 **[iterate](https://common-lisp.net/project/iterate/doc/index.html)** is a
 popular iteration macro that aims at being simpler, "lispier" and more
 predictable than `loop`, besides being extensible. However it isn't built-in,
@@ -68,6 +72,8 @@ Iterate also comes with `display-iterate-clauses` that can be quite handy:
 
 Much of the examples on this page that are valid for loop are also valid for iterate,
 with minor modifications.
+
+### The `for` macro
 
 **[for](https://github.com/Shinmera/for/)** is an extensible iteration
 macro that is often shorter than loop, that "unlike loop is extensible
@@ -130,14 +136,14 @@ Here is an example with [cl-punch](https://github.com/windymelt/cl-punch/):
 
 and voilà :) We won't use this more in this recipe, but feel free to do.
 
-Last but not least, you might like
-**[series](http://series.sourceforge.net/)**,
-a library that describes itself as combining aspects of sequences,
-streams, and loops. Series expressions look like operations on
-sequences (= functional programming), but can achieve the same high level of efficiency as a
-loop. Series first appeared in "Common Lisp the Language", in the
-appendix A (it nearly became part of the language). Series looks like
-this:
+### The `series` library
+
+You might also like **[series](http://series.sourceforge.net/)**, a library that
+describes itself as combining aspects of sequences, streams, and loops. Series
+expressions look like operations on sequences (= functional programming), but
+can achieve the same high level of efficiency as a loop. Series first appeared
+in "Common Lisp the Language", in the appendix A (it nearly became part of the
+language). Series looks like this:
 
 ~~~lisp
 (collect
@@ -163,6 +169,46 @@ younger and not as complete, with a "modern" API with words like `take`, `filter
 
 At the time of writing, GTWIWTG is licensed under the GPLv3.
 
+### The `transducers` library
+
+The **[transducers](https://git.sr.ht/~fosskers/cl-transducers)** pattern was
+ported to Common Lisp in 2023 and offers a full suite of functional programming
+idioms for efficiently iterating over "sources". A "source" could be simple
+collections like Lists or Vectors, but also potentially large files or
+generators of infinite data.
+
+Transducers...
+
+- allow the chaining of operations like `map` and `filter` without allocating memory between each step.
+- aren't tied to any specific data type; they need only be implemented once.
+- vastly simplify "data transformation code".
+- have nothing to do with "lazy evaluation".
+
+Let's sum the squares of the first 1000 odd integers:
+
+~~~lisp
+(defpackage foo
+  (:use :cl)
+  (:local-nicknames (:t :transducers)))
+
+(t:transduce
+ (t:comp (t:filter #'oddp)             ;; (2) Keep only odd numbers.
+         (t:take 1000)                 ;; (3) Keep the first 1000 filtered odds.
+         (t:map (lambda (n) (* n n)))) ;; (4) Square those 1000.
+ #'+         ;; (5) Reducer: Add up all the squares.
+ (t:ints 1)) ;; (1) Source: Generate all positive integers.
+;; => 1333333000 (31 bits, #x4F790C08)
+~~~
+
+Here, even though `ints` is an infinite generator, only as many values as are
+needed for the final result are actually created.
+
+The user is free to invent their own transducers (i.e. functions like `map`) and
+reducers (i.e. functions like `+`) to traverse data streams in any way they
+wish, all while being very memory efficient.
+
+See [its README](https://git.sr.ht/~fosskers/cl-transducers) or [its
+API](https://fosskers.github.io/cl-transducers/index.html) for more information.
 
 ## Recipes
 
