@@ -134,13 +134,18 @@ available for installation.
 [SLY](https://github.com/joaotavora/sly) is a SLIME fork that contains
 the following improvements:
 
-* Completely redesigned REPL based on Emacs's own full-featured comint.el
-* Live code annotations via a new [sly-stickers](https://joaotavora.github.io/sly/#Stickers) contrib
+* Completely redesigned REPL based on Emacs's own full-featured comint.el.
+* Live code annotations via the [Stickers](https://joaotavora.github.io/sly/#Stickers) feature.
 * Consistent interactive button interface. Everything can be copied to the REPL.
-* Multiple inspectors with independent history
-* Regexp-capable M-x sly-apropos
-* Contribs are first class SLY citizens, enabled by default, loaded with ASDF on demand.
-* Support for [NAMED-READTABLES](https://github.com/joaotavora/sly-named-readtables), [macrostep.el](https://github.com/joaotavora/sly-macrostep) and [quicklisp](https://github.com/joaotavora/sly-quicklisp).
+* Multiple REPLs.
+* Multiple inspectors with independent history.
+* Regexp-capable `M-x sly-apropos`.
+* Contribs are first class SLY citizens, enabled by default, loaded with ASDF on demand:
+  - [NAMED-READTABLES](https://github.com/joaotavora/sly-named-readtables) support
+  - [macrostep.el](https://github.com/joaotavora/sly-macrostep)
+  - [Quicklisp](https://github.com/joaotavora/sly-quicklisp)
+  - [ASDF](https://github.com/mmgeorge/sly-asdf)
+  - [Evaluation Overlays](https://git.sr.ht/~fosskers/sly-overlay)
 
 ### Finding one's way into Emacs' built-in documentation
 
