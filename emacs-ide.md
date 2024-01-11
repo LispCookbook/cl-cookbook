@@ -2,16 +2,17 @@
 title: Emacs
 ---
 
+<!-- intentionnally left blank -->
+
 ## Using Emacs as an IDE
 
 This page is meant to provide an introduction to using [Emacs](https://www.gnu.org/software/emacs/) as a Lisp IDE.
 
+[Portacle](https://shinmera.github.io/portacle/) is a portable and
+multi-platform CL development environment shipping Emacs, SBCL and
+necessary extensions. It is a straightforward way to get going.
+
 ![](assets/emacs-teaser.png)
-
-
-**Note**: [Portacle](https://shinmera.github.io/portacle/) is a
-portable and multi-platform CL development environment, a
-straightforward way to get going.
 
 
 <a name="Slide-2"></a>
@@ -21,35 +22,34 @@ straightforward way to get going.
 *   Emacs has fantastic support for working with Lisp code
 *   Not tying yourself into a single CL vendor's editor
 *   Runs on virtually every OS and CL implementation
-*   Extensible: [awesome-emacs](https://github.com/emacs-tw/awesome-emacs).
-*   Can be customized to do many common tasks
-*   Built-in support for different source code version control systems
-*   Vast number of add-on packages
 *   Emacs will probably always be around
 *   Emacs works well either with a mouse or without a mouse
 *   Emacs works well either in GUI mode or in the terminal
 *   Emacs has a large user base with multiple newsgroups
-*   Benefits of using Emacs far outweigh the effort spent in learning it
+*   Built-in tree-sitter and LSP support
+*   Excellent vim mode
 *   Because [Org-mode](http://orgmode.org)
 *   Because [Magit](https://magit.vc/)
 *   Because [Emacs Rocks !](http://emacsrocks.com)
+*   Vast number of extensions: [awesome-emacs](https://github.com/emacs-tw/awesome-emacs).
 
 <a name="Slide-3"></a>
 
 ### Emacs Lisp vs Common Lisp
 
-*   Learning Emacs Lisp is useful and similar (but different from CL):
-    *   Dynamic scope is everywhere
-    *   There are no reader (or reader-related) functions
-    *   Does not support all the types that are supported in CL
-    *   Incomplete implementation of CLOS (with the add-on EIEIO package)
-    *   Not all of CL is supported
-    *   No numerical tower support
+It isn't necessary to use Emacs Lisp to use Emacs with Slime or Sly for Common Lisp
 
-*   Some good Emacs Lisp learning resources:
-    *   [An Introduction to Programming in Emacs Lisp](https://www.gnu.org/software/emacs/manual/eintr.html)
-    *   [Writing GNU Emacs Extensions](http://www.oreilly.com/catalog/gnuext/)
-    *   [Wikemacs](http://wikemacs.org/wiki/Category:Emacs_Lisp)
+However learning Emacs Lisp can be useful and is similar (but different) from CL:
+*   Dynamic scope is everywhere
+*   There are no reader (or reader-related) functions
+*   Does not support all the types that are supported in CL
+*   Incomplete implementation of CLOS (with the add-on EIEIO package)
+*   No numerical tower support
+
+Some good Emacs Lisp learning resources:
+*   [An Introduction to Programming in Emacs Lisp](https://www.gnu.org/software/emacs/manual/eintr.html)
+*   [Writing GNU Emacs Extensions](http://www.oreilly.com/catalog/gnuext/)
+*   [Wikemacs](http://wikemacs.org/wiki/Category:Emacs_Lisp)
 
 
 <a name="Slide-slime"></a>
@@ -71,13 +71,12 @@ for CL programming.
     *   Cross-referencing
     *   Can perform macroexpansions
 
-*   Cons:
-    *   Installing SLIME without MELPA can be tricky
 
 *   Setup:
-    *   Installing it from [MELPA](http://wikemacs.org/wiki/Melpa) is straightforward. Search package-list-packages for 'slime' and click to install. If MELPA is configured correctly, it will install itself and all dependencies.
+    *   Installing it from [MELPA](http://wikemacs.org/wiki/Melpa) is straightforward. Search package-list-packages for 'slime' and click to install. It will install itself and all dependencies.
     *   Enable the desired contribs (SLIME does very little by defaults), e.g. `(slime-setup '(slime-fancy slime-quicklisp slime-asdf))`.
     *   Run SLIME with `M-x slime`.
+    *   See also your GNU/Linux distribution for a "slime" package.
 
 Check out this **[video tutorial](https://www.youtube.com/watch?v=sBcPNr1CKKw)** ! (and the author's channel, full of great stuff)
 
