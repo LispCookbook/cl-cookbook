@@ -353,8 +353,8 @@ an optional return code, instead of `sb-ext:quit`).
 
 ### Size and startup times of executables per implementation
 
-SBCL isn't the only Lisp implementation.
-[ECL](https://gitlab.com/embeddable-common-lisp/ecl/), Embeddable
+**SBCL** isn't the only Lisp implementation.
+[**ECL**](https://gitlab.com/embeddable-common-lisp/ecl/), Embeddable
 Common Lisp, transpiles Lisp programs to C.  That creates a smaller
 executable.
 
@@ -379,10 +379,14 @@ CCL's binaries seem to be as fast to start up as SBCL and nearly half the size.
 |        19948 | clisp.big      |  97% |        .0259 |
 ```
 
-You'll also want to investigate the proprietary Lisps' tree shakers capabilities.
+<!-- TODO: what about SBCL with maximum core compression? -->
 
-Regarding compilation times, CCL is famous for being fast in that regards.
+Regarding compilation times, **CCL** is famous for being fast in that regards.
 ECL is more involved and takes the longer to compile of these three implementations.
+
+You'll also want to investigate the proprietary Lisps' **tree shakers** capabilities.
+**LispWorks** can build a 8MB hello-world program, without compression but fully tree-shaken.
+Such an executable is generated in about 1 second and the runtime is inferior to 0.02 seconds on an Apple M2 Pro CPU.
 
 
 ### Building a smaller binary with SBCL's core compression

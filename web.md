@@ -268,7 +268,7 @@ Example:
   (format nil "Hey~@[ ~A~]!" name))
 ~~~
 
-Visit it at [p://localhost:4242/yo](http://localhost:4242/yo) and add parameters on the url:
+Visit it at [http://localhost:4242/yo](http://localhost:4242/yo) and add parameters on the url:
 [http://localhost:4242/yo?name=Alice](http://localhost:4242/yo?name=Alice).
 
 Just a thought… we didn't explicitly ask Hunchentoot to add this
