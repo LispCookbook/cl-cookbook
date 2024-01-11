@@ -257,7 +257,9 @@ Common Lisp environment, built in Common Lisp.
 
 ## REPLs
 
-[cl-repl](https://github.com/koji-kojiro/cl-repl) is an ipython-like REPL. It supports symbol completion, magic and shell commands, editing command in a file and a simple debugger.
+[cl-repl](https://github.com/lisp-maintainers/cl-repl) is an ipython-like REPL. It supports symbol completion, magic and shell commands, multi-line editing, editing command in a file and a simple debugger.
+
+It is available as a binary.
 
 You might also like [sbcli](https://github.com/hellerve/sbcli), an even simpler REPL with readline capabilities. It handles errors gracefully instead of showing a debugger.
 
