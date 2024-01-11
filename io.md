@@ -70,6 +70,13 @@ text/plain - the default in most Apache configurations).
 
  What follows is a list of implementation dependent choices and behaviours and some code to experiment.
 
+### SBCL
+To load arbitrary bytes into a string, use the `:iso-8859-1` external format. For example:
+
+~~~lisp
+(uiop:read-file-string "/path/to/file" :external-format :iso-8859-1)
+~~~
+
 ### CLISP
 
 On CLISP, faithful output is possible using
