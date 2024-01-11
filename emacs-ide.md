@@ -539,7 +539,14 @@ Other bindings which may be useful:
 - **C-c C-d #** for reader macros
 - **C-c C-d ~**  for format directives
 
-You can enhance the help buffer with the Slime extension [slime-doc-contribs](https://github.com/mmontone/slime-doc-contribs). It will show more information in a nice looking buffer.
+You can enhance the help buffer with the Slime extension [slime-doc-contribs](https://github.com/mmontone/slime-doc-contribs). It will show more information in a nice looking buffer, and it will add choices to the documentation command:
+
+* **slime-help-package** will display information about a CL package: it will nicely show its exported variables, conditions, classes, generic functions, functions and macros, with their documentation. It is a great way to see at a glance what a package provides.
+* **slime-help-system** does the same for a *system*.
+* **slime-help-apropos-documentation** will show symbols whose documentation contains matches for "PATTERN", which is a great way to lookup for functions.
+* and more.
+
+![](https://github.com/mmontone/slime-doc-contribs/raw/master/slime-help.png)
 
 
 #### Inspect
