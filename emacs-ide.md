@@ -336,7 +336,11 @@ You can also select a region and call `M-x indent-region`.
 
 ##### Support for parenthesis
 
-Use `M-(` to insert a pair of parenthesis (`()`) and the same
+When you are in a Slime REPL, you can use `C-return` or `M-return`
+(`slime-repl-closing-return`) to close the remaining parenthesis and
+evaluate your input string.
+
+In files, use `M-(` to insert a pair of parenthesis (`()`) and the same
 keybinding with a prefix argument, `C-u M-(`, to enclose the
 expression in front of the cursor with a pair of parens.
 
@@ -359,6 +363,24 @@ With a numbered prefix argument (`C-u 2 M-(`), wrap around this number of s-expr
 Additionnaly, use `M-x check-parens` to spot malformed s-exps and `C-c
 C-]` (`slime-close-all-parens-in-sexp`) to insert the required number
 of closing parenthesis.
+
+There are additional packages that can make your use of parens easier:
+
+- `M-x show-paren-mode`, a built-in Emacs mode: it toggles the
+  visualization of matching parenthesis. When enabled, place the
+  cursor on a paren and you'll see the other paren it matches
+  with. You can initialize it in your Emacs init file with
+  `(show-paren-mode t)`. It is a global minor mode (it will work for
+  all buffers, all languages).
+- when evil-mode (the vim layer) is enabled, you can use the `%` key to go to the matchin paren.
+- `M-x electric-pair-mode`, a built-in Emacs mode: when enabled,
+typing an open parenthesis automatically inserts the corresponding
+closing parenthesis, and vice versa.  (Likewise for brackets, etc.).
+If the region is active, the parentheses (brackets, etc.) are inserted
+around the region instead.
+- you could use [Paredit (animated guide)](http://danmidwood.com/content/2014/11/21/animated-paredit.html) to automatically insert parentheses in pairs,
+- or [lispy-mode](https://github.com/abo-abo/lispy), like Paredit, but a key triggers an action when the cursor is placed right before or right after a parentheses.
+
 
 ##### Code completion
 
@@ -772,8 +794,8 @@ SPC             slime-space
   (that binding is currently shadowed by another mode)
 ,               slime-handle-repl-shortcut
 DEL             backward-delete-char-untabify
-<C-down>        slime-repl-forward-input
 <C-return>      slime-repl-closing-return
+<C-down>        slime-repl-forward-input
 <C-up>          slime-repl-backward-input
 <return>        slime-repl-return
 
@@ -981,4 +1003,5 @@ C-c C-v M-o     slime-clear-presentations
 
 ### See also
 
-- [Common Lisp REPL exploration guide](https://bnmcgn.github.io/lisp-guide/lisp-exploration.html) - a concise and curated set of highlights to find one's way in the REPL.
+- [Common Lisp REPL exploration guide](https://bnmcgn.github.io/lisp-guide/lisp-exploration.html), a concise and curated set of highlights to find one's way in the REPL.
+- [Emacs4CL](https://github.com/susam/emacs4cl), a tiny DIY kit to set up vanilla Emacs for Common Lisp programming.
