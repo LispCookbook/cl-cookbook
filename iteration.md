@@ -303,7 +303,7 @@ infinitely. Here we show how to loop on a list forever.
 We can build an infinite list by setting its last element to the list itself:
 
 ~~~lisp
-(loop with list-a = '(1 2 3)
+(loop with list-a = (list 1 2 3)
       with infinite-list = (setf (cdr (last list-a)) list-a)
       for item in infinite-list
       repeat 8
@@ -311,7 +311,7 @@ We can build an infinite list by setting its last element to the list itself:
 ;; (1 2 3 1 2 3 1 2)
 ~~~
 
-Illustration: `(last '(1 2 3))` is `(3)`, a list, or rather a cons cell, whose `car` is 3 and `cdr` is NIL. See the [data-structures chapter](data-structures.html) for a reminder. This is the representation of `(list 3)`:
+Illustration: `(last (list 1 2 3))` is `(3)`, a list, or rather a cons cell, whose `car` is 3 and `cdr` is NIL. See the [data-structures chapter](data-structures.html) for a reminder. This is the representation of `(list 3)`:
 
 ~~~
 [o|/]
