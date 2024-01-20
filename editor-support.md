@@ -29,6 +29,7 @@ Since SLIME is heavily modular and the defaults only do the bare minimum (not
 even the SLIME REPL), you might want to enable more features with
 
 ~~~lisp
+(require 'slime)
 (slime-setup '(slime-fancy slime-quicklisp slime-asdf))
 ~~~
 
@@ -41,6 +42,7 @@ Now you can run SLIME with `M-x slime` and/or `M-x slime-connect`.
 See also:
 
 * [https://wikemacs.org/wiki/SLIME](https://wikemacs.org/wiki/SLIME) - configuration examples and extensions.
+* [https://github.com/susam/emacs4cl](https://github.com/susam/emacs4cl) - a minimal Emacs configuration to get new users up and running quickly, *with* a tutorial.
 
 
 ### Using Emacs as an IDE
