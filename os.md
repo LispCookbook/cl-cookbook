@@ -51,6 +51,8 @@ NIL
 
 You should also note that some of these implementations also provide the ability to _set_ these variables. These include ECL (`si:setenv`) and AllegroCL, LispWorks, and CLISP where you can use the functions from above together with [`setf`](http://www.lispworks.com/documentation/HyperSpec/Body/m_setf_.htm). This feature might be important if you want to start subprocesses from your Lisp environment.
 
+To set an envionmental variable, you can `setf` with `(uiop:getenv "lisp")` in a implementation-independent way.
+
 Also note that the
 [Osicat](https://www.common-lisp.net/project/osicat/manual/osicat.html#Environment)
 library has the method `(environment-variable "name")`, on POSIX-like
