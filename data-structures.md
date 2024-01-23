@@ -903,6 +903,26 @@ points to.
 
 and see also the *sequence* functions.
 
+### "I just want Python-style lists!!!"
+The following creates an empty array that can be pushed to and popped from arbitrarily, growing its storage capacity as needed, as is the case for Python lists.
+
+~~~lisp
+(defparameter *v* (make-array 0 :fill-pointer t :adjustable t))
+(vector-push-extend 42 *v*)
+(vector-pop *v*)
+~~~
+
+Note that `vector-pop` does not erase the element in the underlying storage array, as can be confirmed by calling `(array-storage-vector *v*)` -- in this example, it returns `#(42)`. So to avoid leaving garbage around, the following wrapper can be defined instead. 
+
+~~~lisp
+(defun vector-erasepop (v)
+  (let ((x (vector-pop v)))
+    (setf (aref v (fill-pointer v)) nil) ; or 0
+    x))
+~~~
+
+A final warning: `(aref *v* 0)` will still return `nil` rather than raising an error.
+
 ### Transforming a vector to a list.
 
 If you're mapping over it, see the `map` function whose first parameter
