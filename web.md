@@ -509,9 +509,7 @@ The global variables to set to choose the error handling behaviour are:
 
 See also the generic function `maybe-invoke-debugger` if you want to
 fine-tune this behaviour. You might want to specialize it on specific
-condition classes (see below) for debugging purposes. The default method [invokes
-the debugger](http://www.lispworks.com/documentation/HyperSpec/Body/f_invoke.htm)
-if `*catch-errors-p*` is `nil`.
+condition classes (see below) for debugging purposes.
 
 - `*show-lisp-errors-p*`: set to `t` if you want to see errors in HTML output in the browser.
 - `*show-lisp-backtraces-p*`: set to `nil` if the errors shown in HTML
@@ -953,7 +951,9 @@ Please see the section on [testing#continuous-integration](testing.html#continuo
 
 ### Multi-platform delivery with Electron
 
-[Ceramic](https://ceramic.github.io/) makes all the work for us.
+Once you built a binary of your web application, you can point an Electron window to it.
+
+[Ceramic](https://ceramic.github.io/) is a collection of tools that make all the work for us.
 
 It is as simple as this:
 
@@ -1170,6 +1170,8 @@ row.
   a simple project template with Hunchentoot, Easy-Routes, Djula and Bulma CSS.
 - [lisp-web-live-reload-example](https://github.com/vindarel/lisp-web-live-reload-example/) -
   a toy project to show how to interact with a running web app.
+- [lisp-journey: enrich your stacktrace with session and user data](https://lisp-journey.gitlab.io/blog/common-lisp-on-the-web-enrich-your-stacktrace-with-request-and-session-data/)
+- [video: how to build a web app in Lisp · part 1](https://www.youtube.com/watch?v=h_noB1sI_e8) featuring Hunchentoot, easy-routes, Djula templates, error handling, common traps.
 
 ## Credits
 
