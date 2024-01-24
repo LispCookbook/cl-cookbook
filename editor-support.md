@@ -24,7 +24,7 @@ On Ubuntu, SLIME is easily installed alongside Emacs and SBCL:
 
     sudo apt install emacs slime sbcl
 
-Otherwise, install SLIME by adding this code to your `~/.emacs` file:
+Otherwise, install SLIME by adding this code to your `~/.emacs.d/init.el` file:
 
 ~~~lisp
 (require 'package)
