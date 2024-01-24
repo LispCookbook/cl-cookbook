@@ -20,10 +20,22 @@ Quicklisp, SLIME and Git.
 
 ### Installing SLIME
 
-SLIME is in the official GNU ELPA repository of Emacs Lisp packages
-(in Emacs24 and forward). Install with:
+On Ubuntu, SLIME is easily installed alongside Emacs and SBCL:
 
-    M-x package-install RET slime RET
+    sudo apt install emacs slime sbcl
+
+Otherwise, install SLIME by adding this code to your `~/.emacs.d/init.el` file:
+
+~~~lisp
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(dolist (package '(slime))
+  (unless (package-installed-p package)
+    (package-install package)))
+(require 'slime)
+~~~
+
+assuming you've also instealled Emacs and SBCL.
 
 Since SLIME is heavily modular and the defaults only do the bare minimum (not
 even the SLIME REPL), you might want to enable more features with
@@ -33,11 +45,15 @@ even the SLIME REPL), you might want to enable more features with
 (slime-setup '(slime-fancy slime-quicklisp slime-asdf))
 ~~~
 
+After this you can press Alt-X on your keyboard and type `slime` and try Common Lisp! 
+
+(Alt-X is often written `M-x` in Emacs-world.)
+
 For more details, consult the
 [documentation](https://common-lisp.net/project/slime/doc/html/) (also available
 as an Info page).
 
-Now you can run SLIME with `M-x slime` and/or `M-x slime-connect`.
+Now you can run SLIME with, as mentioned, `M-x slime` and/or `M-x slime-connect`.
 
 See also:
 
