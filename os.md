@@ -451,7 +451,7 @@ We can bind them with `multiple-value-bind`:
     (format t "error output is: ~a" error-output)))
 ~~~
 
-### Running visual commands (htop)
+### Running interactive and visual commands (htop)
 
 Use `uiop:run-program` and set both `:input` and `:output` to `:interactive`:
 
@@ -463,8 +463,7 @@ Use `uiop:run-program` and set both `:input` and `:output` to `:interactive`:
 
 This will spawn `htop` in full screen, as it should.
 
-It works for more commands (`sudo`, `vim`…), however not for all interactive
-programs, such as `less` or `fzf`.
+It works for more commands (`sudo`, `vim`, `less`…).
 
 ## Piping
 
