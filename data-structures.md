@@ -890,38 +890,34 @@ vector._
 ;; => #(1 2 3)
 ~~~
 
+The following interface is available for vectors (or vector-like arrays):
 
-`vector-push` *(foo vector)*: replace the vector element pointed to by
-the fill pointer by foo. Can be destructive.
-
-`vector-push-extend` *(foo vector [extension-num])*t
-
-`vector-pop` *(vector)*: return the element of vector its fill pointer
-points to.
-
-`fill-pointer` *(vector)*. `setf`able.
+* `vector-push` *(new-element vector)*: replace the vector element pointed to by the fill pointer by `new-element`, then increment the fill pointer by one. Returns the index at which the new element was placed, or NIL if there's not enough space.
+* `vector-push-extend` *(new-element vector [extension-num])*: like `vector-push`, but if the fill pointer gets too large then the array is extended using `adjust-array`.
+* `vector-pop` *(vector)*: decrement the fill pointer, and return the element that it now points to.
+* `fill-pointer` *(vector)*. `setf`able.
 
 and see also the *sequence* functions.
 
-### "I just want Python-style lists!!!"
-The following creates an empty array that can be pushed to and popped from arbitrarily, growing its storage capacity as needed, as is the case for Python lists.
+The following shows how to create an array that can be pushed to and popped from arbitrarily, growing its storage capacity as needed. This is roughly equivalent to a `list` in Python, an `ArrayList` in Java, or a `vector<T>` in C++ -- though note that elements are not erased when they're popped.
 
 ~~~lisp
-(defparameter *v* (make-array 0 :fill-pointer t :adjustable t))
-(vector-push-extend 42 *v*)
-(vector-pop *v*)
+CL-USER> (defparameter *v* (make-array 0 :fill-pointer t :adjustable t))
+*V*
+CL-USER> *v*
+#()
+CL-USER> (vector-push-extend 42 *v*)
+0
+CL-USER> (vector-push-extend 43 *v*)
+1
+CL-USER> (vector-pop *v*)
+43
+CL-USER> *v*
+#(42)
+CL-USER> (aref *v* 1) ; beware, the element is still there!
+43
+CL-USER> (setf (aref *v* 1) nil) ; manually erase elements if necessary
 ~~~
-
-Note that `vector-pop` does not erase the element in the underlying storage array, as can be confirmed by calling `(array-storage-vector *v*)` -- in this example, it returns `#(42)`. So to avoid leaving garbage around, the following wrapper can be defined instead. 
-
-~~~lisp
-(defun vector-erasepop (v)
-  (let ((x (vector-pop v)))
-    (setf (aref v (fill-pointer v)) nil) ; or 0
-    x))
-~~~
-
-A final warning: `(aref *v* 0)` will still return `nil` rather than raising an error.
 
 ### Transforming a vector to a list.
 
