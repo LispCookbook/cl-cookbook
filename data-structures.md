@@ -893,7 +893,7 @@ vector._
 The following interface is available for vectors (or vector-like arrays):
 
 * `vector-push` *(new-element vector)*: replace the vector element pointed to by the fill pointer by `new-element`, then increment the fill pointer by one. Returns the index at which the new element was placed, or NIL if there's not enough space.
-* `vector-push-extend` *(new-element vector [extension-num])*: like `vector-push`, but if the fill pointer gets too large then the array is extended using `adjust-array`.
+* `vector-push-extend` *(new-element vector [extension])*: like `vector-push`, but if the fill pointer gets too large then the array is extended using `adjust-array`. `extension` is the minimum number of elements to add to the array if it must be extended.
 * `vector-pop` *(vector)*: decrement the fill pointer, and return the element that it now points to.
 * `fill-pointer` *(vector)*. `setf`able.
 
