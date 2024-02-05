@@ -839,6 +839,25 @@ closer-mop:standard-accessor-method
 
 ### See also
 
+#### Slime export class symbols
+
+The command **M-x slime-export-class** will add the class symbols to the ":export" clause of your package definition. This way, you can export dozens of symbols all at once.
+
+Imagine you have this class:
+
+~~~lisp
+(defclass test ()
+  ((foo :accessor foo)
+   (bar :reader bar)))
+~~~
+
+Using "M-x slime-export-class RET test RET" will export "test", "foot" and "bar".
+
+Removing a slot from the class definition will alas not remove it from the export clause.
+
+This works also on structures (only on SBCL and Clozure CL).
+
+
 #### defclass/std: write shorter classes
 
 The library [defclass/std](https://github.com/EuAndreh/defclass-std)
