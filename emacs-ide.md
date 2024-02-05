@@ -13,8 +13,6 @@ necessary extensions. It is a straightforward way to get going.
 ![](assets/emacs-teaser.png)
 
 
-<a name="Slide-2"></a>
-
 ## Why Use Emacs?
 
 *   Emacs has fantastic support for working with Lisp code
@@ -30,8 +28,6 @@ necessary extensions. It is a straightforward way to get going.
 *   Because [Magit](https://magit.vc/)
 *   Because [Emacs Rocks !](http://emacsrocks.com)
 *   Vast number of extensions: [awesome-emacs](https://github.com/emacs-tw/awesome-emacs).
-
-<a name="Slide-3"></a>
 
 
 ## SLIME: Superior Lisp Interaction Mode for Emacs
@@ -418,7 +414,7 @@ to the parent directory of the file.
 
 ### Exporting symbols
 
-Slime provides a shortcut to add export declarations to your package, effectively exporting it, or on the contrary un-exporting it.
+Slime provides a shortcut to add export declarations to your package, effectively exporting one or many symbol(s), or on the contrary un-exporting it.
 
 **C-c x** (*slime-export-symbol-at-point*) from the `slime-package-fu`
 contrib: takes the symbol at point and modifies the `:export` clause of
@@ -437,7 +433,7 @@ There are different styles of how symbols are presented in
 `defpackage`, the default is to use uninterned symbols (`#:foo`).
 This can be changed:
 
-to use keywords:
+to use keywords, add this to your Emacs init file:
 
 
 ~~~lisp
@@ -504,45 +500,63 @@ Other commands are available:
 * you can also look-up glossary terms (for example, you can look-up "function" instead of "defun"), use `M-x common-lisp-hyperspec-glossary-term`, bound to `C-c C-d g`.
 
 
-## Working with Lisp Code
+## Working with Emacs
 
-In this short tutorial we'll see how to:
+In this section we'll learn the most useful Emacs commands to work with Lisp code in general, or to perform common actions.
 
-*   edit Lisp code
-*   evaluate and compile Lisp code
-*   search Lisp code
+We'll start by how to find your way into Emacs' built-in documentation. If there is a skill you should learn, that is the one.
 
-### Packages for structured editing
+Don't forget that Emacs both GUI and terminal interfaces have menus, they help in discovering all available commands. If you don't see one, ensure that your emacs configuration doesn't hide it. Display the menu with `M-x menu-bar-mode`.
 
-In addition to the built-in Emacs commands, you have several packages at your disposal
-that will help to keep the parens and/or the indentation balanced.
-The list below is somewhat sorted by age of the
-extension, according to the
-[history of Lisp editing](https://github.com/shaunlebron/history-of-lisp-editing):
+### Built-in documentation
 
-- [Paredit](https://www.emacswiki.org/emacs/ParEdit) - Paredit is a
-  classic. It defines the must-have commands (move, kill, split, join
-  a sexp,…).
-  ([visual tutorial](http://danmidwood.com/content/2014/11/21/animated-paredit.html))
-- [Smartparens](https://github.com/Fuco1/smartparens) - Smartparens
-  not only deals with parens but with everything that comes in pairs
-  (html tags,…) and thus has features for non-lispy languages.
-- [Lispy](https://github.com/abo-abo/lispy) - Lispy reimagines Paredit
-  with the goal to have the shortest bindings (mostly one key) that
-  only act depending on the point position.
-- [Paxedit](https://github.com/promethial/paxedit) - Paxedit adds
-  commands based on the context (in a symbol, a sexp,… ) and puts
-  efforts on whitespace cleanup and context refactoring.
-- [Parinfer](http://shaunlebron.github.io/parinfer/) - Parinfer
-  automatically fixes the parens depending on the indentation, or the
-  other way round (or both !).
+Emacs comes with built-in tutorials and documentation. Moreover, it is
+a self-documented and self-discoverable editor, capable of introspection to let you
+know about the current keybindings, to let you search about function documentation,
+available variables,source code, tutorials, etc. Whenever you ask yourself questions like
+"what are the available shortcuts to do x" or "what does this
+keybinding really do", the answer is most probably a keystroke away,
+right inside Emacs. You should learn a few keybindings to be able to
+discover Emacs with Emacs flawlessly.
 
-We personally advice to try Parinfer and the famous Paredit, then to
-go up the list. See explanations and even more on
-[Wikemacs](http://wikemacs.org/wiki/Lisp_editing).
+The help on the topic is here:
+
+- [Help page: commands for asking Emacs about its commands](https://www.gnu.org/software/emacs/manual/html_node/emacs/Help.html#Help)
+
+The help keybindings start with either `C-h` or `F1`. Important ones are:
+
+- `C-h k <keybinding>`: what function does this keybinding call?
+- `C-h f <function name>`: what keybinding is linked to this function?
+- `C-h a <topic>`: show a list of commands whose name match the given *topic*. It accepts a keyword, a list of keywords or a regular expression.
+- `C-h i`: show the Info page, a menu of major topics.
+
+Some Emacs packages give even more help.
+
+### More help and discoverability packages
+
+Sometimes, you start typing a key sequence but you can't remember it
+completely. Or, you wonder what other keybindings are related. Comes
+[which-key-mode](https://github.com/justbur/emacs-which-key). This
+packages will display all possible keybindings starting with the key(s) you just typed.
+
+For example, I know there are useful keybindings under `C-x` but I don't remember which ones… I just type `C-x`, I wait for half a second, and which-key shows all the ones available.
+
+![](assets/emacs-which-key-minibuffer.png)
+
+Just try it with `C-h` too!
+
+See also [Helpful](https://github.com/Wilfred/helpful), an alternative to the built-in Emacs help that provides much more contextual information.
+
+<img src="assets/emacs-helpful.png" style="height: 450px"/>
 
 
-<a name="Slide-10"></a>
+### Built-in tutorial
+
+Emacs ships its own tutorial. You should give it a look to learn the most important keybindings and concepts.
+
+Call it with `M-x help-with-tutorial` (where `M-x` is `alt-x`).
+
+
 
 ### Editing
 
@@ -641,7 +655,7 @@ do (print j))
 
 You can also select a region and call `M-x indent-region`.
 
-#### Support for parenthesis
+#### Open and close parenthesis
 
 When you are in a Slime REPL, you can use `C-return` or `M-return`
 (`slime-repl-closing-return`) to close the remaining parenthesis and
@@ -693,19 +707,45 @@ around the region instead.
 
 Use `C-x n n` (narrow-to-region) and `C-x n w` to widen back.
 
-See also [code folding](http://wikemacs.org/wiki/Folding).
+See also [code folding](http://wikemacs.org/wiki/Folding) with external packages.
 
 #### Comments
 
-Insert a comment, comment a region with `M-;`, adjust text with `M-q`.
+Insert a comment or comment a region with `M-;`, adjust text with `M-q`.
+
+### (optional) Packages for structured editing
+
+In addition to the built-in Emacs commands, you have several packages at your disposal
+that will help to keep the parens and/or the indentation balanced.
+The list below is somewhat sorted by age of the
+extension, according to the
+[history of Lisp editing](https://github.com/shaunlebron/history-of-lisp-editing):
+
+- [Paredit](https://www.emacswiki.org/emacs/ParEdit) - Paredit is a
+  classic. It defines the must-have commands (move, kill, split, join
+  a sexp,…).
+  ([visual tutorial](http://danmidwood.com/content/2014/11/21/animated-paredit.html))
+- [Smartparens](https://github.com/Fuco1/smartparens) - Smartparens
+  not only deals with parens but with everything that comes in pairs
+  (html tags,…) and thus has features for non-lispy languages.
+- [Lispy](https://github.com/abo-abo/lispy) - Lispy reimagines Paredit
+  with the goal to have the shortest bindings (mostly one key) that
+  only act depending on the point position.
+- [Paxedit](https://github.com/promethial/paxedit) - Paxedit adds
+  commands based on the context (in a symbol, a sexp,… ) and puts
+  efforts on whitespace cleanup and context refactoring.
+- [Parinfer](http://shaunlebron.github.io/parinfer/) - Parinfer
+  automatically fixes the parens depending on the indentation, or the
+  other way round (or both !).
+
+We personally advice to try Parinfer and the famous Paredit, then to
+go up the list. See explanations and even more on
+[Wikemacs](http://wikemacs.org/wiki/Lisp_editing).
 
 
+### Search and replace
 
-<a name="Slide-12"></a>
-
-### Searching Lisp Code
-
-#### Standard Emacs text search (isearch forward/backward, regexp searches, search/replace)
+#### isearch forward/backward, regexp searches, search/replace
 
 `C-s` does an incremental search forward (e.g. - as each key is
 the search string is entered, the source file is searched for the
@@ -733,60 +773,6 @@ Use `M-x grep`, `rgrep`, `occur`…
 See also interactive versions with
 [helm-swoop](http://wikemacs.org/wiki/Helm-swoop), helm-occur,
 [ag.el](https://github.com/Wilfred/ag.el).
-
-
-
-## Finding one's way into Emacs' built-in documentation
-
-Emacs comes with built-in tutorials and documentation. Moreover, it is
-a self-documented and self-discoverable editor, capable of introspection to let you
-know about the current keybindings, to let you search about function documentation,
-available variables,source code, tutorials, etc. Whenever you ask yourself questions like
-"what are the available shortcuts to do x" or "what does this
-keybinding really do", the answer is most probably a keystroke away,
-right inside Emacs. You should learn a few keybindings to be able to
-discover Emacs with Emacs flawlessly.
-
-The help on the topic is here:
-
-- [Help page: commands for asking Emacs about its commands](https://www.gnu.org/software/emacs/manual/html_node/emacs/Help.html#Help)
-
-The help keybindings start with either `C-h` or `F1`. Important ones are:
-
-- `C-h k <keybinding>`: what function does this keybinding call?
-- `C-h f <function name>`: what keybinding is linked to this function?
-- `C-h a <topic>`: show a list of commands whose name match the given *topic*. It accepts a keyword, a list of keywords or a regular expression.
-- `C-h i`: show the Info page, a menu of major topics.
-
-Some Emacs packages give even more help.
-
-### More help and discoverability packages
-
-Sometimes, you start typing a key sequence but you can't remember it
-completely. Or, you wonder what other keybindings are related. Comes
-[which-key-mode](https://github.com/justbur/emacs-which-key). This
-packages will display all possible keybindings starting with the key(s) you just typed.
-
-For example, I know there are useful keybindings under `C-x` but I don't remember which ones… I just type `C-x`, I wait for half a second, and which-key shows all the ones available.
-
-![](assets/emacs-which-key-minibuffer.png)
-
-Just try it with `C-h` too!
-
-See also [Helpful](https://github.com/Wilfred/helpful), an alternative to the built-in Emacs help that provides much more contextual information.
-
-<img src="assets/emacs-helpful.png" style="height: 450px"/>
-
-
-### Learn Emacs with the built-in tutorial
-
-Emacs ships its own tutorial. You should give it a look to learn the most important keybindings and concepts.
-
-Call it with `M-x help-with-tutorial` (where `M-x` is `alt-x`).
-
-
-## Miscellaneous
-
 
 
 ## Questions/Answers
