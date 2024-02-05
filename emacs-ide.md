@@ -163,12 +163,93 @@ others:
 - Fuzzy-search of the REPL history,
 - Fuzzy-search of the _apropos_ documentation.
 
-## Systems interactions
+
+## Working with SLIME (or SLY)
+
+One of the first things you might want to do is to compile and load some Lisp code. Use `C-c C-c` on a function or `C-c C-k` to compile a whole file. But that's not all, read on.
+
+Note that we give function names for SLIME. They are most of the time similar with SLY.
+
+### Code completion
+
+Use the built-in `C-c TAB` to complete symbols in SLIME. You can get tooltips
+with [company-mode](http://company-mode.github.io/).
+
+![](assets/emacs-company-elisp.png "Lisp symbols completion with company-mode tooltips.")
+
+In the **REPL**, it's simply **TAB**.
+
+Use Emacs' hippie-expand, bound to `M-/`, to complete any string present in other open buffers.
+
+### Evaluating and Compiling Lisp in SLIME
+
+Compile the entire **buffer** by pressing `C-c C-k` (`slime-compile-and-load-file`).
+
+Compile a **region** with `M-x slime-compile-region`.
+
+Compile a **defun** by putting the cursor inside it and pressing `C-c C-c` (`slime-compile-defun`).
+
+Once you compiled some code, you can try it, for example on the REPL.
+
+
+To **evaluate** rather than compile:
+
+- evaluate the **sexp** before the point by putting the cursor after
+  its closing paren and pressing `C-x C-e`
+  (`slime-eval-last-expression`). The result is printed in the minibuffer.
+- similarly, use `C-c C-p` (`slime-pprint-eval-last-expression`) to eval and pretty-print the expression before point. It shows the result in a new "slime-description" window.
+- evaluate a region with `C-c C-r`,
+- evaluate a defun with `C-M-x`,
+- type `C-c C-e` (`slime-interactive-eval`) to get a prompt that asks for code to eval in the current context. It prints the result in the minibuffer. With a prefix argument, insert the result into the current buffer.
+- type `C-c C-j` (`slime-eval-last-expression-in-repl`), when the cursor is after the closing parenthesis of an expression, to send this expression to the REPL and evaluate it.
+
+See also other commands in the menu.
+
+But what's the difference between evaluating and compiling some code?
+
+### evaluation VS compilation
+
+There are a couple of pragmatic differences when choosing between compiling or evaluating.
+In general, it is better to *compile* top-level forms, for two reasons:
+
+* Compiling a top-level form highlights warnings and errors in the editor, whereas evaluation does not.
+* SLIME keeps track of line-numbers of compiled forms, but when a top-level form is evaluated, the file line number information is lost. That's problematic for code navigation afterwards.
+
+`eval` is still useful to observe results from individual non top-level forms. For example, say you have this function:
+
+
+~~~lisp
+(defun foo ()
+  (let ((f (open "/home/mariano/test.lisp")))
+    ...))
+~~~
+
+Go to the end of the OPEN expression and evaluate it (`C-x C-e`), to observe the result:
+
+```
+=> #<SB-SYS:FD-STREAM for "file /mnt/e6b00b8f-9dad-4bf4-bd40-34b1e6d31f0a/home/marian/test.lisp" {1003AAAB53}>
+```
+
+Or on this example, with the cursor on the last parentheses, press `C-x C-e` to evaluate the `let`:
+
+~~~lisp
+(let ((n 20))
+  (loop for i from 0 below n
+     do (print i)))
+~~~
+
+You should see numbers printed in the REPL.
+
+
+See also [eval-in-repl](https://github.com/kaz-yos/eval-in-repl) to send any form to the repl.
+
+### Systems interactions
 
 In Slime, you can use the usual `C-c C-k` in an .asd file to compile and load it, then `ql:quickload` (or `asdf:load-system`) to effectively load the system. SLIME offers more interactive commands to interact with Lisp systems:
 
 - `M-x slime-load-system`: offers a prompt to **select an ASDF system**, with **autocompletion** of projects collected from where ASDF sees Common Lisp projects, then compile and load the system. The default system name is taken from the first file matching *.asd in the current buffer's working directory.
   - note that the system name is inferred from the .asd file name. The real system name defined inside may be different.
+  - to understand where ASDF looks for Lisp systems, read the [getting started](getting-started.html) page, section "How to load an existing project".
 - `M-x slime-open-system`: this opens a new buffer for all source files of a given system.
 - `M-x slime-browse-system`: this command opens a Dired buffer to browse the files of a system.
 - `M-x slime-rgrep-system`: run `rgrep` on the base directory of a system.
@@ -180,7 +261,7 @@ In Slime, you can use the usual `C-c C-k` in an .asd file to compile and load it
 Sly users have a more featureful `sly-load-system` command that will search the .asd file on the current directory and in parent directories.
 
 
-## REPL interactions
+### REPL interactions
 
 From the SLIME REPL, press `,` to prompt for commands.  There is completion
 over the available systems and packages.  Examples:
@@ -196,8 +277,6 @@ With the `slime-quicklisp` contrib, you can also `,ql` to list all systems
 available for installation.
 
 
-
-<a name="Slide-9"></a>
 
 ## Working with Lisp Code
 
@@ -384,18 +463,6 @@ around the region instead.
 - or [lispy-mode](https://github.com/abo-abo/lispy), like Paredit, but a key triggers an action when the cursor is placed right before or right after a parentheses.
 
 
-#### Code completion
-
-Use the built-in `C-c TAB` to complete symbols in SLIME. You can get tooltips
-with [company-mode](http://company-mode.github.io/).
-
-![](assets/emacs-company-elisp.png)
-
-In the REPL, it's simply TAB.
-
-Use Emacs' hippie-expand, bound to `M-/`, to complete any string
-present in other open buffers.
-
 #### Hiding/showing code
 
 Use `C-x n n` (narrow-to-region) and `C-x n w` to widen back.
@@ -407,68 +474,6 @@ See also [code folding](http://wikemacs.org/wiki/Folding).
 Insert a comment, comment a region with `M-;`, adjust text with `M-q`.
 
 
-<a name="Slide-11"></a>
-
-### Evaluating and Compiling Lisp in SLIME
-
-Compile the entire **buffer** by pressing `C-c C-k` (`slime-compile-and-load-file`).
-
-Compile a **region** with `M-x slime-compile-region`.
-
-Compile a **defun** by putting the cursor inside it and pressing `C-c C-c` (`slime-compile-defun`).
-
-
-To **evaluate** rather than compile:
-
-- evaluate the **sexp** before the point by putting the cursor after
-  its closing paren and pressing `C-x C-e`
-  (`slime-eval-last-expression`). The result is printed in the minibuffer.
-- similarly, use `C-c C-p` (`slime-pprint-eval-last-expression`) to eval and pretty-print the expression before point. It shows the result in a new "slime-description" window.
-- evaluate a region with `C-c C-r`,
-- evaluate a defun with `C-M-x`,
-- type `C-c C-e` (`slime-interactive-eval`) to get a prompt that asks for code to eval in the current context. It prints the result in the minibuffer. With a prefix argument, insert the result into the current buffer.
-- type `C-c C-j` (`slime-eval-last-expression-in-repl`), when the cursor is after the closing parenthesis of an expression, to send this expression to the REPL and evaluate it.
-
-See also other commands in the menu.
-
----
-
-**EVALUATION VS COMPILATION**
-
-There are a couple of pragmatic differences when choosing between compiling or evaluating.
-In general, it is better to *compile* top-level forms, for two reasons:
-
-* Compiling a top-level form highlights warnings and errors in the editor, whereas evaluation does not.
-* SLIME keeps track of line-numbers of compiled forms, but when a top-level form is evaluated, the file line number information is lost. That's problematic for code navigation afterwards.
-
-`eval` is still useful to observe results from individual non top-level forms. For example, say you have this function:
-
-
-~~~lisp
-(defun foo ()
-  (let ((f (open "/home/mariano/test.lisp")))
-    ...))
-~~~
-
-Go to the end of the OPEN expression and evaluate it (`C-x C-e`), to observe the result:
-
-```
-=> #<SB-SYS:FD-STREAM for "file /mnt/e6b00b8f-9dad-4bf4-bd40-34b1e6d31f0a/home/marian/test.lisp" {1003AAAB53}>
-```
-
-Or on this example, with the cursor on the last parentheses, press `C-x C-e` to evaluate the `let`:
-
-~~~lisp
-(let ((n 20))
-  (loop for i from 0 below n
-     do (print i)))
-~~~
-
-You should see numbers printed in the REPL.
-
-See also [eval-in-repl](https://github.com/kaz-yos/eval-in-repl) to send any form to the repl.
-
----
 
 <a name="Slide-12"></a>
 
