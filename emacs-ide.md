@@ -196,7 +196,8 @@ To **evaluate** rather than compile:
 - evaluate the **sexp** before the point by putting the cursor after
   its closing paren and pressing `C-x C-e`
   (`slime-eval-last-expression`). The result is printed in the minibuffer.
-- similarly, use `C-c C-p` (`slime-pprint-eval-last-expression`) to eval and pretty-print the expression before point. It shows the result in a new "slime-description" window.
+- similarly, use `C-c C-p` (`slime-pprint-eval-last-expression`) to eval and pretty-print the expression before point. It shows the result in a new "slime-description" buffer.
+- use `M-x slime-eval-print-last-expression` (unbound by default) to print the result in the same file, under the cursor.
 - evaluate a region with `C-c C-r`,
 - evaluate a defun with `C-M-x`,
 - type `C-c C-e` (`slime-interactive-eval`) to get a prompt that asks for code to eval in the current context. It prints the result in the minibuffer. With a prefix argument, insert the result into the current buffer.
@@ -242,52 +243,6 @@ You should see numbers printed in the REPL.
 
 See also [eval-in-repl](https://github.com/kaz-yos/eval-in-repl) to send any form to the repl.
 
-### Calling code
-
-You can write code in the REPL, but you can also interact with code directly from the source file.
-
-**C-c C-y** (`slime-call-defun`): send code to the REPL.
-
-When the point is inside a defun and C-c C-y is pressed (below I’ll use [] as an indication where the cursor is)
-
-~~~lisp
-(defun foo ()
- nil[])
-~~~
-
-
-then `(foo [])` will be inserted into the REPL, so that you can write
-additional arguments and run it.
-
-
-If `foo` was in a different package than the package of the REPL,
-`(package:foo )` or `(package::foo )` will be inserted.
-
-This feature is very useful for testing a function you just wrote.
-
-That works not only for a `defun`, but also for `defgeneric`, `defmethod`,
-`defmacro`, and `define-compiler-macro` in the same fashion as for defun.
-
-For `defvar`, `defparameter`, `defconstant`: `[] *foo*` will be inserted
-(the cursor is positioned before the symbol so that you can easily
-wrap it into a function call).
-
-For defclass: `(make-instance ‘class-name )`.
-
-**Inserting calls to frames in the debugger**
-
-**C-y** in SLDB on a frame will insert a call to that frame into the REPL, e.g.,
-
-```
-(/ 0) =>
-…
-1: (CCL::INTEGER-/-INTEGER 1 0)
-…
-```
-
-**C-y** will insert `(CCL::INTEGER-/-INTEGER 1 0)`.
-
-(thanks to [Slime tips](https://slime-tips.tumblr.com/page/2))
 
 ### Debugging
 
@@ -404,6 +359,56 @@ autocomplete a system to install, from all systems available for
 installation.
 
 In addition, we can use the [Quicklisp-systems](https://github.com/mmontone/quicklisp-systems) Slime extension to search, browse and load Quicklisp systems from Emacs.
+
+### Sending code to the REPL
+
+You can write code in the REPL, but you can also interact with code directly from the source file.
+
+We saw **C-c C-j**, that sends the expression at point to the REPL and evaluates it.
+
+**C-c C-y** (`slime-call-defun`): send code to the REPL.
+
+When the point is inside a defun and C-c C-y is pressed (below I’ll use [] as an indication where the cursor is)
+
+~~~lisp
+(defun foo ()
+ nil[])
+~~~
+
+
+then `(foo [])` will be inserted into the REPL, so that you can write
+additional arguments and run it.
+
+
+If `foo` was in a different package than the package of the REPL,
+`(package:foo )` or `(package::foo )` will be inserted.
+
+This feature is very useful for testing a function you just wrote.
+
+That works not only for a `defun`, but also for `defgeneric`, `defmethod`,
+`defmacro`, and `define-compiler-macro` in the same fashion as for defun.
+
+For `defvar`, `defparameter`, `defconstant`: `[] *foo*` will be inserted
+(the cursor is positioned before the symbol so that you can easily
+wrap it into a function call).
+
+For defclass: `(make-instance ‘class-name )`.
+
+**Inserting calls to frames in the debugger**
+
+**C-y** in SLDB on a frame will insert a call to that frame into the REPL, e.g.,
+
+```
+(/ 0) =>
+…
+1: (CCL::INTEGER-/-INTEGER 1 0)
+…
+```
+
+**C-y** will insert `(CCL::INTEGER-/-INTEGER 1 0)`.
+
+(thanks to [Slime tips](https://slime-tips.tumblr.com/page/2))
+
 
 ### Synchronizing packages
 
