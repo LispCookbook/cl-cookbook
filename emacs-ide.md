@@ -95,7 +95,24 @@ others:
 - Fuzzy-search of the REPL history,
 - Fuzzy-search of the _apropos_ documentation.
 
-##### REPL interactions
+## Systems interactions
+
+In Slime, you can use the usual `C-c C-k` in an .asd file to compile and load it, then `ql:quickload` (or `asdf:load-system`) to effectively load the system. SLIME offers more interactive commands to interact with Lisp systems:
+
+- `M-x slime-load-system`: offers a prompt to **select an ASDF system**, with **autocompletion** of projects collected from where ASDF sees Common Lisp projects, then compile and load the system. The default system name is taken from the first file matching *.asd in the current buffer's working directory.
+  - note that the system name is inferred from the .asd file name. The real system name defined inside may be different.
+- `M-x slime-open-system`: this opens a new buffer for all source files of a given system.
+- `M-x slime-browse-system`: this command opens a Dired buffer to browse the files of a system.
+- `M-x slime-rgrep-system`: run `rgrep` on the base directory of a system.
+- `M-x slime-isearch-system`: run `isearch` on the files of a system.
+- `M-x slime-query-replace-system`: run `query-replace` on an ASDF system.
+- `M-x slime-save-system`: save all files belongign to a system.
+- `M-x slime-delete-system-fasls`: this deletes the cached .fasl files for this system.
+
+Sly users have a more featureful `sly-load-system` command that will search the .asd file on the current directory and in parent directories.
+
+
+## REPL interactions
 
 From the SLIME REPL, press `,` to prompt for commands.  There is completion
 over the available systems and packages.  Examples:
