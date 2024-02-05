@@ -4,8 +4,10 @@ title: Using Emacs as an IDE
 
 This page is meant to provide an introduction to using [Emacs](https://www.gnu.org/software/emacs/) as a Lisp IDE.
 
-[Portacle](https://shinmera.github.io/portacle/) is a portable and
-multi-platform CL development environment shipping Emacs, SBCL and
+We divided it roughly into 2 sections: how to use Slime or Sly, and complementary information on built-in Emacs commands to work with Lisp code.
+
+We want to bring [Portacle](https://shinmera.github.io/portacle/) to your attention. It is a portable and
+multi-platform CL development environment shipping Emacs, Slime, SBCL, git and
 necessary extensions. It is a straightforward way to get going.
 
 ![](assets/emacs-teaser.png)
@@ -113,7 +115,7 @@ Now you can run SLIME with, as mentioned, `M-x slime` and/or `M-x slime-connect`
 
 See also:
 
-* [https://github.com/susam/emacs4cl](https://github.com/susam/emacs4cl) - a minimal Emacs configuration to get new users up and running quickly, *with* a tutorial.
+* [https://github.com/susam/emacs4cl](https://github.com/susam/emacs4cl) - a minimal Emacs configuration to get new users up and running quickly, with a tutorial.
 * [https://wikemacs.org/wiki/SLIME](https://wikemacs.org/wiki/SLIME) - configuration examples and extensions.
 
 ### Portacle
@@ -244,6 +246,133 @@ You should see numbers printed in the REPL.
 
 See also [eval-in-repl](https://github.com/kaz-yos/eval-in-repl) to send any form to the repl.
 
+### Calling code
+
+You can write code in the REPL, but you can also interact with code directly from the source file.
+
+**C-c C-y** (`slime-call-defun`): send code to the REPL.
+
+When the point is inside a defun and C-c C-y is pressed (below I’ll use [] as an indication where the cursor is)
+
+~~~lisp
+(defun foo ()
+ nil[])
+~~~
+
+
+then `(foo [])` will be inserted into the REPL, so that you can write
+additional arguments and run it.
+
+
+If `foo` was in a different package than the package of the REPL,
+`(package:foo )` or `(package::foo )` will be inserted.
+
+This feature is very useful for testing a function you just wrote.
+
+That works not only for a `defun`, but also for `defgeneric`, `defmethod`,
+`defmacro`, and `define-compiler-macro` in the same fashion as for defun.
+
+For `defvar`, `defparameter`, `defconstant`: `[] *foo*` will be inserted
+(the cursor is positioned before the symbol so that you can easily
+wrap it into a function call).
+
+For defclass: `(make-instance ‘class-name )`.
+
+**Inserting calls to frames in the debugger**
+
+**C-y** in SLDB on a frame will insert a call to that frame into the REPL, e.g.,
+
+```
+(/ 0) =>
+…
+1: (CCL::INTEGER-/-INTEGER 1 0)
+…
+```
+
+**C-y** will insert `(CCL::INTEGER-/-INTEGER 1 0)`.
+
+(thanks to [Slime tips](https://slime-tips.tumblr.com/page/2))
+
+### Debugging
+
+We cover debugging commands in its own [debugging](debugging.html) chapter.
+
+### Go to definition
+
+Put the cursor on any symbol and press `M-.` (`slime-edit-definition`) to go to its
+definition. Press `M-,` to come back.
+
+### Go to any symbol, list symbols in current source
+
+Use `C-u M-.` (`slime-edit-definition` with a prefix argument, also available as `M-- M-.`) to autocomplete the symbol and navigate to it.
+
+This command always asks for a symbol even if the cursor is on one. It works with any loaded definition. Here's a little [demonstration video](https://www.youtube.com/watch?v=ZAEt73JHup8).
+
+You can think of it as a `imenu` completion that always work for any Lisp symbol. Add in [Slime's fuzzy completion][slime-fuzzy] for maximum powerness!
+
+### Argument lists
+
+When you put the cursor on a function, SLIME will show its signature
+in the minibuffer.
+
+### Documentation lookup
+
+The main shortcut to know is:
+
+- **C-c C-d d**  shows the symbols' documentation on a new window (same result as using `describe`).
+
+Other bindings which may be useful:
+
+- **C-c C-d f**  describes a function
+- **C-c C-d h**  looks up the symbol documentation in CLHS by opening the web browser. But it works only on symbols, so there are two more bindings:
+- **C-c C-d #** for reader macros
+- **C-c C-d ~**  for format directives
+
+You can enhance the help buffer with the Slime extension [slime-doc-contribs](https://github.com/mmontone/slime-doc-contribs). It will show more information in a nice looking buffer, and it will add choices to the documentation command:
+
+* **slime-help-package** will display information about a CL package: it will nicely show its exported variables, conditions, classes, generic functions, functions and macros, with their documentation. It is a great way to see at a glance what a package provides.
+* **slime-help-system** does the same for a *system*.
+* **slime-help-apropos-documentation** will show symbols whose documentation contains matches for "PATTERN", which is a great way to lookup for functions.
+* and more.
+
+![](https://github.com/mmontone/slime-doc-contribs/raw/master/slime-help.png)
+
+
+### Inspect
+
+You can call `(inspect 'symbol)` from the REPL or call it with `C-c I` from a source file.
+
+### Macroexpand
+
+Use `C-c M-m` to macroexpand a macro call
+
+
+### Crossreferencing: find who's calling, referencing, setting a symbol
+
+Slime has nice cross-referencing facilities. For example, you can ask
+what calls a particular function, what expands a macro, or where a global variable is being used.
+
+Results are presented in a new buffer, listing the places which reference a particular entity.
+From there, we can press Enter to go to the corresponding source line,
+or more interestingly we can recompile the place at point by pressing **C-c C-c** on that
+line. Likewise, **C-c C-k** will recompile all the references. This is useful when
+modifying macros, inline functions, or constants.
+
+The bindings are the following (they are also shown in Slime's menu):
+
+- **C-c C-w c** (`slime-who-calls`) callers of a function
+- **C-c C-w m** (`slime-who-macroexpands`) places where a macro is expanded
+- **C-c C-w r** (`slime-who-references`) global variable references
+- **C-c C-w b** (`slime-who-bind`) global variable bindings
+- **C-c C-w s** (`slime-who-sets`) global variable setters
+- **C-c C-w a** (`slime-who-specializes`) methods specialized on a symbol
+
+And when the `slime-asdf` contrib is enabled,
+**C-c C-w d** (`slime-who-depends-on`) lists dependent ASDF systems
+
+And a general binding: **M-?** or **M-_** (`slime-edit-uses`) combines all
+of the above, it lists every kind of references.
+
 ### Systems interactions
 
 In Slime, you can use the usual `C-c C-k` in an .asd file to compile and load it, then `ql:quickload` (or `asdf:load-system`) to effectively load the system. SLIME offers more interactive commands to interact with Lisp systems:
@@ -274,9 +403,105 @@ over the available systems and packages.  Examples:
 
 and many more. Usually the interactive commands given in the previous section have a REPL shortcut.
 
-With the `slime-quicklisp` contrib, you can also `,ql` to list all systems
-available for installation.
+With the `slime-quicklisp` contrib, we can use `,ql` to
+autocomplete a system to install, from all systems available for
+installation.
 
+In addition, we can use the [Quicklisp-systems](https://github.com/mmontone/quicklisp-systems) Slime extension to search, browse and load Quicklisp systems from Emacs.
+
+### Synchronizing packages
+
+**C-c ~** (`slime-sync-package-and-default-directory`): When run in a
+buffer with a lisp file it will change the current package of the REPL
+to the package of that file and also set the current directory of the REPL
+to the parent directory of the file.
+
+### Exporting symbols
+
+Slime provides a shortcut to add export declarations to your package, effectively exporting it, or on the contrary un-exporting it.
+
+**C-c x** (*slime-export-symbol-at-point*) from the `slime-package-fu`
+contrib: takes the symbol at point and modifies the `:export` clause of
+the corresponding defpackage form. It also exports the symbol.  When
+called with a negative argument (C-u C-c x) it will remove the symbol
+from `:export` and unexport it.
+
+**M-x slime-export-class** does the same but with symbols defined
+by a structure or a class, like accessors, constructors, and so on.
+It works on structures only on SBCL and Clozure CL so far.
+Classes should work everywhere with MOP.
+
+Customization
+
+There are different styles of how symbols are presented in
+`defpackage`, the default is to use uninterned symbols (`#:foo`).
+This can be changed:
+
+to use keywords:
+
+
+~~~lisp
+(setq slime-export-symbol-representation-function
+      (lambda (n) (format ":%s" n)))
+~~~
+
+or strings:
+
+~~~lisp
+(setq slime-export-symbol-representation-function
+ (lambda (n) (format "\"%s\"" (upcase n))))
+~~~
+
+
+### (optional) Consult the Hyper Spec (CLHS) offline
+
+The [Common Lisp Hyper Spec](http://www.lispworks.com/documentation/common-lisp.html) is the
+official online version of the ANSI Common Lisp standard. We can start
+browsing it from [starting points](http://www.lispworks.com/documentation/HyperSpec/Front/StartPts.htm):
+a shortened [table of contents of highlights](http://www.lispworks.com/documentation/HyperSpec/Front/Hilights.htm),
+a [symbols index](http://www.lispworks.com/documentation/HyperSpec/Front/Hilights.htm),
+a glossary, a master index.
+
+Since January of 2023, we have the Common Lisp Community Spec: [https://cl-community-spec.github.io/pages/index.html](https://cl-community-spec.github.io/pages/index.html), a new web rendering of the specification. It is a more modern rendering:
+
+* it has a *search box*
+* it has *syntax highlihgting*
+* it is hosted on GitHub and we have the right to modify it: https://github.com/fonol/cl-community-spec
+
+If you want other tools to do a quick look-up of symbols on the CLHS,
+since the official website doesn't have a search bar, you can use:
+* Xach's website search utility: [https://www.xach.com/clhs?q=with-open-file](https://www.xach.com/clhs?q=with-open-file)
+* the l1sp.org website: [http://l1sp.org/search?q=with-open-file](http://l1sp.org/search?q=with-open-file),
+* and we can use Duckduckgo's or Brave Search's `!clhs` "bang".
+
+We can **browse the CLHS offline** with [Dash](https://kapeli.com/dash) on MacOS, [Zeal](https://zealdocs.org/) on GNU/Linux and [Velocity](https://velocity.silverlakesoftware.com/) on Windows.
+
+But we can also browse it offline from Emacs. We have to install a CL package and to configure the Emacs side with one command:
+
+~~~lisp
+(ql:quickload "clhs")
+(clhs:install-clhs-use-local)
+~~~
+
+Then add this to your Emacs configuration:
+
+~~~lisp
+(load "~/quicklisp/clhs-use-local.el" 'noerror)
+~~~
+
+Now, you can use `C-c C-d h` to look-up the symbol at point in the
+HyperSpec. This will open your browser, but look at its URL starting
+with "file://home/": it opens a local file.
+
+Other commands are available:
+
+* when you want to look-up a reader macro, such as `#'`
+  (sharpsign-quote) or `(` (left-parenthesis), use
+  `M-x common-lisp-hyperspec-lookup-reader-macro`, bound to `C-c C-d #`.
+* to look-up a `format` directive, such as `~A`, use `M-x
+  common-lisp-hyperspec-format`, bound to `C-c C-d ~`.
+  * of course, you can TAB-complete on Emacs' minibuffer prompt to see all the available format directives.
+* you can also look-up glossary terms (for example, you can look-up "function" instead of "defun"), use `M-x common-lisp-hyperspec-glossary-term`, bound to `C-c C-d g`.
 
 
 ## Working with Lisp Code
@@ -509,134 +734,7 @@ See also interactive versions with
 [helm-swoop](http://wikemacs.org/wiki/Helm-swoop), helm-occur,
 [ag.el](https://github.com/Wilfred/ag.el).
 
-#### Go to definition
 
-Put the cursor on any symbol and press `M-.` (`slime-edit-definition`) to go to its
-definition. Press `M-,` to come back.
-
-#### Go to symbol, list symbols in current source
-
-Use `C-u M-.` (`slime-edit-definition` with a prefix argument, also available as `M-- M-.`) to autocomplete the symbol and navigate to it. This command always asks for a symbol even if the cursor is on one. It works with any loaded definition. Here's a little [demonstration video](https://www.youtube.com/watch?v=ZAEt73JHup8).
-
-You can think of it as a `imenu` completion that always work for any Lisp symbol. Add in [Slime's fuzzy completion][slime-fuzzy] for maximum powerness!
-
-
-#### Crossreferencing: find who's calling, referencing, setting a symbol
-
-Slime has nice cross-referencing facilities. For example, you can ask
-what calls a particular function, what expands a macro, or where a global variable is being used.
-
-Results are presented in a new buffer, listing the places which reference a particular entity.
-From there, we can press Enter to go to the corresponding source line,
-or more interestingly we can recompile the place at point by pressing **C-c C-c** on that
-line. Likewise, **C-c C-k** will recompile all the references. This is useful when
-modifying macros, inline functions, or constants.
-
-The bindings are the following (they are also shown in Slime's menu):
-
-- **C-c C-w c** (`slime-who-calls`) callers of a function
-- **C-c C-w m** (`slime-who-macroexpands`) places where a macro is expanded
-- **C-c C-w r** (`slime-who-references`) global variable references
-- **C-c C-w b** (`slime-who-bind`) global variable bindings
-- **C-c C-w s** (`slime-who-sets`) global variable setters
-- **C-c C-w a** (`slime-who-specializes`) methods specialized on a symbol
-
-And when the `slime-asdf` contrib is enabled,
-**C-c C-w d** (`slime-who-depends-on`) lists dependent ASDF systems
-
-And a general binding: **M-?** or **M-_** (`slime-edit-uses`) combines all
-of the above, it lists every kind of references.
-
-<a name="Slide-13"></a>
-
-## Lisp Documentation in Emacs - Learning About Lisp Symbols
-
-### Argument lists
-
-When you put the cursor on a function, SLIME will show its signature
-in the minibuffer.
-
-### Documentation lookup
-
-The main shortcut to know is:
-
-- **C-c C-d d**  shows the symbols' documentation on a new window (same result as using `describe`).
-
-Other bindings which may be useful:
-
-- **C-c C-d f**  describes a function
-- **C-c C-d h**  looks up the symbol documentation in CLHS by opening the web browser. But it works only on symbols, so there are two more bindings:
-- **C-c C-d #** for reader macros
-- **C-c C-d ~**  for format directives
-
-You can enhance the help buffer with the Slime extension [slime-doc-contribs](https://github.com/mmontone/slime-doc-contribs). It will show more information in a nice looking buffer, and it will add choices to the documentation command:
-
-* **slime-help-package** will display information about a CL package: it will nicely show its exported variables, conditions, classes, generic functions, functions and macros, with their documentation. It is a great way to see at a glance what a package provides.
-* **slime-help-system** does the same for a *system*.
-* **slime-help-apropos-documentation** will show symbols whose documentation contains matches for "PATTERN", which is a great way to lookup for functions.
-* and more.
-
-![](https://github.com/mmontone/slime-doc-contribs/raw/master/slime-help.png)
-
-
-### Inspect
-
-You can call `(inspect 'symbol)` from the REPL or call it with `C-c I` from a source file.
-
-### Macroexpand
-
-Use `C-c M-m` to macroexpand a macro call
-
-
-### Consult the Hyper Spec (CLHS) offline
-
-The [Common Lisp Hyper Spec](http://www.lispworks.com/documentation/common-lisp.html) is the
-official online version of the ANSI Common Lisp standard. We can start
-browsing it from [starting points](http://www.lispworks.com/documentation/HyperSpec/Front/StartPts.htm):
-a shortened [table of contents of highlights](http://www.lispworks.com/documentation/HyperSpec/Front/Hilights.htm),
-a [symbols index](http://www.lispworks.com/documentation/HyperSpec/Front/Hilights.htm),
-a glossary, a master index.
-
-Since January of 2023, we have the Common Lisp Community Spec: [https://cl-community-spec.github.io/pages/index.html](https://cl-community-spec.github.io/pages/index.html), a new web rendering of the specification. It is a more modern rendering:
-
-* it has a *search box*
-* it has *syntax highlihgting*
-* it is hosted on GitHub and we have the right to modify it: https://github.com/fonol/cl-community-spec
-
-If you want other tools to do a quick look-up of symbols on the CLHS,
-since the official website doesn't have a search bar, you can use:
-* Xach's website search utility: [https://www.xach.com/clhs?q=with-open-file](https://www.xach.com/clhs?q=with-open-file)
-* the l1sp.org website: [http://l1sp.org/search?q=with-open-file](http://l1sp.org/search?q=with-open-file),
-* and we can use Duckduckgo's or Brave Search's `!clhs` "bang".
-
-We can **browse the CLHS offline** with [Dash](https://kapeli.com/dash) on MacOS, [Zeal](https://zealdocs.org/) on GNU/Linux and [Velocity](https://velocity.silverlakesoftware.com/) on Windows.
-
-But we can also browse it offline from Emacs. We have to install a CL package and to configure the Emacs side with one command:
-
-~~~lisp
-(ql:quickload "clhs")
-(clhs:install-clhs-use-local)
-~~~
-
-Then add this to your Emacs configuration:
-
-~~~lisp
-(load "~/quicklisp/clhs-use-local.el" 'noerror)
-~~~
-
-Now, you can use `C-c C-d h` to look-up the symbol at point in the
-HyperSpec. This will open your browser, but look at its URL starting
-with "file://home/": it opens a local file.
-
-Other commands are available:
-
-* when you want to look-up a reader macro, such as `#'`
-  (sharpsign-quote) or `(` (left-parenthesis), use
-  `M-x common-lisp-hyperspec-lookup-reader-macro`, bound to `C-c C-d #`.
-* to look-up a `format` directive, such as `~A`, use `M-x
-  common-lisp-hyperspec-format`, bound to `C-c C-d ~`.
-  * of course, you can TAB-complete on Emacs' minibuffer prompt to see all the available format directives.
-* you can also look-up glossary terms (for example, you can look-up "function" instead of "defun"), use `M-x common-lisp-hyperspec-glossary-term`, bound to `C-c C-d g`.
 
 ## Finding one's way into Emacs' built-in documentation
 
@@ -689,105 +787,6 @@ Call it with `M-x help-with-tutorial` (where `M-x` is `alt-x`).
 
 ## Miscellaneous
 
-### Synchronizing packages
-
-**C-c ~** (`slime-sync-package-and-default-directory`): When run in a
-buffer with a lisp file it will change the current package of the REPL
-to the package of that file and also set the current directory of the REPL
-to the parent directory of the file.
-
-### Calling code
-
-**C-c C-y** (`slime-call-defun`): When the point is inside a defun and
-C-c C-y is pressed,
-
-(I’ll use [] as an indication where the cursor is)
-
-~~~lisp
-(defun foo ()
- nil[])
-~~~
-
-
-then `(foo [])` will be inserted into the REPL, so that you can write
-additional arguments and run it.
-
-
-If `foo` was in a different package than the package of the REPL,
-`(package:foo )` or `(package::foo )` will be inserted.
-
-This feature is very useful for testing a function you just wrote.
-
-That works not only for defun, but also for defgeneric, defmethod,
-defmacro, and define-compiler-macro in the same fashion as for defun.
-
-For defvar, defparameter, defconstant: `[] *foo*` will be inserted
-(the cursor is positioned before the symbol so that you can easily
-wrap it into a function call).
-
-For defclass: `(make-instance ‘class-name )`.
-
-**Inserting calls to frames in the debugger**
-
-**C-y** in SLDB on a frame will insert a call to that frame into the REPL, e.g.,
-
-```
-(/ 0) =>
-…
-1: (CCL::INTEGER-/-INTEGER 1 0)
-…
-```
-
-**C-y** will insert `(CCL::INTEGER-/-INTEGER 1 0)`.
-
-(thanks to [Slime tips](https://slime-tips.tumblr.com/page/2))
-
-### Exporting symbols
-
-**C-c x** (*slime-export-symbol-at-point*) from the `slime-package-fu`
-contrib: takes the symbol at point and modifies the `:export` clause of
-the corresponding defpackage form. It also exports the symbol.  When
-called with a negative argument (C-u C-c x) it will remove the symbol
-from `:export` and unexport it.
-
-**M-x slime-export-class** does the same but with symbols defined
-by a structure or a class, like accessors, constructors, and so on.
-It works on structures only on SBCL and Clozure CL so far.
-Classes should work everywhere with MOP.
-
-Customization
-
-There are different styles of how symbols are presented in
-`defpackage`, the default is to use uninterned symbols (`#:foo`).
-This can be changed:
-
-to use keywords:
-
-
-~~~lisp
-(setq slime-export-symbol-representation-function
-      (lambda (n) (format ":%s" n)))
-~~~
-
-or strings:
-
-~~~lisp
-(setq slime-export-symbol-representation-function
- (lambda (n) (format "\"%s\"" (upcase n))))
-~~~
-
-### Project Management
-
-ASDF is the de-facto build facility. It is shipped in most Common Lisp implementations.
-
-  * [ASDF](https://common-lisp.net/project/asdf/)
-  * [ASDF best practices](https://gitlab.common-lisp.net/asdf/asdf/blob/master/doc/best_practices.md)
-
-### Searching Quicklisp libraries
-
-From the REPL, we can use `,ql` to install a package known by name already.
-
-In addition, we can use the [Quicklisp-systems](https://github.com/mmontone/quicklisp-systems) Slime extension to search, browse and load Quicklisp systems from Emacs.
 
 
 ## Questions/Answers
