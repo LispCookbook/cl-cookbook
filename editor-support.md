@@ -18,48 +18,6 @@ Quicklisp, SLIME and Git.
 <img src="assets/portacle.png"
      style="width: 800px" alt="Portacle with an open Slime REPL"/>
 
-### Installing SLIME
-
-On Ubuntu, SLIME is easily installed alongside Emacs and SBCL:
-
-    sudo apt install emacs slime sbcl
-
-Otherwise, install SLIME by adding this code to your `~/.emacs.d/init.el` file:
-
-~~~lisp
-(require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-(dolist (package '(slime))
-  (unless (package-installed-p package)
-    (package-install package)))
-(require 'slime)
-~~~
-
-assuming you've also instealled Emacs and SBCL.
-
-Since SLIME is heavily modular and the defaults only do the bare minimum (not
-even the SLIME REPL), you might want to enable more features with
-
-~~~lisp
-(require 'slime)
-(slime-setup '(slime-fancy slime-quicklisp slime-asdf))
-~~~
-
-After this you can press Alt-X on your keyboard and type `slime` and try Common Lisp! 
-
-(Alt-X is often written `M-x` in Emacs-world.)
-
-For more details, consult the
-[documentation](https://common-lisp.net/project/slime/doc/html/) (also available
-as an Info page).
-
-Now you can run SLIME with, as mentioned, `M-x slime` and/or `M-x slime-connect`.
-
-See also:
-
-* [https://wikemacs.org/wiki/SLIME](https://wikemacs.org/wiki/SLIME) - configuration examples and extensions.
-* [https://github.com/susam/emacs4cl](https://github.com/susam/emacs4cl) - a minimal Emacs configuration to get new users up and running quickly, *with* a tutorial.
-
 
 ### Using Emacs as an IDE
 
