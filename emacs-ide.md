@@ -39,11 +39,14 @@ for CL programming. It has a lot of features that make it a powerful, integrated
 
 * it provides a REPL which is hooked to the running image, directly in Emacs
 * it integrates the Common Lisp debugger with an Emacs interface
-* it provides an interactive object inspector
 * it provides symbol completion,
+* code evaluation, compilation, macroexpansion
 * cross-referencing,
 * breaking, stepping, tracing,
-* it can perform macroexpansions
+* go to definition,
+* online documentation,
+* fuzzy searching functions and symbols, system names, documentation,
+* an interactive object inspector,
 * it supports every common Common Lisp implementation
 * it is readily available from MELPA
 * it is actively maintained.
