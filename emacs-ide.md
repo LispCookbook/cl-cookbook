@@ -12,6 +12,8 @@ necessary extensions. It is a straightforward way to get going.
 
 ![](assets/emacs-teaser.png)
 
+<!-- todo: C-u M-x slime and its configuration to work with multiple implementations -->
+
 
 ## Why Use Emacs?
 
@@ -35,7 +37,7 @@ necessary extensions. It is a straightforward way to get going.
 [SLIME](http://common-lisp.net/project/slime/) is the goto major mode
 for CL programming. It has a lot of features that make it a powerful, integrated and very interactive development environment.
 
-* it provides a REPL which is hooked to the running image, directly in Emacs
+* it provides a REPL which is hooked to the running image, directly in Emacs,
 * it integrates the Common Lisp debugger with an Emacs interface
 * it provides symbol completion,
 * code evaluation, compilation, macroexpansion
@@ -45,7 +47,8 @@ for CL programming. It has a lot of features that make it a powerful, integrated
 * online documentation,
 * fuzzy searching functions and symbols, system names, documentation,
 * an interactive object inspector,
-* it supports every common Common Lisp implementation
+* it supports every common Common Lisp implementation,
+* multiple connections and multiple listener buffers (mrepl)
 * it is readily available from MELPA
 * it is actively maintained.
 
@@ -289,9 +292,11 @@ You can enhance the help buffer with the Slime extension [slime-doc-contribs](ht
 ![](https://github.com/mmontone/slime-doc-contribs/raw/master/slime-help.png)
 
 
-### Inspect
+### Inspector
 
 You can call `(inspect 'symbol)` from the REPL or call it with `C-c I` from a source file.
+
+Learn to use with [its documentation](https://slime.common-lisp.dev/doc/html/Inspector.html#Inspector): use `l` to come back to the previous object, `*` to copy the object at point… and more.
 
 ### Macroexpand
 
@@ -900,6 +905,8 @@ C-c M-o         slime-repl-clear-buffer
 
 ### All other Slime shortcuts
 
+There is more to what we showed! Slime has shortcuts to disassemble the function definition of the symbol at point, learn how to navigate the inspector, toggle functions profiling, learn its indentation or completion strategies, use multiple Lisp connections, learn how to [manipulate presentations](https://slime.common-lisp.dev/doc/html/Presentations.html#Presentations)…
+
 Here are all the default keybindings defined by Slime mode.
 
 To see them, go in a .lisp file, type `C-h m` and go to the Slime section.
@@ -1069,6 +1076,7 @@ C-c C-v M-o     slime-clear-presentations
 
 ## See also
 
+- [SLIME's documentation](https://slime.common-lisp.dev/doc/html/)
 - **[Slime video tutorial](https://www.youtube.com/watch?v=sBcPNr1CKKw)** (and the author's channel, full of great stuff)
 - Marco Baringer's [Slime tutorial](https://www.youtube.com/watch?v=NUpAvqa5hQw)
 - [Common Lisp REPL exploration guide](https://bnmcgn.github.io/lisp-guide/lisp-exploration.html), a concise and curated set of highlights to find one's way in the REPL.
