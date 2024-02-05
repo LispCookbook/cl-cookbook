@@ -802,6 +802,10 @@ Some good Emacs Lisp learning resources:
 *   [Writing GNU Emacs Extensions](http://www.oreilly.com/catalog/gnuext/)
 *   [Wikemacs](http://wikemacs.org/wiki/Category:Emacs_Lisp)
 
+### What about LSP (Language Server Protocol)?
+
+LSP server and client ports for Common Lisp exist, but we don't *need* them to have a high quality IDE integration. In fact, Slime/Swank follow a client/server architecture, like LSP, but Slime predates LSP by decades, and still offers much more features for lispers than LSP.
+
 ### utf-8 encoding
 
 You might want to set this to your init file:
