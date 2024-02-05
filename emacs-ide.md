@@ -1,10 +1,6 @@
 ---
-title: Emacs
+title: Using Emacs as an IDE
 ---
-
-<!-- intentionnally left blank -->
-
-## Using Emacs as an IDE
 
 This page is meant to provide an introduction to using [Emacs](https://www.gnu.org/software/emacs/) as a Lisp IDE.
 
@@ -17,7 +13,7 @@ necessary extensions. It is a straightforward way to get going.
 
 <a name="Slide-2"></a>
 
-### Why Use Emacs?
+## Why Use Emacs?
 
 *   Emacs has fantastic support for working with Lisp code
 *   Not tying yourself into a single CL vendor's editor
@@ -36,33 +32,51 @@ necessary extensions. It is a straightforward way to get going.
 <a name="Slide-3"></a>
 
 
-#### SLIME: Superior Lisp Interaction Mode for Emacs
+## SLIME: Superior Lisp Interaction Mode for Emacs
 
 [SLIME](http://common-lisp.net/project/slime/) is the goto major mode
 for CL programming.
 
-*   Pros:
-    *   Provides REPL which is hooked to implementation directly in Emacs
-    *   Has integrated Common Lisp debugger with Emacs interface
-    *   Interactive object-inspector in Emacs buffer
-    *   Has its own minor mode which enhances lisp-mode in many ways
-    *   Supports every common Common Lisp implementation
-    *   Readily available from MELPA
-    *   Actively maintained
-    *   Symbol completion
-    *   Cross-referencing
-    *   Can perform macroexpansions
+*   Provides a REPL which is hooked to the running image, directly in Emacs
+*   Has integrated Common Lisp debugger with Emacs interface
+*   Interactive object-inspector in Emacs buffer
+*   Has its own minor mode which enhances lisp-mode in many ways
+*   Supports every common Common Lisp implementation
+*   Readily available from MELPA
+*   Actively maintained
+*   Symbol completion
+*   Cross-referencing
+*   Can perform macroexpansions
 
 
-*   Setup:
-    *   Installing it from [MELPA](http://wikemacs.org/wiki/Melpa) is straightforward. Search package-list-packages for 'slime' and click to install. It will install itself and all dependencies.
-    *   Enable the desired contribs (SLIME does very little by defaults), e.g. `(slime-setup '(slime-fancy slime-quicklisp slime-asdf))`.
-    *   Run SLIME with `M-x slime`.
-    *   See also your GNU/Linux distribution for a "slime" package.
+Setup:
+
+*   Installing it from [MELPA](http://wikemacs.org/wiki/Melpa) is straightforward. Search package-list-packages for 'slime' and click to install. It will install itself and all dependencies.
+*   Enable the desired contribs (SLIME does very little by defaults), e.g. `(slime-setup '(slime-fancy slime-quicklisp slime-asdf))`.
+*   Run SLIME with `M-x slime`.
+*   See also your GNU/Linux distribution for a "slime" package.
 
 Check out this **[video tutorial](https://www.youtube.com/watch?v=sBcPNr1CKKw)** ! (and the author's channel, full of great stuff)
 
-##### SLIME fancy, contrib packages and other extensions
+## SLY: Sylvester the Cat's Common Lisp IDE
+
+[SLY](https://github.com/joaotavora/sly) is a SLIME fork that contains
+the following improvements:
+
+* Completely redesigned REPL based on Emacs's own full-featured comint.el.
+* Live code annotations via the [Stickers](https://joaotavora.github.io/sly/#Stickers) feature.
+* Consistent interactive button interface. Everything can be copied to the REPL.
+* Multiple REPLs.
+* Multiple inspectors with independent history.
+* Regexp-capable `M-x sly-apropos`.
+* Contribs are first class SLY citizens, enabled by default, loaded with ASDF on demand:
+  - [NAMED-READTABLES](https://github.com/joaotavora/sly-named-readtables) support
+  - [macrostep.el](https://github.com/joaotavora/sly-macrostep)
+  - [Quicklisp](https://github.com/joaotavora/sly-quicklisp)
+  - [ASDF](https://github.com/mmgeorge/sly-asdf)
+  - [Evaluation Overlays](https://git.sr.ht/~fosskers/sly-overlay)
+
+## SLIME fancy, contrib packages and other extensions
 
 SLIME's functionalities live in packages and so-called [contrib
 modules](https://common-lisp.net/project/slime/doc/html/Contributed-Packages.html)
@@ -122,30 +136,13 @@ over the available systems and packages.  Examples:
 - `,in-package`
 - `,restart-inferior-lisp`
 
-and many more.
+and many more. Usually the interactive commands given in the previous section have a REPL shortcut.
 
 With the `slime-quicklisp` contrib, you can also `,ql` to list all systems
 available for installation.
 
-#### SLY: Sylvester the Cat's Common Lisp IDE
 
-[SLY](https://github.com/joaotavora/sly) is a SLIME fork that contains
-the following improvements:
-
-* Completely redesigned REPL based on Emacs's own full-featured comint.el.
-* Live code annotations via the [Stickers](https://joaotavora.github.io/sly/#Stickers) feature.
-* Consistent interactive button interface. Everything can be copied to the REPL.
-* Multiple REPLs.
-* Multiple inspectors with independent history.
-* Regexp-capable `M-x sly-apropos`.
-* Contribs are first class SLY citizens, enabled by default, loaded with ASDF on demand:
-  - [NAMED-READTABLES](https://github.com/joaotavora/sly-named-readtables) support
-  - [macrostep.el](https://github.com/joaotavora/sly-macrostep)
-  - [Quicklisp](https://github.com/joaotavora/sly-quicklisp)
-  - [ASDF](https://github.com/mmgeorge/sly-asdf)
-  - [Evaluation Overlays](https://git.sr.ht/~fosskers/sly-overlay)
-
-### Finding one's way into Emacs' built-in documentation
+## Finding one's way into Emacs' built-in documentation
 
 Emacs comes with built-in tutorials and documentation. Moreover, it is
 a self-documented and self-discoverable editor, capable of introspection to let you
@@ -169,7 +166,7 @@ The help keybindings start with either `C-h` or `F1`. Important ones are:
 
 Some Emacs packages give even more help.
 
-#### More help and discoverability packages
+### More help and discoverability packages
 
 Sometimes, you start typing a key sequence but you can't remember it
 completely. Or, you wonder what other keybindings are related. Comes
@@ -187,7 +184,7 @@ See also [Helpful](https://github.com/Wilfred/helpful), an alternative to the bu
 <img src="assets/emacs-helpful.png" style="height: 450px"/>
 
 
-#### Learn Emacs with the built-in tutorial
+### Learn Emacs with the built-in tutorial
 
 Emacs ships its own tutorial. You should give it a look to learn the most important keybindings and concepts.
 
@@ -196,7 +193,7 @@ Call it with `M-x help-with-tutorial` (where `M-x` is `alt-x`).
 
 <a name="Slide-9"></a>
 
-### Working with Lisp Code
+## Working with Lisp Code
 
 In this short tutorial we'll see how to:
 
@@ -204,7 +201,7 @@ In this short tutorial we'll see how to:
 *   evaluate and compile Lisp code
 *   search Lisp code
 
-#### Packages for structured editing
+### Packages for structured editing
 
 In addition to the built-in Emacs commands, you have several packages at your disposal
 that will help to keep the parens and/or the indentation balanced.
@@ -236,11 +233,11 @@ go up the list. See explanations and even more on
 
 <a name="Slide-10"></a>
 
-#### Editing
+### Editing
 
 Emacs has, of course, built-in commands to deal with s-expressions.
 
-##### Forward/Backward/Up/Down movement and selection by s-expressions
+#### Forward/Backward/Up/Down movement and selection by s-expressions
 
 Use `C-M-f` and `C-M-b` (`forward-sexp` and `backward-sexp`) to move
 in units of s-expressions.
@@ -253,7 +250,7 @@ Use `C-M-@` to highlight an entire sexp. Then press `C-M-u` to expand
 the selection "upwards" and `C-M-d` to move forward down one level of
 parentheses.
 
-##### Deleting s-expressions
+#### Deleting s-expressions
 
 Use `C-M-k` (`kill-sexp`) and `C-M-backspace` (`backward-kill-sexp`) (but caution: this keybinding may restart the system on GNU/Linux).
 
@@ -282,7 +279,7 @@ and you press `C-M-k`, you get:
 ~~~
 
 
-##### Indenting s-expressions
+#### Indenting s-expressions
 
 Indentation is automatic for Lisp forms.
 
@@ -333,7 +330,7 @@ do (print j))
 
 You can also select a region and call `M-x indent-region`.
 
-##### Support for parenthesis
+#### Support for parenthesis
 
 When you are in a Slime REPL, you can use `C-return` or `M-return`
 (`slime-repl-closing-return`) to close the remaining parenthesis and
@@ -381,7 +378,7 @@ around the region instead.
 - or [lispy-mode](https://github.com/abo-abo/lispy), like Paredit, but a key triggers an action when the cursor is placed right before or right after a parentheses.
 
 
-##### Code completion
+#### Code completion
 
 Use the built-in `C-c TAB` to complete symbols in SLIME. You can get tooltips
 with [company-mode](http://company-mode.github.io/).
@@ -393,20 +390,20 @@ In the REPL, it's simply TAB.
 Use Emacs' hippie-expand, bound to `M-/`, to complete any string
 present in other open buffers.
 
-##### Hiding/showing code
+#### Hiding/showing code
 
 Use `C-x n n` (narrow-to-region) and `C-x n w` to widen back.
 
 See also [code folding](http://wikemacs.org/wiki/Folding).
 
-##### Comments
+#### Comments
 
 Insert a comment, comment a region with `M-;`, adjust text with `M-q`.
 
 
 <a name="Slide-11"></a>
 
-#### Evaluating and Compiling Lisp in SLIME
+### Evaluating and Compiling Lisp in SLIME
 
 Compile the entire **buffer** by pressing `C-c C-k` (`slime-compile-and-load-file`).
 
@@ -469,9 +466,9 @@ See also [eval-in-repl](https://github.com/kaz-yos/eval-in-repl) to send any for
 
 <a name="Slide-12"></a>
 
-#### Searching Lisp Code
+### Searching Lisp Code
 
-##### Standard Emacs text search (isearch forward/backward, regexp searches, search/replace)
+#### Standard Emacs text search (isearch forward/backward, regexp searches, search/replace)
 
 `C-s` does an incremental search forward (e.g. - as each key is
 the search string is entered, the source file is searched for the
@@ -492,7 +489,7 @@ and backward respectively)
 expression search/replace
 
 
-##### Finding occurrences (occur, grep)
+#### Finding occurrences (occur, grep)
 
 Use `M-x grep`, `rgrep`, `occur`…
 
@@ -500,19 +497,19 @@ See also interactive versions with
 [helm-swoop](http://wikemacs.org/wiki/Helm-swoop), helm-occur,
 [ag.el](https://github.com/Wilfred/ag.el).
 
-##### Go to definition
+#### Go to definition
 
 Put the cursor on any symbol and press `M-.` (`slime-edit-definition`) to go to its
 definition. Press `M-,` to come back.
 
-##### Go to symbol, list symbols in current source
+#### Go to symbol, list symbols in current source
 
 Use `C-u M-.` (`slime-edit-definition` with a prefix argument, also available as `M-- M-.`) to autocomplete the symbol and navigate to it. This command always asks for a symbol even if the cursor is on one. It works with any loaded definition. Here's a little [demonstration video](https://www.youtube.com/watch?v=ZAEt73JHup8).
 
 You can think of it as a `imenu` completion that always work for any Lisp symbol. Add in [Slime's fuzzy completion][slime-fuzzy] for maximum powerness!
 
 
-##### Crossreferencing: find who's calling, referencing, setting a symbol
+#### Crossreferencing: find who's calling, referencing, setting a symbol
 
 Slime has nice cross-referencing facilities. For example, you can ask
 what calls a particular function, what expands a macro, or where a global variable is being used.
@@ -540,14 +537,14 @@ of the above, it lists every kind of references.
 
 <a name="Slide-13"></a>
 
-### Lisp Documentation in Emacs - Learning About Lisp Symbols
+## Lisp Documentation in Emacs - Learning About Lisp Symbols
 
-#### Argument lists
+### Argument lists
 
 When you put the cursor on a function, SLIME will show its signature
 in the minibuffer.
 
-#### Documentation lookup
+### Documentation lookup
 
 The main shortcut to know is:
 
@@ -570,16 +567,16 @@ You can enhance the help buffer with the Slime extension [slime-doc-contribs](ht
 ![](https://github.com/mmontone/slime-doc-contribs/raw/master/slime-help.png)
 
 
-#### Inspect
+### Inspect
 
 You can call `(inspect 'symbol)` from the REPL or call it with `C-c I` from a source file.
 
-#### Macroexpand
+### Macroexpand
 
 Use `C-c M-m` to macroexpand a macro call
 
 
-#### Consult the Hyper Spec (CLHS) offline
+### Consult the Hyper Spec (CLHS) offline
 
 The [Common Lisp Hyper Spec](http://www.lispworks.com/documentation/common-lisp.html) is the
 official online version of the ANSI Common Lisp standard. We can start
@@ -630,16 +627,16 @@ Other commands are available:
 * you can also look-up glossary terms (for example, you can look-up "function" instead of "defun"), use `M-x common-lisp-hyperspec-glossary-term`, bound to `C-c C-d g`.
 
 
-### Miscellaneous
+## Miscellaneous
 
-#### Synchronizing packages
+### Synchronizing packages
 
 **C-c ~** (`slime-sync-package-and-default-directory`): When run in a
 buffer with a lisp file it will change the current package of the REPL
 to the package of that file and also set the current directory of the REPL
 to the parent directory of the file.
 
-#### Calling code
+### Calling code
 
 **C-c C-y** (`slime-call-defun`): When the point is inside a defun and
 C-c C-y is pressed,
@@ -685,7 +682,7 @@ For defclass: `(make-instance ‘class-name )`.
 
 (thanks to [Slime tips](https://slime-tips.tumblr.com/page/2))
 
-#### Exporting symbols
+### Exporting symbols
 
 **C-c x** (*slime-export-symbol-at-point*) from the `slime-package-fu`
 contrib: takes the symbol at point and modifies the `:export` clause of
@@ -719,23 +716,23 @@ or strings:
  (lambda (n) (format "\"%s\"" (upcase n))))
 ~~~
 
-#### Project Management
+### Project Management
 
 ASDF is the de-facto build facility. It is shipped in most Common Lisp implementations.
 
   * [ASDF](https://common-lisp.net/project/asdf/)
   * [ASDF best practices](https://gitlab.common-lisp.net/asdf/asdf/blob/master/doc/best_practices.md)
 
-#### Searching Quicklisp libraries
+### Searching Quicklisp libraries
 
 From the REPL, we can use `,ql` to install a package known by name already.
 
 In addition, we can use the [Quicklisp-systems](https://github.com/mmontone/quicklisp-systems) Slime extension to search, browse and load Quicklisp systems from Emacs.
 
 
-### Questions/Answers
+## Questions/Answers
 
-#### Emacs Lisp vs Common Lisp
+### Emacs Lisp vs Common Lisp
 
 It isn't necessary to write Emacs Lisp in order to use Emacs with Slime or Sly for Common Lisp.
 
@@ -751,7 +748,7 @@ Some good Emacs Lisp learning resources:
 *   [Writing GNU Emacs Extensions](http://www.oreilly.com/catalog/gnuext/)
 *   [Wikemacs](http://wikemacs.org/wiki/Category:Emacs_Lisp)
 
-#### utf-8 encoding
+### utf-8 encoding
 
 You might want to set this to your init file:
 
@@ -772,7 +769,7 @@ This will avoid getting `ascii stream decoding error`s when you have
 non-ascii characters in files you evaluate with SLIME.
 
 
-#### Default cut/copy/paste keybindings
+### Default cut/copy/paste keybindings
 
 *I am so used to C-c, C-v and friends to copy and paste text that
 the default Emacs shortcuts don't make any sense to me.*
@@ -785,9 +782,9 @@ Luckily, you have a solution! Install [cua-mode](http://www.emacswiki.org/cgi-bi
 ~~~
 
 
-### Appendix
+## Appendix
 
-#### All Slime REPL shortcuts
+### All Slime REPL shortcuts
 
 Here is the reference of all Slime shortcuts that work in the REPL.
 
@@ -847,7 +844,7 @@ C-c M-i         slime-fuzzy-complete-symbol
 C-c M-o         slime-repl-clear-buffer
 ```
 
-#### All other Slime shortcuts
+### All other Slime shortcuts
 
 Here are all the default keybindings defined by Slime mode.
 
@@ -1016,7 +1013,7 @@ C-c C-v M-o     slime-clear-presentations
 
 [slime-fuzzy]: https://common-lisp.net/project/slime/doc/html/Fuzzy-Completion.html
 
-### See also
+## See also
 
 - [Common Lisp REPL exploration guide](https://bnmcgn.github.io/lisp-guide/lisp-exploration.html), a concise and curated set of highlights to find one's way in the REPL.
 - [Emacs4CL](https://github.com/susam/emacs4cl), a tiny DIY kit to set up vanilla Emacs for Common Lisp programming.
