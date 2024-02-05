@@ -35,28 +35,19 @@ necessary extensions. It is a straightforward way to get going.
 ## SLIME: Superior Lisp Interaction Mode for Emacs
 
 [SLIME](http://common-lisp.net/project/slime/) is the goto major mode
-for CL programming.
+for CL programming. It has a lot of features that make it a powerful, integrated and very interactive development environment.
 
-*   Provides a REPL which is hooked to the running image, directly in Emacs
-*   Has integrated Common Lisp debugger with Emacs interface
-*   Interactive object-inspector in Emacs buffer
-*   Has its own minor mode which enhances lisp-mode in many ways
-*   Supports every common Common Lisp implementation
-*   Readily available from MELPA
-*   Actively maintained
-*   Symbol completion
-*   Cross-referencing
-*   Can perform macroexpansions
+* it provides a REPL which is hooked to the running image, directly in Emacs
+* it integrates the Common Lisp debugger with an Emacs interface
+* it provides an interactive object inspector
+* it provides symbol completion,
+* cross-referencing,
+* breaking, stepping, tracing,
+* it can perform macroexpansions
+* it supports every common Common Lisp implementation
+* it is readily available from MELPA
+* it is actively maintained.
 
-
-Setup:
-
-*   Installing it from [MELPA](http://wikemacs.org/wiki/Melpa) is straightforward. Search package-list-packages for 'slime' and click to install. It will install itself and all dependencies.
-*   Enable the desired contribs (SLIME does very little by defaults), e.g. `(slime-setup '(slime-fancy slime-quicklisp slime-asdf))`.
-*   Run SLIME with `M-x slime`.
-*   See also your GNU/Linux distribution for a "slime" package.
-
-Check out this **[video tutorial](https://www.youtube.com/watch?v=sBcPNr1CKKw)** ! (and the author's channel, full of great stuff)
 
 ## SLY: Sylvester the Cat's Common Lisp IDE
 
@@ -76,11 +67,71 @@ the following improvements:
   - [ASDF](https://github.com/mmgeorge/sly-asdf)
   - [Evaluation Overlays](https://git.sr.ht/~fosskers/sly-overlay)
 
-## SLIME fancy, contrib packages and other extensions
+Sly is shipped by default in [Doom Emacs](https://github.com/doomemacs/doomemacs/).
+
+## Installing SLIME or SLY
+
+### Manually
+
+On Ubuntu, SLIME is easily installed alongside Emacs and SBCL:
+
+    sudo apt install emacs slime sbcl
+
+Otherwise, install SLIME by adding this code to your `~/.emacs.d/init.el` file:
+
+~~~lisp
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(dolist (package '(slime))
+  (unless (package-installed-p package)
+    (package-install package)))
+(require 'slime)
+~~~
+
+assuming you've also instealled Emacs and SBCL.
+
+Since SLIME is heavily modular and the defaults only do the bare minimum (not
+even the SLIME REPL), you might want to enable more features with
+
+~~~lisp
+(require 'slime)
+(slime-setup '(slime-fancy slime-quicklisp slime-asdf))
+~~~
+
+After this you can press Alt-X on your keyboard and type `slime` and try Common Lisp!
+
+(Alt-X is often written `M-x` in Emacs-world.)
+
+For more details, consult the
+[documentation](https://common-lisp.net/project/slime/doc/html/) (also available
+as an Info page).
+
+Now you can run SLIME with, as mentioned, `M-x slime` and/or `M-x slime-connect`.
+
+See also:
+
+* [https://github.com/susam/emacs4cl](https://github.com/susam/emacs4cl) - a minimal Emacs configuration to get new users up and running quickly, *with* a tutorial.
+* [https://wikemacs.org/wiki/SLIME](https://wikemacs.org/wiki/SLIME) - configuration examples and extensions.
+
+### Portacle
+
+[Portacle](https://shinmera.github.io/portacle/) is a portable and
+multi-platform CL development environment with which you can start
+developping in Lisp in a few clicks. Portacle includes Emacs, SBCL, Slime, git, and useful Emacs extensions (which-key, treeview…).
+
+It is a straightforward way to get going.
+
+
+### Doom Emacs
+
+[Doom Emacs](https://github.com/doomemacs/doomemacs/) is a popular Emacs configuration. You can easily enable its Sly integration.
+
+
+### SLIME fancy and contrib packages
 
 SLIME's functionalities live in packages and so-called [contrib
 modules](https://common-lisp.net/project/slime/doc/html/Contributed-Packages.html)
-must be loaded to add further functionalities. The default
+must be loaded to add further functionalities. The afored mentioned
 `slime-fancy` includes:
 
 
@@ -1015,5 +1066,6 @@ C-c C-v M-o     slime-clear-presentations
 
 ## See also
 
+- **[Slime video tutorial](https://www.youtube.com/watch?v=sBcPNr1CKKw)** (and the author's channel, full of great stuff)
 - [Common Lisp REPL exploration guide](https://bnmcgn.github.io/lisp-guide/lisp-exploration.html), a concise and curated set of highlights to find one's way in the REPL.
 - [Emacs4CL](https://github.com/susam/emacs4cl), a tiny DIY kit to set up vanilla Emacs for Common Lisp programming.
