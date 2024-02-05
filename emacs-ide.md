@@ -35,24 +35,6 @@ necessary extensions. It is a straightforward way to get going.
 
 <a name="Slide-3"></a>
 
-### Emacs Lisp vs Common Lisp
-
-It isn't necessary to use Emacs Lisp to use Emacs with Slime or Sly for Common Lisp
-
-However learning Emacs Lisp can be useful and is similar (but different) from CL:
-*   Dynamic scope is everywhere
-*   There are no reader (or reader-related) functions
-*   Does not support all the types that are supported in CL
-*   Incomplete implementation of CLOS (with the add-on EIEIO package)
-*   No numerical tower support
-
-Some good Emacs Lisp learning resources:
-*   [An Introduction to Programming in Emacs Lisp](https://www.gnu.org/software/emacs/manual/eintr.html)
-*   [Writing GNU Emacs Extensions](http://www.oreilly.com/catalog/gnuext/)
-*   [Wikemacs](http://wikemacs.org/wiki/Category:Emacs_Lisp)
-
-
-<a name="Slide-slime"></a>
 
 #### SLIME: Superior Lisp Interaction Mode for Emacs
 
@@ -735,6 +717,22 @@ In addition, we can use the [Quicklisp-systems](https://github.com/mmontone/quic
 
 
 ### Questions/Answers
+
+#### Emacs Lisp vs Common Lisp
+
+It isn't necessary to write Emacs Lisp in order to use Emacs with Slime or Sly for Common Lisp.
+
+However learning Emacs Lisp can be useful and is similar (but different) from CL:
+*   Dynamic scope is everywhere
+*   There are no reader (or reader-related) functions
+*   Does not support all the types that are supported in CL
+*   Incomplete implementation of CLOS (with the add-on EIEIO package)
+*   No numerical tower support
+
+Some good Emacs Lisp learning resources:
+*   [An Introduction to Programming in Emacs Lisp](https://www.gnu.org/software/emacs/manual/eintr.html)
+*   [Writing GNU Emacs Extensions](http://www.oreilly.com/catalog/gnuext/)
+*   [Wikemacs](http://wikemacs.org/wiki/Category:Emacs_Lisp)
 
 #### utf-8 encoding
 
