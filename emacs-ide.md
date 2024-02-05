@@ -193,54 +193,6 @@ With the `slime-quicklisp` contrib, you can also `,ql` to list all systems
 available for installation.
 
 
-## Finding one's way into Emacs' built-in documentation
-
-Emacs comes with built-in tutorials and documentation. Moreover, it is
-a self-documented and self-discoverable editor, capable of introspection to let you
-know about the current keybindings, to let you search about function documentation,
-available variables,source code, tutorials, etc. Whenever you ask yourself questions like
-"what are the available shortcuts to do x" or "what does this
-keybinding really do", the answer is most probably a keystroke away,
-right inside Emacs. You should learn a few keybindings to be able to
-discover Emacs with Emacs flawlessly.
-
-The help on the topic is here:
-
-- [Help page: commands for asking Emacs about its commands](https://www.gnu.org/software/emacs/manual/html_node/emacs/Help.html#Help)
-
-The help keybindings start with either `C-h` or `F1`. Important ones are:
-
-- `C-h k <keybinding>`: what function does this keybinding call?
-- `C-h f <function name>`: what keybinding is linked to this function?
-- `C-h a <topic>`: show a list of commands whose name match the given *topic*. It accepts a keyword, a list of keywords or a regular expression.
-- `C-h i`: show the Info page, a menu of major topics.
-
-Some Emacs packages give even more help.
-
-### More help and discoverability packages
-
-Sometimes, you start typing a key sequence but you can't remember it
-completely. Or, you wonder what other keybindings are related. Comes
-[which-key-mode](https://github.com/justbur/emacs-which-key). This
-packages will display all possible keybindings starting with the key(s) you just typed.
-
-For example, I know there are useful keybindings under `C-x` but I don't remember which ones… I just type `C-x`, I wait for half a second, and which-key shows all the ones available.
-
-![](assets/emacs-which-key-minibuffer.png)
-
-Just try it with `C-h` too!
-
-See also [Helpful](https://github.com/Wilfred/helpful), an alternative to the built-in Emacs help that provides much more contextual information.
-
-<img src="assets/emacs-helpful.png" style="height: 450px"/>
-
-
-### Learn Emacs with the built-in tutorial
-
-Emacs ships its own tutorial. You should give it a look to learn the most important keybindings and concepts.
-
-Call it with `M-x help-with-tutorial` (where `M-x` is `alt-x`).
-
 
 <a name="Slide-9"></a>
 
@@ -676,6 +628,54 @@ Other commands are available:
   common-lisp-hyperspec-format`, bound to `C-c C-d ~`.
   * of course, you can TAB-complete on Emacs' minibuffer prompt to see all the available format directives.
 * you can also look-up glossary terms (for example, you can look-up "function" instead of "defun"), use `M-x common-lisp-hyperspec-glossary-term`, bound to `C-c C-d g`.
+
+## Finding one's way into Emacs' built-in documentation
+
+Emacs comes with built-in tutorials and documentation. Moreover, it is
+a self-documented and self-discoverable editor, capable of introspection to let you
+know about the current keybindings, to let you search about function documentation,
+available variables,source code, tutorials, etc. Whenever you ask yourself questions like
+"what are the available shortcuts to do x" or "what does this
+keybinding really do", the answer is most probably a keystroke away,
+right inside Emacs. You should learn a few keybindings to be able to
+discover Emacs with Emacs flawlessly.
+
+The help on the topic is here:
+
+- [Help page: commands for asking Emacs about its commands](https://www.gnu.org/software/emacs/manual/html_node/emacs/Help.html#Help)
+
+The help keybindings start with either `C-h` or `F1`. Important ones are:
+
+- `C-h k <keybinding>`: what function does this keybinding call?
+- `C-h f <function name>`: what keybinding is linked to this function?
+- `C-h a <topic>`: show a list of commands whose name match the given *topic*. It accepts a keyword, a list of keywords or a regular expression.
+- `C-h i`: show the Info page, a menu of major topics.
+
+Some Emacs packages give even more help.
+
+### More help and discoverability packages
+
+Sometimes, you start typing a key sequence but you can't remember it
+completely. Or, you wonder what other keybindings are related. Comes
+[which-key-mode](https://github.com/justbur/emacs-which-key). This
+packages will display all possible keybindings starting with the key(s) you just typed.
+
+For example, I know there are useful keybindings under `C-x` but I don't remember which ones… I just type `C-x`, I wait for half a second, and which-key shows all the ones available.
+
+![](assets/emacs-which-key-minibuffer.png)
+
+Just try it with `C-h` too!
+
+See also [Helpful](https://github.com/Wilfred/helpful), an alternative to the built-in Emacs help that provides much more contextual information.
+
+<img src="assets/emacs-helpful.png" style="height: 450px"/>
+
+
+### Learn Emacs with the built-in tutorial
+
+Emacs ships its own tutorial. You should give it a look to learn the most important keybindings and concepts.
+
+Call it with `M-x help-with-tutorial` (where `M-x` is `alt-x`).
 
 
 ## Miscellaneous
