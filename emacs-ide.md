@@ -153,6 +153,7 @@ must be loaded to add further functionalities. The afored mentioned
 - slime-scratch
 - slime-package-fu
 - slime-trace-dialog
+- [slime-mrepl](https://slime.common-lisp.dev/doc/html/slime_002dmrepl.html#slime_002dmrepl) (multiple REPLs)
 
 SLIME also has some nice extensions like
 [Helm-SLIME](https://github.com/emacs-helm/helm-slime) which features, among
