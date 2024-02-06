@@ -773,7 +773,7 @@ We show this in the Regular Expressions chapter but while we are on this topic, 
 ;; (42 41 1)
 ~~~
 
-### To any number: read-from-string
+### To any number: `read-from-string`
 
 Be aware that the full reader is in effect if you're using this
 function. This can lead to vulnerability issues. You should use a
@@ -806,6 +806,26 @@ SYMBOL
 *foo*
 "gotcha"
 ~~~
+
+### Protecting `read-from-string`
+
+At the very least, if you are reading data coming from the outside, use this:
+
+~~~lisp
+(let ((cl:*read-eval* nil))
+  (read-from-string "…"))
+~~~
+
+This prevents code to be evaluated at read-time. That way our last example, using the `#.` reader macro, would not work. You'll get the error "can't read #. while \*READ-EVAL\* is NIL".
+
+And better yet, for more protection from a possibly custom readtable that would introduce another reader macro:
+
+~~~lisp
+(with-standard-io-syntax
+  (let ((cl:*read-eval* nil))
+    (read-from-string "…")))
+~~~
+
 
 ### To a float: the parse-float library
 
