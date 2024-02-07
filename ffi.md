@@ -2,9 +2,14 @@
 title: Foreign Function Interfaces
 ---
 
-The ANSI Common Lisp standard doesn't mention this topic. So almost everything that can be said here depends on your OS and your implementation.
+The ANSI Common Lisp standard doesn't mention this topic. So almost everything that can be said here depends on your OS and your implementation. However these days, we can use the [CFFI](https://github.com/cffi/cffi) library, a portable and easy-to-use C foreign function interface.
 
-## Calling mathematical functions from C's `math.h` header file.
+> CFFI, the Common Foreign Function Interface, purports to be a portable FFI for Common Lisp. It abstracts away the differences between the API of the native FFI's of the various Common Lisp implementations.
+
+We'll see an example right now.
+
+
+## CFFI: calling a C function from the `math.h` header file.
 
 Let's use `defcfun` to interface with the foreign [ceil](https://en.cppreference.com/w/c/numeric/math/ceil) C function from `math.h`.
 
