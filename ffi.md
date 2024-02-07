@@ -4,30 +4,32 @@ title: Foreign Function Interfaces
 
 The ANSI Common Lisp standard doesn't mention this topic. So almost everything that can be said here depends on your OS and your implementation.
 
-### Example: Calling mathematical functions from C's `math.h` header file.
- 
+## Calling mathematical functions from C's `math.h` header file.
+
 Let's use `defcfun` to interface with the foreign [ceil](https://en.cppreference.com/w/c/numeric/math/ceil) C function from `math.h`.
 
-[defcfun](https://cffi.common-lisp.dev/manual/html_node/defcfun.html) is a macro in the cffi library that generates a function with the name you give it in your local scope.
+[defcfun](https://cffi.common-lisp.dev/manual/html_node/defcfun.html) is a macro in the cffi library that generates a function with the name you give it.
 
-CL-USER> CL-USER> (cffi:defcfun ("ceil" c-ceil) :double (number :double))
+~~~lisp
+CL-USER> (cffi:defcfund ("ceil" c-ceil) :double (number :double))
+~~~
+
+We say that the "ceil" C function will be called "c-ceil" on our Lisp side, it takes one argument that is a double float, and it returns a number that is also a double float.
 
 Here is the above function macroexpanded with `macrostep-expand`:
 
 ~~~lisp
 (progn
-	  nil
-	  (defun c-ceil (number)
-	    (let ((#:g312 number))
-	      (cffi-sys:%foreign-funcall "ceil" (:double #:g312 :double) :convention
-					 :cdecl :library :default))))
+  nil
+  (defun c-ceil (number)
+    (let ((#:g312 number))
+      (cffi-sys:%foreign-funcall "ceil" (:double #:g312 :double) :convention
+				 :cdecl :library :default))))
 ~~~
 
-As we can see from the above macroexpansion, and ignoring other details, a function is created with the builtin `defun` that is called `c-ceil` and that takes exactly one argument: `number`.
+The reason we called it `c-ceil` and not `ceil` is only for the example, so we know this is a wrapper around C. You can name it "ceil", since it doesn't designate a built-in Common Lisp function or macro.
 
-The reason we called it `c-ceil` and not `ceil` is because sbcl already implements a `ceil` function and our generated FFI function produced from the `defcfun` macro would clash with it.
-
-Now that we have a c-ceil function from `math.h`, let's use it!
+Now that we have a c-ceil function from `math.h`, let's use it! We must give it double float.
 
 ~~~lisp
 CL-USER> (c-ceil 5.4d0)
@@ -36,7 +38,7 @@ CL-USER> (c-ceil 5.4d0)
 
 As you can see, it works! The double gets rounded up to `6.0d0` as expected.
 
-Let's try another one! This time, we'll use [floor](https://en.cppreference.com/w/c/numeric/math/floor) from `math.h`:
+Let's try another one! This time, we'll use [floor](https://en.cppreference.com/w/c/numeric/math/floor), and we couldn't name it "floor" because this Common Lisp function exists.
 
 ~~~lisp
 CL-USER> (cffi:defcfun ("floor" c-floor) :double (number :double))
@@ -49,33 +51,11 @@ CL-USER> (c-floor 5.4d0)
 
 Great!
 
-One more, let's try sqrt from math.h:
+One more, let's try `sqrt` from math.h, still with double floats:
 
 ~~~lisp
 CL-USER> (cffi:defcfun ("sqrt" c-sqrt) :double (number :double))
 C-SQRT
-CL-USER> (c-sqrt 36)
-; Debugger entered on #<TYPE-ERROR expected-type: DOUBLE-FLOAT datum: 36>
-[1] CL-USER> 
-; Evaluation aborted on #<TYPE-ERROR expected-type: DOUBLE-FLOAT datum: 36>
-~~~
-
-Oops, what happened there?
-
-Let's try again:
-
-~~~lisp
-CL-USER> (c-sqrt 36.50)
-; Debugger entered on #<TYPE-ERROR expected-type: DOUBLE-FLOAT datum: 36.5>
-[1] CL-USER> 
-; Evaluation aborted on #<TYPE-ERROR expected-type: DOUBLE-FLOAT datum: 36.5>
-~~~
-
-Still no luck :(
-
-We need to specify `36.50d0` because we are working with C doubles.
-
-~~~lisp
 CL-USER> (c-sqrt 36.50d0)
 6.041522986797286d0
 ~~~
@@ -95,9 +75,10 @@ CL-USER> (mapcar #'c-sqrt '(3d0 4d0 5d0 6d0 7.5d0 12.75d0))
  2.7386127875258306d0 3.570714214271425d0)
 ~~~
 
+
 <a name="clisp-gethost"></a>
 
-### Example: Calling 'gethostname' from CLISP
+## Calling `gethostname` from CLISP
 
 Note: You should read the [relevant chapter](http://clisp.sourceforge.net/impnotes.html#dffi) from the CLISP implementation notes before you proceed.
 
@@ -143,7 +124,7 @@ Possibly `SUBSEQ` and `POSITION` are superfluous, thanks to `C-ARRAY-MAX` as opp
 
 <a name="alisp-gethost"></a>
 
-### Example: Calling 'gethostname' from Allegro CL
+## Calling `gethostname` from Allegro CL
 
 This is how the same example above would be written in Allegro Common Lisp version 6 and above. ACL doesn't explicitly distinguish between `input` and `output` arguments. The way to declare an argument as `output` (i.e., modifiable by C) is to use an array, since arrays are passed by reference and C therefore receives a pointer to a memory location (which is what it expects). In this case things are made even easier by the fact that `gethostname()` expects an array of char, and a `SIMPLE-ARRAY` of `CHARACTER` represents essentially the same thing in Lisp. The foreign function definition is therefore the following:
 
