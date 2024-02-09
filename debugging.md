@@ -306,7 +306,10 @@ These are some of the Emacs commands bound to useful keys:
 `M-x slime-trace-dialog-clear-fetched-traces`
 
     Prompt for confirmation, then clear all traces, both fetched and outstanding. 
+    
+Finally, the arguments and return values for each trace entry are interactive buttons. Clicking them opens the SLIME inspector on them. Invoking `M-RET` `M-x slime-trace-dialog-copy-down-to-repl` returns them to the REPL for manipulation . The number left of each entry indicates its absolute position in the calling order, which might differ from display order in case multiple threads call the same traced function.
 
+`M-x slime-trace-dialog-hide-details-mode` hides arguments and return values so you can concentrate on the calling logic. Additionally, `M-x slime-trace-dialog-autofollow-mode` will automatically display additional detail about an entry when the cursor moves over it. 
 
 ## Step
 
