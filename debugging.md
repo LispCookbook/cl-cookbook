@@ -288,6 +288,26 @@ Traces are fetched in batches. So use the the `[refresh]` button to update statu
 5. Then use either the `[fetch next batch]` or `[fetch all]` buttons to fetch the traces. Traces appear under `Traced specs` after that, and you can use the SLIME inspector to visualize their data (arguments and return values).
 6. After more code that calls the traced functions is evaluated, repeat the process (go to step 4).
 
+But, that flow can get a bit tedious, because of the separation between updating the status of the traces and fetching them. Sometimes it is better to just fetch the traces without updating the status first. We can do that invoking the command `M-x slime-trace-dialog-fetch-traces` bound to `G`. So, instead of steps 4 and 5, just press `G` to update the user interface.
+
+These are some of the Emacs commands bound to useful keys:
+
+`g`
+`M-x slime-trace-dialog-fetch-status`
+
+    Update information on the trace collection and traced specs. 
+
+`G`
+`M-x slime-trace-dialog-fetch-traces`
+
+    Fetch the next batch of outstanding (not fetched yet) traces. With a C-u prefix argument, repeat until no more outstanding traces. 
+    
+`C-k`
+`M-x slime-trace-dialog-clear-fetched-traces`
+
+    Prompt for confirmation, then clear all traces, both fetched and outstanding. 
+
+
 ## Step
 
 [step](http://www.xach.com/clhs?q=step) is an interactive command with
