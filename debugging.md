@@ -249,10 +249,6 @@ traced:
 
 The output is printed to `*trace-output*` (see the CLHS).
 
-In Slime, we also have an interactive trace dialog with ``M-x
-slime-trace-dialog`` bound to `C-c T`.
-
-
 ### Tracing method invocation
 
 In SBCL, we can use `(trace foo :methods t)` to trace the execution order of method combination (before, after, around methods). For example:
@@ -275,6 +271,21 @@ In SBCL, we can use `(trace foo :methods t)` to trace the execution order of met
 ~~~
 
 See the [CLOS](clos.html) section for a tad more information.
+
+### Interactive Trace Dialog
+
+Both SLIME and SLY provide an [interactive view for traces](https://slime.common-lisp.dev/doc/html/SLIME-Trace-Dialog.html#SLIME-Trace-Dialog) that features better visualization of traces, and also access to the arguments and return values in their real form, via inspectors, not just the printed representation.
+
+![trace-dialog](trace-dialog.png "Trace dialog")
+
+How it works: (the following instructions are for SLIME)
+
+1. Select the functions to trace using `M-x slime-trace-dialog-toggle-trace` bound to `C-c M-t`.
+2. Evaluate code that calls the traced functions.
+3. Open the trace dialog tool via `M-x slime-trace-dialog` bound to `C-c T`.
+4. The list of traced functions appear under `Traced specs`. 
+Traces are fetched in batches. So use the the `[refresh]` button to update status information about tracing (number of available traces that can be fetched). 
+5. Then use either the `[fetch next batch]` or `[fetch all]` buttons to fetch the traces. Traces appear under `Traced specs` after that, and you can use the SLIME inspector to visualize their data (arguments and return values).
 
 ## Step
 
