@@ -1204,7 +1204,7 @@ Use `nil` to ignore a term:
 ;; (X Y Z)
 ~~~
 
-##### Iterating 2 by 2 over a list
+##### Iterating over a plist or 2 by 2 over a list
 
 To iterate over a list, 2 items at a time we use a combination of `on`, `by` and destructuring.
 
