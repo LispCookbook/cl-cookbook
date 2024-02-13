@@ -1,5 +1,5 @@
 ---
-title: Threads
+title: Threads, concurrency, parallelism
 ---
 
 
@@ -25,8 +25,8 @@ you will.
 The ANSI Common Lisp standard doesn't mention this topic. We will
 present here the portable
 [bordeaux-threads](https://github.com/sionescu/bordeaux-threads)
-library, [SBCL threads](http://www.sbcl.org/manual/index.html#sb_002dconcurrency) and the [lparallel](https://lparallel.org)
-library.
+library, an example implementation via [SBCL threads](http://www.sbcl.org/manual/#Threading) from the [SBCL Manual](http://www.sbcl.org/manual/), and the [lparallel](https://lparallel.org)
+library ([GitHub](https://github.com/sharplispers/lparallel)).
 
 Bordeaux-threads is a de-facto standard portable library, that exposes
 rather low-level primitives. Lparallel builds on it and features:
@@ -43,8 +43,8 @@ rather low-level primitives. Lparallel builds on it and features:
 -  task killing by category
 -  integrated timeouts
 
-For more libraries on parallelism and concurrency, see the [awesome CL list](https://github.com/CodyReichert/awesome-cl#parallelism-and-concurrency)
-and [Quickdocs](http://quickdocs.org/).
+For more libraries on parallelism and concurrency, see the [Awesome CL list](https://github.com/CodyReichert/awesome-cl#parallelism-and-concurrency)
+and [Quickdocs](http://quickdocs.org/) such as quickdocks on [thread](https://quickdocs.org/-/search?q=thread) and [concurrency](https://quickdocs.org/-/search?q=concurrency).
 
 <a name="why_bother"></a>
 
@@ -151,7 +151,7 @@ interesting bit is that it itself does not really create any native
 threads — it relies entirely on the underlying implementation to do
 so.
 
-On there other hand, it does provide some useful extra features in its
+On the other hand, it does provide some useful extra features in its
 own abstractions over the lower-level threads.
 
 Also, you can see from the demo programs that a lot of the Bordeaux
@@ -166,7 +166,7 @@ You can refer to the documentation for more details (check the
 First let’s load up the Bordeaux library using Quicklisp:
 
 ~~~lisp
-CL-USER> (ql:quickload :bt-semaphore)
+CL-USER> (ql:quickload "bt-semaphore")
 To load "bt-semaphore":
   Load 1 ASDF system:
     bt-semaphore
@@ -209,7 +209,7 @@ instead of the common check mentioned above.
 
 For instance, in our case, we are interested in using the Bordeaux
 library. To check whether there is support for threads using this
-library, we can see whether the *supports-threads-p* global variable
+library, we can see whether the `*supports-threads-p*` global variable
 is set to NIL (no support) or T (support available):
 
 ~~~lisp
@@ -334,7 +334,8 @@ The same code would have run fine if we had not run it in a separate
     `*standard-output*`, which being a global variable, we would assume
     should be available to all threads, is rebound inside each thread!
     This is similar to the concept of ThreadLocal storage in Java.
-    Print a message onto the top-level — fixed:
+
+### Print a message onto the top-level — fixed
 
 So how do we fix the problem of the previous example? By binding the top-level at the time of thread creation of course. Pure lexical scoping to the rescue!
 
@@ -345,7 +346,7 @@ So how do we fix the problem of the previous example? By binding the top-level a
         (bt:make-thread
          (lambda ()
            (format top-level "Hello from thread!"))
-         :name "hello")))
+         :name "hello"))
       nil)
 ~~~
 
@@ -385,12 +386,12 @@ And the output:
     NIL
 ~~~
 
-So it works, but what’s the deal with the eval-when and what is that
-strange #. symbol before `*standard-output*`?
+So it works, but what’s the deal with the `eval-when` and what is that
+strange `#.` symbol before `*standard-output*`?
 
-eval-when controls when evaluation of Lisp expressions takes place. We
-can have three targets — :compile-toplevel, :load-toplevel, and
-:execute.
+`eval-when` controls when evaluation of Lisp expressions takes place. We
+can have three targets — `:compile-toplevel`, `:load-toplevel`, and
+`:execute`.
 
 The `#.` symbol is what is called a “Reader macro”. A reader (or read)
 macro is called so because it has special meaning to the Common Lisp
@@ -403,10 +404,10 @@ Binding the value at read-time ensures that the original value of
 `*standard-output*` is maintained when the thread is run, and the output
 is shown on the correct top-level.
 
-Now this is where the eval-when bit comes into play. By wrapping the
-whole function definition inside the eval-when, and ensuring that
+Now this is where the `eval-when` bit comes into play. By wrapping the
+whole function definition inside the `eval-when`, and ensuring that
 evaluation takes place during compile time, the correct value of
-`*standard-output*` is bound. If we had skipped the eval-when, we would
+`*standard-output*` is bound. If we had skipped the `eval-when`, we would
 see the following error:
 
 ~~~lisp
@@ -525,7 +526,7 @@ Let’s rest the balance for the account back to 0 first:
     0
 ~~~
 
-Now let’s modify the demo-race-condition function to access the shared resource using locks (created using bt:make-lock and used as shown):
+Now let’s modify the `demo-race-condition` function to access the shared resource using locks (created using `bt:make-lock` and used as shown):
 
 ~~~lisp
     (defvar *lock* (bt:make-lock))
@@ -596,18 +597,20 @@ A simple demo:
 
     (defun join-destroy-thread ()
       (let* ((s *standard-output*)
-            (joiner-thread (bt:make-thread
-                            (lambda ()
-                              (loop for i from 1 to 10
-                                 do
-                                   (format s "~%[Joiner Thread]  Working...")
-                                   (sleep (* 0.01 (random 100)))))))
-            (destroyer-thread (bt:make-thread
-                               (lambda ()
-                                 (loop for i from 1 to 1000000
-                                    do
-                                      (format s "~%[Destroyer Thread] Working...")
-                                      (sleep (* 0.01 (random 10000))))))))
+            (joiner-thread
+              (bt:make-thread
+                (lambda ()
+                  (loop for i from 1 to 10
+                     do
+                       (format s "~%[Joiner Thread]  Working...")
+                       (sleep (* 0.01 (random 100)))))))
+            (destroyer-thread
+                (bt:make-thread
+                   (lambda ()
+                    (loop for i from 1 to 1000000
+                       do
+                         (format s "~%[Destroyer Thread] Working...")
+                         (sleep (* 0.01 (random 10000))))))))
         (format t "~%[Main Thread] Waiting on joiner thread...")
         (bt:join-thread joiner-thread)
         (format t "~%[Main Thread] Done waiting on joiner thread")
@@ -658,28 +661,61 @@ with another approach.
 Now let’s move onto some more comprehensive examples which tie
 together all the concepts discussed thus far.
 
+### Timeouts
+
+We can use `bt:with-timeout`.
+
+Sometimes we want to run a background operation, but we want to ensure
+that it doesn't take a maximum time limit. We can use `bt:with-timeout
+(n)` where n is a number of seconds. In case of a timeout,
+Bordeaux-threads signals a `bt:timeout` error.
+
+In our scenario below, we create a thread that launches a potentially
+long operation, we `join` the thread with a timeout, and we handle any
+timeout error. In our case, we destroy the running thread. This also
+kills its underlying processes (were they run with
+`uiop:run-program`).
+
+~~~lisp
+(defun maybe-costly-operation ()
+  (print "working hard...")
+  (sleep 10))
+
+(let ((thread (bt:make-thread            ;; <--- create a thread
+                 (lambda ()
+                   ;; maybe a long operation:
+                   (maybe-costly-operation))
+                 :name "maybe-costly-thread")))
+    (handler-case
+        (bt:with-timeout (timeout)       ;; <-- with-timeout
+          (bt:join-thread thread))       ;; <-- join the thread
+      (bt:timeout ()                     ;; <-- handle timeout.
+        (bt:destroy-thread thread))))
+~~~
+
+
 ### Useful functions
 
 Here is a summary of the functions, macros and global variables which
 were used in the demo examples along with some extras. These should
 cover most of the basic programming scenarios:
 
--    `bt:*supports-thread-p*` (to check for basic thread support)
--    `bt:make-thread` (create a new thread)
--    `bt:current-thread` (return the current thread object)
--    `bt:all-threads` (return a list of all running threads)
--    `bt:thread-alive-p` (checks if the thread is still alive)
--    `bt:thread-name` (return the name of the thread)
--    `bt:join-thread` (join on the supplied thread)
--    `bt:interrupt-thread` (interrupt the given thread)
--    `bt:destroy-thread` (attempt to abort the thread)
--    `bt:make-lock` (create a mutex)
--    `bt:with-lock-held` (use the supplied lock to protect critical code)
-
+- `bt:*supports-thread-p*` (to check for basic thread support)
+- `bt:make-thread` (create a new thread)
+- `bt:current-thread` (return the current thread object)
+- `bt:all-threads` (return a list of all running threads)
+- `bt:thread-alive-p` (checks if the thread is still alive)
+- `bt:thread-name` (return the name of the thread)
+- `bt:join-thread` (join on the supplied thread)
+- `bt:interrupt-thread` (interrupt the given thread)
+- `bt:destroy-thread` (attempt to abort the thread)
+- `bt:make-lock` (create a mutex)
+- `bt:with-lock-held` (use the supplied lock to protect critical code)
+- `bt:with-timeout` (to signal a timeout error)
 
 ## SBCL threads
 
-SBCL provides support for native threads via its [sb-thread](http://www.sbcl.org/manual/index.html#Threading)
+[SBCL](http://www.sbcl.org/) provides support for native threads via its [sb-thread](http://www.sbcl.org/manual/#Threading)
 package. These are very low-level functions, but we can build our own
 abstractions on top of these as shown in the demo examples.
 
@@ -900,7 +936,7 @@ The code:
 ~~~
 
 The only difference here is that instead of make-lock as in Bordeaux,
-we have make-mutex and that is used along with the macro with-mutex as
+we have `make-mutex` and that is used along with the macro `with-mutex` as
 shown in the example.
 
 And the output:
@@ -989,8 +1025,8 @@ This is the reason for the bizarre construct used in the
 `atomic-deposit` and `atomic-decf` methods.
 
 One major incentive to use atomic operations as much as possible is
-performance. Let’s do a quick run of the demo-race-condition-locks and
-demo-race-condition-atomics functions over 1000 times and check the
+performance. Let’s do a quick run of the `demo-race-condition-locks` and
+`demo-race-condition-atomics` functions over 1000 times and check the
 difference in performance (if any):
 
 With locks:
@@ -1034,43 +1070,46 @@ atomics version took just 2s! This is a massive difference indeed!
 The code:
 
 ~~~lisp
-    ;;; Joining on and destroying a thread
+;;; Joining on and destroying a thread
 
-    (defmacro until (condition &body body)
-      (let ((block-name (gensym)))
-        `(block ,block-name
-           (loop
-               (if ,condition
-                   (return-from ,block-name nil)
-                   (progn
-                       ,@body))))))
+(defmacro until (condition &body body)
+  (let ((block-name (gensym)))
+    `(block ,block-name
+       (loop
+           (if ,condition
+               (return-from ,block-name nil)
+               (progn
+                   ,@body))))))
 
-    (defun join-destroy-thread ()
-      (let* ((s *standard-output*)
-            (joiner-thread (sb-thread:make-thread
-                            (lambda ()
-                              (loop for i from 1 to 10
-                                 do
-                                   (format s "~%[Joiner Thread]  Working...")
-                                   (sleep (* 0.01 (random 100)))))))
-            (destroyer-thread (sb-thread:make-thread
-                               (lambda ()
-                                 (loop for i from 1 to 1000000
-                                    do
-                                      (format s "~%[Destroyer Thread] Working...")
-                                      (sleep (* 0.01 (random 10000))))))))
-        (format t "~%[Main Thread] Waiting on joiner thread...")
-        (bt:join-thread joiner-thread)
-        (format t "~%[Main Thread] Done waiting on joiner thread")
-        (if (sb-thread:thread-alive-p destroyer-thread)
-            (progn
-              (format t "~%[Main Thread] Destroyer thread alive... killing it")
-              (sb-thread:terminate-thread destroyer-thread))
-            (format t "~%[Main Thread] Destroyer thread is already dead"))
-        (until (sb-thread:thread-alive-p destroyer-thread)
-               (format t "[Main Thread] Waiting for destroyer thread to die..."))
-        (format t "~%[Main Thread] Destroyer thread dead")
-        (format t "~%[Main Thread] Adios!~%")))
+(defun join-destroy-thread ()
+  (let* ((s *standard-output*)
+        (joiner-thread
+           (sb-thread:make-thread
+              (lambda ()
+                (loop for i from 1 to 10
+                   do
+                     (format s "~%[Joiner Thread]  Working...")
+                     (sleep (* 0.01 (random 100)))))))
+        (destroyer-thread
+           (sb-thread:make-thread
+              (lambda ()
+                (loop for i from 1 to 1000000
+                   do
+                     (format s "~%[Destroyer Thread] Working...")
+                     (sleep (* 0.01 (random 10000))))))))
+
+    (format t "~%[Main Thread] Waiting on joiner thread...")
+    (bt:join-thread joiner-thread)
+    (format t "~%[Main Thread] Done waiting on joiner thread")
+    (if (sb-thread:thread-alive-p destroyer-thread)
+        (progn
+          (format t "~%[Main Thread] Destroyer thread alive... killing it")
+          (sb-thread:terminate-thread destroyer-thread))
+        (format t "~%[Main Thread] Destroyer thread is already dead"))
+    (until (sb-thread:thread-alive-p destroyer-thread)
+       (format t "[Main Thread] Waiting for destroyer thread to die..."))
+    (format t "~%[Main Thread] Destroyer thread dead")
+    (format t "~%[Main Thread] Adios!~%")))
 ~~~
 
 And the output:
@@ -1127,7 +1166,7 @@ topic. I share some of my own references here:
 
 -    [Common Lisp Recipes](http://weitz.de/cl-recipes/)
 -    [Bordeaux API Reference](https://trac.common-lisp.net/bordeaux-threads/wiki/ApiDocumentation)
--    [SBCL Manual](http://www.sbcl.org/manual/#Threading%E2%80%9D)
+-    [SBCL Manual](http://www.sbcl.org/manual/) on [Threading](http://www.sbcl.org/manual/#Threading)
 -    [The Common Lisp Hyperspec](https://www.lispworks.com/documentation/HyperSpec/Front/)
 
 Next up, the final post in this mini-series: parallelism in Common
@@ -1190,7 +1229,7 @@ CL-USER> (ql:system-apropos "lparallel")
 Looks like it is. Let’s go ahead and install it:
 
 ~~~lisp
-CL-USER> (ql:quickload :lparallel)
+CL-USER> (ql:quickload "lparallel")
 To load "lparallel":
   Load 2 ASDF systems:
     alexandria bordeaux-threads
@@ -1222,89 +1261,31 @@ To load "lparallel":
 
 And that’s all it took! Now let’s see how this library actually works.
 
-### Preamble - get the number of cores with a call to CFFI
+### Preamble - get the number of cores
 
 First, let’s get hold of the number of threads that we are going to
 use for our parallel examples. Ideally, we’d like to have a 1:1 match
 between the number of worker threads and the number of available
 cores.
 
-We can use the wonderful **cffi** library to this end. I plan to have a
-detailed blog post for this extremely useful library soon, but for
-now, let’s get on with it:
+We can use the great **Serapeum** library to this end, which has a
+`count-cpus` function, that works on all major platforms.
 
-Install CFFI:
+Install it:
 
 ~~~lisp
-CL-USER> (ql:quickload :cffi)
-To load "cffi":
-  Load 4 ASDF systems:
-    alexandria babel trivial-features uiop
-  Install 1 Quicklisp release:
-    cffi
-; Fetching #<URL "http://beta.quicklisp.org/archive/cffi/2016-03-18/cffi_0.17.1.tgz">
-; 234.48KB
-==================================================
-240,107 bytes in 5.98 seconds (39.22KB/sec)
-; Loading "cffi"
-[package cffi-sys]................................
-[package cffi]....................................
-..................................................
-[package cffi-features]
-(:CFFI)
+CL-USER> (ql:quickload "serapeum")
 ~~~
 
-Write C code to get the number of logical cores on the machine:
-
-```
-#include <stdio.h>
-#include <sys/types.h>
-#include <sys/sysctl.h>
-
-int get_core_count();
-
-int main()
-{
-    printf("%d\n", get_core_count());
-
-    return 0;
-}
-
-int32_t get_core_count()
-{
-    const char* s = "hw.logicalcpu";
-    int32_t core_count;
-    size_t len = sizeof(core_count);
-
-    sysctlbyname(s, &core_count, &len, NULL, 0);
-
-    return core_count;
-}
-```
-
-Bundle the C code into a shared library (note, I am using Mac OS X
-which comes bundled with Clang. For pure gcc, refer to the relevant
-documentation): 1
-
-```
-Timmys-MacBook-Pro:Parallelism z0ltan$ clang -dynamiclib get_core_count.c -o libcorecount.dylib
-```
-
-Invoke the function from Common Lisp:
+and call it:
 
 ~~~lisp
-CL-USER> (cffi:use-foreign-library "libcorecount.dylib")
-#<CFFI:FOREIGN-LIBRARY LIBCORECOUNT.DYLIB-853 "libcorecount.dylib">
-CL-USER> (cffi:foreign-funcall "get_core_count" :int)
+CL-USER> (serapeum:count-cpus)
 8
 ~~~
 
-We can see that the result is 8 cores on the machine (which is
-correct) and can be verified from the command line as well:
+and check that is correct.
 
-```
-Timmys-MacBook-Pro:Parallelism z0ltan$ sysctl -n "hw.logicalcpu"
-```
 
 ### Common Setup
 
@@ -1314,7 +1295,7 @@ show some useful information once the setup is done.
 Load the library:
 
 ~~~lisp
-CL-USER> (ql:quickload :lparallel)
+CL-USER> (ql:quickload "lparallel")
 To load "lparallel":
   Load 1 ASDF system:
     lparallel
@@ -1326,7 +1307,8 @@ To load "lparallel":
 Initialise the lparallel kernel:
 
 ~~~lisp
-CL-USER> (setf lparallel:*kernel* (lparallel:make-kernel 8 :name "custom-kernel"))
+CL-USER> (setf lparallel:*kernel*
+               (lparallel:make-kernel 8 :name "custom-kernel"))
 #<LPARALLEL.KERNEL:KERNEL :NAME "custom-kernel" :WORKER-COUNT 8 :USE-CALLER NIL :ALIVE T :SPIN-COUNT 2000 {1003141F03}>
 ~~~
 
@@ -1427,7 +1409,7 @@ For instance, we can calculate the square of a number as:
 (defun calculate-square (n)
   (let* ((channel (lparallel:make-channel))
          (res nil))
-    (lparallel:submit-task channel #'(lambda (x)
+    (lparallel:submit-task channel (lambda (x)
                                        (* x x))
                            n)
     (setf res (lparallel:receive-result channel))
@@ -1452,13 +1434,13 @@ Note that in case of multiple tasks, the output will be in non-deterministic ord
 (defun test-basic-channel-multiple-tasks ()
   (let ((channel (make-channel))
         (res '()))
-    (submit-task channel #'(lambda (x)
+    (submit-task channel (lambda (x)
                              (* x x))
                  10)
-    (submit-task channel #'(lambda (y)
+    (submit-task channel (lambda (y)
                              (* y y y))
                  10)
-    (submit-task channel #'(lambda (z)
+    (submit-task channel (lambda (z)
                              (* z z z z))
                  10)
      (dotimes (i 3 res)
@@ -1594,7 +1576,7 @@ Now, let’s just see the queue in action!
       (let ((queue (make-queue))
             (channel (make-channel))
             (res '()))
-        (submit-task channel #'(lambda ()
+        (submit-task channel (lambda ()
                          (loop for entry = (pop-queue queue)
                             when (queue-empty-p queue)
                             do (return)
@@ -1633,9 +1615,11 @@ can be dynamically bound to different values (as we shall see).
   (let ((channel (make-channel))
         (stream *query-io*))
     (dotimes (i 10)
-      (submit-task channel #'(lambda (x)
-                               (sleep (random 10))
-                               (format stream "~d~%" (* x x))) (random 10)))
+      (submit-task
+          channel
+          (lambda (x)
+            (sleep (random 10))
+            (format stream "~d~%" (* x x))) (random 10)))
     (sleep (random 2))
     (kill-tasks :default)))
 ~~~
@@ -1684,14 +1668,18 @@ Here is the code:
         (stream *query-io*))
     (let ((*task-category* 'squaring-tasks))
       (dotimes (i 5)
-        (submit-task channel #'(lambda (x)
-                                 (sleep (random 5))
-                                 (format stream "~%[Squaring] ~d = ~d" x (* x x))) i)))
+        (submit-task channel
+                     (lambda (x)
+                       (sleep (random 5))
+                       (format stream "~%[Squaring] ~d = ~d"
+                               x (* x x))) i)))
     (let ((*task-category* 'cubing-tasks))
       (dotimes (i 5)
-        (submit-task channel #'(lambda (x)
-                                 (sleep (random 5))
-                                 (format stream "~%[Cubing] ~d = ~d" x (* x x x))) i)))
+        (submit-task channel
+                    (lambda (x)
+                       (sleep (random 5))
+                       (format stream "~%[Cubing] ~d = ~d"
+                               x (* x x x))) i)))
     (sleep 1)
     (if (evenp (random 10))
         (progn
@@ -1748,11 +1736,10 @@ result which is fulfilled by providing it with a value. The promise
 object itself is created using `lparallel:promise`, and the promise is
 given a value using the `lparallel:fulfill` macro.
 
-To check whether the promise has been fulfilled yet or not, we can use
-the `lparallel:fulfilledp` predicate function.  Finally, the
-`lparallel:force` function is used to extract the value out of the
-promise. Note that this function blocks until the operation is
-complete.
+To check whether the promise has been fulfilled yet or not, we can use the
+`lparallel:fulfilledp` predicate function. Finally, the `lparallel:force`
+function is used to extract the value out of the promise. Note that this
+function blocks until the operation is complete.
 
 Let’s solidify these concepts with a very simple example first:
 
@@ -1803,19 +1790,20 @@ available.
              (read))))
     (format t "In main function...~%")
     (bt:make-thread
-     #'(lambda ()
+     (lambda ()
          (sleep (random 10))
          (format stream "Inside thread... fulfilling promise~%")
          (fulfill p (* n n))))
     (bt:make-thread
-     #'(lambda ()
+     (lambda ()
          (loop
             when (fulfilledp p)
             do (return)
             do (progn
                  (format stream "~d~%" (random 100))
                  (sleep (* 0.01 (random 100)))))))
-    (format t "Inside main function, received value: ~d~%" (force p))))
+    (format t "Inside main function, received value: ~d~%"
+            (force p))))
 ~~~
 
 And the output:
@@ -1962,7 +1950,8 @@ Here’s how the code looks:
               (sleep (random 10))
               (fulfill p (* n n))
               (force (future
-                       (format stream "Square of ~d = ~d~%" n (force p)))))))
+                       (format stream "Square of ~d = ~d~%"
+                               n (force p)))))))
     (loop
        when (fulfilledp f)
        do (return)
@@ -2098,10 +2087,10 @@ through an example:
 #### lparallel:pmap: parallel version of map.
 
 Note that all the mapping functions (`lparallel:pmap`,
-**lparallel:pmapc**,`lparallel:pmapcar`, etc.) take two special keyword
-arguments
+**lparallel:pmapc**,`lparallel:pmapcar`, etc.) take two special keyword arguments:
+
 - `:size`, specifying the number of elements of the input
-sequence(s) to process, and
+sequence(s) to process.
 - `:parts` which specifies the number of parallel parts to divide the
 sequence(s) into.
 
@@ -2110,7 +2099,7 @@ sequence(s) into.
     (defun test-pmap ()
       (let ((numbers (loop for i below 10
                         collect i)))
-        (pmap 'vector #'(lambda (x)
+        (pmap 'vector (lambda (x)
                           (* x x))
               :parts (length numbers)
               numbers)))
@@ -2306,16 +2295,18 @@ Sample run:
       age)
 
     (defun test-psort ()
-      (let* ((names (list "Rich" "Peter" "Sybil" "Basil" "Candy" "Slava" "Olga"))
+      (let* ((names (list "Peter" "Sybil" "Basil" "Candy" "Olga"))
              (people (loop for name in names
-                        collect (make-person :name name :age (+ (random 20) 20)))))
+                        collect (make-person :name name
+                                             :age (+ (random 20)
+                                                     20)))))
         (print "Before sorting...")
         (print people)
         (fresh-line)
         (print "After sorting...")
         (psort
          people
-         #'(lambda (x y)
+         (lambda (x y)
              (< (person-age x)
                 (person-age y)))
          :test #'=)))
@@ -2327,16 +2318,14 @@ Sample run:
     LPARALLEL-USER> (test-psort)
 
     "Before sorting..."
-    (#S(PERSON :NAME "Rich" :AGE 38) #S(PERSON :NAME "Peter" :AGE 24)
-     #S(PERSON :NAME "Sybil" :AGE 20) #S(PERSON :NAME "Basil" :AGE 22)
-     #S(PERSON :NAME "Candy" :AGE 23) #S(PERSON :NAME "Slava" :AGE 37)
+    (#S(PERSON :NAME "Peter" :AGE 24) #S(PERSON :NAME "Sybil" :AGE 20)
+     #S(PERSON :NAME "Basil" :AGE 22) #S(PERSON :NAME "Candy" :AGE 23)
      #S(PERSON :NAME "Olga" :AGE 33))
 
     "After sorting..."
     (#S(PERSON :NAME "Sybil" :AGE 20) #S(PERSON :NAME "Basil" :AGE 22)
      #S(PERSON :NAME "Candy" :AGE 23) #S(PERSON :NAME "Peter" :AGE 24)
-     #S(PERSON :NAME "Olga" :AGE 33) #S(PERSON :NAME "Slava" :AGE 37)
-     #S(PERSON :NAME "Rich" :AGE 38))
+     #S(PERSON :NAME "Olga" :AGE 33))
 ~~~
 
 In this example, we first define a structure of type person for
@@ -2348,7 +2337,7 @@ them by age in non-decreasing order.
 
 To see how lparallel handles error handling (hint: with
 `lparallel:task-handler-bind`), please read
-[https://z0ltan.wordpress.com/2016/09/10/basic-concurrency-and-parallelism-in-common-lisp-part-4b-parallelism-using-lparallel-error-handling/](https://z0ltan.wordpress.com/2016/09/10/basic-concurrency-and-parallelism-in-common-lisp-part-4b-parallelism-using-lparallel-error-handling/).
+[lparallel-error-handling](https://z0ltan.wordpress.com/2016/09/10/basic-concurrency-and-parallelism-in-common-lisp-part-4b-parallelism-using-lparallel-error-handling/).
 
 
 ## Monitoring and controlling threads with Slime
@@ -2378,9 +2367,9 @@ library. This post barely scratches the surface on those. However, the
 general flow of operation is amply demonstrated here, and for further
 reading, you may find the following resources useful:
 
-- [The API docs hosted on Quickdoc](http://quickdocs.org/lparallel/api#package-LPARALLEL)
-- [The official homepage of the lparallel library](https://lparallel.org/)
+- [The official homepage of the lparallel library, including documentation](https://lparallel.org/)
 - [The Common Lisp Hyperspec](https://www.lispworks.com/documentation/HyperSpec/Front/), and, of course
 - Your Common Lisp implementation’s
-  manual. [For SBCL, here is a link to the official manual](https://www.lispworks.com/documentation/HyperSpec/Front/)
+  manual. [For SBCL, here is a link to the official manual](http://www.sbcl.org/manual/)
 - [Common Lisp recipes](http://weitz.de/cl-recipes/) by the venerable Edi Weitz.
+- more concurrency and threading libraries on the [Awesome-cl#parallelism-and-concurrency](https://github.com/CodyReichert/awesome-cl#parallelism-and-concurrency) list.

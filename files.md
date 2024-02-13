@@ -2,13 +2,14 @@
 title: Files and Directories
 ---
 
-Note: In this chapter, we use mainly
+We'll see here a handful of functions and libraries to operate on files and directories.
+
+In this chapter, we use mainly
 [namestrings](http://www.lispworks.com/documentation/HyperSpec/Body/19_aa.htm)
 to
-[specify filenames](http://www.lispworks.com/documentation/HyperSpec/Body/19_.htm). The
-issue of
-[pathnames](http://www.lispworks.com/documentation/HyperSpec/Body/19_ab.htm)
-needs to be covered separately.
+[specify filenames](http://www.lispworks.com/documentation/HyperSpec/Body/19_.htm).
+In a recipe or two we also use
+[pathnames](http://www.lispworks.com/documentation/HyperSpec/Body/19_ab.htm).
 
 Many functions will come from UIOP, so we suggest you have a look directly at it:
 
@@ -20,6 +21,47 @@ Of course, do not miss:
 * [Files and File I/O in Practical Common Lisp](http://gigamonkeys.com/book/files-and-file-io.html)
 
 
+### Getting the components of a pathname
+
+#### File name (sans directory)
+
+Use `file-namestring` to get a file name from a pathname:
+
+~~~lisp
+(file-namestring #p"/path/to/file.lisp") ;; => "file.lisp"
+~~~
+
+#### File extension
+
+The file extension is called "pathname type" in Lisp parlance:
+
+~~~lisp
+(pathname-type "~/foo.org")  ;; => "org"
+~~~
+
+#### File basename
+
+The basename is called the "pathname name" -
+
+~~~lisp
+(pathname-name "~/foo.org")  ;; => "foo"
+(pathname-name "~/foo")      ;; => "foo"
+~~~
+
+If a directory pathname has a trailing slash, `pathname-name` may return `nil`; use `pathname-directory` instead -
+
+~~~lisp
+(pathname-name "~/foo/")     ;; => NIL
+(first (last (pathname-directory #P"~/foo/"))) ;; => "foo"
+~~~
+
+#### Parent directory
+
+~~~lisp
+(uiop:pathname-parent-directory-pathname #P"/foo/bar/quux/")
+;; => #P"/foo/bar/"
+~~~
+
 ### Testing whether a file exists
 
 Use the function
@@ -29,6 +71,9 @@ which will return a
 either `nil` if the file doesn't exists, or its
 [truename](http://www.lispworks.com/documentation/HyperSpec/Body/20_ac.htm)
 (which might be different from the argument you supplied).
+
+For more portability, use `uiop:probe-file*` or `uiop:file-exists-p`
+which will return the file pathname (if it exists).
 
 ~~~lisp
 $ ln -s /etc/passwd foo
@@ -42,9 +87,6 @@ $ ln -s /etc/passwd foo
 * (probe-file "bar")
 NIL
 ~~~
-
-For more portability, use `uiop:probe-file*` or `uiop:file-exists-p`
-which will return the file pathname (if it exists).
 
 ### Expanding a file or a directory name with a tilde (`~`)
 
@@ -70,6 +112,16 @@ argument, with the tilde.
 With files that exist, you can also use `truename`. But, at least on
 SBCL, it returns an error if the path doesn't exist.
 
+### Turning a pathname into a string with Windows' directory separator
+
+Use again `uiop:native-namestring`:
+
+~~~lisp
+CL-USER> (uiop:native-namestring #p"~/foo/")
+"C:\\Users\\You\\foo\\"
+~~~
+
+See also `uiop:parse-native-namestring` for the inverse operation.
 
 ### Creating directories
 
@@ -82,6 +134,105 @@ creates the directories if they do not exist:
 ~~~
 
 This may create `foo`, `bar` and `baz`. Don't forget the trailing slash.
+
+### Deleting directories
+
+Use `uiop:delete-directory-tree` with a pathname (`#p`), a trailing slash and the `:validate` key:
+
+~~~lisp
+;; mkdir dirtest
+(uiop:delete-directory-tree #p"dirtest/" :validate t)
+~~~
+
+You can use `pathname` around a string that designates a directory:
+
+~~~lisp
+(defun rmdir (path)
+  (uiop:delete-directory-tree (pathname path) :validate t))
+~~~
+
+UIOP also has `delete-empty-directory`
+
+[cl-fad][cl-fad] has `(fad:delete-directory-and-files "dirtest")`.
+
+### Merging files and directories
+
+Use `merge-pathnames`, with one thing to note: if you want to append
+directories, the second argument must have a trailing `/`.
+
+As always, look at UIOP functions. We have a `uiop:merge-pathnames*`
+equivalent which fixes corner cases.
+
+So, here's how to append a directory to another one:
+
+~~~lisp
+(merge-pathnames "otherpath" "/home/vince/projects/")
+;; important:                                     ^^
+;; a trailing / denotes a directory.
+;; => #P"/home/vince/projects/otherpath"
+~~~
+
+Look at the difference: if you don't include a trailing slash to
+either paths, `otherpath` and `projects` are seen as files, so `otherpath` is appended to the base directory containing `projects`:
+
+~~~lisp
+(merge-pathnames "otherpath" "/home/vince/projects")
+;; #P"/home/vince/otherpath"
+;;               ^^ no "projects", because it was seen as a file.
+~~~
+
+or again, with `otherpath/` (a trailing `/`) but `projects` seen as a file:
+
+~~~lisp
+(merge-pathnames "otherpath/" "/home/vince/projects")
+;; #P"/home/vince/otherpath/projects"
+;;                ^^ inserted here
+~~~
+
+### Get the current working directory (CWD)
+
+Use `uiop/os:getcwd`:
+
+~~~lisp
+(uiop/os:getcwd)
+;; #P"/home/vince/projects/cl-cookbook/"
+;;                                    ^ with a trailing slash, useful for merge-pathnames
+~~~
+
+### Get the current directory relative to a Lisp project
+
+Use `asdf:system-relative-pathname system path`.
+
+Say you are working inside `mysystem`. It has an ASDF system
+declaration, the system is loaded in your Lisp image. This ASDF file
+is somewhere on your filesystem and you want the path to `src/web/`. Do this:
+
+~~~lisp
+(asdf:system-relative-pathname "mysystem" "src/web/")
+;; => #P"/home/vince/projects/mysystem/src/web/"
+~~~
+
+This will work on another user's machine, where the system sources are located in another location.
+
+
+### Setting the current working directory
+
+Use [`uiop:chdir`](https://asdf.common-lisp.dev/uiop.html#Function-uiop_002fos_003achdir) _`path`_:
+
+~~~lisp
+(uiop:chdir "/bin/")
+0
+~~~
+
+The trailing slash in _path_ is optional.
+
+Or, to set for the current directory for the next operation only, use `uiop:with-current-directory`:
+
+~~~lisp
+(let ((dir "/path/to/another/directory/"))
+  (uiop:with-current-directory (dir)
+      (directory-files "./")))
+~~~
 
 
 ### Opening a file
@@ -104,7 +255,7 @@ typical use of `with-open-file` looks like this:
     :direction <_direction_>
     :if-exists <_if-exists_>
     :if-does-not-exist <_if-does-not-exist_>)
-  <_your code here_>)
+  (your code here))
 ~~~
 
 *   `str` is a variable which'll be bound to the stream which is created by
@@ -130,8 +281,7 @@ Note that there are a lot more options to `with-open-file`. See
 [the CLHS entry for `open`](http://www.lispworks.com/documentation/HyperSpec/Body/f_open.htm)
 for all the details. You'll find some examples on how to use `with-open-file`
 below. Also note that you usually don't need to provide any keyword arguments if
-you just want to open an existing file for reading.<a name="strings">
-
+you just want to open an existing file for reading.
 
 ### Reading files
 
@@ -187,7 +337,7 @@ To avoid an `ASCII stream decoding error` you might want to specify an UTF-8 enc
 #### Set SBCL's default encoding format to utf-8
 
 Sometimes you don't control the internals of a library, so you'd
-better set the default encoding to utf-8.  Add this line to your
+better set the default encoding to utf-8. Add this line to your
 `~/.sbclrc`:
 
     (setf sb-impl::*default-external-format* :utf-8)
@@ -382,7 +532,7 @@ With `with-open-file`, specify `:direction :output` and use `write-sequence` ins
 (with-open-file (f <pathname> :direction :output
                               :if-exists :supersede
                               :if-does-not-exist :create)
-    (write-sequence s f)))
+    (write-sequence s f))
 ~~~
 
 If the file exists, you can also `:append` content to it.
@@ -393,6 +543,7 @@ If it doesn't exist, you can `:error` out. See [the standard](http://www.lispwor
 
 The library [Alexandria](https://common-lisp.net/project/alexandria/draft/alexandria.html#Conses)
 has a function called [write-string-into-file](https://gitlab.common-lisp.net/alexandria/alexandria/-/blob/master/alexandria-1/io.lisp#L73)
+
 ~~~lisp
 (alexandria:write-string-into-file content "file.txt")
 ~~~
@@ -405,28 +556,28 @@ Alternatively, the library [str](https://github.com/vindarel/cl-str) has the `to
 
 Both `alexandria:write-string-into-file` and `str:to-file` take the same keyword arguments as `cl:open` that controls file creation: `:if-exists` and `if-does-not-exists`.
 
-### Getting the file extension
-
-The file extension is a pathname type in Lisp parlance:
-
-~~~lisp
-(pathname-type "~/foo.org")  ;; => "org"
-~~~
-
-
 ### Getting file attributes (size, access time,...)
 
-[Osicat](https://www.common-lisp.net/project/osicat/) (in Quicklisp)
+[Osicat](https://www.common-lisp.net/project/osicat/)
 is a lightweight operating system interface for Common Lisp on
 POSIX-like systems, including Windows. With Osicat we can get and set
-**environment variables**, manipulate **files and directories**,
+**environment variables** (now doable with `uiop:getenv`),
+manipulate **files and directories**,
 **pathnames** and a bit more.
 
-Once it is installed, Osicat also defines the `osicat-posix` system,
+[file-attributes](https://github.com/Shinmera/file-attributes/) is a
+newer and lighter OS portability library specifically for getting file attributes,
+using system calls (cffi).
+
+SBCL with its `sb-posix` contrib can be used too.
+
+#### File attributes (Osicat)
+
+Once Osicat is installed, it also defines the `osicat-posix` system,
 which permits us to get file attributes.
 
 ~~~lisp
-(ql:quickload :osicat)
+(ql:quickload "osicat")
 
 (let ((stat (osicat-posix:stat #P"./files.md")))
   (osicat-posix:stat-size stat))  ;; => 10629
@@ -449,6 +600,53 @@ osicat-posix:stat-nlink
 osicat-posix:stat-blocks
 osicat-posix:stat-blksize
 ~~~
+
+#### File attributes (file-attributes)
+
+Install the library with
+
+    (ql:quickload "file-attributes")
+
+Its package is `org.shirakumo.file-attributes`. You can use a
+package-local nickname for a shorter access to its functions, for example:
+
+~~~lisp
+(uiop:add-package-local-nickname :file-attributes :org.shirakumo.file-attributes)
+~~~
+
+Then simply use the functions:
+
+- `access-time`, `modification-time`, `creation-time`. You can `setf` them.
+- `owner`, `group`, and `attributes`. The values used are OS specific
+for these functions. The attributes flag can be decoded and
+encoded via a standardised form with `decode-attributes` and
+`encode-attributes`.
+
+~~~lisp
+CL-USER> (file-attributes:decode-attributes
+           (file-attributes:attributes #p"test.txt"))
+(:READ-ONLY NIL :HIDDEN NIL :SYSTEM-FILE NIL :DIRECTORY NIL :ARCHIVED T :DEVICE
+ NIL :NORMAL NIL :TEMPORARY NIL :SPARSE NIL :LINK NIL :COMPRESSED NIL :OFFLINE
+ NIL :NOT-INDEXED NIL :ENCRYPTED NIL :INTEGRITY NIL :VIRTUAL NIL :NO-SCRUB NIL
+ :RECALL NIL)
+~~~
+
+See [its documentation](https://shinmera.github.io/file-attributes).
+
+#### File attributes (sb-posix)
+
+This contrib is loaded by default on POSIX systems.
+
+First get a stat object for a file, then get the stat you want:
+
+~~~lisp
+CL-USER> (sb-posix:stat "test.txt")
+#<SB-POSIX:STAT {10053FCBE3}>
+
+CL-USER> (sb-posix:stat-mtime *)
+1686671405
+~~~
+
 
 ### Listing files and directories
 
@@ -495,13 +693,13 @@ Returns a list of pathnames:
  #P"/home/vince/projects/cl-cookbook/assets/")
 ```
 
-#### Traversing (walking) directories
+#### Traversing (walking) directories recursively
 
 See `uiop/filesystem:collect-sub*directories`. It takes as arguments:
 
 - a `directory`
-- a `recursep` function
 - a `collectp` function
+- a `recursep` function
 - a `collector` function
 
 Given a directory, when `collectp` returns true with the directory,
@@ -513,7 +711,9 @@ superseding the functionality of `cl-fad:walk-directory`.
 
 The behavior in presence of symlinks is not portable. Use IOlib to handle such situations.
 
-Example:
+Examples:
+
+- this collects only subdirectories:
 
 ~~~lisp
 (defparameter *dirs* nil "All recursive directories.")
@@ -524,7 +724,25 @@ Example:
     (lambda (it) (push it *dirs*)))
 ~~~
 
-With `cl-fad:walk-directory`, we can also collect files, not only subdirectories:
+- this collects files and subdirectories:
+
+~~~lisp
+(let ((results))
+    (uiop:collect-sub*directories
+     "./"
+     (constantly t)
+     (constantly t)
+     (lambda (subdir)
+       (setf results
+             (nconc results
+                    ;; A detail: we return strings, not pathnames.
+                    (loop for path in (append (uiop:subdirectories subdir)
+                                              (uiop:directory-files subdir))
+                          collect (namestring path))))))
+    results)
+~~~
+
+- we can do the same with the `cl-fad` library:
 
 ~~~lisp
 (cl-fad:walk-directory "./"
@@ -533,6 +751,15 @@ With `cl-fad:walk-directory`, we can also collect files, not only subdirectories
    :directories t)
 ~~~
 
+- and of course, we can use an external tool: the good ol' unix `find`, or the newer `fd` (`fdfind` on Debian) that has a simpler syntax and filters out a set of common files and directories by default (node_modules, .git…):
+
+~~~lisp
+(str:lines (uiop:run-program (list "find" ".") :output :string))
+;; or
+(str:lines (uiop:run-program (list "fdfind") :output :string))
+~~~
+
+Here with the help of the `str` library.
 
 
 #### Finding files matching a pattern
@@ -592,3 +819,5 @@ operations.
 ~~~
 
 See also `(user-homedir-pathname)`.
+
+[cl-fad]: https://edicl.github.io/cl-fad/

@@ -4,7 +4,7 @@ title: Input/Output
 
 <a name="redir"></a>
 
-# Redirecting the Standard Output of your Program
+## Redirecting the Standard Output of your Program
 
 You do it like this:
 
@@ -28,7 +28,8 @@ act much like additional parameters that are passed to every function.)
 If the output of the program should go to a file, you can do the following:
 
 ~~~lisp
-(with-open-file (*standard-output* "somefile.dat" :direction :output
+(with-open-file (*standard-output* "somefile.dat"
+                                   :direction :output
                                    :if-exists :supersede)
   ...)
 ~~~
@@ -38,7 +39,7 @@ opens the file - creating it if necessary - binds `*STANDARD-OUTPUT*`, executes
 its body, closes the file, and restores `*STANDARD-OUTPUT*` to its former
 value. It doesn't get more comfortable than this!<a name="faith"></a>
 
-# Faithful Output with Character Streams
+## Faithful Output with Character Streams
 
 By _faithful output_ I mean that characters with codes between 0 and 255 will be
 written out as is. It means, that I can `(PRINC (CODE-CHAR 0..255) s)` to a
@@ -69,13 +70,21 @@ text/plain - the default in most Apache configurations).
 
  What follows is a list of implementation dependent choices and behaviours and some code to experiment.
 
-## CLISP
+### SBCL
+To load arbitrary bytes into a string, use the `:iso-8859-1` external format. For example:
+
+~~~lisp
+(uiop:read-file-string "/path/to/file" :external-format :iso-8859-1)
+~~~
+
+### CLISP
 
 On CLISP, faithful output is possible using
 
 ~~~lisp
 :external-format
-(ext:make-encoding :charset 'charset:iso-8859-1 :line-terminator :unix)
+(ext:make-encoding :charset 'charset:iso-8859-1
+                   :line-terminator :unix)
 ~~~
 
 You can also use `(SETF (STREAM-ELEMENT-TYPE F) '(UNSIGNED-BYTE 8))`, where the
@@ -84,30 +93,26 @@ will cause portability problems, since the default character set on MS-Windows
 is `CHARSET:CP1252`. `CHARSET:CP1252` doesn't allow output of e.g. `(CODE-CHAR
 #x81)`:
 
-~~~lisp
+~~~
 ;*** - Character #\u0080 cannot be represented in the character set CHARSET:CP1252
 ~~~
 
 Characters with code > 127 cannot be represented in ASCII:
 
-~~~lisp
+~~~
 ;*** - Character #\u0080 cannot be represented in the character set CHARSET:ASCII
 ~~~
 
-## CMUCL
-
-`:EXTERNAL-FORMAT :DEFAULT` (untested) - no unicode, so probably no problems.
-
-## AllegroCL
+### AllegroCL
 
 `#+(AND ALLEGRO UNIX) :DEFAULT` (untested) - seems enough on UNIX, but would not
 work on the MS-Windows port of AllegroCL.
 
-## LispWorks
+### LispWorks
 
 `:EXTERNAL-FORMAT '(:LATIN-1 :EOL-STYLE :LF)` (confirmed by Marc Battyani)
 
-## Example
+### Example
 
 Here's some sample code to play with:
 
@@ -118,7 +123,8 @@ Here's some sample code to play with:
 			  #+CLISP (charset 'charset:iso-8859-1)
                           external-format)
   (let ((e (or external-format
-	       #+CLISP (ext:make-encoding :charset charset :line-terminator :unix))))
+	       #+CLISP (ext:make-encoding :charset charset
+                           :line-terminator :unix))))
     (describe e)
     (with-open-file (f filename :direction :output
 		     :external-format e)
@@ -167,7 +173,7 @@ Here's some sample code to play with:
 
 <a name="bulk"></a>
 
-# Fast Bulk I/O
+## Fast Bulk I/O
 
 If you need to copy a lot of data and the source and destination are both
 streams (of the same

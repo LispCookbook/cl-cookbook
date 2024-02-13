@@ -1,34 +1,34 @@
 ---
-title: Getting started
+title: Getting started with Common Lisp
 ---
 
-Easy steps to install a development environment and start a project.
+We'll begin with presenting easy steps to install a development environment and to start a new Common Lisp project.
 
-Want a 2-clicks install ? Then get
+Want a 2-clicks install? Then get
 [Portacle](https://shinmera.github.io/portacle/), *a portable and
-multi-platform* Common Lisp environment. It ships Emacs25, SBCL (the
+multi-platform* Common Lisp environment. It ships Emacs, SBCL (the
 implementation), Quicklisp (package manager), SLIME (IDE) and
-Git. It's the most straightforward way to get going !
+Git. It's the most straightforward way to get going!
 
 ## Install an implementation
 
 ### With your package manager
 
-In doubt, just get SBCL:
+If you don't know which implementation of Common Lisp to use, try SBCL:
 
     apt-get install sbcl
 
 Common Lisp has been standardized via an ANSI document, so it can be
-implemented in different ways: see
+implemented in different ways. See
 [Wikipedia's list of implementations](https://en.wikipedia.org/wiki/Common_Lisp#Implementations).
 
-The following implementations are packaged for Debian and probably for your distro:
+The following implementations are packaged for Debian and most other popular Linux distributions:
 
 * [Steel Bank Common Lisp (SBCL)](http://www.sbcl.org/)
 * [Embeddable Common Lisp (ECL)](https://gitlab.com/embeddable-common-lisp/ecl/), which compiles to C,
 * [CLISP](https://clisp.sourceforge.io/)
 
-There is also:
+Other well-known implementations include:
 
 * [ABCL](http://abcl.org/), to interface with the JVM,
 * [ClozureCL](https://ccl.clozure.com/), a good implementation with very fast build times (see this [Debian package for Clozure CL](http://mr.gy/blog/clozure-cl-deb.html)),
@@ -42,6 +42,12 @@ and older implementations:
 * [GNU Common Lisp](https://en.wikipedia.org/wiki/GNU_Common_Lisp)
 * and there is more!
 
+
+### With the asdf-vm package manager
+
+The [asdf-vm](http://asdf-vm.com/) tool can be used to manage a large ecosystem of runtimes and tools.
+
+* [Steel Bank Common Lisp (SBCL)](http://www.sbcl.org/) is available via [this plugin](https://github.com/smashedtoatoms/asdf-sbcl) for [asdf-vm](http://asdf-vm.com/)
 
 ### With Roswell
 
@@ -66,23 +72,23 @@ Windows installer, Brew/Linux Brew,…).
 
 If you already know [Docker](https://docs.docker.com), you can get
 started with Common Lisp pretty quickly. The
-[daewok/lisp-devel-docker](https://github.com/daewok/lisp-devel-docker)
+[clfoundation/cl-devel](https://hub.docker.com/r/clfoundation/cl-devel)
 image comes with recent versions of SBCL, CCL, ECL and ABCL, plus
-Quicklisp installed in the home (`/home/lisp`) so than we can
+Quicklisp installed in the home (`/home/cl`), so than we can
 `ql:quickload` libraries straight away.
 
-It works on GNU/Linux, Mac and Windows.
+Docker works on GNU/Linux, Mac and Windows.
 
-The following command will download the required image (around 400MB), put your
-local sources inside the Docker image where indicated and drop you
-into an SBCL REPL:
+The following command will download the required image (around 1.0GB
+compressed), put your local sources inside the Docker image where indicated,
+and drop you into an SBCL REPL:
 
-    docker run --rm -it -v /path/to/local/code:/usr/local/share/common-lisp/source daewok/lisp-devel:base sbcl
+    docker run --rm -it -v /path/to/local/code:/home/cl/common-lisp/source clfoundation/cl-devel:latest sbcl
 
-But we still want to develop from our Emacs and SLIME, so we need to
-connect SLIME to the Lisp inside Docker. See
-[slime-docker](https://github.com/daewok/slime-docker) for a library
-that helps on setting that up.
+We still want to develop using Emacs and SLIME, so we need to connect SLIME to
+the Lisp inside Docker. See
+[slime-docker](https://gitlab.common-lisp.net/cl-docker-images/slime-docker),
+which is a library that helps on setting that up.
 
 
 ### On Windows
@@ -93,7 +99,7 @@ All implementations above can be installed on Windows.
 
 You can also try:
 
-* [ρEmacs](https://rho-emacs.sourceforge.io/), a preconfigured distribution of GNU Emacs specificalyl for Microsoft Windows. It ships with many CL implementations: CCL, SBCL, CLISP, ABCL and ECL, and also has components for other programming languages (Python, Racket, Java, C++…).
+* [ρEmacs](https://rho-emacs.sourceforge.io/), a preconfigured distribution of GNU Emacs specifically for Microsoft Windows. It ships with many CL implementations: CCL, SBCL, CLISP, ABCL and ECL, and also has components for other programming languages (Python, Racket, Java, C++…).
 * [Corman Lisp](https://github.com/sharplispers/cormanlisp), for Windows XP, Windows 2000, Windows ME or Windows NT. It is fully integrated with the Win32 API, and all the Windows API functions are readily available from Lisp.
 
 
@@ -136,19 +142,28 @@ But we'll setup our editor to offer a better experience instead of
 working in this REPL. See [editor-support](editor-support.html).
 
 Lisp is interactive by nature, so in case of an error we enter the
-debugger. This can be annoying in certain cases so you might want to
+debugger. This can be annoying in certain cases, so you might want to
 use SBCL's `--disable-debugger` option.
 
-_Tip: the CLISP implementation has a better default REPL for the
+<div class="info" style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 17px;">
+<!-- if inside a <p> then bootstrap adds 10px padding to the bottom -->
+<strong>TIP:</strong> The CLISP implementation has a better default REPL for the
 terminal (readline capabilities, completion of symbols). You can even
-use `clisp -on-error abort` to have error messages without the
+use <code>clisp -on-error abort</code> to have error messages without the
 debugger. It's handy to try things out, but we recommend to set-up
-one's editor and to use SBCL or CCL for production._
+your editor and to use SBCL or CCL.
+</div>
 
+
+<div class="info" style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 17px; margin-top:1em;">
+<!-- if inside a <p> then bootstrap adds 10px padding to the bottom -->
+<strong>TIP:</strong>
+ By adding the <code>-c</code> switch to rlwrap, you can autocomplete file names.
+</div>
 
 ## Libraries
 
-Common Lisp has hundreds of libraries available under a free software license. See:
+Common Lisp has thousands of libraries available under a free software license. See:
 
 * [Quickdocs](http://quickdocs.org/) - the library documentation hosting for CL.
 * the [Awesome-cl](https://github.com/CodyReichert/awesome-cl) list, a
@@ -228,8 +243,9 @@ It adds the following in your (for example) `~/.sbclrc`:
 
 ~~~lisp
 #-quicklisp
-  (let ((quicklisp-init (merge-pathnames "quicklisp/setup.lisp"
-                                         (user-homedir-pathname))))
+  (let ((quicklisp-init (merge-pathnames
+                          "quicklisp/setup.lisp"
+                          (user-homedir-pathname))))
     (when (probe-file quicklisp-init)
       (load quicklisp-init)))
 ~~~
@@ -239,20 +255,47 @@ It adds the following in your (for example) `~/.sbclrc`:
 In the REPL:
 
 ~~~lisp
-(ql:quickload "package-name")
+(ql:quickload "system-name")
 ~~~
 
-and voilà. See Quicklisp's documentation for more commands.
+For example, this installs the "[str](https://github.com/vindarel/cl-str/)" string manipulation library:
 
+~~~lisp
+(ql:quickload "str")
+~~~
+
+and voilà. You can use it right away:
+
+~~~lisp
+(str:title-case "HELLO LISP!")
+~~~
+
+<div class="info" style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 17px; margin: 1em;">
+<strong>SEE MORE:</strong> To understand the <code>package:a-symbol</code> notation, read the <a href="packages.html">packages page</a>, section "Accessing symbols from a package".
+</div>
+
+We can install more than one library at once. Here we install
+[cl-ppcre](https://edicl.github.io/cl-ppcre/) for regular-expressions, and
+[Alexandria](https://alexandria.common-lisp.dev/draft/alexandria.html),
+a utility library:
+
+~~~lisp
+(ql:quickload '("str" "cl-ppcre" "alexandria"))
+~~~
+
+Anytime you want to use a third-party library in your Lisp REPL, you
+can run this `ql:quickload` command. It will not hit the network a second
+time if it finds that the library is already installed on your file
+system. Libraries are by default installed in
+`~/quicklisp/dist/quicklisp/`.
 
 Note also that dozens of Common Lisp libraries are packaged in
 Debian. The package names usually begin with the cl- prefix (use
 `apt-cache search --names-only "^cl-.*"` to list them all).
 
-For example, in order to use the CL-PPCRE library (for regular
-expressions), one should first install the `cl-ppcre` package.
+For example, in order to use the `cl-ppcre` library, one should first install the `cl-ppcre` package.
 
-Then, in SBCL and ECL, it can be used with:
+Then, in SBCL, it can be used like this:
 
 ~~~lisp
 (require "asdf")
@@ -260,39 +303,45 @@ Then, in SBCL and ECL, it can be used with:
 (cl-ppcre:regex-replace "fo+" "foo bar" "frob")
 ~~~
 
-See more: https://wiki.debian.org/CommonLisp
+Here we pretend we don't have Quicklisp installed and we use `require` to load a module that is available on the file system. In doubt, you can use `ql:quickload`.
+
+See Quicklisp's documentation for more commands. For instance, see how to upgrade or rollback your Quicklisp's distribution.
+
 
 ### Advanced dependencies management
 
 You can drop Common Lisp projects into any of those folders:
 
+- `~/quicklisp/local-projects`
 - `~/common-lisp`,
 - `~/.local/share/common-lisp/source`,
-- `~/quicklisp/local-projects`
 
-For a complete list, see
+A library installed here is automatically available for every project.
+
+For a complete list, see the values of:
 
 ~~~lisp
 (asdf/source-registry:default-user-source-registry)
 ~~~
 
 and
+
 ~~~lisp
 asdf:*central-registry*
 ~~~
 
-A library installed here is automatically available for every project.
-
 #### Providing our own version of a library. Cloning projects.
 
 Given the property above, we can clone any library into the
-local-projects directory and it will be found by ASDF (and Quicklisp) and
+`~/quicklisp/local-projects/` directory and it will be found by ASDF (and Quicklisp) and
 available right-away:
 
 ~~~lisp
 (asdf:load-system "system")
 ~~~
+
 or
+
 ~~~lisp
 (ql:quickload "system")
 ~~~
@@ -300,11 +349,13 @@ or
 The practical different between the two is that `ql:quickload` first tries to
 fetch the system from the Internet if it is not already installed.
 
+Note that symlinks in local-projects to another location of your liking works too.
+
 #### How to work with local versions of libraries
 
 If we need libraries to be installed locally, for only one project, or
 in order to easily ship a list of dependencies with an application, we
-can use [Qlot](https://github.com/fukamachi/qlot).
+can use [Qlot](https://github.com/fukamachi/qlot) or [CLPM](https://clpm.dev).
 
 Quicklisp also provides
 [Quicklisp bundles](https://www.quicklisp.org/beta/bundles.html). They
@@ -353,7 +404,7 @@ it will create a directory structure like this:
 Where `my-project.asd` resembles this:
 
 ~~~lisp
-(defsystem "my-project"
+(asdf:defsystem "my-project"
   :version "0.1.0"
   :author ""
   :license ""
@@ -394,10 +445,12 @@ Otherwise you'll need to compile and load its system definition
 (*slime-compile-and-load-file*) in the `.asd`, then you can
 `(ql:quickload …)` it.
 
+You can use `(asdf:load-asd "my-project.asd")` programmatically instead of `C-c C-k`.
+
 Usually you want to "enter" the system in the REPL at this stage:
 
 ~~~lisp
-(use-package :my-project)
+(in-package :my-project)
 ~~~
 
 Lastly, you can compile or eval the sources (`my-project.lisp`) with
@@ -407,10 +460,11 @@ result in the REPL.
 Another solution is to use ASDF's list of known projects:
 
 ~~~lisp
-(pushnew "~/path-to-project/root/" asdf:*central-registry* :test #'equal)
+;; startup file like ~/.sbclrc
+(pushnew "~/to/project/" asdf:*central-registry* :test #'equal)
 ~~~
 
-and since ASDF is integrated into Quicklisp, we can `quickload` our project.
+and since ASDF is integrated into Quicklisp, we can `quickload` our project right away.
 
 Happy hacking !
 
@@ -427,14 +481,18 @@ If you dislike the REPL to print all symbols upcase, add this:
 
     (setf *print-case* :downcase)
 
-Beware that this might break some packages like
-[Mito](https://github.com/fukamachi/mito/issues/45).  Avoid doing this in
-production.
+<div class="info-box warning">
+<!-- if inside a <p> then bootstrap adds 10px padding to the bottom -->
+<strong>Warning:</strong> This might break the behaviour of some packages like it happened with
+<a href="https://github.com/fukamachi/mito/issues/45">Mito</a>.
+Avoid doing this in production.
+</div>
 
 
-## Read more
+## See also
 
-* Source code organization, libraries and packages:  [https://lispmethods.com/libraries.html](https://lispmethods.com/libraries.html)
+- [cl-cookieproject](https://github.com/vindarel/cl-cookieproject) - a project skeleton for a ready-to-use project with an entry point and unit tests. With a `src/` subdirectory, some more metadata, a 5AM test suite, a way to build a binary, an example CLI args parsing, Roswell integration.
+- Source code organization, libraries and packages:  [https://lispmethods.com/libraries.html](https://lispmethods.com/libraries.html)
 
 ## Credits
 

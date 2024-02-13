@@ -18,7 +18,7 @@ also have many more details:
 Don't miss the appendix and when you need more data structures, have a
 look at the
 [awesome-cl](https://github.com/CodyReichert/awesome-cl#data-structures)
-list and [Quickdocs](http://quickdocs.org/search?q=data+structure).
+list and [Quickdocs](https://quickdocs.org/-/search?q=data%20structure).
 
 ## Lists
 
@@ -88,12 +88,14 @@ Before working with circular lists, tell the printer to recognise them
 and not try to print the whole list by setting
 [\*print-circle\*](http://clhs.lisp.se/Body/v_pr_cir.htm)
 to `T`:
+
 ~~~lisp
 (setf *print-circle* t)
 ~~~
 
 A function which modifies a list, so that the last `cdr` points to the
 start of the list is:
+
 ~~~lisp
 (defun circular! (items)
   "Modifies the last cdr of list ITEMS, returning a circular list"
@@ -120,6 +122,7 @@ expression:
 '#42=(1 2 3 . #42#)
 ;; => #1=(1 2 3 . #1#)
 ~~~
+
 Note that the label given to the reader (`n=42`) is discarded after
 reading, and the printer defines a new label (`n=1`).
 
@@ -196,9 +199,6 @@ containing the elements of all its arguments:
 The new list shares some cons cells with the `(3 4)`:
 
 http://gigamonkeys.com/book/figures/after-append.png
-
-__Note__: [cl21](cl21.htm)'s `append` is generic (for strings, lists, vectors and
-its abstract-sequence).
 
 `nconc` is the recycling equivalent.
 
@@ -291,7 +291,8 @@ The `&whole` parameter is bound to the whole list. It must be the
 first one and others can follow.
 
 ~~~lisp
-(destructuring-bind (&whole whole-list &key x y z) (list :z 1 :y 2 :x 3)
+(destructuring-bind (&whole whole-list &key x y z)
+    (list :z 1 :y 2 :x 3)
   (list :x x :y y :z z :whole whole-list))
 ;; => (:X 3 :Y 2 :Z 1 :WHOLE-LIST (:Z 1 :Y 2 :X 3))
 ~~~
@@ -356,8 +357,8 @@ or subexpression in a tree (when it satisfies the optional `test`):
 (subst 'one 1 '(1 2 3))
 ;; => (ONE 2 3)
 
-(subst  '(1 . one) '(1 . 1) '((1 . 1) (2 . 2) (3 . 3)) :test #'equal)
-;; ((1 . ONE) (2 . 2) (3 . 3))
+(subst  '(1 . one) '(1 . 1) '((1 . 1) (2 . 2)) :test #'equal)
+;; ((1 . ONE) (2 . 2))
 ~~~
 
 [sublis](http://www.lispworks.com/documentation/HyperSpec/Body/f_sublis.htm)
@@ -425,8 +426,6 @@ For more, use a `lambda` that takes one parameter.
 (find 'bar my-alist :key (lambda (it) (car it)))
 ~~~
 
-_Note_: and [cl21](cl21.html#shorter-lambda) has short lambdas:
-
 ~~~lisp
 (find 'bar my-alist :key ^(car %))
 (find 'bar my-alist :key (lm (it) (car it)))
@@ -453,18 +452,12 @@ with a list of strings:
 (defparameter str '("foo" "bar" "team"))
 (every #'stringp str)
 ;; => T
-(some #'(lambda (it) (= 3 (length it))) str)
-;; => T
-(some ^(= 3 (length %)) str) ;; in CL21
+(some (lambda (it) (= 3 (length it))) str)
 ;; => T
 ~~~
 
 `some`, `notany` *(test, sequence)*: return either the value of the test, or nil.
 
-`mismatch` *(sequence-a, sequence-b)*: Return position in sequence-a where
-sequence-a and sequence-b begin to mismatch. Return NIL if they match
-entirely. Other parameters: `:from-end bool`, `:start1`, `:start2` and
-their `:end[1,2]`.
 
 ### Functions
 
@@ -488,14 +481,49 @@ See also `count-if`, `count-not` *(test-function sequence)*.
 
 #### subseq (sequence start, [end])
 
-It is "setf"able, but only works if the new sequence has the same
+~~~lisp
+(subseq (list 1 2 3) 0)
+;; (1 2 3)
+(subseq (list 1 2 3) 1 2)
+;; (2)
+~~~
+
+However, watch out if the `end` is larger than the list:
+
+~~~lisp
+(subseq (list 1 2 3) 0 99)
+;; => Error: the bounding indices 0 and 99
+;; are bad for a sequence of length 3.
+~~~
+
+To this end, use `alexandria-2:subseq*`:
+
+~~~lisp
+(alexandria-2:subseq* (list 1 2 3) 0 99)
+;; (1 2 3)
+~~~
+
+`subseq` is "setf"able, but only works if the new sequence has the same
 length of the one to replace.
+
 
 #### sort, stable-sort (sequence, test [, key function])
 
-These sort functions are destructive, so one may prefer to copy the sequence before sorting:
+These sort functions are destructive, so one may prefer to copy the sequence with `copy-seq` before sorting:
 
-    (sort (copy-seq seq) :test #'string<)
+~~~lisp
+(sort (copy-seq seq) :test #'string<)
+~~~
+
+Unlike `sort`, `stable-sort` guarantees to keep the order of the argument.
+In theory, the result of this:
+
+~~~lisp
+(sort '((1 :a) (1 :b)) #'< :key #'first)
+~~~
+
+could be either `((1 :A) (1 :B))`, either `((1 :B) (1 :A))`. On my tests, the order is preserved, but the standard does not guarantee it.
+
 
 #### find, position (foo, sequence) - get index
 
@@ -509,11 +537,35 @@ sequence)*. See `:key` and `:test` parameters.
 ;; 1
 ~~~
 
-#### search (sequence-a, sequence-b)
+#### search and mismatch (sequence-a, sequence-b)
 
-Search sequence-b for a subsequence matching sequence-a. Return
-position in sequence-b, or NIL. Has the `from-end`, `end1/2` and others
+`search` searches in sequence-b for a subsequence that matches sequence-a. It returns the
+*position* in sequence-b, or NIL. It has the `from-end`, `end1`, `end2` and the usual `test` and `key`
 parameters.
+
+~~~lisp
+(search '(20 30) '(10 20 30 40))
+;; 1
+(search '("b" "c") '("a" "b" "c"))
+;; NIL
+(search '("b" "c") '("a" "b" "c") :test #'equal)
+;; 1
+(search "bc" "abc")
+;; 1
+~~~
+
+`mismatch` returns the position where the two sequences start to differ:
+
+~~~lisp
+(mismatch '(10 20 99) '(10 20 30))
+;; 2
+(mismatch "hellolisper" "helloworld")
+;; 5
+(mismatch "same" "same")
+;; NIL
+(mismatch "foo" "bar")
+;; 0
+~~~
 
 #### substitute, nsubstitute[if,if-not]
 
@@ -523,17 +575,46 @@ except that all elements equal to `old` are replaced with `new`.
 ~~~lisp
 (substitute #\o #\x "hellx") ;; => "hello"
 (substitute :a :x '(:a :x :x)) ;; => (:A :A :A)
-(substitute "a" "x" '("a" "x" "x") :test #'string=) ;; => ("a" "a" "a")
+(substitute "a" "x" '("a" "x" "x") :test #'string=)
+;; => ("a" "a" "a")
 ~~~
 
 #### sort, stable-sort, merge
 
 (see above)
 
-#### replace (sequence-a, sequence-b)
+#### replace (sequence-a, sequence-b, &key start1, end1)
 
-Replace elements of sequence-a with elements of
+Destructively replace elements of sequence-a with elements of
 sequence-b.
+
+The full signature is:
+
+~~~lisp
+(replace sequence1 sequence2
+      &rest args
+      &key (start1 0) (end1 nil) (start2 0) (end2 nil))
+~~~
+
+Elements are copied to the subseqeuence bounded by START1 and END1,
+from the subsequence bounded by START2 and END2. If these subsequences
+are not of the same length, then the shorter length determines how
+many elements are copied.
+
+~~~lisp
+(replace "xxx" "foo")
+"foo"
+
+(replace "xxx" "foo" :start1 1)
+"xfo"
+
+(replace "xxx" "foo" :start1 1 :start2 1)
+"xoo"
+
+(replace "xxx" "foo" :start1 1 :start2 1 :end2 2)
+"xox"
+~~~
+
 
 #### remove, delete (foo sequence)
 
@@ -578,8 +659,6 @@ produce either a vector or a list, use `(map 'list function vector)`.
 
 mapcar also accepts multiple lists with `&rest more-seqs`.  The
 mapping stops as soon as the shortest sequence runs out.
-
-_Note: cl21's `map` is a generic `mapcar` for lists and vectors._
 
 `map` takes the output-type as first argument (`'list`, `'vector` or
 `'string`):
@@ -649,6 +728,16 @@ We can use sets functions.
 
 ## Set
 
+We show below how to use set operations on lists.
+
+A set doesn't contain twice the same element and is unordered.
+
+Most of these functions have recycling (modifying) counterparts, starting with "n": `nintersection`,… They all accept the usual `:key` and `:test` arguments, so use the test `#'string=` or `#'equal` if you are working with strings.
+
+For more, see functions in
+[Alexandria](https://common-lisp.net/project/alexandria/draft/alexandria.html#Conses):
+`setp`, `set-equal`,… and the FSet library, shown in the next section.
+
 ### `intersection` of lists
 
 What elements are both in list-a and list-b ?
@@ -660,9 +749,7 @@ What elements are both in list-a and list-b ?
 ;; => (2 0)
 ~~~
 
-### Remove the elements of list-b from list-a
-
-`set-difference`
+### Remove the elements of list-b from list-a (`set-difference`)
 
 ~~~lisp
 (set-difference list-a list-b)
@@ -671,29 +758,50 @@ What elements are both in list-a and list-b ?
 ;; => (4)
 ~~~
 
-### Join two lists
-
-`union`
+### Join two lists with uniq elements (`union`)
 
 ~~~lisp
 (union list-a list-b)
 ;; => (3 1 0 2 4) ;; order can be different in your lisp
 ~~~
 
-### Remove elements that are in both lists
-
-`set-exclusive-or`
+### Remove elements that are in both lists (`set-exclusive-or`)
 
 ~~~lisp
 (set-exclusive-or list-a list-b)
 ;; => (4 3 1)
 ~~~
 
-and their recycling "n" counterpart (`nintersection`,…).
+### Add an element to a set (`adjoin`)
 
-See also functions in
-[Alexandria](https://common-lisp.net/project/alexandria/draft/alexandria.html#Conses):
-`setp`, `set-equal`,…
+A new set is returned, the original set is not modified.
+
+~~~lisp
+(adjoin 3 list-a)
+;; => (0 1 2 3)   ;; <-- nothing was changed, 3 was already there.
+
+(adjoin 5 list-a)
+;; => (5 0 1 2 3) ;; <-- element added in front.
+
+list-a
+;; => (0 1 2 3)  ;; <-- original list unmodified.
+~~~
+
+### Check if this is a subset (`subsetp`)
+
+~~~lisp
+(subsetp '(1 2 3) list-a)
+;; => T
+
+(subsetp '(1 1 1) list-a)
+;; => T
+
+(subsetp '(3 2 1) list-a)
+;; => T
+
+(subsetp '(0 3) list-a)
+;; => T
+~~~
 
 ## Fset - immutable data structure
 
@@ -782,18 +890,34 @@ vector._
 ;; => #(1 2 3)
 ~~~
 
+The following interface is available for vectors (or vector-like arrays):
 
-`vector-push` *(foo vector)*: replace the vector element pointed to by
-the fill pointer by foo. Can be destructive.
-
-`vector-push-extend` *(foo vector [extension-num])*t
-
-`vector-pop` *(vector)*: return the element of vector its fill pointer
-points to.
-
-`fill-pointer` *(vector)*. `setf`able.
+* `vector-push` *(new-element vector)*: replace the vector element pointed to by the fill pointer by `new-element`, then increment the fill pointer by one. Returns the index at which the new element was placed, or NIL if there's not enough space.
+* `vector-push-extend` *(new-element vector [extension])*: like `vector-push`, but if the fill pointer gets too large then the array is extended using `adjust-array`. `extension` is the minimum number of elements to add to the array if it must be extended.
+* `vector-pop` *(vector)*: decrement the fill pointer, and return the element that it now points to.
+* `fill-pointer` *(vector)*. `setf`able.
 
 and see also the *sequence* functions.
+
+The following shows how to create an array that can be pushed to and popped from arbitrarily, growing its storage capacity as needed. This is roughly equivalent to a `list` in Python, an `ArrayList` in Java, or a `vector<T>` in C++ -- though note that elements are not erased when they're popped.
+
+~~~lisp
+CL-USER> (defparameter *v* (make-array 0 :fill-pointer t :adjustable t))
+*V*
+CL-USER> *v*
+#()
+CL-USER> (vector-push-extend 42 *v*)
+0
+CL-USER> (vector-push-extend 43 *v*)
+1
+CL-USER> (vector-pop *v*)
+43
+CL-USER> *v*
+#(42)
+CL-USER> (aref *v* 1) ; beware, the element is still there!
+43
+CL-USER> (setf (aref *v* 1) nil) ; manually erase elements if necessary
+~~~
 
 ### Transforming a vector to a list.
 
@@ -831,19 +955,46 @@ Hash Tables are created using the function
 has no required argument. Its most used optional keyword argument is
 `:test`, specifying the function used to test the equality of keys.
 
-If we are using the [cl21](http://cl21.org/) extension library, we can
-create a hash table and add elements in the same time with the new
-`#H` reader syntax:
+<div class="info-box info">
+<strong>Note:</strong> see shorter notations in the <a href="https://github.com/ruricolist/serapeum/">Serapeum</a> or <a href="https://github.com/vseloved/rutils">Rutils</a> libraries. For example, Serapeum has <code>dict</code>, and Rutils a <code>#h</code> reader macro.
+</div>
+
+<a name="add"></a>
+
+### Adding an Element to a Hash Table
+
+If you want to add an element to a hash table, you can use `gethash`,
+the function to retrieve elements from the hash table, in conjunction
+with
+[`setf`](http://www.lispworks.com/documentation/HyperSpec/Body/m_setf_.htm).
 
 ~~~lisp
-(defparameter *my-hash* #H(:name "Eitaro Fukamachi"))
+CL-USER> (defparameter *my-hash* (make-hash-table))
+*MY-HASH*
+CL-USER> (setf (gethash 'one-entry *my-hash*) "one")
+"one"
+CL-USER> (setf (gethash 'another-entry *my-hash*) 2/4)
+1/2
+CL-USER> (gethash 'one-entry *my-hash*)
+"one"
+T
+CL-USER> (gethash 'another-entry *my-hash*)
+1/2
+T
 ~~~
-then we access an element with
+
+With Serapeum's `dict`, we can create a hash-table and add elements to
+it in one go:
 
 ~~~lisp
-(getf *my-hash* :name)
+(defparameter *my-hash* (dict :one-entry "one"
+                              :another-entry 2/4))
+;; =>
+ (dict
+  :ONE-ENTRY "one"
+  :ANOTHER-ENTRY 1/2
+ )
 ~~~
-
 
 <a name="get"></a>
 
@@ -876,34 +1027,10 @@ library (in Quicklisp) has the functions `hash-table-keys` and
 `hash-table-values` for that.
 
 ~~~lisp
-(ql:quickload :alexandria)
+(ql:quickload "alexandria")
 ;; […]
 (alexandria:hash-table-keys *my-hash*)
 ;; => (BAR)
-~~~
-
-<a name="add"></a>
-
-### Adding an Element to a Hash Table
-
-If you want to add an element to a hash table, you can use `gethash`,
-the function to retrieve elements from the hash table, in conjunction
-with
-[`setf`](http://www.lispworks.com/documentation/HyperSpec/Body/m_setf_.htm).
-
-~~~lisp
-CL-USER> (defparameter *my-hash* (make-hash-table))
-*MY-HASH*
-CL-USER> (setf (gethash 'one-entry *my-hash*) "one")
-"one"
-CL-USER> (setf (gethash 'another-entry *my-hash*) 2/4)
-1/2
-CL-USER> (gethash 'one-entry *my-hash*)
-"one"
-T
-CL-USER> (gethash 'another-entry *my-hash*)
-1/2
-T
 ~~~
 
 
@@ -993,6 +1120,34 @@ NIL
 ~~~
 
 
+<a name="del-tab"></a>
+
+### Deleting a Hash Table
+
+Use
+[`clrhash`](http://www.lispworks.com/documentation/HyperSpec/Body/f_clrhas.htm)
+to delete a hash table. This will remove all of the data from the hash table and return the deleted table.
+
+~~~lisp
+CL-USER> (defparameter *my-hash* (make-hash-table))
+*MY-HASH*
+CL-USER> (setf (gethash 'first-key *my-hash*) 'one)
+ONE
+CL-USER> (setf (gethash 'second-key *my-hash*) 'two)
+TWO
+CL-USER> *my-hash*
+#<hash-table :TEST eql :COUNT 2 {10097BF4E3}>
+CL-USER> (clrhash *my-hash*)
+#<hash-table :TEST eql :COUNT 0 {10097BF4E3}>
+CL-USER> (gethash 'first-key *my-hash*)
+NIL
+NIL
+CL-USER> (gethash 'second-key *my-hash*)
+NIL
+NIL
+~~~
+
+
 <a name="traverse"></a>
 
 ### Traversing a Hash Table
@@ -1021,7 +1176,8 @@ NIL
 CL-USER> (setf (gethash nil *my-hash*) 'nil-value)
 NIL-VALUE
 CL-USER> (defun print-hash-entry (key value)
-    (format t "The value associated with the key ~S is ~S~%" key value))
+    (format t "The value associated with the key ~S is ~S~%"
+            key value))
 PRINT-HASH-ENTRY
 CL-USER> (maphash #'print-hash-entry *my-hash*)
 The value associated with the key FIRST-KEY is ONE
@@ -1075,7 +1231,8 @@ NIL
 NIL
 CL-USER> (loop for key being the hash-keys of *my-hash*
            using (hash-value value)
-           do (format t "The value associated with the key ~S is ~S~%" key value))
+           do (format t "The value associated with the key ~S is ~S~%"
+                      key value))
 The value associated with the key FIRST-KEY is ONE
 The value associated with the key SECOND-KEY is TWO
 The value associated with the key THIRD-KEY is NIL
@@ -1098,9 +1255,7 @@ NIL -> NIL-VALUE
 NIL
 ~~~
 
-Last, we also have [cl21](cl21.htm)'s `(doeach ((key val) *hash*) …)`.
-
-#### Traversign keys or values
+#### Traversing keys or values
 
 To map over keys or values we can again rely on Alexandria with
 `maphash-keys` and `maphash-values`.
@@ -1137,7 +1292,43 @@ CL-USER> (hash-table-count *my-hash*)
 0
 ~~~
 
-### Printing a hash table readably
+### Printing a Hash Table readably
+
+**With print-object** (non portable)
+
+It is very tempting to use `print-object`. It works under several
+implementations, but this method is actually not portable. The
+standard doesn't permit to do so, so this is undefined behaviour.
+
+~~~lisp
+(defmethod print-object ((object hash-table) stream)
+  (format stream "#HASH{~{~{(~a : ~a)~}~^ ~}}"
+          (loop for key being the hash-keys of object
+                using (hash-value value)
+                collect (list key value))))
+~~~
+
+gives:
+
+~~~
+;; WARNING:
+;;   redefining PRINT-OBJECT (#<STRUCTURE-CLASS COMMON-LISP:HASH-TABLE>
+;;                            #<SB-PCL:SYSTEM-CLASS COMMON-LISP:T>) in DEFMETHOD
+;; #<STANDARD-METHOD COMMON-LISP:PRINT-OBJECT (HASH-TABLE T) {1006A0D063}>
+~~~
+
+and let's try it:
+
+~~~lisp
+(let ((ht (make-hash-table)))
+  (setf (gethash :foo ht) :bar)
+  ht)
+;; #HASH{(FOO : BAR)}
+~~~
+
+**With a custom function** (portable way)
+
+Here's a portable way.
 
 This snippets prints the keys, values and the test function of a
 hash-table, and uses `alexandria:alist-hash-table` to read it back in:
@@ -1145,7 +1336,8 @@ hash-table, and uses `alexandria:alist-hash-table` to read it back in:
 ~~~lisp
 ;; https://github.com/phoe/phoe-toolbox/blob/master/phoe-toolbox.lisp
 (defun print-hash-table-readably (hash-table
-                                  &optional (stream *standard-output*))
+                                  &optional
+                                  (stream *standard-output*))
   "Prints a hash table readably using ALEXANDRIA:ALIST-HASH-TABLE."
   (let ((test (hash-table-test hash-table))
         (*print-circle* t)
@@ -1177,9 +1369,70 @@ This output can be read back in to create a hash-table:
 ;; 83
 ~~~
 
+**With Serapeum** (readable and portable)
+
+The [Serapeum library](https://github.com/ruricolist/serapeum/blob/master/REFERENCE.md#hash-tables)
+has the `dict` constructor, the function `pretty-print-hash-table` and
+the `toggle-pretty-print-hash-table` switch, all which do *not* use
+`print-object` under the hood.
+
+~~~lisp
+CL-USER> (serapeum:toggle-pretty-print-hash-table)
+T
+CL-USER> (serapeum:dict :a 1 :b 2 :c 3)
+(dict
+  :A 1
+  :B 2
+  :C 3
+ )
+~~~
+
+This printed representation can be read back in.
 
 
 <a name="size"></a>
+
+### Thread-safe Hash Tables
+
+The standard hash-table in Common Lisp is not thread-safe. That means
+that simple access operations can be interrupted in the middle and
+return a wrong result.
+
+Implementations offer different solutions.
+
+With **SBCL**, we can create thread-safe hash tables with the `:synchronized` keyword to `make-hash-table`: [http://www.sbcl.org/manual/#Hash-Table-Extensions](http://www.sbcl.org/manual/#Hash-Table-Extensions).
+
+> If nil (the default), the hash-table may have multiple concurrent readers, but results are undefined if a thread writes to the hash-table concurrently with another reader or writer. If t, all concurrent accesses are safe, but note that [clhs 3.6 (Traversal Rules and Side Effects)](http://www.lispworks.com/documentation/HyperSpec/Body/03_f.htm) remains in force. See also: sb-ext:with-locked-hash-table.
+
+~~~lisp
+(defparameter *my-hash* (make-hash-table :synchronized t))
+~~~
+
+But, operations that expand to two accesses, like the modify macros (`incf`) or this:
+
+~~~lisp
+(setf (gethash :a *my-hash*) :new-value)
+~~~
+
+need to be wrapped around `sb-ext:with-locked-hash-table`:
+
+> Limits concurrent accesses to HASH-TABLE for the duration of BODY.  If HASH-TABLE is synchronized, BODY will execute with exclusive ownership of the table. If HASH-TABLE is not synchronized, BODY will execute with other WITH-LOCKED-HASH-TABLE bodies excluded -- exclusion of hash-table accesses not surrounded by WITH-LOCKED-HASH-TABLE is unspecified.
+
+~~~lisp
+(sb-ext:with-locked-hash-table (*my-hash*)
+  (setf (gethash :a *my-hash*) :new-value))
+~~~
+
+In **LispWorks**, hash-tables are thread-safe by default. But
+likewise, there is no guarantee of atomicity *between* access
+operations, so we can use
+[with-hash-table-locked](http://www.lispworks.com/documentation/lw71/LW/html/lw-144.htm#pgfId-900768).
+
+Ultimately, you might like what the [**cl-gserver library**](https://mdbergmann.github.io/cl-gserver/index.html#toc-2-4-1-hash-table-agent)
+proposes. It offers helper functions around hash-tables and its
+actors/agent system to allow thread-safety. They also maintain the
+order of updates and reads.
+
 
 ### Performance Issues: The Size of your Hash Table
 
@@ -1197,7 +1450,8 @@ CL-USER> (hash-table-size *my-hash*)
 65
 CL-USER> (hash-table-rehash-size *my-hash*)
 1.5
-CL-USER> (time (dotimes (n 100000) (setf (gethash n *my-hash*) n)))
+CL-USER> (time (dotimes (n 100000)
+                 (setf (gethash n *my-hash*) n)))
 Compiling LAMBDA NIL:
 Compiling Top-Level Form:
 
@@ -1208,7 +1462,8 @@ Evaluation took:
   0 page faults and
   8754768 bytes consed.
 NIL
-CL-USER> (time (dotimes (n 100000) (setf (gethash n *my-hash*) n)))
+CL-USER> (time (dotimes (n 100000)
+                 (setf (gethash n *my-hash*) n)))
 Compiling LAMBDA NIL:
 Compiling Top-Level Form:
 
@@ -1233,7 +1488,10 @@ hash until we reach the final size...
 ~~~lisp
 CL-USER> (log (/ 100000 65) 1.5)
 18.099062
-CL-USER> (let ((size 65)) (dotimes (n 20) (print (list n size)) (setq size (* 1.5 size))))
+CL-USER> (let ((size 65))
+           (dotimes (n 20)
+             (print (list n size))
+             (setq size (* 1.5 size))))
 (0 65)
 (1 97.5)
 (2 146.25)
@@ -1271,7 +1529,8 @@ CL-USER> (defparameter *my-hash* (make-hash-table :size 100000))
 *MY-HASH*
 CL-USER> (hash-table-size *my-hash*)
 100000
-CL-USER> (time (dotimes (n 100000) (setf (gethash n *my-hash*) n)))
+CL-USER> (time (dotimes (n 100000)
+                 (setf (gethash n *my-hash*) n)))
 Compiling LAMBDA NIL:
 Compiling Top-Level Form:
 
@@ -1298,7 +1557,8 @@ CL-USER> (hash-table-size *my-hash*)
 65
 CL-USER> (hash-table-rehash-size *my-hash*)
 100000
-CL-USER> (time (dotimes (n 100000) (setf (gethash n *my-hash*) n)))
+CL-USER> (time (dotimes (n 100000)
+                 (setf (gethash n *my-hash*) n)))
 Compiling LAMBDA NIL:
 Compiling Top-Level Form:
 
@@ -1383,23 +1643,37 @@ Alists are just lists, so you can have the same key multiple times in the same a
 
 To get a key, we have `assoc` (use `:test 'equal` when your keys are
 strings, as usual). It returns the whole cons cell, so you may want to
-use `cdr` or `second` to get the value or even better `assoc-value list key` from `Alexandria`.
+use `cdr` or `second`  to get the value, or even `assoc-value list key` from `Alexandria`.
 
+~~~lisp
+(assoc :foo *my-alist*)
+;; (:FOO . "foo")
+(cdr *)
+;; "foo"
+~~~
 
 ~~~lisp
 (alexandria:assoc-value *my-alist* :foo)
-;; it actually returns 2 values
 ;; "foo"
 ;; (:FOO . "FOO")
+;; It actually returned 2 values.
 ~~~
 
-There is `assoc-if`, and `rassoc` to get a cons cell by its value.
+There is `assoc-if`, and `rassoc` to get a cons cell by its value:
+
+~~~lisp
+(rassoc "foo" *my-alist*)
+;; NIL
+;; bummer! The value "foo" is a string, so use:
+(rassoc "foo" *my-alist* :test #'equal)
+;; (:FOO . "foo")
+~~~
 
 If the alist has repeating (duplicate) keys, you can use `remove-if-not`, for example, to retrieve all of them.
 
 ~~~lisp
 (remove-if-not
-  #'(lambda (entry)
+  (lambda (entry)
       (eq :a entry))
   *alist-with-duplicate-keys*
   :key #'car)
@@ -1418,26 +1692,33 @@ We can use `pop` and other functions that operate on lists, like `remove`:
 
 ~~~lisp
 (remove :team *my-alist*)
-;; => ((:TEAM . "team") (FOO . "foo") (BAR . "bar")) ;; didn't remove anything
+;; ((:TEAM . "team") (FOO . "foo") (BAR . "bar"))
+;; => didn't remove anything
 (remove :team *my-alist* :key 'car)
-;; => ((FOO . "foo") (BAR . "bar")) ;; returns a copy
+;; ((FOO . "foo") (BAR . "bar"))
+;; => returns a copy
 ~~~
 
 Remove only one element with `:count`:
 
 ~~~lisp
 (push (cons 'bar "bar2") *my-alist*)
-;; => ((BAR . "bar2") (TEAM . "team") (FOO . "foo") (BAR . "bar")) ;; twice the 'bar key
+;; ((BAR . "bar2") (TEAM . "team") (FOO . "foo") (BAR . "bar"))
+;; => twice the 'bar key
+
 (remove 'bar *my-alist* :key 'car :count 1)
-;; => ((TEAM . "team") (FOO . "foo") (BAR . "bar"))
+;; ((TEAM . "team") (FOO . "foo") (BAR . "bar"))
+
 ;; because otherwise:
 (remove 'bar *my-alist* :key 'car)
-;; => ((TEAM . "team") (FOO . "foo")) ;; no more 'bar
+;; ((TEAM . "team") (FOO . "foo"))
+;; => no more 'bar
 ~~~
 
 ### Update entries
 
 Replace a value:
+
 ~~~lisp
 *my-alist*
 ;; => '((:FOO . "foo") (:BAR . "bar"))
@@ -1450,6 +1731,7 @@ Replace a value:
 ~~~
 
 Replace a key:
+
 ~~~lisp
 *my-alist*
 ;; => '((:FOO . "foo") (:BAR . "bar")))
@@ -1647,7 +1929,11 @@ code.
        (name "john doe" :type string)
        age
        email)
+~~~
 
+gives an error and we drop in the debugger:
+
+~~~
 attempt to redefine the STRUCTURE-OBJECT class PERSON
 incompatibly with the current definition
    [Condition of type SIMPLE-ERROR]
@@ -1721,7 +2007,9 @@ choose the depth to print:
 (let ((*print-level* 2))
   (print '(:a (:b (:c (:d :e))))))
 ;; (:A (:B #))             <= *print-level* in action
-;; (:A (:B (:C (:D :E))))  <= the list is returned, the let binding is not in effect anymore.
+;; (:A (:B (:C (:D :E))))
+;; => the list is returned,
+;; the let binding is not in effect anymore.
 ~~~
 
 `*print-length*` will be applied at each level.
@@ -1735,9 +2023,8 @@ The solutions presented below might help you getting started, but keep
 in mind that they'll have a performance impact and that error messages
 will be less explicit.
 
-* [CL21](cl21.html) has a generic `getf` (as well as others generic functions),
-* [rutils](https://github.com/vseloved/rutils) as a generic `generic-elt` or `?`,
 * the [access](https://github.com/AccelerationNet/access) library (battle tested, used by the Djula templating system) has a generic `(access my-var :elt)` ([blog post](https://lisp-journey.gitlab.io/blog/generice-consistent-access-of-data-structures-dotted-path/)). It also has `accesses` (plural) to access and set nested values.
+* [rutils](https://github.com/vseloved/rutils) as a generic `generic-elt` or `?`,
 
 ## Appendix B - accessing nested data structures
 

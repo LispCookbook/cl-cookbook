@@ -54,7 +54,8 @@ Call the function:
 ~~~lisp
 (hello "me")
 ;; hello me !  <-- this is printed by `format`
-;; NIL         <-- return value: `format t` prints a string to standard output and returns nil.
+;; NIL         <-- return value: `format t` prints a string
+;;                 to standard output and returns nil.
 ~~~
 
 If you don't specify the right amount of arguments, you'll be trapped
@@ -78,7 +79,8 @@ This function:
 must be called like this:
 
 ~~~lisp
-(hello "me") ;; a value for the required argument, zero optional arguments
+(hello "me") ;; a value for the required argument,
+             ;; zero optional arguments
 (hello "me" "7")  ;; a value for age
 (hello "me" 7 :h) ;; a value for age and gender
 ~~~
@@ -96,7 +98,7 @@ and we use `name` as a regular variable in the function body. They are
   "If `happy' is `t', print a smiley"
   (format t "hello ~a " name)
   (when happy
-    (format t ":)~&"))
+    (format t ":)~&")))
 ~~~
 
 The following calls are possible:
@@ -123,6 +125,16 @@ it can be called with zero or more key parameters, in any order:
 (hello "me" :cookbook-contributor-p t :happy t)
 ~~~
 
+Last but not least, you would quickly realize it, but we can choose the keys programmatically (they can be variables):
+
+~~~lisp
+(let ((key :happy)
+      (val t))
+  (hello "me" key val))
+;; hello me :)
+;; NIL
+~~~
+
 #### Mixing optional and key parameters
 
 It is generally a style warning, but it is possible.
@@ -136,7 +148,7 @@ It is generally a style warning, but it is possible.
 
 In SBCL, this yields:
 
-~~~lisp
+~~~
 ; in: DEFUN HELLO
 ;     (SB-INT:NAMED-LAMBDA HELLO
 ;         (&OPTIONAL NAME &KEY HAPPY)
@@ -158,7 +170,7 @@ We can call it:
 ;; NIL
 ~~~
 
-### Default values
+### Default values to key parameters
 
 In the lambda list, use pairs to give a default value to an optional or a key argument, like `(happy t)` below:
 
@@ -167,6 +179,39 @@ In the lambda list, use pairs to give a default value to an optional or a key ar
 ~~~
 
 Now `happy` is true by default.
+
+### Was a key parameter specified?
+
+You can skip this tip for now if you want, but come back later to it as it can turn handy.
+
+We saw that a default key parameter is `nil` by default (`(defun hello
+(name &key happy) …)`). But how can be distinguish between "the value
+is NIL by default" and "the user wants it to be NIL"?
+
+We saw how to use a tuple to set its default value:
+
+`&key (:happy t)`
+
+To answer our question, use a triple like this:
+
+`&key (happy t happy-p)`
+
+where `happy-p` serves as a *predicate* variable (using `-p` is only a
+convention, give it the name you want) to know if the key was
+supplied. If it was, then it will be `T`.
+
+So now, we will print a sad face if `:happy` was explicitely set to
+NIL. We don't print it by default.
+
+~~~lisp
+(defun hello (name &key (happy nil happy-p))
+  (format t "Key supplied? ~a~&" happy-p)
+  (format t "hello ~a " name)
+  (when happy-p
+    (if happy
+      (format t ":)")
+      (format t ":("))))
+~~~
 
 ### Variable number of arguments: `&rest`
 
@@ -181,11 +226,11 @@ arguments. Use `&rest <variable>`, where `<variable>` will be a list.
 
 ~~~lisp
 (mean 1)
-(mean 1 2)
-(mean 1 2 3 4 5)
+(mean 1 2)  ;; => 3/2 (yes, it is printed as a ratio)
+(mean 1 2 3 4 5) ;;  => 3
 ~~~
 
-### `&allow-other-keys`
+### Defining key arguments, and allowing more: `&allow-other-keys`
 
 Observe:
 
@@ -278,7 +323,8 @@ with `nth-value`:
 ~~~lisp
 (multiple-value-bind (res1 res2 res3)
     (foo :a :b :c)
-  (format t "res1 is ~a, res2 is ~a, res2 is ~a~&" res1 res2 res3))
+  (format t "res1 is ~a, res2 is ~a, res2 is ~a~&"
+     res1 res2 res3))
 ;; res1 is A, res2 is B, res2 is C
 ;; NIL
 ~~~
@@ -355,6 +401,88 @@ can be used on a list, for example from `&rest`:
 (funcall #'+ 1 2)
 (apply #'+ '(1 2))
 ~~~
+
+### Referencing functions by name: single quote `'` or sharpsign-quote `#'`?
+
+In the example above, we used `#'`, but a single quote also works, and
+we can encounter it in the wild. Which one to use?
+
+It is generally safer to use `#'`, because it respects lexical scope. Observe:
+
+~~~lisp
+(defun foo (x)
+  (* x 100))
+
+(flet ((foo (x) (1+ x)))
+  (funcall #'foo 1))
+;; => 2, as expected
+
+;; But:
+
+(flet ((foo (x) (1+ x)))
+  (funcall 'foo 1))
+;; => 100
+~~~
+
+`#'` is actually the shorthand for `(function …)`:
+
+~~~lisp
+(function +)
+;; #<FUNCTION +>
+
+(flet ((foo (x) (1+ x)))
+  (print (function foo))
+  (funcall (function foo) 1))
+;; #<FUNCTION (FLET FOO) {1001C0ACFB}>
+;; 2
+~~~
+
+Using `function` or the `#'` shorthand allows us to refer to local
+functions. If we pass instead a symbol to `funcall`, what is
+called is always the function named by that symbol in the *global environment*.
+
+In addition, `#'` catches the function by value. If the function is redefined, bindings that refered to this function by `#'` will still run its original behaviour.
+
+Let's assign a function to a parameter:
+
+~~~lisp
+(defparameter *foo-caller* #'foo)
+(funcall *foo-caller* 1)
+;; => 100
+~~~
+
+Now, if we redefine `foo`, the behaviour of `*foo-caller*` will *not* change:
+
+~~~lisp
+(defun foo (x) (1+ x))
+;; WARNING: redefining CL-USER::FOO in DEFUN
+;; FOO
+
+(funcall *foo-caller* 1)
+;; 100  ;; and not 2
+~~~
+
+If we bind the caller with `'foo`, a single quote, the function will be resolved at runtime:
+
+~~~lisp
+(defun foo (x) (* x 100))  ;; back to original behavior.
+(defparameter *foo-caller-2* 'foo)
+;; *FOO-CALLER-2*
+(funcall *foo-caller-2* 1)
+;; 100
+
+;; We change the definition:
+(defun foo (x) (1+ x))
+;; WARNING: redefining CL-USER::FOO in DEFUN
+;; FOO
+
+;; We try again:
+(funcall *foo-caller-2* 1)
+;; 2
+~~~
+
+The behaviour you want depends on your use case. Generally, using sharpsign-quote is less surprising. But if you are running a tight loop and you want live-update mechanisms (think a game or live visualisations), you might want to use a single quote so that your loop picks up the user's new function definition.
+
 
 ## Higher order functions: functions that return functions
 
@@ -568,7 +696,7 @@ implementation of the
 library (in Quicklisp).
 
 ~~~lisp
-(ql:quickload :alexandria)
+(ql:quickload "alexandria")
 
 (defun adder (foo bar)
   "Add the two arguments."

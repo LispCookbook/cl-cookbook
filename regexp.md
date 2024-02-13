@@ -22,9 +22,7 @@ The description provided below is far from complete, so don't forget
 to check the reference manual that comes along with the CL-PPCRE
 library.
 
-# PPCRE
-
-## Using PPCRE
+## PPCRE
 
 [CL-PPCRE](https://github.com/edicl/cl-ppcre) (abbreviation for
 Portable Perl-compatible regular expressions) is a portable regular
@@ -41,7 +39,7 @@ Basic operations with the CL-PPCRE library functions are described
 below.
 
 
-## Looking for matching patterns
+### Looking for matching patterns: scan, create-scanner
 
 The `scan` function tries to match the given pattern and on success
 returns four multiple-values values - the start of the match, the end
@@ -69,10 +67,45 @@ but will require less time for repeated `scan` calls as parsing the
 expression and compiling it is done only once.
 
 
-## Extracting information
+### Extracting information
 
-CL-PPCRE provides a several ways to extract matching fragments, among
-them: the `scan-to-strings` and `register-groups-bind` functions.
+CL-PPCRE provides several ways to extract matching fragments.
+
+#### all-matches, all-matches-as-strings
+
+The function `all-matches-as-strings` is very handy: it returns a list of matches:
+
+~~~lisp
+(ppcre:all-matches-as-strings "\\d+" "numbers: 1 10 42")
+;; => ("1" "10" "42")
+~~~
+
+The function `all-matches` is similar, but it returns a list of positions:
+
+~~~lisp
+(ppcre:all-matches "\\d+" "numbers: 1 10 42")
+;; => (9 10 11 13 14 16)
+~~~
+
+Look carefully: it actually return a list containing the start and end
+positions of all matches: 9 and 10 are the start and end for the first
+number (1), and so on.
+
+If you wanted to extract integers from this example string, simply map
+`parse-integer` to the result:
+
+~~~lisp
+CL-USER> (ppcre:all-matches-as-strings "\\d+" "numbers: 1 10 42")
+;; ("1" "10" "42")
+CL-USER> (mapcar #'parse-integer *)
+(1 10 42)
+~~~
+
+The two functions accept the usual `:start` and `:end` key arguments. Additionnaly, `all-matches-as-strings` accepts a `:sharedp` argument:
+
+> If SHAREDP is true, the substrings may share structure with TARGET-STRING.
+
+#### scan-to-strings, register-groups-bind
 
 The `scan-to-strings` function is similar to `scan` but returns
 substrings of target-string instead of positions. This function
@@ -94,29 +127,25 @@ CL-PPCRE also provides a shortcut for calling a function before
 assigning the matching fragment to the variable:
 
 ~~~lisp
-(ppcre:register-groups-bind (fname lname (#'parse-integer date month year))
-      ("(\\w+)\\s+(\\w+)\\s+(\\d{1,2})\\.(\\d{1,2})\\.(\\d{4})" "Frank Zappa 21.12.1940")
-    (list fname lname (encode-universal-time 0 0 0 date month year 0)))
-;; => ("Frank" "Zappa" 1292889600)
+(ppcre:register-groups-bind
+  (fname lname (#'parse-integer date month year))
+      ("(\\w+)\\s+(\\w+)\\s+(\\d{1,2})\\.(\\d{1,2})\\.(\\d{4})"
+       "Frank Zappa 21.12.1940")
+    (list fname lname date month year))
+;; => ("Frank" "Zappa" 21 12 1940)
 ~~~
 
-## Syntactic sugar
-
-It might be more convenient to use CL-PPCRE with the
-[CL-INTERPOL](https://github.com/edicl/cl-interpol)
-library. CL-INTERPOL is a library for Common Lisp which modifies the
-reader in a way that introduces interpolation within strings similar
-to Perl, Scala, or Unix Shell scripts.
-
-In addition to loading the CL-INTERPOL library, initialization call
-must be made to properly configure the Lisp reader. This is
-accomplished by either calling the `enable-interpol-syntax` function
-from the REPL or placing that call in the source file before using any
-of its features:
+### Replacing text: regex-replace, regex-replace-all
 
 ~~~lisp
-(interpol:enable-interpol-syntax)
+(ppcre:regex-replace "a" "abc" "A") ;; => "Abc"
+;; or
+(let ((pat (ppcre:create-scanner "a")))
+  (ppcre:regex-replace pat "abc" "A"))
 ~~~
 
-A lot more syntax sugar is introduced by the [cl21](cl21.html) project
-but in a somewhat more intrusive way.
+## See more
+
+- [cl-ppcre on common-lisp-libraries.readthedocs.io](https://common-lisp-libraries.readthedocs.io/cl-ppcre/) and read on: `do-matches`, `do-matches-as-strings`,
+  `do-register-groups`, `do-scans`, `parse-string`, `regex-apropos`,
+  `quote-meta-chars`, `split`…

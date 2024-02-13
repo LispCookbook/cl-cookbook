@@ -4,7 +4,7 @@ title: Packages
 
 See: [The Complete Idiot's Guide to Common Lisp Packages][guide]
 
-# Creating a package
+## Creating a package
 
 Here's an example package definition. It takes a name, and you
 probably want to `:use` the Common Lisp symbols and functions.
@@ -20,33 +20,164 @@ To start writing code for this package, go inside it:
 (in-package :my-package)
 ~~~
 
-## Accessing symbols from a package
+This `in-package` macro puts you "inside" a package:
+
+- any new variable or function will be created in this package, aka in the "namespace" of this package.
+- you can call all this package's symbols directly, without using the package prefix.
+
+Just try!
+
+We can also use `in-package` to try packages on the REPL. Note that on
+a new Lisp REPL session, we are "inside" the CL-USER package. It is a
+regular package.
+
+Let's show you an example. We open a new .lisp file and we create a new
+package with a function inside our package:
+
+~~~lisp
+;; in test-package.lisp
+(defpackage :my-package
+  (:use :cl))
+
+(in-package :my-package)
+
+(defun hello ()
+  (print "Hello from my package."))
+~~~
+
+This "hello" function lives inside "my-package". It is not exported yet.
+
+Continue below to see how to call it.
+
+### Accessing symbols from a package
 
 As soon as you have defined a package or loaded one (with Quicklisp,
 or if it was defined as a dependency in your `.asd` system
-definition), you can access its symbols with `package:a-symbol`, or
-with a double colon if the symbol is not exported:
-`package::non-exported-symbol`.
+definition), you can access its symbols with `package:a-symbol`, using
+a colon as delimiter.
 
-Now we can choose to import individual symbols to access them right
+For example:
+
+~~~lisp
+(str:concat …)
+~~~
+
+When the symbol is not exported (it is "private"), use a double colon:
+
+~~~lisp
+(package::non-exported-symbol)
+(my-package::hello)
+~~~
+
+Continuing our example: in the REPL, be sure to be in `my-package` and not in `CL-USER`. There you can call "hello" directly:
+
+~~~lisp
+CL-USER> (in-package :my-package)
+#<PACKAGE "MY-PACKAGE">
+;; ^^^ this creates a package object.
+MY-PACKAGE> (hello)
+;; ^^^^ the REPL shows you the current package.
+"Hello from my package."
+~~~
+
+But now, come back to the CL-USER package and try to call "hello": we get an error.
+
+~~~lisp
+MY-PACKAGE> (in-package :cl-user)
+#<PACKAGE "COMMON-LISP-USER">
+CL-USER> (hello)
+
+=> you get the interactive debugger that says:
+
+The function COMMON-LISP-USER::HELLO is undefined.
+
+(quit)
+~~~
+
+We have to "namespace" our hello function with its package name:
+
+~~~lisp
+CL-USER> (my-package::hello)
+"Hello from my package."
+~~~
+
+Let's export the function.
+
+### Exporting symbols
+
+Augment our `defpackage` declaration to export our "hello" function like so:
+
+~~~lisp
+(defpackage :my-package
+  (:use :cl)
+  (:export
+   #:hello))
+~~~
+
+Compile this (`C-c C-c` in Slime), and now you can call
+
+~~~lisp
+CL-USER> (my-package:hello)
+~~~
+
+with a single colon.
+
+You can also use the `export` function:
+
+~~~lisp
+(in-package :my-package)
+(export #:hello)
+~~~
+
+Observation:
+
+- exporting `:hello` without the sharpsign (`#:hello`) works too, but it will always create a new symbol. The `#:` notation does not create a new symbol. More precisely: it doesn't *intern* a new symbol in our current package. It is a detail and at this point, a personal preference to use it or not. It can be helpful to not clutter our symbols namespace, specially when we import and re-export symbols from other libraries. That way, our editor's symbols completion only shows relevant results. It is not useful for us at this point, don't worry.
+
+Now we might want to import individual symbols in order to access them right
 away, without the package prefix.
 
 
-## Importing symbols from another package
+### Importing symbols from another package
 
 You can import exactly the symbols you need with `:import-from`:
 
 ~~~lisp
 (defpackage :my-package
-  (:import-from :ppcre :regex-replace)
+  (:import-from :ppcre #:regex-replace)
   (:use :cl))
 ~~~
+
+Now you can call `regex-replace` from inside `my-package`, without the `ppcre` package prefix. `regex-replace` is a new symbol inside your package. It is not exported.
 
 Sometimes, we see `(:import-from :ppcre)`, without an explicit
 import. This helps people using ASDF's *package inferred system*.
 
+You can also use the `import` function from outside a package definition:
 
-## About "use"-ing packages being a bad practice
+~~~lisp
+CL-USER> (import 'ppcre:regex-replace)
+CL-USER> (regex-replace …)
+~~~
+
+### Importing all symbols
+
+It is a better practice to carefully choose what symbols you import from another package (read below), but we can also import all symbols at once with `:use`:
+
+~~~lisp
+(defpackage :my-package
+  (:use :cl :ppcre))
+~~~
+
+Now you can access all variables, functions and macros of `cl-ppcre` from your `my-package` package.
+
+You can also use the `use-package` function:
+
+~~~lisp
+CL-USER> (use-package 'cl-ppcre)
+~~~
+
+
+### About "use"-ing packages being a bad practice
 
 `:use` is a well spread idiom. You could do:
 
@@ -67,7 +198,7 @@ To quote [this thorough explanation](https://gist.github.com/phoe/2b63f33a2a4727
 > USE is a bad idea in contemporary code except for internal packages that you fully control, where it is a decent idea until you forget that you mutate the symbol of some other package while making that brand new shiny DEFUN. USE is the reason why Alexandria cannot nowadays even add a new symbol to itself, because it might cause name collisions with other packages that already have a symbol with the same name from some external source.
 
 
-# List all Symbols in a Package
+## List all Symbols in a Package (do-external-symbols)
 
 Common Lisp provides some macros to iterate through the symbols of a
 package. The two most interesting are:
@@ -98,22 +229,61 @@ Or you can do it with [`LOOP`][loop].
   collect s)
 ~~~
 
-# Package nickname
+## Package nickname
 
-## Nickname Provided by Packages
+#### Package Local Nicknames (PLN)
 
-When defining a package, it is trivial to give it a nickname for better user
-experience. The following example is a snippet of `PROVE` package:
+Sometimes it is handy to give a local name to an imported package to
+save some typing, especially when the imported package does not
+provide nice global nicknames.
+
+Many implementations (SBCL, CCL, ECL, Clasp, ABCL, ACL, LispWorks >= 7.2…) support Package Local Nicknames (PLN).
+
+
+To use a PLN you can simply do the following, for example, if you'd like to try out a local nickname in an ad-hoc fashion:
+
+~~~lisp
+(uiop:add-package-local-nickname :a :alexandria)
+(a:iota 12) ; (0 1 2 3 4 5 6 7 8 9 10 11)
+~~~
+
+You can also set up a PLN in a `defpackage` form. The effect of PLN is totally within `mypackage` i.e. the `nickname` won't work in other packages unless defined there too. So, you don't have to worry about unintended package name clash in other libraries.
+
+~~~lisp
+(defpackage :mypackage
+  (:use :cl)
+  (:local-nicknames (:nickname :original-package-name)
+                    (:alex :alexandria)
+                    (:re :cl-ppcre)))
+
+(in-package :mypackage)
+
+;; You can use :nickname instead of :original-package-name
+(nickname:some-function "a" "b")
+~~~
+
+Another facility exists for adding nicknames to packages. The function [`RENAME-PACKAGE`](http://www.lispworks.com/documentation/HyperSpec/Body/f_rn_pkg.htm) can be used to replace the name and nicknames of a package. But it's use would mean that other libraries may not be able to access the package using the original name or nicknames. There is rarely any situation to use this. Use Package Local Nicknames instead.
+
+### Nickname Provided by Packages
+
+When defining a package, it is trivial to give it a nickname for
+better user experience. But this mechanism is *global*, a nickname
+defined here is visible by all other packages everywhere. If you were
+thinking in giving a short name to a package you use often, you can
+get a conflict with another package. That's why *package-local*
+nicknames appeared. You should use them instead.
+
+Here's an example anyways, from the `prove` package:
 
 ~~~lisp
 (defpackage prove
   (:nicknames :cl-test-more :test-more)
-  (:export :run
-           :is
-           :ok)
+  (:export #:run
+           #:is
+           #:ok)
 ~~~
 
-Afterwards, a user may use nickname instead of the package name to refer to this
+Afterwards, a user may use a nickname instead of the package name to refer to this
 package. For example:
 
 ~~~lisp
@@ -135,33 +305,8 @@ example:
   (:nicknames :ppcre)
 ~~~
 
-### Package Local Nicknames (PLN)
 
-Sometimes it is handy to give a local name to an imported package to
-save some typing, especially when the imported package does not
-provide nice nicknames.
-
-Many implementations (SBCL, CCL, ECL, Clasp, ABCL, ACL, LispWorks >= 7.2…) support Package Local Nicknames (PLN).
-
-~~~lisp
-(defpackage :mypackage
-  (:use :cl)
-  (:local-nicknames (:nickname :original-package-name)
-                    (:alex :alexandria)
-                    (:re :cl-ppcre)))
-
-(in-package :mypackage)
-
-;; You can use :nickname instead of :original-package-name
-(nickname:some-function "a" "b")
-~~~
-
-The effect of `PLN` is totally within `mypackage` i.e. the `nickname` won't work in other packages unless defined there too. So, you don't have to worry about unintended package name clash in other libraries.
-
-Another facility exists for adding nicknames to packages. The function [`RENAME-PACKAGE`](http://www.lispworks.com/documentation/HyperSpec/Body/f_rn_pkg.htm) can be used to replace the name and nicknames of a package. But it's use would mean that other libraries may not be able to access the package using the original name or nicknames. There is rarely any situation to use this. Use Package Local Nicknames instead.  
-
-
-## Package locks
+### Package locks
 
 The package `common-lisp` and SBCL internal implementation packages are locked
 by default, including `sb-ext`.
@@ -209,7 +354,7 @@ example:
   (rename-package :alexandria :alex))
 ~~~
 
-# See also
+## See also
 
 - [Package Local Nicknames in Common Lisp](https://gist.github.com/phoe/2b63f33a2a4727a437403eceb7a6b4a3) article.
 

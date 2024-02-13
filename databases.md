@@ -20,15 +20,15 @@ don't need a SQL database and want automatic persistence of Lisp
 objects, you also have a choice of libraries.
 
 
-# The Mito ORM and SxQL
+## The Mito ORM and SxQL
 
 Mito is in Quicklisp:
 
 ~~~lisp
-(ql:quickload :mito)
+(ql:quickload "mito")
 ~~~
 
-## Overview
+### Overview
 
 [Mito](https://github.com/fukamachi/mito) is "an ORM for Common Lisp
 with migrations, relationships and PostgreSQL support".
@@ -41,11 +41,10 @@ with migrations, relationships and PostgreSQL support".
 - permits DB **schema versioning**,
 - is tested under SBCL and CCL.
 
-As an ORM, it allows to write class definitions, to specify
-relationships, and provides functions to query the database.  For
-custom queries, it relies on
-[SxQL](https://github.com/fukamachi/sxql), an SQL generator that
-provides the same interface for several backends.
+As an ORM, it allows to write class definitions, to specify relationships, and
+provides functions to query the database. For custom queries, it relies on
+[SxQL](https://github.com/fukamachi/sxql), an SQL generator that provides the
+same interface for several backends.
 
 Working with Mito generally involves these steps:
 
@@ -56,13 +55,16 @@ Working with Mito generally involves these steps:
 
 and iterating.
 
-## Connecting to a DB
+### Connecting to a DB
 
 Mito provides the function `connect-toplevel` to establish a
 connection to RDBMs:
 
 ~~~lisp
-(mito:connect-toplevel :mysql :database-name "myapp" :username "fukamachi" :password "c0mon-1isp")
+(mito:connect-toplevel :mysql
+                       :database-name "myapp"
+                       :username "fukamachi"
+                       :password "c0mon-1isp")
 ~~~
 
 The driver type can be of `:mysql`, `:sqlite3` and `:postgres`.
@@ -70,7 +72,7 @@ The driver type can be of `:mysql`, `:sqlite3` and `:postgres`.
 With sqlite you don't need the username and password:
 
 ~~~lisp
-(connect-toplevel :sqlite3 :database-name "myapp")
+(mito:connect-toplevel :sqlite3 :database-name "myapp")
 ~~~
 
 As usual, you need to create the MySQL or PostgreSQL database beforehand.
@@ -80,36 +82,28 @@ Connecting sets `mito:*connection*` to the new connection and returns it.
 
 Disconnect with `disconnect-toplevel`.
 
-=> you might make good use of a wrapper function:
+You might make good use of a wrapper function:
 
 ~~~lisp
 (defun connect ()
   "Connect to the DB."
-  (connect-toplevel :sqlite3 :database-name "myapp"))
+  (mito:connect-toplevel :sqlite3 :database-name "myapp"))
 ~~~
 
-## Models
+### Models
 
-### Defining models
+#### Defining models
 
-In Mito, you can define a class which corresponds to a database table
-by specifying `(:metaclass mito:dao-table-class)`:
+In Mito, you can define a class which corresponds to a database table with the `deftable` macro:
 
 ~~~lisp
-(defclass user ()
-  ((name :col-type (:varchar 64)
-         :initarg :name
-         :accessor user-name)
-   (email :col-type (or (:varchar 128) :null)
-          :initarg :email
-          :accessor user-email))
-  (:metaclass mito:dao-table-class))
+(mito:deftable user ()
+  ((name :col-type (:varchar 64))
+   (email :col-type (or (:varchar 128) :null)))
 ~~~
+Alternatively, you can specify `(:metaclass mito:dao-table-class)` in a regular class definition.
 
-Note that the class automatically adds some slots: a primary key named `id`
-if there's no primary keys, `created_at` and `updated_at` for
-recording timestamps. To disable these behaviors, specify `:auto-pk
-nil` or `:record-timestamps nil` to the defclass forms.
+The `deftable` macro automatically adds some slots: a primary key named `id` if there's no primary key, and `created_at` and `updated_at` for recording timestamps. Specifying `(:auto-pk nil)` and `(:record-timestamps nil)` in the `deftable` form will disable these behaviours. A `deftable` class will also come with initializers, named after the slot, and accessors, of form `<class-name>-<slot-name>`, for each named slot. For example, for the `name` slot in the above table definition, the initarg `:name` will be added to the constuctor, and the accessor `user-name` will be created.
 
 You can inspect the new class:
 
@@ -139,7 +133,7 @@ For more information on using the Common Lisp Object System, see the
 [clos](clos.html) page.
 
 
-### Creating the tables
+#### Creating the tables
 
 After defining the models, you must create the tables:
 
@@ -151,7 +145,7 @@ So a helper function:
 
 ~~~lisp
 (defun ensure-tables ()
-  (mapcar #'mito:ensure-table-exists '('user 'foo 'bar)))
+  (mapcar #'mito:ensure-table-exists '(user foo bar)))
 ~~~
 
 
@@ -161,13 +155,13 @@ for a couple more ways.
 
 When you alter the model you'll need to run a DB migration, see the next section.
 
-### Fields
+#### Fields
 
-#### Fields types
+##### Fields types
 
 Field types are:
 
-`(:varchar <integer>)` ,
+`(:varchar <integer>)`, `text`,
 
 `:serial`, `:bigserial`, `:integer`, `:bigint`, `:unsigned`,
 
@@ -175,30 +169,23 @@ Field types are:
 
 `:bytea`,
 
-#### Optional fields
+##### Optional fields
 
 Use `(or <real type> :null)`:
 
 ~~~lisp
-   (email :col-type (or (:varchar 128) :null)
-          :initarg :email
-          :accessor user-email))
+   (email :col-type (or (:varchar 128) :null))
 ~~~
 
 
-#### Field constraints
+##### Field constraints
 
 `:unique-keys` can be used like so:
 
 ~~~lisp
-(defclass user ()
-  ((name :col-type (:varchar 64)
-         :initarg :name
-         :accessor user-name)
-   (email :col-type (:varchar 128)
-          :initarg :email
-          :accessor user-email))
-  (:metaclass mito:dao-table-class)
+(mito:deftable user ()
+  ((name :col-type (:varchar 64))
+   (email :col-type (:varchar 128))
   (:unique-keys email))
 ~~~
 
@@ -206,20 +193,15 @@ We already saw `:primary-key`.
 
 You can change the table name with `:table-name`.
 
-### Relationships
+#### Relationships
 
 You can define a relationship by specifying  a foreign class with `:col-type`:
 
 ~~~lisp
-(defclass tweet ()
-  ((status :col-type :text
-           :initarg :status
-           :accessor tweet-status)
+(mito:deftable tweet ()
+  ((status :col-type :text)
    ;; This slot refers to USER class
-   (user :col-type user
-         :initarg :user
-         :accessor tweet-user))
-  (:metaclass mito:dao-table-class))
+   (user :col-type user))
 
 (table-definition (find-class 'tweet))
 ;=> (#<SXQL-STATEMENT: CREATE TABLE tweet (
@@ -242,13 +224,13 @@ Now you can create or retrieve a `TWEET` by a `USER` object, not a `USER-ID`.
 
 Mito doesn't add foreign key constraints for referring tables.
 
-#### One-to-one
+##### One-to-one
 
 A one-to-one relationship is simply represented with a simple foreign
 key on a slot (as `:col-type user` in the `tweet` class). Besides, we
 can add a unicity constraint, as with `(:unique-keys email)`.
 
-#### One-to-many, many-to-one
+##### One-to-many, many-to-one
 
 The tweet example above shows a one-to-many relationship between a user and
 his tweets: a user can write many tweets, and a tweet belongs to only
@@ -262,7 +244,7 @@ to edit the `user` class.
 A many-to-one relationship is actually the contrary of a one-to-many.
 You have to put the foreign key on the appropriate side.
 
-#### Many-to-many
+##### Many-to-many
 
 A many-to-many relationship needs an intermediate table, which will be
 the "many" side for the two tables it is the intermediary of.
@@ -272,16 +254,9 @@ And, thanks to the join table, we can store more information about the relations
 Let's define a `book` class:
 
 ~~~lisp
-(defclass book ()
-    ((title
-       :col-type (:varchar 128)
-       :initarg :title
-       :accessor title)
-     (ean
-       :col-type (or (:varchar 128) :null)
-       :initarg :ean
-       :accessor ean))
-    (:metaclass mito:dao-table-class))
+(mito:deftable book ()
+    ((title :col-type (:varchar 128))
+     (ean :col-type (or (:varchar 128) :null))))
 ~~~
 
 A user can have many books, and a book (as the title, not the physical
@@ -289,14 +264,9 @@ copy) is likely to be in many people's library. Here's the
 intermediate class:
 
 ~~~lisp
-(defclass user-books ()
-    ((user
-      :col-type user
-      :initarg :user)
-    (book
-      :col-type book
-      :initarg :book))
-    (:metaclass mito:dao-table-class))
+(mito:deftable user-books ()
+    ((user :col-type user)
+     (book :col-type book)))
 ~~~
 
 Each time we want to add a book to a user's collection (say in
@@ -306,44 +276,27 @@ But someone may very well own many copies of one book. This is an
 information we can store in the join table:
 
 ~~~lisp
-(defclass user-books ()
-    ((user
-      :col-type user
-      :initarg :user)
-    (book
-      :col-type book
-      :initarg :book)
+(mito:deftable user-books ()
+    ((user :col-type user)
+     (book :col-type book)
     ;; Set the quantity, 1 by default:
-    (quantity
-      :col-type :integer
-      :initarg :quantity
-      :initform 1
-      :accessor quantity))
-    (:metaclass mito:dao-table-class))
+     (quantity :col-type :integer)))
 ~~~
 
 
-### Inheritance and mixin
+#### Inheritance and mixin
 
 A subclass of DAO-CLASS is allowed to be inherited. This may be useful
 when you need classes which have similar columns:
 
 ~~~lisp
-(defclass user ()
-  ((name :col-type (:varchar 64)
-         :initarg :name
-         :accessor user-name)
-   (email :col-type (:varchar 128)
-          :initarg :email
-          :accessor user-email))
-  (:metaclass mito:dao-table-class)
+(mito:deftable user ()
+  ((name :col-type (:varchar 64))
+   (email :col-type (:varchar 128)))
   (:unique-keys email))
 
-(defclass temporary-user (user)
-  ((registered-at :col-type :timestamp
-                  :initarg :registered-at
-                  :accessor temporary-user-registered-at))
-  (:metaclass mito:dao-table-class))
+(mito:deftable temporary-user (user)
+  ((registered-at :col-type :timestamp)))
 
 (mito:table-definition 'temporary-user)
 ;=> (#<SXQL-STATEMENT: CREATE TABLE temporary_user (
@@ -357,9 +310,9 @@ when you need classes which have similar columns:
 ;    )>)
 ~~~
 
-If you need a 'template' for tables which doesn't related to any
-database tables, you can use `DAO-TABLE-MIXIN`. Below the `has-email`
-class will not create a table.
+If you need a 'template' for tables which aren't related to any
+database tables, you can use `DAO-TABLE-MIXIN` in a `defclass` form. The `has-email`
+class below will not create a table.
 
 ~~~lisp
 (defclass has-email ()
@@ -370,11 +323,8 @@ class will not create a table.
   (:unique-keys email))
 ;=> #<MITO.DAO.MIXIN:DAO-TABLE-MIXIN COMMON-LISP-USER::HAS-EMAIL>
 
-(defclass user (has-email)
-  ((name :col-type (:varchar 64)
-         :initarg :name
-         :accessor user-name))
-  (:metaclass mito:dao-table-class))
+(mito:deftable user (has-email)
+  ((name :col-type (:varchar 64))))
 ;=> #<MITO.DAO.TABLE:DAO-TABLE-CLASS COMMON-LISP-USER::USER>
 
 (mito:table-definition 'user)
@@ -391,9 +341,9 @@ class will not create a table.
 See more examples of use in [mito-auth](https://github.com/fukamachi/mito-auth/).
 
 
-### Troubleshooting
+#### Troubleshooting
 
-#### "Cannot CHANGE-CLASS objects into CLASS metaobjects."
+##### "Cannot CHANGE-CLASS objects into CLASS metaobjects."
 
 If you get the following error message:
 
@@ -418,15 +368,19 @@ or, with the Slime inspector, click on the class and find the "remove" button.
 
 More info [here](https://stackoverflow.com/questions/38811931/how-to-change-classs-metaclass).
 
-## Migrations
+### Migrations
 
-First create the tables if needed:
+We can run database migrations manually, as shown below, or we can
+automatically run migrations after a change to the model
+definitions. To enable automatic migrations, set `mito:*auto-migration-mode*` to `t`.
+
+The first step is to create the tables, if needed:
 
 ~~~lisp
 (ensure-table-exists 'user)
 ~~~
 
-then alter the tables, if needed:
+then alter the tables:
 
 ~~~lisp
 (mito:migrate-table 'user)
@@ -456,14 +410,9 @@ There are no changes from the previous user definition:
 Now let's add a unique `email` field:
 
 ~~~lisp
-(defclass user ()
-  ((name :col-type (:varchar 64)
-         :initarg :name
-         :accessor user-name)
-   (email :col-type (:varchar 128)
-          :initarg :email
-          :accessor user-email))
-  (:metaclass mito:dao-table-class)
+(mito:deftable user ()
+  ((name :col-type (:varchar 64))
+   (email :col-type (:varchar 128)))
   (:unique-keys email))
 ~~~
 
@@ -486,9 +435,9 @@ so let's apply it:
 ~~~
 
 
-## Queries
+### Queries
 
-### Creating objects
+#### Creating objects
 
 We can create user objects with the regular `make-instance`:
 
@@ -522,7 +471,7 @@ a helper function:
   (make-instance 'user :name name))
 ~~~
 
-### Updating fields
+#### Updating fields
 
 ~~~lisp
 (setf (slot-value me 'name) "nitro_idiot")
@@ -535,7 +484,7 @@ and save it:
 (mito:save-dao me)
 ~~~
 
-### Deleting
+#### Deleting
 
 ~~~lisp
 (mito:delete-dao me)
@@ -546,21 +495,21 @@ and save it:
 ;-> ;; DELETE FROM `user` WHERE (`id` = ?) (1) [0 rows] | MITO.DAO:DELETE-DAO
 ~~~
 
-### Get the primary key value
+#### Get the primary key value
 
 ~~~lisp
 (mito:object-id me)
 ;=> 1
 ~~~
 
-### Count
+#### Count
 
 ~~~lisp
 (mito:count-dao 'user)
 ;=> 1
 ~~~
 
-### Find one
+#### Find one
 
 ~~~lisp
 (mito:find-dao 'user :id 1)
@@ -583,7 +532,7 @@ keys."))
                           (sxql:where (:= :name key-value)))))
 ~~~
 
-### Find all
+#### Find all
 
 Use the macro `select-dao`.
 
@@ -596,7 +545,7 @@ Get a list of all users:
 ~~~
 
 
-### Find by relationship
+#### Find by relationship
 
 As seen above:
 
@@ -604,7 +553,7 @@ As seen above:
 (mito:find-dao 'tweet :user *user*)
 ~~~
 
-### Custom queries
+#### Custom queries
 
 It is with `select-dao` that you can write more precise queries by
 giving it [SxQL](https://github.com/fukamachi/sxql) statements.
@@ -637,6 +586,52 @@ You can compose your queries with regular Lisp code:
 ~~~
 
 `select-dao` is a macro that expands to the right thing©.
+
+<div class="info-box info">
+<strong>Note:</strong> if you didn't <code>use</code> SXQL, then write <code>(sxql:where …)</code> and <code>(sxql:order-by …)</code>.
+</div>
+<!-- epub-exclude-start -->
+<br>
+<!-- epub-exclude-end -->
+
+You can compose your queries further with the backquote syntax.
+
+Imagine you receive a `query` string, maybe composed of
+space-separated words, and you want to search for books that have
+either one of these words in their title or in their author's
+name. Searching for "bob adventure" would return a book that has
+"adventure" in its title and "bob" in its author name, or both in the
+title.
+
+For the example sake, an author is a string, not a link to another table:
+
+~~~lisp
+(mito:deftable book ()
+    ((title :col-type (:varchar 128))
+     (author :col-type (:varchar 128))
+     (ean :col-type (or (:varchar 128) :null))))
+~~~
+
+You want to add a clause that searches on both fields for each word.
+
+~~~lisp
+(defun find-books (&key query (order :desc))
+  "Return a list of books.
+If a query string is given, search on both the title
+and the author fields."
+  (mito:select-dao 'book
+    (when (str:non-blank-string-p query)
+      (sxql:where
+       `(:and
+         ,@(loop for word in (str:words query)
+              :collect `(:or (:like :title
+                                    ,(str:concat "%" word "%"))
+                             (:like :authors
+                                    ,(str:concat "%" word "%")))))))
+       (sxql:order-by `(,order :created-at))))
+~~~
+
+By the way, we are still using a `LIKE` statement, but with a non-small dataset you'll want to use your database's full text search engine.
 
 
 #### Clauses
@@ -687,8 +682,7 @@ and `join`s, etc.
 :raw
 ~~~
 
-
-## Triggers
+### Triggers
 
 Since `insert-dao`, `update-dao` and `delete-dao` are defined as generic
 functions, you can define `:before`, `:after` or `:around` methods to those, like regular [method combination](clos.html#qualifiers-and-method-combination).
@@ -703,29 +697,22 @@ functions, you can define `:before`, `:after` or `:around` methods to those, lik
 ;=> #<USER {100835FB33}>
 ~~~
 
-## Inflation/Deflation
+### Inflation/Deflation
 
 Inflation/Deflation is a function to convert values between Mito and RDBMS.
 
 ~~~lisp
-(defclass user-report ()
-  ((title :col-type (:varchar 100)
-          :initarg :title
-          :accessor report-title)
+(mito:deftable user-report ()
+  ((title :col-type (:varchar 100))
    (body :col-type :text
-         :initarg :body
-         :initform ""
-         :accessor report-body)
+         :initform "")
    (reported-at :col-type :timestamp
-                :initarg :reported-at
                 :initform (local-time:now)
-                :accessor report-reported-at
                 :inflate #'local-time:universal-to-timestamp
-                :deflate #'local-time:timestamp-to-universal))
-  (:metaclass mito:dao-table-class))
+                :deflate #'local-time:timestamp-to-universal)))
 ~~~
 
-## Eager loading
+### Eager loading
 
 One of the pains in the neck to use ORMs is the "N+1 query" problem.
 
@@ -768,7 +755,7 @@ which only sends a single WHERE IN query instead of N queries:
 ;=> #<USER {100361E813}>
 ~~~
 
-## Schema versioning
+### Schema versioning
 
 ~~~
 $ ros install mito
@@ -789,7 +776,7 @@ Options:
     --dry-run                       List SQL expressions to migrate
 ~~~
 
-## Introspection
+### Introspection
 
 Mito provides some functions for introspection.
 
@@ -815,14 +802,14 @@ Given we get a list of slots of our class:
 
 We can answer the following questions:
 
-### What is the type of this column ?
+#### What is the type of this column ?
 
 ~~~lisp
 (mito.class.column:table-column-type (first user-slots))
 ;; (:VARCHAR 64)
 ~~~
 
-### Is this column nullable ?
+#### Is this column nullable ?
 
 ~~~lisp
 (mito.class.column:table-column-not-null-p
@@ -834,7 +821,7 @@ We can answer the following questions:
 ~~~
 
 
-## Testing
+### Testing
 
 We don't want to test DB operations against the production one. We
 need to create a temporary DB before each test.
@@ -869,15 +856,16 @@ tables, runs the code and connects back to the original DB connection.
                                (random-string 8)
                                "/"))
           ;; Save our current DB connection.
-          (connection (when (mito.connection:connected-p)
-                        mito:*connection*)))
+          (connection mito:*connection*))
      (uiop:with-temporary-file (:pathname name :prefix prefix)
        ;; Bind our *db-name* to a new name, so as to create a new DB.
        (let* ((*db-name* name))
-         ;; Always re-connect to our real DB even in case of error in body.
+         ;; Always re-connect to our real DB even in case of
+         ;; error in body.
          (unwind-protect
            (progn
-             ;; our functions to connect to the DB, create the tables and run the migrations.
+             ;; our functions to connect to the DB, create the tables
+             ;; and run the migrations.
              (connect)
              (ensure-tables-exist)
              (migrate-all)
@@ -916,6 +904,8 @@ Use it like this:
 - [mito-attachment](https://github.com/fukamachi/mito-attachment)
 - [mito-auth](https://github.com/fukamachi/mito-auth)
 - [can](https://github.com/fukamachi/can/) a role-based access right control library
+<!-- epub-exclude-start -->
 - an advanced ["defmodel" macro](drafts/defmodel.lisp.html).
+<!-- epub-exclude-end -->
 
 <!-- # todo: Generating models for an existing DB -->

@@ -19,6 +19,13 @@ img{
     margin-right:1%;
     position:fixed;
 }
+
+@media only screen and (max-width: 576px) {
+  #searchform-container {
+      display: none;
+  }
+}
+
 #logo{
     width:auto;
     height:70px;
@@ -145,6 +152,32 @@ footer {
     opacity: 0.9;
 }
 
+.announce-neutral {
+    background-color: #add8e6;
+    padding: 1em;
+    text-align: center;
+    opacity: 0.9;
+}
+.announce {
+    // background-color: #8dd090;
+    padding: 1em;
+    text-align: center;
+
+    // Orange announce:
+    // background-color: #f48224;
+    // color: white;
+    background-color: gold;
+    // background-color: rgba(255, 0, 0, 0.6);
+    color: #3b3b3b;
+    margin: 1em 0 1em 0;
+}
+
+.announce a {
+    text-decoration: underline;
+    // color: white;
+    color: #3b3b3b;
+}
+
 ul{
     margin-left:0px;
 }
@@ -153,4 +186,32 @@ ul ul{
 }
 ul ul ul{
     margin-left:-26px;
+}
+
+// Alert / Info boxes
+
+.info-box {
+    // note: if element is inside a <p> then bootstrap adds 10px padding to the bottom.
+    padding: 17px;
+}
+
+.danger {
+  background-color: #ffdddd;
+  border-left: 6px solid #f44336;
+}
+
+.success {
+  background-color: #ddffdd;
+  border-left: 6px solid #4CAF50;
+}
+
+.info {
+  background-color: #e7f3fe;
+  border-left: 6px solid #2196F3;
+}
+
+
+.warning {
+  background-color: #ffffcc;
+  border-left: 6px solid #ffeb3b;
 }

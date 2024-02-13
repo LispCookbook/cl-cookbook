@@ -3,20 +3,19 @@ title: Web development
 ---
 
 
-For web development as for any other task, one can leverage Common
-Lisp's advantages: the unmatched REPL that even helps to interact with a running web app,
-the exception handling system,
-performance, the ability to build a self-contained executable,
-stability, good threads story, strong typing, etc. We can, say, define
-a new route and try it right away, there is no need to restart any
-running server. We can change and compile *one function at a time*
-(the usual `C-c C-c` in Slime) and try it. The feedback is
-immediate. We can choose the degree of interactivity: the web server
-can catch exceptions and fire the interactive debugger, or print lisp
-backtraces on the browser, or display a 404 error page and print logs
-on standard output. The ability to build self-contained executables eases
-deployment tremendously (compared to, for example, npm-based apps), in
-that we just copy the executable to a server and run it.
+For web development as for any other task, one can leverage Common Lisp's
+advantages: the unmatched REPL that even helps to interact with a running web
+app, the exception handling system, performance, the ability to build a
+self-contained executable, stability, good threads story, strong typing, etc. We
+can, say, define a new route and try it right away, there is no need to restart
+any running server. We can change and compile *one function at a time* (the
+usual `C-c C-c` in Slime) and try it. The feedback is immediate. We can choose
+the degree of interactivity: the web server can catch exceptions and fire the
+interactive debugger, or print lisp backtraces on the browser, or display a 404
+error page and print logs on standard output. The ability to build
+self-contained executables eases deployment tremendously (compared to, for
+example, npm-based apps), in that we just copy the executable to a server and
+run it.
 
 And when we have deployed our app, we can still interact with it,
 allowing for hot reload, that even works when new dependencies have to
@@ -35,7 +34,7 @@ appreciated.
 
 <!-- Javascript -->
 
-# Overview
+## Overview
 
 [Hunchentoot][hunchentoot] and [Clack][clack] are two projects that
 you'll often hear about.
@@ -114,12 +113,13 @@ featureful static site generator, see
 [Coleslaw](https://github.com/coleslaw-org/coleslaw).
 
 
-# Installation
+## Installation
 
 Let's install the libraries we'll use:
 
 ~~~lisp
-(ql:quickload '("hunchentoot" "caveman" "spinneret" "djula"))
+(ql:quickload '("hunchentoot" "caveman2" "spinneret"
+                "djula" "easy-routes"))
 ~~~
 
 To try Weblocks, please see its documentation. The Weblocks in
@@ -128,16 +128,17 @@ Quicklisp is not yet, as of writing, the one we are interested in.
 We'll start by serving local files and we'll run more than one local
 server in the running image.
 
-# Simple webserver
+## Simple webserver
 
-## Serve local files
+### Serve local files
 
-### Hunchentoot
+#### Hunchentoot
 
 Create and start a webserver like this:
 
 ~~~lisp
-(defvar *acceptor* (make-instance 'hunchentoot:easy-acceptor :port 4242))
+(defvar *acceptor* (make-instance 'hunchentoot:easy-acceptor
+                                  :port 4242))
 (hunchentoot:start *acceptor*)
 ~~~
 
@@ -149,17 +150,18 @@ By default, Hunchentoot serves the files from the `www/` directory in
 its source tree. Thus, if you go to the source of
 `easy-acceptor` (`M-.` in Slime), which is probably
 `~/quicklisp/dists/quicklisp/software/hunchentoot-v1.2.38/`, you'll
-find the `root/` directory. It contains:
+find the `www/` directory. It contains:
 
 - an `errors/` directory, with the error templates `404.html` and `500.html`,
 - an `img/` directory,
 - an `index.html` file.
 
-To serve another directory, we give the option `document-root` to
+To serve another directory, we give the option `:document-root` to
 `easy-acceptor`. We can also set the slot with its accessor:
 
 ~~~lisp
-(setf (hunchentoot:acceptor-document-root *acceptor*) #p"path/to/www")
+(setf (hunchentoot:acceptor-document-root *acceptor*)
+      #p"path/to/www")
 ~~~
 
 Let's create our `index.html` first. Put this in a new
@@ -182,8 +184,9 @@ Let's create our `index.html` first. Put this in a new
 Let's start a new acceptor on a new port:
 
 ~~~lisp
-(defvar *my-acceptor* (make-instance 'hunchentoot:easy-acceptor :port 4444
-                                   :document-root #p"www/"))
+(defvar *my-acceptor* (make-instance 'hunchentoot:easy-acceptor
+                                     :port 4444
+                                     :document-root #p"www/"))
 (hunchentoot:start *my-acceptor*)
 ~~~
 
@@ -193,9 +196,9 @@ Note that we just created another *acceptor* on a different port on
 the same lisp image. This is already pretty cool.
 
 
-# Access your server from the internet
+## Access your server from the internet
 
-## Hunchentoot
+### Hunchentoot
 
 With Hunchentoot we have nothing to do, we can see the server from the
 internet right away.
@@ -208,11 +211,11 @@ You can see it right away on your server's IP.
 
 Stop it with `(hunchentoot:stop *)`.
 
-# Routing
+## Routing
 
-## Simple routes
+### Simple routes
 
-### Hunchentoot
+#### Hunchentoot
 
 To bind an existing function to a route, we create a "prefix dispatch"
 that we push onto the `*dispatch-table*` list:
@@ -265,7 +268,7 @@ Example:
   (format nil "Hey~@[ ~A~]!" name))
 ~~~
 
-Visit it at [p://localhost:4242/yo](http://localhost:4242/yo) and add parameters on the url:
+Visit it at [http://localhost:4242/yo](http://localhost:4242/yo) and add parameters on the url:
 [http://localhost:4242/yo?name=Alice](http://localhost:4242/yo?name=Alice).
 
 Just a thought… we didn't explicitly ask Hunchentoot to add this
@@ -286,36 +289,61 @@ It also has a `default-parameter-type` which we'll use in a minute to get url pa
 There are also keys to know for the lambda list. Please see the documentation.
 
 
-### Easy-routes (Hunchentoot)
+#### Easy-routes (Hunchentoot)
 
 [easy-routes](https://github.com/mmontone/easy-routes) is a route
 handling extension on top of Hunchentoot. It provides:
 
-- dispatch based on HTTP method (otherwise cumbersome in Hunchentoot)
-- arguments extraction from the url path
-- and decorators.
+- **dispatch** based on the HTTP method, such as GET or POST (which is otherwise cumbersome to do in Hunchentoot)
+- **arguments extraction** from the url path
+- **decorators** (functions to run before the route body, typically used to add a layer of authentication or changing the returned content type)
+- **URL generation** from route names and given URL parameters
+- visualization of routes
+- and more
 
 To use it, don't create a server with `hunchentoot:easy-acceptor` but
-with `easy-routes:routes-acceptor`:
+with `easy-routes:easy-routes-acceptor`:
 
 ~~~lisp
-(setf *server* (make-instance 'easy-routes:routes-acceptor))
+(setf *server* (make-instance 'easy-routes:easy-routes-acceptor))
 ~~~
+
+Note: there is also `routes-acceptor`. The difference is that
+`easy-routes-acceptor` iterates over Hunchentoot's `*dispatch-table*`
+if no route is found by `easy-routes`. That allows us, for example, to
+serve static content the usual way with Hunchentoot.
 
 Then define a route like this:
 
 ~~~lisp
-(easy-routes:defroute name ("/foo/:x" :method :get) (y &get z)
-    (format nil "x: ~a y: ~y z: ~a" x y z))
+(easy-routes:defroute my-route-name ("/foo/:x" :method :get) (y &get z)
+    (format nil "x: ~a y: ~a z: ~a" x y z))
 ~~~
 
+the route signature is made up of two parts:
+
+    ("/foo/:x" :method :get) (y &get z)
+
 Here, `:x` captures the path parameter and binds it to the `x`
-variable into the route body. `y` and `&get z` define url parameters,
+variable into the route body. `y` and `&get z` define URL parameters,
 and we can have `&post` parameters to extract from the HTTP request
 body.
 
 These parameters can take an `:init-form` and `:parameter-type`
 options as in `define-easy-handler`.
+
+Now, imagine that we are deeper in our web application logic, and we
+want to redirect our user to the route "/foo/3". Instead of hardcoding
+the URL, we can **generate the URL from its name**. Use
+`easy-routes:genurl` like this:
+
+~~~lisp
+(easy-routes:genurl my-route-name :id 3)
+;; => /foo/3
+
+(easy-routes:genurl my-route-name :id 3 :y "yay")
+;; => /foo/3?y=yay
+~~~
 
 **Decorators** are functions that are executed before the route body. They
 should call the `next` parameter function to continue executing the
@@ -342,7 +370,7 @@ decoration chain and the route body finally. Examples:
 
 See `easy-routes`' readme for more.
 
-### Caveman
+#### Caveman
 
 [Caveman](caveman) provides two ways to
 define a route: the `defroute` macro and the `@route` pythonic
@@ -382,9 +410,9 @@ We must enable regexps with `:regexp t`:
 ~~~
 
 
-## Accessing GET and POST parameters
+### Accessing GET and POST parameters
 
-### Hunchentoot
+#### Hunchentoot
 
 First of all, note that we can access query parameters anytime with
 
@@ -436,6 +464,24 @@ or a compound list:
 
 where `<type>` is a simple type.
 
+### Accessing a JSON request body
+
+#### Hunchentoot
+
+To read a request body, use `hunchentoot:raw-post-data`, to which you
+can add `:force-text t` to always get a string (and not a vector of
+octets).
+
+Then you can parse this string to JSON with the library of your choice ([jzon](https://github.com/Zulu-Inuoe/jzon/), [shasht](https://github.com/yitzchak/shasht)…).
+
+~~~lisp
+(easy-routes route-api-demo ("/api/:id/update" :method :post) ()
+   (let ((json (ignore-errors
+                (jzon:parse (hunchentoot:raw-post-data :force-text t)))))
+     (when json
+        …)))
+~~~
+
 
 <!-- ## Sessions -->
 
@@ -443,37 +489,53 @@ where `<type>` is a simple type.
 
 <!-- ## Cookies -->
 
-# Error handling
+## Error handling
 
 In all frameworks, we can choose the level of interactivity. The web
 framework can return a 404 page and print output on the repl, it can
 catch errors and invoke the interactive lisp debugger, or it can show
 the lisp backtrace on the html page.
 
-## Hunchentoot
+### Hunchentoot
 
-The global variables to set are `*catch-errors-p*`,
-`*show-lisp-errors-p*` and `*show-lisp-backtraces-p*`.
+The global variables to set to choose the error handling behaviour are:
 
-Hunchentoot also defines condition classes.
+- `*catch-errors-p*`: set to `nil` if you want errors to be caught in
+  the interactive debugger (for development only, of course):
+
+~~~lisp
+(setf hunchentoot:*catch-errors-p* nil)
+~~~
+
+See also the generic function `maybe-invoke-debugger` if you want to
+fine-tune this behaviour. You might want to specialize it on specific
+condition classes (see below) for debugging purposes.
+
+- `*show-lisp-errors-p*`: set to `t` if you want to see errors in HTML output in the browser.
+- `*show-lisp-backtraces-p*`: set to `nil` if the errors shown in HTML
+  output (when `*show-lisp-errors-p*` is `t`) should *not* contain
+  backtrace information (defaults to `t`, shows the backtrace).
+
+Hunchentoot defines condition classes. The superclass of all
+conditions is `hunchentoot-condition`. The superclass of errors is `hunchentoot-error` (itself a subclass of `hunchentoot-condition`).
 
 See the documentation: [https://edicl.github.io/hunchentoot/#conditions](https://edicl.github.io/hunchentoot/#conditions).
 
 
-## Clack
+### Clack
 
 Clack users might make a good use of plugins, like the clack-errors middleware: [https://github.com/CodyReichert/awesome-cl#clack-plugins](https://github.com/CodyReichert/awesome-cl#clack-plugins).
 
-<img src="https://camo.githubusercontent.com/17dd6e0a7a916c8118f0134a94404f6757bee9dc/68747470733a2f2f7261772e6769746875622e636f6d2f6575646f786961302f636c61636b2d6572726f72732f6d61737465722f73637265656e73686f742d6465762e706e67" width="800"/>
+<img src="assets/clack-errors.png" width="800"/>
 
-# Weblocks - solving the "JavaScript problem"©
+## Weblocks - solving the "JavaScript problem"©
 
 [Weblocks][weblocks] is a widgets-based and
 server-based framework with a built-in ajax update mechanism. It
 allows to write dynamic web applications *without the need to write
 JavaScript or to write lisp code that would transpile to JavaScript*.
 
-![](http://40ants.com/weblocks/_images/quickstart-check-task.gif)
+![](assets/weblocks-quickstart-check-task.gif)
 
 Weblocks is an old framework developed by Slava Akhmechet, Stephen
 Compall and Leslie Polzer. After nine calm years, it is seeing a very
@@ -494,25 +556,25 @@ Weblock's unit of work is the *widget*. They look like a class definition:
 
 ~~~lisp
 (defwidget task ()
-        ((title
-          :initarg :title
-          :accessor title)
-         (done
-          :initarg :done
-          :initform nil
-          :accessor done)))
+   ((title
+     :initarg :title
+     :accessor title)
+    (done
+     :initarg :done
+     :initform nil
+     :accessor done)))
 ~~~
 
 Then all we have to do is to define the `render` method for this widget:
 
 ~~~lisp
 (defmethod render ((task task))
-        "Render a task."
-        (with-html
-              (:span (if (done task)
-                         (with-html
-                               (:s (title task)))
-                       (title task)))))
+  "Render a task."
+  (with-html
+        (:span (if (done task)
+                   (with-html
+                         (:s (title task)))
+                 (title task)))))
 ~~~
 
 It uses the Spinneret template engine by default, but we can bind any
@@ -523,11 +585,11 @@ To trigger an ajax event, we write lambdas in full Common Lisp:
 ~~~lisp
 ...
 (with-html
-          (:p (:input :type "checkbox"
-            :checked (done task)
-            :onclick (make-js-action
-                      (lambda (&key &allow-other-keys)
-                        (toggle task))))
+  (:p (:input :type "checkbox"
+    :checked (done task)
+    :onclick (make-js-action
+              (lambda (&key &allow-other-keys)
+                (toggle task))))
 ...
 ~~~
 
@@ -539,12 +601,12 @@ task only.
 Is it appealing ? Carry on this quickstart guide here: [http://40ants.com/weblocks/quickstart.html](http://40ants.com/weblocks/quickstart.html).
 
 
-# Templates
+## Templates
 
-## Djula - HTML markup
+### Djula - HTML markup
 
 [Djula](https://github.com/mmontone/djula) is a port of Python's
-Django template engine to Common Lisp. It has [excellent documentation](https://mmontone.github.io/djula/doc/build/html/index.html).
+Django template engine to Common Lisp. It has [excellent documentation](https://mmontone.github.io/djula/djula/).
 
 Caveman uses it by default, but otherwise it is not difficult to
 setup. We must declare where our templates are with something like
@@ -589,7 +651,7 @@ It is, along with its companion
 [access](https://github.com/AccelerationNet/access/) library, one of
 the most downloaded libraries of Quicklisp.
 
-### Djula filters
+#### Djula filters
 
 Filters allow to modify how a variable is displayed. Djula comes with
 a good set of built-in filters and they are [well documented](https://mmontone.github.io/djula/doc/build/html/filters.html). They are not to be confused with [tags](https://mmontone.github.io/djula/doc/build/html/tags.html).
@@ -627,20 +689,20 @@ Filters are very handy to move non-trivial formatting or logic from the
 templates to the backend.
 
 
-## Spinneret - lispy templates
+### Spinneret - lispy templates
 
 [Spinneret](https://github.com/ruricolist/spinneret) is a "lispy"
 HTML5 generator. It looks like this:
 
 ~~~lisp
 (with-page (:title "Home page")
-     (:header
-      (:h1 "Home page"))
-     (:section
-      ("~A, here is *your* shopping list: " *user-name*)
-      (:ol (dolist (item *shopping-list*)
-             (:li (1+ (random 10)) item))))
-     (:footer ("Last login: ~A" *last-login*)))
+  (:header
+   (:h1 "Home page"))
+  (:section
+   ("~A, here is *your* shopping list: " *user-name*)
+   (:ol (dolist (item *shopping-list*)
+          (:li (1+ (random 10)) item))))
+  (:footer ("Last login: ~A" *last-login*)))
 ~~~
 
 The author finds it is easier to compose the HTML in separate
@@ -653,8 +715,31 @@ has more features under it sleeves:
 - it understands embedded markdown
 - it can tell where in the document a generator function is (see `get-html-tag`)
 
+## Serve static assets
 
-# Connecting to a database
+### Hunchentoot
+
+With Hunchentoot, use `create-folder-dispatcher-and-handler prefix directory`.
+
+For example:
+
+~~~lisp
+(push (hunchentoot:create-folder-dispatcher-and-handler
+       "/static/" (merge-pathnames
+                     "src/static" ; <-- starts without a /
+                     (asdf:system-source-directory :myproject)))
+      hunchentoot:*dispatch-table*)
+~~~
+
+Now our project's static files located under
+`/path/to/myproject/src/static/` are served with the `/static/` prefix:
+
+```html
+<img src="/static/img/banner.jpg" />
+```
+
+
+## Connecting to a database
 
 Please see the [databases section](databases.html). The Mito ORM
 supports SQLite3, PostgreSQL, MySQL, it has migrations and db schema
@@ -663,7 +748,7 @@ versioning, etc.
 In Caveman, a database connection is alive during the Lisp session and is
 reused in each HTTP requests.
 
-## Checking a user is logged-in
+### Checking a user is logged-in
 
 A framework will provide a way to work with sessions. We'll create a
 little macro to wrap our routes to check if the user is logged in.
@@ -718,9 +803,9 @@ body. We use it like this:
 and so on.
 
 
-## Encrypting passwords
+### Encrypting passwords
 
-### With cl-pass
+#### With cl-pass
 
 [cl-pass](https://github.com/eudoxia0/cl-pass) is a password hashing and verification library. It is as simple to use as this:
 
@@ -737,7 +822,7 @@ You might also want to look at
 [hermetic](https://github.com/eudoxia0/hermetic), a simple
 authentication system for Clack-based applications.
 
-### Manually (with Ironclad)
+#### Manually (with Ironclad)
 
 In this recipe we do the encryption and verification ourselves. We use the de-facto standard
 [Ironclad](https://github.com/froydnj/ironclad) cryptographic toolkit
@@ -794,9 +879,9 @@ library.
 
 *Credit: `/u/arvid` on [/r/learnlisp](https://www.reddit.com/r/learnlisp/comments/begcf9/can_someone_give_me_an_eli5_on_hiw_to_encrypt_and/)*.
 
-# Runnning and building
+## Runnning and building
 
-## Running the application from source
+### Running the application from source
 
 To run our Lisp code from source, as a script, we can use the `--load`
 switch from our implementation.
@@ -819,7 +904,9 @@ We could use such commands:
 (in-package :myproject)
 (handler-case
     ;; The START function starts the web server.
-    (myproject::start :port (ignore-errors (parse-integer (uiop:getenv "PROJECT_PORT"))))
+    (myproject::start :port (ignore-errors
+                              (parse-integer
+                                (uiop:getenv "PROJECT_PORT"))))
   (error (c)
     (format *error-output* "~&An error occured: ~a~&" c)
     (uiop:quit 1)))
@@ -842,7 +929,7 @@ running instance. See the following section
 [#connecting-to-a-remote-lisp-image](#connecting-to-a-remote-lisp-image).
 
 
-## Building a self-contained executable
+### Building a self-contained executable
 
 As for all Common Lisp applications, we can bundle our web app in one
 single executable, including the assets. It makes deployment very
@@ -857,14 +944,16 @@ Listening on localhost:9003.
 See this recipe on [scripting#for-web-apps](scripting.html#for-web-apps).
 
 
-## Continuous delivery with Travis CI or Gitlab CI
+### Continuous delivery with Travis CI or Gitlab CI
 
 Please see the section on [testing#continuous-integration](testing.html#continuous-integration).
 
 
-## Multi-platform delivery with Electron
+### Multi-platform delivery with Electron
 
-[Ceramic](https://ceramic.github.io/) makes all the work for us.
+Once you built a binary of your web application, you can point an Electron window to it.
+
+[Ceramic](https://ceramic.github.io/) is a collection of tools that make all the work for us.
 
 It is as simple as this:
 
@@ -894,14 +983,14 @@ There is more:
 
 Thus, no need to minify our JS.
 
-# Deployment
+## Deployment
 
-## Deploying manually
+### Deploying manually
 
 We can start our executable in a shell and send it to the background (`C-z bg`), or run it inside a `tmux` session. These are not the best but hey, it works©.
 
 
-## Daemonizing, restarting in case of crashes, handling logs with Systemd
+### Systemd: Daemonizing, restarting in case of crashes, handling logs
 
 This is actually a system-specific task. See how to do that on your system.
 
@@ -910,51 +999,65 @@ Most GNU/Linux distros now come with Systemd, so here's a little example.
 Deploying an app with Systemd is as simple as writing a configuration file:
 
 ```
-$ emacs -nw /etc/systemd/system/my-app.service
+$ sudo emacs -nw /etc/systemd/system/my-app.service
 [Unit]
-Description=stupid simple example
+Description=your lisp app on systemd example
 
 [Service]
-WorkingDirectory=/path/to/your/app
-ExecStart=/usr/local/bin/sthg sthg
+WorkingDirectory=/path/to/your/project/directory/
+ExecStart=/usr/bin/make run  # or anything
 Type=simple
-Restart=always
-RestartSec=10
+Restart=on-failure
+
+[Install]
+WantedBy=network.target
 ```
 
-Then we have a command to start it:
+Then we have a command to `start` it, only now:
 
     sudo systemctl start my-app.service
 
-a command to check its status:
-
-    systemctl status my-app.service
-
-
-and Systemd can handle **logging** (we write to stdout or stderr, it writes logs):
-
-    journalctl -f -u my-app.service
-
-
-and it handles crashes and **restarts the app**:
-
-    Restart=always
-
-and it can **start the app after a reboot**:
-
-    [Install]
-    WantedBy=basic.target
-
-to enable it:
+and a command to install the service, to **start the app after a boot
+or reboot** (that's the "[Install]" part):
 
     sudo systemctl enable my-app.service
 
+Then we can check its `status`:
 
-## With Docker
+    systemctl status my-app.service
+
+and see our application's **logs** (we can write to stdout or stderr,
+and Systemd handles the logging):
+
+    journalctl -u my-app.service
+
+(you can also use the `-f` option to see log updates in real time, and in that case augment the number of lines with `-n 50` or `--lines`).
+
+Systemd handles crashes and **restarts the application**. That's the `Restart=on-failure` line.
+
+Now keep in mind a couple things:
+
+- we want our app to crash so that it can be re-started automatically:
+  you'll want the `--disable-debugger` flag with SBCL.
+- Systemd will, by default, run your app as root. If you rely on your
+  Lisp to read your startup file (`~/.sbclrc`), especially to setup
+  Quicklisp, you will need to use the `--userinit` flag, or to set the
+  Systemd user with `User=xyz` in the `[service]` section. And if you
+  use a startup file, be aware that the line `(user-homedir-pathname)`
+  will not return the same result depending on the user, so the snippet
+  might not find Quicklisp's setup.lisp file.
+
+
+See more: [https://www.freedesktop.org/software/systemd/man/systemd.service.html](https://www.freedesktop.org/software/systemd/man/systemd.service.html).
+
+### With Docker
 
 There are several Docker images for Common
 Lisp. For example:
 
+- [clfoundation/sbcl](https://hub.docker.com/r/clfoundation/sbcl/)
+includes the latest version of SBCL, many OS packages useful for CI
+purposes, and a script to install Quicklisp.
 - [40ants/base-lisp-image](https://github.com/40ants/base-lisp-image)
 is based on Ubuntu LTS and includes SBCL, CCL, Quicklisp, Qlot and
 Roswell.
@@ -964,16 +1067,60 @@ Common Lisp application as a reproducible docker image using OpenShift's
 source-to-image.
 
 
-## With Guix
+### With Guix
 
 [GNU Guix](https://www.gnu.org/software/guix/) is a transactional
 package manager, that can be installed on top of an existing OS, and a
 whole distro that supports declarative system configuration. It allows
 to ship self-contained tarballs, which also contain system
-dependencies. For an example, see the [Next browser](https://github.com/atlas-engineer/next/).
+dependencies. For an example, see the [Nyxt browser](https://github.com/atlas-engineer/nyxt/).
+
+### Running behind Nginx
+
+There is nothing CL-specific to run your Lisp web app behind Nginx. Here's an example to get you started.
+
+We suppose you are running your Lisp app on a web server, with the IP
+address 1.2.3.4, on the port 8001. Nothing special here. We want to
+access our app with a real domain name (and eventuall benefit of other
+Nginx's advantages, such as rate limiting etc). We bought our domain
+name and we created a DNS record of type A that links the domain name
+to the server's IP address.
+
+We must configure our server with Nginx to tell it that all
+connections coming from "your-domain-name.org", on port 80, are to be
+sent to the Lisp app running locally.
+
+Create a new file: `/etc/nginx/sites-enabled/my-lisp-app.conf` and add this proxy directive:
+
+~~~lisp
+server {
+    listen www.your-domain-name.org:80;
+    server_name your-domain-name.org www.your-domain-name.org;  # with and without www
+    location / {
+        proxy_pass http://1.2.3.4:8001/;
+    }
+
+    # Optional: serve static files with nginx, not the Lisp app.
+    location /files/ {
+        proxy_pass http://1.2.3.4:8001/files/;
+    }
+}
+~~~
+
+Note that on the proxy_pass directive: `proxy_pass
+http://1.2.3.4:8001/;` we are using our server's public IP
+address. Oten, your Lisp webserver such as Hunchentoot directly
+listens on it. You might want, for security reasons, to run the Lisp
+app on localhost.
+
+Reload nginx (send the "reload" signal):
+
+    $ nginx -s reload
+
+and that's it: you can access your Lisp app from the outside through `http://www.your-domain-name.org`.
 
 
-## Deploying on Heroku and other services
+### Deploying on Heroku and other services
 
 See [heroku-buildpack-common-lisp](https://gitlab.com/duncan-bayne/heroku-buildpack-common-lisp) and the [Awesome CL#deploy](https://github.com/CodyReichert/awesome-cl#deployment) section for interface libraries for Kubernetes, OpenShift, AWS, etc.
 
@@ -1013,7 +1160,7 @@ local swank server, loads the new code, stops and starts the app in a
 row.
 
 
-# See also
+## See also
 
 - [Feather](https://hg.sr.ht/~wnortje/feather), a template for web
   application development, shows a functioning Hello World app
@@ -1023,8 +1170,10 @@ row.
   a simple project template with Hunchentoot, Easy-Routes, Djula and Bulma CSS.
 - [lisp-web-live-reload-example](https://github.com/vindarel/lisp-web-live-reload-example/) -
   a toy project to show how to interact with a running web app.
+- [lisp-journey: enrich your stacktrace with session and user data](https://lisp-journey.gitlab.io/blog/common-lisp-on-the-web-enrich-your-stacktrace-with-request-and-session-data/)
+- [video: how to build a web app in Lisp · part 1](https://www.youtube.com/watch?v=h_noB1sI_e8) featuring Hunchentoot, easy-routes, Djula templates, error handling, common traps.
 
-# Credits
+## Credits
 
 - [https://lisp-journey.gitlab.io/web-dev/](https://lisp-journey.gitlab.io/web-dev/)
 

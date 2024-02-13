@@ -39,9 +39,9 @@ But see also
 - and for reference, the complete [CLOS-MOP specifications](https://clos-mop.hexstreamsoft.com/).
 
 
-#  Classes and instances
+##  Classes and instances
 
-## Diving in
+### Diving in
 
 Let's dive in with an example showing class definition, creation of
 objects, slot access, methods specialized for a given class, and
@@ -86,7 +86,7 @@ inheritance.
 ;; T
 ~~~
 
-## Defining classes (defclass)
+### Defining classes (defclass)
 
 The macro used for defining new data types in CLOS is `defclass`.
 
@@ -129,16 +129,16 @@ So, our `person` class doesn't explicitly inherit from another class
 the class `t` and from `standard-object`. See below under
 "inheritance".
 
-We could write a minimal class definition without slots options like this:
+We could write a minimal class definition without slot options like this:
 
 ~~~lisp
 (defclass point ()
   (x y z))
 ~~~
 
-or even without slots specifiers: `(defclass point () ())`.
+or even without slot specifiers: `(defclass point () ())`.
 
-## Creating objects (make-instance)
+### Creating objects (make-instance)
 
 We create instances of a class with `make-instance`:
 
@@ -157,9 +157,9 @@ This has the direct advantage that you can control the required
 arguments. You should now export the constructor from your package and
 not the class itself.
 
-## Slots
+### Slots
 
-### A function that always works (slot-value)
+#### A function that always works (slot-value)
 
 The function to access any slot anytime is `(slot-value <object> <slot-name>)`.
 
@@ -192,7 +192,7 @@ condition:
 (slot-value pt 'x) ;; => 1
 ~~~
 
-### Initial and default values (initarg, initform)
+#### Initial and default values (initarg, initform)
 
 - `:initarg :foo` is the keyword we can pass to `make-instance` to
   give a value to this slot:
@@ -220,7 +220,7 @@ Sometimes we see the following trick to clearly require a slot:
 ~~~
 
 
-### Getters and setters (accessor, reader, writer)
+#### Getters and setters (accessor, reader, writer)
 
 - `:accessor foo`: an accessor is both a **getter** and a
   **setter**. Its argument is a name that will become a **generic
@@ -277,7 +277,7 @@ inside the macro is equivalent to a call to the accessor function.
           (format t "name: ~a, lisper: ~a" name lisper))
 ~~~
 
-### Class VS instance slots
+#### Class VS instance slots
 
 `:allocation` specifies whether this slot is *local* or *shared*.
 
@@ -327,11 +327,21 @@ class (whether or not those instances exist yet).
 ;; HOMO-LISPER
 ~~~
 
-### Slot documentation
+#### Slot documentation
 
-Each slot accepts one `:documentation` option.
+Each slot accepts one `:documentation` option. To obtain its documentation via `documentation`, you need to obtain the slot object. This can be done compatibly using a library such as [closer-mop](https://github.com/pcostanza/closer-mop). For instance:
 
-### Slot type
+~~~lisp
+(closer-mop:class-direct-slots (find-class 'my-class))
+;; => list of slots (objects)
+(find 'my-slot * :key #'closer-mop:slot-definition-name)
+;; => find desired slot by name
+(documentation * t) ; obtain its documentation
+~~~
+
+Note however that generally it may be better to document slot accessors instead, as a popular viewpoint is that slots are implementation details and not part of the public interface.
+
+#### Slot type
 
 The `:type` slot option may not do the job you expect it does. If you
 are new to the CLOS, we suggest you skip this section and use your own
@@ -346,7 +356,7 @@ its version 1.5.9 (November, 2019) or when safety is high (`(declaim
 To do it otherwise, see [this Stack-Overflow answer](https://stackoverflow.com/questions/51723992/how-to-force-slots-type-to-be-checked-during-make-instance), and see also [quid-pro-quo](https://github.com/sellout/quid-pro-quo), a contract programming library.
 
 
-## find-class, class-name, class-of
+### find-class, class-name, class-of
 
 ~~~lisp
 (find-class 'point)
@@ -380,7 +390,7 @@ the *metaclass* (i.e. the class of the class) of
 
 
 
-## Subclasses and inheritance
+### Subclasses and inheritance
 
 As illustrated above, `child` is a subclass of `person`.
 
@@ -406,7 +416,7 @@ The [closer-mop](https://github.com/pcostanza/closer-mop) library is *the*
 portable way to do CLOS/MOP operations.
 
 
-A subclass inherits all of its parents slots, and it can override any
+A subclass inherits all of its parents' slots, and it can override any
 of their slot options. Common Lisp makes this process dynamic, great
 for REPL session, and we can even control parts of it (like, do
 something when a given slot is removed/updated/added, etc).
@@ -461,7 +471,7 @@ then it's correct to mix them together by inheritance, but if they're
 really separate concepts then you should use slots to keep them apart.
 
 
-## Multiple inheritance
+### Multiple inheritance
 
 CLOS supports multiple inheritance.
 
@@ -477,7 +487,7 @@ that both `child` and `person` have to be defined prior to defining
 `baby` in this example.
 
 
-## Redefining and changing a class
+### Redefining and changing a class
 
 This section briefly covers two topics:
 
@@ -538,13 +548,13 @@ Changing, adding, removing slots,...
    (lisper
     :initform nil
     :accessor lisper)
-   (age
+   (age               ;; <-- new slot
     :initarg :arg
-    :initform 18
+    :initform 18      ;; <-- default value
     :accessor age)))
 
 (age p1)
-;; => slot unbound error. This is different from "slot missing":
+;; => 18. Correct. This is the default initform for this new slot.
 
 (slot-value p1 'bwarf)
 ;; => "the slot bwarf is missing from the object #<person…>"
@@ -579,7 +589,7 @@ To change the class of an instance, use `change-class`:
 In the above example, I became a `child`, and I inherited the `can-walk-p` slot, which is true by default.
 
 
-## Pretty printing
+### Pretty printing
 
 Every time we printed an object so far we got an output like
 
@@ -635,7 +645,7 @@ For reference, the following reproduces the default behaviour:
 
 Here, `:identity` to `t` prints the `{1006234593}` address.
 
-## Classes of traditional lisp types
+### Classes of traditional lisp types
 
 Where we approach that we don't need CLOS objects to use CLOS.
 
@@ -663,19 +673,81 @@ might or might not be built using CLOS classes in any given
 implementation). However, 33 correspondences remain relating to
 "traditional" lisp types:
 
+<style>
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 5px;
+}
+th {
+  text-align: left;
+}
+</style>
 
-|`array`|`hash-table`|`readtable`|
-|`bit-vector`|`integer`|`real`|
-|`broadcast-stream`|`list`|`sequence`|
-|`character`|`logical-pathname`|`stream`|
-|`complex`|`null`|`string`|
-|`concatenated-stream`|`number`|`string-stream`|
-|`cons`|`package`|`symbol`|
-|`echo-stream`|`pathname`|`synonym-stream`|
-|`file-stream`|`random-state`|`t`|
-|`float`|`ratio`|`two-way-stream`|
-|`function`|`rational`|`vector`|
-
+<table>
+  <tbody>
+    <tr>
+      <td>array</td>
+      <td>hash-table</td>
+      <td>readtable</td>
+    </tr>
+    <tr>
+      <td>bit-vector</td>
+      <td>integer</td>
+      <td>real</td>
+    </tr>
+    <tr>
+      <td>broadcast-stream</td>
+      <td>list</td>
+      <td>sequence</td>
+    </tr>
+    <tr>
+      <td>character</td>
+      <td>logical-pathname</td>
+      <td>stream</td>
+    </tr>
+    <tr>
+      <td>complex</td>
+      <td>null</td>
+      <td>string</td>
+    </tr>
+    <tr>
+      <td>concatenated-stream</td>
+      <td>number</td>
+      <td>string-stream</td>
+    </tr>
+    <tr>
+      <td>cons</td>
+      <td>package</td>
+      <td>symbol</td>
+    </tr>
+    <tr>
+      <td>echo-stream</td>
+      <td>pathname</td>
+      <td>synonym-stream</td>
+    </tr>
+    <tr>
+      <td>file-stream</td>
+      <td>random-state</td>
+      <td>t</td>
+    </tr>
+    <tr>
+      <td>float</td>
+      <td>ratio</td>
+      <td>two-way-stream</td>
+    </tr>
+    <tr>
+      <td>function</td>
+      <td>rational</td>
+      <td>vector</td>
+    </tr>
+  </tbody>
+</table>
+<!-- epub-exclude-start -->
+<br>
+<!-- epub-exclude-end -->
 
 Note that not all "traditional" lisp types are included in this
 list. (Consider: `atom`, `fixnum`, `short-float`, and any type not
@@ -705,20 +777,19 @@ FOO
 ;; #<STRUCTURE-CLASS FOO 21DE8714>
 ~~~
 
-The metaclass of a `structure-object` is the class
-    `structure-class`. It is implementation-dependent whether
-    the metaclass of a "traditional" lisp object is
-    `standard-class`, `structure-class`, or
-    `built-in-class`. Restrictions:
+The metaclass of a `structure-object` is the class `structure-class`. It is implementation-dependent whether
+the metaclass of a "traditional" lisp object is `standard-class`, `structure-class`, or `built-in-class`.
+Restrictions:
 
-|`built-in-class`| May not use `make-instance`, may not use `slot-value`, may not use `defclass` to modify, may not create subclasses.|
-|`structure-class`| May not use `make-instance`, might work with `slot-value` (implementation-dependent). Use `defstruct` to subclass application structure types. Consequences of modifying an existing `structure-class` are undefined: full recompilation may be necessary.|
-|`standard-class`|None of these restrictions.|
+`built-in-class`: May not use `make-instance`, may not use `slot-value`, may not use `defclass` to modify, may not create subclasses.
 
+`structure-class`: May not use `make-instance`, might work with `slot-value` (implementation-dependent). Use `defstruct` to subclass application structure types. Consequences of modifying an existing `structure-class` are undefined: full recompilation may be necessary.
 
-## Introspection
+`standard-class`: None of these restrictions.
 
-we already saw some introspection functions.
+### Introspection
+
+We already saw some introspection functions.
 
 Your best option is to discover the
 [closer-mop](https://github.com/pcostanza/closer-mop) library and to
@@ -766,9 +837,28 @@ closer-mop:standard-accessor-method
 ```
 
 
-## See also
+### See also
 
-### defclass/std: write shorter classes
+#### Slime export class symbols
+
+The command **M-x slime-export-class** will add the class symbols to the ":export" clause of your package definition. This way, you can export dozens of symbols all at once.
+
+Imagine you have this class:
+
+~~~lisp
+(defclass test ()
+  ((foo :accessor foo)
+   (bar :reader bar)))
+~~~
+
+Using "M-x slime-export-class RET test RET" will export "test", "foot" and "bar".
+
+Removing a slot from the class definition will alas not remove it from the export clause.
+
+This works also on structures (only on SBCL and Clozure CL).
+
+
+#### defclass/std: write shorter classes
 
 The library [defclass/std](https://github.com/EuAndreh/defclass-std)
 provides a macro to write shorter `defclass` forms.
@@ -801,12 +891,12 @@ expands to:
 ~~~
 
 It does much more and it is very flexible, however it is seldom used
-by the Common Lisp community: use at your own risks©.
+by the Common Lisp community: use at your own risk©.
 
 
-# Methods
+## Methods
 
-## Diving in
+### Diving in
 Recalling our `person` and `child` classes from the beginning:
 
 ~~~lisp
@@ -982,7 +1072,7 @@ Below we create methods, we specialize them, we use method combination
 ~~~
 
 
-## Generic functions (defgeneric, defmethod)
+### Generic functions (defgeneric, defmethod)
 
 A `generic function` is a lisp function which is associated
 with a set of methods and dispatches them when it's invoked. All
@@ -1114,7 +1204,7 @@ for the function call.
 
 See more about [defmethod on the CLHS](http://www.lispworks.com/documentation/lw70/CLHS/Body/m_defmet.htm).
 
-## Multimethods
+### Multimethods
 
 Multimethods explicitly specialize more than one of the generic
 function's required parameters.
@@ -1137,7 +1227,7 @@ have to in other languages.
 
 Read more on [Practical Common Lisp](http://www.gigamonkeys.com/book/object-reorientation-generic-functions.html#multimethods).
 
-## Controlling setters (setf-ing methods)
+### Controlling setters (setf-ing methods)
 
 In Lisp, we can define `setf` counterparts of functions or methods. We
 might want this to have more control on how to update an object.
@@ -1154,7 +1244,7 @@ might want this to have more control on how to update an object.
 If you know Python, this behaviour is provided by the `@property` decorator.
 
 
-## Dispatch mechanism and next methods
+### Dispatch mechanism and next methods
 
 
 When a generic function is invoked, the application cannot directly invoke a method. The dispatch mechanism proceeds as follows:
@@ -1210,7 +1300,7 @@ has lexical scope and indefinite extent).
 Note finally that the body of every method establishes a block with the same name as the method’s generic function. If you `return-from` that name you are exiting the current method, not the call to the enclosing generic function.
 
 
-## Method qualifiers (before, after, around)
+### Method qualifiers (before, after, around)
 
 In our "Diving in" examples, we saw some use of the `:before`, `:after` and `:around` *qualifiers*:
 
@@ -1287,7 +1377,7 @@ Think of it as an onion, with all the `:around`
     on the inside.
 
 
-## Other method combinations
+### Other method combinations
 
 The default method combination type we just saw is named `standard`,
 but other method combination types are available, and no need to say
@@ -1398,8 +1488,7 @@ CLOS allows us to define a new operator as a method combination type, be
 it a lisp function, macro or special form. We'll let you refer to the
 books if you feel the need.
 
-
-## Debugging: tracing method combination
+### Debugging: tracing method combination
 
 It is possible to [trace](http://www.xach.com/clhs?q=trace) the method
 combination, but this is implementation dependent.
@@ -1442,8 +1531,96 @@ Let's trace it:
 9
 ~~~
 
+### Difference between defgeneric and defmethod: redefinition
 
-# MOP
+There is a difference between declaring methods inside a `defgeneric`
+body or by writing multiple `defmethod`s: the two methods handle
+re-definition of methods differently. `defgeneric` will delete methods
+that are not in its body anymore.
+
+Below we define a new generic function, using two `defmethod` that
+specialize on `person` and `child`:
+
+~~~lisp
+(defmethod goodbye ((p person))
+  (format t "goodbye ~a.~&" (name p)))
+
+(defmethod goodbye ((c child))
+  (format t "love you lil' one <3~&"))
+~~~
+
+You can try them with `(goodbye (make-instance 'person :name "you"))`.
+
+Now, later in your work session, you decide that you don't need the
+one specializing on `child` any more. You delete its source code. But
+**the method still exists in the image**. You have to programmatically
+remove the method, see below.
+
+Had you used `defgeneric`, all the methods would have been updated,
+added or deleted. We have defined the `tidy` generic function already
+with three methods:
+
+~~~lisp
+(defgeneric tidy (obj)
+  (:method-combination list)
+  (:method list (obj)
+    :foo)
+  (:method list ((obj person))
+    :books)
+  (:method list ((obj child))
+    :toys))
+~~~
+
+It works for any object type, a person or a child. Try it on a string:
+`(tidy "tidy what?")`, it works.
+
+Now remove this declaration from the `defgeneric`:
+
+
+~~~lisp
+(defgeneric tidy (obj)
+  (:method-combination list)
+  ;;(:method list (obj)  ;; <--- commented out
+  ;;  :foo)
+  (:method list ((obj person))
+    :books)
+  (:method list ((obj child))
+    :toys))
+~~~
+
+Try to call it again: you get a "no applicable method" error:
+
+```
+There is no applicable method for the generic function
+  #<STANDARD-GENERIC-FUNCTION TRADESIGNAL::TIDY (2)>
+when called with arguments
+  ("tidy what?").
+```
+
+This might or might not be important to you during development, but
+knowing this can help you keep your lisp image in sync with your
+source code. Otherwise, you can remove an old method when it gets on
+your way.
+
+### Removing a method
+
+First, we need to find the method object:
+
+~~~lisp
+(find-method #'goodbye nil (list (find-class 'child)))
+;; => #<STANDARD-METHOD GOODBYE (CHILD) {10073EFD73}>
+~~~
+
+`find-method` takes as arguments: a function reference, a qualifier
+(like before, after or around), and a list of class specializers.
+
+Once you found the method, use `remove-method`.
+
+You could use `(fmakunbound 'goodbye)`, but this makes *all* methods
+unbound.
+
+
+## MOP
 
 We gather here some examples that make use of the framework provided
 by the meta-object protocol, the configurable object system that rules
@@ -1457,7 +1634,7 @@ CL libraries are built. We invite you to read the books referenced in
 the introduction.
 
 
-## Metaclasses
+### Metaclasses
 
 Metaclasses are needed to control the behaviour of other classes.
 
@@ -1540,7 +1717,7 @@ Now testing:
 It's working.
 
 
-## Controlling the initialization of instances (initialize-instance)
+### Controlling the initialization of instances (initialize-instance)
 
 To further control the creation of object instances, we can specialize the method
 `initialize-instance`. It is called by `make-instance`, just after
@@ -1551,7 +1728,8 @@ It is recommended (Keene) to create an after method, since creating a
 primary method would prevent slots' initialization.
 
 ~~~lisp
-(defmethod initialize-instance :after ((obj person) &key) ;; note &key
+(defmethod initialize-instance :after ((obj person) &key)
+;; note the &key in the arglist:                    ^^^^
   (do something with obj))
 ~~~
 
@@ -1567,7 +1745,7 @@ check that the person's name is longer than 3 characters:
 So this call doesn't work anymore:
 
 ~~~lisp
-(make-instance 'person :name "me" )
+(make-instance 'person :name "me")
 ;; The assertion (>= #1=(LENGTH NAME) 3) failed with #1# = 2.
 ;;   [Condition of type SIMPLE-ERROR]
 ~~~
@@ -1576,13 +1754,14 @@ We are prompted into the interactive debugger and we are given a
 choice of restarts (continue, retry, abort).
 
 So while we're at it, here's an assertion that uses the debugger
-features to offer to change "name":
+features to offer to change "name". We give `assert` a list of places
+that can be changed from the debugger:
 
 ~~~lisp
 (defmethod INITIALIZE-INSTANCE :after ((obj person) &key)
   (with-slots (name) obj
     (assert (>= (length name) 3)
-            (name)  ;; creates a restart that offers to change "name"
+            (name)  ;; <-- list of places
             "The value of name is ~a. It should be longer than 3 characters." name)))
 ~~~
 
@@ -1593,7 +1772,8 @@ The value of name is me. It should be longer than 3 characters.
    [Condition of type SIMPLE-ERROR]
 
 Restarts:
- 0: [CONTINUE] Retry assertion with new value for NAME.    <--- new restart
+ 0: [CONTINUE] Retry assertion with new value for NAME.
+                               ^^^^^^^^^^^^ our new restart
  1: [RETRY] Retry SLIME REPL evaluation request.
  2: [*ABORT] Return to SLIME's top level.
 ```
@@ -1618,4 +1798,75 @@ Another rationale. The CLOS implementation of
 initialize-instance instance &rest initargs &key &allow-other-keys
 ~~~
 
-See more in the books !
+### Controlling the update of instances (update-instance-for-redefined-class)
+
+Suppose you created a "circle" class, with coordinates and a
+diameter. Later on, you decide to replace the diameter by a
+radius. You want all the existing objects to be cleverly updated:
+the radius should have the diameter value, divided by 2. Use
+`update-instance-for-redefined-class`.
+
+Its parameters are:
+
+- instance:	the object instance that is being updated
+- added-slots:	a list of added slots
+- discarded-slots: a list of discarded slots
+- property-list: a plist that captured the slot names and values of all the discarded-slots with values in the original instance.
+- initargs: an initialization argument list. `&key` catches them below.
+
+and it returns an object.
+
+We actually don't call the method direcly, but we use a `:before` method:
+
+~~~lisp
+(defmethod update-instance-for-redefined-class
+    :before ((obj circle) added deleted plist-values &key)
+  (format t "plist values: ~a~&" plist-values)
+  (let ((diameter (getf plist-values 'diameter)))
+    (setf (radius obj) (/ diameter 2))))
+~~~
+
+Here's how to try it. Start with a `circle` class:
+
+~~~lisp
+(defclass circle ()
+  ((diameter :accessor diameter :initform 9)))
+~~~
+
+and create a circle object:
+
+~~~lisp
+(make-instance 'circle)
+~~~
+
+inspect it or check its diameter value.
+
+Now write and compile a new class definition:
+
+~~~lisp
+(defclass circle ()
+  ((radius :accessor radius)))
+~~~
+
+Nothing happens yet, you don't see the output of our "plist values" print.
+
+Inspect or `describe` the object: now it will be updated, and you'll
+find the `radius` slot.
+
+Existing objects are updated lazily.
+
+See more on the [HyperSpec](https://www.lispworks.com/documentation/HyperSpec/Body/f_upda_1.htm)
+or on the [Community Spec](https://cl-community-spec.github.io/pages/update_002dinstance_002dfor_002dredefined_002dclass.html).
+
+### Controlling the update of instances to new classes (update-instance-for-different-class)
+
+Now imagine you are working with the `circle` class, but you realize
+you only need a `surface` kind of objects. You will discard the circle
+class altogether, but you want your existing objects to be updated -to
+this new class, and compute new slots intelligently. Use
+`update-instance-for-different-class`.
+
+See more on the [HyperSpec](https://www.lispworks.com/documentation/HyperSpec/Body/f_update.htm) or on the [Community Spec](https://cl-community-spec.github.io/pages/update_002dinstance_002dfor_002ddifferent_002dclass.html).
+
+
+And see more in the books!

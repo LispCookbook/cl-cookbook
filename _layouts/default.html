@@ -8,6 +8,8 @@
     <meta name="description" content="{{ site.description }}">
     <meta name="viewport" content=
 	  "width=device-width, initial-scale=1">
+    <link rel="icon" href=
+	  "{{ site.baseurl }}/assets/cl-logo-blue.png"/>
     <link rel="stylesheet" href=
 	  "{{ site.baseurl }}/assets/style.css">
     <script type="text/javascript" src=
@@ -35,9 +37,11 @@
         <img id="logo" src="{{ site.baseurl }}/assets/cl-logo-blue.png"/>
       </a>
 
-      <form onsubmit="duckSearch()" action="javascript:void(0)">
-        <input id="searchField" type="text" value="" placeholder="Search...">
-      </form>
+      <div id="searchform-container">
+        <form onsubmit="duckSearch()" action="javascript:void(0)">
+          <input id="searchField" type="text" value="" placeholder="Search...">
+        </form>
+      </div>
 
       <div id="toc-container" class="toc-close">
         <div id="toc-title">Table of Contents</div>
@@ -73,5 +77,8 @@
         }
       }
     </script>
+
+    <script async defer data-domain="lispcookbook.github.io/cl-cookbook" src="https://plausible.io/js/plausible.js"></script>
+
   </body>
 </html>

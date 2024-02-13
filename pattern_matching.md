@@ -40,15 +40,35 @@ For the following examples, let's `use` the library:
 
 ### `list`, `list*`
 
+`list` is a strict pattern, it expects the length of the matched
+object to be the same length as its subpatterns.
+
 ~~~lisp
-(match '(something #(0 1 2))
-  ((list a (vector 0 _ b))
+(match '(something 2 3)
+  ((list a b _)
    (values a b)))
 SOMETHING
 2
 ~~~
 
-`list*` pattern:
+Without the `_` placeholder, it would not match:
+
+~~~lisp
+(match '(something 2 3)
+  ((list a b)
+   (values a b)))
+NIL
+~~~
+
+The `list*` pattern is flexible on the object's length:
+
+~~~lisp
+(match '(something 2 3)
+  ((list* a b)
+   (values a b)))
+SOMETHING
+(2 3)
+~~~
 
 ~~~lisp
 (match '(1 2 . 3)
@@ -57,7 +77,18 @@ SOMETHING
 3
 ~~~
 
-Note that using `list` would match nothing.
+However pay attention that if `list*` receives only one object, that
+object is returned, regardless of whether or not it is a list:
+
+~~~lisp
+(match #(0 1 2)
+  ((list* a)
+   a))
+#(0 1 2)
+~~~
+
+This is related to the definition of `list*` in the HyperSpec: http://clhs.lisp.se/Body/f_list_.htm.
+
 
 ### `vector`, `vector*`
 
@@ -135,7 +166,11 @@ See https://github.com/guicho271828/trivia/wiki/Type-Based-Destructuring-Pattern
 
 ## Logic based patterns
 
+We can combine any pattern with some logic.
+
 ### `and`, `or`
+
+The following:
 
 ~~~lisp
 (match x
@@ -151,22 +186,21 @@ matches against both `(1 2)` and `(4 . 3)` and returns 2 and 4, respectively.
 It does not match when subpattern matches. The variables used in the
 subpattern are not visible in the body.
 
-### `guards`
+## Guards
+
+Guards allow us to use patterns *and* to verify them against a predicate.
 
 The syntax is `guard` + `subpattern` + `a test form`, and the body.
 
 ~~~lisp
 (match (list 2 5)
-  ((guard (list x y)     ; subpattern
-          (= 10 (* x y)) ; test-form
-          (- x y) (satisfies evenp)) ; generator1, subpattern1
-   t))
+  ((guard (list x y)     ; subpattern1
+          (= 10 (* x y))) ; test-form
+   :ok))
 ~~~
 
 If the subpattern is true, the test form is evaluated, and if it is
 true it is matched against subpattern1.
-
-The above returns `nil`, since `(- x y) == 3` does not satisfies `evenp`.
 
 
 ## Nesting patterns

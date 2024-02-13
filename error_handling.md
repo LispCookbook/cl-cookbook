@@ -9,7 +9,7 @@ What is a condition ?
 
 > Just like in languages that support exception handling (Java, C++,
 > Python, etc.), a condition represents, for the most part, an
-> “exceptional” situation. However, even more so that those languages,
+> “exceptional” situation. However, even more so than those languages,
 > *a condition in Common Lisp can represent a general situation where
 > some branching in program logic needs to take place*, not
 > necessarily due to some error condition. Due to the highly
@@ -95,24 +95,6 @@ The general form of `handler-case` is
        ...))
 ~~~
 
-We can also catch all conditions by matching `t`, like in a `cond`:
-
-~~~lisp
-(handler-case
-    (progn
-      (format t "This won't work…~%")
-      (/ 3 0))
-  (t (c)
-    (format t "Got an exception: ~a~%" c)
-    (values 0 c)))
-;; …
-;; This won't work…
-;; Got an exception: arithmetic error DIVISION-BY-ZERO signalled
-;; Operation was (/ 3 0).
-;; 0
-;; #<DIVISION-BY-ZERO {100608F0F3}>
-~~~
-
 
 ## Catching a specific condition
 
@@ -144,7 +126,7 @@ interactively or programmatically.
 If some library doesn't catch all conditions and lets some bubble out
 to us, we can see the restarts (established by `restart-case`)
 anywhere deep in the stack, including restarts established by other
-libraries that this library called.  And *we can see the stack
+libraries that this library called. And *we can see the stack
 trace*, with every frame that was called and, in some lisps, even see
 local variables and such. Once we `handler-case`, we "forget" about
 this, everything is unwound. `handler-bind` does *not* rewind the
@@ -184,8 +166,12 @@ able to populate it with information to be consumed later:
 ;; #<MY-DIVISION-BY-ZERO {1005C18653}>
 ~~~
 
-Note: here's a quick reminder on classes, if you are not fully operational
-on the [Common Lisp Object System](clos.html):
+<div class="info-box info">
+<p>
+<strong>Note:</strong> here's a quick reminder on classes, if you are not fully operational
+on the <a href="clos.html">Common Lisp Object System</a>.
+</p>
+</div>
 
 ~~~lisp
 (make-condition 'my-division-by-zero :dividend 3)
@@ -267,7 +253,9 @@ We can do better by giving a `:report` function in our condition declaration:
              :accessor dividend))
   ;; the :report is the message into the debugger:
   (:report (lambda (condition stream)
-     (format stream "You were going to divide ~a by zero.~&" (dividend condition)))))
+     (format stream
+             "You were going to divide ~a by zero.~&"
+             (dividend condition)))))
 ~~~
 
 Now:
@@ -297,7 +285,7 @@ debugging, speed or security.
 See our [debugging section](debugging.html).
 
 
-# Restarts, interactive choices in the debugger
+## Restarts, interactive choices in the debugger
 
 Restarts are the choices we get in the debugger, which always has the
 `RETRY` and `ABORT` ones.
@@ -306,7 +294,7 @@ By *handling* restarts we can start over the operation as if the error
 didn't occur (as seen in the stack).
 
 
-## Using assert's optional restart
+### Using assert's optional restart
 
 In its simple form `assert` does what we know:
 
@@ -367,7 +355,7 @@ Type a form to be evaluated:
 ```
 
 
-## Defining restarts (restart-case)
+### Defining restarts (restart-case)
 
 All this is good but we might want more custom choices.  We can add
 restarts on the top of the list by wrapping our function call inside
@@ -409,7 +397,7 @@ That's better, but we lack the ability to change an operand, as we did
 with the `assert` example above.
 
 
-## Changing a variable with restarts
+### Changing a variable with restarts
 
 The two restarts we defined didn't ask for a new value. To do this, we
 add an `:interactive` lambda function to the restart, that asks for
@@ -436,9 +424,9 @@ use the regular `read`.
       (divide-with-restarts x value))))
 
 (defun prompt-new-value (prompt)
-  (format *query-io* prompt)  ;; *query-io*: the special stream to make user queries.
-  (force-output *query-io*)   ;; Ensure the user sees what he types.
-  (list (read *query-io*)))   ;; We must return a list.
+  (format *query-io* prompt) ;; *query-io*: the special stream to make user queries.
+  (force-output *query-io*)  ;; Ensure the user sees what he types.
+  (list (read *query-io*)))  ;; We must return a list.
 
 (divide-with-restarts 3 0)
 ~~~
@@ -481,12 +469,12 @@ Now try again and you should get a little window asking for a new number:
 ![](assets/zenity-prompt.png)
 
 
-That's fun, but that's not all. Choosing restarts manually is not always (or often?)
-satisfactory.  And by *handling* restarts we can start over the
-operation as if the error didn't occur, as seen in the stack.
+That's fun, but that's not all. Choosing restarts manually is not always (or
+often?) satisfactory. And by *handling* restarts we can start over the operation
+as if the error didn't occur, as seen in the stack.
 
 
-## Calling restarts programmatically (handler-bind, invoke-restart)
+### Calling restarts programmatically (handler-bind, invoke-restart)
 
 We have a piece of code that we know can throw conditions. Here,
 `divide-with-restarts` can signal an error about a division by
@@ -512,7 +500,7 @@ We can do this with `handler-bind` and [invoke-restart][invoke-restart]:
 ~~~
 
 
-## Using other restarts (find-restart)
+### Using other restarts (find-restart)
 
 Use [find-restart][find-restart].
 
@@ -520,7 +508,7 @@ Use [find-restart][find-restart].
 restart with the given name, or `nil`.
 
 
-## Hiding and showing restarts
+### Hiding and showing restarts
 
 Restarts can be hidden. In `restart-case`, in addition to `:report`
 and `:interactive`, they also accept a `:test` key:
@@ -534,7 +522,7 @@ and `:interactive`, they also accept a `:test` key:
 ~~~
 
 
-# Handling conditions (handler-bind)
+## Handling conditions (handler-bind)
 
 We just saw a use for [handler-bind][handler-bind].
 
@@ -546,6 +534,11 @@ Its general form is:
     (code that can...)
     (...error out))
 ~~~
+
+If the handler returns normally (it declines to handle the condition),
+the condition continues to bubble up, searching for another handler,
+and it will find the interactive debugger (when it's an error, not
+when it's a simple condition).
 
 
 We can study a real example with the
@@ -575,7 +568,7 @@ it if needed. Here we get the name of the erroneous option with the
 condition's reader `(opts:option condition)`.
 
 
-# Running some code, condition or not ("finally") (unwind-protect)
+## Running some code, condition or not ("finally") (unwind-protect)
 
 The "finally" part of others `try/catch/finally` forms is done with [unwind-protect][unwind-protect].
 
@@ -593,7 +586,7 @@ We *do* get the interactive debugger (we didn't use handler-bind or
 anything), but our message is printed afterwards anyway.
 
 
-# Conclusion
+## Conclusion
 
 You're now more than ready to write some code and to dive into other resources!
 

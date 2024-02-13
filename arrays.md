@@ -15,11 +15,12 @@ section on [Arrays and vectors](data-structures.html).
 
 Some libraries available on [Quicklisp](https://www.quicklisp.org/beta/) for manipulating arrays:
 
-- [array-operations](https://github.com/tpapp/array-operations) defines
+- [array-operations](https://github.com/Lisp-Stat/array-operations) maintained by @Symbolics defines
   functions `generate`, `permute`, `displace`, `flatten`, `split`,
   `combine`, `reshape`. It also defines `each`, for element-wise
-  operations. This library is not maintained by the original author,
-  but there is an [actively maintained fork](https://github.com/bendudson/array-operations).
+  operations. This is a fork of [bendudson/array-operations](https://github.com/bendudson/array-operations) which is a fork of
+  [tpapp/array-operations](https://github.com/tpapp/array-operations), the original
+  author.
 - [cmu-infix](https://github.com/rigetticomputing/cmu-infix) includes
   array indexing syntax for multidimensional arrays.
 - [lla](https://github.com/tpapp/lla) is a library for linear algebra, calling BLAS and LAPACK
@@ -72,7 +73,7 @@ are given on the [github web pages](https://github.com/rigetticomputing/magicl).
 Low-level routines wrap foreign functions, so have the Fortran names
 e.g `magicl.lapack-cffi::%zgetrf`. Higher-level interfaces to some of
 these functions also exist, see the
-[source code](https://github.com/rigetti/magicl/blob/master/src/high-level/high-level.lisp).
+[source directory](https://github.com/rigetti/magicl/blob/master/src/high-level/) and [documentation](https://github.com/quil-lang/magicl/blob/master/doc/high-level.md).
 
 Taking this further, domain specific languages have been built on Common
 Lisp, which can be used for numerical calculations with arrays.
@@ -88,7 +89,7 @@ languages (particularly C++), by using [LLVM](http://llvm.org/).
 One of the main applications of this project is to numerical/scientific
 computing.
 
-# Creating
+## Creating
 
 The function [CLHS: make-array](http://clhs.lisp.se/Body/f_mk_ar.htm)
 can create arrays filled with a single value
@@ -124,10 +125,10 @@ To load "array-operations":
 Note that the nickname for `array-operations` is `aops`. The
 `generate` function can also iterate over the array subscripts by
 passing the key `:subscripts`. See the
-[github repository](https://github.com/tpapp/array-operations) for
+[Array Operations manual on generate](https://lisp-stat.dev/docs/manuals/array-operations/#generate) for
 more examples.
 
-## Random numbers
+### Random numbers
 
 To create an 3x3 array containing random numbers drawn from a uniform
 distribution, `generate` can be used to call the CL
@@ -166,7 +167,7 @@ For more efficient implementations, and a wider range of probability
 distributions, there are packages available on Quicklisp. See
 [CLiki](https://www.cliki.net/statistics) for a list.
 
-# Accessing elements
+## Accessing elements
 
 To access the individual elements of an array there are the [aref](http://clhs.lisp.se/Body/f_aref.htm)
 and [row-major-aref](http://clhs.lisp.se/Body/f_row_ma.htm#row-major-aref) functions.
@@ -174,6 +175,7 @@ and [row-major-aref](http://clhs.lisp.se/Body/f_row_ma.htm#row-major-aref) funct
 The [aref](http://clhs.lisp.se/Body/f_aref.htm) function takes the same number of index arguments as the
 array has dimensions. Indexing is from 0 and row-major as in C, but
 not Fortran.
+
 ~~~lisp
 * (defparameter *a* #(1 2 3 4))
 *A*
@@ -201,6 +203,7 @@ The range of these indices can be found using
 
 or the rank of the array can be found, and then the size of each
 dimension queried:
+
 ~~~lisp
 * (array-rank *a*)
 1
@@ -214,7 +217,8 @@ dimension queried:
 3
 ~~~
 
-To loop over an array nested loops can be used, such as
+To loop over an array nested loops can be used, such as:
+
 ~~~lisp
 * (defparameter a #2A((1 2 3) (4 5 6)))
 A
@@ -252,27 +256,37 @@ A utility macro which does this for multiple dimensions is `nested-loop`:
 
   ;; Generate gensyms for dimension sizes
   (let* ((rank (length syms))
-         (syms-rev (reverse syms)) ; Reverse, since starting with innermost
-         (dims-rev (loop for i from 0 below rank collecting (gensym))) ; innermost dimension first
-         (result `(progn ,@body))) ; Start with innermost expression
+         ;; reverse our symbols list,
+         ;; since we start from the innermost.
+         (syms-rev (reverse syms))
+         ;; innermost dimension first:
+         (dims-rev (loop for i from 0 below rank
+                         collecting (gensym)))
+         ;; start with innermost expression
+         (result `(progn ,@body)))
     ;; Wrap previous result inside a loop for each dimension
     (loop for sym in syms-rev for dim in dims-rev do
-         (unless (symbolp sym) (error "~S is not a symbol. First argument to nested-loop must be a list of symbols" sym))
+         (unless (symbolp sym)
+           (error "~S is not a symbol. First argument to nested-loop must be a list of symbols" sym))
          (setf result
                `(loop for ,sym from 0 below ,dim do
                      ,result)))
-    ;; Add checking of rank and dimension types, and get dimensions into gensym list
+    ;; Add checking of rank and dimension types,
+    ;; and get dimensions into gensym list.
     (let ((dims (gensym)))
       `(let ((,dims ,dimensions))
-         (unless (= (length ,dims) ,rank) (error "Incorrect number of dimensions: Expected ~a but got ~a" ,rank (length ,dims)))
+         (unless (= (length ,dims) ,rank)
+           (error "Incorrect number of dimensions: Expected ~a but got ~a" ,rank (length ,dims)))
          (dolist (dim ,dims)
-           (unless (integerp dim) (error "Dimensions must be integers: ~S" dim)))
-         (destructuring-bind ,(reverse dims-rev) ,dims ; Dimensions reversed so that innermost is last
+           (unless (integerp dim)
+             (error "Dimensions must be integers: ~S" dim)))
+         ;; dimensions reversed so that innermost is last:
+         (destructuring-bind ,(reverse dims-rev) ,dims
            ,result)))))
-
 ~~~
 
-so that the contents of a 2D array can be printed using
+so that the contents of a 2D array can be printed using:
+
 ~~~lisp
 * (defparameter a #2A((1 2 3) (4 5 6)))
 A
@@ -291,7 +305,7 @@ NIL
 [Note: This macro is available in [this fork](https://github.com/bendudson/array-operations) of array-operations, but
 not Quicklisp]
 
-## Row major indexing
+### Row major indexing
 
 In some cases, particularly element-wise operations, the number of
 dimensions does not matter. To write code which is independent of the
@@ -313,7 +327,7 @@ NIL
 #2A((3.0 4.0 5.0) (6.0 7.0 8.0))
 ~~~
 
-## Infix syntax
+### Infix syntax
 
 The [cmu-infix](https://github.com/rigetticomputing/cmu-infix) library
 provides some different syntax which can make mathematical expressions
@@ -343,6 +357,7 @@ ARR
 ~~~
 
 A matrix-matrix multiply operation can be implemented as:
+
 ~~~lisp
 (let ((A #2A((1 2) (3 4)))
       (B #2A((5 6) (7 8)))
@@ -354,13 +369,14 @@ A matrix-matrix multiply operation can be implemented as:
                        #i(result[i j] += A[i k] * B[k j]))))
       result)
 ~~~
+
 See the section below on linear algebra, for alternative
 matrix-multiply implementations.
 
-# Element-wise operations
+## Element-wise operations
 
 To multiply two arrays of numbers of the same size, pass a function
-to `each` in the [array-operations](https://github.com/tpapp/array-operations) library:
+to `each` in the [array-operations](https://github.com/Lisp-Stat/array-operations) library:
 
 ~~~lisp
 * (aops:each #'* #(1 2 3) #(2 3 4))
@@ -385,7 +401,7 @@ Note that `each` is not destructive, but makes a new array.
 All arguments to `each` must be arrays of the same size,
 so `(aops:each #'+ 42 *a*)` is not valid.
 
-## Vectorising expressions
+### Vectorising expressions
 
 An alternative approach to the `each` function above, is to use a
 macro to iterate over all elements of an array:
@@ -421,6 +437,7 @@ fork](https://github.com/bendudson/array-operations) of array-operations, but
 not Quicklisp]
 
 This can be used as:
+
 ~~~lisp
 * (defparameter *a* #(1 2 3 4))
 *A*
@@ -441,22 +458,24 @@ B
 #(0.9092974 0.28224 -2.2704074 -3.8356972)
 ~~~
 
-and combined with `cmu-infix`
+and combined with `cmu-infix`:
+
 ~~~lisp
 * (vectorize (a b) #i(a * sin(b)) )
 #(0.9092974 0.28224 -2.2704074 -3.8356972)
 ~~~
 
-## Calling BLAS
+### Calling BLAS
 
 Several packages provide wrappers around BLAS, for fast matrix manipulation.
 
 The [lla](https://github.com/tpapp/lla) package in quicklisp includes
 calls to some functions:
 
-### Scale an array
+#### Scale an array
 
 scaling by a constant factor:
+
 ~~~lisp
 * (defparameter a #(1 2 3))
 * (lla:scal! 2.0 a)
@@ -464,10 +483,11 @@ scaling by a constant factor:
 #(2.0d0 4.0d0 6.0d0)
 ~~~
 
-### AXPY
+#### AXPY
 
 This calculates `a * x + y` where `a` is a constant, `x` and `y` are arrays.
 The `lla:axpy!` function is destructive, modifying the last argument (`y`).
+
 ~~~lisp
 * (defparameter x #(1 2 3))
 A
@@ -480,6 +500,7 @@ B
 * y
 #(2.5d0 4.0d0 5.5d0)
 ~~~
+
 If the `y` array is complex, then this operation calls the complex
 number versions of these operators:
 
@@ -494,9 +515,10 @@ number versions of these operators:
 #(#C(1.5d0 1.5d0) #C(2.0d0 2.0d0) #C(2.5d0 2.5d0))
 ~~~
 
-### Dot product
+#### Dot product
 
 The dot product of two vectors:
+
 ~~~lisp
 * (defparameter x #(1 2 3))
 * (defparameter y #(2 3 4))
@@ -504,7 +526,7 @@ The dot product of two vectors:
 20.0d0
 ~~~
 
-## Reductions
+### Reductions
 
 The [reduce](http://clhs.lisp.se/Body/f_reduce.htm) function operates
 on sequences, including vectors (1D arrays), but not on
@@ -513,6 +535,7 @@ To get around this, multidimensional arrays can be displaced to create
 a 1D vector.
 Displaced arrays share storage with the original array, so this is a
 fast operation which does not require copying data:
+
 ~~~lisp
 * (defparameter a #2A((1 2) (3 4)))
 A
@@ -522,6 +545,7 @@ A
 
 The `array-operations` package contains `flatten`, which returns a
 displaced array i.e doesn't copy data:
+
 ~~~lisp
 * (reduce #'max (aops:flatten a))
 ~~~
@@ -529,6 +553,7 @@ displaced array i.e doesn't copy data:
 An SBCL extension,
 [array-storage-vector](http://www.sbcl.org/manual/#index-array_002dstorage_002dvector)
 provides an efficient but not portable way to achieve the same thing:
+
 ~~~lisp
 * (reduce #'max (array-storage-vector a))
 4
@@ -593,21 +618,24 @@ defined above, a macro which does not allocate can be defined as:
          ,result))))
 
 ~~~
+
 [Note: This macro is available in [this fork](https://github.com/bendudson/array-operations)
 of array-operations, but not Quicklisp]
 
 Using this macro, the maximum value in an array A (of any shape) is:
+
 ~~~lisp
 * (vectorize-reduce #'max (a) a)
 ~~~
 
 The maximum absolute difference between two arrays A and B, of any
 shape as long as they have the same shape, is:
+
 ~~~lisp
 * (vectorize-reduce #'max (a b) (abs (- a b)))
 ~~~
 
-# Linear algebra
+## Linear algebra
 
 Several packages provide bindings to BLAS and LAPACK libraries,
 including:
@@ -618,6 +646,7 @@ including:
 A longer list of available packages is on [CLiki's linear algebra page](https://www.cliki.net/linear%20algebra).
 
 In the examples below the lla package is loaded:
+
 ~~~lisp
 * (ql:quickload :lla)
 
@@ -629,47 +658,54 @@ To load "lla":
 (:LLA)
 ~~~
 
-## Matrix multiplication
+### Matrix multiplication
 
 The [lla](https://github.com/tpapp/lla) function `mm` performs
 vector-vector, matrix-vector and matrix-matrix
 multiplication.
 
-### Vector dot product
+#### Vector dot product
 
 Note that one vector is treated as a row vector, and the other as
 column:
+
 ~~~lisp
 * (lla:mm #(1 2 3) #(2 3 4))
 20
 ~~~
 
-### Matrix-vector product
+#### Matrix-vector product
+
 ~~~lisp
 * (lla:mm #2A((1 1 1) (2 2 2) (3 3 3))  #(2 3 4))
 #(9.0d0 18.0d0 27.0d0)
 ~~~
+
 which has performed the sum over `j` of `A[i j] * x[j]`
 
-### Matrix-matrix multiply
+#### Matrix-matrix multiply
+
 ~~~lisp
 * (lla:mm #2A((1 2 3) (1 2 3) (1 2 3))  #2A((2 3 4) (2 3 4) (2 3 4)))
 #2A((12.0d0 18.0d0 24.0d0) (12.0d0 18.0d0 24.0d0) (12.0d0 18.0d0 24.0d0))
 ~~~
+
 which summed over `j` in `A[i j] * B[j k]`
 
 Note that the type of the returned arrays are simple arrays,
 specialised to element type `double-float`
+
 ~~~lisp
 * (type-of (lla:mm #2A((1 0 0) (0 1 0) (0 0 1)) #(1 2 3)))
 (SIMPLE-ARRAY DOUBLE-FLOAT (3))
 ~~~
 
-### Outer product
+#### Outer product
 
-The [array-operations](https://github.com/tpapp/array-operations)
+The [array-operations](https://github.com/Lisp-Stat/array-operations)
 package contains a generalised [outer product](https://en.wikipedia.org/wiki/Outer_product)
 function:
+
 ~~~lisp
 * (ql:quickload :array-operations)
 To load "array-operations":
@@ -681,18 +717,22 @@ To load "array-operations":
 * (aops:outer #'* #(1 2 3) #(2 3 4))
 #2A((2 3 4) (4 6 8) (6 9 12))
 ~~~
+
 which has created a new 2D array `A[i j] = B[i] * C[j]`. This `outer`
 function can take an arbitrary number of inputs, and inputs with
 multiple dimensions.
 
-## Matrix inverse
+### Matrix inverse
 
 The direct inverse of a dense matrix can be calculated with `invert`
+
 ~~~lisp
 * (lla:invert #2A((1 0 0) (0 1 0) (0 0 1)))
 #2A((1.0d0 0.0d0 -0.0d0) (0.0d0 1.0d0 -0.0d0) (0.0d0 0.0d0 1.0d0))
 ~~~
+
 e.g
+
 ~~~lisp
 * (defparameter a #2A((1 2 3) (0 2 1) (1 3 2)))
 A
@@ -718,7 +758,7 @@ B
 #(1.0d0 2.0d0 3.0d0)
 ~~~
 
-## Singular value decomposition
+### Singular value decomposition
 
 The `svd` function calculates the [singular value decomposition](https://en.wikipedia.org/wiki/Singular-value_decomposition)
 of a given matrix, returning an object with slots for the three returned
@@ -744,6 +784,7 @@ A-SVD
 
 The diagonal matrix (singular values) and vectors can be accessed with
 functions:
+
 ~~~lisp
 (lla:svd-u a-svd)
 #2A((-0.6494608633564334d0 0.7205486773948702d0 0.24292013188045855d0)
@@ -761,7 +802,7 @@ functions:
 ~~~
 
 
-# Matlisp
+## Matlisp
 
 The [Matlisp](https://github.com/bharath1097/matlisp/) scientific
 computation library provides high performance operations on arrays,
@@ -776,6 +817,7 @@ The nickname for `matlisp` is `m`. To avoid typing `matlisp:` or
 `m:` in front of each symbol, you can define your own package which
 uses matlisp
 (See the [PCL section on packages](http://www.gigamonkeys.com/book/programming-in-the-large-packages-and-symbols.html)):
+
 ~~~lisp
 * (defpackage :my-new-code
      (:use :common-lisp :matlisp))
@@ -783,13 +825,15 @@ uses matlisp
 
 * (in-package :my-new-code)
 ~~~
+
 and to use the `#i` infix reader (note the same name as for
 `cmu-infix`), run:
+
 ~~~lisp
 * (named-readtables:in-readtable :infix-dispatch-table)
 ~~~
 
-## Creating tensors
+### Creating tensors
 
 ~~~lisp
 * (matlisp:zeros '(2 2))
@@ -812,6 +856,7 @@ To create a complex array using `zeros`, `ones` and `eye`, specify the type:
 
 As well as `zeros` and `ones` there is `eye` which creates an identity
 matrix:
+
 ~~~lisp
 * (matlisp:eye '(3 3) '((complex double-float)))
 #<|<BLAS-MIXIN SIMPLE-DENSE-TENSOR: (COMPLEX DOUBLE-FLOAT)>| #(3 3)
@@ -821,7 +866,7 @@ matrix:
 >
 ~~~
 
-### Ranges
+#### Ranges
 
 To generate 1D arrays there are the `range` and `linspace` functions:
 
@@ -833,6 +878,7 @@ To generate 1D arrays there are the `range` and `linspace` functions:
 ~~~
 
 The `range` function rounds down it's final argument to an integer:
+
 ~~~lisp
 * (matlisp:range 1 -3.5)
 #<|<BLAS-MIXIN SIMPLE-DENSE-TENSOR: SINGLE-FLOAT>| #(5)
@@ -863,7 +909,7 @@ end point.
 
 Currently `linspace` requires real inputs, and doesn't work with complex numbers.
 
-### Random numbers
+#### Random numbers
 
 ~~~lisp
 * (matlisp:random-uniform '(2 2))
@@ -880,11 +926,12 @@ Currently `linspace` requires real inputs, and doesn't work with complex numbers
  -0.3877    -1.371
 >
 ~~~
+
 There are functions for other distributions, including
 `random-exponential`, `random-beta`, `random-gamma` and
 `random-pareto`.
 
-### Reader macros
+#### Reader macros
 
 The `#d` and `#e` reader macros provide a way to create `double-float`
 and `single-float` tensors:
@@ -901,9 +948,10 @@ and `single-float` tensors:
   4.000    5.000    6.000
 >
 ~~~
+
 Note that the comma separators are needed.
 
-### Tensors from arrays
+#### Tensors from arrays
 
 Common lisp arrays can be converted to Matlisp tensors by copying:
 
@@ -922,15 +970,17 @@ dimensions. The internal storage of `tensor` objects is a 1D array
 (`simple-vector`) in a slot `store`.
 
 For example, to create a `double-float` type tensor:
+
 ~~~lisp
 (make-instance (tensor 'double-float)
     :dimensions  (coerce '(2) '(simple-array index-type (*)))
     :store (make-array 2 :element-type 'double-float))
 ~~~
 
-### Arrays from tensors
+#### Arrays from tensors
 
 The array store can be accessed using slots:
+
 ~~~lisp
 * (defparameter vec (m:range 0 5))
 * vec
@@ -947,6 +997,7 @@ common lisp arrays. A displaced array will therefore be
 transposed.
 
 The contents of a tensor can be copied into an array
+
 ~~~lisp
 * (let ((tens (m:ones '(2 3))))
     (m:copy tens 'array))
@@ -954,15 +1005,17 @@ The contents of a tensor can be copied into an array
 ~~~
 
 or a list:
+
 ~~~lisp
 * (m:copy (m:ones '(2 3)) 'cons)
 ((1.0d0 1.0d0 1.0d0) (1.0d0 1.0d0 1.0d0))
 ~~~
 
-## Element access
+### Element access
 
 The `ref` function is the equivalent of `aref` for standard CL
 arrays, and is also setf-able:
+
 ~~~lisp
 * (defparameter a (matlisp:ones '(2 3)))
 
@@ -975,10 +1028,11 @@ arrays, and is also setf-able:
 >
 ~~~
 
-## Element-wise operations
+### Element-wise operations
 
 The `matlisp-user` package, loaded when `matlisp` is loaded, contains
 functions for operating element-wise on tensors.
+
 ~~~lisp
 * (matlisp-user:* 2 (ones '(2 3)))
 #<|<BLAS-MIXIN SIMPLE-DENSE-TENSOR: DOUBLE-FLOAT>| #(2 3)

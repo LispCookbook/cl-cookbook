@@ -33,12 +33,34 @@ Evaluation took:
   0 bytes consed
 ~~~
 
-By using `time` macro it is fairly easy to find out which part of your program
+By using the `time` macro it is fairly easy to find out which part of your program
 takes too much time.
 
 Please note that the timing information provided here is not guaranteed to be
 reliable enough for marketing comparisons. It should only be used for tuning
 purpose, as demonstrated in this chapter.
+
+### Know your Lisp's statistical profiler
+
+Implementations ship their own profilers. SBCL has
+[sb-profile](http://www.sbcl.org/manual/#Deterministic-Profiler), a
+"classic, per-function-call" deterministic profiler and
+[sb-sprof](http://www.sbcl.org/manual/#Statistical-Profiler), a
+statistical profiler. The latter works by taking samples of the
+program execution at regular intervals, instead of instrumenting
+functions like `sb-profile:profile` does.
+
+> You might find sb-sprof more useful than the deterministic profiler when profiling functions in the common-lisp-package, SBCL internals, or code where the instrumenting overhead is excessive.
+
+### Use flamegraphs and other tracing profilers
+
+[cl-flamegraph](https://github.com/40ants/cl-flamegraph) is a wrapper around SBCL's statistical profiler to generate FlameGraph charts. Flamegraphs are a very visual way to search for hotspots in your code:
+
+![](assets/cl-flamegraph.png)
+
+See also [tracer](https://github.com/TeMPOraL/tracer), a tracing
+profiler for SBCL. Its output is suitable for display in
+Chrome’s or Chromium’s Tracing Viewer (`chrome://tracing`).
 
 ### Checking Assembly Code
 
@@ -53,19 +75,19 @@ PLUS
 * (disassemble 'plus)
 ; disassembly for PLUS
 ; Size: 37 bytes. Origin: #x52B8063B
-; 3B:       498B5D60         MOV RBX, [R13+96]                ; no-arg-parsing entry point
-                                                              ; thread.binding-stack-pointer
-; 3F:       48895DF8         MOV [RBP-8], RBX
-; 43:       498BD0           MOV RDX, R8
-; 46:       488BFE           MOV RDI, RSI
-; 49:       FF1425B0001052   CALL QWORD PTR [#x521000B0]      ; GENERIC-+
-; 50:       488B75E8         MOV RSI, [RBP-24]
-; 54:       4C8B45F0         MOV R8, [RBP-16]
-; 58:       488BE5           MOV RSP, RBP
-; 5B:       F8               CLC
-; 5C:       5D               POP RBP
-; 5D:       C3               RET
-; 5E:       CC0F             BREAK 15                         ; Invalid argument count trap
+; 3B:  498B5D60     MOV RBX, [R13+96]  ; no-arg-parsing entry point
+                                       ; thread.binding-stack-pointer
+; 3F:  48895DF8     MOV [RBP-8], RBX
+; 43:  498BD0       MOV RDX, R8
+; 46:  488BFE       MOV RDI, RSI
+; 49:  FF14250102   CALL QWORD PTR [#x52100] ; GENERIC-+
+; 50:  488B75E8     MOV RSI, [RBP-24]
+; 54:  4C8B45F0     MOV R8, [RBP-16]
+; 58:  488BE5       MOV RSP, RBP
+; 5B:  F8           CLC
+; 5C:  5D           POP RBP
+; 5D:  C3           RET
+; 5E:  CC0F         BREAK 15   ; Invalid argument count trap
 ~~~
 
 The code above was evaluated in SBCL. In some other implementations such as
@@ -130,63 +152,63 @@ MAX-ORIGINAL
 * (disassemble 'max-original)
 ; disassembly for MAX-ORIGINAL
 ; Size: 144 bytes. Origin: #x52D450EF
-; 7A7:       8D46F1           lea eax, [rsi-15]               ; no-arg-parsing entry point
-; 7AA:       A801             test al, 1
-; 7AC:       750E             jne L0
-; 7AE:       3C0A             cmp al, 10
-; 7B0:       740A             jeq L0
-; 7B2:       A80F             test al, 15
-; 7B4:       7576             jne L5
-; 7B6:       807EF11D         cmp byte ptr [rsi-15], 29
-; 7BA:       7770             jnbe L5
-; 7BC: L0:   8D43F1           lea eax, [rbx-15]
-; 7BF:       A801             test al, 1
-; 7C1:       750E             jne L1
-; 7C3:       3C0A             cmp al, 10
-; 7C5:       740A             jeq L1
-; 7C7:       A80F             test al, 15
-; 7C9:       755A             jne L4
-; 7CB:       807BF11D         cmp byte ptr [rbx-15], 29
-; 7CF:       7754             jnbe L4
-; 7D1: L1:   488BD3           mov rdx, rbx
-; 7D4:       488BFE           mov rdi, rsi
-; 7D7:       B9C1030020       mov ecx, 536871873              ; generic->
-; 7DC:       FFD1             call rcx
-; 7DE:       488B75F0         mov rsi, [rbp-16]
-; 7E2:       488B5DF8         mov rbx, [rbp-8]
-; 7E6:       7E09             jle L3
-; 7E8:       488BD3           mov rdx, rbx
-; 7EB: L2:   488BE5           mov rsp, rbp
-; 7EE:       F8               clc
-; 7EF:       5D               pop rbp
-; 7F0:       C3               ret
-; 7F1: L3:   4C8BCB           mov r9, rbx
-; 7F4:       4C894DE8         mov [rbp-24], r9
-; 7F8:       4C8BC6           mov r8, rsi
-; 7FB:       4C8945E0         mov [rbp-32], r8
-; 7FF:       488BD3           mov rdx, rbx
-; 802:       488BFE           mov rdi, rsi
-; 805:       B929040020       mov ecx, 536871977              ; generic-=
-; 80A:       FFD1             call rcx
-; 80C:       4C8B45E0         mov r8, [rbp-32]
-; 810:       4C8B4DE8         mov r9, [rbp-24]
-; 814:       488B75F0         mov rsi, [rbp-16]
-; 818:       488B5DF8         mov rbx, [rbp-8]
-; 81C:       498BD0           mov rdx, r8
-; 81F:       490F44D1         cmoveq rdx, r9
-; 823:       EBC6             jmp L2
-; 825: L4:   CC0A             break 10                        ; error trap
-; 827:       04               byte #X04
-; 828:       13               byte #X13                       ; OBJECT-NOT-REAL-ERROR
-; 829:       FE9B01           byte #XFE, #X9B, #X01           ; RBX
-; 82C: L5:   CC0A             break 10                        ; error trap
-; 82E:       04               byte #X04
-; 82F:       13               byte #X13                       ; OBJECT-NOT-REAL-ERROR
-; 830:       FE1B03           byte #XFE, #X1B, #X03           ; RSI
-; 833:       CC0A             break 10                        ; error trap
-; 835:       02               byte #X02
-; 836:       19               byte #X19                       ; INVALID-ARG-COUNT-ERROR
-; 837:       9A               byte #X9A                       ; RCX
+; 7A7:       8D46F1      lea eax, [rsi-15]               ; no-arg-parsing entry point
+; 7AA:       A801        test al, 1
+; 7AC:       750E        jne L0
+; 7AE:       3C0A        cmp al, 10
+; 7B0:       740A        jeq L0
+; 7B2:       A80F        test al, 15
+; 7B4:       7576        jne L5
+; 7B6:       807EF11D    cmp byte ptr [rsi-15], 29
+; 7BA:       7770        jnbe L5
+; 7BC: L0:   8D43F1      lea eax, [rbx-15]
+; 7BF:       A801        test al, 1
+; 7C1:       750E        jne L1
+; 7C3:       3C0A        cmp al, 10
+; 7C5:       740A        jeq L1
+; 7C7:       A80F        test al, 15
+; 7C9:       755A        jne L4
+; 7CB:       807BF11D    cmp byte ptr [rbx-15], 29
+; 7CF:       7754        jnbe L4
+; 7D1: L1:   488BD3      mov rdx, rbx
+; 7D4:       488BFE      mov rdi, rsi
+; 7D7:       B9C1030020  mov ecx, 536871873   ; generic->
+; 7DC:       FFD1        call rcx
+; 7DE:       488B75F0    mov rsi, [rbp-16]
+; 7E2:       488B5DF8    mov rbx, [rbp-8]
+; 7E6:       7E09        jle L3
+; 7E8:       488BD3      mov rdx, rbx
+; 7EB: L2:   488BE5      mov rsp, rbp
+; 7EE:       F8          clc
+; 7EF:       5D          pop rbp
+; 7F0:       C3          ret
+; 7F1: L3:   4C8BCB      mov r9, rbx
+; 7F4:       4C894DE8    mov [rbp-24], r9
+; 7F8:       4C8BC6      mov r8, rsi
+; 7FB:       4C8945E0    mov [rbp-32], r8
+; 7FF:       488BD3      mov rdx, rbx
+; 802:       488BFE      mov rdi, rsi
+; 805:       B929040020  mov ecx, 536871977   ; generic-=
+; 80A:       FFD1        call rcx
+; 80C:       4C8B45E0    mov r8, [rbp-32]
+; 810:       4C8B4DE8    mov r9, [rbp-24]
+; 814:       488B75F0    mov rsi, [rbp-16]
+; 818:       488B5DF8    mov rbx, [rbp-8]
+; 81C:       498BD0      mov rdx, r8
+; 81F:       490F44D1    cmoveq rdx, r9
+; 823:       EBC6        jmp L2
+; 825: L4:   CC0A        break 10            ; error trap
+; 827:       04          byte #X04
+; 828:       13          byte #X13           ; OBJECT-NOT-REAL-ERROR
+; 829:       FE9B01      byte #XFE, #X9B, #X01      ; RBX
+; 82C: L5:   CC0A        break 10            ; error trap
+; 82E:       04          byte #X04
+; 82F:       13          byte #X13           ; OBJECT-NOT-REAL-ERROR
+; 830:       FE1B03      byte #XFE, #X1B, #X03           ; RSI
+; 833:       CC0A        break 10            ; error trap
+; 835:       02          byte #X02
+; 836:       19          byte #X19           ; INVALID-ARG-COUNT-ERROR
+; 837:       9A          byte #X9A           ; RCX
 
 * (defun max-with-speed-3 (a b)
     (declare (optimize (speed 3) (safety 0)))
@@ -200,7 +222,7 @@ MAX-WITH-SPEED-3
 ; 3F:       488945E8         mov [rbp-24], rax
 ; 43:       488BD0           mov rdx, rax
 ; 46:       488BFB           mov rdi, rbx
-; 49:       B9C1030020       mov ecx, 536871873               ; generic->
+; 49:       B9C1030020       mov ecx, 536871873     ; generic->
 ; 4E:       FFD1             call rcx
 ; 50:       488B45E8         mov rax, [rbp-24]
 ; 54:       488B5DE0         mov rbx, [rbp-32]
@@ -218,7 +240,7 @@ MAX-WITH-SPEED-3
 ; 74:       4C8945F8         mov [rbp-8], r8
 ; 78:       488BD0           mov rdx, rax
 ; 7B:       488BFB           mov rdi, rbx
-; 7E:       B929040020       mov ecx, 536871977               ; generic-=
+; 7E:       B929040020       mov ecx, 536871977      ; generic-=
 ; 83:       FFD1             call rcx
 ; 85:       488B45E8         mov rax, [rbp-24]
 ; 89:       488B75F0         mov rsi, [rbp-16]
@@ -227,14 +249,14 @@ MAX-WITH-SPEED-3
 ; 95:       EBC6             jmp L0
 ~~~
 
-As you can see, the generated assembly code is much shorter (92 bytes
-VS 144).  The compiler was able to perform optimizations. Yet we
-can do better by declaring types.
+As you can see, the generated assembly code is much shorter (92 bytes VS 144).
+The compiler was able to perform optimizations. Yet we can do better by
+declaring types.
 
 
 ### Type Hints
 
-As mentioned in the [*Type System*][sec:type] chapter, Lisp has a relatively
+As mentioned in the [*Type System*][type] chapter, Lisp has a relatively
 powerful type system. You may provide type hints so that the compiler may
 reduce the size of the generated code.
 
@@ -253,7 +275,7 @@ MAX-WITH-TYPE
 ; 22:       488BD8           mov rbx, rax
 ; 25:       48895DF8         mov [rbp-8], rbx
 ; 29:       488BD0           mov rdx, rax
-; 2C:       B98C030020       mov ecx, 536871820               ; generic-<
+; 2C:       B98C030020       mov ecx, 536871820    ; generic-<
 ; 31:       FFD1             call rcx
 ; 33:       488B75F0         mov rsi, [rbp-16]
 ; 37:       488B5DF8         mov rbx, [rbp-8]
@@ -362,7 +384,8 @@ than one `ftype` declaration associated with it. A `ftype` declaration restricts
 the type of the argument every time the function is called. It has the following form:
 
 ~~~lisp
- (declare (ftype (function (arg1 arg2 ...) return-value) function-name1))
+ (declaim (ftype (function (arg1 arg2 ...) return-value)
+                 function-name1))
 ~~~~
 
 If the function returns `nil`, its return type is `null`.
@@ -411,18 +434,18 @@ Now let's try to optimize the speed. The compiler will state that there is type 
       (disassemble 'do-some-arithmetic)
 ; disassembly for DO-SOME-ARITHMETIC
 ; Size: 53 bytes. Origin: #x52CD1D1A
-; 1A:       488945F8         MOV [RBP-8], RAX                 ; no-arg-parsing entry point
+; 1A:       488945F8         MOV [RBP-8], RAX   ; no-arg-parsing entry point
 ; 1E:       488BD0           MOV RDX, RAX
 ; 21:       4883EC10         SUB RSP, 16
 ; 25:       B902000000       MOV ECX, 2
 ; 2A:       48892C24         MOV [RSP], RBP
 ; 2E:       488BEC           MOV RBP, RSP
-; 31:       E8C2737CFD       CALL #x504990F8                  ; #<FDEFN SQUARE>
+; 31:       E8C2737CFD       CALL #x504990F8    ; #<FDEFN SQUARE>
 ; 36:       480F42E3         CMOVB RSP, RBX
 ; 3A:       488B45F8         MOV RAX, [RBP-8]
 ; 3E:       488BFA           MOV RDI, RDX
 ; 41:       488BD0           MOV RDX, RAX
-; 44:       E807EE42FF       CALL #x52100B50                  ; GENERIC-+
+; 44:       E807EE42FF       CALL #x52100B50    ; GENERIC-+
 ; 49:       488BE5           MOV RSP, RBP
 ; 4C:       F8               CLC
 ; 4D:       5D               POP RBP
@@ -444,13 +467,13 @@ that the expression `(square x)` is a `fixnum`, and use the fixnum-specific `+`:
 
 ; disassembly for DO-SOME-ARITHMETIC
 ; Size: 48 bytes. Origin: #x52C084DA
-; 4DA:       488945F8         MOV [RBP-8], RAX                ; no-arg-parsing entry point
+; 4DA:       488945F8         MOV [RBP-8], RAX   ; no-arg-parsing entry point
 ; 4DE:       4883EC10         SUB RSP, 16
 ; 4E2:       488BD0           MOV RDX, RAX
 ; 4E5:       B902000000       MOV ECX, 2
 ; 4EA:       48892C24         MOV [RSP], RBP
 ; 4EE:       488BEC           MOV RBP, RSP
-; 4F1:       E8020C89FD       CALL #x504990F8                 ; #<FDEFN SQUARE>
+; 4F1:       E8020C89FD       CALL #x504990F8    ; #<FDEFN SQUARE>
 ; 4F6:       480F42E3         CMOVB RSP, RBX
 ; 4FA:       488B45F8         MOV RAX, [RBP-8]
 ; 4FE:       4801D0           ADD RAX, RDX
@@ -584,11 +607,69 @@ It can be enabled globally by adding `:inline-generic-function` flag in
 When this feature is present, all inlinable generic functions are inlined
 unless it is declared `notinline`.
 
+## Block compilation
+
+SBCL [got block compilation on version 2.0.2](https://mstmetent.blogspot.com/2020/02/block-compilation-fresh-in-sbcl-202.html), which was in CMUCL since 1991 but a little forgotten since.
+
+You can enable block compilation with a one-liner:
+
+~~~lisp
+(setq *block-compile-default* t)
+~~~
+
+But what is it?
+
+Block compilation addresses a known aspect of dynamic languages: function calls to global, top-level functions are expensive.
+
+> Much more expensive than in a statically compiled language. They're slow because of the late-bound nature of top-level defined functions, allowing arbitrary redefinition while the program is running and forcing runtime checks on whether the function is being called with the right number or types of arguments. This type of call is known as a "full call" in Python (the compiler used in CMUCL and SBCL, not to be confused with the programming language), and their calling convention permits the most runtime flexibility.
+
+But local calls, the ones inside a top-level functions (for example `lambda`s, `labels` and `flet`s) are fast.
+
+> These calls are more 'static' in the sense that they are treated more like function calls in static languages, being compiled "together" and at the same time as the local functions they reference, allowing them to be optimized at compile-time. For example, argument checking can be done at compile time because the number of arguments of the callee is known at compile time, unlike in the full call case where the function, and hence the number of arguments it takes, can change dynamically at runtime at any point. Additionally, the local call calling convention can allow for passing unboxed values like floats around, as they are put into unboxed registers never used in the full call convention, which must use boxed argument  and return value registers.
+
+So enabling block compilation kind of turns your code into a giant `labels` form.
+
+One evident possible drawback, dependending on your application, is that you can't redefine functions at runtime anymore.
+
+We can also enable block compilation with the `:block-compile` keyword to `compile-file`:
+
+~~~lisp
+(defun foo (x y)
+  (print (bar x y))
+  (bar x y))
+
+(defun bar (x y)
+  (+ x y))
+
+(defun fact (n)
+  (if (zerop n)
+      1
+      (* n (fact (1- n)))))
+
+> (compile-file "foo.lisp" :block-compile t :entry-points nil)
+> (load "foo.fasl")
+
+> (sb-disassem:disassemble-code-component #'foo)
+~~~
+
+If you inspect the assembly,
+
+> you [will] see that FOO and BAR are now compiled into the same component (with local calls), and both have valid external entry points. This improves locality of code quite a bit and still allows calling both FOO and BAR externally from the file (e.g. in the REPL). […]
+
+But there is one more goody block compilation adds...
+
+> Notice we specified `:entry-points` nil above. That's telling the compiler to still create external entry points to every function in the file, since we'd like to be able to call them normally from outside the code component (i.e. the compiled compilation unit, here the entire file).
+
+For more explanations, I refer you to the mentioned blog post, the current de-facto documentation for SBCL, in addition to [CMUCL's documentation](https://cmucl.org/docs/cmu-user/html/Block-Compilation.html) (note that the form-by-form level granularity in CMUCL (` (declaim (start-block ...)) ... (declaim (end-block ..))`) is missing in SBCL, at the time of writing).
+
+Finally, be aware that "block compiling and inlining currently does not interact very well [in SBCL]".
+
+
 [time]: http://www.lispworks.com/documentation/lw51/CLHS/Body/m_time.htm
 [trace-output]: http://www.lispworks.com/documentation/lw71/CLHS/Body/v_debug_.htm#STtrace-outputST
 [disassemble]: http://www.lispworks.com/documentation/lw60/CLHS/Body/f_disass.htm
 [inlined-generic-function]: https://github.com/guicho271828/inlined-generic-function
-[sec:type]: #type
+[type]: type.html
 [declare]: http://www.lispworks.com/documentation/lw71/CLHS/Body/s_declar.htm
 [declare-scope]: http://www.lispworks.com/documentation/lw71/CLHS/Body/03_cd.htm
 [optimize]: http://www.lispworks.com/documentation/lw71/CLHS/Body/d_optimi.htm

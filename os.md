@@ -10,7 +10,7 @@ available through [Quicklisp](https://www.quicklisp.org/beta/). These include:
 * ASDF3, which is included with almost all Common Lisp implementations,
   includes [Utilities for Implementation- and OS- Portability (UIOP)](https://common-lisp.net/project/asdf/uiop.html).
 * [osicat](https://common-lisp.net/project/osicat/)
-* [unix-opts](http://quickdocs.org/unix-opts/) is a command-line argument parser, similar to Python's `argparse`.
+* [unix-opts](http://quickdocs.org/unix-opts/) or the newer [clingon](https://github.com/dnaeon/clingon) are a command-line argument parsers, similar to Python's `argparse`.
 
 
 <a name="env"></a>
@@ -24,7 +24,7 @@ UIOP comes with a function that'll allow you to look at Unix/Linux environment v
   "/home/edi"
 ~~~
 
-Below is an example implementation:
+Below is an example implementation, where we can see /feature flags/ used to run code on specific implementations:
 
 ~~~lisp
 * (defun my-getenv (name &optional default)
@@ -50,6 +50,8 @@ NIL
 ~~~
 
 You should also note that some of these implementations also provide the ability to _set_ these variables. These include ECL (`si:setenv`) and AllegroCL, LispWorks, and CLISP where you can use the functions from above together with [`setf`](http://www.lispworks.com/documentation/HyperSpec/Body/m_setf_.htm). This feature might be important if you want to start subprocesses from your Lisp environment.
+
+To set an envionmental variable, you can `setf` with `(uiop:getenv "lisp")` in a implementation-independent way.
 
 Also note that the
 [Osicat](https://www.common-lisp.net/project/osicat/manual/osicat.html#Environment)
@@ -91,17 +93,13 @@ More on using this to write standalone Lisp scripts can be found in the [SBCL Ma
 ("/Users/cbrown/Projects/lisptty/tty-lispworks" "-init" "/Users/cbrown/Desktop/lisp/lispworks-init.lisp")
 ~~~
 
-[CMUCL](http://www.cons.org/cmucl/) has interesting extensions for [manipulating the arguments](https://common-lisp.net/project/cmucl/docs/cmu-user/html/UNIX-Interface.html)
-
 Here's a quick function to return the argument strings list across multiple implementations:
 
 ~~~lisp
 (defun my-command-line ()
   (or
    #+SBCL *posix-argv*
-   #+LISPWORKS system:*line-arguments-list*
-   #+CMU extensions:*command-line-words*
-   nil))
+   #+LISPWORKS system:*line-arguments-list*))
 ~~~
 
 Now it would be handy to access them in a portable way and to parse
@@ -111,83 +109,9 @@ them according to a schema definition.
 
 We have a look at the
 [Awesome CL list#scripting](https://github.com/CodyReichert/awesome-cl#scripting)
-section and we'll show how to use [unix-opts](https://github.com/mrkkrp/unix-opts).
+section and we'll show how to use [clingon](https://github.com/dnaeon/clingon).
 
-~~~lisp
-(ql:quickload "unix-opts")
-~~~
-
-We can now refer to it with its `opts` nickname.
-
-We first declare our arguments with `opts:define-opts`, for example
-
-~~~lisp
-(opts:define-opts
-    (:name :help
-           :description "print this help text"
-           :short #\h
-           :long "help")
-    (:name :level
-           :description "The level of something (integer)."
-           :short #\l
-           :long "level"
-           :arg-parser #'parse-integer))
-~~~
-
-Everything should be self-explanatory. Note that `#'parse-integer` is
-a built-in CL function.
-
-Now we can parse and get them with `opts:get-opts`, which returns two
-values: the first is the list of valid options and the second the
-remaining free arguments. We then must use multiple-value-bind to
-catch everything:
-
-~~~lisp
-(multiple-value-bind (options free-args)
-    ;; There is no error handling yet (specially for options not having their argument).
-    (opts:get-opts)
-~~~
-
-We can explore this by giving a list of strings (as options) to
-`get-opts`:
-
-
-~~~lisp
-(multiple-value-bind (options free-args)
-                   (opts:get-opts '("hello" "-h" "-l" "1"))
-                 (format t "Options: ~a~&" options)
-                 (format t "free args: ~a~&" free-args))
-Options: (HELP T LEVEL 1)
-free args: (hello)
-NIL
-~~~
-
-If we put an unknown option, we get into the debugger. We refer you to
-unix-opts' documentation and code sample to deal with erroneous
-options and other errors.
-
-We can access the arguments stored in `options` with `getf` (it is a
-property list), and we can exit (in a portable way) with
-`opts:exit`. So, for example:
-
-~~~lisp
-(multiple-value-bind (options free-args)
-    ;; No error handling.
-    (opts:get-opts)
-
-  (if (getf options :help)
-      (progn
-        (opts:describe
-         :prefix "My app. Usage:"
-         :args "[keywords]")
-        (exit))) ;; <= exit takes an optional return status.
-    ...
-~~~
-
-And that's it for now, you know the essential. See the documentation
-for a complete example, and the Awesome CL list for useful packages to
-use in the terminal (ansi colors, printing tables and progress bars,
-interfaces to readline,…).
+Please see our [scripting recipe](https://lispcookbook.github.io/cl-cookbook/scripting.html#parsing-command-line-arguments).
 
 
 ## Running external programs
@@ -220,17 +144,17 @@ This function has the following optional arguments:
 
 ~~~lisp
 run-program (command &rest keys &key
-                         ignore-error-status
-                         (force-shell nil force-shell-suppliedp)
-                         input
-                         (if-input-does-not-exist :error)
-                         output
-                         (if-output-exists :supersede)
-                         error-output
-                         (if-error-output-exists :supersede)
-                         (element-type #-clozure *default-stream-element-type* #+clozure 'character)
-                         (external-format *utf-8-external-format*)
-                       &allow-other-keys)
+               ignore-error-status
+               (force-shell nil force-shell-suppliedp)
+               input
+               (if-input-does-not-exist :error)
+               output
+               (if-output-exists :supersede)
+               error-output
+               (if-error-output-exists :supersede)
+               (element-type *default-stream-element-type*)
+               (external-format *utf-8-external-format*)
+              allow-other-keys)
 ~~~
 
 It will always call a shell (rather than directly executing the command when possible)
@@ -304,20 +228,18 @@ With [`uiop:launch-program`](https://common-lisp.net/project/asdf/uiop.html#UIOP
 Its signature is the following:
 
 ~~~lisp
-launch-program (command &rest keys
-                         &key
-                           input
-                           (if-input-does-not-exist :error)
-                           output
-                           (if-output-exists :supersede)
-                           error-output
-                           (if-error-output-exists :supersede)
-                           (element-type #-clozure *default-stream-element-type*
-                                         #+clozure 'character)
-                           (external-format *utf-8-external-format*)
-                           directory
-                           #+allegro separate-streams
-                           &allow-other-keys)
+launch-program (command &rest keys &key
+                    input
+                    (if-input-does-not-exist :error)
+                    output
+                    (if-output-exists :supersede)
+                    error-output
+                    (if-error-output-exists :supersede)
+                    (element-type *default-stream-element-type*)
+                    (external-format *utf-8-external-format*)
+                    directory
+                    #+allegro separate-streams
+                    &allow-other-keys)
 ~~~
 
 Output (stdout) from the launched program is set using the `output`
@@ -333,7 +255,7 @@ keyword:
  - If it's `:stream`, a new stream will be made available that can be accessed via
    `process-info-output` and read from.
  - Otherwise, `output` should be a value that the underlying lisp
-   implementation knows how to handle. 
+   implementation knows how to handle.
 
 `if-output-exists`, which is only meaningful if `output` is a string or a
 pathname, can take the values `:error`, `:append`, and `:supersede` (the
@@ -376,7 +298,8 @@ See the [docstrings](https://gitlab.common-lisp.net/asdf/asdf/blob/master/uiop/l
 `process-info` object returned by `launch-program`:
 
 ~~~lisp
-* (defparameter *shell* (uiop:launch-program "bash" :input :stream :output :stream))
+* (defparameter *shell* (uiop:launch-program "bash"
+                            :input :stream :output :stream))
 
 ;; inferior shell process now running
 * (uiop:process-alive-p *shell*)
@@ -406,7 +329,7 @@ An exit code to 0 means success (use `zerop`).
 The exit code is also stored in the `exit-code` slot of our
 `process-info` object. We see from the class definition above that it
 has no accessor, so we'll use `slot-value`. It has an `initform` to
-nil, so we don't have to check if the slot is bound.  We can do:
+nil, so we don't have to check if the slot is bound. We can do:
 
 ~~~lisp
 (slot-value *my-process* 'uiop/launch-program::exit-code)
@@ -441,9 +364,11 @@ accessed using `uiop:process-info-input`:
 
 ~~~lisp
 ;; Start the inferior shell, with input and output streams
-* (defparameter *shell* (uiop:launch-program "bash" :input :stream :output :stream))
+* (defparameter *shell* (uiop:launch-program "bash"
+                           :input :stream :output :stream))
 ;; Write a line to the shell
-* (write-line "find . -name '*.md'" (uiop:process-info-input *shell*))
+* (write-line "find . -name '*.md'"
+     (uiop:process-info-input *shell*))
 ;; Flush stream
 * (force-output (uiop:process-info-input *shell*))
 ~~~
@@ -482,6 +407,64 @@ Note that due to issues like buffering, and the timing of when the
 other process is executed, there is no guarantee that all data sent
 will be received before `listen` or `read-char-no-hang` return `nil`.
 
+### Capturing standard and error output
+
+Capturing standard output, as seen above, is easily done by telling
+`:output` to be `:string`, or using `:output '(:string :stripped t)` to
+strip any ending newline.
+
+You can ask the same to `:error-output` and, in addition, you can ask
+`uiop:run-program` to *not* signal an error, thus to not enter the
+interactive debugger, with `:ignore-error-status t`.
+
+In that case, you can check the success or the failure of the program
+with the returned `exit-code`. 0 is success.
+
+Here's everything together:
+
+~~~lisp
+(uiop:run-program (list "git"
+                        "checkout"
+                        "me/does-not-exist")
+                  :output :string
+                  :error-output :string
+                  :ignore-error-status t)
+;; =>
+""
+"error: pathspec 'me/does-not-exist did not match any file(s) known to git
+"
+1
+~~~
+
+`uiop:run-program` returns 3 values:
+
+- the standard output (here, as a blank string)
+- the error output (here, as a string with our error message)
+- the exit code
+
+We can bind them with `multiple-value-bind`:
+
+~~~lisp
+(multiple-value-bind (output error-output exit-code)
+    (uiop:run-program (list …))
+  (unless (zerop exit-code)
+    (format t "error output is: ~a" error-output)))
+~~~
+
+### Running interactive and visual commands (htop)
+
+Use `uiop:run-program` and set both `:input` and `:output` to `:interactive`:
+
+~~~lisp
+(uiop:run-program "htop"
+                  :output :interactive
+                  :input :interactive)
+~~~
+
+This will spawn `htop` in full screen, as it should.
+
+It works for more commands (`sudo`, `vim`, `less`…).
+
 ## Piping
 
 Here's an example to do the equivalent of `ls | sort`. Note that "ls"
@@ -498,48 +481,37 @@ string.
                    :output :string)
 ~~~
 
-<a name="fork-cmucl"></a>
 
-## Forking with CMUCL
+## Get Lisp's current Process ID (PID)
 
-Here's a function by Martin Cracauer that'll allow you to compile a couple of files in parallel with [CMUCL](http://www.cons.org/cmucl/). It demonstrates how to use the UNIX [`fork`](http://www.freebsd.org/cgi/man.cgi?query=fork&apropos=0&sektion=0&manpath=FreeBSD+4.5-RELEASE&format=html) system call with this CL implementation.
+Implementations provide their own functions for this.
+
+On SBCL:
 
 ~~~lisp
-(defparameter *sigchld* 0)
+(sb-posix:getpid)
+~~~
 
-(defparameter *compile-files-debug* 2)
+It is possible portably with the osicat library:
 
-(defun sigchld-handler (p1 p2 p3)
-  (when (> 0 *compile-files-debug*)
-    (print (list "returned" p1 p2 p3))
-    (force-output))
-  (decf *sigchld*))
+~~~lisp
+(osicat-posix:getpid)
+~~~
 
-(defun compile-files (files &key (load nil))
-  (setq *sigchld* 0)
-  (system:enable-interrupt unix:sigchld #'sigchld-handler)
-  (do ((f files (cdr f)))
-      ((not f))
-    (format t "~&process ~d diving for ~a" (unix:unix-getpid)
-            `(compile-file ,(car f)))
-    (force-output)
-    (let ((pid (unix:unix-fork)))
-      (if (/= 0 pid)
-          ;; parent
-          (incf *sigchld*)
-          ;; child
-          (progn
-            (compile-file (car f) :verbose nil :print nil)
-            (unix:unix-exit 0)))))
-  (do () ((= 0 *sigchld*))
-    (sleep 1)
-    (when (> 0 *compile-files-debug*)
-      (format t "~&process ~d still waiting for ~d childs"
-              (unix:unix-getpid) *sigchld*)))
-  (when (> 0 *compile-files-debug*)
-    (format t "~&finished"))
-  (when load
-    (do ((f files (cdr f)))
-        ((not f))
-      (load (compile-file-pathname (car f))))))
+Here again, we could find it by using the `apropos` function:
+
+~~~lisp
+CL-USER> (apropos "pid")
+OSICAT-POSIX:GETPID (fbound)
+OSICAT-POSIX::PID
+[…]
+SB-IMPL::PID
+SB-IMPL::WAITPID (fbound)
+SB-POSIX:GETPID (fbound)
+SB-POSIX:GETPPID (fbound)
+SB-POSIX:LOG-PID (bound)
+SB-POSIX::PID
+SB-POSIX::PID-T
+SB-POSIX:WAITPID (fbound)
+[…]
 ~~~

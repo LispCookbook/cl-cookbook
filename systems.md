@@ -19,10 +19,25 @@ _"the Utilities for Implementation- and OS- Portability"_. You can read
 
 ## Simple examples
 
-### Loading a System
+### Loading a system definition
 
-The most trivial use of ASDF is by calling `(asdf:make :foobar)` (or `load-system`)
-to load your library.
+When you start your Lisp, it knows about its internal modules and, by
+default, it has no way to know that your shiny new project is located
+under your `~/code/foo/bar/new-ideas/` directory. So, in order to load
+your project in your image, you have one of three ways:
+
+- use ASDF or Quicklisp defaults
+- configure where ASDF or Quicklisp look for project definitions
+- load your project definition explicitely.
+
+Please read our section on the [getting started#how-to-load-an-existing-project](https://lispcookbook.github.io/cl-cookbook/getting-started.html#how-to-load-an-existing-project) page.
+
+
+### Loading a system
+
+Once your Lisp knows what your system is and where it lives, you can load it.
+
+The most trivial use of ASDF is by calling `asdf:load-system` to load your library.
 Then you can use it.
 For instance, if it exports a function `some-fun` in its package `foobar`,
 then you will be able to call it with `(foobar:some-fun ...)` or with:
@@ -32,13 +47,22 @@ then you will be able to call it with `(foobar:some-fun ...)` or with:
 (some-fun ...)
 ~~~
 
-You can also use Quicklisp:
+You can also use Quicklisp.
+
+Quicklisp calls ASDF under the hood, with the advantage that it will download and install any dependency if they are not already installed.
 
 ~~~lisp
-(ql:quickload :foobar)
+(ql:quickload "foobar")
+;; =>
+;; installs all dependencies
+;; and loads the system.
 ~~~
 
-### Testing a System
+Also, you can use SLIME to load a system, using the `M-x slime-load-system` Emacs command or the `, load-system` comma command in the prompt.
+The interesting thing about this way of doing it is that SLIME collects all the system warnings and errors in the process,
+and puts them in the `*slime-compilation*` buffer, from which you can interactively inspect them after the loading finishes.
+
+### Testing a system
 
 To run the tests for a system, you may use:
 
@@ -54,13 +78,13 @@ The proper way to designate a system in a program is with lower-case
 strings, not symbols, as in:
 
 ~~~lisp
-(asdf:make "foobar")
+(asdf:load-system "foobar")
 (asdf:test-system "foobar")
 ~~~
 
-### Trivial System Definition
+### How to write a trivial system definition
 
-A trivial system would have a single Lisp file called `foobar.lisp`.
+A trivial system would have a single Lisp file called `foobar.lisp`, located at the project's root.
 That file would depend on some existing libraries,
 say `alexandria` for general purpose utilities,
 and `trivia` for pattern-matching.
@@ -69,7 +93,7 @@ you create a system definition file called `foobar.asd`,
 with the following contents:
 
 ~~~lisp
-(defsystem "foobar"
+(asdf:defsystem "foobar"
   :depends-on ("alexandria" "trivia")
   :components ((:file "foobar")))
 ~~~
@@ -106,7 +130,7 @@ Instead of `using` multiple complete packages, you might want to just import par
   (:import-from #:trivia
                 #:some-function
                 #:another-function))
-...)                
+...)
 ~~~
 
 
@@ -114,13 +138,17 @@ Instead of `using` multiple complete packages, you might want to just import par
 
 Assuming your system is installed under `~/common-lisp/`,
 `~/quicklisp/local-projects/` or some other filesystem hierarchy
-already configured for ASDF, you can load it with: `(asdf:make "foobar")`.
+already configured for ASDF, you can load it with: `(asdf:load-system "foobar")`.
 
 If your Lisp was already started when you created that file,
-you may have to `(asdf:clear-configuration)` to re-process the configuration.
+you may have to, either:
+
+- load the new .asd file: `(asdf:load-asd "path/to/foobar.asd")`, or with `C-c C-k` in Slime to compile and load the whole file.
+  - note: avoid using the built-in `load` for ASDF files, it may work but `asdf:load-asd` is preferred.
+- `(asdf:clear-configuration)` to re-process the configuration.
 
 
-### Trivial Testing Definition
+### How to write a trivial testing definition
 
 Even the most trivial of systems needs some tests,
 if only because it will have to be modified eventually,
@@ -131,12 +159,12 @@ The simplest way to write tests is to have a file `foobar-tests.lisp`
 and modify the above `foobar.asd` as follows:
 
 ~~~lisp
-(defsystem "foobar"
+(asdf:defsystem "foobar"
     :depends-on ("alexandria" "trivia")
     :components ((:file "foobar"))
     :in-order-to ((test-op (test-op "foobar/tests"))))
 
-(defsystem "foobar/tests"
+(asdf:defsystem "foobar/tests"
     :depends-on ("foobar" "fiveam")
     :components ((:file "foobar-tests"))
     :perform (test-op (o c) (symbol-call :fiveam '#:run! :foobar)))
@@ -156,11 +184,11 @@ Obvious YMMV if you use a different library.
 
 [cl-project](https://github.com/fukamachi/cl-project) can be used to
 generate a project skeleton. It will create a default ASDF definition,
-it generates a system for unit testing, etc.
+ generate a system for unit testing, etc.
 
 Install with
 
-    (ql:quickload :cl-project)
+    (ql:quickload "cl-project")
 
 Create a project:
 
@@ -178,3 +206,5 @@ Create a project:
 ;   writing /Users/fukamachi/Programs/lib/cl-sample/t/hogehoge.lisp
 ;=> T
 ~~~
+
+And you're done.

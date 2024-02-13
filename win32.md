@@ -219,8 +219,8 @@ Edi Weitz asked if the :dbcs keyword decides at compile time or at run time whic
 (deliver 'display-format-used "dbcs-run" 5)
 (quit)
 
-; We then have dbcs-run.exe.  When run on Windows XP, dbcs-run pops up a messagebox
-; displaying "Unicode".  The same dbcs-run.exe file, ftp'd to a Macintosh running OS 9 with
+; We then have dbcs-run.exe. When run on Windows XP, dbcs-run pops up a messagebox
+; displaying "Unicode". The same dbcs-run.exe file, ftp'd to a Macintosh running OS 9 with
 ; Virtual PC running Windows 98, pops up a message box displaying "Ascii".
 ~~~
 
@@ -461,7 +461,7 @@ A common C++ idiom is "Resource Acquisition Is Initialization", in which a C++ o
 
 Objects with dynamic extent are declared local at the beginning of a C++ function and the object's destructor is called when the function returns and the object goes out of scope. The corresponding Lisp idiom is the use of a `with-...` macro. The macro is responsible for acquiring the resource and releasing it under an unwind-protect.
 
-In C++, objects with indefinite extent must have their destructor called explicitly, with `delete` or `delete []`. The destructor tears down the object, first releasing any acquired resources via explicitly-programmed C++ code, then releasing the object's memory via compiler-generated code as the destructor exits.
+In C++, objects with indefinite extent must have their destructor called explicitly, with `delete` or `delete []`. The destructor tears down the object, first releasing any acquired resources via explicitly programmed C++ code, then releasing the object's memory via compiler-generated code as the destructor exits.
 
 Lisp is garbage collected, which means that Lisp is responsible for freeing the object's memory. However, that may not happen for a very long time after the last reference to the object has disappeared. The garbage collector runs only as memory fills or when it is explicitly called. If an object holds an acquired resource, almost always there is a proper time to release the resource and not releasing it at that time leads to resource exhaustion.
 
@@ -561,8 +561,8 @@ It may be advantageous to open a separate window with the program source code vi
 ### Appendix D: Paul Tarvydas's Example
 
 Here's an example that creates a windows class (in C) and gets invoked and
-handled from LWW.  It is similar to the "Hello" example in Petzhold, except
-that it hooks to the LWW mainloop instead of creating its own.  Probably it
+handled from LWW. It is similar to the "Hello" example in Petzhold, except
+that it hooks to the LWW mainloop instead of creating its own. Probably it
 ain't as pretty as it might be, due to my rustiness with Win32 (and my lack
 of patience with it :-).
 
@@ -582,10 +582,10 @@ lispworksxxx.exe.
 9) You should then see a window with "hello" in the middle of it.
 
 The example window class is built and initialized in C (called from the lisp
-mainline).  The windows callbacks to this window are handled in lisp (eg. the
+mainline). The windows callbacks to this window are handled in lisp (eg. the
 WM_PAINT message) - windows has been given a pointer to a lisp function
-(Lisp_WndProc) and has been told to use it for callbacks.  The lisp code
-makes direct Win32 calls that display the "hello" text.  Lisp uses FLI
+(Lisp_WndProc) and has been told to use it for callbacks. The lisp code
+makes direct Win32 calls that display the "hello" text. Lisp uses FLI
 foreign functions and foreign variables to set this up.  [If one were doing
 this on a real project, a less contrived flow of control would be chosen, but
 this one appears to exercise the FLI calls that you were asking about].

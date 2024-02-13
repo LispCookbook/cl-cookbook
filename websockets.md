@@ -6,7 +6,7 @@ The Common Lisp ecosystem boasts a few approaches to building WebSocket servers.
 First, there is the excellent
 [Hunchensocket](https://github.com/joaotavora/hunchensocket) that is written as
 an extension to [Hunchentoot](https://edicl.github.io/hunchentoot/), the classic
-web server for Common Lisp.  I have used both and I find them to be wonderful.
+web server for Common Lisp. I have used both and I find them to be wonderful.
 
 Today, however, you will be using the equally excellent
 [websocket-driver](https://github.com/fukamachi/websocket-driver) to build a WebSocket server with
@@ -122,7 +122,8 @@ that the connection has been made. Here's how it works:
                          (lambda () (handle-new-connection ws)))
 
     (websocket-driver:on :message ws
-                         (lambda (msg) (broadcast-to-room ws msg)))
+                         (lambda (msg)
+                           (broadcast-to-room ws msg)))
 
     (websocket-driver:on :close ws
                          (lambda (&key code reason)
@@ -131,15 +132,15 @@ that the connection has been made. Here's how it works:
 
     (lambda (responder)
       (declare (ignore responder))
-      (websocket-driver:start-connection ws)))) ; send the handshake
-
+      ;; Send the handshake:
+      (websocket-driver:start-connection ws))))
 ~~~
 
 You may now start your server, running on port `12345`:
 
 ~~~lisp
-;; keep the handler around so that you can stop your server later on
-
+;; Keep the handler around so that
+;; you can stop your server later on:
 (defvar *chat-handler* (clack:clackup #'chat-server :port 12345))
 ~~~
 
@@ -147,7 +148,7 @@ You may now start your server, running on port `12345`:
 ## A Quick HTML Chat Client
 
 So now you need a way to talk to your server. Using Clack, define a simple
-application that serves a web page to display and send chats.  First the web page:
+application that serves a web page to display and send chats. First the web page:
 
 ~~~lisp
 
@@ -216,8 +217,8 @@ ahead and start it, this time on port `8080`:
 Now open up two browser tabs and point them to `http://localhost:8080` and you
 should see your chat app!
 
-<img src="https://raw.githubusercontent.com/cbeo/resource-dump/master/lisp-chat.gif"
-     width="470" height="247"/>
+<img src="assets/sockets-lisp-chat.gif"
+     width="470" height="247" alt="Chat app demo between two browser windows"/>
 
 ## All The Code
 
@@ -250,7 +251,8 @@ should see your chat app!
                          (lambda () (handle-new-connection ws)))
 
     (websocket-driver:on :message ws
-                         (lambda (msg) (broadcast-to-room ws msg)))
+                         (lambda (msg)
+                           (broadcast-to-room ws msg)))
 
     (websocket-driver:on :close ws
                          (lambda (&key code reason)

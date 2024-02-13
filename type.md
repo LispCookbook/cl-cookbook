@@ -32,7 +32,7 @@ For example:
 The function [`type-of`][type-of] returns the type of the given object. The
 returned result is a [type-specifier][type-specifiers]. In this case the first
 element is the type and the remaining part is extra information (lower and
-upper bound) of that type.  You can safely ignore it for now. Also remember
+upper bound) of that type. You can safely ignore it for now. Also remember
 that integers in Lisp have no limit!
 
 Now let's try to [`setf`][setf] the variable:
@@ -104,6 +104,7 @@ T
 
 The function [`subtypep`][subtypep] can be used to inspect if a type inherits
 from the another one. It returns 2 values:
+
 - `T, T` means first argument is sub-type of the second one.
 - `NIL, T` means first argument is *not* sub-type of the second one.
 - `NIL, NIL` means "not determined".
@@ -201,6 +202,12 @@ symbol type specifier.
 Its body should be a macro checking whether given argument is of this type
 (see [`defmacro`][defmacro]).
 
+We can use `member` to define enum types, for example:
+
+~~~lisp
+(deftype fruit () '(member :apple :orange :pear))
+~~~
+
 Now let us define a new data type. The data type should be a array with at
 most 10 elements. Also each element should be a number smaller than 10. See
 following code for an example:
@@ -229,7 +236,7 @@ NIL
 NIL
 ~~~
 
-## Type Checking
+## Run-time type Checking
 
 Common Lisp supports run-time type checking via the macro
 [`check-type`][check-type]. It accepts a [`place`][place] and a type specifier
@@ -257,7 +264,8 @@ The value of ARG is "Hello", which is not of type NUMBER.
 ## Compile-time type checking
 
 You may provide type information for variables, function arguments
-etc via [`proclaim`][proclaim], [`declaim`][declaim] and [`declare`][declare].
+etc via [`proclaim`][proclaim], [`declaim`][declaim] (at the toplevel) and [`declare`][declare] (inside functions and macros).
+
 However, similar to the `:type` slot
 introduced in [CLOS section][clos], the effects of type declarations are
 undefined in Lisp standard and are implementation specific. So there is no
@@ -287,10 +295,10 @@ Now, we'll do better.
 
 ### Declaring the type of variables
 
-Use the macro [`declaim`][declaim].
+Use the macro [`declaim`][declaim] with a `type` declaration identifier (other identifiers are "ftype, inline, notinline, optimize…).
 
-Let's declare that our global variable `*name*` is a string (you can
-type the following in any order in the REPL):
+Let's declare that our global variable `*name*` is a string. You can
+type the following in any order in the REPL:
 
 ~~~lisp
 (declaim (type (string) *name*))
@@ -323,13 +331,15 @@ Now let's declare that our `*all-names*` variables is a list of strings:
 (declaim (type (list-of-strings) *all-names*))
 ;; and with a wrong value:
 (defparameter *all-names* "")
-;; we get an error:
+;; we get an error, still at compile-time:
 Cannot set SYMBOL-VALUE of *ALL-NAMES* to "", not of type
 (SATISFIES LIST-OF-STRINGS-P).
    [Condition of type SIMPLE-TYPE-ERROR]
 ~~~
 
-We can compose types:
+### Composing types
+
+We can compose types. Following the previous example:
 
 ~~~lisp
 (declaim (type (or null list-of-strings) *all-names*))
@@ -401,6 +411,60 @@ For example:
     (declaim (ftype (function (string &key (:n integer))) foo))
     (defun foo (bar &key n) …)
 
+### Declaring &rest parameters
+
+This is less evident, you might need a well-placed `declare`.
+
+In the following, we declare a fruit type and we write a function that
+uses a single fruit argument, so compiling `placing-order` gives us a
+type warning as expected:
+
+~~~lisp
+(deftype fruit () '(member :apple :orange :pear))
+
+(declaim (ftype (function (fruit)) one-order))
+(defun one-order (fruit)
+  (format t "Ordering ~S~%" fruit))
+
+(defun placing-order ()
+  (one-order :bacon))
+~~~
+
+But in this version, we use `&rest` parameters, and we don't have a type warning anymore:
+
+~~~lisp
+(declaim (ftype (function (&rest fruit)) place-order))
+(defun place-order (&rest selections)
+  (dolist (s selections)
+    (format t "Ordering ~S~%" s)))
+
+(defun placing-orders ()
+  (place-order :orange :apple :bacon)) ;; => no type warning
+~~~
+
+The declaration is correct, but our compiler doesn't check it. A well-placed `declare` gives us the compile-time warning back:
+
+~~~lisp
+(defun place-order (&rest selections)
+  (dolist (s selections)
+    (declare (type fruit s))      ;; <= declare
+    (format t "Ordering ~S~%" s)))
+
+(defun placing-orders ()
+  (place-order :orange :apple :bacon))
+~~~
+
+=>
+
+```
+The value
+  :BACON
+is not of type
+  (MEMBER :PEAR :ORANGE :APPLE)
+```
+
+For portable code, we would add run-time checks with an `assert`.
+
 
 ### Declaring class slots types
 
@@ -451,7 +515,7 @@ It also allows:
 ### Limitations
 
 Complex types involving `satisfies` are not checked inside a function
-body, only at its boundaries. Even if it does a lot, SBCL doesn't do
+body by default, only at its boundaries. Even if it does a lot, SBCL doesn't do
 as much as a statically typed language.
 
 Consider this example, where we badly increment an integer with a
@@ -462,7 +526,7 @@ string:
 (defun bad-adder ()
   (let ((res 10))
     (loop for name in '("alice")
-       do (incf res name))  ;; bad
+       do (incf res name))  ;; <= bad
     (format nil "finally doing sth with ~a" res)))
 ~~~
 
@@ -490,6 +554,12 @@ we'd get the warning:
 ;     (VALUES STRING &REST T).
 ~~~
 
+We could also use a `the` declaration in the loop body to get a compile-time warning:
+
+```lisp
+       do (incf res (the string name)))
+```
+
 What can we conclude? This is yet another reason to decompose your
 code into small functions.
 
@@ -498,12 +568,12 @@ code into small functions.
 
 - the article [Static type checking in SBCL](https://medium.com/@MartinCracauer/static-type-checking-in-the-programmable-programming-language-lisp-79bb79eb068a), by Martin Cracauer
 - the article [Typed List, a Primer](https://alhassy.github.io/TypedLisp) - let's explore Lisp's fine-grained type hierarchy! with a shallow comparison to Haskell.
-- the [Coalton](https://github.com/stylewarning/coalton) library
-  (pre-alpha): adding Hindley-Milner type checking to Common Lisp
-  which allows for gradual adoption, in the same way Typed Racket or
-  Hack allows for. It is as an embedded DSL in Lisp that resembles
-  Standard ML or OCaml, but lets you seamlessly interoperate with
-  non-statically-typed Lisp code (and vice versa).
+- the [Coalton](https://github.com/coalton-lang/coalton/) library: an
+  efficient, statically typed functional programming language that
+  supercharges Common Lisp. It is as an embedded DSL in Lisp that
+  resembles Haskell or Standard ML, but lets you seamlessly
+  interoperate with non-statically-typed Lisp code (and vice versa).
+- [exhaustiveness type checking at compile-time](https://dev.to/vindarel/compile-time-exhaustiveness-checking-in-common-lisp-with-serapeum-5c5i) with [Serapeum](https://github.com/ruricolist/serapeum/blob/master/REFERENCE.md#ecase-of-type-x-body-body) for enum types and union types (ecase-of, etypecase-of).
 
 ---
 
@@ -538,5 +608,5 @@ code into small functions.
 [declaim]: http://www.lispworks.com/documentation/HyperSpec/Body/m_declai.htm
 [declare]: http://www.lispworks.com/documentation/HyperSpec/Body/s_declar.htm
 [safety]: http://www.lispworks.com/documentation/HyperSpec/Body/d_optimi.htm#speed
-[sbcl159]: http://www.sbcl.org/news.html#1.5.9
+[sbcl159]: http://www.sbcl.org/all-news.html#1.5.9
 [sanity-clause]: https://github.com/fisxoj/sanity-clause

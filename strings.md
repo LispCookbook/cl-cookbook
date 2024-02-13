@@ -39,9 +39,10 @@ don't miss the following resources:
 * the official [CLHS documentation](http://www.lispworks.com/documentation/HyperSpec/Body/22_c.htm)
 * a [quick reference](http://clqr.boundp.org/)
 * a [CLHS summary on HexstreamSoft](https://www.hexstreamsoft.com/articles/common-lisp-format-reference/clhs-summary/#subsections-summary-table)
-* plus a Slime tip: type `C-c C-d ~` plus a letter of a format directive to open up its documentation. Again more useful with `ivy-mode` or `helm-mode`.
+* the list of all format directives at the end of this document.
+* plus a Slime tip: type `C-c C-d ~` plus a letter of a format directive to open up its documentation. Use TAB-completion to list them all. Again more useful with `ivy-mode` or `helm-mode`.
 
-# Creating strings
+## Creating strings
 
 A string is created with double quotes, all right, but we can recall
 these other ways:
@@ -62,7 +63,7 @@ these other ways:
 ~~~
 
 
-# Accessing Substrings
+## Accessing Substrings
 
 As a string is a sequence, you can access substrings with the SUBSEQ
 function. The index into the string is, as always, zero-based. The third,
@@ -70,13 +71,13 @@ optional, argument is the index of the first character which is not a part of
 the substring, it is not the length of the substring.
 
 ~~~lisp
-* (defparameter *my-string* (string "Groucho Marx"))
+(defparameter *my-string* (string "Groucho Marx"))
 *MY-STRING*
-* (subseq *my-string* 8)
+(subseq *my-string* 8)
 "Marx"
-* (subseq *my-string* 0 7)
+(subseq *my-string* 0 7)
 "Groucho"
-* (subseq *my-string* 1 5)
+(subseq *my-string* 1 5)
 "rouc"
 ~~~
 
@@ -114,7 +115,7 @@ determines the number of elements that are replaced." For example:
 "Harpo Mar"
 ~~~
 
-# Accessing Individual Characters
+## Accessing Individual Characters
 
 You can use the function CHAR to access individual characters of a string. CHAR
 can also be used in conjunction with SETF.
@@ -168,21 +169,23 @@ value 255). Notice the Lisp reader can round-trip characters by name.
 * (char-code #\LATIN_CAPITAL_LETTER_E_WITH_GRAVE)
 
 200
-* (code-char 1488)
-#\HEBREW_LETTER_ALEF
+* (code-char 2048)
+#\SAMARITAN_LETTER_ALAF
 
-* (char-code #\HEBREW_LETTER_ALEF)
-1488
+* (char-code #\SAMARITAN_LETTER_ALAF)
+2048
 ~~~
 
 Check out the UTF-8 Wikipedia article for the range of supported characters and
 their encodings.
 
-# Manipulating Parts of a String
+## Remove or replace characters from a string
 
 There's a slew of (sequence) functions that can be used to manipulate a string
 and we'll only provide some examples here. See the sequences dictionary in the
 HyperSpec for more.
+
+`remove` one character from a string:
 
 ~~~lisp
 * (remove #\o "Harpo Marx")
@@ -193,6 +196,11 @@ HyperSpec for more.
 "Harpo Mrx"
 * (remove-if #'upper-case-p "Harpo Marx")
 "arpo arx"
+~~~
+
+Replace one character with `substitute` (non destructive) or `replace` (destructive):
+
+~~~lisp
 * (substitute #\u #\o "Groucho Marx")
 "Gruuchu Marx"
 * (substitute-if #\_ #'upper-case-p "Groucho Marx")
@@ -205,41 +213,8 @@ HyperSpec for more.
 "Harpo Marx"
 ~~~
 
-Another function that can be frequently used (but not part of the ANSI standard)
-is replace-all. This function provides an easy functionality for search/replace
-operations on a string, by returning a new string in which all the occurrences of
-the 'part' in string is replaced with 'replacement'".
 
-~~~lisp
-* (replace-all "Groucho Marx Groucho" "Groucho" "ReplacementForGroucho")
-"ReplacementForGroucho Marx ReplacementForGroucho"
-~~~
-
-One of the implementations of replace-all is as follows:
-
-~~~lisp
-(defun replace-all (string part replacement &key (test #'char=))
-"Returns a new string in which all the occurrences of the part
-is replaced with replacement."
-    (with-output-to-string (out)
-      (loop with part-length = (length part)
-            for old-pos = 0 then (+ pos part-length)
-            for pos = (search part string
-                              :start2 old-pos
-                              :test test)
-            do (write-string string out
-                             :start old-pos
-                             :end (or pos (length string)))
-            when pos do (write-string replacement out)
-            while pos)))
-~~~
-
-However, bear in mind that the above code is not optimized for long strings; if
-you intend to perform such an operation on very long strings, files, etc. please
-consider using cl-ppcre regular expressions and string processing library which
-is heavily optimized.
-
-# Concatenating Strings
+## Concatenating Strings
 
 The name says it all: CONCATENATE is your friend. Note that this is a generic
 sequence function and you have to provide the result type as the first argument.
@@ -274,9 +249,9 @@ VECTOR-PUSH-EXTEND.)
 
 ~~~lisp
 * (defparameter *my-string* (make-array 0
-                                        :element-type 'character
-                                        :fill-pointer 0
-                                        :adjustable t))
+                              :element-type 'character
+                              :fill-pointer 0
+                              :adjustable t))
 *MY-STRING*
 * *my-string*
 ""
@@ -331,14 +306,14 @@ should you need it.
 "Zappa, 1940 - 1993"
 ~~~
 
-# Processing a String One Character at a Time
+## Processing a String One Character at a Time
 
 Use the MAP function to process a string one character at a time.
 
 ~~~lisp
 * (defparameter *my-string* (string "Groucho Marx"))
 *MY-STRING*
-* (map 'string #'(lambda (c) (print c)) *my-string*)
+* (map 'string (lambda (c) (print c)) *my-string*)
 #\G
 #\r
 #\o
@@ -362,7 +337,7 @@ Or do it with LOOP.
 (#\Z #\e #\p #\p #\o)
 ~~~
 
-# Reversing a String by Word or Character
+## Reversing a String by Word or Character
 
 Reversing a string by character is easy using the built-in REVERSE function (or
 its destructive counterpart NREVERSE).
@@ -430,12 +405,12 @@ JOIN-STRING-LIST
 "word by sentence this Reverse"
 ~~~
 
-# Dealing with unicode strings
+## Dealing with unicode strings
 
 We'll use here [SBCL's string operations](http://www.sbcl.org/manual/index.html#String-operations). More generally, see [SBCL's unicode support](http://www.sbcl.org/manual/index.html#Unicode-Support).
 
 
-## Sorting unicode strings alphabetically
+### Sorting unicode strings alphabetically
 
 Sorting unicode strings with `string-lessp` as the comparison function
 isn't satisfying:
@@ -445,15 +420,42 @@ isn't satisfying:
 ;; ("Aaa" "Zzz" "Ééé")
 ~~~
 
-With SBCL, use `sb-unicode:unicode<`:
+With [SBCL](http://www.sbcl.org/manual/#String-operations), use `sb-unicode:unicode<`:
 
 ~~~lisp
 (sort '("Aaa" "Ééé" "Zzz") #'sb-unicode:unicode<)
 ;; ("Aaa" "Ééé" "Zzz")
 ~~~
 
+### Breaking strings into graphenes, sentences, lines and words
 
-# Controlling Case
+These functions use SBCL's [`sb-unicode`](http://www.sbcl.org/manual/#String-operations): they are SBCL specific.
+
+Use `sb-unicode:sentences` to break a string into sentences according
+to the default sentence breaking rules.
+
+Use `sb-unicode:lines` to break a string into lines that are no wider
+than the `:margin` keyword argument. Combining marks will always be kept together with their base characters, and spaces (but not other types of whitespace) will be removed from the end of lines. If `:margin` is unspecified, it defaults to 80 characters
+
+~~~lisp
+(sb-unicode:lines "A first sentence. A second somewhat long one." :margin 10)
+;; => ("A first"
+       "sentence."
+       "A second"
+       "somewhat"
+       "long one.")
+~~~
+
+See also `sb-unicode:words` and `sb-unicode:graphenes`.
+
+Tip: you can ensure these functions are run only in SBCL with a feature flag:
+
+    #+sbcl
+    (runs on sbcl)
+    #-sbcl
+    (runs on other implementations)
+
+## Controlling Case
 
 Common Lisp has a couple of functions to control the case of a string.
 
@@ -512,11 +514,11 @@ the following example is implementation-dependent - it may either be "BIG" or
 "BIG"
 ~~~
 
-## With the format function
+### With the format function
 
 The format function has directives to change the case of words:
 
-### To lower case: ~( ~)
+#### To lower case: ~( ~)
 
 ~~~lisp
 (format t "~(~a~)" "HELLO WORLD")
@@ -524,7 +526,7 @@ The format function has directives to change the case of words:
 ~~~
 
 
-### Capitalize every word: ~:( ~)
+#### Capitalize every word: ~:( ~)
 
 ~~~lisp
 (format t "~:(~a~)" "HELLO WORLD")
@@ -532,7 +534,7 @@ Hello World
 NIL
 ~~~
 
-### Capitalize the first word: ~@( ~)
+#### Capitalize the first word: ~@( ~)
 
 ~~~lisp
 (format t "~@(~a~)" "hello world")
@@ -540,7 +542,7 @@ Hello world
 NIL
 ~~~
 
-### To upper case: ~@:( ~)
+#### To upper case: ~@:( ~)
 
 Where we re-use the colon and the @:
 
@@ -551,7 +553,7 @@ NIL
 ~~~
 
 
-# Trimming Blanks from the Ends of a String
+## Trimming Blanks from the Ends of a String
 
 Not only can you trim blanks, but you can get rid of arbitrary characters. The
 functions STRING-TRIM, STRING-LEFT-TRIM and STRING-RIGHT-TRIM return a substring
@@ -576,7 +578,7 @@ of characters.
 Note: The caveat mentioned in the section about Controlling Case also applies
 here.
 
-# Converting between Symbols and Strings
+## Converting between Symbols and Strings
 
 The function INTERN will "convert" a string to a symbol. Actually, it will check
 whether the symbol denoted by the string (its first argument) is already
@@ -627,7 +629,7 @@ STRING.
 "HOWDY"
 ~~~
 
-# Converting between Characters and Strings
+## Converting between Characters and Strings
 
 You can use COERCE to convert a string of length 1 to a character. You can also
 use COERCE to convert any sequence of characters into a string. You can not use
@@ -660,91 +662,96 @@ instead.
    [Condition of type SIMPLE-TYPE-ERROR]
 ~~~
 
-# Finding an Element of a String
+## Finding an Element of a String
 
-Use FIND, POSITION, and their -IF counterparts to find characters in a string.
+Use `find`, `position`, and their `…-if` counterparts to find characters in a string, with the appropriate `:test` parameter:
 
 ~~~lisp
-* (find #\t "The Hyperspec contains approximately 110,000 hyperlinks." :test #'equal)
+(find #\t "Tea time." :test #'equal)
 #\t
-* (find #\t "The Hyperspec contains approximately 110,000 hyperlinks." :test #'equalp)
+* (find #\t "Tea time." :test #'equalp)
 #\T
-* (find #\z "The Hyperspec contains approximately 110,000 hyperlinks." :test #'equalp)
+* (find #\z "Tea time." :test #'equalp)
 NIL
-* (find-if #'digit-char-p "The Hyperspec contains approximately 110,000 hyperlinks.")
+* (find-if #'digit-char-p "Tea time.")
 #\1
-* (find-if #'digit-char-p "The Hyperspec contains approximately 110,000 hyperlinks." :from-end t)
+* (find-if #'digit-char-p "Tea time." :from-end t)
 #\0
-* (position #\t "The Hyperspec contains approximately 110,000 hyperlinks." :test #'equal)
-17
-* (position #\t "The Hyperspec contains approximately 110,000 hyperlinks." :test #'equalp)
-0
-* (position-if #'digit-char-p "The Hyperspec contains approximately 110,000 hyperlinks.")
-37
-* (position-if #'digit-char-p "The Hyperspec contains approximately 110,000 hyperlinks." :from-end t)
-43
+
+(position #\t "Tea time." :test #'equal)
+4   ;; <= the first lowercase t
+(position #\t "Tea time." :test #'equalp)
+0    ;; <= the first capital T
+(position-if #'digit-char-p "Tea time is at 5'00.")
+15
+(position-if #'digit-char-p "Tea time is at 5'00." :from-end t)
+18
 ~~~
 
-Or use COUNT and friends to count characters in a string.
+Or use `count` and friends to count characters in a string:
 
 ~~~lisp
-* (count #\t "The Hyperspec contains approximately 110,000 hyperlinks." :test #'equal)
-2
-* (count #\t "The Hyperspec contains approximately 110,000 hyperlinks." :test #'equalp)
+(count #\t "Tea time." :test #'equal)
+1  ;; <= equal ignores the capital T
+(count #\t "Tea time." :test #'equalp)
+2  ;; <= equalp counts the capital T
+(count-if #'digit-char-p "Tea time is at 5'00.")
 3
-* (count-if #'digit-char-p "The Hyperspec contains approximately 110,000 hyperlinks.")
-6
-* (count-if #'digit-char-p "The Hyperspec contains approximately 110,000 hyperlinks." :start 38)
-5
+(count-if #'digit-char-p "Tea time is at 5'00." :start 18)
+1
 ~~~
 
-# Finding a Substring of a String
+## Finding a Substring of a String
 
-The function SEARCH can find substrings of a string.
+The function `search` can find substrings of a string.
 
 ~~~lisp
 * (search "we" "If we can't be free we can at least be cheap")
 3
-* (search "we" "If we can't be free we can at least be cheap" :from-end t)
+* (search "we" "If we can't be free we can at least be cheap"
+          :from-end t)
 20
-* (search "we" "If we can't be free we can at least be cheap" :start2 4)
+* (search "we" "If we can't be free we can at least be cheap"
+          :start2 4)
 20
-* (search "we" "If we can't be free we can at least be cheap" :end2 5 :from-end t)
+* (search "we" "If we can't be free we can at least be cheap"
+          :end2 5 :from-end t)
 3
 * (search "FREE" "If we can't be free we can at least be cheap")
 NIL
-* (search "FREE" "If we can't be free we can at least be cheap" :test #'char-equal)
+* (search "FREE" "If we can't be free we can at least be cheap"
+          :test #'char-equal)
 15
 ~~~
 
-# Converting a String to a Number
+## Converting a String to a Number
 
-## To an integer: parse-integer
+### To an integer: parse-integer
 
 CL provides the `parse-integer` function to convert a string representation of an integer
 to the corresponding numeric value. The second return value is the index into
 the string where the parsing stopped.
 
 ~~~lisp
-* (parse-integer "42")
+(parse-integer "42")
 42
 2
-* (parse-integer "42" :start 1)
+(parse-integer "42" :start 1)
 2
 2
-* (parse-integer "42" :end 1)
+(parse-integer "42" :end 1)
 4
 1
-* (parse-integer "42" :radix 8)
+(parse-integer "42" :radix 8)
 34
 2
-* (parse-integer " 42 ")
+(parse-integer " 42 ")
 42
 3
-* (parse-integer " 42 is forty-two" :junk-allowed t)
+(parse-integer " 42 is forty-two" :junk-allowed t)
 42
 3
-* (parse-integer " 42 is forty-two")
+(parse-integer " 42 is forty-two")
 
 Error in function PARSE-INTEGER:
    There's junk in this string: " 42 is forty-two".
@@ -754,41 +761,73 @@ Error in function PARSE-INTEGER:
 built-in function to parse other numeric types. You could use `read-from-string`
 in this case.
 
+### Extracting many integers from a string: `ppcre:all-matches-as-strings`
 
-## To any number: read-from-string
-
-Be aware that the full reader is in effect if you're using this
-function. This can lead to vulnerability issues.
+We show this in the Regular Expressions chapter but while we are on this topic, you can find it super useful:
 
 ~~~lisp
-* (read-from-string "#X23")
+* (ppcre:all-matches-as-strings "-?\\d+" "42 is 41 plus 1")
+;; ("42" "41" "1")
+
+* (mapcar #'parse-integer *)
+;; (42 41 1)
+~~~
+
+### To any number: `read-from-string`
+
+Be aware that the full reader is in effect if you're using this
+function. This can lead to vulnerability issues. You should use a
+library like `parse-number` or `parse-float` instead.
+
+~~~lisp
+(read-from-string "#X23")
 35
 4
-* (read-from-string "4.5")
+(read-from-string "4.5")
 4.5
 3
-* (read-from-string "6/8")
+(read-from-string "6/8")
 3/4
 3
-* (read-from-string "#C(6/8 1)")
+(read-from-string "#C(6/8 1)")
 #C(3/4 1)
 9
-* (read-from-string "1.2e2")
+(read-from-string "1.2e2")
 120.00001
 5
-* (read-from-string "symbol")
+(read-from-string "symbol")
 SYMBOL
 6
-* (defparameter *foo* 42)
+(defparameter *foo* 42)
 *FOO*
-* (read-from-string "#.(setq *foo* \"gotcha\")")
+(read-from-string "#.(setq *foo* \"gotcha\")")
 "gotcha"
 23
-* *foo*
+*foo*
 "gotcha"
 ~~~
 
-## To a float: the parse-float library
+### Protecting `read-from-string`
+
+At the very least, if you are reading data coming from the outside, use this:
+
+~~~lisp
+(let ((cl:*read-eval* nil))
+  (read-from-string "…"))
+~~~
+
+This prevents code to be evaluated at read-time. That way our last example, using the `#.` reader macro, would not work. You'll get the error "can't read #. while \*READ-EVAL\* is NIL".
+
+And better yet, for more protection from a possibly custom readtable that would introduce another reader macro:
+
+~~~lisp
+(with-standard-io-syntax
+  (let ((cl:*read-eval* nil))
+    (read-from-string "…")))
+~~~
+
+
+### To a float: the parse-float library
 
 There is no built-in function similar to `parse-integer` to parse
 other number types. The external library
@@ -807,7 +846,7 @@ LispWorks also has a [parse-float](http://www.lispworks.com/documentation/lw51/L
 See also [parse-number](https://github.com/sharplispers/parse-number).
 
 
-# Converting a Number to a String
+## Converting a Number to a String
 
 The general function WRITE-TO-STRING or one of its simpler variants
 PRIN1-TO-STRING or PRINC-TO-STRING may be used to convert a number to a
@@ -817,18 +856,18 @@ the output base for a single call. To change the output base globally, set
 represented as quotients of two integers even when converted to strings.
 
 ~~~lisp
-* (write-to-string 250)
+(write-to-string 250)
 "250"
-* (write-to-string 250.02)
+(write-to-string 250.02)
 "250.02"
-* (write-to-string 250 :base 5)
+(write-to-string 250 :base 5)
 "2000"
-* (write-to-string (/ 1 3))
+(write-to-string (/ 1 3))
 "1/3"
 *
 ~~~
 
-# Comparing Strings
+## Comparing Strings
 
 The general functions EQUAL and EQUALP can be used to test whether two strings
 are equal. The strings are compared element-by-element, either in a
@@ -840,23 +879,23 @@ documentation in this case.
 Here are a few examples. Note that all functions that test for inequality return the position of the first mismatch as a generalized boolean. You can also use the generic sequence function MISMATCH if you need more versatility.
 
 ~~~lisp
-* (string= "Marx" "Marx")
+(string= "Marx" "Marx")
 T
-* (string= "Marx" "marx")
+(string= "Marx" "marx")
 NIL
-* (string-equal "Marx" "marx")
+(string-equal "Marx" "marx")
 T
-* (string< "Groucho" "Zeppo")
+(string< "Groucho" "Zeppo")
 0
-* (string< "groucho" "Zeppo")
+(string< "groucho" "Zeppo")
 NIL
-* (string-lessp "groucho" "Zeppo")
+(string-lessp "groucho" "Zeppo")
 0
-* (mismatch "Harpo Marx" "Zeppo Marx" :from-end t :test #'char=)
+(mismatch "Harpo Marx" "Zeppo Marx" :from-end t :test #'char=)
 3
 ~~~
 
-# String formatting
+## String formatting
 
 The `format` function has a lot of directives to print strings,
 numbers, lists, going recursively, even calling Lisp functions,
@@ -891,12 +930,12 @@ format constructs.
 which prints:
 
 ```
-1 fooo baaar 5
-10 last 3.3
+1 Matrix 5
+10 Matrix Trilogy swe sub 3.3
 ```
 
 
-## Structure of format
+### Structure of format
 
 Format directives start with `~`. A final character like `A` or `a`
 (they are case insensitive) defines the directive. In between, it can
@@ -910,8 +949,9 @@ Other directives include:
 - `$`: monetary: `(format t "~$" 21982)` => 21982.00
 - `D`, `B`, `O`, `X`: Decimal, Binary, Octal, Hexadecimal.
 - `F`: fixed-format Floating point.
+- `P`: plural: `(format nil "~D famil~:@P/~D famil~:@P" 7 1)` => "7 families/1 family"
 
-## Basic primitive: ~A or ~a (Aesthetics)
+### Basic primitive: ~A or ~a (Aesthetics)
 
 `(format t "~a" movies)` is the most basic primitive.
 
@@ -920,20 +960,20 @@ Other directives include:
 ;; => "((1 Matrix 5) (10 Matrix Trilogy swe sub 3.3))"
 ~~~
 
-## Newlines: ~% and ~&
+### Newlines: ~% and ~&
 
 `~%` is the newline character. `~10%` prints 10 newlines.
 
 `~&` does not print a newline if the output stream is already at one.
 
-## Tabs
+### Tabs
 
 with `~T`. Also `~10T` works.
 
 Also `i` for indentation.
 
 
-## Justifying text / add padding on the right
+### Justifying text / add padding on the right
 
 Use a number as parameter, like `~2a`:
 
@@ -968,7 +1008,7 @@ So, expanding:
 
 text is justified on the right (this would be with option `:`).
 
-### Justifying on the left: @
+#### Justifying on the left: @
 
 Use a `@` as in `~2@A`:
 
@@ -988,7 +1028,7 @@ Use a `@` as in `~2@A`:
 10    Matrix Trilogy swe sub 3.3
 ```
 
-## Justifying decimals
+### Justifying decimals
 
 In `~,2F`, 2 is the number of decimals and F the floats directive:
 `(format t "~,2F" 20.1)` => "20.10".
@@ -1008,7 +1048,37 @@ With `~2,2f`:
 
 And we're happy with this result.
 
-## Formatting a format string
+### Iteration
+
+Create a string from a list with iteration construct `~{str~}`:
+
+~~~lisp
+(format nil "~{~A, ~}" '(a b c))
+;; "A, B, C, "
+~~~
+
+using `~^` to avoid printing the comma and space after the last element:
+
+~~~lisp
+(format nil "~{~A~^, ~}" '(a b c))
+;; "A, B, C"
+~~~
+
+`~:{str~}` is similar but for a list of sublists:
+
+~~~lisp
+(format nil "~:{~S are ~S. ~}" '((pigeons birds) (dogs mammals)))
+;; "PIGEONS are BIRDS. DOGS are MAMMALS. "
+~~~
+
+`~@{str~}` is similar to `~{str~}`, but instead of using one argument that is a list, all the remaining arguments are used as the list of arguments for the iteration:
+
+~~~lisp
+(format nil "~@{~S are ~S. ~}" 'pigeons 'birds 'dogs 'mammals)
+;; "PIGEONS are BIRDS. DOGS are MAMMALS. "
+~~~
+
+### Formatting a format string (`~v`, `~?`)
 
 Sometimes you want to justify a string, but the length is a variable
 itself. You can't hardcode its value as in `(format nil "~30a"
@@ -1021,7 +1091,60 @@ comma-separated prefix parameters:
 ;; "foo                           "
 ~~~
 
-# Capturing what is is printed into a stream
+Other times, you would like to insert a complete format directive
+at run time. Enters the `?` directive.
+
+~~~lisp
+(format nil "~?" "~30a" '("foo"))
+;;                       ^ a list
+~~~
+
+or, using `~@?`:
+
+~~~lisp
+(format nil "~@?" "~30a" "foo" )
+;;                       ^ not a list
+~~~
+
+Of course, it is always possible to format a format string beforehand:
+
+~~~lisp
+(let* ((length 30)
+      (directive (format nil "~~~aa" length)))
+ (format nil directive "foo"))
+~~~
+
+### Conditional Formatting
+
+Choose one value out of many options by specifying a number:
+
+~~~lisp
+(format nil "~[dog~;cat~;bird~:;default~]" 0)
+;; "dog"
+
+(format nil "~[dog~;cat~;bird~:;default~]" 1)
+;; "cat"
+~~~
+
+If the number is out of range, the default option (after `~:;`) is returned:
+
+~~~lisp
+(format nil "~[dog~;cat~;bird~:;default~]" 9)
+;; "default"
+~~~
+
+Combine it with `~:*` to implement irregular plural:
+
+~~~lisp
+(format nil "I saw ~r el~:*~[ves~;f~:;ves~]." 0)
+;; => "I saw zero elves."
+(format nil "I saw ~r el~:*~[ves~;f~:;ves~]." 1)
+;; => "I saw one elf."
+(format nil "I saw ~r el~:*~[ves~;f~:;ves~]." 2)
+;; => "I saw two elves."
+~~~
+
+## Capturing what is is printed into a stream
 
 Inside `(with-output-to-string (mystream) …)`, everything that is
 printed into the stream `mystream` is captured and returned as a
@@ -1039,14 +1162,14 @@ string:
 ;; NIL
 ~~~
 
-# Cleaning up strings
+## Cleaning up strings
 
 The following examples use the
 [cl-slug](https://github.com/EuAndreh/cl-slug/) library which,
 internally, iterates over the characters of the string and uses
 `ppcre:regex-replace-all`.
 
-    (ql:quickload :cl-slug)
+    (ql:quickload "cl-slug")
 
 Then it can be used with the `slug` prefix.
 
@@ -1057,7 +1180,7 @@ Its main function is to transform a string to a slug, suitable for a website's u
 ;; "my-new-cool-article-for-the-blog-v-2"
 ~~~
 
-## Removing accentuated letters
+### Removing accentuated letters
 
 Use `slug:asciify` to replace accentuated letters by their ascii equivalent:
 
@@ -1068,7 +1191,7 @@ Use `slug:asciify` to replace accentuated letters by their ascii equivalent:
 
 This function supports many (western) languages:
 
-~~~lisp
+~~~
 slug:*available-languages*
 ((:TR . "Türkçe (Turkish)") (:SV . "Svenska (Swedish)") (:FI . "Suomi (Finnish)")
  (:UK . "українська (Ukrainian)") (:RU . "Ру́сский (Russian)") (:RO . "Română (Romanian)")
@@ -1080,7 +1203,7 @@ slug:*available-languages*
  (:CURRENCY . "Currency"))
 ~~~
 
-## Removing punctuation
+### Removing punctuation
 
 Use `(str:remove-punctuation s)` or `(str:no-case s)` (same as
 `(cl-change-case:no-case s)`):
@@ -1097,7 +1220,53 @@ They strip the punctuation with one ppcre unicode regexp
 (`(ppcre:regex-replace-all "[^\\p{L}\\p{N}]+"` where `p{L}` is the
 "letter" category and `p{N}` any kind of numeric character).
 
+## Appendix
 
-# See also
+### All format directives
+
+All directives are case-insensivite: `~A` is the same as `~a`.
+
+```
+$ - Monetary Floating-Point
+% - Newline
+& - Fresh-line
+( - Case Conversion
+) - End of Case Conversion
+* - Go-To
+/ - Call Function
+; - Clause Separator
+< - Justification
+< - Logical Block
+> - End of Justification
+? - Recursive Processing
+A - Aesthetic
+B - Binary
+C - Character
+D - Decimal
+E - Exponential Floating-Point
+F - Fixed-Format Floating-Point
+G - General Floating-Point
+I - Indent
+Missing and Additional FORMAT Arguments
+Nesting of FORMAT Operations
+Newline: Ignored Newline
+O - Octal
+P - Plural
+R - Radix
+S - Standard
+T - Tabulate
+W - Write
+X - Hexadecimal
+[ - Conditional Expression
+] - End of Conditional Expression
+^ - Escape Upward
+_ - Conditional Newline
+{ - Iteration
+| - Page
+} - End of Iteration
+~ - Tilde
+```
+
+## See also
 
 * [Pretty printing table data](https://gist.github.com/WetHat/a49e6f2140b401a190d45d31e052af8f), in ASCII art, a tutorial as a Jupyter notebook.
