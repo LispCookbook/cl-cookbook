@@ -230,9 +230,6 @@ traced:
 
 The output is printed to `*trace-output*` (see the CLHS).
 
-In Slime, we also have an interactive trace dialog with ``M-x
-slime-trace-dialog`` bound to `C-c T`.
-
 
 ### Trace options
 
@@ -392,6 +389,45 @@ It is also possible in CCL.
 
 See the [CLOS](clos.html) section for a tad more information.
 
+### Interactive Trace Dialog
+
+Both SLIME and SLY provide an [interactive view for traces](https://slime.common-lisp.dev/doc/html/SLIME-Trace-Dialog.html#SLIME-Trace-Dialog) that features better visualization of traces, and also access to the arguments and return values in their real form, via inspectors, not just the printed representation.
+
+![trace-dialog](trace-dialog.png "Trace dialog")
+
+How it works: (the following instructions are for SLIME)
+
+1. Select the functions to trace using `M-x slime-trace-dialog-toggle-trace` bound to `C-c M-t`.
+2. Evaluate code that calls the traced functions.
+3. Open the trace dialog tool via `M-x slime-trace-dialog` bound to `C-c T`.
+4. The list of traced functions appear under `Traced specs`.
+Traces are fetched in batches. So use the the `[refresh]` button to update status information about tracing (number of available traces that can be fetched).
+5. Then use either the `[fetch next batch]` or `[fetch all]` buttons to fetch the traces. Traces appear under `Traced specs` after that, and you can use the SLIME inspector to visualize their data (arguments and return values).
+6. After more code that calls the traced functions is evaluated, repeat the process (go to step 4).
+
+But, that flow can get a bit tedious, because of the separation between updating the status of the traces and fetching them. Sometimes it is better to just fetch the traces without updating the status first. We can do that invoking the command `M-x slime-trace-dialog-fetch-traces` bound to `G`. So, instead of steps 4 and 5, just press `G` to update the user interface.
+
+These are some of the Emacs commands bound to useful keys:
+
+`g`
+`M-x slime-trace-dialog-fetch-status`
+
+    Update information on the trace collection and traced specs.
+
+`G`
+`M-x slime-trace-dialog-fetch-traces`
+
+    Fetch the next batch of outstanding (not fetched yet) traces. With a C-u prefix argument, repeat until no more outstanding traces.
+
+`C-k`
+`M-x slime-trace-dialog-clear-fetched-traces`
+
+    Prompt for confirmation, then clear all traces, both fetched and outstanding.
+
+
+Finally, the arguments and return values for each trace entry are interactive buttons. Clicking them opens the SLIME inspector on them. Invoking `M-RET` `M-x slime-trace-dialog-copy-down-to-repl` returns them to the REPL for manipulation . The number left of each entry indicates its absolute position in the calling order, which might differ from display order in case multiple threads call the same traced function.
+
+`M-x slime-trace-dialog-hide-details-mode` hides arguments and return values so you can concentrate on the calling logic. Additionally, `M-x slime-trace-dialog-autofollow-mode` will automatically display additional detail about an entry when the cursor moves over it.
 
 ## The interactive debugger
 
