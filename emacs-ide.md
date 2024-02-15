@@ -99,7 +99,7 @@ even the SLIME REPL), you might want to enable more features with
 
 ~~~lisp
 (require 'slime)
-(slime-setup '(slime-fancy slime-quicklisp slime-asdf))
+(slime-setup '(slime-fancy slime-quicklisp slime-asdf slime-mrepl))
 ~~~
 
 After this you can press Alt-X on your keyboard and type `slime` and try Common Lisp!
