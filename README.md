@@ -39,7 +39,7 @@ Since it can be a bit troublesome to install older versions of Ruby onto newer L
 1. Build the container by executing `sudo docker build -t cl-cookbook .` in this directory.
 2. Run Jekyll inside the container `sudo docker run -p 4000:4000 -v $(pwd):/cl-cookbook cl-cookbook` from this directory.
 
-This container will mount current directory into the container so you will be able to see your latest changes. You can open your web browser and navigate to `http://127.0.0.1:4000/cl-cookbook/`.
+This command will mount current directory into the container so you will be able to see your latest changes. You can open your web browser and navigate to `http://127.0.0.1:4000/cl-cookbook/`. Therefore, you don't have to rebuild your container when you make a change.
 
 
 ### Troubleshooting
