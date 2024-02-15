@@ -34,13 +34,11 @@ Another option is to install the Jekyll version of this repository locally with 
 
 ### Use a Docker container
 
-Since it can be a bit troublesome to install older versions of Ruby onto newer Linux-based systems, another option is to use a `docker` or similar technology.
-
+Since it can be a bit troublesome to install older versions of Ruby onto newer Linux-based systems, another option is to use a `docker`.
 1. Build the container by executing `sudo docker build -t cl-cookbook .` in this directory.
 2. Run Jekyll inside the container `sudo docker run -p 4000:4000 -v $(pwd):/cl-cookbook cl-cookbook` from this directory.
 
-This command will mount current directory into the container so you will be able to see your latest changes. You can open your web browser and navigate to `http://127.0.0.1:4000/cl-cookbook/`. Therefore, you don't have to rebuild your container when you make a change.
-
+This command will mount the current working directory into the container so you will be able to see your latest changes. You can open your web browser and navigate to `http://127.0.0.1:4000/cl-cookbook/`. Therefore, you don't have to rebuild your container when you make a change.
 
 ### Troubleshooting
 
