@@ -654,7 +654,7 @@ the most downloaded libraries of Quicklisp.
 #### Djula filters
 
 Filters allow to modify how a variable is displayed. Djula comes with
-a good set of built-in filters and they are [well documented](https://mmontone.github.io/djula/doc/build/html/filters.html). They are not to be confused with [tags](https://mmontone.github.io/djula/doc/build/html/tags.html).
+a good set of built-in filters and they are [well documented](https://mmontone.github.io/djula/djula/Filters.html#Filters). They are not to be confused with [tags](https://mmontone.github.io/djula/djula/Tags.html#Tags).
 
 They look like this: `{{ name | lower }}`, where `lower` is an
 existing filter, which renders the text into lowercase.
