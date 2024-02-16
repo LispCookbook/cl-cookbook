@@ -40,6 +40,7 @@
    "sockets.md"
    "os.md"
    "ffi.md"
+   "dynamic-libraries.md"
    "process.md"
    "systems.md"
    ;; "win32.md" ; Excluded because: Out of date
