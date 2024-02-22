@@ -1103,6 +1103,17 @@ C-c C-v M-o     slime-clear-presentations
 
 - [SLIME's documentation](https://slime.common-lisp.dev/doc/html/)
 - **[Slime video tutorial](https://www.youtube.com/watch?v=sBcPNr1CKKw)** (and the author's channel, full of great stuff)
-- Marco Baringer's [Slime tutorial](https://www.youtube.com/watch?v=NUpAvqa5hQw)
+- Marco Baringer's [Slime tutorial](https://www.youtube.com/watch?v=NUpAvqa5hQw) (Slime author)
 - [Common Lisp REPL exploration guide](https://bnmcgn.github.io/lisp-guide/lisp-exploration.html), a concise and curated set of highlights to find one's way in the REPL.
 - [Emacs4CL](https://github.com/susam/emacs4cl), a tiny DIY kit to set up vanilla Emacs for Common Lisp programming.
+- [slime-star](https://github.com/mmontone/slime-star), a collection of extensions for SLIME:
+  * doc contribs: richer slime-help and slime-info buffers to display documentation.
+  * Quicklisp systems: autocompletion to load Quicklisp systems from the REPL.
+  * quicksearch integration: search for Common Lisp repositories on Quicklisp, Github and Cliki.
+  * Slime breakpoints: set breakpoints visually without code annotation, get buttons to step through code.
+  * Quicklisp apropos: "apropos" across Quicklisp libraries.
+  * Slime critic: get the Slime critic gently critique your code.
+  * interactive print and trace buffers
+  * dedicated Emacs buffers for output streams
+  * access to the ANSICL specification in Emacs' Info format.
+  * Lisp system browser: a (work in progress) Smalltalk-like system browser for Common Lisp, where one can get different panes to browse available packages and their functions, variables, macros, classes, generic functions.
