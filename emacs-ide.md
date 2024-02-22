@@ -269,6 +269,31 @@ You can think of it as a `imenu` completion that always work for any Lisp symbol
 When you put the cursor on a function, SLIME will show its signature
 in the minibuffer.
 
+If you want to see them better, try `C-c C-s` after a function name.
+
+For example, you forgot how to use `with-open-file`. Write it:
+
+```lisp
+(with-open-file
+```
+
+now press `C-c C-s` (`slime-complete-form`) and you'll get:
+
+```lisp
+(with-open-file (stream filespec :direction direction
+                                 :element-type element-type
+                                 :if-exists if-exists
+                                 :if-does-not-exist if-does-not-exist
+                                 :external-format external-format
+                                 :class class
+                         )
+           body...)
+```
+
+written in your source file (or in the REPL).
+
+The minibuffer will show you the default values of the arguments.
+
 ### Documentation lookup
 
 The main shortcut to know is:
