@@ -480,7 +480,7 @@ With arguments:
    [Condition of type SB-EXT:STEP-FORM-CONDITION]
 
 Restarts:
- 0: [STEP-CONTINUE] Resume normal execution   <---------- stepping actions
+ 0: [STEP-CONTINUE] Resume normal execution   <-------------------- stepping actions
  1: [STEP-OUT] Resume stepping after returning from this function
  2: [STEP-NEXT] Step over call
  3: [STEP-INTO] Step into call
@@ -489,7 +489,7 @@ Restarts:
  --more--
 
 Backtrace:
-  0: (FACTORIAL 3)     <----------- press Enter to fold/unfold.
+  0: (FACTORIAL 3)     <----------- press Enter to fold/unfold. Fix your code and press "r" to restart it.
       Locals:
         N = 3          <----------- want to check? Move the point here and
                                     press "e" to evaluate code on that frame.
@@ -553,15 +553,25 @@ Stepping is precious. However, if you find yourself inspecting the
 behaviour of a function a lot, it may be a sign that you need to
 simplify it and divide it in smaller pieces.
 
-And again, LispWorks has a graphical stepper.
+And again, **LispWorks** has a **graphical stepper**.
 
-### Resume a program execution from anywhere in the stack
+
+<div class="info" style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 17px; margin-bottom: 1em;">
+<!-- if inside a <p> then bootstrap adds 10px padding to the bottom -->
+<strong>TIP:</strong> the <a href="https://github.com/mmontone/slime-breakpoints">slime-breakpoints</a> package adds stepping and breaking buttons to Slime too.
+</div>
+
+![](https://raw.githubusercontent.com/mmontone/slime-star/master/screenshots/toolbars.png)
+
+### Resume a program execution from anywhere in the stack (demo)
 
 In [this video](https://www.youtube.com/watch?v=jBBS4FeY7XM) you will
 find a demo that shows the process explained above: how to fix a buggy
-function and how to resume the program execution from anywhere in the
+function and how to **resume the program execution** from anywhere in the
 stack, without running everything from zero again. The video shows it
 with Emacs and Slime, the Lem editor, both with SBCL.
+
+They key point is to use `r` (`sldb-restart-frame`) on a stack frame to restart it.
 
 <!-- epub-exclude-start -->
 
@@ -593,7 +603,7 @@ re-compile a function at runtime and resume the program execution from
 where it stopped (using the "step-continue" restart
 or using `r` ("restart frame") on a given stackframe).
 
-See also the [Slime-star](https://github.com/mmontone/slime-star) Emacs extension to set breakpoints without code annotations.
+See also the [Slime-star](https://github.com/mmontone/slime-star) Emacs extension mentioned above to set breakpoints without code annotations.
 
 
 ## Advise and watch
