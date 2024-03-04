@@ -310,7 +310,7 @@ See Quicklisp's documentation for more commands. For instance, see how to upgrad
 
 ### Advanced dependencies management
 
-You can drop Common Lisp projects into any of those folders:
+You can drop Common Lisp projects into any of these folders:
 
 - `~/quicklisp/local-projects`
 - `~/common-lisp`,
@@ -346,10 +346,10 @@ or
 (ql:quickload "system")
 ~~~
 
-The practical different between the two is that `ql:quickload` first tries to
+The practical difference between the two is that `ql:quickload` first tries to
 fetch the system from the Internet if it is not already installed.
 
-Note that symlinks in local-projects to another location of your liking works too.
+Note that symlinks in local-projects to another location of your liking work too.
 
 #### How to work with local versions of libraries
 
@@ -371,15 +371,15 @@ to help us build *dists*.
 Now that we have Quicklisp and our editor ready, we can start writing
 Lisp code in a file and interacting with the REPL.
 
-But what if we want to work with an existing project or create a new
-one, how do we proceed, what's the right sequence of `defpackage`,
-what to put in the `.asd` file, how to load the project into the REPL ?
+But if we want to work with an existing project or create a new
+one, how do we proceed? What's the right sequence of `defpackage`?
+What should we put in the `.asd` file? How do we load the project into the REPL ?
 
 ### Creating a new project
 
 Some project builders help to scaffold the project structure. We like
-[cl-project](https://github.com/fukamachi/cl-project) that also sets
-up a tests skeleton.
+[cl-project](https://github.com/fukamachi/cl-project), which also sets
+up a test skeleton.
 
 In short:
 
@@ -388,7 +388,7 @@ In short:
 (cl-project:make-project #P"./path-to-project/root/")
 ~~~
 
-it will create a directory structure like this:
+will create a directory structure like this:
 
 ```
 |-- my-project.asd
@@ -401,7 +401,7 @@ it will create a directory structure like this:
     `-- my-project.lisp
 ```
 
-Where `my-project.asd` resembles this:
+where `my-project.asd` resembles this:
 
 ~~~lisp
 (asdf:defsystem "my-project"
@@ -432,8 +432,8 @@ and `src/my-project.lisp` this:
 ### How to load an existing project
 
 You have created a new project, or you have an existing one, and you
-want to work with it on the REPL, but Quicklisp doesn't know it. How
-can you do ?
+want to work with it in the REPL, but Quicklisp doesn't know about it. What
+do you do?
 
 Well first, if you create it or clone it into
 one of `~/common-lisp`, `~/.local/share/common-lisp/source/` or
@@ -477,13 +477,13 @@ You might want to set SBCL's default encoding format to utf-8:
 
 You can add this to your `~/.sbclrc`.
 
-If you dislike the REPL to print all symbols upcase, add this:
+If you dislike the REPL printing all symbols uppercase, add this:
 
     (setf *print-case* :downcase)
 
 <div class="info-box warning">
 <!-- if inside a <p> then bootstrap adds 10px padding to the bottom -->
-<strong>Warning:</strong> This might break the behaviour of some packages like it happened with
+<strong>Warning:</strong> This might break the behaviour of some packages like happened with
 <a href="https://github.com/fukamachi/mito/issues/45">Mito</a>.
 Avoid doing this in production.
 </div>
