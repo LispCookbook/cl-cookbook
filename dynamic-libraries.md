@@ -9,7 +9,7 @@ i.e. compiling your CL library as a library callable via C ABI from
 other languages, might be rare.
 
 Commercial implementations like LispWorks and Allegro CL usually
-offer this functionality and they are well documented.
+offer this functionality, and they are well documented.
 
 This chapter describes a project called [SBCL-Librarian](https://github.com/quil-lang/sbcl-librarian), an opinionated way to create libraries callable from C (anything which has C FFI) and Python using an open-source and free-to-use implementation [Steel Bank Common Lisp](https://www.sbcl.org).
 
@@ -48,6 +48,126 @@ Clone the SBCL-Librarian repostiory:
 
 ~~~bash
 git clone https://github.com/quil-lang/sbcl-librarian.git
+~~~
+
+## Hello World from Lisp
+
+Let's set a couple of environment variables for convenience:
+
+~~~bash
+# Directory with SBCL sources
+export SBCL_SRC=~/.roswell/src/sbcl-2.4.1
+# Directory with this project, don't forget the double slash at the end
+# or it might not work
+export CL_SOURCE_REGISTRY="~/prg/sbcl-librarian//"
+~~~
+
+Libraries are usually not searched for in the current directory on more modern Linux-based systems, similar to paths Python searches for libraries.
+
+~~~bash
+export LD_LIBRARY_PATH=.:
+export PATH=.:$PATH
+~~~
+
+Let's make the simplest program.
+Since (format t "Hello World") doesn't get printed to console, let's create
+a method for adding integers.
+
+Create a file helloworld.lisp
+
+~~~lisp
+(require '#:asdf)
+(asdf:load-system :sbcl-librarian)
+
+(defpackage libhelloworld
+  (:use :cl :sbcl-librarian))
+
+(in-package libhelloworld)
+
+(defun hello-world (a b)
+  (+ a b))
+
+
+
+(define-enum-type error-type "err_t"
+  ("ERR_SUCCESS" 0)
+  ("ERR_FAIL" 1))
+
+
+(define-error-map error-map error-type 0
+  ((t (lambda (condition)
+        (declare (ignore condition))
+        (return-from error-map 1)))))
+
+
+(define-api libhelloworld-api (:error-map error-map
+                               :function-prefix "helloworld_")
+  (:literal "/* types */")
+  (:type error-type)
+  (:literal "/* functions */")
+  (:function
+     (hello-world :int ((a :int) (b :int)))))
+
+(define-aggregate-library libhelloworld (:function-linkage "LIBHELLOWORLD_API")
+  sbcl-librarian:handles sbcl-librarian:environment libhelloworld-api)
+
+(build-bindings libhelloworld ".")
+(build-python-bindings libhelloworld ".")
+(build-core-and-die libhelloworld "." :compression t)
+~~~
+
+compile it with
+
+~~~bash
+$SBCL_SRC/run-sbcl.sh --script "helloworld.lisp"
+cc -shared -fpic -o libhelloworld.so libhelloworld.c -L$SBCL_SRC/src/runtime -lsbcl
+cp $SBCL_SRC/src/runtime/libsbcl.so .
+~~~
+
+problem:
+>>> import helloworld
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ImportError: dynamic module does not define module export function (PyInit_helloworld)
+
+solution:
+
+cp ./helloworld.py ./py_helloworld.py
+
+problem:
+
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "/home/martin/prg/sbcl-librarian/examples/simple/helloworld.py", line 9, in <module>
+    raise Exception('Unable to locate libhelloworld') from e
+Exception: Unable to locate libhelloworld
+
+solution:
+libpath = Path('./libhelloworld.so').resolve()
+
+
+
+>>> import helloworld
+
+dir(helloworld)
+has
+helloworld_hello_world
+
+
+Call like
+
+~~~python
+# Save as call_helloworld.py
+import helloworld
+import ctypes
+
+rv = ctypes.c_int(0)
+helloworld.helloworld_hello_world(5, 6, ctypes.pointer(rv))
+print(rv.value)
+~~~
+
+~~~bash
+python3 call_helloworld.py
 ~~~
 
 ## Let's Start: Callback Example
