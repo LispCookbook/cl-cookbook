@@ -13,7 +13,6 @@ offer this functionality, and they are well documented.
 
 This chapter describes a project called [SBCL-Librarian](https://github.com/quil-lang/sbcl-librarian), an opinionated way to create libraries callable from C (anything which has C FFI) and Python using an open-source and free-to-use implementation [Steel Bank Common Lisp](https://www.sbcl.org).
 
-
 ## Preparing Environment
 
 ### Make SBCL Shared Library
@@ -39,7 +38,7 @@ export PATH=~/.roswell/impls/x86-64/linux/sbcl-bin/2.4.1/bin/:$PATH
 ./make-shared-library.sh --fancy
 ~~~
 
-Note that the shared library has a `.so` extension even on Windows and Mac, but it seems to work just fine. If you use Roswell in MSYS2, it can sometimes use your Windows home directory rather than your MSYS2 home directory, which are different paths. Therefore, the path to Roswell might be `/C/Users/<username>/.roswell`,
+Note that the shared library has a `.so` extension even on Windows and Mac, but it seems to work just fine. If you use Roswell in MSYS2, it can use your Windows home directory rather than your MSYS2 home directory, which are different paths. Therefore, the path to Roswell might be `$USERPROFILE/.roswell` (or `/C/Users/<username>/.roswell`),
 not `~/.roswell/`.
 
 ### Download and Setup SBCL-Librarian
@@ -52,6 +51,8 @@ git clone https://github.com/quil-lang/sbcl-librarian.git
 
 ## Hello World from Lisp
 
+Although SBCL-Librarian comes with some documentation and a couple of examples, it doesn't really have anything like a basic tutorial. In this chapter we'll make a basic function which adds two numbers and we'll call it from Python.
+
 Let's set a couple of environment variables for convenience:
 
 ~~~bash
@@ -62,18 +63,14 @@ export SBCL_SRC=~/.roswell/src/sbcl-2.4.1
 export CL_SOURCE_REGISTRY="~/prg/sbcl-librarian//"
 ~~~
 
-Libraries are usually not searched for in the current directory on more modern Linux-based systems, similar to paths Python searches for libraries.
+Libraries are usually not searched for in the current directory on more modern Linux-based systems. The paths which Python searches for libraries are usually not set to the current working directory either. Let's set them this way for convenience.
 
 ~~~bash
 export LD_LIBRARY_PATH=.:
 export PATH=.:$PATH
 ~~~
 
-Let's make the simplest program.
-Since (format t "Hello World") doesn't get printed to console, let's create
-a method for adding integers.
-
-Create a file helloworld.lisp
+Now we can create a file `helloworld.lisp` with following content:
 
 ~~~lisp
 (require '#:asdf)
@@ -84,39 +81,64 @@ Create a file helloworld.lisp
 
 (in-package libhelloworld)
 
+;; will be called from Python
 (defun hello-world (a b)
   (+ a b))
 
 
-
+;; error enum to be used in C/Python code for error handling
 (define-enum-type error-type "err_t"
   ("ERR_SUCCESS" 0)
   ("ERR_FAIL" 1))
 
-
+;; mapping Common Lisp conditions to C enums
+;; in this simple example, all conditions are mapped to number 1
+;; which is "ERR_FAIL" in `error-type` enum
 (define-error-map error-map error-type 0
   ((t (lambda (condition)
         (declare (ignore condition))
         (return-from error-map 1)))))
 
-
-(define-api libhelloworld-api (:error-map error-map
-                               :function-prefix "helloworld_")
-  (:literal "/* types */")
-  (:type error-type)
+;; structure of the generated C source file
+(define-api libhelloworld-api (:error-map error-map              ; error enum
+                               :function-prefix "helloworld_")   ; prefix for all function names (C doesn't have namespaces)
+  (:literal "/* types */")        ; just a comment (whatever is there will be printed as-is)
+  (:type error-type)              ; outputs the error enum
   (:literal "/* functions */")
-  (:function
+  (:function                      ; function declaration - name, return type, argument types
      (hello-world :int ((a :int) (b :int)))))
 
+;; definition of the whole library - what is there
 (define-aggregate-library libhelloworld (:function-linkage "LIBHELLOWORLD_API")
   sbcl-librarian:handles sbcl-librarian:environment libhelloworld-api)
 
+;; builds the bindings
 (build-bindings libhelloworld ".")
 (build-python-bindings libhelloworld ".")
+
+;; outputs the Lisp core
 (build-core-and-die libhelloworld "." :compression t)
 ~~~
 
-compile it with
+The macro `define-enum-type` creates a mapping between conditions signaled by Common Lisp functions and a return type for the wrapping C functions. If a condition is signaled from Common Lisp, it is translated into a number — a C function return value — within `define-error-map`. The enumeration type adds a C `enum`, so instead of:
+
+~~~C
+if (1 == cl_function()) {
+~~~
+
+you can write:
+
+~~~C
+if (ERR_FAIL == cl_function()) {
+~~~
+
+which is more readable.
+
+`define-api` outlines the structure of the library code to be created, specifying the error map, types, functions, and their order (`:literal` is used for comments in this case). The function `call-callback` uses previously defined types for its arguments: the `callback` type for the first argument named `fn` and the `:char-buffer` type for its second argument `out_buffer`. The `:function-prefix` option means the actual name of the exported function will be `callback_call_callback`.
+
+`define-aggregate-library` defines the entire library, specifying what should be included and in what order.
+
+You can compile the file with following commands:
 
 ~~~bash
 $SBCL_SRC/run-sbcl.sh --script "helloworld.lisp"
@@ -124,40 +146,26 @@ cc -shared -fpic -o libhelloworld.so libhelloworld.c -L$SBCL_SRC/src/runtime -ls
 cp $SBCL_SRC/src/runtime/libsbcl.so .
 ~~~
 
-problem:
->>> import helloworld
-Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-ImportError: dynamic module does not define module export function (PyInit_helloworld)
 
-solution:
-
-cp ./helloworld.py ./py_helloworld.py
-
-problem:
-
-Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-  File "/home/martin/prg/sbcl-librarian/examples/simple/helloworld.py", line 9, in <module>
-    raise Exception('Unable to locate libhelloworld') from e
-Exception: Unable to locate libhelloworld
-
-solution:
-libpath = Path('./libhelloworld.so').resolve()
-
-
-
->>> import helloworld
-
-dir(helloworld)
-has
-helloworld_hello_world
-
-
-Call like
+You can run Python console and check that `helloworld` module was created successfully
 
 ~~~python
-# Save as call_helloworld.py
+import helloworld
+
+dir(helloworld)
+~~~
+
+Function `helloworld_hello_world` should be present in the printed dictionary.
+
+This function follows a C standard that return value of the function is its error code
+(0 is for success, other numbers should be defined in `err_t` class which follows the `error-map` definitions),
+the last parameter of the function is its return value. Since this is a pointer to integer in this case,
+an integer needs to be created using `ctypes` library and `helloworld_hello_world` has to be called with
+a pointer to the result value.
+
+The following program should print 11.
+
+~~~python
 import helloworld
 import ctypes
 
@@ -166,13 +174,56 @@ helloworld.helloworld_hello_world(5, 6, ctypes.pointer(rv))
 print(rv.value)
 ~~~
 
-~~~bash
-python3 call_helloworld.py
+There are two common problems which can occur, depending on your system.
+
+First is a rather cryptic error from Python
+
+~~~
+>>> import helloworld
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ImportError: dynamic module does not define module export function (PyInit_helloworld)
 ~~~
 
-## Let's Start: Callback Example
+This means that Python tries to open `helloworld.so` as a Python module rather than `helloworld.py`. Since
+`helloworld.so` is just an ordinary dynamic library and not a natively-compiled Python module, it
+will not work.
 
-SBCL-Librarian includes several examples, one of which is a simple callback to Python code.
+~~~bash
+cp ./helloworld.py ./py_helloworld.py
+~~~
+
+and in Python `import py_helloworld` .
+
+If you experience a following exception being raised:
+
+~~~
+Traceback (most recent call last):
+  ...
+    raise Exception('Unable to locate libhelloworld') from e
+Exception: Unable to locate libhelloworld
+~~~
+
+First, check that all required dependencies - `libsbcl` and `libzstd` in this case - are either copied
+to the output directory or are in path which your operating system loads libraries from. If it still doesn't
+work, it might be a problem with the mechanism Python locates libraries on your particular system.
+
+Open `helloworld.py` (or `py_helloworld.py` if you renamed it as suggested earlier) and change the line
+
+~~~Python
+libpath = Path(find_library('libcallback')).resolve()
+~~~
+
+to a path for your operating system, e.g.
+
+~~~Python
+libpath = Path('./libhelloworld.so').resolve()
+~~~
+
+
+## More Complex Example: Callback Example
+
+SBCL-Librarian includes several examples, one of which is a simple callback to Python code. This example comes with `Makefile` and with properly defined system using `ASD`.
 
 ### ASD File
 
@@ -213,68 +264,9 @@ SBCL-Librarian utilizes `sb-alien`, an SBCL package for interfacing with C funct
 
 This section defines the types `callback` and `char-buffer` in C, Python, and Common Lisp. The C and Python types for both are `void*` and `char*`, respectively. The Common Lisp type for callback specifies a function prototype: a pointer to a function that returns `void` and takes two parameters, a `c-string` and a pointer to a `char`. The `sb-alien:*` indicates a pointer, so `:callback` is a pointer to a function. The `:char-buffer` type represents a `char*` in all three languages.
 
-~~~lisp
-(define-enum-type error-type "err_t"
-  ("ERR_SUCCESS" 0)
-  ("ERR_FAIL" 1))
-
-(define-error-map error-map error-type 0
-  ((t (lambda (condition)
-        (declare (ignore condition))
-        (return-from error-map 1)))))
-~~~
-
-This creates a mapping between conditions signaled by Common Lisp functions and a return type for the wrapping C functions. If a condition is signaled from Common Lisp, it is translated into a number — a C function return value — within `define-error-map`. The enumeration type adds a C `enum`, so instead of:
-
-~~~C
-if (1 == cl_function()) {
-~~~
-
-you can write:
-
-~~~C
-if (ERR_FAIL == cl_function()) {
-~~~
-
-which is more readable.
-
-~~~lisp
-(define-api libcallback-api (:error-map error-map
-                             :function-prefix "callback_")
-    (:literal "/* types */")
-  (:type error-type)
-  (:literal "/* functions */")
-  (:function
-   (call-callback :void ((fn :callback) (out_buffer :char-buffer)))))
-
-(define-aggregate-library libcallback (:function-linkage "CALLBACKING_API")
-  sbcl-librarian:handles sbcl-librarian:environment libcallback-api)
-~~~
-
-`define-api` outlines the structure of the library code to be created, specifying the error map, types, functions, and their order (`:literal` is used for comments in this case). The function `call-callback` uses previously defined types for its arguments: the `callback` type for the first argument named `fn` and the `:char-buffer` type for its second argument `out_buffer`. The `:function-prefix` option means the actual name of the exported function will be `callback_call_callback`.
-
-`define-aggregate-library` defines the entire library, specifying what should be included and in what order.
+The rest of this file is similar to what was described in the `Hello World` section.
 
 ### Compile LISP Code
-
-Now you can compile the Lisp code and generate the C sources for compiling the library and the Python wrapper.
-
-Set a couple of environment variables for convenience:
-
-~~~bash
-# Directory with SBCL sources
-export SBCL_SRC=~/.roswell/src/sbcl-2.4.1
-# Directory with this project, don't forget the double slash at the end
-# or it might not work
-export CL_SOURCE_REGISTRY="~/prg/sbcl-librarian//"
-~~~
-
-Libraries are usually not searched for in the current directory on more modern Linux-based systems, similar to paths Python searches for libraries.
-
-~~~bash
-export LD_LIBRARY_PATH=.:
-export PATH=.:$PATH
-~~~
 
 `script.lisp` is a straightforward Lisp script for compiling the Lisp sources and outputting the wrapper code and the Lisp core.
 
@@ -319,7 +311,7 @@ CALLBACKING_API int init(char* core) {
 
 At the top, you'll find several SBCL-related functions, such as `lisp_gc`, which signals to the Lisp garbage collector that it is a good time to run. Then there is a pointer to the `callback_call_callback` function. Finally, the `init` function, which should be run before executing any Lisp code.
 
-Currently, there is no way to de-initialize the Lisp core.
+SBCL (as of version 2.4.2) didn't support de-initialize the Lisp core so there are no functions for doing so.
 
 `libcallback.h ` is a header file that should be included in both `lispcallback.c` and any calling C code. It contains prototypes of functions and function pointers in `lispcallback.c`, includes the error `enum`, and any comments added in `bindings.lisp`:
 
@@ -341,7 +333,7 @@ except TypeError as e:
 
 The rest of the file is similar to the C header file.
 
-This setup loads a compiled C library (shared object, DLL, dylib) and informs the Python interpreter about the functions and types included in the library. It also initializes the Lisp core when loaded by the Python interpreter.
+This setup loads a compiled C library (shared object, DLL, dylib) and informs the Python interpreter about the functions and types included in the library. It also initializes the Lisp core when loaded by the Python interpreter. The initialization needs to be called manually when the generated library is called from C.
 
 
 ### Compile C Code
@@ -371,18 +363,6 @@ If it's successful, you should see the output:
 ~~~bash
 I guess  it works!
 ~~~
-
-If you encounter a cryptic error like this:
-
-~~~bash
-$ python3 ./example.py 
-Traceback (most recent call last):
-  File "/home/user/prg/sbcl-librarian/examples/callback/./example.py", line 2, in <module>
-    import libcallback
-ImportError: dynamic module does not define module export function (PyInit_libcallback)
-~~~
-
-It indicates that Python is attempting to load `libcallback.so` as if it were a compiled Python module (written in C). Since that is not the case, a workaround is to rename `libcallback.py` to another name, such as `callback.py`, and in `example.py` to import `callback` instead of `libcallback`.
 
 ## Makefile
 
