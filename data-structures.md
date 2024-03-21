@@ -10,8 +10,8 @@ also have many more details:
 - [Practical CL](http://gigamonkeys.com/book/they-called-it-lisp-for-a-reason-list-processing.html), by Peter Seibel
 - [CL Recipes](http://weitz.de/cl-recipes/), by E. Weitz, full of explanations and tips,
 - the
-  [CL standard](http://cberr.us/tech_writings/notes/common_lisp_standard_draft.html)
-  with a nice TOC, functions reference, extensive descriptions, more
+  [CL standard](https://franz.com/support/documentation/cl-ansi-standard-draft-w-sidebar.pdf)
+  with -- in the sidebar of your PDF reader -- a nice TOC, functions reference, extensive descriptions, more
   examples and warnings (i.e: everything). [PDF mirror](https://gitlab.com/vancan1ty/clstandard_build/-/blob/master/cl-ansi-standard-draft-w-sidebar.pdf)
 - a [Common Lisp quick reference](http://clqr.boundp.org/)
 
