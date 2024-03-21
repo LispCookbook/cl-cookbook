@@ -29,6 +29,8 @@ s/\(\[CLOS section\]\)(clos.html)/\1[Fundamentals of CLOS]/
 # debugging.md
 s/\(\[error handling\]\)(error_handling.html)/\1[Error and exception handling]/
 s/\(\[testing\]\)(testing.html)/\1[Testing the code]/
+# dynamic-libraries.md
+s/\(\[\(foreign function interface\)\]\)(ffi.html)/\1[Foreign Function Interfaces]/
 # editor-support.md
 s/\(\["\(Using Emacs as an IDE\)"\]\)(emacs-ide.html)/\1[\2]/
 s/\(\[\(Using VSCode with Alive\)\]\)(vscode-alive.html)/\1[\2]/
@@ -62,6 +64,7 @@ s/\(\[\(Type System\)\]\)(type.html)/\1[\2]/
 s/\(\[Sockets\]\)(sockets.html)/\1[TCP\/UDP programming with sockets]/
 s/\(\[\(Interfacing with your OS\)\]\)(os.html)/\1[\2]/
 s/\(\[\(Foreign Function Interfaces\)\]\)(ffi.html)/\1[\2]/
+s/\(\[\(Building Dynamic Libraries\)\]\)(dynamic-libraries.html)/\1[\2]/
 s/\(\[\(Threads\)\]\)(process.html)/\1[\2]/
 s/\(\[\(Defining Systems\)\]\)(systems.html)/\1[\2]/
 s/\(\[\(Using the Win32 API\)\]\)(win32.html)/\1[\2]/

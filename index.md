@@ -67,6 +67,7 @@ The CL Cookbook aims to tackle all sort of topics, for the beginner as for the m
 * [Interfacing with your OS](os.html)
 * [Databases](databases.html)
 * [Foreign Function Interfaces](ffi.html)
+* [Building Dynamic Libraries](dynamic-libraries.html)
 * [GUI programming](gui.html)
 * [Sockets](sockets.html)
 * [WebSockets](websockets.html)
