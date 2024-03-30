@@ -11,14 +11,33 @@ other languages, might be rare.
 Commercial implementations like LispWorks and Allegro CL usually
 offer this functionality, and they are well documented.
 
-This chapter describes a project called [SBCL-Librarian](https://github.com/quil-lang/sbcl-librarian), an opinionated way to create libraries callable from C (anything which has C FFI) and Python using an open-source and free-to-use implementation [Steel Bank Common Lisp](https://www.sbcl.org).
+This chapter describes a project called [SBCL-Librarian](https://github.com/quil-lang/sbcl-librarian),
+an opinionated way to create libraries callable from C (anything which has C FFI) and Python using
+an open-source and free-to-use implementation [Steel Bank Common Lisp](https://www.sbcl.org).
+SBCL-Librarian does support callbacks so you can integrate your Lisp library with any code,
+including Python code which might use its great machine learning and statistical libraries.
+
+The way SBCL-Librarian works is that it generates C source files, a C header and a Python module.
+
+The C source file is compiled first into a dynamic library which is (using the provided header file)
+loadable from any C project or by any project in a language which supports loading C libraries.
+
+The generated Python module loads the compiled library into Python process. This means that the C
+library needs to be compiled before your Lisp library is used from Python code. This fact has two
+main consequences - on one hand the Lisp library is all efficient native code, which is great.
+Python interpreter can be quite slow and many libraries, especially the ones for machine learning
+and statistics, are all compiled native code. You can achieve the same efficiency with Common Lisp.
+On the other hand, your library can only use C interface to communicate with Python - primitive data
+types from C, structures, functions and pointers (including pointers to functions). Some basic knowledge
+of C is required.
 
 ## Preparing Environment
 
 ### Make SBCL Shared Library
 
-Binary distributions of SBCL usually do not come with SBCL built as a shared library, which is necessary for SBCL-Librarian. You can download it either from the [SBCL git repository](https://github.com/sbcl/sbcl) or by [using Roswell](getting-started.html#with-roswell) and running the command `ros install sbcl-source`.
-
+Binary distributions of SBCL usually do not come with SBCL built as a shared library, which is necessary for SBCL-Librarian.
+You can download it either from the [SBCL git repository](https://github.com/sbcl/sbcl)
+or by [using Roswell](getting-started.html#with-roswell) and running the command `ros install sbcl-source`.
 
 SBCL also requires a working Common Lisp system to bootstrap the compilation process. An easy trick is to download a binary installation from Roswell and add it to your `PATH` variable.
 
