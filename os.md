@@ -99,7 +99,8 @@ Here's a quick function to return the argument strings list across multiple impl
 (defun my-command-line ()
   (or
    #+SBCL *posix-argv*
-   #+LISPWORKS system:*line-arguments-list*))
+   #+LISPWORKS system:*line-arguments-list*)
+   #+CLISP *args*)
 ~~~
 
 Now it would be handy to access them in a portable way and to parse
