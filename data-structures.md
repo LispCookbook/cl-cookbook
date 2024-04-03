@@ -202,10 +202,14 @@ http://gigamonkeys.com/book/figures/after-append.png
 
 `nconc` is the recycling equivalent.
 
-### push (item, place)
+### push, pushnew (item, place)
 
 `push` prepends *item* to the list that is stored in *place*, stores
 the resulting list in *place*, and returns the list.
+
+`pushnew` is similar, but it does nothing if the element already exists in the place.
+
+See also `adjoin` below that doesn't modify the target list.
 
 ~~~lisp
 (defparameter mylist '(1 2 3))
@@ -230,6 +234,9 @@ There is no built-in function to **add to the end of a list**. It is a
 more costly operation (have to traverse the whole list). So if you
 need to do this: either consider using another data structure, either
 just `reverse` your list when needed.
+
+`pushnew` accepts key arguments: `:key`, `:test`, `:test-not`.
+
 
 ### pop
 
@@ -786,6 +793,9 @@ A new set is returned, the original set is not modified.
 list-a
 ;; => (0 1 2 3)  ;; <-- original list unmodified.
 ~~~
+
+You can also use `pushnew`, that modifies the list (see above).
+
 
 ### Check if this is a subset (`subsetp`)
 
