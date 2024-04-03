@@ -1103,7 +1103,7 @@ C-c C-v M-o     slime-clear-presentations
 
 - [SLIME's documentation](https://slime.common-lisp.dev/doc/html/)
 - **[Slime video tutorial](https://www.youtube.com/watch?v=sBcPNr1CKKw)** (and the author's channel, full of great stuff)
-- Marco Baringer's [Slime tutorial](https://www.youtube.com/watch?v=NUpAvqa5hQw) (Slime author)
+- Marco Baringer's [Slime tutorial](https://www.youtube.com/watch?v=NUpAvqa5hQw)
 - [Common Lisp REPL exploration guide](https://bnmcgn.github.io/lisp-guide/lisp-exploration.html), a concise and curated set of highlights to find one's way in the REPL.
 - [Emacs4CL](https://github.com/susam/emacs4cl), a tiny DIY kit to set up vanilla Emacs for Common Lisp programming.
 - [slime-star](https://github.com/mmontone/slime-star), a collection of extensions for SLIME:
