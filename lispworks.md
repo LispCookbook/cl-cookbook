@@ -554,9 +554,37 @@ However: `console` is implemented **only for Windows and Mac**.
 
 See LispWorks' documentation.
 
+## Delivering applications
+
+LispWorks' delivery method revolves around its `delivery` function. It has good documentation: [https://www.lispworks.com/documentation/lw80/deliv/deliv.htm](https://www.lispworks.com/documentation/lw80/deliv/deliv.htm).
+
+Unlike other open-source Lisps, LispWorks provides a tree-shaker that
+can strip-off packages from the delivered application, allowing to
+build small binaries, around 7MB.
+
+
+#### Delivery limitations
+
+LispWorks's delivery doesn't include `compile-file` into the delivered
+application. As such, it isn't possible to change code on the fly on a
+delivered image. No Swank server, no possibility to use
+`ql:quickload`.
+
+To allow remote debugging, LW however provides its own debugger client. On the backend, do:
+
+    (require "remote-debugger-client")
+    (dbg:start-client-remote-debugging-server :announce t)
+
+and on the IDE, do:
+
+    (require "remote-debugger-full")
+    (dbg:ide-connect-remote-debugging "host" :open-a-listener t)
+
+
 ## See also
 
 - [LispWorks IDE User Guide](http://www.lispworks.com/documentation/lw71/IDE-U/html/ide-u.htm) (check out the sections we didn't cover)
 - [LispWorks on Wikipedia](https://en.wikipedia.org/wiki/LispWorks)
 - the [Awesome LispWorks](https://github.com/fourier/awesome-lispworks) list
 - [Real Image-based approach in Common Lisp](https://www.youtube.com/watch?v=nsKx40ab9SY) - differences between SBCL and LispWorks.
+- blog post: [Delivering a LispWorks application](https://blog.dziban.net/posts/delivering-a-lispworks-application/)
