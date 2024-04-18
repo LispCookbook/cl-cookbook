@@ -153,7 +153,7 @@ if (ERR_FAIL == cl_function()) {
 
 which is more readable.
 
-`define-api` outlines the structure of the library code to be created, specifying the error map, types, functions, and their order (`:literal` is used for comments in this case). The function `call-callback` uses previously defined types for its arguments: the `callback` type for the first argument named `fn` and the `:char-buffer` type for its second argument `out_buffer`. The `:function-prefix` option means the actual name of the exported function will be `callback_call_callback`.
+`define-api` outlines the structure of the library code to be created, specifying the error map, types, functions, and their order (`:literal` is used for comments in this case).
 
 `define-aggregate-library` defines the entire library, specifying what should be included and in what order.
 
