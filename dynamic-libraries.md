@@ -9,11 +9,11 @@ i.e. compiling your CL library as a library callable via C ABI from
 other languages, might be rare.
 
 Commercial implementations like LispWorks and Allegro CL usually
-offer this functionality, and they are well documented.
+offer this functionality, and they are well documented [^1].
 
 This chapter describes a project called [SBCL-Librarian](https://github.com/quil-lang/sbcl-librarian),
 an opinionated way to create libraries callable from C (anything which has C FFI) and Python using
-an open-source and free-to-use implementation [Steel Bank Common Lisp](https://www.sbcl.org).
+the excellent open-source and free-to-use implementation [SBCL (Steel Bank Common Lisp)](https://www.sbcl.org).
 SBCL-Librarian does support callbacks so you can integrate your Lisp library with any code,
 including Python code which might use its great machine learning and statistical libraries.
 
@@ -22,18 +22,19 @@ The way SBCL-Librarian works is that it generates C source files, a C header and
 The C source file is compiled first into a dynamic library which is (using the provided header file)
 loadable from any C project or by any project in a language which supports loading C libraries.
 
-The generated Python module loads the compiled library into Python process. This means that the C
+The generated Python module loads the compiled library into the Python process. This means that the C
 library needs to be compiled before your Lisp library is used from Python code. This fact has two
-main consequences - on one hand the Lisp library is all efficient native code, which is great.
-Python interpreter can be quite slow and many libraries, especially the ones for machine learning
-and statistics, are all compiled native code. You can achieve the same efficiency with Common Lisp.
-On the other hand, your library can only use C interface to communicate with Python - primitive data
+main consequences:
+
+- on one hand the Lisp library is all efficient native code, which is great. The Python interpreter can be quite slow and many libraries, especially the ones for machine learning
+and statistics, are all compiled to native code. You can achieve the same efficiency with Common Lisp.
+- on the other hand, your library can only use the C interface to communicate with Python - primitive data
 types from C, structures, functions and pointers (including pointers to functions). Some basic knowledge
 of C is required.
 
-## Preparing Environment
+## Preparing the Environment
 
-### Make SBCL Shared Library
+### Build SBCL with Shared Library Support
 
 Binary distributions of SBCL usually do not come with SBCL built as a shared library, which is necessary for SBCL-Librarian.
 You can download it either from the [SBCL git repository](https://github.com/sbcl/sbcl)
@@ -82,14 +83,14 @@ export SBCL_SRC=~/.roswell/src/sbcl-2.4.1
 export CL_SOURCE_REGISTRY="~/prg/sbcl-librarian//"
 ~~~
 
-Libraries are usually not searched for in the current directory on more modern Linux-based systems. The paths which Python searches for libraries are usually not set to the current working directory either. Let's set them this way for convenience.
+Libraries are usually not searched for in the current directory on more modern Linux-based systems. The paths which Python searches libraries on are usually not set to the current working directory either. Let's set them this way for convenience.
 
 ~~~bash
 export LD_LIBRARY_PATH=.:
 export PATH=.:$PATH
 ~~~
 
-Now we can create a file `helloworld.lisp` with following content:
+Now we can create a file `helloworld.lisp` with the following content:
 
 ~~~lisp
 (require '#:asdf)
@@ -157,7 +158,7 @@ which is more readable.
 
 `define-aggregate-library` defines the entire library, specifying what should be included and in what order.
 
-You can compile the file with following commands:
+You can compile the file with the following commands:
 
 ~~~bash
 $SBCL_SRC/run-sbcl.sh --script "helloworld.lisp"
@@ -165,8 +166,7 @@ cc -shared -fpic -o libhelloworld.so libhelloworld.c -L$SBCL_SRC/src/runtime -ls
 cp $SBCL_SRC/src/runtime/libsbcl.so .
 ~~~
 
-
-You can run Python console and check that `helloworld` module was created successfully
+You can run a Python console and check that the `helloworld` module was created successfully:
 
 ~~~python
 import helloworld
@@ -174,15 +174,15 @@ import helloworld
 dir(helloworld)
 ~~~
 
-Function `helloworld_hello_world` should be present in the printed dictionary.
+The function `helloworld_hello_world` should be present in the printed dictionary.
 
-This function follows a C standard that return value of the function is its error code
+This function follows a C standard that the return value of the function is its error code
 (0 is for success, other numbers should be defined in `err_t` class which follows the `error-map` definitions),
 the last parameter of the function is its return value. Since this is a pointer to integer in this case,
 an integer needs to be created using `ctypes` library and `helloworld_hello_world` has to be called with
 a pointer to the result value.
 
-The following program should print 11.
+The following program should print 11:
 
 ~~~python
 import helloworld
@@ -195,7 +195,7 @@ print(rv.value)
 
 There are two common problems which can occur, depending on your system.
 
-First is a rather cryptic error from Python
+First is a rather cryptic error from Python:
 
 ~~~
 >>> import helloworld
@@ -212,7 +212,7 @@ will not work.
 cp ./helloworld.py ./py_helloworld.py
 ~~~
 
-and in Python `import py_helloworld` .
+and in Python `import py_helloworld`.
 
 If you experience a following exception being raised:
 
@@ -223,8 +223,8 @@ Traceback (most recent call last):
 Exception: Unable to locate libhelloworld
 ~~~
 
-First, check that all required dependencies - `libsbcl` and `libzstd` in this case - are either copied
-to the output directory or are in path which your operating system loads libraries from. If it still doesn't
+the first, check that all required dependencies - `libsbcl` and `libzstd` in this case - are either copied
+to the output directory or are in the path which your operating system loads libraries from. If it still doesn't
 work, it might be a problem with the mechanism Python locates libraries on your particular system.
 
 Open `helloworld.py` (or `py_helloworld.py` if you renamed it as suggested earlier) and change the line
@@ -242,18 +242,19 @@ libpath = Path('./libhelloworld.so').resolve()
 
 ## More Complex Example: Callback Example
 
-SBCL-Librarian includes several examples, one of which is a simple callback to Python code. This example comes with `Makefile` and with properly defined system using `ASD`.
+SBCL-Librarian includes several examples, one of which is a simple callback to Python code. This example comes with a `Makefile` and with a properly defined system using `asdf`.
 
-### ASD File
+### ASDF system definition
 
-The ASD file `libcallback.asd` declares a dependency on SBCL-Librarian:
+The system definition in `libcallback.asd` declares a dependency on SBCL-Librarian:
 
 ~~~lisp
-:defsystem-depends-on (#:sbcl-librarian)
-:depends-on (#:sbcl-librarian)
+(asdf:defsystem #:libcallback
+  :defsystem-depends-on (#:sbcl-librarian)
+  :depends-on (#:sbcl-librarian)
 ~~~
 
-The ASDF system needs to know where to find the SBCL-Librarian sources. One way to specify this is by setting the `CL_SOURCE_REGISTRY` environment variable to include its directory.
+The ASDF system needs to know where to find the SBCL-Librarian sources. One way to specify this is by setting the `CL_SOURCE_REGISTRY` environment variable to include its directory, as seen above, or to clone the project in a location whene ASDF can find it (`~/common-lisp/`, `~/quicklisp/local-projects/`).
 
 ### Bindings.lisp
 
@@ -374,7 +375,7 @@ If you do not have `$SBCL_SRC/src/runtime` in your `$PATH`, you should copy the 
 Now that everything is set up, you can run the example code using the following command:
 
 ~~~bash
-$ python3 ./example.py 
+$ python3 ./example.py
 ~~~
 
 If it's successful, you should see the output:
@@ -429,3 +430,8 @@ add_custom_command(TARGET my_project POST_BUILD
         "${libsbcl}"
         $<TARGET_FILE_DIR:my_project>)
 ~~~
+
+This concludes our tutorial on getting started with SBCL-librarian. We hope it expands your imagination in what you can build with Common Lisp and that it put you in the right tracks.
+
+
+[^1]: [on LispWorks](https://www.lispworks.com/documentation/lw70/DV/html/delivery-20.htm), [on LispWorks for Java](https://www.lispworks.com/documentation/lw80/lw/lw-lw-ji-88.htm), [on AllegroCL](https://franz.com/support/documentation/10.1/doc/dll.htm).
