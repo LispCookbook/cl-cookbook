@@ -14,6 +14,7 @@ offer this functionality, and they are well documented [^1].
 This chapter describes a project called [SBCL-Librarian](https://github.com/quil-lang/sbcl-librarian),
 an opinionated way to create libraries callable from C (anything which has C FFI) and Python using
 the excellent open-source and free-to-use implementation [SBCL (Steel Bank Common Lisp)](https://www.sbcl.org).
+
 SBCL-Librarian does support callbacks so you can integrate your Lisp library with any code,
 including Python code which might use its great machine learning and statistical libraries.
 
@@ -31,6 +32,11 @@ and statistics, are all compiled to native code. You can achieve the same effici
 - on the other hand, your library can only use the C interface to communicate with Python - primitive data
 types from C, structures, functions and pointers (including pointers to functions). Some basic knowledge
 of C is required.
+
+<div class="info" style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 17px;">
+<!-- if inside a <p> then bootstrap adds 10px padding to the bottom -->
+<strong>NOTE:</strong> The team behind SBCL-Librarian works on quantum computing in the industry. More precisely on a programming language for quantum computing called Quil, and its ecosystem.
+</div>
 
 ## Preparing the Environment
 
