@@ -565,8 +565,8 @@ build small binaries, around 7MB.
 
 #### Delivery limitations
 
-LispWorks's delivery doesn't include `compile-file` into the delivered
-application. As such, it isn't possible to change code on the fly on a
+LispWorks's delivery [doesn't include](https://www.lispworks.com/products/runtimes.html) `compile-file` into the delivered
+application (nor `save-image`, `deliver` and the IDE). As such, it isn't possible to change code on the fly on a
 delivered image. No Swank server, no possibility to use
 `ql:quickload`.
 
