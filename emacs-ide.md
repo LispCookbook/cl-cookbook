@@ -379,7 +379,7 @@ over the available systems and packages.  Examples:
 
 - `,load-system`
 - `,reload-system`
-- `,in-package`
+- `,in-package` (also `C-c M-p` in a .lisp file)
 - `,restart-inferior-lisp`
 
 and many more. Usually the interactive commands given in the previous section have a REPL shortcut.
