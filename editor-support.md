@@ -176,6 +176,11 @@ So you probably want a shell alias:
 
     alias ilem='lem --eval "(lem-lisp-mode:start-lisp-repl t)"'
 
+There is more:
+
+* 🚀 [Lem on the cloud](https://www.youtube.com/watch?v=IMN7feOQOak) (video presentation) Rooms is a product that runs Lem, a text editor created in Common Lisp, in the Cloud and can be used by multiple users.
+  * Lem on the cloud is NEW as of April, 2024. In private beta at the time of writing.
+
 <img src="assets/lem1.png" style="width: 800px" title="Lem's REPL" alt="Lem running in the terminal with the Lisp REPL full screen, showing a completion window."/>
 
 ## Sublime Text
