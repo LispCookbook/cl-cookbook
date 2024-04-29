@@ -1,4 +1,4 @@
-# sed script to change internal links in markdown file,
+# sed script to change internal links in markdown file
 # to links pandoc can use when generating EPUB from markdown.
 # Currently, the transformed links do not work in the web server,
 # so the script should change a file that is not used in the web server.
@@ -10,7 +10,7 @@
 #   "[strings](strings.html)" to "[strings](#strings)"
 #   pandoc associates each section header with a unique key, here "strings".
 #   We specify the target header represented by "key", using the syntax (#key).
-#   This has to be used when the taget syntax [section header] is ambiguous.
+#   This has to be used when the target syntax [section header] is ambiguous.
 # Usage:
 #   sed -i -f fix-epub-links.sed full.md
 # Note:
