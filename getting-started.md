@@ -2,9 +2,9 @@
 title: Getting started with Common Lisp
 ---
 
-We'll begin with presenting easy steps to install a development environment and to start a new Common Lisp project.
+We'll begin by presenting easy steps to install a development environment and to start a new Common Lisp project.
 
-Want a 2-clicks install? Then get
+Want a 2-click install? Then get
 [Portacle](https://shinmera.github.io/portacle/), *a portable and
 multi-platform* Common Lisp environment. It ships Emacs, SBCL (the
 implementation), Quicklisp (package manager), SLIME (IDE) and
@@ -18,9 +18,9 @@ If you don't know which implementation of Common Lisp to use, try SBCL:
 
     apt-get install sbcl
 
-Common Lisp has been standardized via an ANSI document, so it can be
-implemented in different ways. See
-[Wikipedia's list of implementations](https://en.wikipedia.org/wiki/Common_Lisp#Implementations).
+Common Lisp is an ANSI standard but implementations can vary greatly in what
+they provide in addition to the standard. See [Wikipedia's list of
+implementations](https://en.wikipedia.org/wiki/Common_Lisp#Implementations).
 
 The following implementations are packaged for Debian and most other popular Linux distributions:
 
@@ -31,7 +31,7 @@ The following implementations are packaged for Debian and most other popular Lin
 Other well-known implementations include:
 
 * [ABCL](http://abcl.org/), to interface with the JVM,
-* [ClozureCL](https://ccl.clozure.com/), a good implementation with very fast build times (see this [Debian package for Clozure CL](http://mr.gy/blog/clozure-cl-deb.html)),
+* [ClozureCL](https://ccl.clozure.com/), a good implementation with very fast build times,
 * [CLASP](https://github.com/drmeister/clasp), that interoperates with C++ libraries using LLVM for compilation to native code,
 * [AllegroCL](https://franz.com/products/allegrocl/) (proprietary)
 * [LispWorks](http://www.lispworks.com/) (proprietary)
