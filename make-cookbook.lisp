@@ -3,8 +3,7 @@
 ;; pandoc to epub
 ;; calibre from epub to pdf
 ;;
-;; To generate the EPUB, load this file and call
-;; (generate)
+;; To generate the EPUB, just load this file.
 ;;
 ;; Metadata is in metadata.txt
 ;; -> change the date
