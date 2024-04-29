@@ -23,7 +23,7 @@ Then open `http://127.0.0.1:4000/cl-cookbook/` (the last `/` is important).
 
 ### Install system locally using Ruby gems
 
-Another option is to install the Jekyll version of this repository locally with Ruby gems. Since bundler 1.17.3 requires Ruby 2.5 that is rather old, it is recommended to install it using rbenv:
+Another option is to install the Jekyll version of this repository locally with Ruby gems. Since bundler 1.17.3 requires Ruby 2.5 that is rather old, it is recommended to install it using `rbenv`:
 
 1. Install [rbenv](https://github.com/rbenv/rbenv) using your package manager, or follow [these instructions](https://github.com/rbenv/rbenv#basic-github-checkout) to install it manually.
 2. Install [ruby-build](https://github.com/rbenv/ruby-build#installation). If you did a manual installation in the previous step, it is recommended to install ruby-build as a rbenv plugin.
@@ -76,7 +76,7 @@ Run `make epub`. See `make-cookbook.lisp`.
 
 You need a decently recent version of [Calibre](https://calibre-ebook.com/). They provide an easy binary installation.
 
-To exclude regions of text of the build (for example, embedded videos that makes no sense in a print format), use these flags:
+To exclude regions of text from the output (for example, embedded videos that makes no sense in a print format), use these flags:
 
     <!-- epub-exclude-start -->
     <!-- epub-exclude-end -->
