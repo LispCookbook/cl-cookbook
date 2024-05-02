@@ -105,6 +105,21 @@ The two functions accept the usual `:start` and `:end` key arguments. Additionna
 
 > If SHAREDP is true, the substrings may share structure with TARGET-STRING.
 
+#### count-matches (new in 2.1.2, April 2024)
+
+`(count-matches regex target-string)` returns a count of all matches of `regex` against `target-string`:
+
+
+~~~lisp
+CL-USER> (count-matches "a" "foo bar baz")
+2
+
+CL-USER> (count-matches "\\w*" "foo bar baz")
+6
+~~~
+
+
+
 #### scan-to-strings, register-groups-bind
 
 The `scan-to-strings` function is similar to `scan` but returns
