@@ -111,10 +111,10 @@ The two functions accept the usual `:start` and `:end` key arguments. Additionna
 
 
 ~~~lisp
-CL-USER> (count-matches "a" "foo bar baz")
+CL-USER> (ppcre:count-matches "a" "foo bar baz")
 2
 
-CL-USER> (count-matches "\\w*" "foo bar baz")
+CL-USER> (ppcre:count-matches "\\w*" "foo bar baz")
 6
 ~~~
 
