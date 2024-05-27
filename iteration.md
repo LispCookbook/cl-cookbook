@@ -30,17 +30,21 @@ If you want to return a list, use `collect`:
 ;; (10 20 30)
 ~~~
 
-The Loop macro is different than most Lisp expressions in having a complex
-internal domain-specific language that doesn't use s-expressions.
-So you need to read Loop expressions with half of your brain in Lisp mode, and
-the other half in Loop mode. You love it or you hate it.
+The `loop` macro is different than most Lisp expressions in having a complex
+internal domain-specific language that doesn't use s-expressions, so you need
+to read `loop` expressions with half of your brain in Lisp mode and the other
+half in `loop` mode. You love it or you hate it.
 
-Think of Loop expressions as having four parts: expressions that set up
-variables that will be iterated, expressions that conditionally terminate the
-iteration, expressions that do something on each iteration, and expressions that
-do something right before the Loop exits.  In addition, Loop expressions can
-return a value.  It is very rare to use all of these parts in a given Loop
-expression, but you can combine them in many ways.
+Think of `loop` expressions as having four parts:
+
+1. expressions that set up variables that will be iterated,
+2. expressions that conditionally terminate the iteration,
+3. expressions that do something on each iteration, and
+4. expressions that do something right before the Loop exits.
+
+In addition, `loop` expressions can return a value.  It is very rare to use all
+of these parts in a given `loop` expression, but you can combine them in many
+ways.
 
 ### The `iterate` macro
 
@@ -59,7 +63,8 @@ Iterate looks like this:
     (collect (* i i)))
 ~~~
 
-(if you use loop and iterate in the same package, you might run into name conflicts)
+(If you use `loop` and Iterate in the same package, you might run into name
+conflicts.)
 
 Iterate also comes with `display-iterate-clauses` that can be quite handy:
 
@@ -70,18 +75,18 @@ Iterate also comes with `display-iterate-clauses` that can be quite handy:
 ;; ...
 ~~~
 
-Much of the examples on this page that are valid for loop are also valid for iterate,
-with minor modifications.
+Many of the examples on this page that are valid for `loop` are also valid for
+Iterate, with minor modifications.
 
 ### The `for` macro
 
-**[for](https://github.com/Shinmera/for/)** is an extensible iteration
-macro that is often shorter than loop, that "unlike loop is extensible
-and sensible, and unlike iterate does not require code-walking and is
-easier to extend".
+**[for](https://github.com/Shinmera/for/)** is an extensible iteration macro
+that is often shorter than `loop`, that "unlike `loop` is extensible and
+sensible, and unlike Iterate does not require code-walking and is easier to
+extend".
 
 It has the other advantage of having one construct that works for all
-data structures (lists, vectors, hash-tables…): in doubt, just use
+data structures (lists, vectors, hash-tables…): if in doubt, just use
 `for… over`:
 
 ~~~lisp
@@ -107,7 +112,7 @@ returns a list of result.
 (11 12 13)
 ~~~
 
-`map` is generic, it accepts list and vectors as arguments, and
+`map` is generic, it accepts lists and vectors as arguments, and
 expects the type for its result as first argument:
 
 ~~~lisp
@@ -124,7 +129,7 @@ either process the *tails* of lists, or *concatenate* the return
 values, or don't return anything. We'll see some of them.
 
 If you like `mapcar`, use it a lot, and would like a quicker and
-shorter way to write lambdas, then you might like one of those
+shorter way to write lambdas, then you might like one of these
 [lambda shorthand libraries](https://github.com/CodyReichert/awesome-cl#lambda-shorthands).
 
 Here is an example with [cl-punch](https://github.com/windymelt/cl-punch/):
@@ -134,15 +139,15 @@ Here is an example with [cl-punch](https://github.com/windymelt/cl-punch/):
 ;; (10 20 30)
 ~~~
 
-and voilà :) We won't use this more in this recipe, but feel free to do.
+and voilà :) We won't use this more in this recipe, but feel free.
 
 ### The `series` library
 
 You might also like **[series](http://series.sourceforge.net/)**, a library that
 describes itself as combining aspects of sequences, streams, and loops. Series
 expressions look like operations on sequences (= functional programming), but
-can achieve the same high level of efficiency as a loop. Series first appeared
-in "Common Lisp the Language", in the appendix A (it nearly became part of the
+can achieve the same high level of efficiency as `loop`. Series first appeared
+in "Common Lisp the Language", in appendix A (it nearly became part of the
 language). Series looks like this:
 
 ~~~lisp
@@ -179,9 +184,10 @@ generators of infinite data.
 
 Transducers...
 
-- allow the chaining of operations like `map` and `filter` without allocating memory between each step.
-- aren't tied to any specific data type; they need only be implemented once.
-- vastly simplify "data transformation code".
+- allow the chaining of operations like `map` and `filter` without allocating
+  memory between each step,
+- aren't tied to any specific data type; they need only be implemented once,
+- vastly simplify "data transformation code", and
 - have nothing to do with "lazy evaluation".
 
 Let's sum the squares of the first 1000 odd integers:
@@ -279,7 +285,7 @@ Or you can use `return` with return values:
   do (format t "Hello!~%"))
 ~~~
 
-This prints 10 times "hello" and returns `nil`.
+This prints "Hello!" 10 times and returns `nil`.
 
 ~~~lisp
 (loop repeat 10 collect (random 10))
@@ -360,7 +366,7 @@ For lists and vectors:
   (print i))
 ~~~
 
-or, a generalized iteration clause for lists and vectors, use
+or, for a generalized iteration clause for lists and vectors, use
 `in-sequence` (you'll pay a speed penalty).
 
 Looping over a hash-table is also straightforward:
@@ -413,7 +419,7 @@ with `in`, no surprises:
 ;; (A B C)
 ~~~
 
-With `on`, we loop over the cdr of the list:
+With `on`, we loop over the `cdr` of the list:
 
 ~~~lisp
 (loop for i on '(1 2 3) do (print i))
@@ -427,8 +433,8 @@ With `on`, we loop over the cdr of the list:
 
 ~~~lisp
 (mapcar (lambda (x)
-             (print (* x 10)))
-         '(1 2 3))
+          (print (* x 10)))
+        '(1 2 3))
 10
 20
 30
@@ -488,7 +494,7 @@ Looping over keys:
 Looping over values uses the same concept but with the `hash-value` keyword instead of `hash-key`:
 
 ~~~lisp
-(loop for k being the hash-value of h do (print k))
+(loop for v being the hash-value of h do (print v))
 ;; 1
 ;; 2
 ~~~
@@ -601,7 +607,7 @@ inefficient. Instead, we can tell `loop` to extend the short list.
 The trick is that the notation `for … = … then (cdr …)` (note the `=`
 and the role of `then`) shortens our intermediate list at each
 iteration (thanks to `cdr`). It will first be `'(a b c)`, the initial
-value, then we will get the `cdr`: `(2 3)`, then `(3)`, then
+value, then we will get the `cdr`: `(b c)`, then `(c)`, then
 `NIL`. And both `(car NIL)` and `(cdr NIL)` return `NIL`, so we are
 good.
 
@@ -618,7 +624,7 @@ good.
 or simply:
 
 ~~~lisp
-(mapcar #'list
+(mapcar 'list
         '(a b c)
         '(1 2 3))
 ;; ((A 1) (B 2) (C 3))
@@ -668,7 +674,7 @@ Return a flat list:
 ~~~lisp
 (loop for x from 1 to 3
       collect (loop for y from 1 to x
-		    collect y))
+		            collect y))
 ;; ((1) (1 2) (1 2 3))
 ~~~
 
@@ -695,9 +701,9 @@ To return a flat list, use `nconcing` instead of the first `collect`.
 
 ### Computing an intermediate value
 
-Use `=`.
+#### loop
 
-With `for`:
+Use `=` with `for`:
 
 ~~~lisp
 (loop for x from 1 to 3
@@ -706,8 +712,7 @@ With `for`:
 ;; (10 20 30)
 ~~~
 
-With `with`, the difference being that the value is computed only
-once:
+Use `=` with `with`, the difference being that the value is computed only once:
 
 ~~~lisp
 (loop for x from 1 to 3
@@ -728,6 +733,7 @@ so it turns out we can specify the type before the `=` and chain the `with` with
       for y integer = (* x 10)
       with z integer = x
       collect (list x y z))
+;; ((1 10 1) (2 20 1) (3 30 1))
 ~~~
 
 ~~~lisp
@@ -735,6 +741,7 @@ so it turns out we can specify the type before the `=` and chain the `with` with
       with foo = :foo
       and bar = :bar
       collect (list x foo bar))
+;; ((0 :FOO :BAR) (1 :FOO :BAR) (2 :FOO :BAR) (3 :FOO :BAR))
 ~~~
 
 We can also give `for` a `then` clause that will be called at each iteration:
@@ -768,14 +775,13 @@ the list determines when the iteration ends. Two sets of actions are defined,
 one of which is executed conditionally.
 
 ~~~lisp
-* (loop for x in '(a b c d e)
+(loop for x in '(a b c d e)
       for y from 1
 
       when (> y 1)
       do (format t ", ")
 
-      do (format t "~A" x)
-      )
+      do (format t "~A" x))
 
 A, B, C, D, E
 NIL
@@ -784,13 +790,12 @@ NIL
 We could also write the preceding loop using the IF construct.
 
 ~~~lisp
-* (loop for x in '(a b c d e)
+(loop for x in '(a b c d e)
       for y from 1
 
       if (> y 1)
       do (format t ", ~A" x)
-      else do (format t "~A" x)
-      )
+      else do (format t "~A" x))
 
 A, B, C, D, E
 NIL
@@ -814,16 +819,15 @@ range, we can make a counter.
 `from… to…`:
 
 ~~~lisp
-(loop for i from 0 to 10
-      do (print i))
-;; 0 1 2 3 4 5 6 7 8 9 10
+(loop for i from 0 to 10 collect i)
+;; (0 1 2 3 4 5 6 7 8 9 10)
 ~~~
 
 `from… below…`: this stops at 9:
 
 ~~~lisp
-(loop for i from 0 below 10
-      do (print i))
+(loop for i from 0 below 10 collect i)
+;; (0 1 2 3 4 5 6 7 8 9)
 ~~~
 
 Similarly, use `from 10 downto 0` (10…0) and `from 10 above 0` (10…1).
@@ -896,7 +900,7 @@ with `if`, `else` and `finally`:
 (55 89 59 13 49)
 ```
 
-Combining multiple clauses in an if body requires special syntax (`and
+Combining multiple clauses in an `if` body requires special syntax (`and
 do`, `and count`):
 
 ~~~lisp
@@ -1017,7 +1021,7 @@ x is 3
 ~~~
 
 #### Series
-By mapping, we can perform a side effect and also collect items
+By mapping, we can perform a side effect and also collect items.
 
 ~~~lisp
 (collect
@@ -1031,9 +1035,9 @@ By mapping, we can perform a side effect and also collect items
 ### Named loops and early exit
 #### loop
 
-The special `loop named` foo syntax allows you to create a loop that
-you can exit early from. The exit is performed using `return-from`,
-and can be used from within nested loops.
+The special `loop named` syntax allows you to create a block that can be used
+with `return-from` to exit the loop early.  This can be especially useful in
+nested loops.
 
 
 ~~~lisp
@@ -1048,7 +1052,7 @@ and can be used from within nested loops.
 ~~~
 
 Sometimes, you want to return early but execute the `finally` clause
-anyways. Use [`loop-finish`](http://www.lispworks.com/documentation/HyperSpec/Body/m_loop_f.htm#loop-finish).
+anyway. Use [`loop-finish`](http://www.lispworks.com/documentation/HyperSpec/Body/m_loop_f.htm#loop-finish).
 
 ~~~lisp
 (loop for x from 0 to 100
@@ -1083,19 +1087,19 @@ It is most needed when some computation must take place in the `finally` clause.
 Several actions provide shorthands for combinations of when/return:
 
 ~~~lisp
-* (loop for x in '(foo 2)
+(loop for x in '(foo 2)
       thereis (numberp x))
 T
 ~~~
 
 ~~~lisp
-* (loop for x in '(foo 2)
+(loop for x in '(foo 2)
       never (numberp x))
 NIL
 ~~~
 
 ~~~lisp
-* (loop for x in '(foo 2)
+(loop for x in '(foo 2)
       always (numberp x))
 NIL
 ~~~
@@ -1111,7 +1115,7 @@ They correspond to the functions `some`, `notany` and `every`:
 
 #### Series
 
-A block is manually created and returned from.
+To exit the iteration early explicitly create a block to use with `return-from`.
 
 ~~~lisp
 (block loop-1
@@ -1187,7 +1191,7 @@ and `collect-min`.
 
 ~~~lisp
 (loop for (a b) in '((x 1) (y 2) (z 3))
-      collect (list b a) )
+      collect (list b a))
 ;; ((1 X) (2 Y) (3 Z))
 ~~~
 
@@ -1200,7 +1204,7 @@ Use `nil` to ignore a term:
 
 ~~~lisp
 (loop for (a nil) in '((x 1) (y 2) (z 3))
-      collect a )
+      collect a)
 ;; (X Y Z)
 ~~~
 
@@ -1255,9 +1259,9 @@ But for alists, `scan-alist` is provided:
 
 `iterate` has some other things unique to it.
 
-If you are a newcomer in Lisp, it's perfectly OK to keep this section for
+If you are a newcomer to Common Lisp, it's perfectly OK to keep this section for
 later. You could very well spend your career in Lisp without resorting
-to those features… although they might turn out useful one day.
+to these features… although they might turn out useful one day.
 
 
 ### No rigid order for clauses
@@ -1267,10 +1271,13 @@ for example before a `while`. It's ok for `iter` to not follow this
 order:
 
 ~~~lisp
-(iter (for x in '(1 2 99)
+(iter (for x in '(1 2 99))
   (while (< x 10))
   (for y = (print x))
   (collect (list x y)))
+1
+2
+;; ((1 1) (2 2))
 ~~~
 
 ### Accumulating clauses can be nested
@@ -1319,14 +1326,15 @@ The rough equivalent in LOOP would be:
 There could be more than one `such-that` clause:
 
 ~~~lisp
- (iter (for i in '(7 -4 2 -3))
-       (if (plusp i)
-    (finding i such-that (evenp i))
-        (finding (- i) such-that (oddp i))))
+(iter (for i in '(7 -4 2 -3))
+      (if (plusp i)
+          (finding i such-that (evenp i))
+          (finding (- i) such-that (oddp i))))
 ;; => 2
 ~~~
 
-We can also write `such-that #'evenp` and `such-that #'oddp`.
+We can also write `such-that #'evenp` and `such-that #'oddp`. **Note that
+`such-that 'oddp` will not work.**
 
 
 ### Control flow: `next-iteration`
@@ -1342,7 +1350,8 @@ See [control flow](https://common-lisp.net/project/iterate/doc/Control-Flow.html
 
 ### Generators
 
-Use `generate` and `next`. A generator is lazy, it goes to the next value when said explicitly.
+Use `generate` and `next`. A generator is lazy, it goes to the next value when
+explicitly requested.
 
 ~~~lisp
 (iter (for i in '(1 2 3 4 5))
@@ -1390,9 +1399,9 @@ In this case however we can do it with `loop`'s parallel binding `and`, which is
 ;; => (A B C D)
 ~~~
 
-(`adjoin` is a set operation)
+(`adjoin` is a set operation.)
 
-- `loop` has `summing`, `counting`, `maximizing`, and `minimizing`. `iterate` also includes `multiplying` and `reducing`. reducing is the generalized reduction builder:
+- `loop` has `summing`, `counting`, `maximizing`, and `minimizing`. `iterate` also includes `multiplying` and `reducing`. Reducing is the generalized reduction builder:
 
 ~~~lisp
 (iter (with dividend = 100)
@@ -1473,8 +1482,13 @@ becomes redundant.
 
 ## Loop gotchas
 
-- the keyword `it`, often used in functional constructs, can be
+- The keyword `it`, often used in functional constructs, can be
   recognized as a loop keyword. Don't use it inside a loop.
+
+~~~lisp
+(loop for i from 1 to 5 when (evenp i) collect it)
+;; (T T)
+~~~
 
 ## Iterate gotchas
 
@@ -1487,7 +1501,7 @@ It breaks on the function `count`:
 
 It doesn't recognize the built-in `count` function and instead signals a condition.
 
-It works in loop:
+It works in `loop`:
 
 ~~~lisp
 (loop for i from 1 to 10
