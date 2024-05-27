@@ -19,6 +19,8 @@ generation.
 
 - functions should generally be referenced with backtics. There is no need to capitalize them in the age of markdown: write `function` instead of FUNCTION.
 
+- indent code using the predominant style. If unsure, check what Emacs `lisp-mode` does.
+
 ## Code snippets
 
 - use `~~~lisp` for code snippets.
