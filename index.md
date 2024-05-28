@@ -136,6 +136,7 @@ Books
 * [Successful Lisp: How to Understand and Use Common Lisp](https://successful-lisp.blogspot.com/p/httpsdrive.html) by David B. Lamkins
 * [On Lisp](http://www.paulgraham.com/onlisptext.html) by Paul Graham
 * [Common Lisp the Language, 2nd Edition](http://www-2.cs.cmu.edu/Groups/AI/html/cltl/cltl2.html) by Guy L. Steele
+  * [CLtL2, in PDF format](https://github.com/mmontone/cltl2-doc)
 * [A Tutorial on Good Lisp Style](https://www.cs.umd.edu/%7Enau/cmsc421/norvig-lisp-style.pdf) by Peter Norvig and Kent Pitman
 
 Advanced books
