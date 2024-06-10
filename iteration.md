@@ -171,7 +171,7 @@ At the time of writing, GTWIWTG is licensed under the GPLv3.
 
 ### The `transducers` library
 
-The **[transducers](https://git.sr.ht/~fosskers/cl-transducers)** pattern was
+The **[transducers](https://codeberg.org/fosskers/cl-transducers)** pattern was
 ported to Common Lisp in 2023 and offers a full suite of functional programming
 idioms for efficiently iterating over "sources". A "source" could be simple
 collections like Lists or Vectors, but also potentially large files or
@@ -207,7 +207,7 @@ The user is free to invent their own transducers (i.e. functions like `map`) and
 reducers (i.e. functions like `+`) to traverse data streams in any way they
 wish, all while being very memory efficient.
 
-See [its README](https://git.sr.ht/~fosskers/cl-transducers), [its
+See [its README](https://codeberg.org/fosskers/cl-transducers), [its
 API](https://fosskers.github.io/cl-transducers/index.html), or the [original
 Transducers document](https://clojure.org/reference/transducers) for more
 information.
