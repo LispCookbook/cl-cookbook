@@ -643,29 +643,47 @@ first one, and where the first argument is the new value:
   body)
 ~~~
 
-This mechanism is particularly used for CLOS methods.
+This mechanism is often used for CLOS methods.
 
-A silly example:
+Let's work towards an example. Let's say we manipulate a hash-table
+that represents a square. We store the square width in this
+hash-table:
 
 ~~~lisp
-(defparameter *current-name* ""
-  "A global name.")
-
-(defun hello (name)
-  (format t "hello ~a~&" name))
-
-(defun (setf hello) (new-value)
-  (hello new-value)
-  (setf *current-name* new-value)
-  (format t "current name is now ~a~&" new-value))
-
-(setf (hello) "Alice")
-;; hello Alice
-;; current name is now Alice
-;; NIL
+(defparameter *square* (make-hash-table))
+(setf (gethash :width *square*) 21)
 ~~~
 
-<a name="curry"></a>
+During our program life cycle, we can change the square width, with `setf` as we did above.
+
+We define a function to compute a square area. We don't store it in
+the hash-table as it is redundant with the dimension.
+
+~~~lisp
+(defun area (square)
+  (expt (gethash :width square) 2))
+~~~
+
+Now, our programming needs lead to the situation where it would be
+very handy to change the *area* of the square… and have this reflected
+on the square's dimensions. It can be ergonomic for your program's
+application interface to define a setf-function, like this:
+
+~~~lisp
+(defun (setf area) (new-area square)
+  (let ((width (sqrt new-area)))
+    (setf (gethash :width square) width)))
+~~~
+
+And now you can do:
+
+~~~lisp
+(setf (area *SQUARE*) 100)
+;; => 10.0
+~~~
+
+and check your square (`describe`, `inspect`…), the new width was set.
+
 
 ## Currying
 
