@@ -11,6 +11,14 @@ Some sources:
 * [`Numbers, Characters and Strings`][numbers-characters-strings]
   in Practical Common Lisp
 
+<!-- epub-exclude-start -->
+<div style="text-align: center">
+    <img src="numbertower.png" alt="Number Types in Common Lisp"/>
+</div>
+<!-- epub-exclude-end -->
+
+*Types in bold, cyan boxes are the ones you will typically use.*
+
 ## Introduction
 
 ### Integer types
