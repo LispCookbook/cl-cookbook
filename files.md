@@ -695,7 +695,7 @@ Returns a list of pathnames:
 
 #### Iterating on files (lazily)
 
-In addition of the above functions, we mention solutions that *lazily*
+In addition to the above functions, we mention solutions that *lazily*
 traverse a directory. They don't load the entire list of files before
 returning it.
 
