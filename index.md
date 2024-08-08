@@ -119,6 +119,7 @@ The Cookbook has been translated to:
 * [Common Lisp Libraries Read the Docs](https://common-lisp-libraries.readthedocs.io/) - the documentation of popular libraries ported to the modern and good looking Read The Docs style.
 * [lisp-tips](https://github.com/lisp-tips/lisp-tips/issues/)
 * [Articulate Common Lisp](http://articulate-lisp.com/), an initiation manual for the uninitiated
+* [Common Lisp the Tutorial](https://github.com/rabbibotton/clog/blob/main/LEARN.md), a tutorial for Common Lisp and CLOG (a gui library for Common Lisp)
 * [Lisp and Elements of Style](http://web.archive.org/web/20190316190256/https://www.nicklevine.org/declarative/lectures/) by Nick Levine
 * Pascal Costanza's [Highly Opinionated Guide to Lisp](http://www.p-cos.net/lisp/guide.html)
 * [Cliki](http://www.cliki.net/), Common Lisp's wiki
