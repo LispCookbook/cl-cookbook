@@ -105,7 +105,7 @@ Thank you!
 The Cookbook has been translated to:
 
 * [Chinese simplified](https://oneforalone.github.io/cl-cookbook-cn/#/) ([Github](https://github.com/oneforalone/cl-cookbook-cn))
-* [Portuguese (Brazilian)](https://book.lisp.com.br/) ([Github](https://github.com/commonlispbr/cl-cookbook))
+* [Portuguese (Brazilian)](https://lisp.com.br/cl-cookbook/) ([Github](https://github.com/commonlispbr/cl-cookbook))
 
 # Other CL Resources
 
