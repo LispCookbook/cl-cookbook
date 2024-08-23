@@ -288,7 +288,9 @@ start2, end1 and end2, compares characters in string1 to characters in
 string2 (using char-equal).
 ```
 
-See also our page [strings.html](https://lispcookbook.github.io/cl-cookbook/strings.html).
+There are also the functions: ` string=; string/=; string<; string>; string<=; string>=; string-equal; string-not-equal; string-lessp; string-greaterp; string-not-greaterp; string-not-lessp`.
+
+See our page [strings.html](https://lispcookbook.github.io/cl-cookbook/strings.html).
 
 ### Compare trees with `tree-equal`
 
@@ -377,6 +379,7 @@ If you really want to use `=` or `equal`, use a library, see below.
 
 ## See also
 
+- [`equal` on the CL Community Spec](https://cl-community-spec.github.io/pages/equal.html)
 - [equals](https://github.com/karlosz/equals/) - generic equality for Common Lisp.
 - [generic-cl](https://github.com/alex-gutev/generic-cl/) - a generic function interface to CL built-ins.
   - we can use `=` or `<` on our own custom objects.
