@@ -34,6 +34,7 @@ The CL Cookbook aims to tackle all sort of topics, for the beginner as for the m
 * [Strings](strings.html)
   + [Regular Expressions](regexp.html)
 * [Numbers](numbers.html)
+* NEW! ⭐ [Equality](equality.html)
 * [Loops, iteration, mapping](iteration.html)
 * [Multidimensional Arrays](arrays.html)
 * [Dates and Times](dates_and_times.html)

@@ -325,7 +325,7 @@ Trees (lists of lists)     TREE-EQUAL (with appropriate :TEST argument)
 
 ## How to compare your own objects AKA built-in functions are not object-oriented
 
-In short: use `eq` to check they are two identical objects.
+Use `eq` to check that two objects are identical, that they are the same object in memory
 
 If you want to compare your own objects with a logic of your own (for
 example, two "person" objects will be considered equal if they have
@@ -333,7 +333,41 @@ the same name and surname), you can't specialize a built-in function
 for this. Use your own `person=` or similar function, or use a library (see our links below).
 
 While this can be seen as a limitation, not using generic functions
-has the advantage to be (much) faster.
+has the advantage of being (much) faster.
+
+As an example, let's consider the `person` class from the CLOS tutorial:
+
+```lisp
+(defclass person ()
+  ((name
+    :initarg :name
+    :accessor name)))
+```
+
+Let's create two person objects, they have the same name but are two different objects:
+
+```lisp
+(defparameter *p1* (make-instance 'person :name "me"))
+(defparameter *p2-same-name* (make-instance 'person :name "me"))
+```
+
+Use `eq` to compare two objects:
+
+~~~lisp
+(eq *p1* *p1*) ;; => T
+(eq *p1* *p2-same-name*) ;; => NIL
+~~~
+
+We use our own `person=` method to compare different objects and decide when they are equal:
+
+~~~lisp
+(defmethod person= (p1 p2)
+  (string= (name p1) (name p2)))
+
+(person= *p1* *p2-same-name*)  ;; => T
+~~~
+
+If you really want to use `=` or `equal`, use a library, see below.
 
 
 ## Credits
