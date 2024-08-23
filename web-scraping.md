@@ -192,7 +192,7 @@ available in Quicklisp. So we could do:
 
 ~~~lisp
 (map 'vector (lambda (it)
-                (str:starts-with-p it "mailto:"))
+                (str:starts-with-p "mailto:" it))
              *urls*)
 ~~~
 
