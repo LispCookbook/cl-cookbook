@@ -327,6 +327,31 @@ Learn to use with [its documentation](https://slime.common-lisp.dev/doc/html/Ins
 
 Use `C-c M-m` to macroexpand a macro call
 
+### Navigating warnings
+
+When you compile and load a file with `C-c C-k` (or a single function
+with `C-c C-c`), and when you have compilation warnings, you don't get
+the interactive debugger. You get the list of warnings inside a
+dedicated "`*slime-compilation*`" buffer that opens up next to your
+source file.
+
+Each line of your source impacted by a warning will be underlined in red.
+
+Each warning of the slime-compilation buffer is clickable, and you can
+quickly go to the next or previous warning (they are called "notes" or
+"annotations") with keybindings: `M-n` and `M-p` (`slime-[next, previous]-note`).
+
+You can also use the usual Emacs shortcut from [compilation-mode]( https://www.gnu.org/software/emacs/manual/html_node/emacs/Compilation-Mode.html#Compilation-Mode) bound to C-x \` (Control-x and a backquote).
+
+If you don't want to see the red annotations in your source… use `C-c
+M-c`, `slime-remove-notes`. They are not automagically fixed though.
+
+Only style warnings may not be caught by the slime-compilation buffer.
+
+You can find all these keybindings, as usual, under Emac's Slime menu.
+
+Reference: [https://slime.common-lisp.dev/doc/html/Compilation.html#Compilation](https://slime.common-lisp.dev/doc/html/Compilation.html#Compilation).
+
 
 ### Crossreferencing: find who's calling, referencing, setting a symbol
 
