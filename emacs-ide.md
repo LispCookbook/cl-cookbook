@@ -172,6 +172,20 @@ One of the first things you might want to do is to compile and load some Lisp co
 
 Note that we give function names for SLIME. They are most of the time similar with SLY.
 
+### Pro Tip: Use the Emacs menu
+
+All the information on this page can be overwhelming, but you can easily find all
+the commands and keybindings we are going to talk about under Emacs'
+Slime menu. Thus, we advise to *not* disable the menu. It's very handy!
+
+If you can't see it, call `M-x menu-bar-mode RET`.
+
+In the terminal version of Emacs (`emacs -nw`), you can open the menu
+with `M-x menu-bar-open`, which is bound by default to `f10`.
+
+![](assets/slime-menu.png "Emacs' SLIME menu lists all available commands and keybindings.")
+
+
 ### Code completion
 
 Use the built-in `C-c TAB` to complete symbols in SLIME. You can get tooltips
