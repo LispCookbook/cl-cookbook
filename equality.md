@@ -11,6 +11,7 @@ In short:
 - `=` is only for numbers and `equal` is the equality predicate that does what you expect on many things.
 - you can't overload built-in operators such as `=` or `equal` for your own classes, unless you use a library.
 - when you manipulate sequences of strings with functional built-ins (`remove-if`, `find`…) and you are surprised to get no results, you probably forgot the `:test` key argument: `(find "foo" '("hello" "foo") :test #'equal)`.
+- not using a generic predicate gives better static analysis and performance.
 
 
 ## `=` is for numbers (beware of `NIL`)
