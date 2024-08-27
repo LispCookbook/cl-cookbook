@@ -8,9 +8,9 @@ We tell you everything, with examples.
 
 In short:
 
-- `=` is only for numbers and `equal` is the equality predicate that works on many things.
+- `=` is only for numbers and `equal` is the equality predicate that does what you expect on many things.
 - you can't overload built-in operators such as `=` or `equal` for your own classes, unless you use a library.
-- when you manipulate strings with functional built-ins (`remove-if`, `find`…) and you are surprised to get no results, you probably forgot the `:test` key argument: `(find "foo" '("hello" "foo") :test #'equal)`.
+- when you manipulate sequences of strings with functional built-ins (`remove-if`, `find`…) and you are surprised to get no results, you probably forgot the `:test` key argument: `(find "foo" '("hello" "foo") :test #'equal)`.
 
 
 ## `=` is for numbers (beware of `NIL`)
@@ -60,7 +60,7 @@ NILs, you can use `equalp`, or encapsulate your variables with `(or …
 
 > (eq x y) is true if and only if x and y are the same identical object.
 
-`eq` works for symbols and keywords.
+Use `eq` for symbols and keywords.
 
 Those are true:
 
@@ -77,19 +77,23 @@ If we compare an object with itself, it is `eq`:
 ;; => T
 ~~~
 
-`eq` does **not** work to compare numbers, lists, strings and other
+`eq` does **not** meaningfully work to compare numbers, lists, strings and other
 compound objects. It looks like it can, but it isn't specified to be
 true for all implementations.
 
 As such, `eq` works for numbers on my implementation, but it might not on yours:
 
 ~~~lisp
-(eq 2 2) ;; => T or NIL, this is not specified
+(eq 2 2) ;; => T or NIL, this is not specified (it is T on my implementation).
+
+;; However:
+(eq
+  49827139472193749213749218734917239479213749127394871293749123
+  49827139472193749213749218734917239479213749127394871293749123) ;; => NIL on my implementation, and on yours?
 ~~~
 
-An implementation might allocate the exact same position in memory for
-the same number, but it might not. This isn't dictated by the
-standard.
+Thea reasion is that an implementation might allocate the exact same position in memory for
+the same number, but it might not. This isn't dictated by the standard.
 
 Likewise, these might depend on the implementation:
 
@@ -105,11 +109,13 @@ Comparing lists or strings are false:
 (eq "a" "a") ;; => NIL
 ~~~
 
-those strings (vectors of characters) are not equal by `eq` because the compiler might have
+<!-- or unspecified? -->
+
+those strings (vectors of characters) are not equal by `eq` because your implementation might have
 created two different string objects in memory.
 
 
-## `eql` is a better `eq` also for numbers of same types and characters.
+## `eql` is a more general `eq` also for numbers of same types and characters.
 
 > The `eql` predicate is true if its arguments are `eq`, or if they are numbers of the same type with the same value, or if they are character objects that represent the same character.
 
@@ -141,7 +147,7 @@ Comparing two characters works:
 (eql #\A #\A) ;; => T
 ~~~
 
-And we still can't compare lists or cons cells:
+And we still can't meaningfully compare lists or cons cells:
 
 ~~~lisp
 (eql (cons 'a 'b) (cons 'a 'b)) ;; => NIL
@@ -234,7 +240,7 @@ we want to know if the string "foo" exists in the given list. We get
 NIL. What's happening?
 
 This CL built-in function, as all that work for sequences, use `eql`
-for testing each elements. But `(eql "foo" "foo")` won't work for
+for testing each elements. But `(eql "foo" "foo")` doesn't meaningfully work for
 strings. We need to use another test function.
 
 All of those functions accept a `:test` keyword parameter, that allows
@@ -334,7 +340,7 @@ example, two "person" objects will be considered equal if they have
 the same name and surname), you can't specialize a built-in function
 for this. Use your own `person=` or similar function, or use a library (see our links below).
 
-While this can be seen as a limitation, not using generic functions
+While this can be seen as a limitation, using specialised functions instead of generic ones
 has the advantage of being (much) faster.
 
 As an example, let's consider the `person` class from the CLOS tutorial:
@@ -370,6 +376,30 @@ We use our own `person=` method to compare different objects and decide when the
 ~~~
 
 If you really want to use `=` or `equal`, use a library, see below.
+
+## Coalescing: the implications of `compile-file`
+
+Let's take back our `(eql "a" "a")` example, that returns NIL.
+
+We must precise that it return NIL on the REPL. The interpreter
+doesn't see the two strings "a" as the same object in memory, so it
+returns NIL.
+
+However, a compiler might coalesce objects together.
+
+If you compile a file with `compile-file`, the compiler might have
+coalesced different objects together. It might have noticed that "a"
+and "a" are two literal strings that are similar and it might have
+saved them at the same memory location.
+
+Thus our equality predicate can return T now.
+
+Conclusion: use the right equality predicate.
+
+This is also why we shouldn't modify variables that we defined with
+literals, for example `'(1 2 3)` (using a quote) instead of `(list 1 2 3)` (using the `list` function).
+
+Note that `compile` is not allowed to coalesce objects.
 
 
 ## Credits
