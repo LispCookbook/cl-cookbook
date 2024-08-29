@@ -15,7 +15,7 @@ databases. We can group them roughly in four categories:
 and other DB-related tools (pgloader).
 
 We'll begin with an overview of Mito. If you must work with an
-existing DB, you might want to have a look at cl-dbi and clsql. If you
+existing DB, you might want to have a look at [cl-dbi](https://github.com/fukamachi/cl-dbi) and [clsql](https://clsql.kpe.io/manual/). If you
 don't need a SQL database and want automatic persistence of Lisp
 objects, you also have a choice of libraries.
 
@@ -27,6 +27,22 @@ Mito is in Quicklisp:
 ~~~lisp
 (ql:quickload "mito")
 ~~~
+
+Mito will load another system on the fly depending on your database's
+driver. These systems are:
+
+    :dbd-sqlite3
+    :dbd-mysql
+    :dbd-postgres
+
+You can "quickload" one of them now, or let Mito (actually cl-dbi) do it
+when required.
+
+But if you build an executable of your program, and if you plan on
+using it on a machine where Quicklisp is not installed, you must
+reference the required additional system into your .asd system
+definition.
+
 
 ### Overview
 
