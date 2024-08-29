@@ -236,6 +236,7 @@ rely on your OS' current installation, so we'll tell Deploy to not
 bother shipping it (nor `libcrypto`):
 
 ~~~lisp
+(require :cl+ssl)
 #+linux (deploy:define-library cl+ssl::libssl :dont-deploy T)
 #+linux (deploy:define-library cl+ssl::libcrypto :dont-deploy T)
 ~~~
