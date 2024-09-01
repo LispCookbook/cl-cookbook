@@ -1,5 +1,5 @@
 ---
-title: Home
+title: The Common Lisp Cookbook
 ---
 
 > Cookbook, n.

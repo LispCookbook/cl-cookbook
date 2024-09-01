@@ -1,5 +1,5 @@
 title: Common Lisp Cookbook
-description: A collection of examples of using Common Lisp
+description: A collection of examples of how to use Common Lisp
 baseurl: "/cl-cookbook"
 
 # https://stackoverflow.com/questions/39057405/unable-to-build-a-jekyll-site-invalid-date
