@@ -190,7 +190,7 @@ is NIL by default" and "the user wants it to be NIL"?
 
 We saw how to use a tuple to set its default value:
 
-`&key (:happy t)`
+`&key (happy t)`
 
 To answer our question, use a triple like this:
 
