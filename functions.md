@@ -9,9 +9,9 @@ title: Functions
 Creating named functions is done with the `defun` keyword. It follows this model:
 
 ~~~lisp
-(defun <name> (list of arguments)
+(defun function-name (zero or some arguments)
   "docstring"
-  (function body))
+  (code of function body))
 ~~~
 
 The return value is the value returned by the last expression of the body
@@ -32,6 +32,10 @@ Call it:
 ;; "hello world!"  <-- output
 ;; "hello world!"  <-- a string is returned.
 ~~~
+
+The `print` function prints its one argument to standard output *and
+returns it*. "hello world" is thus the returned value of our function.
+
 
 ## Arguments
 
@@ -89,9 +93,10 @@ must be called like this:
 
 It is not always convenient to remember the order of the arguments. It
 is thus possible to supply arguments by name: we declare them using
-`&key <name>`, we set them with `:name <value>` in the function call,
-and we use `name` as a regular variable in the function body. They are
-`nil` by default.
+`&key argname`, we set them with `:argname "value"` in the function call,
+and we use `argname` as a regular variable in the function body.
+
+Key arguments are `nil` by default.
 
 ~~~lisp
 (defun hello (name &key happy)
@@ -639,7 +644,7 @@ A function name can also be a list of two symbols with `setf` as the
 first one, and where the first argument is the new value:
 
 ~~~lisp
-(defun (setf <name>) (new-value <other arguments>)
+(defun (setf function-name) (new-value other optional arguments)
   body)
 ~~~
 
@@ -730,6 +735,6 @@ library (in Quicklisp).
 
 ## Documentation
 
-- functions: http://www.lispworks.com/documentation/HyperSpec/Body/t_fn.htm#function
-- ordinary lambda lists: http://www.lispworks.com/documentation/HyperSpec/Body/03_da.htm
-- multiple-value-bind: http://clhs.lisp.se/Body/m_multip.htm
+- functions: <http://www.lispworks.com/documentation/HyperSpec/Body/t_fn.htm#function>
+- ordinary lambda lists: <http://www.lispworks.com/documentation/HyperSpec/Body/03_da.htm>
+- multiple-value-bind: <http://clhs.lisp.se/Body/m_multip.htm>
