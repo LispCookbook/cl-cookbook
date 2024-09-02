@@ -124,6 +124,7 @@ The Cookbook has been translated to:
 * Pascal Costanza's [Highly Opinionated Guide to Lisp](http://www.p-cos.net/lisp/guide.html)
 * [Cliki](http://www.cliki.net/), Common Lisp's wiki
 * 📹 [Common Lisp programming: from novice to effective developer](https://www.udemy.com/course/common-lisp-programming/?referralCode=2F3D698BBC4326F94358), a video course on the Udemy platform (paywall), by one of the main Cookbook contributor. *"Thanks for supporting my work on Udemy. You can ask me for a free coupon if you are a student."* vindarel
+* [Rosetta Code](https://rosettacode.org/wiki/Category:Common_Lisp) - hundreds of CL solutions for various tasks in comparison with other programming languages
 
 and also: [Common Lisp Pitfalls](https://github.com/LispCookbook/cl-cookbook/issues/479) by Jeff Dalton.
 
