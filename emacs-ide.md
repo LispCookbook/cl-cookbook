@@ -181,7 +181,8 @@ Slime menu. Thus, we advise to *not* disable the menu. It's very handy!
 If you can't see it, call `M-x menu-bar-mode RET`.
 
 In the terminal version of Emacs (`emacs -nw`), you can open the menu
-with `M-x menu-bar-open`, which is bound by default to `f10`.
+with `M-x menu-bar-open`, which is bound by default to `f10`, or use
+the mouse when it is enabled (`(xterm-mouse-mode +1)`).
 
 ![](assets/slime-menu.png "Emacs' SLIME menu lists all available commands and keybindings.")
 
