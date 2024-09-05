@@ -158,15 +158,15 @@ And we still can't meaningfully compare lists or cons cells:
 
 > The `equal` predicate is true if its arguments are structurally similar (isomorphic) objects. A rough rule of thumb is that two objects are `equal` if and only if their printed representations are the same.
 
-Again, conceptually, we could say that `eq` < `eql` < `equal`.
+Again, conceptually, we could say that `eq` < `eql` < `equal`. Any two objects that are `eql` are also `equal`.
 
-We can still not compare numbers of different types:
+We can still **not** compare **numbers** of different types:
 
 ~~~lisp
 (equal 3 3.0) ;; => NIL
 ~~~
 
-but we can now compare lists and cons cells. Indeed, their printed
+but we can now compare **lists** and cons cells. Indeed, their printed
 representation is the same. No matter this time if they are different
 objects in memory.
 
@@ -176,7 +176,7 @@ objects in memory.
 (equal (list 'a) (list 'a)) ;; => T
 ~~~
 
-We can compare strings!
+We can compare **strings**!
 
 ~~~lisp
 (equal "Foo" "Foo") ;; => T
@@ -194,27 +194,58 @@ Case is important. Indeed, "FOO" doesn't print the same as "foo":
 (equal "FOO" "foo") ;; => NIL
 ~~~
 
+Concerning other objects such as structures or hash-tables: they are
+`equal` if they are `eq` (the low-level equality). `equal` doesn't
+descend into them to check for the equality of the values stored into
+them.
+
+You can read more on the Community Spec linked below.
+
+
 ## `equalp` is case-insensitive for strings and for numerical value of numbers.
 
 > Two objects are `equalp` if they are `equal`; if they are characters and satisfy `char-equal`, which ignores alphabetic case and certain other attributes of characters; if they are numbers and have the same numerical value, even if they are of different types; or if they have components that are all `equalp`.
 
 Continuing with our ordering, we could say that `eq` < `eql` < `equal` < `equalp`.
+But in terms of general usefulness, it is likely you will prefer `equal` over `equalp` in most cases. Read on.
 
-We can compare two numbers, looking at their value, even if they have different types:
+We can compare two **numbers**, looking at their value, even if they have different types:
 
 ~~~lisp
 (equalp 3 3.0) ;; => T
 ~~~
 
-Now look at our string comparison:
+numbers are `equalp` "if they are the same under =". That's good.
+
+Now pay attention at our **string** comparison:
 
 ~~~lisp
 (equalp "FOO" "foo") ;; => T
 ~~~
 
-`equalp` is case *in*sensitive for strings because a string is a
-sequence of characters, `equalp` compares all of its components and it
-uses `char-equal` for characters, which ignores the characters' case.
+`equalp` is **case insensitive** for strings because a string is a
+sequence of characters and `equalp` compares all of its components
+using `char-equal` for characters, which ignores the characters' case.
+
+When `equalp` compares **arrays**, it ignores the type for which they
+specialize. So a string and an array can be equalp:
+
+~~~lisp
+(equalp "x" #(#\x)) ;; => T
+~~~
+
+whereas
+
+~~~lisp
+(equal "x" #(#\x)) ;; => NIL
+~~~
+
+As for **structures** and **hash-tables**: `equalp` descends into
+them.
+
+But it doesn't descend into object instances, see our dedicated section below.
+
+You can read more on the Community Spec linked below.
 
 
 ## Other comparison functions
@@ -222,6 +253,10 @@ uses `char-equal` for characters, which ignores the characters' case.
 ### `null`
 
 The function `null` returns true if its one argument is NIL.
+
+~~~lisp
+(null '()) ;; => T
+~~~
 
 
 ### `eql` is used by default by many CL built-ins
@@ -411,6 +446,7 @@ Note that `compile` is not allowed to coalesce objects.
 ## See also
 
 - [`equal` on the CL Community Spec](https://cl-community-spec.github.io/pages/equal.html)
+- [`equalp` on the CL Community Spec](https://cl-community-spec.github.io/pages/equalp.html)
 - [equals](https://github.com/karlosz/equals/) - generic equality for Common Lisp.
 - [generic-cl](https://github.com/alex-gutev/generic-cl/) - a generic function interface to CL built-ins.
   - we can use `=` or `<` on our own custom objects.
