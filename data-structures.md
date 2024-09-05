@@ -439,7 +439,7 @@ For more, use a `lambda` that takes one parameter.
 ~~~
 
 
-### Predicates: every, some,…
+### Predicates: every, some, notany
 
 `every, notevery (test, sequence)`: return nil or t, respectively, as
 soon as one test on any set of the corresponding elements of sequences

@@ -124,13 +124,17 @@ either process the *tails* of lists, or *concatenate* the return
 values, or don't return anything. We'll see some of them.
 
 If you like `mapcar`, use it a lot, and would like a quicker and
-shorter way to write lambdas, then you might like one of those
-[lambda shorthand libraries](https://github.com/CodyReichert/awesome-cl#lambda-shorthands).
-
-Here is an example with [cl-punch](https://github.com/windymelt/cl-punch/):
+shorter way to write lambdas, we offer a simple macro to you:
 
 ~~~lisp
-(mapcar ^(* _ 10) '(1 2 3))
+(defmacro ^ (&rest forms)
+  `(lambda ,@forms))
+~~~
+
+Example:
+
+~~~lisp
+(mapcar (^ (nb) (* nb 10)) '(1 2 3))
 ;; (10 20 30)
 ~~~
 
@@ -1078,7 +1082,7 @@ anyways. Use [`loop-finish`](http://www.lispworks.com/documentation/HyperSpec/Bo
 
 It is most needed when some computation must take place in the `finally` clause.
 
-#### Loop shorthands for when/return
+#### Loop shorthands for when/return: thereis, never, always
 
 Several actions provide shorthands for combinations of when/return:
 
