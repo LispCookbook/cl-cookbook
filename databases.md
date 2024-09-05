@@ -771,6 +771,29 @@ which only sends a single WHERE IN query instead of N queries:
 ;=> #<USER {100361E813}>
 ~~~
 
+### Iteration with cursor (do-select)
+
+`do-select` is a macro to iterate over results from `SELECT` one by
+one.
+
+On PostgreSQL, it uses `CURSOR`, which can reduce memory usage since
+it won't load all results in memory.
+
+```common-lisp
+(do-select (dao (select-dao 'user (where (:< "2024-07-01" :created_at))))
+  ;; Can be a more complex condition
+  (when (equal (user-name dao) "Eitaro")
+    (return dao)))
+
+;; Same but without using CURSOR
+(loop for dao in (select-dao 'user (where (:< "2024-07-01" :created_at)))
+      when (equal (user-name dao) "Eitaro")
+      do (return dao))
+```
+
+> NOTE: do-select was added on August of 2024. It requires DBI v0.11.1 or above.
+
+
 ### Schema versioning
 
 ~~~
