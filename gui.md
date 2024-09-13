@@ -1079,7 +1079,7 @@ Have fun, and don't hesitate to share your experience and your apps.
 
 [tk]: https://www.tcl.tk
 [ltk]: http://www.peter-herth.de/ltk/ltkdoc/
-[nodgui]: https://notabug.org/cage/nodgui
+[nodgui]: https://codeberg.org/cage/nodgui
 [qt4]: https://doc.qt.io/archives/qt-4.8/index.html
 [gtk]: https://www.gtk.org/
 [qtools]: https://github.com/Shinmera/qtools
