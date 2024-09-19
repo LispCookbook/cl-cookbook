@@ -1037,6 +1037,15 @@ Systemd handles crashes and **restarts the application**. That's the `Restart=on
 
 Now keep in mind a couple things:
 
+- your main thread has to be kept active, otherwise Systemd will
+  successfully start your app, think that nothing is happening, and it
+  will successfully stop your app. If your app offers a Lisp REPL upon
+  start, this is not enough.
+  - see how we keep our web server thread active in this recipe on
+  [scripting#for-web-apps](scripting.html#for-web-apps).
+  - then, if you want to connect to the running Lisp image, in that
+    case where you don't have access to your app's REPL, use a
+    [Swank server](debugging.html#remote-debugging).
 - we want our app to crash so that it can be re-started automatically:
   you'll want the `--disable-debugger` flag with SBCL.
 - Systemd will, by default, run your app as root. If you rely on your
