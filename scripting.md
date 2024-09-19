@@ -326,13 +326,14 @@ can do something like this:
 
 ~~~lisp
 (defun main ()
-  (start-app :port 9003) ;; our start-app, for example clack:clack-up
-  ;; let the webserver run.
-  ;; warning: hardcoded "hunchentoot".
-  ;; You can simply run (sleep most-positive-fixnum)
-  (handler-case (bt:join-thread (find-if (lambda (th)
-                                            (search "hunchentoot" (bt:thread-name th)))
-                                         (bt:all-threads)))
+  (handler-case
+      (progn
+        (start-app :port 9003) ;; our start-app, for example clack:clack-up
+        ;; let the webserver run,
+        ;; keep the server thread in the foreground:
+        ;; sleep for ± a hundred billion years.
+        (sleep most-positive-fixnum))
+
     ;; Catch a user's C-c
     (#+sbcl sb-sys:interactive-interrupt
       #+ccl  ccl:interrupt-signal-condition
