@@ -407,6 +407,69 @@ can be used on a list, for example from `&rest`:
 (apply #'+ '(1 2))
 ~~~
 
+There is one thing to keep in mind with `apply`, it is that we can't
+use it with super-large lists: the argument list of functions
+have a length limit.
+
+We can find this limit in the variable `call-arguments-limit`. It
+depends on the implementation. While it is rather large on SBCL
+(4611686018427387903), we have another option to apply a function with
+arguments of arbitrary length: `reduce`.
+
+### `reduce`
+
+`reduce` is used to apply functions on lists and vectors of arbitrary
+length. It repeateadly calls the function with two arguments and walks
+over the argument list.
+
+For example, instead of using `apply` like above:
+
+    (apply #'min '(22 1 2 3)) ;; imagine a super large list
+
+we can use `reduce`:
+
+    (reduce #'min '(22 1 2 3))
+
+If our argument was 1000 elements long, `apply` would call the `min`
+function with 1000 arguments, while `reduce` would call `min` (nearly)
+a 1000 times with 2 arguments each time.
+
+`reduce` walks over the list, which means the following:
+
+- `min` is first called with arguments 22 and 1, and it produces an
+  intermediate result: 1.
+- `min` is called again with this intermediate result as first argument, and the following argument of the argument list, 2. An intermediate result is produced, 1 again.
+- `min` is called again with arguments 1 and 3, and returns the final result, 1.
+
+Look, we can trace it:
+
+~~~lisp
+CL-USER> (trace min)
+CL-USER> (reduce #'min '(22 1 2 3))
+  0: (MIN 22 1)
+  0: MIN returned 1
+  0: (MIN 1 2)
+  0: MIN returned 1
+  0: (MIN 1 3)
+  0: MIN returned 1
+1
+~~~
+
+Its full signature is the following:
+
+```lisp
+(reduce function sequence &key key from-end start end initial-value)
+```
+
+where `key`, `from-end`, `start` and `end` are key arguments found in
+other built-in functions (see our data-structures chapter). If given,
+`:initial-value` is placed before the first subsequence.
+
+Read more about `reduce` on the Community Spec:
+
+- https://cl-community-spec.github.io/pages/reduce.html
+
+
 ### Referencing functions by name: single quote `'` or sharpsign-quote `#'`?
 
 In the example above, we used `#'`, but a single quote also works, and
