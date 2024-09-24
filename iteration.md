@@ -93,6 +93,7 @@ You also have to quickload it:
 
     (ql:quickload "for")
 
+### `map`, `mapcar` et all
 
 We'll also give examples with **`mapcar`** and `map`, and eventually
 with their friends `mapcon`, `mapcan`, `maplist`, `mapc` and `mapl`
@@ -383,9 +384,9 @@ Looping over a hash-table is also straightforward:
 In fact, take a look [here](https://common-lisp.net/project/iterate/doc/Sequence-Iteration.html),
 or `(display-iterate-clauses '(for))` to know about iterating over
 
-- symbols in-package
-- forms - or lines, or whatever-you-wish - in-file, or in-stream
-- elements in-sequence - sequences can be vectors or lists
+- symbols: `in-package`
+- a file or a stream: `in-file`, or `in-stream`
+- elements: `in-sequence` (sequences can be vectors or lists).
 
 ### Looping over a list
 
@@ -454,7 +455,7 @@ With `on`, we loop over the cdr of the list:
   (print i))
 ~~~
 
-### Looping over a vector
+### Looping over a vector and a string
 
 #### loop: `across`
 
@@ -462,11 +463,65 @@ With `on`, we loop over the cdr of the list:
 (loop for i across #(1 2 3) do (print i))
 ~~~
 
+strings are vectors, so:
+
+~~~lisp
+(loop for i across "foo" do (format t "~a " i))
+;; f o o
+;; NIL
+~~~
+
+#### iterate: `in-vector`, `index-of-vector`, `in-string`
+
+Iterate uses `in-vector` to iterate through arrays.
+
+```lisp
+(iter (for i in-vector #(100 20 3))
+      (sum i))
+```
+
+You can directly assign the index of the vector to a variable by using `index-of-vector`:
+
+~~~lisp
+(iter (for i index-of-vector  #(100 20 3))
+      (format t "~a " i))
+;; => 0 1 2
+~~~
+
 #### Series
 
 ~~~lisp
 (iterate ((i (scan #(1 2 3))))
   (print i))
+~~~
+
+### Looping over a generic sequence
+
+#### loop (nothing)
+
+`loop` doesn't have one keyword to loop over any kind of sequence.
+
+#### iterate: `in-sequence`
+
+With iter one can use `in-sequence` to iterate through a string, a vector (and thus a list).
+
+This can be slower than a specific iteration construct.
+
+~~~lisp
+(iter (for i in-sequence "foo" )
+      (format t "~a " i))
+;; => f o o
+;; NIL
+
+(iter (for i in-sequence '(1 2 3))
+      (format t "~a " i))
+;; => 1 2 3
+;; NIL
+
+(iter (for i in-sequence #(100 20 3))
+      (format t "~a " i))
+;; => 100 20 3
+;; NIL
 ~~~
 
 ### Looping over a hash-table
@@ -508,7 +563,7 @@ b 2
 a 1
 ~~~
 
-#### iterate
+#### iterate: `in-hashtable`
 
 Use `in-hashtable`:
 
@@ -1346,7 +1401,9 @@ See [control flow](https://common-lisp.net/project/iterate/doc/Control-Flow.html
 
 ### Generators
 
-Use `generate` and `next`. A generator is lazy, it goes to the next value when said explicitly.
+A generator is lazy, it goes to the next value when said explicitly.
+
+Use `generate` and `next`:
 
 ~~~lisp
 (iter (for i in '(1 2 3 4 5))
