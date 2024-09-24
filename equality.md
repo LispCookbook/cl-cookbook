@@ -243,7 +243,21 @@ whereas
 As for **structures** and **hash-tables**: `equalp` descends into
 them.
 
-But it doesn't descend into object instances, see our dedicated section below.
+For example, we create two hash-tables (with the `serapeum:dict` shorthand):
+
+~~~lisp
+(dict :a 1 :b 2)
+(dict :b 2 :a 1)
+~~~
+
+and we compare them. Are they equalp?
+
+~~~lisp
+(equalp * **)
+;; => T
+~~~
+
+However **equalp** doesn't descend into **object instances**, see our dedicated section below.
 
 You can read more on the Community Spec linked below.
 
