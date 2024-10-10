@@ -1118,7 +1118,7 @@ server {
 
 Note that on the proxy_pass directive: `proxy_pass
 http://1.2.3.4:8001/;` we are using our server's public IP
-address. Oten, your Lisp webserver such as Hunchentoot directly
+address. Often, your Lisp webserver such as Hunchentoot directly
 listens on it. You might want, for security reasons, to run the Lisp
 app on localhost.
 
