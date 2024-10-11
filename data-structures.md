@@ -1050,7 +1050,7 @@ library (in Quicklisp) has the functions `hash-table-keys` and
 
 Use `equalp` to compare the equality of hash-tables, element by
 element. `equalp` is case-insensitive for strings. Read more in our
-[equality](/equality.html) section.
+[equality](equality.html) section.
 
 
 ### Testing for the Presence of a Key in a Hash Table
