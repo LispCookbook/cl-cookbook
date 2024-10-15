@@ -115,7 +115,7 @@ In Mito, you can define a class which corresponds to a database table with the `
 ~~~lisp
 (mito:deftable user ()
   ((name :col-type (:varchar 64))
-   (email :col-type (or (:varchar 128) :null)))
+   (email :col-type (or (:varchar 128) :null))))
 ~~~
 Alternatively, you can specify `(:metaclass mito:dao-table-class)` in a regular class definition.
 
