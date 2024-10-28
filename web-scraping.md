@@ -187,17 +187,14 @@ Actually before writing the `remove-if` (which works on any sequence,
 including vectors) I tested with a `(map 'vector …)` to see that the
 results where indeed `nil` or `t`.
 
-As a side note, there is a handy `starts-with` function in
-[cl-strings](https://github.com/diogoalexandrefranco/cl-strings/),
+As a side note, there is a handy `starts-with-p` function in the "str" library
 available in Quicklisp. So we could do:
 
 ~~~lisp
 (map 'vector (lambda (it)
-                (cl-strings:starts-with it "mailto:"))
+                (str:starts-with-p "mailto:" it))
              *urls*)
 ~~~
-
-it also has an option to ignore or respect the case.
 
 While we're at it, we'll only consider links starting with "http", in
 order not to write too much stuff irrelevant to web scraping:

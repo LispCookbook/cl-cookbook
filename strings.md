@@ -895,6 +895,8 @@ NIL
 3
 ~~~
 
+and also `string/=`, `string-not-equal`, `string-not-lessp`, `string-not-greaterp`.
+
 ## String formatting
 
 The `format` function has a lot of directives to print strings,

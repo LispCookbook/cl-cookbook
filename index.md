@@ -1,5 +1,5 @@
 ---
-title: Home
+title: The Common Lisp Cookbook
 ---
 
 > Cookbook, n.
@@ -34,6 +34,7 @@ The CL Cookbook aims to tackle all sort of topics, for the beginner and for the 
 * [Strings](strings.html)
   + [Regular Expressions](regexp.html)
 * [Numbers](numbers.html)
+* NEW! ⭐ [Equality](equality.html)
 * [Loops, iteration, mapping](iteration.html)
 * [Multidimensional Arrays](arrays.html)
 * [Dates and Times](dates_and_times.html)
@@ -105,7 +106,7 @@ Thank you!
 The Cookbook has been translated to:
 
 * [Chinese simplified](https://oneforalone.github.io/cl-cookbook-cn/#/) ([Github](https://github.com/oneforalone/cl-cookbook-cn))
-* [Portuguese (Brazilian)](https://book.lisp.com.br/) ([Github](https://github.com/commonlispbr/cl-cookbook))
+* [Portuguese (Brazilian)](https://lisp.com.br/cl-cookbook/) ([Github](https://github.com/commonlispbr/cl-cookbook))
 
 # Other CL Resources
 
@@ -118,7 +119,7 @@ The Cookbook has been translated to:
 * [Learn X in Y minutes - Where X = Common Lisp](https://learnxinyminutes.com/docs/common-lisp/) - Small Common Lisp tutorial covering the essentials.
 * [Common Lisp Libraries Read the Docs](https://common-lisp-libraries.readthedocs.io/) - the documentation of popular libraries ported to the modern and good looking Read The Docs style.
 * [lisp-tips](https://github.com/lisp-tips/lisp-tips/issues/)
-* [Articulate Common Lisp](http://articulate-lisp.com/), an initiation manual for the uninitiated
+* [Common Lisp and CLOG tutorial series](https://github.com/rabbibotton/clog/blob/main/LEARN.md), a tutorial for Common Lisp and CLOG, a GUI-like library for Common Lisp based on web technologies.
 * [Lisp and Elements of Style](http://web.archive.org/web/20190316190256/https://www.nicklevine.org/declarative/lectures/) by Nick Levine
 * Pascal Costanza's [Highly Opinionated Guide to Lisp](http://www.p-cos.net/lisp/guide.html)
 * [Cliki](http://www.cliki.net/), Common Lisp's wiki

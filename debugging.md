@@ -685,7 +685,7 @@ If needed, import the dependencies first:
   (format t "hello world ~a!~%" *counter*))
 
 (defun runner ()
-  (swank:create-server :port 4006)
+  (swank:create-server :port 4006 :dont-close t)
   (format t "we are past go!~%")
   (bt:make-thread (lambda ()
                     (loop repeat 5 do

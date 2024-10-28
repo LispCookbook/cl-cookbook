@@ -664,6 +664,10 @@ For more explanations, I refer you to the mentioned blog post, the current de-fa
 
 Finally, be aware that "block compiling and inlining currently does not interact very well [in SBCL]".
 
+## See also
+
+* [CMUCL's Advanced Compiler Use and Efficiency Hints](https://cmucl.org/downloads/doc/cmu-user-2010-05-03/compiler-hint.html), which is were SBCL comes from.
+
 
 [time]: http://www.lispworks.com/documentation/lw51/CLHS/Body/m_time.htm
 [trace-output]: http://www.lispworks.com/documentation/lw71/CLHS/Body/v_debug_.htm#STtrace-outputST

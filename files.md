@@ -693,6 +693,25 @@ Returns a list of pathnames:
  #P"/home/vince/projects/cl-cookbook/assets/")
 ```
 
+#### Iterating on files (lazily)
+
+In addition to the above functions, we mention solutions that *lazily*
+traverse a directory. They don't load the entire list of files before
+returning it.
+
+Osicat has `with-directory-iterator`:
+
+~~~lisp
+(with-directory-iterator (next "/")
+  (loop for entry = (next)
+        while entry
+        when (member :group-write (file-permissions entry))
+        collect entry))
+;; => (#P"tmp/")
+~~~
+
+LispWorks has the [fast-directory-files](https://www.lispworks.com/documentation/lw80/lw/lw-hcl-74.htm#LWUGRM) function, and AllegroCL has [map-over-directory](https://franz.com/support/documentation/10.1/doc/operators/excl/map-over-directory.htm).
+
 #### Traversing (walking) directories recursively
 
 See `uiop/filesystem:collect-sub*directories`. It takes as arguments:

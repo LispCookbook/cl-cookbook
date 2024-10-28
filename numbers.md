@@ -11,6 +11,14 @@ Some sources:
 * [`Numbers, Characters and Strings`][numbers-characters-strings]
   in Practical Common Lisp
 
+<!-- epub-exclude-start -->
+<div style="text-align: center">
+    <img src="numbertower.png" alt="Number Types in Common Lisp"/>
+</div>
+<!-- epub-exclude-end -->
+
+*Types in bold, cyan boxes are the ones you will typically use.*
+
 ## Introduction
 
 ### Integer types
@@ -90,7 +98,7 @@ using a finite number of bits. This means that many real numbers
 cannot be represented, but are approximated. This can lead to some nasty
 surprises, particularly when converting between base-10 and the base-2
 internal representation. If you are working with floating point
-numbers then reading [What Every Computer Scientist Should Know About
+numbers, then reading [What Every Computer Scientist Should Know About
 Floating-Point Arithmetic][article-floating-point-arithmetic] is highly
 recommended.
 
@@ -104,6 +112,20 @@ The constants [`short-float-epsilon`, `single-float-epsilon`,
 `double-float-epsilon` and `long-float-epsilon`][float-constants] give
 a measure of the precision of the floating point types, and are
 implementation dependent.
+
+ECL specifically bases its `long-float` on C's `long double`, and thus has
+higher precision:
+
+```
+CL-USER> (lisp-implementation-type)
+"ECL"
+CL-USER> most-positive-single-float
+3.4028235e38
+CL-USER> most-positive-double-float
+1.7976931348623157d308
+CL-USER> most-positive-long-float
+1.189731495357231765l4932
+```
 
 #### Floating point literals
 

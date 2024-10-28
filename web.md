@@ -1037,6 +1037,15 @@ Systemd handles crashes and **restarts the application**. That's the `Restart=on
 
 Now keep in mind a couple things:
 
+- your main thread has to be kept active, otherwise Systemd will
+  successfully start your app, think that nothing is happening, and it
+  will successfully stop your app. If your app offers a Lisp REPL upon
+  start, this is not enough.
+  - see how we keep our web server thread active in this recipe on
+  [scripting#for-web-apps](scripting.html#for-web-apps).
+  - then, if you want to connect to the running Lisp image, in that
+    case where you don't have access to your app's REPL, use a
+    [Swank server](debugging.html#remote-debugging).
 - we want our app to crash so that it can be re-started automatically:
   you'll want the `--disable-debugger` flag with SBCL.
 - Systemd will, by default, run your app as root. If you rely on your
@@ -1109,7 +1118,7 @@ server {
 
 Note that on the proxy_pass directive: `proxy_pass
 http://1.2.3.4:8001/;` we are using our server's public IP
-address. Oten, your Lisp webserver such as Hunchentoot directly
+address. Often, your Lisp webserver such as Hunchentoot directly
 listens on it. You might want, for security reasons, to run the Lisp
 app on localhost.
 

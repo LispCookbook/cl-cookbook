@@ -58,6 +58,22 @@ Also note that the
 library has the method `(environment-variable "name")`, on POSIX-like
 systems including Windows. It is also `fset`-able.
 
+### Environment variables with directories (PATH)
+
+A function allows to retrieve the list of directories from an environment variable:
+
+```lisp
+(uiop:getenv-absolute-directories "PATH")
+;; => (#P"/home/vince/.local/bin/" #P"/usr/local/bin/" #P"/usr/sbin/" #P"/usr/bin/")
+```
+
+Its documentation:
+
+> Extract a list of absolute directories from a user-configured environment variable, as per native OS.  Any empty entries in the environment variable X will be returned as NILs.
+
+Use `uiop:getenv-absolute-directory` when the env var contains one directory. See also: `uiop:getenv-pathname[s]`.
+
+
 <a name="accessing-command-line"></a>
 
 ## Accessing the command line arguments

@@ -9,9 +9,9 @@ title: Functions
 Creating named functions is done with the `defun` keyword. It follows this model:
 
 ~~~lisp
-(defun <name> (list of arguments)
+(defun function-name (zero or some arguments)
   "docstring"
-  (function body))
+  (code of function body))
 ~~~
 
 The return value is the value returned by the last expression of the body
@@ -32,6 +32,10 @@ Call it:
 ;; "hello world!"  <-- output
 ;; "hello world!"  <-- a string is returned.
 ~~~
+
+The `print` function prints its one argument to standard output *and
+returns it*. "hello world" is thus the returned value of our function.
+
 
 ## Arguments
 
@@ -89,9 +93,10 @@ must be called like this:
 
 It is not always convenient to remember the order of the arguments. It
 is thus possible to supply arguments by name: we declare them using
-`&key <name>`, we set them with `:name <value>` in the function call,
-and we use `name` as a regular variable in the function body. They are
-`nil` by default.
+`&key argname`, we set them with `:argname "value"` in the function call,
+and we use `argname` as a regular variable in the function body.
+
+Key arguments are `nil` by default.
 
 ~~~lisp
 (defun hello (name &key happy)
@@ -190,7 +195,7 @@ is NIL by default" and "the user wants it to be NIL"?
 
 We saw how to use a tuple to set its default value:
 
-`&key (:happy t)`
+`&key (happy t)`
 
 To answer our question, use a triple like this:
 
@@ -401,6 +406,69 @@ can be used on a list, for example from `&rest`:
 (funcall #'+ 1 2)
 (apply #'+ '(1 2))
 ~~~
+
+There is one thing to keep in mind with `apply`, it is that we can't
+use it with super-large lists: the argument list of functions
+have a length limit.
+
+We can find this limit in the variable `call-arguments-limit`. It
+depends on the implementation. While it is rather large on SBCL
+(4611686018427387903), we have another option to apply a function with
+arguments of arbitrary length: `reduce`.
+
+### `reduce`
+
+`reduce` is used to apply functions on lists and vectors of arbitrary
+length. It repeateadly calls the function with two arguments and walks
+over the argument list.
+
+For example, instead of using `apply` like above:
+
+    (apply #'min '(22 1 2 3)) ;; imagine a super large list
+
+we can use `reduce`:
+
+    (reduce #'min '(22 1 2 3))
+
+If our argument was 1000 elements long, `apply` would call the `min`
+function with 1000 arguments, while `reduce` would call `min` (nearly)
+a 1000 times with 2 arguments each time.
+
+`reduce` walks over the list, which means the following:
+
+- `min` is first called with arguments 22 and 1, and it produces an
+  intermediate result: 1.
+- `min` is called again with this intermediate result as first argument, and the following argument of the argument list, 2. An intermediate result is produced, 1 again.
+- `min` is called again with arguments 1 and 3, and returns the final result, 1.
+
+Look, we can trace it:
+
+~~~lisp
+CL-USER> (trace min)
+CL-USER> (reduce #'min '(22 1 2 3))
+  0: (MIN 22 1)
+  0: MIN returned 1
+  0: (MIN 1 2)
+  0: MIN returned 1
+  0: (MIN 1 3)
+  0: MIN returned 1
+1
+~~~
+
+Its full signature is the following:
+
+```lisp
+(reduce function sequence &key key from-end start end initial-value)
+```
+
+where `key`, `from-end`, `start` and `end` are key arguments found in
+other built-in functions (see our data-structures chapter). If given,
+`:initial-value` is placed before the first subsequence.
+
+Read more about `reduce` on the Community Spec:
+
+- https://cl-community-spec.github.io/pages/reduce.html
+
 
 ### Referencing functions by name: single quote `'` or sharpsign-quote `#'`?
 
@@ -639,33 +707,51 @@ A function name can also be a list of two symbols with `setf` as the
 first one, and where the first argument is the new value:
 
 ~~~lisp
-(defun (setf <name>) (new-value <other arguments>)
+(defun (setf function-name) (new-value other optional arguments)
   body)
 ~~~
 
-This mechanism is particularly used for CLOS methods.
+This mechanism is often used for CLOS methods.
 
-A silly example:
+Let's work towards an example. Let's say we manipulate a hash-table
+that represents a square. We store the square width in this
+hash-table:
 
 ~~~lisp
-(defparameter *current-name* ""
-  "A global name.")
-
-(defun hello (name)
-  (format t "hello ~a~&" name))
-
-(defun (setf hello) (new-value)
-  (hello new-value)
-  (setf *current-name* new-value)
-  (format t "current name is now ~a~&" new-value))
-
-(setf (hello) "Alice")
-;; hello Alice
-;; current name is now Alice
-;; NIL
+(defparameter *square* (make-hash-table))
+(setf (gethash :width *square*) 21)
 ~~~
 
-<a name="curry"></a>
+During our program life cycle, we can change the square width, with `setf` as we did above.
+
+We define a function to compute a square area. We don't store it in
+the hash-table as it is redundant with the dimension.
+
+~~~lisp
+(defun area (square)
+  (expt (gethash :width square) 2))
+~~~
+
+Now, our programming needs lead to the situation where it would be
+very handy to change the *area* of the square… and have this reflected
+on the square's dimensions. It can be ergonomic for your program's
+application interface to define a setf-function, like this:
+
+~~~lisp
+(defun (setf area) (new-area square)
+  (let ((width (sqrt new-area)))
+    (setf (gethash :width square) width)))
+~~~
+
+And now you can do:
+
+~~~lisp
+(setf (area *SQUARE*) 100)
+;; => 10.0
+~~~
+
+and check your square (`describe`, `inspect`…), the new width was set.
+
 
 ## Currying
 
@@ -712,6 +798,6 @@ library (in Quicklisp).
 
 ## Documentation
 
-- functions: http://www.lispworks.com/documentation/HyperSpec/Body/t_fn.htm#function
-- ordinary lambda lists: http://www.lispworks.com/documentation/HyperSpec/Body/03_da.htm
-- multiple-value-bind: http://clhs.lisp.se/Body/m_multip.htm
+- functions: <http://www.lispworks.com/documentation/HyperSpec/Body/t_fn.htm#function>
+- ordinary lambda lists: <http://www.lispworks.com/documentation/HyperSpec/Body/03_da.htm>
+- multiple-value-bind: <http://clhs.lisp.se/Body/m_multip.htm>

@@ -15,7 +15,7 @@ databases. We can group them roughly in four categories:
 and other DB-related tools (pgloader).
 
 We'll begin with an overview of Mito. If you must work with an
-existing DB, you might want to have a look at cl-dbi and clsql. If you
+existing DB, you might want to have a look at [cl-dbi](https://github.com/fukamachi/cl-dbi) and [clsql](https://clsql.kpe.io/manual/). If you
 don't need a SQL database and want automatic persistence of Lisp
 objects, you also have a choice of libraries.
 
@@ -27,6 +27,22 @@ Mito is in Quicklisp:
 ~~~lisp
 (ql:quickload "mito")
 ~~~
+
+Mito will load another system on the fly depending on your database's
+driver. These systems are:
+
+    :dbd-sqlite3
+    :dbd-mysql
+    :dbd-postgres
+
+You can "quickload" one of them now, or let Mito (actually cl-dbi) do it
+when required.
+
+But if you build an executable of your program, and if you plan on
+using it on a machine where Quicklisp is not installed, you must
+reference the required additional system into your .asd system
+definition.
+
 
 ### Overview
 
@@ -99,7 +115,7 @@ In Mito, you can define a class which corresponds to a database table with the `
 ~~~lisp
 (mito:deftable user ()
   ((name :col-type (:varchar 64))
-   (email :col-type (or (:varchar 128) :null)))
+   (email :col-type (or (:varchar 128) :null))))
 ~~~
 Alternatively, you can specify `(:metaclass mito:dao-table-class)` in a regular class definition.
 
@@ -754,6 +770,29 @@ which only sends a single WHERE IN query instead of N queries:
 (tweet-user (first *))
 ;=> #<USER {100361E813}>
 ~~~
+
+### Iteration with cursor (do-select)
+
+`do-select` is a macro to iterate over results from `SELECT` one by
+one.
+
+On PostgreSQL, it uses `CURSOR`, which can reduce memory usage since
+it won't load all results in memory.
+
+```common-lisp
+(do-select (dao (select-dao 'user (where (:< "2024-07-01" :created_at))))
+  ;; Can be a more complex condition
+  (when (equal (user-name dao) "Eitaro")
+    (return dao)))
+
+;; Same but without using CURSOR
+(loop for dao in (select-dao 'user (where (:< "2024-07-01" :created_at)))
+      when (equal (user-name dao) "Eitaro")
+      do (return dao))
+```
+
+> NOTE: do-select was added on August of 2024. It requires DBI v0.11.1 or above.
+
 
 ### Schema versioning
 
