@@ -19,6 +19,8 @@ generation.
 
 - functions should generally be referenced with backtics. There is no need to capitalize them in the age of markdown: write `function` instead of FUNCTION.
 
+- indent code using the predominant style. If unsure, check what Emacs `lisp-mode` does.
+
 ## Code snippets
 
 - use `~~~lisp` for code snippets.
@@ -37,6 +39,8 @@ Here's a snippet:
 
 This snippet...
 ```
+
+- don't write the lisp prompt like "CL-USER> " unless it is very important for the example. This is mainly due to ease copy-pasting.
 
 - to show a snippet's result, use `;; => result` on the same line if the snippet was on one line, otherwise you can do:
 
