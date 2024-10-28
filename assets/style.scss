@@ -13,6 +13,7 @@ img{
     display:none;
 }
 #logo-container{
+    z-index:1; // so the TOC is above the announce and the "page source" bar.
     height:90px;
     width:23%;
     margin-left:1%;
@@ -70,7 +71,6 @@ img{
 	padding:0;
     }
     #toc-container{
-	z-index:1; // above the "page source" bar
 	display:block;
 	position:fixed;
 	margin:0;
