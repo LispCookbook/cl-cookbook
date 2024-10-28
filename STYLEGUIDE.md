@@ -40,6 +40,8 @@ Here's a snippet:
 This snippet...
 ```
 
+- don't write the lisp prompt like "CL-USER> " unless it is very important for the example. This is mainly due to ease copy-pasting.
+
 - to show a snippet's result, use `;; => result` on the same line if the snippet was on one line, otherwise you can do:
 
 ~~~lisp

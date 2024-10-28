@@ -16,8 +16,9 @@ Its simplest form is `(loop (print "hello"))`: this will print forever.
 A simple iteration over a list is:
 
 ~~~lisp
-* (loop for x in '(1 2 3)
-        do (print x))
+(loop for x in '(1 2 3)
+      do (print x))
+;; =>
 1
 2
 3
@@ -29,8 +30,9 @@ It prints what's needed but returns `nil`.
 If you want to return a list, use `collect`:
 
 ~~~lisp
-* (loop for x in '(1 2 3)
-        collect (* x 10))
+(loop for x in '(1 2 3)
+      collect (* x 10))
+;; =>
 (10 20 30)
 ~~~
 
@@ -63,8 +65,9 @@ so you have to import it:
 Iterate looks like this:
 
 ~~~lisp
-* (iter (for i from 1 to 5)
-    (collect (* i i)))
+(iter (for i from 1 to 5)
+  (collect (* i i)))
+;; =>
 (1 4 9 16 25)
 ~~~
 
@@ -114,21 +117,24 @@ applies the function on each *element* of the lists one by one and
 returns a list of result.
 
 ~~~lisp
-* (mapcar (lambda (it) (+ it 10)) '(1 2 3))
-(11 12 13)
+(mapcar (lambda (it) (+ it 10)) '(1 2 3))
+;; => (11 12 13)
 ~~~
 
 `map` is generic, it accepts lists and vectors as arguments, and
 expects the type for its result as first argument:
 
 ~~~lisp
-* (map 'vector (lambda (it) (+ it 10)) '(1 2 3))
+(map 'vector (lambda (it) (+ it 10)) '(1 2 3))
+;; =>
 #(11 12 13)
 
-* (map 'list (lambda (it) (+ it 10)) #(1 2 3))
+(map 'list (lambda (it) (+ it 10)) #(1 2 3))
+;; =>
 (11 12 13)
 
-* (map 'string (lambda (it) (code-char it)) '#(97 98 99))
+(map 'string (lambda (it) (code-char it)) '#(97 98 99))
+;; =>
 "abc"
 ~~~
 
@@ -163,10 +169,10 @@ in "Common Lisp the Language", in appendix A (it nearly became part of the
 language). Series looks like this:
 
 ~~~lisp
-* (collect
-    (mapping ((x (scan-range :from 1 :upto 5)))
-      (* x x)))
-(1 4 9 16 25)
+(collect
+  (mapping ((x (scan-range :from 1 :upto 5)))
+    (* x x)))
+;; (1 4 9 16 25)
 ~~~
 
 `series` is good, but its function names are different from what we
@@ -177,11 +183,11 @@ younger and not as complete, with a "modern" API with words like `take`, `filter
 `for` or `fold`, and that is easy to use.
 
 ~~~lisp
-* (range :from 20)
-#<GTWIWTG::GENERATOR! {1001A90CA3}>
+(range :from 20)
+;; #<GTWIWTG::GENERATOR! {1001A90CA3}>
 
-* (take 4 (range :from 20))
-(20 21 22 23)
+(take 4 (range :from 20))
+;; (20 21 22 23)
 ~~~
 
 At the time of writing, GTWIWTG is licensed under the GPLv3.
@@ -205,19 +211,19 @@ Transducers...
 Let's sum the squares of the first 1000 odd integers:
 
 ~~~lisp
-* (defpackage foo
-    (:use :cl)
-    (:local-nicknames (:t :transducers)))
-#<PACKAGE "FOO">
+(defpackage foo
+  (:use :cl)
+  (:local-nicknames (:t :transducers)))
+;; #<PACKAGE "FOO">
 
-* (t:transduce
-    (t:comp (t:filter #'oddp)  ;; (2) Keep only odd numbers.
-            (t:take 1000)      ;; (3) Keep the first 1000 filtered odds.
-            (t:map (lambda (n) ;; (4) Square those 1000.
-                     (* n n))))
-    #'+                        ;; (5) Reducer: Add up all the squares.
-    (t:ints 1))                ;; (1) Source: Generate all positive integers.
-1333333000
+(t:transduce
+  (t:comp (t:filter #'oddp)  ;; (2) Keep only odd numbers.
+          (t:take 1000)      ;; (3) Keep the first 1000 filtered odds.
+          (t:map (lambda (n) ;; (4) Square those 1000.
+                   (* n n))))
+  #'+                        ;; (5) Reducer: Add up all the squares.
+  (t:ints 1))                ;; (1) Source: Generate all positive integers.
+;; 1333333000
 ~~~
 
 Here, even though `ints` is an infinite generator, only as many values as are
@@ -237,16 +243,16 @@ information.
 ### Looping forever, return
 
 ~~~lisp
-* (loop (print "hello"))
+(loop (print "hello"))
 ~~~
 
 `return` can return a result:
 
 ~~~lisp
-* (loop for i in '(1 2 3)
-        when (> i 1)
-          return i)
-2
+(loop for i in '(1 2 3)
+      when (> i 1)
+        return i)
+;; => 2
 ~~~
 
 
@@ -255,8 +261,9 @@ information.
 #### dotimes
 
 ~~~lisp
-* (dotimes (n 3)
-    (print n))
+(dotimes (n 3)
+  (print n))
+;; =>
 0
 1
 2
@@ -266,9 +273,10 @@ NIL
 Here `dotimes` returns `nil`. There are two ways to return a value. First, you can set a result form in the lambda list:
 
 ~~~lisp
-* (dotimes (n 3 :done)
-    ;;          ^^^^^ result form. It can be a s-expression.
-    (print n))
+(dotimes (n 3 :done)
+  ;;          ^^^^^ result form. It can be a s-expression.
+  (print n))
+;; =>
 0
 1
 2
@@ -278,10 +286,11 @@ Here `dotimes` returns `nil`. There are two ways to return a value. First, you c
 Or you can use `return` with return values:
 
 ~~~lisp
-* (dotimes (i 3)
-     (if (> i 1)
-         (return :early-exit!)
-       (print i)))
+(dotimes (i 3)
+   (if (> i 1)
+       (return :early-exit!)
+     (print i)))
+;; =>
 0
 1
 :EARLY-EXIT!
@@ -293,8 +302,9 @@ Or you can use `return` with return values:
 This prints "Hello!" 3 times and returns `nil`.
 
 ~~~lisp
-* (loop repeat 3
-        do (format t "Hello!~%"))
+(loop repeat 3
+      do (format t "Hello!~%"))
+;; =>
 Hello!
 Hello!
 Hello!
@@ -304,16 +314,17 @@ NIL
 With `collect`, this returns a list.
 
 ~~~lisp
-* (loop repeat 3
-        collect (random 10))
-(5 1 3)
+(loop repeat 3
+      collect (random 10))
+;; => (5 1 3)
 ~~~
 
 #### Series
 
 ~~~lisp
-* (iterate ((n (scan-range :below 3)))
-    (print n))
+(iterate ((n (scan-range :below 3)))
+  (print n))
+;; =>
 0
 1
 2
@@ -328,11 +339,12 @@ infinitely. Here we show how to loop on a list forever.
 We can build an infinite list by setting its last element to the list itself:
 
 ~~~lisp
-* (loop with list-a = (list 1 2 3)
-        with infinite-list = (setf (cdr (last list-a)) list-a)
-        for item in infinite-list
-        repeat 8
-        collect item)
+(loop with list-a = (list 1 2 3)
+      with infinite-list = (setf (cdr (last list-a)) list-a)
+      for item in infinite-list
+      repeat 8
+      collect item)
+;; =>
 (1 2 3 1 2 3 1 2)
 ~~~
 
@@ -357,18 +369,18 @@ By setting the `cdr` of the last element to the list itself, we make it recur on
 A notation shortcut is possible with the `#=` syntax:
 
 ~~~lisp
-* (defparameter *list-a* '#1=(1 2 3 . #1#))
-* (setf *print-circle* t)  ;; don't print circular lists forever
-* *list-a*
+(defparameter *list-a* '#1=(1 2 3 . #1#))
+(setf *print-circle* t)  ;; don't print circular lists forever
+;; *list-a*
 ~~~
 
 If you need to alternate only between two values, use `for … then`:
 
 ~~~lisp
-* (loop repeat 4
-        for up = t then (not up)
-        collect up)
-(T NIL T NIL)
+(loop repeat 4
+      for up = t then (not up)
+      collect up)
+;; (T NIL T NIL)
 ~~~
 
 ### Iterate's for loop
@@ -376,12 +388,13 @@ If you need to alternate only between two values, use `for … then`:
 For lists and vectors:
 
 ~~~lisp
-* (iter (for item in '(1 2 3))
-    (collect (+ item 1)))
-(2 3 4)
-* (iter (for i in-vector #(1 2 3))
-    (collect (+ item 1)))
-(2 3 4)
+(iter (for item in '(1 2 3))
+  (collect (+ item 1)))
+;; (2 3 4)
+
+(iter (for i in-vector #(1 2 3))
+  (collect (+ item 1)))
+;; (2 3 4)
 ~~~
 
 or, for a generalized iteration clause for lists and vectors, use
@@ -390,12 +403,13 @@ or, for a generalized iteration clause for lists and vectors, use
 Looping over a hash-table is also straightforward:
 
 ~~~lisp
-* (let ((h (let ((h (make-hash-table)))
-              (setf (gethash 'a h) 1)
-              (setf (gethash 'b h) 2)
-              h)))
-     (iter (for (k v) in-hashtable h)
-       (print k)))
+(let ((h (let ((h (make-hash-table)))
+            (setf (gethash 'a h) 1)
+            (setf (gethash 'b h) 2)
+            h)))
+   (iter (for (k v) in-hashtable h)
+     (print k)))
+;; =>
 B
 A
 NIL
@@ -413,8 +427,9 @@ or `(display-iterate-clauses '(for))` to know about iterating over
 #### dolist
 
 ~~~lisp
-* (dolist (item '(1 2 3))
-    (print item))
+(dolist (item '(1 2 3))
+  (print item))
+;; =>
 1
 2
 3
@@ -428,8 +443,9 @@ NIL
 with `in`, no surprises:
 
 ~~~lisp
-* (loop for x in '(a b c)
-        do (print x))
+(loop for x in '(a b c)
+      do (print x))
+;; =>
 A
 B
 C
@@ -437,34 +453,36 @@ NIL
 ~~~
 
 ~~~lisp
-* (loop for x in '(a b c)
-        collect x)
+(loop for x in '(a b c)
+      collect x)
+;; =>
 (A B C)
 ~~~
 
 With `on`, we loop over the `cdr` of the list:
 
 ~~~lisp
-* (loop for i on '(1 2 3) collect i)
-((1 2 3) (2 3) (3))
+(loop for i on '(1 2 3) collect i)
+;; ((1 2 3) (2 3) (3))
 ~~~
 
 
 #### mapcar
 
 ~~~lisp
-* (mapcar (lambda (x)
-            (* x 10))
-          '(1 2 3))
-(10 20 30)
+(mapcar (lambda (x)
+          (* x 10))
+        '(1 2 3))
+;; (10 20 30)
 ~~~
 
 `mapcar` returns the results of the lambda function as a list.
 
 #### Series
 ~~~lisp
-* (iterate ((item (scan '(1 2 3))))
-    (print item))
+(iterate ((item (scan '(1 2 3))))
+  (print item))
+;; =>
 1
 2
 3
@@ -474,8 +492,9 @@ NIL
 `scan-sublists` is the equivalent of `loop for ... on`:
 
 ~~~lisp
-* (iterate ((i (scan-sublists '(1 2 3))))
-    (print i))
+(iterate ((i (scan-sublists '(1 2 3))))
+  (print i))
+;; =>
 (1 2 3)
 (2 3)
 (3)
@@ -487,8 +506,8 @@ NIL
 #### loop: `across`
 
 ~~~lisp
-* (loop for i across #(1 2 3) collect (+ i 1))
-(2 3 4)
+(loop for i across #(1 2 3) collect (+ i 1))
+;; (2 3 4)
 ~~~
 
 strings are vectors, so:
@@ -519,8 +538,9 @@ You can directly assign the index of the vector to a variable by using `index-of
 #### Series
 
 ~~~lisp
-* (iterate ((i (scan #(1 2 3))))
-    (print i))
+(iterate ((i (scan #(1 2 3))))
+  (print i))
+;; =>
 1
 2
 3
@@ -571,24 +591,24 @@ We create a hash-table:
 Looping over keys:
 
 ~~~lisp
-* (loop for k being the hash-key of h collect k)
-(B A)
+(loop for k being the hash-key of h collect k)
+;; (B A)
 ~~~
 
 Looping over values uses the same concept but with the `hash-value` keyword instead of `hash-key`:
 
 ~~~lisp
-* (loop for v being the hash-value of h collect v)
-(2 1)
+(loop for v being the hash-value of h collect v)
+;; (2 1)
 ~~~
 
 Looping over key-values pairs:
 
 ~~~lisp
-* (loop for k being the hash-key
-          using (hash-value v) of h
-        collect (list k v))
-((B 2) (A 1))
+(loop for k being the hash-key
+        using (hash-value v) of h
+      collect (list k v))
+;; ((B 2) (A 1))
 ~~~
 
 #### iterate: `in-hashtable`
@@ -596,9 +616,9 @@ Looping over key-values pairs:
 Use `in-hashtable`:
 
 ~~~lisp
-* (iter (for (k v) in-hashtable h)
-    (collect (list k v)))
-((B 2) (A 1))
+(iter (for (k v) in-hashtable h)
+  (collect (list k v)))
+;; ((B 2) (A 1))
 ~~~
 
 #### for
@@ -606,8 +626,9 @@ Use `in-hashtable`:
 the same with `for`:
 
 ~~~lisp
-* (for:for ((it over h))
-    (print it))
+(for:for ((it over h))
+  (print it))
+;; =>
 (A 1)
 (B 2)
 NIL
@@ -620,9 +641,10 @@ The lambda function of `maphash` takes two arguments: the key and the
 value:
 
 ~~~lisp
-* (maphash (lambda (key val)
-             (format t "key: ~A value: ~A~%" key val))
-           h)
+(maphash (lambda (key val)
+           (format t "key: ~A value: ~A~%" key val))
+         h)
+;; =>
 key: A value: 1
 key: B value: 2
 NIL
@@ -635,8 +657,9 @@ See also [with-hash-table-iterator](http://www.lispworks.com/documentation/Hyper
 Only because we like this topic, we introduce another library, [trivial-do](https://github.com/yitzchak/trivial-do/). It has the `dohash` macro, that ressembles `dolist`:
 
 ~~~lisp
-* (dohash (key value h)
-    (format t "key: ~A, value: ~A~%" key value))
+(dohash (key value h)
+  (format t "key: ~A, value: ~A~%" key value))
+;; =>
 key: A value: 1
 key: B value: 2
 NIL
@@ -644,8 +667,9 @@ NIL
 
 #### Series
 ~~~lisp
-* (iterate (((k v) (scan-hash h)))
-    (format t "~&~a ~a~%" k v))
+(iterate (((k v) (scan-hash h)))
+  (format t "~&~a ~a~%" k v))
+;; =>
 A 1
 B 2
 NIL
@@ -656,28 +680,28 @@ NIL
 #### loop
 
 ~~~lisp
-* (loop for x in '(a b c)
-        for y in '(1 2 3)
-        collect (list x y))
-((A 1) (B 2) (C 3))
+(loop for x in '(a b c)
+      for y in '(1 2 3)
+      collect (list x y))
+;; ((A 1) (B 2) (C 3))
 ~~~
 
 To return a flat list, use `nconcing` instead of `collect`:
 
 ~~~lisp
-* (loop for x in '(a b c)
-        for y in '(1 2 3)
-        nconcing (list x y))
-(A 1 B 2 C 3)
+(loop for x in '(a b c)
+      for y in '(1 2 3)
+      nconcing (list x y))
+;; (A 1 B 2 C 3)
 ~~~
 
 If a list is smaller than the other one, loop stops at the end of the small one:
 
 ~~~lisp
-* (loop for x in '(a b c)
-        for y in '(1 2 3 4 5)
-        collect (list x y))
-((A 1) (B 2) (C 3))
+(loop for x in '(a b c)
+      for y in '(1 2 3 4 5)
+      collect (list x y))
+;; ((A 1) (B 2) (C 3))
 ~~~
 
 We could loop over the biggest list and manually access the elements
@@ -685,11 +709,11 @@ of the smaller one by index, but it would quickly be
 inefficient. Instead, we can tell `loop` to extend the short list.
 
 ~~~lisp
-* (loop for y in '(1 2 3 4 5)
-        for x-list = '(a b c) then (cdr x-list)
-        for x = (or (car x-list) 'z)
-        collect (list x y))
-((A 1) (B 2) (C 3) (Z 4) (Z 5))
+(loop for y in '(1 2 3 4 5)
+      for x-list = '(a b c) then (cdr x-list)
+      for x = (or (car x-list) 'z)
+      collect (list x y))
+;; ((A 1) (B 2) (C 3) (Z 4) (Z 5))
 ~~~
 
 The trick is that the notation `for … = … then (cdr …)` (note the `=`
@@ -702,55 +726,55 @@ good.
 
 #### mapcar
 ~~~lisp
-* (mapcar (lambda (x y)
-            (list x y))
-          '(a b c)
-          '(1 2 3))
-((A 1) (B 2) (C 3))
+(mapcar (lambda (x y)
+          (list x y))
+        '(a b c)
+        '(1 2 3))
+;; ((A 1) (B 2) (C 3))
 ~~~
 
 or simply:
 
 ~~~lisp
-* (mapcar 'list '(a b c) '(1 2 3))
-((A 1) (B 2) (C 3))
+(mapcar 'list '(a b c) '(1 2 3))
+;; ((A 1) (B 2) (C 3))
 ~~~
 
 Return a flat list:
 
 ~~~lisp
-* (mapcan 'list '(a b c) '(1 2 3))
-(A 1 B 2 C 3)
+(mapcan 'list '(a b c) '(1 2 3))
+;; (A 1 B 2 C 3)
 ~~~
 
 #### Series
 ~~~lisp
-* (collect
-    (#Mlist (scan '(a b c))
-            (scan '(1 2 3))))
-((A 1) (B 2) (C 3))
+(collect
+  (#Mlist (scan '(a b c))
+          (scan '(1 2 3))))
+;; ((A 1) (B 2) (C 3))
 ~~~
 
 A more efficient way, when the lists are known to be of equal length:
 
 ~~~lisp
-* (collect
-    (mapping (((x y) (scan-multiple 'list
-                                    '(a b c)
-                                    '(1 2 3))))
-      (list x y)))
-((A 1) (B 2) (C 3))
+(collect
+  (mapping (((x y) (scan-multiple 'list
+                                  '(a b c)
+                                  '(1 2 3))))
+    (list x y)))
+;; ((A 1) (B 2) (C 3))
 ~~~
 
 Return a flat list:
 
 ~~~lisp
-* (collect-append ; or collect-nconc
-    (mapping (((x y) (scan-multiple 'list
-                                    '(a b c)
-                                    '(1 2 3))))
-      (list x y)))
-(A 1 B 2 C 3)
+(collect-append ; or collect-nconc
+  (mapping (((x y) (scan-multiple 'list
+                                  '(a b c)
+                                  '(1 2 3))))
+    (list x y)))
+;; (A 1 B 2 C 3)
 ~~~
 
 
@@ -758,9 +782,9 @@ Return a flat list:
 #### loop
 
 ~~~lisp
-* (loop for x from 1 to 3
-        collect (loop for y from 1 to x collect y))
-((1) (1 2) (1 2 3))
+(loop for x from 1 to 3
+      collect (loop for y from 1 to x collect y))
+;; ((1) (1 2) (1 2 3))
 ~~~
 
 To return a flat list, use `nconcing` instead of the first `collect`.
@@ -768,20 +792,20 @@ To return a flat list, use `nconcing` instead of the first `collect`.
 #### iterate
 
 ~~~lisp
-* (iter outer
-    (for i below 2)
-    (iter (for j below 3)
-       (in outer (collect (list i j)))))
-((0 0) (0 1) (0 2) (1 0) (1 1) (1 2))
+(iter outer
+  (for i below 2)
+  (iter (for j below 3)
+     (in outer (collect (list i j)))))
+;; ((0 0) (0 1) (0 2) (1 0) (1 1) (1 2))
 ~~~
 
 #### Series
 
 ~~~lisp
-* (collect
-    (mapping ((x (scan-range :from 1 :upto 3)))
-      (collect (scan-range :from 1 :upto x))))
-((1) (1 2) (1 2 3))
+(collect
+  (mapping ((x (scan-range :from 1 :upto 3)))
+    (collect (scan-range :from 1 :upto x))))
+;; ((1) (1 2) (1 2 3))
 ~~~
 
 
@@ -792,20 +816,20 @@ To return a flat list, use `nconcing` instead of the first `collect`.
 Use `for var = ...` if you need the value to be computed on each iteration:
 
 ~~~lisp
-* (loop for x from 1 to 3
-        for y = (* x 10)
-        collect y)
-(10 20 30)
+(loop for x from 1 to 3
+      for y = (* x 10)
+      collect y)
+;; (10 20 30)
 ~~~
 
 Use `with var = ...` if you only need the value to be computed once:
 
 ~~~lisp
-* (loop for x from 1 to 3
-        for y = (* x 10)
-        with z = x
-        collect (list x y z))
-((1 10 1) (2 20 1) (3 30 1))
+(loop for x from 1 to 3
+      for y = (* x 10)
+      with z = x
+      collect (list x y z))
+;; ((1 10 1) (2 20 1) (3 30 1))
 ~~~
 
 The HyperSpec defines the `with` clause like this:
@@ -815,37 +839,37 @@ The HyperSpec defines the `with` clause like this:
 so it turns out we can specify the type before the `=` and chain the `with` with `and`:
 
 ~~~lisp
-* (loop for x from 1 to 3
-        for y integer = (* x 10)
-        with z integer = x
-        collect (list x y z))
-((1 10 1) (2 20 1) (3 30 1))
+(loop for x from 1 to 3
+      for y integer = (* x 10)
+      with z integer = x
+      collect (list x y z))
+;; ((1 10 1) (2 20 1) (3 30 1))
 ~~~
 
 ~~~lisp
-* (loop for x upto 3
-        with foo = :foo
-        and bar = :bar
-        collect (list x foo bar))
-((0 :FOO :BAR) (1 :FOO :BAR) (2 :FOO :BAR) (3 :FOO :BAR))
+(loop for x upto 3
+      with foo = :foo
+      and bar = :bar
+      collect (list x foo bar))
+;; ((0 :FOO :BAR) (1 :FOO :BAR) (2 :FOO :BAR) (3 :FOO :BAR))
 ~~~
 
 We can also give `for` a `then` clause that will be called at each iteration:
 
 ~~~lisp
-* (loop repeat 3
-        for x = 10 then (incf x)
-        collect x)
-(10 11 12)
+(loop repeat 3
+      for x = 10 then (incf x)
+      collect x)
+;; (10 11 12)
 ~~~
 
 Here's a trick to alternate a boolean:
 
 ~~~lisp
-* (loop repeat 4
-        for up = t then (not up)
-        collect up)
-(T NIL T NIL)
+(loop repeat 4
+      for up = t then (not up)
+      collect up)
+;; (T NIL T NIL)
 ~~~
 
 ### Loop with a counter
@@ -857,11 +881,12 @@ executed conditionally. (If `do` immediately follows a `when`, `unless`, or
 `if` clause, its actions are only executed when the test returns `t`.)
 
 ~~~lisp
-* (loop for x in '(a b c d e)
-        for firstp = t then nil
-        unless firstp
-          do (format t ", ")
-        do (format t "~A" x))
+(loop for x in '(a b c d e)
+      for firstp = t then nil
+      unless firstp
+        do (format t ", ")
+      do (format t "~A" x))
+;; =>
 A, B, C, D, E
 NIL
 ~~~
@@ -869,12 +894,13 @@ NIL
 We could also write the preceding loop using `if` and a counter variable `y`:
 
 ~~~lisp
-* (loop for x in '(a b c d e)
-        for y from 1
-        if (> y 1)
-          do (format t ", ~A" x)
-        else
-          do (format t "~A" x))
+(loop for x in '(a b c d e)
+      for y from 1
+      if (> y 1)
+        do (format t ", ~A" x)
+      else
+        do (format t "~A" x))
+;; =>
 A, B, C, D, E
 NIL
 ~~~
@@ -885,11 +911,12 @@ By iterating on multiple series in parallel, and using an infinite
 range, we can make a counter.
 
 ~~~lisp
-* (iterate ((x (scan '(a b c d e)))
-            (y (scan-range :from 1)))
-    (when (> y 1)
-      (format t ", "))
-    (format t "~A" x))
+(iterate ((x (scan '(a b c d e)))
+          (y (scan-range :from 1)))
+  (when (> y 1)
+    (format t ", "))
+  (format t "~A" x))
+;; =>
 A, B, C, D, E
 NIL
 ~~~
@@ -900,15 +927,15 @@ NIL
 `from… to…`:
 
 ~~~lisp
-* (loop for i from 0 to 3 collect i)
-(0 1 2 3)
+(loop for i from 0 to 3 collect i)
+;; (0 1 2 3)
 ~~~
 
 `from… below…`: this stops at 2:
 
 ~~~lisp
-* (loop for i from 0 below 3 collect i)
-(0 1 2)
+(loop for i from 0 below 3 collect i)
+;; (0 1 2)
 ~~~
 
 Similarly, use `from 3 downto 0` to get `(3 2 1 0)` and `from 3 above 0` to get
@@ -919,8 +946,9 @@ Similarly, use `from 3 downto 0` to get `(3 2 1 0)` and `from 3 above 0` to get
 `:from ... :upto`, including the upper limit:
 
 ~~~lisp
-* (iterate ((i (scan-range :from 0 :upto 3)))
-    (print i))
+(iterate ((i (scan-range :from 0 :upto 3)))
+  (print i))
+;; =>
 0
 1
 2
@@ -931,8 +959,9 @@ NIL
 `:from ... :below`, excluding the upper limit:
 
 ~~~lisp
-* (iterate ((i (scan-range :from 0 :below 3)))
-    (print i))
+(iterate ((i (scan-range :from 0 :below 3)))
+  (print i))
+;; =>
 0
 1
 2
@@ -946,17 +975,17 @@ NIL
 with `by`:
 
 ~~~lisp
-* (loop for i from 1 to 10 by 2 collect i)
-(1 3 5 7 9)
+(loop for i from 1 to 10 by 2 collect i)
+;; (1 3 5 7 9)
 ~~~
 
 The step clause is only evaluated once. If you use `by (1+ (random 3))` it is
 equivalent to this:
 
 ~~~lisp
-* (let ((step (1+ (random 3))))
-    (loop for i from 1 to 10 by step
-          do (print i)))
+(let ((step (1+ (random 3))))
+  (loop for i from 1 to 10 by step
+        do (print i)))
 ...
 ~~~
 
@@ -967,8 +996,8 @@ The step must always be a positive number. If you want to count down, see above.
 with `:by`:
 
 ~~~lisp
-* (iterate ((i (scan-range :from 1 :upto 10 :by 2)))
-    (print i))
+(iterate ((i (scan-range :from 1 :upto 10 :by 2)))
+  (print i))
 ~~~
 
 
@@ -978,13 +1007,14 @@ with `:by`:
 with `if`, `else` and `finally`:
 
 ~~~lisp
-* (loop repeat 10
-        for x = (random 100)
-        if (evenp x)
-          collect x into evens
-        else
-          collect x into odds
-        finally (return (values evens odds)))
+*(loop repeat 10
+       for x = (random 100)
+       if (evenp x)
+         collect x into evens
+       else
+         collect x into odds
+       finally (return (values evens odds)))
+;; =>
 (92 44 58 68)
 (95 5 97 43 99 37)
 ~~~
@@ -998,15 +1028,16 @@ Combining multiple clauses in an `if` body requires special syntax (`and do`,
 `and count`):
 
 ~~~lisp
-* (loop repeat 10
-        for x = (random 100)
-        if (evenp x)
-          collect x into evens
-          and do (format t "~a is even!~%" x)
-        else
-          collect x into odds
-          and count t into n-odds
-        finally (return (values evens odds n-odds)))
+(loop repeat 10
+      for x = (random 100)
+      if (evenp x)
+        collect x into evens
+        and do (format t "~a is even!~%" x)
+      else
+        collect x into odds
+        and count t into n-odds
+      finally (return (values evens odds n-odds)))
+;; =>
 46 is even!
 8 is even!
 76 is even!
@@ -1022,16 +1053,16 @@ Combining multiple clauses in an `if` body requires special syntax (`and do`,
 Translating (or even writing!) the above example using iterate is straight-forward:
 
 ~~~lisp
-* (iter (repeat 10)
-     (for x = (random 100))
-     (if (evenp x)
-         (progn
-           (collect x into evens)
-           (format t "~a is even!~%" x))
-         (progn
-           (collect x into odds)
-           (count t into n-odds)))
-     (finally (return (values evens odds n-odds))))
+(iter (repeat 10)
+   (for x = (random 100))
+   (if (evenp x)
+       (progn
+         (collect x into evens)
+         (format t "~a is even!~%" x))
+       (progn
+         (collect x into odds)
+         (count t into n-odds)))
+   (finally (return (values evens odds n-odds))))
 ...
 ~~~
 
@@ -1041,17 +1072,18 @@ The preceding loop would be done a bit differently in Series. `split`
 sorts one series into multiple according to provided boolean series.
 
 ~~~lisp
-* (let* ((number (#M(lambda (n)
-                       (declare (ignore n))
-                       (random 100))
-                    (scan-range :below 10)))
-         (parity (#Mevenp number)))
-    (iterate ((n number) (p parity))
-      (when p (format t "~a is even!~%" n)))
-    (multiple-value-bind (evens odds) (split number parity)
-      (values (collect evens)
-              (collect odds)
-              (collect-length odds))))
+(let* ((number (#M(lambda (n)
+                     (declare (ignore n))
+                     (random 100))
+                  (scan-range :below 10)))
+       (parity (#Mevenp number)))
+  (iterate ((n number) (p parity))
+    (when p (format t "~a is even!~%" n)))
+  (multiple-value-bind (evens odds) (split number parity)
+    (values (collect evens)
+            (collect odds)
+            (collect-length odds))))
+;; =>
 24 is even!
 92 is even!
 92 is even!
@@ -1068,9 +1100,10 @@ example with `loop`.
 ### Begin the loop with a clause (initially)
 
 ~~~lisp
-* (loop initially (format t "~a " 'loop-begin)
-        for x below 3
-        do (format t "~a " x))
+(loop initially (format t "~a " 'loop-begin)
+      for x below 3
+      do (format t "~a " x))
+;; =>
 LOOP-BEGIN 0 1 2
 NIL
 ~~~
@@ -1082,19 +1115,19 @@ NIL
 #### loop
 
 ~~~lisp
-* (loop for x in '(1 2 3 4 5)
-        until (> x 3)
-          collect x)
-(1 2 3)
+(loop for x in '(1 2 3 4 5)
+      until (> x 3)
+        collect x)
+;; (1 2 3)
 ~~~
 
 the same, with `while`:
 
 ~~~lisp
-* (loop for x in '(1 2 3 4 5)
-        while (< x 4)
-          collect x)
-(1 2 3)
+(loop for x in '(1 2 3 4 5)
+      while (< x 4)
+        collect x)
+;; (1 2 3)
 ~~~
 
 #### Series
@@ -1102,10 +1135,10 @@ the same, with `while`:
 We truncate the series with `until-if`, then collect from its result.
 
 ~~~lisp
-* (collect
-    (until-if (lambda (i) (> i 3))
-              (scan '(1 2 3 4 5))))
-(1 2 3)
+(collect
+  (until-if (lambda (i) (> i 3))
+            (scan '(1 2 3 4 5))))
+;; (1 2 3)
 ~~~
 
 ### Loop, print and return a result
@@ -1114,10 +1147,11 @@ We truncate the series with `until-if`, then collect from its result.
 `do` and `collect` can be combined in one expression
 
 ~~~lisp
-* (loop for x in '(1 2 3 4 5)
-        while (< x 4)
-          do (format t "x is ~a~&" x)
-        collect x)
+(loop for x in '(1 2 3 4 5)
+      while (< x 4)
+        do (format t "x is ~a~&" x)
+      collect x)
+;; =>
 x is 1
 x is 2
 x is 3
@@ -1128,11 +1162,12 @@ x is 3
 By mapping, we can perform a side effect and also collect items.
 
 ~~~lisp
-* (collect
-    (mapping ((x (until-if (complement (lambda (x) (< x 4)))
-                           (scan '(1 2 3 4 5)))))
-      (format t "x is ~a~&" x)
-      x))
+(collect
+  (mapping ((x (until-if (complement (lambda (x) (< x 4)))
+                         (scan '(1 2 3 4 5)))))
+    (format t "x is ~a~&" x)
+    x))
+;; =>
 x is 1
 x is 2
 x is 3
@@ -1149,11 +1184,12 @@ nested loops.
 
 
 ~~~lisp
-* (loop named loop-1
-        for x from 0 to 10 by 2
-        do (loop for y from 0 to 100 by (1+ (random 3))
-                 when (< x y)
-                   do (return-from loop-1 (values x y))))
+(loop named loop-1
+      for x from 0 to 10 by 2
+      do (loop for y from 0 to 100 by (1+ (random 3))
+               when (< x y)
+                 do (return-from loop-1 (values x y))))
+;; =>
 0
 2
 ~~~
@@ -1162,22 +1198,25 @@ Sometimes, you want to return early but execute the `finally` clause
 anyway. Use [`loop-finish`](http://www.lispworks.com/documentation/HyperSpec/Body/m_loop_f.htm#loop-finish).
 
 ~~~lisp
-* (loop for x from 0 to 100
-    do (print x)
-    when (>= x 3)
-      return x
-    finally (print :done))  ;; <-- not printed
+(loop for x from 0 to 100
+  do (print x)
+  when (>= x 3)
+    return x
+  finally (print :done))  ;; <-- not printed
+;; =»
 0
 1
 2
 3
 3
-* (loop for x from 0 to 100
-        do (print x)
-        when (>= x 3)
-          do (loop-finish)
-        finally (print :done)
-                (return x))
+
+(loop for x from 0 to 100
+      do (print x)
+      when (>= x 3)
+        do (loop-finish)
+      finally (print :done)
+              (return x))
+;; =>
 0
 1
 2
@@ -1193,21 +1232,21 @@ It is most needed when some computation must take place in the `finally` clause.
 Several actions provide shorthands for combinations of when/return:
 
 ~~~lisp
-* (loop for x in '(foo 2)
-        thereis (numberp x))
-T
+(loop for x in '(foo 2)
+      thereis (numberp x))
+;; T
 ~~~
 
 ~~~lisp
-* (loop for x in '(foo 2)
-        never (numberp x))
-NIL
+(loop for x in '(foo 2)
+      never (numberp x))
+;; NIL
 ~~~
 
 ~~~lisp
-* (loop for x in '(foo 2)
-        always (numberp x))
-NIL
+(loop for x in '(foo 2)
+      always (numberp x))
+;; NIL
 ~~~
 
 They correspond to the functions `some`, `notany` and `every`:
@@ -1224,11 +1263,12 @@ They correspond to the functions `some`, `notany` and `every`:
 To exit the iteration early explicitly create a block to use with `return-from`.
 
 ~~~lisp
-* (block loop-1
-    (iterate ((x (scan-range :from 0 :upto 10 :by 2)))
-      (iterate ((y (scan-range :from 0 :upto 100 :by (1+ (random 3)))))
-        (when (< x y)
-          (return-from loop-1 (values x y))))))
+(block loop-1
+  (iterate ((x (scan-range :from 0 :upto 10 :by 2)))
+    (iterate ((y (scan-range :from 0 :upto 100 :by (1+ (random 3)))))
+      (when (< x y)
+        (return-from loop-1 (values x y))))))
+;; =>
 0
 3
 ~~~
@@ -1236,31 +1276,32 @@ To exit the iteration early explicitly create a block to use with `return-from`.
 ### Count
 #### loop
 ~~~lisp
-* (loop for i from 1 to 3 count (oddp i))
-2
+(loop for i from 1 to 3 count (oddp i))
+;; 2
 ~~~
 
 #### Series
 ~~~lisp
-* (collect-length (choose-if #'oddp (scan-range :from 1 :upto 3)))
-2
+(collect-length (choose-if #'oddp (scan-range :from 1 :upto 3)))
+;; 2
 ~~~
 
 ### Summation
 #### loop
 
 ~~~lisp
-* (loop for i from 1 to 3 sum (* i i))
-14
+(loop for i from 1 to 3 sum (* i i))
+;; 14
 ~~~
 
 Summing into a variable:
 
 ~~~lisp
-* (loop for i from 1 to 3
-        sum (* i i) into total
-        do (print i)
-        finally (return total))
+(loop for i from 1 to 3
+      sum (* i i) into total
+      do (print i)
+      finally (return total))
+;; =>
 1
 2
 3
@@ -1271,9 +1312,9 @@ Summing into a variable:
 #### Series
 
 ~~~lisp
-* (collect-sum (#M(lambda (i) (* i i))
-                  (scan-range :from 1 :upto 3)))
-14
+(collect-sum (#M(lambda (i) (* i i))
+                (scan-range :from 1 :upto 3)))
+;; 14
 ~~~
 
 ### max, min
@@ -1281,8 +1322,8 @@ Summing into a variable:
 #### loop
 
 ~~~lisp
-* (loop for i from 1 to 3 maximize (mod i 3))
-2
+(loop for i from 1 to 3 maximize (mod i 3))
+;; 2
 ~~~
 
 and `minimize`.
@@ -1290,9 +1331,9 @@ and `minimize`.
 #### Series
 
 ~~~lisp
-* (collect-max (#M(lambda (i) (mod i 3))
-                  (scan-range :from 1 :upto 3)))
-2
+(collect-max (#M(lambda (i) (mod i 3))
+                (scan-range :from 1 :upto 3)))
+;; 2
 ~~~
 and `collect-min`.
 
@@ -1301,16 +1342,16 @@ and `collect-min`.
 #### loop
 
 ~~~lisp
-* (loop for (a b) in '((x 1) (y 2) (z 3))
-        collect (list b a))
-((1 X) (2 Y) (3 Z))
+(loop for (a b) in '((x 1) (y 2) (z 3))
+      collect (list b a))
+;; ((1 X) (2 Y) (3 Z))
 ~~~
 
 Use `nil` to ignore a term:
 
 ~~~lisp
-* (loop for (nil . y) in '((1 . a) (2 . b) (3 . c)) collect y)
-(A B C)
+(loop for (nil . y) in '((1 . a) (2 . b) (3 . c)) collect y)
+;; (A B C)
 ~~~
 
 ##### Iterating over a plist or 2 by 2 over a list
@@ -1320,25 +1361,25 @@ To iterate over a list two items at a time we use a combination of `on`, `by` an
 We use `on` to loop over the rest (the `cdr`) of the list.
 
 ~~~lisp
-* (loop for rest on '(a 2 b 2 c 3)
-        collect rest)
-((A 2 B 2 C 3) (2 B 2 C 3) (B 2 C 3) (2 C 3) (C 3) (3))
+(loop for rest on '(a 2 b 2 c 3)
+      collect rest)
+;; ((A 2 B 2 C 3) (2 B 2 C 3) (B 2 C 3) (2 C 3) (C 3) (3))
 ~~~
 
 We use `by` to skip one element at every iteration (`(cddr list)` is equivalent to `(rest (rest list))`)
 
 ~~~lisp
-* (loop for rest on '(a 2 b 2 c 3) by #'cddr
-        collect rest)
-((A 2 B 2 C 3) (B 2 C 3) (C 3))
+(loop for rest on '(a 2 b 2 c 3) by #'cddr
+      collect rest)
+;; ((A 2 B 2 C 3) (B 2 C 3) (C 3))
 ~~~
 
 Then we add destructuring to bind only the first two items at each iteration:
 
 ~~~lisp
-* (loop for (key value) on '(a 2 b 2 c 3) by #'cddr
-        collect (list key (* 2 value)))
-((A 2) (B 4) (C 6))
+(loop for (key value) on '(a 2 b 2 c 3) by #'cddr
+      collect (list key (* 2 value)))
+;; ((A 2) (B 4) (C 6))
 ~~~
 
 
@@ -1346,20 +1387,20 @@ Then we add destructuring to bind only the first two items at each iteration:
 In general, with `destructuring-bind`:
 
 ~~~lisp
-* (collect
-    (mapping ((l (scan '((x 1) (y 2) (z 3)))))
-      (destructuring-bind (a b) l
-        (list b a))))
+(collect
+  (mapping ((l (scan '((x 1) (y 2) (z 3)))))
+    (destructuring-bind (a b) l
+      (list b a))))
 ~~~
 
 But for alists, `scan-alist` is provided:
 
 ~~~lisp
-* (collect
-    (mapping (((a b) (scan-alist '((1 . a) (2 . b) (3 . c)))))
-      (declare (ignore a))
-      b))
-(A B C)
+(collect
+  (mapping (((a b) (scan-alist '((1 . a) (2 . b) (3 . c)))))
+    (declare (ignore a))
+    b))
+;; (A B C)
 ~~~
 
 ## Iterate unique features lacking in loop
@@ -1378,10 +1419,11 @@ for example before a `while`. It's ok for `iter` to not follow this
 order:
 
 ~~~lisp
-* (iter (for x in '(1 2 99))
-    (while (< x 10))
-    (for y = (print x))
-    (collect (list x y)))
+(iter (for x in '(1 2 99))
+  (while (< x 10))
+  (for y = (print x))
+  (collect (list x y)))
+;; =>
 1
 2
 ((1 1) (2 2))
@@ -1392,11 +1434,11 @@ order:
 `collect`, `appending` and other accumulating clauses can appear anywhere:
 
 ~~~lisp
-* (iter (for x in '(1 2 3))
-    (case x
-      (1 (collect :a))
-      ;;  ^^ iter keyword, nested in a s-expression.
-      (2 (collect :b))))
+(iter (for x in '(1 2 3))
+  (case x
+    (1 (collect :a))
+    ;;  ^^ iter keyword, nested in a s-expression.
+    (2 (collect :b))))
 ~~~
 
 ### Finders: `finding`
@@ -1410,34 +1452,34 @@ We can use `finding` followed by `maximizing`, `minimizing` or `such-that`.
 Here's how to find the longest list in a list of lists:
 
 ~~~lisp
-* (iter (for elt in '((a) (b c d) (e f)))
-        (finding elt maximizing (length elt)))
-(B C D)
+(iter (for elt in '((a) (b c d) (e f)))
+      (finding elt maximizing (length elt)))
+;; (B C D)
 ~~~
 
 The rough equivalent in LOOP would be:
 
 ~~~lisp
-* (loop with max-elt = nil
-        with max-key = 0
-        for elt in '((a) (b c d) (e f))
-        for key = (length elt)
-        do
-        (when (> key max-key)
-          (setf max-elt elt
-                max-key key))
-        finally (return max-elt))
-(B C D)
+(loop with max-elt = nil
+      with max-key = 0
+      for elt in '((a) (b c d) (e f))
+      for key = (length elt)
+      do
+      (when (> key max-key)
+        (setf max-elt elt
+              max-key key))
+      finally (return max-elt))
+;; (B C D)
 ~~~
 
 There could be more than one `such-that` clause:
 
 ~~~lisp
-* (iter (for i in '(7 -4 2 -3))
-        (if (plusp i)
-            (finding i such-that (evenp i))
-          (finding (- i) such-that (oddp i))))
-2
+(iter (for i in '(7 -4 2 -3))
+      (if (plusp i)
+          (finding i such-that (evenp i))
+        (finding (- i) such-that (oddp i))))
+;; 2
 ~~~
 
 We can also write `such-that #'evenp` and `such-that #'oddp`. **Note that
@@ -1462,10 +1504,11 @@ A generator is lazy, it goes to the next value when said explicitly.
 Use `generate` and `next`:
 
 ~~~lisp
-* (iter (for i in '(1 2 3 4 5))
-        (generate c in-string "black")
-        (if (oddp i) (next c))
-        (format t "~a " c))
+(iter (for i in '(1 2 3 4 5))
+      (generate c in-string "black")
+      (if (oddp i) (next c))
+      (format t "~a " c))
+;; =>
 b b l l a
 NIL
 ~~~
@@ -1475,19 +1518,19 @@ NIL
 `iterate` allows us to get the previous value of a variable:
 
 ~~~lisp
-* (iter (for el in '(a b c d e))
-        (for prev-el previous el)
-        (collect (list el prev-el)))
-((A NIL) (B A) (C B) (D C) (E D))
+(iter (for el in '(a b c d e))
+      (for prev-el previous el)
+      (collect (list el prev-el)))
+;; ((A NIL) (B A) (C B) (D C) (E D))
 ~~~
 
 In this case however we can do it with `loop`'s parallel binding `and`, which is unsupported in `iterate`:
 
 ~~~lisp
-* (loop for el in '(a b c d e)
-        and prev-el = nil then el
-        collect (list el prev-el))
-((A NIL) (B A) (C B) (D C) (E D))
+(loop for el in '(a b c d e)
+      and prev-el = nil then el
+      collect (list el prev-el))
+;; ((A NIL) (B A) (C B) (D C) (E D))
 ~~~
 
 ### More clauses
@@ -1495,17 +1538,17 @@ In this case however we can do it with `loop`'s parallel binding `and`, which is
 - `in-string` can be used explicitly to iterate character by character over a string. With loop, use `across`.
 
 ~~~lisp
-* (iter (for c in-string "hello")
-        (collect c))
-(#\h #\e #\l #\l #\o)
+(iter (for c in-string "hello")
+      (collect c))
+;; (#\h #\e #\l #\l #\o)
 ~~~
 
 - `loop` offers `collecting`, `nconcing`, and `appending`. `iterate` has these and also `adjoining`, `unioning`, `nunioning`, and `accumulating`.
 
 ~~~lisp
-* (iter (for el in '(a b c a d b))
-        (adjoining el))
-(A B C D)
+(iter (for el in '(a b c a d b))
+      (adjoining el))
+;; (A B C D)
 ~~~
 
 (`adjoin` is a set operation.)
@@ -1513,22 +1556,23 @@ In this case however we can do it with `loop`'s parallel binding `and`, which is
 - `loop` has `summing`, `counting`, `maximizing`, and `minimizing`. `iterate` also includes `multiplying` and `reducing`. Reducing is the generalized reduction builder:
 
 ~~~lisp
-* (iter (with dividend = 100)
-        (for divisor in '(10 5 2))
-        (reducing divisor by #'/ initial-value dividend))
-1
+(iter (with dividend = 100)
+      (for divisor in '(10 5 2))
+      (reducing divisor by #'/ initial-value dividend))
+;; 1
 ~~~
 
 
 ### Iterate is extensible
 
 ~~~lisp
-* (defmacro dividing-by (num &key (initial-value 0))
-    `(reducing ,num by #'/ initial-value ,initial-value))
-DIVIDING-BY
-* (iter (for i in '(10 5 2))
-        (dividing-by i :initial-value 100))
-1
+(defmacro dividing-by (num &key (initial-value 0))
+  `(reducing ,num by #'/ initial-value ,initial-value))
+;; DIVIDING-BY
+
+(iter (for i in '(10 5 2))
+      (dividing-by i :initial-value 100))
+;; 1
 ~~~
 
 but [there is more to it, see the documentation](https://common-lisp.net/project/iterate/doc/Rolling-Your-Own.html#Rolling-Your-Own).
