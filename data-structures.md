@@ -813,12 +813,6 @@ You can also use `pushnew`, that modifies the list (see above).
 ;; => T
 ~~~
 
-## Fset - immutable data structure
-
-You may want to have a look at the
-[FSet](https://common-lisp.net/project/fset/Site/FSet-Tutorial.html )
-library (in Quicklisp).
-
 
 ## Arrays and vectors
 
@@ -1981,10 +1975,29 @@ doesn't have such limitations. See the [CLOS section](clos.html).
 * [structures on the hyperspec](http://www.lispworks.com/documentation/HyperSpec/Body/08_.htm)
 * David B. Lamkins, ["Successful Lisp, How to Understand and Use Common Lisp"](http://www.communitypicks.com/r/lisp/s/17592186045679-successful-lisp-how-to-understand-and-use-common).
 
-## Tree
+## Trees
 
-`tree-equal`, `copy-tree`. They descend recursively into the car and
+### Built-ins
+
+A tree can be built with lists of lists.
+
+For example, the nested list `'(A (B) (C (D) (E)))` represents the tree:
+
+```
+   A
+   ├─ B
+   ╰─ C
+      ├─ D
+      ╰─ E
+```
+
+where `(B)`, `(D)` and `(E)` are leaf nodes.
+
+The functions `tree-equal` and `copy-tree` descend recursively into the car and
 the cdr of the cons cells they visit.
+
+See the functions `subst` and `sublis` above to replace elements in a tree.
+
 
 ### Sycamore - purely functional weight-balanced binary trees
 
@@ -1998,6 +2011,15 @@ Features:
 * [Ropes](http://en.wikipedia.org/wiki/Rope_(data_structure))
 * Purely functional [pairing heaps](http://en.wikipedia.org/wiki/Pairing_heap)
 * Purely functional amortized queue.
+
+See also FSet.
+
+## Fset - immutable data structures
+
+You may want to have a look at the
+[FSet](https://common-lisp.net/project/fset/Site/FSet-Tutorial.html )
+library (in Quicklisp) to use immutable data structures.
+
 
 ## Controlling how much of data to print (`*print-length*`, `*print-level*`)
 
