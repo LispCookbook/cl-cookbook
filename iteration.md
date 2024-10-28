@@ -32,8 +32,7 @@ If you want to return a list, use `collect`:
 ~~~lisp
 (loop for x in '(1 2 3)
       collect (* x 10))
-;; =>
-(10 20 30)
+;; => (10 20 30)
 ~~~
 
 The `loop` macro is different than most Lisp expressions in having a complex
@@ -67,8 +66,7 @@ Iterate looks like this:
 ~~~lisp
 (iter (for i from 1 to 5)
   (collect (* i i)))
-;; =>
-(1 4 9 16 25)
+;; => (1 4 9 16 25)
 ~~~
 
 (If you use `loop` and Iterate in the same package, you might run into name
@@ -126,16 +124,13 @@ expects the type for its result as first argument:
 
 ~~~lisp
 (map 'vector (lambda (it) (+ it 10)) '(1 2 3))
-;; =>
-#(11 12 13)
+;; => #(11 12 13)
 
 (map 'list (lambda (it) (+ it 10)) #(1 2 3))
-;; =>
-(11 12 13)
+;; => (11 12 13)
 
 (map 'string (lambda (it) (code-char it)) '#(97 98 99))
-;; =>
-"abc"
+;; => "abc"
 ~~~
 
 The other constructs have their advantages in some situations ;) They
@@ -214,7 +209,7 @@ Let's sum the squares of the first 1000 odd integers:
 (defpackage foo
   (:use :cl)
   (:local-nicknames (:t :transducers)))
-;; #<PACKAGE "FOO">
+;; => #<PACKAGE "FOO">
 
 (t:transduce
   (t:comp (t:filter #'oddp)  ;; (2) Keep only odd numbers.
@@ -223,7 +218,7 @@ Let's sum the squares of the first 1000 odd integers:
                    (* n n))))
   #'+                        ;; (5) Reducer: Add up all the squares.
   (t:ints 1))                ;; (1) Source: Generate all positive integers.
-;; 1333333000
+;; => 1333333000
 ~~~
 
 Here, even though `ints` is an infinite generator, only as many values as are
@@ -344,8 +339,7 @@ We can build an infinite list by setting its last element to the list itself:
       for item in infinite-list
       repeat 8
       collect item)
-;; =>
-(1 2 3 1 2 3 1 2)
+;; => (1 2 3 1 2 3 1 2)
 ~~~
 
 Illustration: `(last (list 1 2 3))` is `(3)`, a list, or rather a cons cell, whose `car` is 3 and `cdr` is NIL. See the [data-structures chapter](data-structures.html) for a reminder. This is the representation of `(list 3)`:
@@ -455,15 +449,14 @@ NIL
 ~~~lisp
 (loop for x in '(a b c)
       collect x)
-;; =>
-(A B C)
+;; => (A B C)
 ~~~
 
 With `on`, we loop over the `cdr` of the list:
 
 ~~~lisp
 (loop for i on '(1 2 3) collect i)
-;; ((1 2 3) (2 3) (3))
+;; => ((1 2 3) (2 3) (3))
 ~~~
 
 
