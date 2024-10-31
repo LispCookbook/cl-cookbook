@@ -6,7 +6,7 @@ title: Loop, iteration, mapping
 
 ## Introduction: loop, iterate, for, mapcar, series, transducers
 
-### The `loop` macro
+### The `loop` macro (built-in)
 
 **[loop](http://www.lispworks.com/documentation/lw51/CLHS/Body/m_loop.htm)**
 is the built-in macro for iteration.
@@ -38,7 +38,7 @@ If you want to return a list, use `collect`:
 The `loop` macro is different than most Lisp expressions in having a complex
 internal domain-specific language that doesn't use s-expressions, so you need
 to read `loop` expressions with half of your brain in Lisp mode and the other
-half in `loop` mode. You love it or you hate it.
+half in `loop` mode. You love it or you hate it. Usually you hate it for a while and then you love it.
 
 Think of `loop` expressions as having four parts:
 
@@ -51,7 +51,17 @@ In addition, `loop` expressions can return a value.  It is very rare to use all
 of these parts in a given `loop` expression, but you can combine them in many
 ways.
 
-### The `iterate` macro
+The loop clauses can be written in two styles: either as symbols like
+we did above, either as keywords, like this:
+
+~~~lisp
+(loop :for x :in '(1 2 3) :collect (* x 10))
+~~~
+
+We wrote `:for`, `:in` and `:collect` as keywords.
+
+
+### The `iterate` library
 
 **[iterate](https://common-lisp.net/project/iterate/doc/index.html)** is a
 popular iteration macro that aims at being simpler, "lispier" and more
@@ -61,6 +71,9 @@ so you have to import it:
     (ql:quickload "iterate")
     (use-package :iterate)
 
+(If you use `loop` and Iterate in the same package, you might run into name
+conflicts.)
+
 Iterate looks like this:
 
 ~~~lisp
@@ -68,9 +81,6 @@ Iterate looks like this:
   (collect (* i i)))
 ;; => (1 4 9 16 25)
 ~~~
-
-(If you use `loop` and Iterate in the same package, you might run into name
-conflicts.)
 
 Iterate also comes with `display-iterate-clauses` that can be quite handy:
 
@@ -84,7 +94,7 @@ Iterate also comes with `display-iterate-clauses` that can be quite handy:
 Many of the examples on this page that are valid for `loop` are also valid for
 Iterate, with minor modifications.
 
-### The `for` macro
+### The `for` library
 
 **[for](https://github.com/Shinmera/for/)** is an extensible iteration macro
 that is often shorter than `loop`, that "unlike `loop` is extensible and
@@ -104,7 +114,7 @@ You also have to quickload it:
 
     (ql:quickload "for")
 
-### `map`, `mapcar` et all
+### `map`, `mapcar` et all (built-in)
 
 We'll also give examples with **`mapcar`** and `map`, and eventually
 with their friends `mapcon`, `mapcan`, `maplist`, `mapc` and `mapl`
