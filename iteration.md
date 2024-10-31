@@ -1111,6 +1111,29 @@ LOOP-BEGIN 0 1 2
 NIL
 ~~~
 
+The `initially` forms are evaluated in the loop "prologue", before all
+loop code. Its counterpart for the end of the loop is `finally`.
+
+If you tried to modify variables declared just after it, in a `:for`,
+`:with` or `:as` clause, it would have no effect *inside the loop
+body*.  For example, trying to mutate a and b with initially below:
+
+~~~lisp
+(loop with a = 20 with b = 10
+     initially (rotatef a b)  ;; warn: too late for a and b. No effect.
+     for i from a to b
+  do (print i))
+;; => NIL
+~~~
+
+this doesn't swap a and b in time in order to loop from 10 to 20. We loop
+from 20 to 10 and thus we don't loop at all and we return NIL.
+
+However if you print the values of a and b at the end of the loop (try
+`finally (format t "a is ~a, b is ~a" a b)`) you'll see that their
+values were swapped. You'll need to macro-expand the loop snippet to
+fully get why ;) (there are intermediate variables)
+
 `initially` also exists with `iterate`.
 
 
