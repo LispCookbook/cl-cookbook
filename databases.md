@@ -106,6 +106,22 @@ You might make good use of a wrapper function:
   (mito:connect-toplevel :sqlite3 :database-name "myapp"))
 ~~~
 
+### Connecting to an in-memory DB (SQLite)
+
+To connect to a `sqlite3` in-memory database, you use the ":memory:"
+string as the DB name. It has a special meaning for SQLite.
+
+~~~lisp
+(mito:connect-toplevel :sqlite3 :database-name ":memory:")
+~~~
+
+This doesn't create a file on disk, and the DB will be even
+faster. But you'll loose all the data when you close the
+connection. It is consequently specially useful for unit-tests, to
+load data for temporary analytics, etc.
+
+You can read more about [in-memory SQLite databases here](https://www.sqlite.org/inmemorydb.html).
+
 ### Models
 
 #### Defining models
