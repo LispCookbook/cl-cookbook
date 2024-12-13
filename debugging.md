@@ -447,7 +447,7 @@ and the backtrace. A few remarks:
 - we can explore the functionality with the menu that should appear
   in our editor.
 
-### Compile with maximum debugging information
+### Compile with maximum debugging information (`declaim` and `C-u` prefix)
 
 Usually your compiler will optimize things out and this will reduce
 the amount of information available to the debugger. For example
@@ -459,6 +459,9 @@ change the optimization choices with:
 ~~~
 
 and recompile our code. You can achieve the same with a handy shortcut: `C-u C-c C-c`: the form is compiled with maximum debug settings. You can on the contrary use a negative prefix argument (`M--`) to compile for speed. And use a numeric argument to set the setting to it (you should read the docstring of `slime-compile-defun`).
+
+Likewise, you can apply maximum debug settings to all the code of your
+current buffer with `C-u C-c C-k`. Use the `M--` prefix for maximum speed.
 
 
 ## Step
