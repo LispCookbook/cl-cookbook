@@ -924,7 +924,8 @@ A, B, C, D, E
 NIL
 ~~~
 
-### Ascending, descending order, limits
+### Ascending and descending order, upper and lower limits: `to` and `below`, `downto` and `above`
+
 #### loop
 
 `from… to…`:
