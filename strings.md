@@ -897,7 +897,7 @@ NIL
 
 and also `string/=`, `string-not-equal`, `string-not-lessp`, `string-not-greaterp`.
 
-## String formatting
+## String formatting: `format`
 
 The `format` function has a lot of directives to print strings,
 numbers, lists, going recursively, even calling Lisp functions,
@@ -1268,6 +1268,10 @@ _ - Conditional Newline
 } - End of Iteration
 ~ - Tilde
 ```
+
+### Slime help
+
+* to look-up a `format` directive, such as `~A`, use `M-x common-lisp-hyperspec-format`, bound to `C-c C-d ~`, and use TAB-completion.
 
 ## See also
 
