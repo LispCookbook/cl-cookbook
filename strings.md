@@ -903,38 +903,13 @@ The `format` function has a lot of directives to print strings,
 numbers, lists, going recursively, even calling Lisp functions,
 etc. We'll focus here on a few things to print and format strings.
 
-The need of our examples arise when we want to print many strings and
-justify them. Let's work with this list of movies:
+For our examples below, we'll work with a list of movies:
 
 ~~~lisp
-(defparameter movies '(
+(defparameter *movies* '(
     (1 "Matrix" 5)
-    (10 "Matrix Trilogy swe sub" 3.3)
-    ))
+    (10 "Matrix Trilogy swe sub" 3.3)))
 ~~~
-
-We want an aligned and justified result like this:
-
-```
- 1 Matrix                  5
-10 Matrix Trilogy swe sub  3.3
-```
-
-We'll use `mapcar` to iterate over our movies and experiment with the
-format constructs.
-
-~~~lisp
-(mapcar (lambda (it)
-          (format t "~a ~a ~a~%" (first it) (second it) (third it)))
-        movies)
-~~~
-
-which prints:
-
-```
-1 Matrix 5
-10 Matrix Trilogy swe sub 3.3
-```
 
 
 ### Structure of format
@@ -943,7 +918,7 @@ Format directives start with `~`. A final character like `A` or `a`
 (they are case insensitive) defines the directive. In between, it can
 accept coma-separated options and parameters.
 
-Print a tilde with `~~`, or 10 with `~10~`.
+Print a tilde with `~~`, or 10 tildes with `~10~`.
 
 Other directives include:
 
@@ -955,12 +930,44 @@ Other directives include:
 
 ### Basic primitive: ~A or ~a (Aesthetics)
 
-`(format t "~a" movies)` is the most basic primitive.
+`(format t "~a" *movies*)` is the most basic primitive.
+
+`t` prints to `*standard-output*`.
 
 ~~~lisp
-(format nil "~a" movies)
+(format nil "~a" *movies*)
 ;; => "((1 Matrix 5) (10 Matrix Trilogy swe sub 3.3))"
 ~~~
+
+Here, `nil` tells `format` to return a new string.
+
+
+### Print to standard output or return a new string: `t` or `nil`
+
+As seen above, `(format t …)` prints to `*standard-output*` whereas
+`(format nil …)` returns a new string.
+
+Now observe:
+
+~~~lisp
+(format t "~a" *movies*)
+;; =>
+((1 Matrix 5) (10 Matrix Trilogy swe sub 3.3))
+NIL
+~~~
+
+`format` *prints* to stdout and *returns* NIL.
+
+But now:
+
+~~~lisp
+(format nil "~a" *movies*)
+;; =>
+"((1 Matrix 5) (10 Matrix Trilogy swe sub 3.3))"
+~~~
+
+`format` returned a string.
+
 
 ### Newlines: ~% and ~&
 
@@ -987,7 +994,7 @@ Use a number as parameter, like `~2a`:
 ~~~lisp
 (mapcar (lambda (it)
            (format t "~2a ~a ~a~%" (first it) (second it) (third it)))
-         movies)
+         *movies*)
 ~~~
 
 ```
@@ -1000,7 +1007,7 @@ So, expanding:
 ~~~lisp
 (mapcar (lambda (it)
           (format t "~2a ~25a ~2a~%" (first it) (second it) (third it)))
-        movies)
+        *movies*)
 ~~~
 
 ```
@@ -1022,7 +1029,7 @@ Use a `@` as in `~2@A`:
 ~~~lisp
 (mapcar (lambda (it)
            (format nil "~2@a ~25@a ~2a~%" (first it) (second it) (third it)))
-        movies)
+        *movies*)
 ~~~
 
 ```
@@ -1040,7 +1047,7 @@ With `~2,2f`:
 ~~~lisp
 (mapcar (lambda (it)
           (format t "~2@a ~25a ~2,2f~%" (first it) (second it) (third it)))
-        movies)
+        *movies*)
 ~~~
 
 ```
