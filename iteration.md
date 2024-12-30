@@ -581,60 +581,43 @@ This can be slower than a specific iteration construct.
 
 ### Looping over a hash-table
 
-We create a hash-table:
+Iterating over a hash-table is possible with `loop` and other
+built-ins, with `iterate` and other libraries.
+
+Note that due to the nature of hash tables you
+_can't_ control the order in which the entries are provided.
+
+Let's create a hash-table for our fowlling examples:
 
 ~~~lisp
-(defparameter h (make-hash-table))
-(setf (gethash 'a h) 1)
-(setf (gethash 'b h) 2)
+(defparameter *my-hash-table* (make-hash-table))
+(setf (gethash 'a *my-hash-table*) 1)
+(setf (gethash 'b *my-hash-table*) 2)
 ~~~
 
-#### Looping over keys and values
+#### `loop`-ing over keys and values
 
-Looping over keys:
+To loop over keys, use this:
 
 ~~~lisp
-(loop for k being the hash-key of h collect k)
+(loop :for k :being :the :hash-key :of *my-hash-table* :collect k)
 ;; (B A)
 ~~~
 
-Looping over values uses the same concept but with the `hash-value` keyword instead of `hash-key`:
+Looping over values uses the same concept but with the `:hash-value` keyword instead of `:hash-key`:
 
 ~~~lisp
-(loop for v being the hash-value of h collect v)
+(loop :for v :being :the :hash-value :of *my-hash-table* :collect v)
 ;; (2 1)
 ~~~
 
 Looping over key-values pairs:
 
 ~~~lisp
-(loop for k being the hash-key
-        using (hash-value v) of h
-      collect (list k v))
+(loop :for k :being :the :hash-key
+        :using (hash-value v) :of *my-hash-table*
+      :collect (list k v))
 ;; ((B 2) (A 1))
-~~~
-
-#### iterate: `in-hashtable`
-
-Use `in-hashtable`:
-
-~~~lisp
-(iter (for (k v) in-hashtable h)
-  (collect (list k v)))
-;; ((B 2) (A 1))
-~~~
-
-#### for
-
-the same with `for`:
-
-~~~lisp
-(for:for ((it over h))
-  (print it))
-;; =>
-(A 1)
-(B 2)
-NIL
 ~~~
 
 
@@ -646,21 +629,93 @@ value:
 ~~~lisp
 (maphash (lambda (key val)
            (format t "key: ~A value: ~A~%" key val))
-         h)
+         *my-hash-table*)
 ;; =>
 key: A value: 1
 key: B value: 2
 NIL
 ~~~
 
-See also [with-hash-table-iterator](http://www.lispworks.com/documentation/HyperSpec/Body/m_w_hash.htm).
 
-#### dohash
+#### with-hash-table-iterator
+
+You can also use
+[`with-hash-table-iterator`](http://www.lispworks.com/documentation/HyperSpec/Body/m_w_hash.htm),
+a macro which turns (via
+[`macrolet`](http://www.lispworks.com/documentation/HyperSpec/Body/s_flet_.htm))
+its first argument into an iterator that on each invocation returns
+three values per hash table entry:
+- a generalized boolean that's true if an entry is returned,
+- the key of the entry,
+- and the value of the entry.
+
+If there are no more entries, only one value is returned, `nil`.
+
+For example:
+
+~~~lisp
+;;; same hash-table as above
+CL-USER> (with-hash-table-iterator (my-iterator *my-hash-table*)
+           (loop
+              (multiple-value-bind (entry-p key value)
+                  (my-iterator)
+                (if entry-p
+                    (format t "The value associated with the key ~S is ~S~%" key value)
+                    (return)))))
+;; =>
+The value associated with the key A is 1
+The value associated with the key B is 2
+NIL
+~~~
+
+Note the following caveat from the HyperSpec:
+
+> It is unspecified what happens if any of the implicit interior state
+> of an iteration is returned outside the dynamic extent of the
+> `with-hash-table-iterator` form such as by returning some closure
+> over the invocation form.
+
+#### iterate: `in-hashtable`
+
+Use `in-hashtable`:
+
+~~~lisp
+(iter (for (k v) in-hashtable *my-hash-table*)
+  (collect (list k v)))
+;; ((B 2) (A 1))
+~~~
+
+#### Alexandria's `maphash-keys` and `maphash-values`
+
+To map over keys or values (and only keys or only values) we can again
+rely on Alexandria with `maphash-keys` and `maphash-values`.
+
+#### Serapeum's `do-hash-table`
+
+The [Serapeum library](https://github.com/ruricolist/serapeum/blob/master/REFERENCE.md#hash-tables) has a do-like macro called `do-hash-table`.
+
+    (do-hash-table (key value table &optional return) &body body)
+
+
+#### for
+
+With the `for` library, use the `over` keyword:
+
+~~~lisp
+(for:for ((it over *my-hash-table*))
+  (print it))
+;; =>
+(A 1)
+(B 2)
+NIL
+~~~
+
+#### trivial-do:dohash
 
 Only because we like this topic, we introduce another library, [trivial-do](https://github.com/yitzchak/trivial-do/). It has the `dohash` macro, that ressembles `dolist`:
 
 ~~~lisp
-(dohash (key value h)
+(dohash (key value *my-hash-table*)
   (format t "key: ~A, value: ~A~%" key value))
 ;; =>
 key: A value: 1
@@ -669,8 +724,9 @@ NIL
 ~~~
 
 #### Series
+
 ~~~lisp
-(iterate (((k v) (scan-hash h)))
+(iterate (((k v) (scan-hash *my-hash-table*)))
   (format t "~&~a ~a~%" k v))
 ;; =>
 A 1
