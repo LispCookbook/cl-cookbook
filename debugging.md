@@ -632,7 +632,22 @@ Your Lisp can tell you all the places where a function is referenced
 or called, where a global variable is set, where a macro is expanded,
 and so on. For example, `slime-who-calls` (`C-c C-w C-c` or the Slime > Cross-Reference menu) will show you all the places where a function is called.
 
-See our Emacs page for a complete list of commands.
+- `slime-who-references`: global variable references
+- `slime-who-bind`: global variable bindings
+- `slime-who-sets`: global variable setters
+- `slime-who-specializes`: methods specialized on a symbol
+- `slime-who-macroexpands`: places where a macro is expanded
+- `slime-list-callees`: lists all the functions that are called inside a given function body.
+- `slime-list-callers`: lists all the functions that call a given function.
+
+Calling such a cross-reference function opens a new buffer with the
+list of results. You can navigate between references, and also
+recompile all the listed functions and macros with the usual shortcuts
+(`C-c C-k`). This is specially useful when you just changed a macro
+and you want to recompile all the functions that are using this macro.
+
+See our Emacs page for a complete list of commands and their Slime shortcuts.
+
 
 ## SLY stepper and SLY stickers
 

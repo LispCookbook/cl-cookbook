@@ -371,7 +371,7 @@ Reference: [https://slime.common-lisp.dev/doc/html/Compilation.html#Compilation]
 ### Crossreferencing: find who's calling, referencing, setting a symbol
 
 Slime has nice cross-referencing facilities. For example, you can ask
-what calls a particular function, what expands a macro, or where a global variable is being used.
+who calls a function, who expands a macro, or where a global variable is being used.
 
 Results are presented in a new buffer, listing the places which reference a particular entity.
 From there, we can press Enter to go to the corresponding source line,
@@ -387,6 +387,8 @@ The bindings are the following (they are also shown in Slime's menu):
 - **C-c C-w b** (`slime-who-bind`) global variable bindings
 - **C-c C-w s** (`slime-who-sets`) global variable setters
 - **C-c C-w a** (`slime-who-specializes`) methods specialized on a symbol
+- **C-c >** (`slime-list-callees`) lists all the functions that are called inside a function body.
+- **C-c <** (`slime-list-callers`) lists all the functions that call a given function.
 
 And when the `slime-asdf` contrib is enabled,
 **C-c C-w d** (`slime-who-depends-on`) lists dependent ASDF systems
