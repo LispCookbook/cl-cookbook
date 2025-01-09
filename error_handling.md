@@ -26,6 +26,21 @@ What is a condition ?
 
 Let's dive into it step by step. More resources are given afterwards.
 
+## Throwing/catching versus signaling/handling
+
+Common Lisp has a notion of throwing and catching, but it refers to a different concept
+than throwing and catching in C++ or Java.
+In Common Lisp,
+[`throw`](https://www.lispworks.com/documentation/HyperSpec/Body/s_throw.htm)
+and [`catch`](https://www.lispworks.com/documentation/HyperSpec/Body/s_catch.htm)
+(like in [Ruby](https://ruby-doc.com/docs/ProgrammingRuby/html/tut_exceptions.html#S4)!)
+are a mechanism for transfers of control; they do not refer to working with conditions.
+
+In Common Lisp, conditions are *signaled* and the process of executing code in response
+to a signaled condition is called *handling*. Unlike in Java or C++, handling
+a condition does not mean that the stack is immediately unwound - it is up to
+the individual handler functions to decide if and in what situations
+the stack should be unwound.
 
 ## Ignoring all errors, returning nil
 
@@ -56,18 +71,18 @@ could not choose what to return.
 Remember that we can `inspect` the condition with a right click in Slime.
 
 
-## Catching any condition (handler-case)
+## Handling all error conditions (handler-case)
 
 <!-- we will say "handling" for handler-bind -->
 
 `ignore-errors` is built from [handler-case][handler-case]. We can write the previous
-example by catching the general `error` but now we can return whatever
+example by handling the general `error` but now we can return whatever
 we want:
 
 ~~~lisp
 (handler-case (/ 3 0)
   (error (c)
-    (format t "We caught a condition.~&")
+    (format t "We handled an error.~&")
     (values 0 c)))
 ; in: HANDLER-CASE (/ 3 0)
 ;     (/ 3 0)
@@ -78,7 +93,7 @@ we want:
 ;
 ; compilation unit finished
 ;   caught 1 STYLE-WARNING condition
-We caught a condition.
+We handled an error.
 0
 #<DIVISION-BY-ZERO {1004846AE3}>
 ~~~
@@ -95,35 +110,34 @@ The general form of `handler-case` is
        ...))
 ~~~
 
-
-## Catching a specific condition
+## Handling a specific condition
 
 We can specify what condition to handle:
 
 ~~~lisp
 (handler-case (/ 3 0)
   (division-by-zero (c)
-    (format t "Caught division by zero: ~a~%" c)))
+    (format t "Got division by zero: ~a~%" c)))
 ;; …
-;; Caught division by zero: arithmetic error DIVISION-BY-ZERO signalled
+;; Got division by zero: arithmetic error DIVISION-BY-ZERO signalled
 ;; Operation was (/ 3 0).
 ;; NIL
 ~~~
 
-This workflow is similar to a try/catch as found in other languages, but we can do more.
 
+This is the mechanism that is the most similar to the "usual" exception handling
+as known from other languages: `throw`/`try`/`catch` from C++ and Java,
+`raise`/`try`/`except` from Python, `raise`/`begin`/`rescue` in Ruby,
+and so on. But we can do more.
 
 ## handler-case VS handler-bind
 
-`handler-case` is similar to the `try/catch` forms that we find in
-other languages.
-
-[handler-bind][handler-bind] (see the next examples), is what to use
-when we need absolute control over what happens when a signal is
-raised. It allows us to use the debugger and restarts, either
+[handler-bind][handler-bind] (see the next examples) is what to use
+when we need absolute control over what happens when a condition is
+signaled. It allows us to use the debugger and restarts, either
 interactively or programmatically.
 
-If some library doesn't catch all conditions and lets some bubble out
+If some library doesn't handle all conditions and lets some bubble out
 to us, we can see the restarts (established by `restart-case`)
 anywhere deep in the stack, including restarts established by other
 libraries that this library called. And *we can see the stack
@@ -158,7 +172,7 @@ It's better if we give more information to it when we create a condition, so let
   (:documentation "Custom error when we encounter a division by zero.")) ;; good practice ;)
 ~~~
 
-Now when we'll "signal" or "throw" the condition in our code we'll be
+Now, when we signal the condition in our code, we'll be
 able to populate it with information to be consumed later:
 
 ~~~lisp
@@ -198,14 +212,17 @@ not standard objects.
 A difference is that we can't use `slot-value` on slots.
 
 
-## Signaling (throwing) conditions: error, warn, signal
+## Signaling conditions: error, cerror, warn, signal
 
 We can use [error][error] in two ways:
 
-- `(error "some text")`: signals a condition of type [simple-error][simple-error], and opens-up the interactive debugger.
-- `(error 'my-error :message "We did this and that and it didn't work.")`: creates and throws a custom condition with its slot "message" and opens-up the interactive debugger.
+- `(error "some text")`: signals a condition of type [simple-error][simple-error],.
+- `(error 'my-error :message "We did this and that and it didn't work.")`: creates and signals a custom condition with a value provided for the `message` slot.
 
-With our own condition we can do:
+In both cases, if the condition is not handled, `error` opens up the interactive debugger, where
+the user may select a restart to continue execution.
+
+With our own condition type from above, we can do:
 
 ~~~lisp
 (error 'my-division-by-zero :dividend 3)
@@ -213,16 +230,17 @@ With our own condition we can do:
 (error (make-condition 'my-division-by-zero :dividend 3))
 ~~~
 
-Throwing these conditions will enter the interactive debugger, where
-the user may select a restart.
+`cerror` is like `error`, but automatically establishes a `continue` restart that the user can use to continue execution. It accepts a string as its first argument - this string will be used as the user-visible report for that restart.
 
-`warn` will not enter the debugger (create warning conditions by subclassing [simple-warning][simple-warning]).
+`warn` will not enter the debugger (create warning conditions by subclassing [warning][warning]) - if its condition is unhandled, it will log the warning to error output instead.
 
-Use [signal][signal] if you do not want to enter the debugger, but you still want to signal to the upper levels that something *exceptional* happened.
+Use [signal][signal] if you do not want to do any printing or enter the debugger, but you still want to signal to the upper levels that some sort of noticeable situation has occurred.
 
-And that can be anything. For example, it can be used to track
-progress during an operation. You would create a condition with a
-`percent` slot, signal one when progress is made, and the
+That situation can be anything, from passing information during normal
+operation of your code to grave situations like errors.
+For example, it can be used to track progress during an operation.
+You can create a condition with a
+`percent` slot, signal one whenever progress is made, and the
 higher level code would handle it and display it to the user. See the
 resources below for more.
 
@@ -236,7 +254,7 @@ The class precedence list of `simple-warning` is  `simple-warning, simple-condit
 ### Custom error messages (:report)
 
 
-So far, when throwing our error, we saw this default text in the
+So far, when signaling our error, we saw this default text in the
 debugger:
 
 ```
@@ -420,7 +438,7 @@ use the regular `read`.
       :interactive (lambda () (prompt-new-value "Please enter a new divisor: "))
       ;;
       ;; and call the divide function with the new value…
-      ;; … possibly catching bad input again!
+      ;; … possibly handling bad input again!
       (divide-with-restarts x value))))
 
 (defun prompt-new-value (prompt)
@@ -476,7 +494,7 @@ as if the error didn't occur, as seen in the stack.
 
 ### Calling restarts programmatically (handler-bind, invoke-restart)
 
-We have a piece of code that we know can throw conditions. Here,
+We have a piece of code that we know can signal conditions. Here,
 `divide-with-restarts` can signal an error about a division by
 zero. What we want to do, is our higher-level code to automatically
 handle it and call the appropriate restart.
@@ -487,9 +505,9 @@ We can do this with `handler-bind` and [invoke-restart][invoke-restart]:
 (defun divide-and-handle-error (x y)
   (handler-bind
       ((division-by-zero (lambda (c)
-                (format t "Got error: ~a~%" c) ;; error-message
-                (format t "and will divide by 1~&")
-                (invoke-restart 'divide-by-one))))
+                           (format t "Got error: ~a~%" c) ;; error-message
+                           (format t "and will divide by 1~&")
+                           (invoke-restart 'divide-by-one))))
     (divide-with-restarts x y)))
 
 (divide-and-handle-error 3 0)
@@ -570,7 +588,7 @@ condition's reader `(opts:option condition)`.
 
 ## Running some code, condition or not ("finally") (unwind-protect)
 
-The "finally" part of others `try/catch/finally` forms is done with [unwind-protect][unwind-protect].
+The "finally" part of others `try`/`catch`/`finally` forms is done with [unwind-protect][unwind-protect].
 
 It is the construct used in "with-" macros, like `with-open-file`,
 which always closes the file after it.
@@ -605,7 +623,8 @@ You're now more than ready to write some code and to dive into other resources!
 * [Algebraic effects - You can touch this !](http://jacek.zlydach.pl/blog/2019-07-24-algebraic-effects-you-can-touch-this.html) - how to use conditions and restarts to implement progress reporting and aborting of a long-running calculation, possibly in an interactive or GUI context.
 * [A tutorial on conditions and restarts](https://github.com/stylewarning/lisp-random/blob/master/talks/4may19/root.lisp),  based around computing the roots of a real function. It was presented by the author at a Bay Area Julia meetup on may 2019 ([talk slides here](https://github.com/stylewarning/talks/blob/master/4may19-julia-meetup/Bay%20Area%20Julia%20Users%20Meetup%20-%204%20May%202019.pdf)).
 * [lisper.in](https://lisper.in/restarts#signaling-validation-errors) - example with parsing a csv file and using restarts with success, [in a flight travel company](https://www.reddit.com/r/lisp/comments/7k85sf/a_tutorial_on_conditions_and_restarts/drceozm/).
-* [https://github.com/svetlyak40wt/python-cl-conditions](https://github.com/svetlyak40wt/python-cl-conditions) - implementation of the CL conditions system in Python.
+* [https://github.com/svetlyak40wt/python-cl-conditions](https://github.com/svetlyak40wt/python-cl-conditions) - implementation of the CL condition system in Python.
+* [https://github.com/phoe/portable-condition-system](https://github.com/phoe/portable-condition-system) - portable implementation of the CL condition system in Common Lisp.
 
 [ignore-errors]: http://www.lispworks.com/documentation/HyperSpec/Body/m_ignore.htm
 [handler-case]: http://www.lispworks.com/documentation/HyperSpec/Body/m_hand_1.htm

@@ -123,8 +123,8 @@ Before diving into tests, here is a brief introduction of the available checks y
 
 There is also:
 
-* `finishes`: passes if the assertion body executes to normal completion. In other words if body does signal, return-from or throw, then this test fails.
-* `pass`: just make the test pass.
+* `finishes`: passes if the assertion body executes to normal completion. In other words, if the body signals an error or makes a non-local jump, then this test fails.
+* `pass`: marks the test as passed.
 * `is-true`: like `is`, but unlike it this check does not inspect the assertion body to determine how to report the failure. Similarly, there is `is-false`.
 
 Please note that all the checks accept an optional reason, as string, that can be formatted with format directives (see more below). When omitted, FiveAM generates a report that explains the failure according to the arguments passed to the function.

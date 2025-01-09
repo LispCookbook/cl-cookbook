@@ -478,7 +478,7 @@ november 2019, now gives those warnings, meaning that this:
   ((name :type number :initform "17")))
 ~~~
 
-throws a warning at compile time.
+signals a warning at compile time.
 
 
 Note: see also [sanity-clause][sanity-clause], a data
@@ -530,7 +530,7 @@ string:
     (format nil "finally doing sth with ~a" res)))
 ~~~
 
-Compiling this function doesn't throw a type warning.
+Compiling this function doesn't signal a type warning.
 
 However, if we had the problematic line at the function's boundary
 we'd get the warning:

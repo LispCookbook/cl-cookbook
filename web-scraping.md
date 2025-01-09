@@ -227,12 +227,11 @@ that case. If all goes well, we return the return code, that should be
 200.
 
 As we saw at the beginning, `dex:get` returns many values, including
-the return code. We'll catch only this one with `nth-value` (instead
+the return code. We'll access only this one with `nth-value` (instead
 of all of them with `multiple-value-bind`) and we'll use
 `ignore-errors`, that returns nil in case of an error. We could also
-use `handler-case` and catch specific error types (see examples in
-dexador's documentation) or (better yet ?) use `handler-bind` to catch
-any `condition`.
+use `handler-case` and handle specific error types (see examples in
+dexador's documentation).
 
 (*ignore-errors has the caveat that when there's an error, we can not
 return the element it comes from. We'll get to our ends though.*)
