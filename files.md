@@ -247,7 +247,9 @@ always recommendable to use the macro
 instead. Not only will this macro open the file for you and close it when you're
 done, it'll also take care of it if your code leaves the body abnormally (such
 as by a use of
-[throw](http://www.lispworks.com/documentation/HyperSpec/Body/s_throw.htm)). A
+[`go`](https://www.lispworks.com/documentation/HyperSpec/Body/s_go.htm),
+[`return-from`](https://www.lispworks.com/documentation/HyperSpec/Body/s_ret_fr.htm),
+or [`throw`](http://www.lispworks.com/documentation/HyperSpec/Body/s_throw.htm)). A
 typical use of `with-open-file` looks like this:
 
 ~~~lisp

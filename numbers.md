@@ -176,7 +176,7 @@ this results in an error condition:
 ; Evaluation aborted on #<FLOATING-POINT-OVERFLOW {10041720B3}>.
 ~~~
 
-The error can be caught and handled, or this behaviour can be
+The error can be handled, or this behaviour can be
 changed, to return `+infinity`. In SBCL this is:
 
 ~~~lisp

@@ -361,7 +361,8 @@ You can also use the usual Emacs shortcut from [compilation-mode]( https://www.g
 If you don't want to see the red annotations in your source… use `C-c
 M-c`, `slime-remove-notes`. They are not automagically fixed though.
 
-Only style warnings may not be caught by the slime-compilation buffer.
+If your code has only style warnings, they will be caught by the slime-compilation
+buffer, but the buffer will not pop up on its own.
 
 You can find all these keybindings, as usual, under Emac's Slime menu.
 

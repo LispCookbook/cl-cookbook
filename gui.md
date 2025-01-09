@@ -563,7 +563,7 @@ And voilà. Run it with
 ##### Custom events
 
 We'll implement the same functionality as above, but for demonstration
-purposes we'll create our own signal named `name-set` to throw when
+purposes we'll create our own signal named `name-set` to get emitted when
 the button is clicked.
 
 We start by defining the signal, which happens inside the

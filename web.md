@@ -10,8 +10,9 @@ self-contained executable, stability, good threads story, strong typing, etc. We
 can, say, define a new route and try it right away, there is no need to restart
 any running server. We can change and compile *one function at a time* (the
 usual `C-c C-c` in Slime) and try it. The feedback is immediate. We can choose
-the degree of interactivity: the web server can catch exceptions and fire the
-interactive debugger, or print lisp backtraces on the browser, or display a 404
+the degree of interactivity: the web server can refuse to handle exceptions
+and fire the interactive debugger instead,
+or handle them and print lisp backtraces on the browser, or display a 404
 error page and print logs on standard output. The ability to build
 self-contained executables eases deployment tremendously (compared to, for
 example, npm-based apps), in that we just copy the executable to a server and
@@ -493,14 +494,14 @@ Then you can parse this string to JSON with the library of your choice ([jzon](h
 
 In all frameworks, we can choose the level of interactivity. The web
 framework can return a 404 page and print output on the repl, it can
-catch errors and invoke the interactive lisp debugger, or it can show
+invoke the interactive lisp debugger, or it can handle the error and show
 the lisp backtrace on the html page.
 
 ### Hunchentoot
 
 The global variables to set to choose the error handling behaviour are:
 
-- `*catch-errors-p*`: set to `nil` if you want errors to be caught in
+- `*catch-errors-p*`: set to `nil` if you want unhandled errors to invoke
   the interactive debugger (for development only, of course):
 
 ~~~lisp
