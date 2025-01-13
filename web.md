@@ -30,6 +30,11 @@ application. We do *not* aim to be exhaustive nor to replace the
 upstream documentation. Your feedback and contributions are
 appreciated.
 
+<div class="info" style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 17px;">
+<!-- if inside a <p> then bootstrap adds 10px padding to the bottom -->
+<strong>INFO:</strong> a new website now specializes on web development in Common Lisp: <a href="https://web-apps-in-lisp.github.io/">Web Apps in Lisp, Know-how</a> (<a href="https://github.com/web-apps-in-lisp/web-apps-in-lisp.github.io/">sources</a>).
+</div>
+
 
 <!-- form creation, form validation -->
 
@@ -1172,6 +1177,7 @@ row.
 
 ## See also
 
+- [Web Apps in Lisp, Know-how](https://web-apps-in-lisp.github.io/)
 - [Feather](https://hg.sr.ht/~wnortje/feather), a template for web
   application development, shows a functioning Hello World app
   with an HTML page, a JSON API, a passing test suite, a Postgres DB
@@ -1180,7 +1186,6 @@ row.
   a simple project template with Hunchentoot, Easy-Routes, Djula and Bulma CSS.
 - [lisp-web-live-reload-example](https://github.com/vindarel/lisp-web-live-reload-example/) -
   a toy project to show how to interact with a running web app.
-- [lisp-journey: enrich your stacktrace with session and user data](https://lisp-journey.gitlab.io/blog/common-lisp-on-the-web-enrich-your-stacktrace-with-request-and-session-data/)
 - [video: how to build a web app in Lisp · part 1](https://www.youtube.com/watch?v=h_noB1sI_e8) featuring Hunchentoot, easy-routes, Djula templates, error handling, common traps.
 
 ## Credits
