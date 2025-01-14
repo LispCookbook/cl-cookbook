@@ -157,11 +157,43 @@ build:
          --eval "(sb-ext:save-lisp-and-die #p\"my-app\" :toplevel #'my-app:main :executable t)"
 ```
 
-### With ASDF
+### `uiop:dump-image` is the portable equivalent of sb-ext:save-lisp-and-die
 
-Now that we've seen the basics, we need a portable method. Since its
-version 3.1, ASDF allows to do that. It introduces the [`make` command](https://common-lisp.net/project/asdf/asdf.html#Convenience-Functions),
-that reads parameters from the .asd. Add this to your .asd declaration:
+`sb-ext:save-lisp-and-die` is SBCL-specific. Although the feature
+exists in other implementations, the function to use is named
+differently and it accepts different arguments. On CCL (Clozure CL),
+it is named `ccl:save-application`.
+
+If you want to write a build script that is portable across CL
+implementations, you can use `uiop:dump-image`. It takes roughly the
+same arguments as `save-lisp-and-die` described above, with the
+exception of `:toplevel` that should be given to the variable
+`uiop:*image-entry-point*`:
+
+~~~lisp
+;; build.lisp
+(asdf:load-asd "my-app.asd")
+(ql:quickload "my-app")
+
+(setf uiop:*image-entry-point* #'my-app:main)
+
+(uiop:dump-image "my-app-binary" :executable t :compression 9)
+~~~
+
+You can run this file, that we named `build.lisp`, with any implementation:
+
+    $ sbcl --load build.lisp
+    $ ecl --load build.lisp
+    $ ccl --load build.lisp
+    …
+
+
+### Adding build steps directly in the ASDF system definition
+
+You can choose to add the build instructions directly in the `.asd` project definition.
+
+Since its version 3.1, ASDF allows to do that. It introduced the [`make` command](https://common-lisp.net/project/asdf/asdf.html#Convenience-Functions),
+that reads parameters from the .asd. Add this to your .asd file:
 
 ~~~
 :build-operation "program-op" ;; leave as is
@@ -171,7 +203,7 @@ that reads parameters from the .asd. Add this to your .asd declaration:
 
 and call `asdf:make :my-package`.
 
-So, in a Makefile:
+So, you could add this in a Makefile:
 
 ~~~lisp
 LISP ?= sbcl
