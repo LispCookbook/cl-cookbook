@@ -157,7 +157,7 @@ build:
          --eval "(sb-ext:save-lisp-and-die #p\"my-app\" :toplevel #'my-app:main :executable t)"
 ```
 
-### `uiop:dump-image` is the portable equivalent of sb-ext:save-lisp-and-die
+### With `uiop:dump-image`
 
 `sb-ext:save-lisp-and-die` is SBCL-specific. Although the feature
 exists in other implementations, the function to use is named
@@ -188,7 +188,7 @@ You can run this file, that we named `build.lisp`, with any implementation:
     …
 
 
-### Adding build steps directly in the ASDF system definition
+### With ASDF
 
 You can choose to add the build instructions directly in the `.asd` project definition.
 
