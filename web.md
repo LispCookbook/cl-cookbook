@@ -811,22 +811,24 @@ and so on.
 
 ### Encrypting passwords
 
-#### With cl-pass
+#### With cl-bcrypt
 
-[cl-pass](https://github.com/eudoxia0/cl-pass) is a password hashing and verification library. It is as simple to use as this:
+[cl-bcrypt](https://github.com/dnaeon/cl-bcrypt) is a password hashing and verification library. It is as simple to use as this:
 
 ~~~lisp
-(cl-pass:hash "test")
-;; "PBKDF2$sha256:20000$5cf6ee792cdf05e1ba2b6325c41a5f10$19c7f2ccb3880716bf7cdf999b3ed99e07c7a8140bab37af2afdc28d8806e854"
-(cl-pass:check-password "test" *)
-;; t
-(cl-pass:check-password "nope" **)
-;; nil
+;; Create a password object with 12 rounds:
+(defparameter *password* (bcrypt:make-password "test" :cost 12 :identifier "2a"))
+;; Generate a hash:
+(bcrypt:password-hash *password*)
+;; #(249 97 146 214 147 168 142 174 40 17 15 74 150 236 240 184 72 175 74 206 160 168 22)
+;; String representation:
+(defparameter *password-string* (bcrypt:encode *password*))
+;; Check the password by comparing "test" to the stored string:
+(bcrypt:password= "test" *password-string*)
+;; T
+(bcrypt:password= "correct horse battery staple" *password-string*)
+;; NIL
 ~~~
-
-You might also want to look at
-[hermetic](https://github.com/eudoxia0/hermetic), a simple
-authentication system for Clack-based applications.
 
 #### Manually (with Ironclad)
 
