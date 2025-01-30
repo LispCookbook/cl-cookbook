@@ -588,3 +588,5 @@ and on the IDE, do:
 - the [Awesome LispWorks](https://github.com/fourier/awesome-lispworks) list
 - [Real Image-based approach in Common Lisp](https://www.youtube.com/watch?v=nsKx40ab9SY) - differences between SBCL and LispWorks.
 - blog post: [Delivering a LispWorks application](https://blog.dziban.net/posts/delivering-a-lispworks-application/)
+- [lw-plugins](https://github.com/apr3vau/lw-plugins) - LispWorks plugins:
+  * terminal integration, code folding, side tree, markdown highlighting, Nerd Fonts, fuzzy-matching, enhanced directory mode, expand region, pair editing, SVG rendering…
