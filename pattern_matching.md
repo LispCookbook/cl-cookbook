@@ -157,8 +157,95 @@ acceptable.
 
 All these patterns first check if the pattern is a list. If that is
 satisfied, then they obtain the contents, and the value is matched
-against the subpattern.
+against the subpattern. The `assoc` and `property` patterns match
+single values. The `alist` and `plist` patterns effectively `and` 
+several patterns.
 
+~~~lisp
+(match '(:a 1 :b 2)
+  ((property :a 1) 'found))
+;; -> FOUND
+~~~
+
+~~~lisp
+(match '(:a 1 :b 2)
+  ((property :a n) n))
+;; -> 1
+~~~
+
+~~~lisp
+(match '(:a 1 :b 2)
+  ((property :d n) n))
+;; -> NIL
+~~~
+
+Like `cl:getf` you can add a default value to the `property` pattern.
+Unlike `cl:getf` you can further add a flag to catch if the default
+is being used.
+
+~~~lisp
+(match '(:a 1 :b 2)
+  ((property :c c 3) c))
+;; -> 3
+~~~
+
+~~~
+(match '(:a 1 :b 2)
+  ((property :c c 3 foundp) (list c foundp)))
+;; -> (3 NIL)
+~~~
+
+The pattern `property!` will only match if the key is actually present. 
+
+~~~lisp
+(match '(:a 1 :b 2)
+  ((property :d n) (list n))
+  (_ 'fail))
+;; -> (NIL)
+~~~
+
+~~~lisp
+(match '(:a 1 :b 2)
+  ((property! :d n) (list n))
+  (_ 'fail))
+;; -> FAIL
+~~~
+
+Several properties can be matched with `plist`.
+
+~~~lisp
+(match '(:a 1 :b 2)
+  ((plist :a 1 :b x) x))
+;; -> 2
+~~~
+
+The pattern `assoc` matches association lists. It can take the `:test` keyword like `cl:assoc`.
+
+~~~lisp
+(match '((a . 1) (b . 2) (c . 3))
+  ((assoc 'a 1) 'ok))
+;; -> OK
+~~~
+
+~~~lisp
+(match '((a . 1) (b . 2) (c . 3))
+  ((assoc 'b x) x))
+;; -> 2
+~~~
+
+~~~lisp
+(match '(("one" . 1) ("two" . 2))
+  ((assoc "one" x :test #'string-equal) x))
+;; -> 1
+~~~
+
+The pattern `alist` matches several elements in an association list.
+
+~~~lisp
+(match '((a . 1) (b . 2) (c . 3))
+  ((alist ('a . 1) ('c . n)) n))
+;; -> 3
+~~~
 
 ### Array, simple-array, row-major-array patterns
 
