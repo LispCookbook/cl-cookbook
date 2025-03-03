@@ -97,7 +97,13 @@ All implementations above can be installed on Windows.
 
 [Portacle](https://shinmera.github.io/portacle/) is multiplatform and works on Windows.
 
-You can also try
+SBCL is available on
+[Chocolatey](https://community.chocolatey.org/packages/sbcl), albeit
+this is *not* an official installation method.
+
+> > choco install sbcl
+
+You can also use
 [plain-common-lisp](https://github.com/pascalcombier/plain-common-lisp/),
 a trivial way to get a native Common Lisp environment on Windows. It
 lets you install Emacs with Slime, Quicklisp and SBCL in a couple
