@@ -101,7 +101,7 @@ SBCL is available on
 [Chocolatey](https://community.chocolatey.org/packages/sbcl), albeit
 this is *not* an official installation method.
 
-> > choco install sbcl
+    > choco install sbcl
 
 You can also use
 [plain-common-lisp](https://github.com/pascalcombier/plain-common-lisp/),
