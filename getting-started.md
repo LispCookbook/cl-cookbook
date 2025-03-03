@@ -33,8 +33,9 @@ Other well-known implementations include:
 * [ABCL](http://abcl.org/), to interface with the JVM,
 * [ClozureCL](https://ccl.clozure.com/), a good implementation with very fast build times,
 * [CLASP](https://github.com/drmeister/clasp), that interoperates with C++ libraries using LLVM for compilation to native code,
-* [AllegroCL](https://franz.com/products/allegrocl/) (proprietary)
+* [SICL](https://github.com/robert-strandh/SICL), a new and modular implementation,
 * [LispWorks](http://www.lispworks.com/) (proprietary)
+* [AllegroCL](https://franz.com/products/allegrocl/) (proprietary)
 
 and older implementations:
 
