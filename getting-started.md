@@ -230,11 +230,17 @@ If you wish, you can install Quicklisp to a different location.  For instance,
 to install it to a hidden folder on Unix systems:
 
 ~~~lisp
+;; optional
 (quicklisp-quickstart:install :path "~/.quicklisp")
 ~~~
 
-If you want Quicklisp to always be loaded in your Lisp sessions, run
-`(ql:add-to-init-file)`: this adds the right stuff to the init file of
+Finally, in order to always load Quicklisp when you start a new Lisp session, run:
+
+~~~lisp
+(ql:add-to-init-file)
+~~~
+
+this adds the right stuff to the init file of
 your CL implementation. Otherwise, you have to run `(load
 "~/quicklisp/setup.lisp")` in every session if you want to use
 Quicklisp or any of the libraries installed through it.
