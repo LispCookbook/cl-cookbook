@@ -652,7 +652,9 @@ Read the CLHS section about [form evaluation](http://www.lispworks.com/documenta
 
 ## Closures
 
-Closures allow to capture lexical bindings:
+Closures allow you to capture lexical bindings. This can be useful to store state
+that you don't want to have to keep passing into your function(s), either as a convenience
+or to keep state variables out of a reachable namespace.
 
 ~~~lisp
 (let ((limit 3)
@@ -698,6 +700,48 @@ Or similarly:
 0
 ~~~
 
+In addition to counter generators, another common use of lexical closures is
+memoization — caching previous results of functions that are expensive to
+calculate. Using the non-memoized Fibonacci function below quickly gets quite
+time-consuting to calculate.
+
+~~~lisp
+(defun fibonacci (n)
+  (if (<= n 1)
+      n
+      (+ (fibonacci (- n 1)) (fibonacci (- n 2)))))
+
+(time (fibonacci 40))
+;; Evaluation took:
+;;   2.843 seconds of real time
+;;   2.841360 seconds of total run time (2.796188 user, 0.045172 system)
+;;   99.93% CPU
+;;   0 bytes consed
+;; 102334155
+~~~
+
+Using a hash table in a lexical closure to store previously caclulated results can speed things up:
+
+~~~lisp
+(let ((memo (make-hash-table)))
+  (defun fibonacci (n)
+    (let ((value (gethash n memo)))
+      (cond ((<= n 1) n)
+            (value value)
+            (t (setf (gethash n memo)
+                     (+ (fibonacci (- n 1)) (fibonacci (- n 2)))))))))
+
+(time (fibonacci 40))
+;; Evaluation took:
+;;   0.000 seconds of real time
+;;   0.000016 seconds of total run time (0.000015 user, 0.000001 system)
+;;   100.00% CPU
+;;   0 bytes consed
+;; 102334155
+~~~
+
+There are several memoization libraries, some of which wrap this lexical closure and caching
+mechanics up in a macro.
 
 See more on [Practical Common Lisp](http://www.gigamonkeys.com/book/variables.html).
 
