@@ -954,7 +954,7 @@ M-RET           slime-repl-closing-return
 M-n             slime-repl-next-input
 M-p             slime-repl-previous-input
 M-r             slime-repl-previous-matching-input
-M-s             previous-line
+M-s             slime-repl-next-matching-input
 
 C-c C-z         run-lisp
   (that binding is currently shadowed by another mode)
