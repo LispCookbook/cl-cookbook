@@ -720,7 +720,9 @@ time-consuting to calculate.
 ;; 102334155
 ~~~
 
-Using a hash table in a lexical closure to store previously caclulated results can speed things up:
+Using a hash table to store previously calculated results can speed things up.
+We could use a `defvar`, but this is a good use case for a closure since that
+avoids adding a variable only used by one function to the namespace.
 
 ~~~lisp
 (let ((memo (make-hash-table)))
