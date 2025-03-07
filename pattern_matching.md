@@ -189,7 +189,7 @@ is being used.
 ;; -> 3
 ~~~
 
-~~~
+~~~lisp
 (match '(:a 1 :b 2)
   ((property :c c 3 foundp) (list c foundp)))
 ;; -> (3 NIL)
