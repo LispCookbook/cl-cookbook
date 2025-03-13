@@ -349,16 +349,31 @@ If this gives you the will to do pattern matching, see
 [pattern matching](pattern_matching.html).
 
 
-### Predicates: null, listp
+### Predicates: null, listp, consp, atom
 
 `null` is equivalent to `not`, but considered better style.
 
-`listp` tests whether an object is a cons cell or nil.
+`listp` tests whether an object is a list or nil.
 
-and sequences' predicates.
+`consp` tests wether an object is a cons cell.
+
+The empty list is *not* a cons, so `(consp nil)` is falsy, while
+`(listp nil)` is truthy.
+
+`atom` checks if its argument is an atom, in other words, if it isn't
+a `cons`. `atom` is also a type.
+
+~~~lisp
+(atom '()) ;; => true
+~~~
+
+and see also all the sequences' predicates.
 
 
-### ldiff, tailp, list*, make-list, fill, revappend, nreconc, consp, atom
+### list*, make-list
+
+`make-list` allows to create a list of a given size, with an optional
+initial element to fill it up:
 
 ~~~lisp
 (make-list 3 :initial-element "ta")
