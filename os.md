@@ -138,24 +138,28 @@ implementation.
 
 ### Synchronously
 
-[`uiop:run-program`](https://common-lisp.net/project/asdf/uiop.html#UIOP_002fRUN_002dPROGRAM) either takes a string as argument, denoting the
-name of the executable to run, or a list of strings, for the program and its arguments:
+[`uiop:run-program`](https://common-lisp.net/project/asdf/uiop.html#UIOP_002fRUN_002dPROGRAM) either takes a string as argument,
+denoting the name of the executable to run,
+or a list of strings, for the program and its arguments:
 
 ~~~lisp
-(uiop:run-program "firefox")
+(uiop:run-program "ls | grep lisp" :output t)
 ~~~
 
 or
 
 ~~~lisp
-(uiop:run-program (list "firefox" "http:url"))
+(uiop:run-program (list "ls" "-lh") :output t)
 ~~~
 
 This will process the program output as specified and return the
 processing results when the program and its output processing are
 complete.
 
-Use `:output t` to print to standard output.
+Passing the command as a string runs it in a shell, passing it as a list doesn't.
+
+We use `:output t` to print to standard output. We can capture its
+output in a string, a file or any other stream, or have an interactive output, see below.
 
 This function has the following optional arguments:
 
@@ -181,22 +185,20 @@ specified to be `nil`.
 Signal a continuable `subprocess-error` if the process wasn't successful (exit-code 0),
 unless `ignore-error-status` is specified.
 
-If `output` is a pathname, a string designating a pathname, or `nil` (the default)
-designating the null device, the file at that path is used as output.
-If it's `:interactive`, output is inherited from the current process;
-beware that this may be different from your `*standard-output*`,
-and under `slime` will be on your `*inferior-lisp*` buffer.
-If it's `t`, output goes to your current `*standard-output*` stream.
-Otherwise, `output` should be a value that is a suitable first argument to
-`slurp-input-stream` (qv.), or a list of such a value and keyword arguments.
+The `:output` argument can be of the following:
+
+- if `output` is `nil` (the default, designating the `null` device), a pathname or a string designating a pathname, the file at that path is used as output.
+- if it's `t`, output goes to your current `*standard-output*` stream.
+- `:output :string` or even `:output '(:string :stripped t)` to strip any ending newline
+- if it's `:interactive`, output is inherited from the current process; beware that this may be different from your `*standard-output*`, and under `slime` will be on your `*inferior-lisp*` buffer.
+- otherwise, `output` should be a value that is a suitable first argument to
+`uiop:slurp-input-stream`, or a list of such a value and keyword arguments: like `:string` and `'(:string :stripped t)`.
 In this case, `run-program` will create a temporary stream for the program output;
 the program output, in that stream, will be processed by a call to `slurp-input-stream`,
 using `output` as the first argument (or the first element of `output`, and the rest as keywords).
 The primary value resulting from that call (or `nil` if no call was needed)
 will be the first value returned by `run-program.`
 E.g., using `:output :string` will have it return the entire output stream as a string.
-And using `:output '(:string :stripped t`) will have it return the same string
-stripped of any ending newline.
 
 `if-output-exists`, which is only meaningful if `output` is a string or a
 pathname, can take the values `:error`, `:append`, and `:supersede` (the
