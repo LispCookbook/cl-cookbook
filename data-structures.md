@@ -22,6 +22,16 @@ list and [Quickdocs](https://quickdocs.org/-/search?q=data%20structure).
 
 ## Lists
 
+The simplest way to create a list is with `list`:
+
+~~~lisp
+(list 1 2 3)
+~~~
+
+but there are more constructors, and you should also know that lists
+are made of `cons` cells.
+
+
 ### Building lists. Cons cells, lists.
 
 _A list is also a sequence, so we can use the functions shown below._
@@ -342,6 +352,48 @@ and sequences' predicates.
 (fill * "hello")
 ;; => ("hello" "hello" "hello")
 ~~~
+
+`list*` is similar to `list` in various aspects. One difference is
+that it allows to add an element in front of a list and to cr
+
+`list*` is handy to push one (or many) element(s) in front of an existing list and to return a new list:
+
+~~~lisp
+(list* :foo (list 1 2 3))
+;; => (:FOO 1 2 3)
+
+(list* 'a 'b 'c '(d e f))
+;; => (A B C D E F)
+~~~
+
+note that `:foo` was added in front of the list and the result list is flat, whereas in:
+
+~~~lisp
+(list :foo (list 1 2 3))
+;; => (:FOO (1 2 3))
+~~~
+
+we get a new list of two elements.
+
+`list*`, like `list`, accepts a variable number of arguments. But a
+difference is that the last element of the list is a cons cell with
+the last 2 elements, denoted with a dotted pair below:
+
+~~~lisp
+(list*  1 2 3)
+;; => (1 2 . 3)
+~~~
+
+and this result is not a proper list: it is a suite of cons cells.
+
+whereas with `list`:
+
+~~~lisp
+(list 1 2 3)
+;; => (1 2 3)
+~~~
+
+the last cons cell is the number 3 and `nil`, which is the termination for a proper list.
 
 ### member (elt, list)
 
