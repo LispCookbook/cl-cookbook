@@ -429,6 +429,26 @@ whereas with `list`:
 
 the last cons cell is the number 3 and `nil`, which is the termination for a proper list.
 
+
+### ldiff, tailp
+
+<!-- TODO redact -->
+
+If object is the same as some tail of list, `tailp` returns true; otherwise, it returns false.
+
+If object is the same as some tail of list, `ldiff` returns a fresh list
+of the elements of list that precede object in the list structure of
+list; otherwise, it returns a copy of list.
+
+<!-- ~~~lisp -->
+<!-- (ldiff '(1 2) (list 9 8 1 2 3)) -->
+<!-- ;; => (1 2) -->
+<!-- ~~~ -->
+
+What happens with a circular list? Check your implementation's
+documentation. If it detects circularity it must return false.
+
+
 ### member (elt, list)
 
 Returns the tail of `list` beginning with the first element satisfying `eql`ity.
