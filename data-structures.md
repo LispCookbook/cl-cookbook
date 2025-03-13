@@ -196,7 +196,7 @@ mylist
 ~~~
 
 
-### append
+### append, nconc (and revappend, nreconc)
 
 `append` takes any number of list arguments and returns a new list
 containing the elements of all its arguments:
@@ -211,6 +211,25 @@ The new list shares some cons cells with the `(3 4)`:
 http://gigamonkeys.com/book/figures/after-append.png
 
 `nconc` is the recycling equivalent.
+
+`revappend` and `nreconc` are two functions you might not use often :)
+
+`revappend` does `(append (reverse x) y)`:
+
+~~~lisp
+(revappend (list 1 2 3) (list :a :b :c))
+;; => (3 2 1 :A :B :C)
+~~~
+
+`nreconc` does `(nconc (nreverse x) Y)`:
+
+~~~lisp
+(nreconc (list 1 2 3) (list :a :b :c))
+;; => (3 2 1 :A :B :C)
+~~~
+
+You will thank us later.
+
 
 ### push, pushnew (item, place)
 
