@@ -618,6 +618,22 @@ In theory, the result of this:
 could be either `((1 :A) (1 :B))`, either `((1 :B) (1 :A))`. On my tests, the order is preserved, but the standard does not guarantee it.
 
 
+#### fill (sequence item &keys start end)
+
+`fill` is a **destructive** operation.
+
+It destructively replaces the elements in `sequence`, in-between the `start` and `end` position, by `item` (a sequence).
+
+~~~lisp
+(make-list 3)
+;; (NIL NIL NIL)
+(fill * :hello :start 1)
+;; (NIL :HELLO :HELLO)
+~~~
+
+See also `nsubstitute` for a non destructive function.
+
+
 #### find, position (foo, sequence) - get index
 
 also `find-if`, `find-if-not`, `position-if`, `position-if-not` *(test
@@ -671,6 +687,9 @@ except that all elements equal to `old` are replaced with `new`.
 (substitute "a" "x" '("a" "x" "x") :test #'string=)
 ;; => ("a" "a" "a")
 ~~~
+
+`nsubstitute` is the non-destructive version.
+
 
 #### sort, stable-sort, merge
 
