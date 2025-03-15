@@ -1486,6 +1486,51 @@ But for alists, `scan-alist` is provided:
 ;; (A B C)
 ~~~
 
+### Declaring variable types
+
+Declaring types can help the compiler to optimize out code. SBCL is
+famously good at this.
+
+You can check if the machine code got optimized with a call to `disassembly`.
+
+#### Loop
+
+Use `:of-type`:
+
+~~~lisp
+(loop :for i :of-type fixnum :below 10
+   :for j :of-type fixnum :from 1
+   :sum (* i j))
+~~~
+
+For simple types like `fixnum, float, t and nil` you can omit `:of-type`:
+
+~~~lisp
+(loop :for i fixnum :below 10
+   :for j fixnum :from 1
+   :sum (* i j))
+~~~
+
+You can also precise the type after `sum` and other accumulation clauses:
+
+~~~lisp
+(loop for i fixnum below 10
+   for j fixnum from 1
+   sum (* i j) fixnum)
+~~~
+
+#### Iterate
+
+Use `(declare (fixnum i))`:
+
+~~~lisp
+(iter (for i below 10)
+      (for j from 1)
+      (declare (fixnum i))
+      (sum (* i j)))
+~~~
+
+
 ## Iterate unique features lacking in loop
 
 Iterate has some other things unique to it.
