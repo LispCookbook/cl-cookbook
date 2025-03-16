@@ -1945,6 +1945,33 @@ Slots are `setf`-able:
 ;; "Cookbook author"
 ~~~
 
+### symbol-macrolet
+
+If you are accessing several slots within a single function the
+special form `symbol-macrolet` can improve readibility, by creating
+symbol macros which expand into forms with structure accessors:
+
+~~~lisp
+(defstruct ship x-position y-position x-velocity y-velocity)
+
+(defun move-ship (ship)
+  (symbol-macrolet
+      ((x (ship-x-position ship))
+       (y (ship-y-position ship))
+       (xv (ship-x-velocity ship))
+       (yv (ship-y-velocity ship)))
+    (psetf x (+ x xv)
+           y (+ y yv))))
+~~~
+
+Here the math involved in the `move-ship` function is easier to
+read than if accessor functions were used.
+
+Though it is not mentioned in the standard, many modern implementations
+of Common Lisp permit the use of the CLOS macro `with-slots` with
+structures.  In the standard `with-slots` itself is defined using
+`symbol-macrolet`.
+
 ### Predicate
 
 A predicate function is generated:
