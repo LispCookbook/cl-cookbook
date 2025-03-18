@@ -1983,11 +1983,14 @@ symbol macros which expand into forms with structure accessors:
        (xv (ship-x-velocity ship))
        (yv (ship-y-velocity ship)))
     (psetf x (+ x xv)
-           y (+ y yv))))
+           y (+ y yv))
+    ship))
 ~~~
 
 Here the math involved in the `move-ship` function is easier to
-read than if accessor functions were used.  Without `symbol-macrolet`
+read than if accessor functions were used.
+
+Without `symbol-macrolet`
 it looks like this:
 
 ~~~lisp
@@ -1995,11 +1998,21 @@ it looks like this:
   (psetf (ship-x-position ship)
            (+ (ship-x-position ship) (ship-x-velocity ship))
          (ship-y-position ship)
-           (+ (ship-y-position ship) (ship-y-velocity ship))))
+           (+ (ship-y-position ship) (ship-y-velocity ship)))
+   ship)
 ~~~
 
 In this function all the accessors are not too hard to read, but
 with more complex operations it would quickly get cluttered.
+
+Now, let's try our function:
+
+~~~lisp
+(move-ship (make-ship :x-position 1 :y-position 1 :x-velocity 2 :y-velocity 2))
+;; #S(SHIP :X-POSITION 3 :Y-POSITION 3 :X-VELOCITY 2 :Y-VELOCITY 2)
+~~~
+
+#### Structures and `with-slots`
 
 Though it is not mentioned in the standard, many modern implementations
 of Common Lisp permit the use of the CLOS macro `with-slots` with
