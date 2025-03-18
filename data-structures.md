@@ -1945,7 +1945,29 @@ Slots are `setf`-able:
 ;; "Cookbook author"
 ~~~
 
-### symbol-macrolet
+### Predicate
+
+A predicate function is generated:
+
+~~~lisp
+(person-p *me*)
+T
+~~~
+
+### Single inheritance
+
+Use single inheritance with the `:include <struct>` argument:
+
+~~~lisp
+(defstruct (female (:include person))
+     (gender "female" :type string))
+(make-female :name "Lilie")
+;; #S(FEMALE :ID NIL :NAME "Lilie" :AGE NIL :GENDER "female")
+~~~
+
+Note that the CLOS object system is more powerful.
+
+### Shorter slot access with symbol-macrolet
 
 If you are accessing several slots within a single function the
 special form `symbol-macrolet` can improve readibility, by creating
@@ -1982,7 +2004,7 @@ with more complex operations it would quickly get cluttered.
 Though it is not mentioned in the standard, many modern implementations
 of Common Lisp permit the use of the CLOS macro `with-slots` with
 structures.  In the standard `with-slots` itself is defined using
-`symbol-macrolet`. SBCL and ECL will accept this:
+`symbol-macrolet`. At least SBCL and ECL will accept this:
 
 ~~~lisp
 (defstruct point x y)
@@ -1997,28 +2019,6 @@ structures.  In the standard `with-slots` itself is defined using
 
 But do note that in the standard the behavior of the above use of
 `with-slots` with a structure is called "unspecified."
-
-### Predicate
-
-A predicate function is generated:
-
-~~~lisp
-(person-p *me*)
-T
-~~~
-
-### Single inheritance
-
-Use single inheritance with the `:include <struct>` argument:
-
-~~~lisp
-(defstruct (female (:include person))
-     (gender "female" :type string))
-(make-female :name "Lilie")
-;; #S(FEMALE :ID NIL :NAME "Lilie" :AGE NIL :GENDER "female")
-~~~
-
-Note that the CLOS object system is more powerful.
 
 ### Limitations
 
