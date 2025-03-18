@@ -1965,12 +1965,38 @@ symbol macros which expand into forms with structure accessors:
 ~~~
 
 Here the math involved in the `move-ship` function is easier to
-read than if accessor functions were used.
+read than if accessor functions were used.  Without `symbol-macrolet`
+it looks like this:
+
+~~~lisp
+(defun move-ship (ship)
+  (psetf (ship-x-position ship)
+           (+ (ship-x-position ship) (ship-x-velocity ship))
+         (ship-y-position ship)
+           (+ (ship-y-position ship) (ship-y-velocity ship))))
+~~~
+
+In this function all the accessors are not too hard to read, but
+with more complex operations it would quickly get cluttered.
 
 Though it is not mentioned in the standard, many modern implementations
 of Common Lisp permit the use of the CLOS macro `with-slots` with
 structures.  In the standard `with-slots` itself is defined using
-`symbol-macrolet`.
+`symbol-macrolet`. SBCL and ECL will accept this:
+
+~~~lisp
+(defstruct point x y)
+
+(defvar p (make-point :x 2.3 :y -3.2))
+
+(with-slots (x y) p
+  (list x y))
+
+;; => (2.3 -3.2)
+~~~
+
+But do note that in the standard the behavior of the above use of
+`with-slots` with a structure is called "unspecified."
 
 ### Predicate
 
