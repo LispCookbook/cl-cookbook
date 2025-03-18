@@ -16,7 +16,7 @@ Let's use `defcfun` to interface with the foreign [ceil](https://en.cppreference
 [defcfun](https://cffi.common-lisp.dev/manual/html_node/defcfun.html) is a macro in the cffi library that generates a function with the name you give it.
 
 ~~~lisp
-CL-USER> (cffi:defcfund ("ceil" c-ceil) :double (number :double))
+CL-USER> (cffi:defcfun ("ceil" c-ceil) :double (number :double))
 ~~~
 
 We say that the "ceil" C function will be called "c-ceil" on our Lisp side, it takes one argument that is a double float, and it returns a number that is also a double float.
