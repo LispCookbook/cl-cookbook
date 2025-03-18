@@ -689,6 +689,68 @@ I leave the definition of `find-nth-occurrence` as an exercise. You might also w
 
 One caution: In general, command languages will consist of a mixture of macros and functions, with convenience for their definer (and usually sole user) being the main consideration. If a command seems to "want" to evaluate some of its arguments sometimes, you have to decide whether to define two (or more) versions of it, or just one, a function whose arguments must be quoted to prevent their being evaluated. For the `cf` command mentioned in the previous paragraph, some users might prefer `cf` to be a function, some a macro.
 
+## define-symbol-macro, symbol-macrolet
+
+These two macros allow to define a symbol that will act as a
+"shortcut" for another, more complex form.
+
+In the spec words, they "provide a mechanism for affecting the macro
+expansion of the indicated symbol".
+
+`define-symbol-macro` affects the global environment (like
+`defparameter`, `defun` and all), `symbol-macrolet` is to be used for
+a local scope like `let`.
+
+We gave an example in the Data Structures section. We use a struct:
+
+~~~lisp
+(defstruct ship x-position y-position x-velocity y-velocity)
+~~~
+
+Its slot accessors are `ship-x-position`, etc.
+
+We write a `move-ship` function, that has to access all the different structure slots:
+
+~~~lisp
+(defun move-ship (ship)
+  (psetf (ship-x-position ship)
+           (+ (ship-x-position ship) (ship-x-velocity ship))
+         (ship-y-position ship)
+           (+ (ship-y-position ship) (ship-y-velocity ship)))
+   ship)
+~~~
+
+but we find it too wordy: we'll use a local symbol macro so that `x`
+will expand to `ship-x-position`.
+
+`symbol-macrolet` looks like this, its syntax is similar to `let`:
+
+~~~lisp
+(symbol-macrolet ((x (ship-x-position ship))
+                  (y (other-form ship)))
+    (use x and y here))
+~~~
+
+let's use it in our function:
+
+~~~lisp
+(defun move-ship (ship)
+  (symbol-macrolet                   ;; <---- like a LET
+      ((x (ship-x-position ship))    ;; <---- a list of (symbol (expansion form))
+       (y (ship-y-position ship))
+       (xv (ship-x-velocity ship))
+       (yv (ship-y-velocity ship)))
+    (psetf x (+ x xv)                ;; <----- use x in the body
+           y (+ y yv))
+    ship))
+~~~
+
+At compile-time, during the phase of macro-expansions, `x` witll be
+expanded to the form `(ship-x-position ship)`, and the function will
+be compiled with that form.
+
+Read more on the [Community Spec](https://cl-community-spec.github.io/pages/symbol_002dmacrolet.html).
+
 
 ## See also
 
