@@ -2,9 +2,94 @@
 title: Input/Output
 ---
 
-<a name="redir"></a>
+## Asking for user input: `read`, `read-line`
 
-## Redirecting the Standard Output of your Program
+The [`read`](https://cl-community-spec.github.io/pages/read.html)
+function, when called with no other argument, stops the world and
+waits for user input:
+
+~~~lisp
+CL-USER> (read)
+|               ;; <---- point waiting for input.
+~~~
+
+Type in `(1+ 2)` and you will see this result:
+
+```lisp
+(1+ 2)
+```
+
+Did you expect to see 3?
+
+Let's try again:
+
+~~~lisp
+(read)
+hello  ;; our input
+HELLO  ;; return value: a symbol, hence capitalized
+
+(read)
+(list a b c)   ;; our input
+(LIST A B C)   ;; return value: some s-expression.
+~~~
+
+The results were *not* evaluated.
+
+The `read` function reads source code. Not strings! It returns an
+s-expression.
+
+If you want a string, write it inside quotes (or see the next section).
+
+It doesn't evaluate the code yet. For this, we have `eval`:
+
+~~~lisp
+(read)
+(1+ 2)  ;; input
+(1+ 2)  ;; return value
+
+(eval *)
+;; 3
+~~~
+
+This is how we can build the most primite REPL: a Read-Eval-Print-Loop.
+
+~~~lisp
+CL-USER> (loop (print (eval (read))))
+(1+ 1)  ;; input
+
+2 (1+ 2)  ;; result + my next input
+
+3
+~~~
+
+The above line will loop forever and you have no way to escape it,
+appart `(quit)` which quits your top-level REPL too. Here's a very
+simple loop that quits when seeing the `q` symbol (not a string):
+
+~~~lisp
+(loop for input = (read)
+      while (not (equal input 'q))
+      do (print (eval input)))
+~~~
+
+
+### Read input as string: `read-line`
+
+To read the input as a *string*, use [`read-line`](https://cl-community-spec.github.io/pages/read_002dline.html):
+
+~~~lisp
+CL-USER> (defparameter *input* (read-line))
+This is a longer input.
+*INPUT*
+
+CL-USER> *input*
+"This is a longer input."
+~~~
+
+It doesn't read multiple lines.
+
+
+## Redirecting the standard output of your program
 
 You do it like this:
 
@@ -14,7 +99,7 @@ You do it like this:
 ~~~
 
 Because
-[`*STANDARD-OUTPUT*`](http://www.lispworks.com/documentation/HyperSpec/Body/v_debug_.htm)
+[`*standard-output*`](http://www.lispworks.com/documentation/HyperSpec/Body/v_debug_.htm)
 is a dynamic variable, all references to it during execution of the body of the
 `LET` form refer to the stream that you bound it to. After exiting the `LET`
 form, the old value of `*STANDARD-OUTPUT*` is restored, no matter if the exit
@@ -34,27 +119,27 @@ If the output of the program should go to a file, you can do the following:
   ...)
 ~~~
 
-[`WITH-OPEN-FILE`](http://www.lispworks.com/documentation/HyperSpec/Body/m_w_open.htm)
-opens the file - creating it if necessary - binds `*STANDARD-OUTPUT*`, executes
-its body, closes the file, and restores `*STANDARD-OUTPUT*` to its former
+[`with-open-file`](http://www.lispworks.com/documentation/HyperSpec/Body/m_w_open.htm)
+opens the file - creating it if necessary - binds `*standard-output*`, executes
+its body, closes the file, and restores `*standard-output*` to its former
 value. It doesn't get more comfortable than this!<a name="faith"></a>
 
-## Faithful Output with Character Streams
+## Faithful output with character streams
 
 By _faithful output_ I mean that characters with codes between 0 and 255 will be
-written out as is. It means, that I can `(PRINC (CODE-CHAR 0..255) s)` to a
+written out as is. It means, that I can `(princ (code-char 0..255) s)` to a
 stream and expect 8-bit bytes to be written out, which is not obvious in the
 times of Unicode and 16 or 32 bit character representations. It does _not_
 require that the characters ä, ß, or þ must have their
-[`CHAR-CODE`](http://www.lispworks.com/documentation/HyperSpec/Body/f_char_c.htm)
+[`char-code`](http://www.lispworks.com/documentation/HyperSpec/Body/f_char_c.htm)
 in the range 0..255 - the implementation is free to use any code. But it does
 require that no `#\Newline` to CRLF translation takes place, among others.
 
 Common Lisp has a long tradition of distinguishing character from byte (binary)
 I/O,
-e.g. [`READ-BYTE`](http://www.lispworks.com/documentation/HyperSpec/Body/f_rd_by.htm)
+e.g. [`read-byte`](http://www.lispworks.com/documentation/HyperSpec/Body/f_rd_by.htm)
 and
-[`READ-CHAR`](http://www.lispworks.com/documentation/HyperSpec/Body/f_rd_cha.htm)
+[`read-char`](http://www.lispworks.com/documentation/HyperSpec/Body/f_rd_cha.htm)
 are in the standard. Some implementations let both functions be called
 interchangeably. Others allow either one or the other. (The
 [simple stream proposal](https://www.cliki.net/simple-stream) defines the
@@ -71,6 +156,7 @@ text/plain - the default in most Apache configurations).
  What follows is a list of implementation dependent choices and behaviours and some code to experiment.
 
 ### SBCL
+
 To load arbitrary bytes into a string, use the `:iso-8859-1` external format. For example:
 
 ~~~lisp
@@ -173,15 +259,15 @@ Here's some sample code to play with:
 
 <a name="bulk"></a>
 
-## Fast Bulk I/O
+## Fast bulk I/O
 
 If you need to copy a lot of data and the source and destination are both
 streams (of the same
 [element type](http://www.lispworks.com/documentation/HyperSpec/Body/26_glo_e.htm#element_type)),
 it's very fast to use
-[`READ-SEQUENCE`](http://www.lispworks.com/documentation/HyperSpec/Body/f_rd_seq.htm)
+[`read-sequence`](http://www.lispworks.com/documentation/HyperSpec/Body/f_rd_seq.htm)
 and
-[`WRITE-SEQUENCE`](http://www.lispworks.com/documentation/HyperSpec/Body/f_wr_seq.htm):
+[`write-sequence`](http://www.lispworks.com/documentation/HyperSpec/Body/f_wr_seq.htm):
 
 ~~~lisp
 (let ((buf (make-array 4096 :element-type (stream-element-type input-stream))))

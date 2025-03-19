@@ -2012,7 +2012,7 @@ Now, let's try our function:
 ;; #S(SHIP :X-POSITION 3 :Y-POSITION 3 :X-VELOCITY 2 :Y-VELOCITY 2)
 ~~~
 
-#### Structures and `with-slots`
+### Structures and `with-slots`
 
 Though it is not mentioned in the standard, many modern implementations
 of Common Lisp permit the use of the CLOS macro `with-slots` with
