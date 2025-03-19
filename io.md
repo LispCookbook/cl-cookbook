@@ -2,6 +2,8 @@
 title: Input/Output
 ---
 
+Let's see some useful patterns for input/output.
+
 ## Asking for user input: `read`, `read-line`
 
 The [`read`](https://cl-community-spec.github.io/pages/read.html)
