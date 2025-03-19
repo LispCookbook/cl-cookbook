@@ -281,69 +281,100 @@ There are ways for non-local exits (`return-from <function name> <value>`), but 
 
 Common Lisp has also the concept of multiple return values.
 
-### Multiple return values: `values`, `multiple-value-bind` and `nth-value`
+### Multiple return values
 
-Returning multiple values is *not* like returning a tuple or a list of
-results ;) This is a common misconception.
-
-Multiple values are specially useful and powerful because a change in
-them needs little to no refactoring.
-
-~~~lisp
-(defun foo (a b c)
-  a)
-~~~
-
-This function returns `a`.
+While most Common Lisp forms return a single value, it is
+sometimes useful for a function to return several (or none).
+For example, `round` returns two values, the rounded result
+as well as how much was removed to do the rounding:
 
 ~~~lisp
-(defvar *res* (foo :a :b :c))
-;; :A
+(round 10.33333333)
+;; => 10
+;; => 0.33333302
 ~~~
 
-We use `values` to return multiple values:
+Most of the time you only need the rounded value, but if for
+some reason you want to know the remainder, it can be captured.
+If you expect all the values calculated by a function to be
+used most of the time, then it is better to bundle up the results
+in a list, a CLOS instance, etc., and return that.  Only use
+multiple values when the first values are most often needed,
+and the later ones less often used.
+
+The function `values` is used to return multiple values:
 
 ~~~lisp
-(defun foo (a b c)
-  (values a b c))
+(values 'a 'b)
+;; => A
+;; => B
+~~~
+
+Calling `values` with no arguments returns no value at all.
+
+The most common way to capture multiple values is with
+`multiple-value-bind`:
+
+~~~lisp
+(multiple-value-bind (c d) (values 1 2)
+  (list c d))
+;; => (1 2)
+~~~
+
+The number of values returned does not have to match the
+number of variables to bind.  If there are too many values,
+the extras are discarded, and if there are too many variables
+to bind, the extras are set to `nil`:
+
+~~~lisp
+(multiple-value-bind (a b) (values 1 2 3 4)
+  (list a b))
+;; =>(1 2)
 ~~~
 
 ~~~lisp
-(setf *res* (foo :a :b :c))
-;; :A
+(multiple-value-bind (a b) (values 1)
+  (list a b))
+;; => (1 NIL)
 ~~~
 
-Observe here that `*res*` *is still `:A`*.
-
-All functions that use the return value of `foo` need *not* to change, they
-still work. If we had returned a list or an array, this would be
-different.
-
-**multiple-value-bind**
-
-We destructure multiple values with `multiple-value-bind` (or
-`mvb`+TAB in Slime for short) and we can get one given its position
-with `nth-value`:
+The function `values` is `setf`-able, which can also be
+used to capture values:
 
 ~~~lisp
-(multiple-value-bind (res1 res2 res3)
-    (foo :a :b :c)
-  (format t "res1 is ~a, res2 is ~a, res2 is ~a~&"
-     res1 res2 res3))
-;; res1 is A, res2 is B, res2 is C
-;; NIL
+(let (c d)
+  (setf (values c d) (values 1 2))
+  (list c d))
+;; => (1 2)
 ~~~
 
-Its general form is
+Or you can shunt multiple values directly into a function call
+with `multiple-value-call`:
 
 ~~~lisp
-(multiple-value-bind (var-1 .. var-n) expr
-  body)
+(multiple-value-call #'list (values 1 2 3))
+;; => (1 2 3)
 ~~~
 
-The variables `var-n` are not available outside the scope of `multiple-value-bind`.
+The function `multiple-value-list` is equivalent to the code
+above:
 
-With **nth-value**:
+~~~lisp
+(multiple-value-list (values 1 2 3))
+;; => (1 2 3)
+~~~~
+
+And you can go the other way, turning a list into multiple
+return values with `values-list`:
+
+~~~lisp
+(values-list '(1 2 3))
+;; => 1
+;; => 2
+;; => 3
+~~~
+
+You can select a particular value with `nth-value`:
 
 ~~~lisp
 (nth-value 0 (values :a :b :c))  ;; => :A
@@ -351,33 +382,39 @@ With **nth-value**:
 (nth-value 9 (values :a :b :c))  ;; => NIL
 ~~~
 
-Look here too that `values` is different from a list:
+Note here too that `values` is different from a list:
 
 ~~~lisp
 (nth-value 0 '(:a :b :c)) ;; => (:A :B :C)
 (nth-value 1 '(:a :b :c)) ;; => NIL
 ~~~
 
-Note that `(values)` with no values returns… no values at all.
-
-**multiple-value-list**
-
-While we are at it: [multiple-value-list](http://www.lispworks.com/documentation/HyperSpec/Body/m_mult_1.htm) turns multiple values to a list:
-
-~~~lisp
-(multiple-value-list (values 1 2 3))
-;; (1 2 3)
-~~~
-
-The reverse is **values-list**, it turns a list to multiple values:
+Another use for multiple values is to distinguish between finding
+`nil` and a lookup failure.  For example, `gethash` returns two
+values.  The first is the result of the lookup, which might be `nil` if
+nothing is found, but could be an actual `nil` stored in the
+hashtable.  The second value returned is a flag indicating if the
+lookup was a success:
 
 ~~~lisp
-(values-list '(1 2 3))
-;; 1
-;; 2
-;; 3
+(defvar *hash* (make-hash-table))
+(setf (gethash 'a *hash*) 12)
+(setf (gethash 'b *hash*) nil)
 ~~~
 
+~~~lisp
+(gethash 'a *hash*)
+;; => 12
+;; => T
+
+(gethash 'b *hash*)
+;; => NIL
+;; => T
+
+(gethash 'c *hash*)
+;; => NIL
+;; => NIL
+~~~
 
 ## Anonymous functions: `lambda`
 
