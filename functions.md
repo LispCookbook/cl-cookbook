@@ -447,8 +447,11 @@ You can select a particular value with `nth-value`:
 Note here too and let us stress again that `values` is different from a list:
 
 ~~~lisp
-(nth-value 0 '(:a :b :c)) ;; => (:A :B :C)  ;; <--- a list is one data structure on its own
-(nth-value 1 '(:a :b :c)) ;; => NIL         ;; <--- no second value to capture
+(nth-value 0 (list :a :b :c)) ;; => (:A :B :C)
+;; => a list is one data structure of its own
+
+(nth-value 1 (list :a :b :c)) ;; => NIL
+;; => no second value to capture
 ~~~
 
 #### Using multiple values to report success or failure
