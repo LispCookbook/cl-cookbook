@@ -283,11 +283,75 @@ Common Lisp has also the concept of multiple return values.
 
 ### Multiple return values
 
-Returning multiple values is *not* like returning a tuple or a list of
+Returning multiple values is **not** like returning a tuple or a list of
 results.
+
+#### Quick example
+
+Let's define a function that returns one value:
+
+~~~lisp
+(defun foo ()
+  :a)
+~~~
+
+now we set the result of calling this function to a variable:
+
+~~~lisp
+(defparameter *var* (foo))
+~~~
+
+`*var*` is now `:a`. That's a very classical behaviour.
+
+Now our function will return *multiple values*, using `values`:
+
+~~~lisp
+(foo ()
+  (values :a :b :c))
+~~~
+
+and we set `*var*` to its result again:
+
+~~~lisp
+(setf *var* (foo))
+~~~
+
+What is the value of `*var*`? *It is still :a*. We didn't ask to
+capture the remaining values, so `:b` and `:c` were discarded.
+
+This is actually very handy: you can change a function to return more
+multiple values than it did, and you don't need to change and refactor
+the call sites.
+
+#### Returning multiple values: `values`
+
+The function `values` is used to return multiple values:
+
+~~~lisp
+(values 'a 'b)
+;; => A
+;; => B
+~~~
+
+Calling `values` with no arguments returns no value at all.
+
+It is different than returning `nil`.
+
+Unless you use the functions described below to capture multiple
+values, only the first will be seen and used by other functions:
+
+~~~lisp
+(+ (values 1 2 3) (values 10 20 30))
+;; => 11
+~~~
+
+`values` does **not** create a list.
+
+#### Why multiple values. A look at CL built-ins
 
 While most Common Lisp forms return a single value, it is
 sometimes useful for a function to return several (or none).
+
 For example, `round` returns two values, the rounded result
 as well as how much was removed to do the rounding:
 
@@ -305,25 +369,10 @@ in a list, a CLOS instance, *etc.,* and return that.  Only use
 multiple values when the first values are most often needed,
 and the later ones less often used.
 
-The function `values` is used to return multiple values:
+Similarly, getting the content of a hash-table returns two values: the
+result, and a boolean saying if the key was found or not. See below.
 
-~~~lisp
-(values 'a 'b)
-;; => A
-;; => B
-~~~
-
-Calling `values` with no arguments returns no value at all.
-
-Unless you use the functions described below to capture multiple
-values, only the first will be seen and used by other functions:
-
-~~~lisp
-(+ (values 1 2 3) (values 10 20 30))
-;; => 11
-~~~
-
-#### Capturing Multiple Values
+#### Capturing multiple values: `multiple-value-bind`, `nth-value`, `multiple-value-list` et all
 
 The most common way to capture multiple values is with
 `multiple-value-bind`:
@@ -395,16 +444,16 @@ You can select a particular value with `nth-value`:
 (nth-value 9 (values :a :b :c))  ;; => NIL
 ~~~
 
-Note here too that `values` is different from a list:
+Note here too and let us stress again that `values` is different from a list:
 
 ~~~lisp
-(nth-value 0 '(:a :b :c)) ;; => (:A :B :C)
-(nth-value 1 '(:a :b :c)) ;; => NIL
+(nth-value 0 '(:a :b :c)) ;; => (:A :B :C)  ;; <--- a list is one data structure on its own
+(nth-value 1 '(:a :b :c)) ;; => NIL         ;; <--- no second value to capture
 ~~~
 
 #### Using multiple values to report success or failure
 
-Another use for multiple values is to distinguish between finding
+A typical use for multiple values is to distinguish between finding
 `nil` and a lookup failure.  For example, `gethash` returns two
 values.  The first is the result of the lookup, which might be `nil` if
 nothing is found, but could be an actual `nil` stored in the
@@ -419,8 +468,8 @@ lookup was a success:
 
 ~~~lisp
 (gethash 'a *hash*)
-;; => 12
-;; => T
+;; => 12           <--- first returned value: our result
+;; => T            <--- second returned value: the key was found
 
 (gethash 'b *hash*)
 ;; => NIL
@@ -428,7 +477,7 @@ lookup was a success:
 
 (gethash 'c *hash*)
 ;; => NIL
-;; => NIL
+;; => NIL          <---- this key wasn't found.
 ~~~
 
 ## Anonymous functions: `lambda`
