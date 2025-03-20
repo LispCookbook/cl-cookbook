@@ -283,6 +283,9 @@ Common Lisp has also the concept of multiple return values.
 
 ### Multiple return values
 
+Returning multiple values is *not* like returning a tuple or a list of
+results.
+
 While most Common Lisp forms return a single value, it is
 sometimes useful for a function to return several (or none).
 For example, `round` returns two values, the rounded result
@@ -298,7 +301,7 @@ Most of the time you only need the rounded value, but if for
 some reason you want to know the remainder, it can be captured.
 If you expect all the values calculated by a function to be
 used most of the time, then it is better to bundle up the results
-in a list, a CLOS instance, etc., and return that.  Only use
+in a list, a CLOS instance, *etc.,* and return that.  Only use
 multiple values when the first values are most often needed,
 and the later ones less often used.
 
@@ -311,6 +314,16 @@ The function `values` is used to return multiple values:
 ~~~
 
 Calling `values` with no arguments returns no value at all.
+
+Unless you use the functions described below to capture multiple
+values, only the first will be seen and used by other functions:
+
+~~~lisp
+(+ (values 1 2 3) (values 10 20 30))
+;; => 11
+~~~
+
+#### Capturing Multiple Values
 
 The most common way to capture multiple values is with
 `multiple-value-bind`:
@@ -388,6 +401,8 @@ Note here too that `values` is different from a list:
 (nth-value 0 '(:a :b :c)) ;; => (:A :B :C)
 (nth-value 1 '(:a :b :c)) ;; => NIL
 ~~~
+
+#### Using multiple values to report success or failure
 
 Another use for multiple values is to distinguish between finding
 `nil` and a lookup failure.  For example, `gethash` returns two
