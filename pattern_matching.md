@@ -23,10 +23,80 @@ For the following examples, let's `use` the library:
 (use-package :trivia)
 ~~~
 
+If you prefer, you can create a package for our tests:
+
+~~~lisp
+(defpackage :trivia-tests (:use :cl :trivia))
+(in-package :trivia-tests)
+~~~
+
 
 ## Common destructuring patterns
 
+### Match on simple values
+
+You can use `match` to test a variable against other values:
+
+~~~lisp
+(let ((x 3))
+  (match x
+     (0 :no-match)
+     (1 :still-no-match)
+     (3 :yes)
+     (_ :other)))
+;; => :yes
+~~~
+
+The same, with a list:
+
+~~~lisp
+(let ((x (list :a)))
+  (match x
+    (0 :nope)
+    (1 :still-nope)
+    (3 :yes)
+    ((list :a) :a-list) ;; <-- match (list :a) entirely. Next we'll match on the content.
+    (_ :other)))
+;; => :A-LIST
+~~~
+
+It works with strings too (wherease CL's built-in `case` doesn't):
+
+~~~lisp
+(let ((x "a string"))
+  (match x
+    ("a string" :a-string)
+    (_ :other)))
+;; => :A-STRING
+~~~
+
+We can use this knowledge to write an elegant recursive Fibonacci function:
+
+~~~lisp
+(defun fib (n)
+  (match n
+    (0 0)
+    (1 1)
+    (_ (+ (fib (- n 1)) (fib (- n 2))))))
+~~~
+
+It would be more interesting to match against the content of our
+variable `x`, when it is a compound data structure: that's what we'll
+do in the next sections with Trivia's patterns.
+
+
+### The fall-through is `_`
+
+Observe how we used `_` (the underscore) for the fall-through cause,
+and not `t` as it is used in `cond` or `case`.
+
+
 ### `cons`
+
+The `cons` pattern matches againts lists and other cons cells.
+
+The lengths of the matched object and of the pattern can be
+different. Below, `y` receives all the rest that is not matched by `x`.
 
 ~~~lisp
 (match '(1 2 3)
@@ -158,7 +228,7 @@ acceptable.
 All these patterns first check if the pattern is a list. If that is
 satisfied, then they obtain the contents, and the value is matched
 against the subpattern. The `assoc` and `property` patterns match
-single values. The `alist` and `plist` patterns effectively `and` 
+single values. The `alist` and `plist` patterns effectively `and`
 several patterns.
 
 ~~~lisp
@@ -195,7 +265,7 @@ is being used.
 ;; -> (3 NIL)
 ~~~
 
-The pattern `property!` will only match if the key is actually present. 
+The pattern `property!` will only match if the key is actually present.
 
 ~~~lisp
 (match '(:a 1 :b 2)
