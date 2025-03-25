@@ -139,7 +139,7 @@ Note that there's also SCHAR. If efficiency is important, SCHAR can be a bit
 faster where appropriate.
 
 Because strings are arrays and thus sequences, you can also use the more generic
-functions AREF and ELT (which are more general while CHAR might be implemented
+functions `aref` and `elt` (which are more general while CHAR might be implemented
 more efficiently).
 
 ~~~lisp
@@ -216,7 +216,7 @@ Replace one character with `substitute` (non destructive) or `replace` (destruct
 
 ## Concatenating Strings
 
-The name says it all: CONCATENATE is your friend. Note that this is a generic
+The name says it all: `concatenate` is your friend. Note that this is a generic
 sequence function and you have to provide the result type as the first argument.
 
 ~~~lisp
@@ -239,13 +239,13 @@ or with the library `str`, use `concat`:
 ~~~
 
 If you have to construct a string out of many parts, all of these calls to
-CONCATENATE seem wasteful, though. There are at least three other good ways to
+`concatenate` seem wasteful, though. There are at least three other good ways to
 construct a string piecemeal, depending on what exactly your data is. If you
-build your string one character at a time, make it an adjustable VECTOR (a
-one-dimensional ARRAY) of type character with a fill-pointer of zero, then use
-VECTOR-PUSH-EXTEND on it. That way, you can also give hints to the system if you
+build your string one character at a time, make it an adjustable vector (a
+one-dimensional array) of type character with a fill-pointer of zero, then use
+`vector-push-extend` on it. That way, you can also give hints to the system if you
 can estimate how long the string will be. (See the optional third argument to
-VECTOR-PUSH-EXTEND.)
+`vector-push-extend`.)
 
 ~~~lisp
 * (defparameter *my-string* (make-array 0
@@ -264,7 +264,7 @@ NIL
 
 If the string will be constructed out of (the printed representations of)
 arbitrary objects, (symbols, numbers, characters, strings, ...), you can use
-FORMAT with an output stream argument of NIL. This directs FORMAT to return the
+`format` with an output stream argument of `nil`. This directs `format` to return the
 indicated output as a string.
 
 ~~~lisp
@@ -273,8 +273,8 @@ indicated output as a string.
 "This is a string with a list (1 2 3) in it"
 ~~~
 
-We can use the looping constructs of the FORMAT mini language to emulate
-CONCATENATE.
+We can use the looping constructs of the `format` mini language to emulate
+`concatenate`.
 
 ~~~lisp
 * (format nil "The Marx brothers are:~{ ~A~}."
@@ -282,7 +282,7 @@ CONCATENATE.
 "The Marx brothers are: Groucho Harpo Chico Zeppo Karl."
 ~~~
 
-FORMAT can do a lot more processing but it has a relatively arcane syntax. After
+`format` can do a lot more processing but it has a relatively arcane syntax. After
 this last example, you can find the details in the CLHS section about formatted
 output.
 
@@ -293,9 +293,9 @@ output.
 ~~~
 
 Another way to create a string out of the printed representation of various
-object is using WITH-OUTPUT-TO-STRING. The value of this handy macro is a string
+object is using `with-output-to-string`. The value of this handy macro is a string
 containing everything that was output to the string stream within the body to
-the macro. This means you also have the full power of FORMAT at your disposal,
+the macro. This means you also have the full power of `format` at your disposal,
 should you need it.
 
 ~~~lisp
@@ -339,8 +339,8 @@ Or do it with LOOP.
 
 ## Reversing a String by Word or Character
 
-Reversing a string by character is easy using the built-in REVERSE function (or
-its destructive counterpart NREVERSE).
+Reversing a string by character is easy using the built-in `reverse` function (or
+its destructive counterpart `nreverse`).
 
 ~~~lisp
 *(defparameter *my-string* (string "DSL"))
@@ -499,7 +499,7 @@ Note this potential caveat: according to the HyperSpec,
 
 This implies that the last result in
 the following example is implementation-dependent - it may either be "BIG" or
-"BUG". If you want to be sure, use COPY-SEQ.
+"BUG". If you want to be sure, use `copy-seq`.
 
 ~~~lisp
 * (defparameter *my-string* (string "BIG"))
@@ -556,7 +556,7 @@ NIL
 ## Trimming Blanks from the Ends of a String
 
 Not only can you trim blanks, but you can get rid of arbitrary characters. The
-functions STRING-TRIM, STRING-LEFT-TRIM and STRING-RIGHT-TRIM return a substring
+functions `string-trim`, `string-left-trim` and `string-right-trim` return a substring
 of their second argument where all characters that are in the first argument are
 removed off the beginning and/or the end. The first argument can be any sequence
 of characters.
@@ -580,7 +580,7 @@ here.
 
 ## Converting between Symbols and Strings
 
-The function INTERN will "convert" a string to a symbol. Actually, it will check
+The function `intern` will "convert" a string to a symbol. Actually, it will check
 whether the symbol denoted by the string (its first argument) is already
 accessible in the package (its second, optional, argument which defaults to the
 current package) and enter it, if necessary, into this package. It is beyond the
@@ -615,8 +615,8 @@ NIL
 :EXTERNAL
 ~~~
 
-To do the opposite, convert from a symbol to a string, use SYMBOL-NAME or
-STRING.
+To do the opposite, convert from a symbol to a string, use `symbol-name` or
+`string`.
 
 ~~~lisp
 * (symbol-name 'MY-SYMBOL)
@@ -631,9 +631,9 @@ STRING.
 
 ## Converting between Characters and Strings
 
-You can use COERCE to convert a string of length 1 to a character. You can also
-use COERCE to convert any sequence of characters into a string. You can not use
-COERCE to convert a character to a string, though - you'll have to use STRING
+You can use `coerce` to convert a string of length 1 to a character. You can also
+use `coerce` to convert any sequence of characters into a string. You can not use
+`coerce` to convert a character to a string, though - you'll have to use `string`
 instead.
 
 ~~~lisp
@@ -848,9 +848,9 @@ See also [parse-number](https://github.com/sharplispers/parse-number).
 
 ## Converting a Number to a String
 
-The general function WRITE-TO-STRING or one of its simpler variants
-PRIN1-TO-STRING or PRINC-TO-STRING may be used to convert a number to a
-string. With WRITE-TO-STRING, the :base keyword argument may be used to change
+The general function `write-to-string` or one of its simpler variants
+`prin1-to-string` or `princ-to-string` may be used to convert a number to a
+string. With `write-to-string`, the `:base` keyword argument may be used to change
 the output base for a single call. To change the output base globally, set
 *print-base* which defaults to 10. Remember in Lisp, rational numbers are
 represented as quotients of two integers even when converted to strings.
@@ -869,14 +869,14 @@ represented as quotients of two integers even when converted to strings.
 
 ## Comparing Strings
 
-The general functions EQUAL and EQUALP can be used to test whether two strings
+The general functions `equal` and `equalp` can be used to test whether two strings
 are equal. The strings are compared element-by-element, either in a
-case-sensitive manner (EQUAL) or not (EQUALP). There's also a bunch of
+case-sensitive manner (`equal`) or not (`equalp`). There's also a bunch of
 string-specific comparison functions. You'll want to use these if you're
 deploying implementation-defined attributes of characters. Check your vendor's
 documentation in this case.
 
-Here are a few examples. Note that all functions that test for inequality return the position of the first mismatch as a generalized boolean. You can also use the generic sequence function MISMATCH if you need more versatility.
+Here are a few examples. Note that all functions that test for inequality return the position of the first mismatch as a generalized boolean. You can also use the generic sequence function `mismatch` if you need more versatility.
 
 ~~~lisp
 (string= "Marx" "Marx")
