@@ -916,7 +916,25 @@ For our examples below, we'll work with a list of movies:
 
 Format directives start with `~`. A final character like `A` or `a`
 (they are case insensitive) defines the directive. In between, it can
-accept coma-separated options and parameters.
+accept coma-separated options and parameters.  Further, some directives
+can take colon and at-sign modifiers, which change the behavior of the
+directive in some way.  For example, with the `D` directive, the colon
+adds commas every three digits, and the at-sign adds a plus sign when
+the number is positive:
+
+~~~lisp
+(format nil "~d" 2025)
+;; => "2025"
+(format nil "~:d" 2025)
+;; => "2,025"
+(format nil "~@d" 2025)
+;; => "+2025"
+(format nil "~@:d" 2025)
+;; => "+2,025"
+~~~
+
+If it there isn't a sensible interpretation for both modifiers used
+together, the result is either undefined or some additional meaning.
 
 Print a tilde with `~~`, or 10 tildes with `~10~`.
 
