@@ -933,7 +933,17 @@ the number is positive:
 ;; => "+2,025"
 ~~~
 
-If it there isn't a sensible interpretation for both modifiers used
+With the at-sign modifier, the `R` directive outputs Roman numerals
+rather than an English cardinal number:
+
+~~~lisp
+(format nil "~r" 2025)
+;; => "two thousand twenty-five"
+(format nil "~@r" 2025)
+;; => "MMXXV"
+~~~
+
+If there isn't a sensible interpretation for both modifiers used
 together, the result is either undefined or some additional meaning.
 
 Print a tilde with `~~`, or 10 tildes with `~10~`.
