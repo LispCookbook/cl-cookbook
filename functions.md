@@ -419,6 +419,15 @@ used to capture values:
 ;; => (1 2)
 ~~~
 
+You can also use `multiple-value-setq`, which is equivalent:
+
+~~~lisp
+(let (c d)
+  (multiple-value-setq (c d) (values 3 4))
+  (list c d))
+;; => (3 4)
+~~~
+
 Or you can shunt multiple values directly into a function call
 with `multiple-value-call`:
 
