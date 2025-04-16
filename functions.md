@@ -378,8 +378,7 @@ The most common way to capture multiple values is with
 `multiple-value-bind`:
 
 ~~~lisp
-(multiple-value-bind (c d)
-    (values 1 2)
+(multiple-value-bind (c d) (values 1 2)
   (list c d))
 ;; => (1 2)
 
