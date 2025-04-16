@@ -727,10 +727,30 @@ you correctly get
   (+ 3 3))
 ~~~
 
-Use `C-M-q` (`slime-reindent-defun`) to indent the current function definition:
+Use `C-M-q` (`indent-sexp`) to re-indent the form at point.
 
 ~~~lisp
 ;; Put the cursor on the open parens of "(defun ..."
+;; and press "C-M-q" to indent the code:
+[] (defun e ()
+   "A badly indented function."
+ (let ((x 20))
+ (print x)))
+~~~
+
+you get:
+
+```
+(defun e ()
+  "A correctly indented function."
+  (let ((x 20))
+    (print x)))
+```
+
+Use `C-c M-q` (`slime-reindent-defun`) to indent the current function definition:
+
+~~~lisp
+;; Put the cursor anywhere inside the function
 ;; and press "C-M-q" to indent the code:
 (defun e ()
 "A badly indented function."
@@ -1001,9 +1021,6 @@ C-c C-z         run-lisp
 C-M-x           lisp-eval-defun
 
 C-M-q           indent-sexp
-
-C-M-q           prog-indent-sexp
-  (that binding is currently shadowed by another mode)
 
 C-c M-e         macrostep-expand
 C-c M-i         slime-fuzzy-complete-symbol
