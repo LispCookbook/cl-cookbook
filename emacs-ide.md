@@ -653,6 +653,9 @@ Use `C-M-@` to highlight an entire sexp. Then press `C-M-u` to expand
 the selection "upwards" and `C-M-d` to move forward down one level of
 parentheses.
 
+Use `M-)` (`move-past-close-and-reindent`) to move to the end of the
+current lexical block, create a new line and indent.
+
 #### Deleting s-expressions
 
 Use `C-M-k` (`kill-sexp`) and `C-M-backspace` (`backward-kill-sexp`) (but caution: this keybinding may restart the system on GNU/Linux).
@@ -679,6 +682,29 @@ and you press `C-M-k`, you get:
       (+ 3 3)
       []
       (+ 4 4)))
+~~~
+
+Use `M-x raise-sexp` (unbound by default) to "raise" the current
+expression. This moves it up one level, and erases the previous
+expression. For example, with the point below:
+
+~~~lisp
+(defun d ()
+  (when t
+    [](+ 3 3)
+~~~
+
+call `raise-sexp` and you get:
+
+~~~lisp
+(defun d ()
+  [](+ 3 3))
+~~~
+
+You can bind it to a global key:
+
+~~~lisp
+(keymap-global-set "M-+" #'raise-sexp) ;; M-+ originally unbound
 ~~~
 
 
