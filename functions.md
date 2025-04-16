@@ -378,10 +378,19 @@ The most common way to capture multiple values is with
 `multiple-value-bind`:
 
 ~~~lisp
-(multiple-value-bind (c d) (values 1 2)
+(multiple-value-bind (c d)
+    (values 1 2)
   (list c d))
 ;; => (1 2)
+
+;; Also often indented like this:
+(multiple-value-bind (c d)
+    (values 1 2)
+  (list c d))
 ~~~
+
+It acts as a `let` binding: the values `c` and `d` exist in the scope
+of `multiple-value-bind`.
 
 The number of values returned does not have to match the
 number of variables to bind.  If there are too many values,
