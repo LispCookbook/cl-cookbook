@@ -806,6 +806,19 @@ around the region instead.
 - you could use [Paredit (animated guide)](http://danmidwood.com/content/2014/11/21/animated-paredit.html) to automatically insert parentheses in pairs,
 - or [lispy-mode](https://github.com/abo-abo/lispy), like Paredit, but a key triggers an action when the cursor is placed right before or right after a parentheses.
 
+#### Deleting parenthesis
+
+Use `M-x delete-pair` to delete the pair of parenthesis ahead of the
+point. It actually works with any symbols that come in pair (double
+quotes, square brackets…).
+
+For example:
+
+~~~lisp
+[](1 2 3)
+;; M-x delete-pair =>
+1 2 3
+~~~
 
 #### Hiding/showing code
 
