@@ -643,18 +643,50 @@ Emacs has, of course, built-in commands to deal with s-expressions.
 #### Forward/Backward/Up/Down movement and selection by s-expressions
 
 Use `C-M-f` and `C-M-b` (`forward-sexp` and `backward-sexp`) to move
-in units of s-expressions.
+to the end (to the beginning) of the s-expression at point or to the
+next expression of the same level. `C-M-n` and `C-M-p` (next,
+previous) are similar.
 
-Use `C-M-t` (`transpose-sexps`) to swap
-the first addition sexp and the second one. Put the cursor on the open
-parens of "(+ x" in defun c and press
+Use `C-M-u` (`backward-up-list`) and `C-M-d` (`down-list`) to go up
+and down in the tree of s-expressions.
 
-Use `C-M-@` (`mark-sexp`) to highlight an entire sexp. Then press `C-M-u` to expand
+Use `C-M-a` (`beginning-of-defun` or `slime-beginning-of-defun` in
+lisp-mode) and `C-M-e` (`end-of-defun` or `slime-end-of-defun`) to go
+to the beginning (or end) of the top-level s-expression: for example
+this goes to the beginning of the current function definition.
+
+Use `C-M-@` or `C-M-space` (both `mark-sexp`) to highlight an entire sexp. Then press `C-M-u` to expand
 the selection "upwards" and `C-M-d` to move forward down one level of
-parentheses.
+parentheses. You can also press `mark-sexp` repeatedly.
 
 Use `M-)` (`move-past-close-and-reindent`) to move to the end of the
 current lexical block, create a new line and indent.
+
+Use `C-M-t` (`transpose-sexps`) to drag the s-expression at point up, before the previous s-exp.
+
+For example:
+
+```lisp
+;; Press C-M-t and observe how you move the different additions.
+
+(defun c ()
+  "another function"
+  (let ((x 42))
+    (+ x
+       (+ 2 2)
+     [](+ 3 3)  ; <-- cursor
+       (+ 4 4))))
+
+;; C-M-t =>
+
+(defun c ()
+  "another function"
+  (let ((x 42))
+    (+ x
+       (+ 3 3)
+       (+ 2 2)[]  ; <-- cursor moved too (now right before (+ 4 4)
+       (+ 4 4))))
+```
 
 #### Comment a line or a region
 
