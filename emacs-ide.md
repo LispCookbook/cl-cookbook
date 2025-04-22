@@ -636,7 +636,7 @@ Call it with `M-x help-with-tutorial` (where `M-x` is `alt-x`).
 
 
 
-### Editing
+### Editing with parentheses
 
 Emacs has, of course, built-in commands to deal with s-expressions.
 
@@ -645,18 +645,34 @@ Emacs has, of course, built-in commands to deal with s-expressions.
 Use `C-M-f` and `C-M-b` (`forward-sexp` and `backward-sexp`) to move
 in units of s-expressions.
 
-Use `C-M-t` to swap
+Use `C-M-t` (`transpose-sexps`) to swap
 the first addition sexp and the second one. Put the cursor on the open
 parens of "(+ x" in defun c and press
 
-Use `C-M-@` to highlight an entire sexp. Then press `C-M-u` to expand
+Use `C-M-@` (`mark-sexp`) to highlight an entire sexp. Then press `C-M-u` to expand
 the selection "upwards" and `C-M-d` to move forward down one level of
 parentheses.
 
 Use `M-)` (`move-past-close-and-reindent`) to move to the end of the
 current lexical block, create a new line and indent.
 
-#### Deleting s-expressions
+#### Comment a line or a region
+
+Insert a comment or comment a region with `M-;`, adjust text with `M-q`.
+
+#### Deleting parenthesis and s-expressions
+
+Use `M-x delete-pair` to delete the pair of parenthesis ahead of the
+point. It actually works with any symbols that come in pair (double
+quotes, square brackets…).
+
+For example:
+
+~~~lisp
+[](1 2 3)
+;; M-x delete-pair =>
+1 2 3
+~~~
 
 Use `C-M-k` (`kill-sexp`) and `C-M-backspace` (`backward-kill-sexp`) (but caution: this keybinding may restart the system on GNU/Linux).
 
@@ -684,6 +700,8 @@ and you press `C-M-k`, you get:
       (+ 4 4)))
 ~~~
 
+#### raise: moving an s-expression up
+
 Use `M-x raise-sexp` (unbound by default) to "raise" the current
 expression. This moves it up one level, and erases the previous
 expression. For example, with the point below:
@@ -706,7 +724,6 @@ You can bind it to a global key:
 ~~~lisp
 (keymap-global-set "M-+" #'raise-sexp) ;; M-+ originally unbound
 ~~~
-
 
 #### Indenting s-expressions
 
@@ -740,7 +757,7 @@ Use `C-M-q` (`indent-sexp`) to re-indent the form at point.
 
 you get:
 
-```
+```lisp
 (defun e ()
   "A correctly indented function."
   (let ((x 20))
@@ -779,11 +796,36 @@ do (print j))
 
 You can also select a region and call `M-x indent-region`.
 
-#### Open and close parenthesis
+#### Open and close parentheses
 
-When you are in a Slime REPL, you can use `C-return` or `M-return`
+You may not need many keybindings (or any at all) to manage Lisp's
+parentheses. `M-x show-paren-mode` is super useful already (see
+below). But some keybindings are helpful nonetheless.
+
+Did you know that when you are in a Slime REPL, you can use `C-return` or `M-return`
 (`slime-repl-closing-return`) to close the remaining parenthesis and
-evaluate your input string.
+evaluate your input string?
+
+In source files, you can use `C-c C-]` (`slime-close-all-parens-in-sexp`)
+to insert the required number of closing parenthesis.
+
+For example:
+
+```lisp
+(defun example ()
+  (when t
+    (when (+ 1 2)
+      nil[]  ;; <--- point
+
+;; C-c C-]
+;; =>
+
+(defun example ()
+  (when t
+    (when (+ 1 2)
+      nil)))
+         ^^^ 3 closing ) were inserted.
+```
 
 In files, use `M-(` to insert a pair of parenthesis (`()`) and the same
 keybinding with a prefix argument, `C-u M-(`, to enclose the
@@ -792,22 +834,20 @@ expression in front of the cursor with a pair of parens.
 For example, we start with the cursor before the first paren:
 
 ~~~lisp
-CL-USER> |(- 2 2)
+[](- 2 2)
 ~~~
 
 Press `C-u M-(` to enclose it with parens:
 
 ~~~lisp
-CL-USER> (|(- 2 2))
+([](- 2 2))
 ;; now write anything.
-CL-USER> (zerop (- 2 2))
+(zerop (- 2 2))
 ~~~
 
 With a numbered prefix argument (`C-u 2 M-(`), wrap around this number of s-expressions.
 
-Additionnaly, use `M-x check-parens` to spot malformed s-exps and `C-c
-C-]` (`slime-close-all-parens-in-sexp`) to insert the required number
-of closing parenthesis.
+Additionnaly, use `M-x check-parens` to spot malformed s-exps.
 
 There are additional packages that can make your use of parens easier:
 
@@ -817,6 +857,7 @@ There are additional packages that can make your use of parens easier:
   with. You can initialize it in your Emacs init file with
   `(show-paren-mode t)`. It is a global minor mode (it will work for
   all buffers, all languages).
+  - **we highly suggest you enable it**.
 - when evil-mode (the vim layer) is enabled, you can use the `%` key to go to the matchin paren.
 - `M-x electric-pair-mode`, a built-in Emacs mode: when enabled,
 typing an open parenthesis automatically inserts the corresponding
@@ -826,33 +867,10 @@ around the region instead.
 - you could use [Paredit (animated guide)](http://danmidwood.com/content/2014/11/21/animated-paredit.html) to automatically insert parentheses in pairs,
 - or [lispy-mode](https://github.com/abo-abo/lispy), like Paredit, but a key triggers an action when the cursor is placed right before or right after a parentheses.
 
-#### Deleting parenthesis
-
-Use `M-x delete-pair` to delete the pair of parenthesis ahead of the
-point. It actually works with any symbols that come in pair (double
-quotes, square brackets…).
-
-For example:
-
-~~~lisp
-[](1 2 3)
-;; M-x delete-pair =>
-1 2 3
-~~~
-
-#### Hiding/showing code
-
-Use `C-x n n` (narrow-to-region) and `C-x n w` to widen back.
-
-See also [code folding](http://wikemacs.org/wiki/Folding) with external packages.
-
-#### Comments
-
-Insert a comment or comment a region with `M-;`, adjust text with `M-q`.
-
 ### (optional) Packages for structured editing
 
-In addition to the built-in Emacs commands, you have several packages at your disposal
+In addition to the built-in Emacs commands and modes (`show-paren-mode` is a must have, see above),
+you have more packages at your disposal
 that will help to keep the parens and/or the indentation balanced.
 The list below is somewhat sorted by age of the
 extension, according to the
@@ -875,10 +893,16 @@ extension, according to the
   automatically fixes the parens depending on the indentation, or the
   other way round (or both !).
 
-We personally advice to try Parinfer and the famous Paredit, then to
-go up the list. See explanations and even more on
-[Wikemacs](http://wikemacs.org/wiki/Lisp_editing).
+We personally advice to know the built-in functions well, then to get
+inspiration from the famous Paredit or from Lispy for evil users. See
+even more on [Wikemacs](http://wikemacs.org/wiki/Lisp_editing).
 
+
+### Hiding/showing code
+
+Use `C-x n n` (narrow-to-region) and `C-x n w` to widen back.
+
+See also [code folding](http://wikemacs.org/wiki/Folding) with external packages.
 
 ### Search and replace
 
