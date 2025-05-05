@@ -103,10 +103,10 @@ extend".
 
 It has the other advantage of having one construct that works for all
 data structures (lists, vectors, hash-tables…): if in doubt, just use
-`for… over`:
+`for… over…`:
 
 ~~~lisp
-(for:for ((x over <your data structure>))
+(for:for ((x over your-data-structure))
    (print …))
 ~~~
 
