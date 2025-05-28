@@ -307,7 +307,7 @@ to end" test that tests with real data and all your code…)
 
 However, FiveAM's fixture system is nothing more than a macro, it is
 not fully-featured compared to other libraries such as
-[Mockingbird](https://github.com/Chream/mockingbird), and even
+[Mockingbird](https://github.com/pfdietz/mockingbird), and even
 FiveAM's maintainer encourages to "just use a macro" instead.
 
 Mockingbird (and maybe other libraries), in addition to the basic
