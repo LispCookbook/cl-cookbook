@@ -1640,11 +1640,13 @@ _completely ignore_ the values provided for `rehash-size` and
 
 An association list is a list of cons cells.
 
+Its keys and values can be of any type.
+
 This simple example:
 
 ~~~lisp
 (defparameter *my-alist* (list (cons 'foo "foo")
-                             (cons 'bar "bar")))
+                               (cons 'bar "bar")))
 ;; => ((FOO . "foo") (BAR . "bar"))
 ~~~
 
@@ -1664,20 +1666,21 @@ FOO
 
 ### Construction
 
-We can construct an alist like its representation:
-
+Besides constructing a list of cons cells like above, we can
+construct an alist following its dotted representation:
 
 ~~~lisp
 (setf *my-alist* '((:foo . "foo")
-                 (:bar . "bar")))
+                   (:bar . "bar")))
 ~~~
 
+Keep in mind that using quote doesn't evaluate the expressions inside it.
 
 The constructor `pairlis` associates a list of keys and a list of values:
 
 ~~~lisp
-(pairlis '(:foo :bar)
-         '("foo" "bar"))
+(pairlis (list :foo :bar)
+         (list "foo" "bar"))
 ;; => ((:BAR . "bar") (:FOO . "foo"))
 ~~~
 
@@ -1713,7 +1716,7 @@ use `cdr` or `second`  to get the value, or even `assoc-value list key` from `Al
 ;; It actually returned 2 values.
 ~~~
 
-There is `assoc-if`, and `rassoc` to get a cons cell by its value:
+There is `assoc-if`, and `rassoc` to do a "reverse" search, to get a cons cell by its value:
 
 ~~~lisp
 (rassoc "foo" *my-alist*)
@@ -1735,7 +1738,15 @@ If the alist has repeating (duplicate) keys, you can use `remove-if-not`, for ex
 
 ### Insert and remove entries
 
-To add a key, we `push` another cons cell:
+The function `acons` adds a key with a given value to an existing
+alist and returns a new alist:
+
+~~~lisp
+(acons :key "key" *my-alist*)
+;; => ((:KEY . "key") (:FOO . "foo") (:BAR . "bar"))
+~~~
+
+To add a key, we can `push` another cons cell:
 
 ~~~lisp
 (push (cons 'team "team") *my-alist*)
