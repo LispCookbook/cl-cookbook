@@ -625,7 +625,7 @@ Just try it with `C-h` too!
 
 See also [Helpful](https://github.com/Wilfred/helpful), an alternative to the built-in Emacs help that provides much more contextual information.
 
-<img src="assets/emacs-helpful.png" style="height: 450px"/>
+<img src="assets/emacs-helpful.png" style="height: 450px" alt="The Emacs helpful package shows detailed information about a symbol."/>
 
 
 ### Built-in tutorial

@@ -532,7 +532,7 @@ See the documentation: [https://edicl.github.io/hunchentoot/#conditions](https:/
 
 Clack users might make a good use of plugins, like the clack-errors middleware: [https://github.com/CodyReichert/awesome-cl#clack-plugins](https://github.com/CodyReichert/awesome-cl#clack-plugins).
 
-<img src="assets/clack-errors.png" width="800"/>
+<img src="assets/clack-errors.png" width="800" alt="The clack-errors plugin shows the error message, a legible backtrace and environment variables."/>
 
 ## Weblocks - solving the "JavaScript problem"©
 
