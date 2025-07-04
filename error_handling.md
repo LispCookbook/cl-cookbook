@@ -71,7 +71,7 @@ could not choose what to return.
 Remember that we can `inspect` the condition with a right click in Slime.
 
 
-## Handling all error conditions (handler-case)
+## Handling all error conditions with `handler-case`
 
 <!-- we will say "handling" for handler-bind -->
 
@@ -103,12 +103,16 @@ We also returned two values, 0 and the signaled condition.
 The general form of `handler-case` is
 
 ~~~lisp
-(handler-case (code that errors out)
+(handler-case (code that can error out)
    (condition-type (the-condition) ;; <-- optional argument
       (code))
    (another-condition (the-condition)
        ...))
 ~~~
+
+The `(code that can error out)` following `handler-case` must be one
+form. If you want to write multiple expressions, wrap them in a `progn`.
+
 
 ## Handling a specific condition
 
@@ -130,24 +134,233 @@ as known from other languages: `throw`/`try`/`catch` from C++ and Java,
 `raise`/`try`/`except` from Python, `raise`/`begin`/`rescue` in Ruby,
 and so on. But we can do more.
 
-## handler-case VS handler-bind
+## Absolute control over conditions and restarts: `handler-bind`
 
-[handler-bind][handler-bind] (see the next examples) is what to use
-when we need absolute control over what happens when a condition is
-signaled. It allows us to use the debugger and restarts, either
-interactively or programmatically.
+[handler-bind][handler-bind] is what to use when we need absolute
+control over what happens when a condition is signaled. It doesn't
+unwind the stack, which we illustrate in the next section. It allows
+us to use the debugger and restarts, either interactively or
+programmatically.
+
+Its general form is:
+
+~~~lisp
+(handler-bind ((a-condition #'function-to-handle-it)
+               (another-one #'another-function))
+    (code that can...)
+    (...error out…)
+    (... with an implicit PROGN))
+~~~
+
+For example:
+
+~~~lisp
+(defun handler-bind-example ()
+  (handler-bind
+        ((error (lambda (c)
+                  (format t "we handle this condition: ~a" c)
+                  ;; Try without this return-from: the error bubbles up
+                  ;; up to the interactive debugger.
+                  (return-from handler-bind-example))))
+      (format t "starting example…~&")
+      (error "oh no")))
+~~~
+
+You'll notice that its syntax is "in reverse" compared to
+`handler-case`: we have the bindings first, the forms (in an implicit
+progn) next.
+
+If the handler returns normally (it declines to handle the condition),
+the condition continues to bubble up, searching for another handler,
+and it will find the interactive debugger.
+
+This is another difference from `handler-case`: if our handler
+function didn't explicitely return from its calling function with
+`return-from handler-bind-example`, the error would continue to bubble
+up, and we would get the interactive debugger.
+
+This behaviour is particularly useful when your program signaled a
+simple condition. A simple condition isn't an error (see our
+"conditions hierarchy" below) so it won't trigger the debugger. You
+can do something to handle the condition (it's a signal for something
+occuring in your application), and let the program continue.
 
 If some library doesn't handle all conditions and lets some bubble out
 to us, we can see the restarts (established by `restart-case`)
 anywhere deep in the stack, including restarts established by other
-libraries that this library called. And *we can see the stack
-trace*, with every frame that was called and, in some lisps, even see
-local variables and such. Once we `handler-case`, we "forget" about
-this, everything is unwound. `handler-bind` does *not* rewind the
-stack.
+libraries that this library called.
 
-Before we properly see `handler-bind`, let's study conditions and restarts.
+### handler-bind doesn't unwind the stack
 
+With `handler-bind`, *we can see the full stack trace*, with every
+frame that was called. Once we use `handler-case`, we "forget" many
+steps of our program's execution until the condition is handled: the
+call stack is unwound. `handler-bind` does *not* rewind the
+stack. Let's illustrate this.
+
+For the sake of our demonstration, we will use the library
+`trivial-backtrace`, which you can install with Quicklisp:
+
+    (ql:quickload "trivial-backtrace")
+
+It is a wrapper around the implementations' primitives such as `sb-debug:print-backtrace`.
+
+Consider the following code: our `main` function calls a chain of
+functions which ultimately fail by signaling an `error`. We handle the
+error in the main function and print the backtrace.
+
+~~~lisp
+(defun f0 ()
+  (error "oh no"))
+
+(defun f1 ()
+  (f0))
+
+(defun f2 ()
+  (f1))
+
+(defun main ()
+  (handler-case (f2)
+    (error (c)
+      (format t "in main, we handle: ~a" c)
+      (trivial-backtrace:print-backtrace c))))
+~~~
+
+This is the backtrace (only the first frames):
+
+```
+CL-REPL> (main)
+in main, we handle: oh no
+Date/time: 2025-07-04-11:25!
+An unhandled error condition has been signalled: oh no
+
+Backtrace for: #<SB-THREAD:THREAD "repl-thread" RUNNING {1008695453}>
+0: […]
+1: (TRIVIAL-BACKTRACE:PRINT-BACKTRACE … )
+2: (MAIN)
+[…]
+```
+
+So far so good. It is `trivial-backtrace` that prints the "Date/time" and the message "An unhandled error condition…".
+
+Now compare the stacktrace when we use `handler-bind`:
+
+```lisp
+(defun main-no-stack-unwinding ()
+  (handler-bind
+      ((error (lambda (c)
+                (format t "in main, we handle: ~a" c)
+                (trivial-backtrace:print-backtrace c)
+                (return-from main-no-stack-unwinding))))
+    (f2)))
+```
+
+```
+CL-REPL> (main-no-stack-unwinding)
+in main, we handle: oh no
+Date/time: 2025-07-04-11:32!
+An unhandled error condition has been signalled: oh no
+
+
+Backtrace for: #<SB-THREAD:THREAD "repl-thread" RUNNING {1008695453}>
+0: …
+1: (TRIVIAL-BACKTRACE:PRINT-BACKTRACE …)
+2: …
+3: …
+4: (ERROR "oh no")
+5: (F0)
+6: (F1)
+7: (MAIN-NO-STACK-UNWINDING)
+```
+
+That's right: you can see all the call stack: from the main function
+to the error through `f1` and `f0`. These two intermediate functions
+were not present in the backtrace when we used `handler-case` because,
+as the error was signaled and bubbled up in the call stack, the stack
+was *unwound* (or "untangled", "shortened"), and we lost information.
+
+
+### When to use which?
+
+`handler-case` is enough when you expect a situation to fail. For
+example, in the context of an HTTP request, it is a common to anticipate a 400-ish error:
+
+~~~lisp
+;; using the dexador library.
+(handler-case (dex:get "http://bad-url.lisp")
+  (dex:http-request-failed (e)
+    ;; For 4xx or 5xx HTTP errors: it's OK, this can happen.
+    (format *error-output* "The server returned ~D" (dex:response-status e))))
+~~~
+
+In other exceptional situations, we'll surely want `handler-bind`. For
+example, when we want to handle what went wrong and we want to print a
+backtrace, or if we want to invoke the debugger manually (see below)
+and see exactly what happened.
+
+## Running some code, condition or not ("finally") (unwind-protect)
+
+The "finally" part of others `try`/`catch`/`finally` forms is done with [unwind-protect][unwind-protect].
+
+It is the construct used in "with-" macros, like `with-open-file`,
+which always closes the file after it.
+
+With this example:
+
+~~~lisp
+(unwind-protect (/ 3 0)
+  (format t "This place is safe.~&"))
+~~~
+
+SBCL source:
+
+```lisp
+(sb-xc:defmacro with-open-file ((stream filespec &rest options)
+                                &body body)
+  (multiple-value-bind (forms decls) (parse-body body nil)
+    (let ((abortp (sb-xc:gensym)))
+      `(let ((,stream (open ,filespec ,@options))
+             (,abortp t))
+         ,@decls
+         (unwind-protect
+              (multiple-value-prog1
+                  (progn ,@forms)
+                (setq ,abortp nil))
+           (when ,stream
+             (close ,stream :abort ,abortp)))))))
+```
+
+simplified:
+
+```lisp
+(defmacro with-open-file ((stream filespec) &body body)
+  `(let ((,stream (open ,filespec)))
+    (unwind-protect
+      (progn ,@body)
+     (when ,stream
+       (close ,stream)))))
+```
+
+because we want:
+
+```lisp
+(let ((stream (open "filename.txt" :direction :input :if-does-not-exist :create :if-exists :overwrite)))
+    (unwind-protect
+      (format stream "hello file")
+     (when stream
+       (close stream))))
+```
+
+as simply as:
+
+```lisp
+(with-open-file (f "filename.txt" …)
+  (format stream "hello"))
+```
+
+
+We *do* get the interactive debugger (we didn't use handler-bind or
+anything), but our message is printed afterwards anyway.
 
 ## Defining and making conditions
 
@@ -539,74 +752,34 @@ and `:interactive`, they also accept a `:test` key:
     ...
 ~~~
 
+## Invoking the debugger manually
 
-## Handling conditions (handler-bind)
-
-We just saw a use for [handler-bind][handler-bind].
-
-Its general form is:
-
-~~~lisp
-(handler-bind ((a-condition #'function-to-handle-it)
-               (another-one #'another-function))
-    (code that can...)
-    (...error out))
-~~~
-
-If the handler returns normally (it declines to handle the condition),
-the condition continues to bubble up, searching for another handler,
-and it will find the interactive debugger (when it's an error, not
-when it's a simple condition).
-
-
-We can study a real example with the
-[`unix-opts`](https://github.com/mrkkrp/unix-opts) library, that
-parses command line arguments. It defined some conditions:
-`unknown-option`, `missing-arg` and `arg-parser-failed`, and it is up
-to us to write what to do in these cases.
+Suppose you handle a condition with `handler-bind`, and your condition
+object is bound to the `c` variable (as in our examples
+above). Suppose a parameter of yours, say `*devel-mode*`, tells you
+are not in production. It may be handy to fire the debugger on the
+given condition. Use:
 
 ~~~lisp
-(handler-bind ((opts:unknown-option #'unknown-option)
-               (opts:missing-arg #'missing-arg)
-               (opts:arg-parser-failed #'arg-parser-failed))
-  (opts:get-opts))
+(invoke-debugger c)
 ~~~
 
-Our `unknown-option` function is simple and looks like this:
-
-~~~lisp
-(defun unknown-option (condition)
-  (format t "~s option is unknown.~%" (opts:option condition))
-  (opts:describe)
-  (exit)) ;; <-- we return to the command line, no debugger.
-~~~
-
-it takes the condition as parameter, so we can read information from
-it if needed. Here we get the name of the erroneous option with the
-condition's reader `(opts:option condition)`.
+In production, you can print the backtrace instead with `trivial-backtrace:print-backtrace`.
 
 
-## Running some code, condition or not ("finally") (unwind-protect)
+## Disabling the debugger
 
-The "finally" part of others `try`/`catch`/`finally` forms is done with [unwind-protect][unwind-protect].
+We can run our lisp programs in production with the debugger turned off. Each implementation has a command-line switch. In SBCL, it is:
 
-It is the construct used in "with-" macros, like `with-open-file`,
-which always closes the file after it.
+    $ sbcl --disable-debugger
 
-With this example:
+(which is implied by `--script`).
 
-~~~lisp
-(unwind-protect (/ 3 0)
-  (format t "This place is safe.~&"))
-~~~
-
-We *do* get the interactive debugger (we didn't use handler-bind or
-anything), but our message is printed afterwards anyway.
 
 
 ## Conclusion
 
-You're now more than ready to write some code and to dive into other resources!
+You're now ready to write some production code!
 
 
 ## Resources
@@ -625,6 +798,11 @@ You're now more than ready to write some code and to dive into other resources!
 * [lisper.in](https://lisper.in/restarts#signaling-validation-errors) - example with parsing a csv file and using restarts with success, [in a flight travel company](https://www.reddit.com/r/lisp/comments/7k85sf/a_tutorial_on_conditions_and_restarts/drceozm/).
 * [https://github.com/svetlyak40wt/python-cl-conditions](https://github.com/svetlyak40wt/python-cl-conditions) - implementation of the CL condition system in Python.
 * [https://github.com/phoe/portable-condition-system](https://github.com/phoe/portable-condition-system) - portable implementation of the CL condition system in Common Lisp.
+
+## Acknowledgements
+
+* [`@vindarel`'s video course on Udemy](https://www.udemy.com/course/common-lisp-programming/?referralCode=2F3D698BBC4326F94358) for the `handler-bind` part.
+
 
 [ignore-errors]: http://www.lispworks.com/documentation/HyperSpec/Body/m_ignore.htm
 [handler-case]: http://www.lispworks.com/documentation/HyperSpec/Body/m_hand_1.htm
