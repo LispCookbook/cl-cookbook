@@ -773,7 +773,7 @@ We can run our lisp programs in production with the debugger turned off. Each im
 
     $ sbcl --disable-debugger
 
-(which is implied by `--script`).
+(which is implied by `--script` and `--non-interactive`).
 
 
 
