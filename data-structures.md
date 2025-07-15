@@ -625,7 +625,7 @@ length of the one to replace.
 These sort functions are destructive, so one may prefer to copy the sequence with `copy-seq` before sorting:
 
 ~~~lisp
-(sort (copy-seq seq) :test #'string<)
+(sort (copy-seq seq) #'string<)
 ~~~
 
 Unlike `sort`, `stable-sort` guarantees to keep the order of the argument.
