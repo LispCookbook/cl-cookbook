@@ -900,7 +900,7 @@ the hash-table as it is redundant with the dimension.
 ~~~
 
 Now, our programming needs lead to the situation where it would be
-very handy to change the *area* of the square… and have this reflected
+very handy to change the `*area*` of the square… and have this reflected
 on the square's dimensions. It can be ergonomic for your program's
 application interface to define a setf-function, like this:
 
@@ -913,11 +913,41 @@ application interface to define a setf-function, like this:
 And now you can do:
 
 ~~~lisp
-(setf (area *SQUARE*) 100)
+(setf (area *square*) 100)
 ;; => 10.0
 ~~~
 
 and check your square (`describe`, `inspect`…), the new width was set.
+
+### setf-functions: optional arguments
+
+Note that setf-functions only have one mandatory argument, the new
+value. The second and other arguments are optional. For example, from
+the [Lem editor codebase](https://github.com/lem-project/lem/blob/main/src/buffer/internal/buffer.lisp):
+
+
+~~~lisp
+(defun (setf current-buffer) (buffer)
+  "Change the current buffer."
+  (check-type buffer buffer)
+  (setf *current-buffer* buffer))
+~~~
+
+This setf-function sets a global parameter (`*current-buffer*`) to the
+new value.
+
+We could define setf-functions with more than two arguments too:
+
+~~~lisp
+(defun (setf area) (new-area square x y &key log)
+  (list new-area square x y log))
+~~~
+
+Use it:
+
+~~~lisp
+(setf (area 'square 1 2 :log t) 9)
+~~~
 
 
 ## Currying
