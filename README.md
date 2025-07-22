@@ -72,7 +72,7 @@ Also, refer to the [CONTRIBUTING.md][contributing] file.
 
 ### Building the EPUB and the PDF
 
-Run `make epub`. See `make-cookbook.lisp`.
+Run `make epub` to only build epub.  Run `make epub+pdf` to also build pdf. See `make-cookbook.lisp`.
 
 You need a decently recent version of [Calibre](https://calibre-ebook.com/). They provide an easy binary installation.
 
@@ -92,6 +92,28 @@ It uses some metadata in `metadata.txt`.
 
 We can check the resulting EPUB with `epubcheck`.
 
+#### Troubleshooting build on macOS
+
+If you encounter the following error:
+
+~~~
+debugger invoked on a UIOP/RUN-PROGRAM:SUBPROCESS-ERROR in thread
+#<THREAD tid=259 "main thread" RUNNING {1203FA81D3}>:
+  Subprocess with command "sed -i \"s/title:/# /g\" full.md"
+ exited with error code 1
+~~~
+
+It means that your `sed` program is non-GNU. Install GNU version using `homebrew`:
+
+~~~sh
+brew install gnu-sed
+~~~
+
+Now you have `gsed` in your PATH, you can build the book with the following command:
+
+~~~sh
+SED_CMD=gsed make epub
+~~~
 
 ## Origins
 
