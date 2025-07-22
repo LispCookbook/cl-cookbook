@@ -57,6 +57,7 @@
    "contributors.md"
    ))
 
+(defparameter *sed-command* (uiop:getenv "SED_CMD"))
 (defparameter *full-markdown* "full.md")
 (defparameter *bookname* "common-lisp-cookbook.epub")
 (defparameter *epub-command-placeholder* "pandoc -o ~a --toc metadata.txt ~a"
@@ -68,13 +69,15 @@
 (defun full-editing ()
   "Transform markdown frontmatters to a title, etc."
   (format t "Edit the markdown...~&")
-  (uiop:run-program (format nil "sed -i \"s/title:/# /g\" ~a" *full-markdown*))
-  (uiop:run-program (format nil "sed -i \"/^---/s/---/ /g\" ~a" *full-markdown*))
+  (uiop:run-program (format nil "~a -i \"s/title:/# /g\" ~a" *sed-command* *full-markdown*))
+  (uiop:run-program (format nil "~a -i \"/^---/s/---/ /g\" ~a" *sed-command* *full-markdown*))
   ;; Exclude regions that don't export correctly, like embedded videos.
-  (uiop:run-program (format nil "sed -i \"/<\!-- epub-exclude-start -->/,/<\!-- epub-exclude-end -->/d\" ~a" *full-markdown*))
+  (uiop:run-program (format nil
+                            "~a -i \"/<\!-- epub-exclude-start -->/,/<\!-- epub-exclude-end -->/d\" ~a"
+                            *sed-command*
+                            *full-markdown*))
   ;; Make internal links work in the generated EPUB.
-  (uiop:run-program (format nil "sed -i -f fix-epub-links.sed ~a" *full-markdown*))
-  )
+  (uiop:run-program (format nil "~a -i -f fix-epub-links.sed ~a" *sed-command* *full-markdown*)))
 
 (defun to-epub ()
   (format t "~&Generating ~a...~&" *bookname*)
@@ -94,8 +97,4 @@
 
 (defun generate ()
   (reset-target)
-  (build-full-source)
-  (to-epub)
-  (to-pdf))
-
-(generate)
+  (build-full-source))
