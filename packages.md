@@ -231,6 +231,8 @@ Or you can do it with [`LOOP`][loop].
   collect s)
 ~~~
 
+See also [`with-package-iterator`](https://cl-community-spec.github.io/pages/with_002dpackage_002diterator.html).
+
 ## Package nickname
 
 #### Package Local Nicknames (PLN)
