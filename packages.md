@@ -168,13 +168,15 @@ It is a better practice to carefully choose what symbols you import from another
   (:use :cl :ppcre))
 ~~~
 
-Now you can access all variables, functions and macros of `cl-ppcre` from your `my-package` package.
+Now you can access all variables, functions and macros that were exported by `cl-ppcre` from your `my-package` package.
 
 You can also use the `use-package` function:
 
 ~~~lisp
 CL-USER> (use-package 'cl-ppcre)
 ~~~
+
+Its counterpart, to undo the imports of `use-package`, is… `unuse-package`.
 
 
 ### About "use"-ing packages being a bad practice
