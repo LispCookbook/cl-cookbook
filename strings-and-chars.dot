@@ -1,0 +1,41 @@
+digraph G {
+    label="String and Character Types in Common Lisp"
+    labelloc="t"
+
+    t [shape=circle, style=filled, fillcolor=lightgray, label="T", penwidth=0];
+    character [shape=rectangle, color=cyan, penwidth=2, label=<character<br/><font point-size="8">ECL: #\涅<br/>CCL/ABCL: #\é #\涅<br/>Allegro: #\a #\é #\涅</font>>]
+    base_char [shape=rectangle, color=cyan, penwidth=2, label=<base-char<br/><font point-size="8">ECL: #\é<br/>Clisp: #\é #\涅</font>>]
+    standard_char [shape=rectangle, color=cyan, penwidth=2, label=<standard-char<br/><font point-size="8">96 simple chars ~= ASCII<br/>SBCL/ECL/CCL/ABCL/Clisp: #\a</font>>]
+    extended_char [shape=rectangle, color=cyan, style=dashed, label=<extended-char<br/><font point-size="8">Non base-char<br/>SBCL: #\é #\涅</font>>]
+
+    array [shape=rectangle, penwidth=2, label=<array<br/><font point-size="8">Index with aref</font>>]
+    vector [shape=rectangle, style=dashed, label=<vector<br/><font point-size="8">1-dimensional array</font>>]
+    simple_array [shape=rectangle, style=dashed, label=<simple-array<br/><font point-size="8">Non-adjustable, non-displaced</font>>]
+
+    string [shape=rectangle, style=dashed, color=red, penwidth=2, label=<string<br/><font point-size="8">(array character (*))<br/>Index with char</font>>]
+    simple_string [shape=rectangle, color=red, penwidth=2, style=dashed, label=<simple-string<br/><font point-size="8">(or (simple-array character (*)) (simple-array base-char (*)))<br/>Index with schar</font>>]
+    base_string [shape=rectangle, style=dashed, color=red, label=<base-string<br/><font point-size="8">(array base-char (*))</font>>]
+    simple_base_string [shape=rectangle, color=red, style=dashed, label=<simple-base-string<br/><font point-size="8">(simple-array base-char (*))<br/>Index with schar</font>>]
+    extended_string [shape=rectangle, style=dashed, color=magenta, label=<extended-string<br/><font point-size="8">ECL: (array extended-char (*))</font>>]
+    literal [shape=rectangle, style=dashed, color=red, penwidth=2, label=<String Literal<br/><font point-size="8">(simple-array character (*))<br/>Index with schar</font>>]
+
+    si_foreign_data [shape=rectangle, color=magenta, label=<si:foreign-data<br/><font point-size="8">#&lt;foreign (* :char)&gt;<br/>ECL: FFI-based C String</font>>]
+
+    t -> character
+    character -> base_char
+    base_char -> standard_char
+    character -> extended_char
+
+    t -> si_foreign_data
+    t -> array
+    array -> vector
+    array -> simple_array
+    vector -> string
+    string -> literal [style=dotted]
+    simple_array -> literal [style=dotted]
+    literal -> simple_string [style=dotted]
+    string -> base_string
+    base_string -> simple_base_string
+    simple_string -> simple_base_string
+    string -> extended_string [style=dotted]
+}
