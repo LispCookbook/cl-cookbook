@@ -305,13 +305,26 @@ type the following in any order in the REPL:
 (defparameter *name* "book")
 ~~~
 
-Now if we try to set it with a bad type, we get a `simple-type-error`:
+Now if we try to set it with a bad type, it might just work on some
+implementations, and we might get a type error on others.
+
+On SBCL, we get a `simple-type-error`:
 
 ~~~lisp
 (setf *name* :me)
 Value of :ME in (THE STRING :ME) is :ME, not a STRING.
    [Condition of type SIMPLE-TYPE-ERROR]
 ~~~
+
+On LispWorks and ECL, for example, we can do it with no warning or error:
+
+~~~lisp
+(setf *name* :me)
+
+*name*
+:ME
+~~~
+
 
 We can do the same with our custom types. Let's quickly declare the type `list-of-strings`:
 
