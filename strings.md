@@ -2,12 +2,20 @@
 title: Strings
 ---
 
+<!-- epub-exclude-start -->
+<div style="text-align: center">
+    <img src="strings-and-chars.png" alt="String and Character Types in Common Lisp"/>
+</div>
+<!-- epub-exclude-end -->
+
+*Solid nodes are concrete types, while dashed ones are type aliases.*
+
 The most important thing to know about strings in Common Lisp is probably that
 they are arrays and thus also sequences. This implies that all concepts that are
 applicable to arrays and sequences also apply to strings. If you can't find a
 particular string function, make sure you've also searched for the more general
-[array or sequence functions](http://www.gigamonkeys.com/book/collections.html). We'll only cover a fraction of what can be done
-with and to strings here.
+[array or sequence functions](http://www.gigamonkeys.com/book/collections.html).
+We'll only cover a fraction of what can be done with and to strings here.
 
 ASDF3, which is included with almost all Common Lisp implementations,
 includes

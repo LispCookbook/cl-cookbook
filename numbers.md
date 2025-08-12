@@ -17,7 +17,7 @@ Some sources:
 </div>
 <!-- epub-exclude-end -->
 
-*Types in bold, cyan boxes are the ones you will typically use.*
+*Types in bold, solid boxes are the ones you will typically use.*
 
 ## Introduction
 

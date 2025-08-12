@@ -1,0 +1,37 @@
+digraph G {
+    label="Number Types in Common Lisp"
+    labelloc="t"
+
+    t [shape=circle, style=filled, fillcolor=lightgray, label="T", penwidth=0];
+    number [label="number", shape=rectangle, style=dashed];
+    real [label="real", shape=rectangle, style=dashed];
+    complex [label=<complex<br/><font point-size="8">#C(0 1)</font>>, color=cyan, shape=rectangle, penwidth=2];
+    ratio [label=<ratio<br/><font point-size="8">1/2</font>>, color=cyan, shape=rectangle, penwidth=2];
+    integer [penwidth=2, shape=rectangle, label=<integer<br/><font point-size="8">signed-byte<br/>(signed-byte *)<br/></font>>];
+    fixnum [label=<fixnum<br/><font point-size="8">32 or 64 bits</font>>, color=cyan, shape=rectangle, penwidth=2];
+    bignum [style=dashed, label=<bignum<br/><font point-size="8">(and integer (not fixnum))</font>>, shape=rectangle];
+    unsigned_byte [style=dashed, label=<unsigned-byte<br/><font point-size="8">(integer 0 *)</font>>, shape=rectangle];
+    bit [label=<bit<br/><font point-size="8">(integer 0 1)<br/>(unsigned-byte 1)</font>>, color=cyan, shape=rectangle, penwidth=1.5];
+    rational [label="rational", shape=rectangle, style=dashed];
+    float [label="float", shape=rectangle, style=dashed];
+    short_float [label=<short-float<br/><font point-size="8">Clisp: 17-bit Mantissa<br/>Others: Same as single-float</font>>, color=cyan, shape=rectangle, style=dashed];
+    single_float [label=<single-float<br/><font point-size="8">24-bit Mantissa</font>>, color=cyan, shape=rectangle, penwidth=2];
+    double_float [label=<double-float<br/><font point-size="8">53-bit Mantissa</font>>, color=cyan, shape=rectangle, penwidth=2];
+    long_float [label=<long-float<br/><font point-size="8">ECL/Clisp: 64-bit Mantissa<br/>Others: Same as double-float</font>>, color=cyan, shape=rectangle, style=dashed];
+
+    t -> number;
+    number -> complex;
+    number -> real;
+    real -> rational;
+    real -> float;
+    float -> short_float;
+    float -> single_float;
+    float -> double_float;
+    float -> long_float;
+    rational -> ratio;
+    rational -> integer;
+    integer -> fixnum;
+    integer -> bignum [style=dotted];
+    integer -> unsigned_byte [style=dotted];
+    unsigned_byte -> bit [style=dotted];
+}
