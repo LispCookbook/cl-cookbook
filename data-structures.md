@@ -387,10 +387,9 @@ initial element to fill it up:
 ;; => ("hello" "hello" "hello")
 ~~~
 
-`list*` is similar to `list` in various aspects. One difference is
-that it allows to add an element in front of a list and to cr
-
-`list*` is handy to push one (or many) element(s) in front of an existing list and to return a new list:
+`list*` is similar to `list` in various aspects. it is handy to push
+one (or many) element(s) in front of an existing list and to return a
+new list:
 
 ~~~lisp
 (list* :foo (list 1 2 3))
