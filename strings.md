@@ -2,14 +2,6 @@
 title: Strings
 ---
 
-<!-- epub-exclude-start -->
-<div style="text-align: center">
-    <img src="strings-and-chars.png" alt="String and Character Types in Common Lisp"/>
-</div>
-<!-- epub-exclude-end -->
-
-*Solid nodes are concrete types, while dashed ones are type aliases.*
-
 The most important thing to know about strings in Common Lisp is probably that
 they are arrays and thus also sequences. This implies that all concepts that are
 applicable to arrays and sequences also apply to strings. If you can't find a
@@ -1315,6 +1307,16 @@ _ - Conditional Newline
 ### Slime help
 
 * to look-up a `format` directive, such as `~A`, use `M-x common-lisp-hyperspec-format`, bound to `C-c C-d ~`, and use TAB-completion.
+
+
+## String and character types hierarchy
+
+*Solid nodes are concrete types, while dashed ones are type aliases.*
+
+<div style="text-align: center">
+    <img src="string-and-chars.png" alt="String and Character Types in Common Lisp"/>
+</div>
+
 
 ## See also
 
