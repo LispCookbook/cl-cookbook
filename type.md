@@ -154,7 +154,7 @@ specifier. It is a list whose head is a symbol indicating the type. The rest
 part of it is complementary information.
 
 ~~~lisp
-* (typep '#(1 2 3) '(vector number 3))
+* (typep #(1 2 3) '(vector number 3))
 T
 ~~~
 
@@ -166,7 +166,7 @@ The rest part of a compound type specifier can be a `*`, which means
 vector consisting of any number of numbers.
 
 ~~~lisp
-* (typep '#(1 2 3) '(vector number *))
+* (typep #(1 2 3) '(vector number *))
 T
 ~~~
 
@@ -174,10 +174,10 @@ The trailing parts can be omitted, the omitted elements are treated as
 `*`s:
 
 ~~~lisp
-* (typep '#(1 2 3) '(vector number))
+* (typep #(1 2 3) '(vector number))
 T
 
-* (typep '#(1 2 3) '(vector))
+* (typep #(1 2 3) '(vector))
 T
 ~~~
 
@@ -185,7 +185,7 @@ As you may have guessed, the type specifier above can be shortened as
 following:
 
 ~~~lisp
-* (typep '#(1 2 3) 'vector)
+* (typep #(1 2 3) 'vector)
 T
 ~~~
 
@@ -223,16 +223,16 @@ following code for an example:
     `(and (array ,type 1)
           (satisfies small-number-array-p)))
 
-* (typep '#(1 2 3 4) '(small-number-array number))
+* (typep #(1 2 3 4) '(small-number-array number))
 T
 
-* (typep '#(1 2 3 4) 'small-number-array)
+* (typep #(1 2 3 4) 'small-number-array)
 T
 
-* (typep '#(1 2 3 4 100) 'small-number-array)
+* (typep #(1 2 3 4 100) 'small-number-array)
 NIL
 
-* (small-number-array-p '#(1 2 3 4 5 6 7 8 9 0 1))
+* (small-number-array-p '(1 2 3 4 5 6 7 8 9 0 1))
 NIL
 ~~~
 
