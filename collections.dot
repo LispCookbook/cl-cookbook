@@ -1,0 +1,41 @@
+digraph G {
+    label="Collection Types in Common Lisp"
+    labelloc="t"
+
+    t [shape=circle, style=filled, fillcolor=lightgray, label="T", penwidth=0];
+
+    hash_table [shape=rectangle, penwidth=2, color=darkolivegreen, label=<hash-table<br/><font point-size="8">Index with gethash</font>>]
+    sequence [shape=rectangle, label=<sequence<br/><font point-size="8">Index with elt</font>>]
+
+    array [shape=rectangle, penwidth=2, color=navy, label=<array<br/><font point-size="8">Index with aref</font>>]
+    bit_vector [shape=rectangle, style=dashed, color=navy, label=<bit-vector<br/><font point-size="8">(vector bit *)<br/>Index with bit</font>>]
+    simple_vector [shape=rectangle, style=dashed, color=navy, label=<simple-vector<br/><font point-size="8">(vector T *)<br/>(simple-array T (*))<br/>Non-adjustable, non-displaced<br/>Elements always T<br/>Vector literals<br/>Index with svref</font>>]
+    simple_array [shape=rectangle, style=dashed, color=navy, label=<simple-array<br/><font point-size="8">Non-adjustable, non-displaced<br/>Index with aref</font>>]
+    vector [shape=rectangle, style=dashed, color=navy, label=<vector<br/><font point-size="8">(array * (*))<br/>1-dimensional array<br/>Index with aref</font>>]
+    simple_bit_vector [shape=rectangle, style=dashed, color=navy, label=<simple-bit-vector<br/><font point-size="8">(simple-array bit (*))<br/>Index with sbit</font>>]
+    string [shape=rectangle, style=dashed, color=red, label=<string<br/><font point-size="8">(vector character *)<br/>See String chart</font>>]
+
+    javalist [shape=rectangle, color=hotpink, label=<java.util.List<br/><font point-size="8">And all subclasses<br/>ABCL only</font>>]
+
+    list [shape=rectangle, color=wheat, style=dashed, label=<list<br/><font point-size="8">(or cons null)<br/>Sequence if ends in NIL<br/>Index with nth</font>>]
+    cons [shape=rectangle, color=wheat, penwidth=2, label=<cons<br/><font point-size="8">List literals</font>>]
+    null [shape=rectangle, color=wheat, label=<null<br/><font point-size="8">The type of NIL</font>>]
+
+    t -> sequence
+    t -> hash_table
+    t -> array
+    sequence -> vector
+    sequence -> javalist
+    array -> vector
+    array -> simple_array
+    vector -> simple_vector
+    vector -> bit_vector
+    vector -> string
+    simple_array -> simple_vector
+    bit_vector -> simple_bit_vector
+    simple_array -> simple_bit_vector
+
+    sequence -> list [style=dotted]
+    list -> cons
+    list -> null
+}

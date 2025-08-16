@@ -2192,3 +2192,11 @@ easier way to access a nested element than intricated "getf" and
 an intermediary key doesn't exist.
 
 The `access` library given above provides this, with `(accesses var key1 key2…)`.
+
+## Appendix C - Collections Type Hierarchy
+
+<!-- epub-exclude-start -->
+<div style="text-align: center">
+    <img src="collections.png" alt="Collection Types in Common Lisp"/>
+</div>
+<!-- epub-exclude-end -->
