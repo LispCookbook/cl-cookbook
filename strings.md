@@ -427,7 +427,7 @@ With [SBCL](http://www.sbcl.org/manual/#String-operations), use `sb-unicode:unic
 ;; ("Aaa" "Ééé" "Zzz")
 ~~~
 
-### Breaking strings into graphenes, sentences, lines and words
+### Breaking strings into graphemes, sentences, lines and words
 
 These functions use SBCL's [`sb-unicode`](http://www.sbcl.org/manual/#String-operations): they are SBCL specific.
 
@@ -446,7 +446,7 @@ than the `:margin` keyword argument. Combining marks will always be kept togethe
        "long one.")
 ~~~
 
-See also `sb-unicode:words` and `sb-unicode:graphenes`.
+See also `sb-unicode:words` and `sb-unicode:graphemes`.
 
 Tip: you can ensure these functions are run only in SBCL with a feature flag:
 
