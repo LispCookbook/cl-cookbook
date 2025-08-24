@@ -11,13 +11,6 @@ Interaction Mode for Emacs. It has support for interacting with a
 running Common Lisp process for compilation, debugging, documentation
 lookup, cross-references, and so on. It works with many implementations.
 
-[Portacle](https://shinmera.github.io/portacle/) is a portable and
-**multi-platform** Common Lisp environment. It ships Emacs, SBCL,
-Quicklisp, SLIME and Git.
-
-<img src="assets/portacle.png"
-     style="width: 800px" alt="Portacle with an open Slime REPL"/>
-
 [plain-common-lisp](https://github.com/pascalcombier/plain-common-lisp/)
 is a crafted, easy-to-install Common Lisp environment for
 **Windows**. It ships Emacs, SBCL, Slime, Quicklisp. It also shows how
