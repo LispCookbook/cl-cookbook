@@ -4,12 +4,6 @@ title: Getting started with Common Lisp
 
 We'll begin by presenting easy steps to install a development environment and to start a new Common Lisp project.
 
-Want a 2-click install? Then get
-[Portacle](https://shinmera.github.io/portacle/), *a portable and
-multi-platform* Common Lisp environment. It ships Emacs, SBCL (the
-implementation), Quicklisp (package manager), SLIME (IDE) and
-Git. It's the most straightforward way to get going!
-
 ## Install an implementation
 
 ### With your package manager
@@ -95,8 +89,6 @@ which is a library that helps on setting that up.
 ### On Windows
 
 All implementations above can be installed on Windows.
-
-[Portacle](https://shinmera.github.io/portacle/) is multiplatform and works on Windows.
 
 SBCL is available on
 [Chocolatey](https://community.chocolatey.org/packages/sbcl), albeit
