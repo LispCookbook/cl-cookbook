@@ -6,10 +6,6 @@ This page is meant to provide an introduction to using [Emacs](https://www.gnu.o
 
 We divided it roughly into 2 sections: how to use Slime or Sly, and complementary information on built-in Emacs commands to work with Lisp code.
 
-We want to bring [Portacle](https://shinmera.github.io/portacle/) to your attention. It is a portable and
-multi-platform CL development environment shipping Emacs, Slime, SBCL, git and
-necessary extensions. It is a straightforward way to get going.
-
 ![](assets/emacs-teaser.png)
 
 <!-- todo: C-u M-x slime and its configuration to work with multiple implementations -->
@@ -116,15 +112,6 @@ See also:
 
 * [https://github.com/susam/emacs4cl](https://github.com/susam/emacs4cl) - a minimal Emacs configuration to get new users up and running quickly, with a tutorial.
 * [https://wikemacs.org/wiki/SLIME](https://wikemacs.org/wiki/SLIME) - configuration examples and extensions.
-
-### Portacle
-
-[Portacle](https://shinmera.github.io/portacle/) is a portable and
-multi-platform CL development environment with which you can start
-developping in Lisp in a few clicks. Portacle includes Emacs, SBCL, Slime, git, and useful Emacs extensions (which-key, treeview…).
-
-It is a straightforward way to get going.
-
 
 ### Doom Emacs
 
