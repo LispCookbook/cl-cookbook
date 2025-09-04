@@ -85,6 +85,14 @@ the Lisp inside Docker. See
 [slime-docker](https://gitlab.common-lisp.net/cl-docker-images/slime-docker),
 which is a library that helps on setting that up.
 
+### On macOS
+
+Use [homebrew](https://brew.sh) to install Emacs and SBCL:
+
+```shell
+brew tap d12frosted/emacs-plus
+brew install sbcl emacs-plus
+```
 
 ### On Windows
 
@@ -101,6 +109,10 @@ You can also use
 a trivial way to get a native Common Lisp environment on Windows. It
 lets you install Emacs with Slime, Quicklisp and SBCL in a couple
 clicks: you only have to extract its archive in your workspace.
+
+Otherwise you can install and configure Emacs yourself:
+
+    > choco install emacs
 
 
 ## Start a REPL
