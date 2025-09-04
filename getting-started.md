@@ -141,12 +141,18 @@ distribution for more information.
 user@debian:~$
 ```
 
-You can slightly enhance the REPL (the arrow keys do not work,
-it has no history,…) with `rlwrap`:
+The REPL, is not very ergonomic out of the box, the arrow keys do not
+work in order to recall history (the previous commands entered),… You
+can slightly enhance its fuctionality by installing and using
+`rlwrap`.
 
-    apt-get install rlwrap
+| **Operating system** | **command**            |
+|----------------------|------------------------|
+| Linux (Debian)       | apt-get install rlwrap |
+| macOS                | brew install rlwrap    |
+| Windows              | choco install rlwrap   |
 
-and:
+The invoke it like so:
 
     rlwrap sbcl
 
