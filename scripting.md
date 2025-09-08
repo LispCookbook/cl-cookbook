@@ -805,7 +805,7 @@ application code with a `handler-case`:
   (sb-sys:interactive-interrupt ()
       (progn
         (format *error-output* "Abort.~&")
-        (opts:exit))))
+        (uiop:quit))))
 ~~~
 
 This code is only for SBCL though. We know about
