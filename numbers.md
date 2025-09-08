@@ -294,16 +294,27 @@ and return complex numbers when this is the true result. For example:
 
 The [`parse-integer`][parse-integer] function reads an integer from a string.
 
-The [parse-float][parse-float] library provides a parser which cannot evaluate
-arbitrary expressions, so should be safer to use on untrusted input:
+The [parse-number][parse-number] library cannot evaluate arbitrary
+expressions, so it should be safer to use on untrusted input. It can
+also parse floats.
 
 ~~~lisp
-* (ql:quickload :parse-float)
-* (use-package :parse-float)
+* (ql:quickload :parse-number)
+* (use-package :parse-number)
 
-* (parse-float "23.4e2" :type 'double-float)
-2340.0d0
+* (parse-number "23.4e2")
+2340.0
 6
+~~~
+
+The [Serapeum][serapeum] library of course has a `parse-float`
+function too. You can even ask it the output type, for example, a double float:
+
+~~~lisp
+* (ql:quickload "serapeum")
+* (serapeum:parse-float "23.4e2" :type 'double-float)
+2340.0d0
+;;    ^^ double
 ~~~
 
 See the [strings section][strings] on converting between strings and numbers.
@@ -665,7 +676,8 @@ or other bit-wise functions.
 [complex]: http://clhs.lisp.se/Body/f_comp_2.htm#complex
 [realpart-and-imaginary]: http://clhs.lisp.se/Body/f_realpa.htm
 [parse-integer]: http://clhs.lisp.se/Body/f_parse_.htm
-[parse-float]: https://github.com/soemraws/parse-float/blob/master/parse-float.lisp
+[parse-number]: https://github.com/sharplispers/parse-number
+[serapeum]: https://github.com/ruricolist/serapeum/
 [strings]: https://lispcookbook.github.io/cl-cookbook/strings.html#converting-a-string-to-a-number
 [book-cl-12.6]: https://www.cs.cmu.edu/Groups/AI/html/cltl/clm/node130.html
 [rational-and-rationalize]: http://clhs.lisp.se/Body/f_ration.htm
