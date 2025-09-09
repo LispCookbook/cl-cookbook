@@ -75,11 +75,16 @@ either `nil` if the file doesn't exists, or its
 For more portability, use `uiop:probe-file*` or `uiop:file-exists-p`
 which will return the file pathname (if it exists).
 
-~~~lisp
-$ ln -s /etc/passwd foo
+If you fear that your file name might contain a wildcard character such as
+`*`, `[` or `]`, read below.
 
+
+~~~lisp
 * (probe-file "/etc/passwd")
 #p"/etc/passwd"
+
+;; Create a symlink (shell):
+$ ln -s /etc/passwd foo
 
 * (probe-file "foo")
 #p"/etc/passwd"
@@ -87,6 +92,51 @@ $ ln -s /etc/passwd foo
 * (probe-file "bar")
 NIL
 ~~~
+
+
+### Testing wether a file exists (beware of wildcard characters)
+
+Use `probe-file` after `(make-pathname :name filename-with-wild-chars)` or `sb-ext:parse-native-namestring` on SBCL. Why?
+
+The characters `*` but also `[` and `]` are wildcard characters. Inside a file name, they create
+[wildcard pathnames](https://cl-community-spec.github.io/pages/Restrictions-on-Wildcard-Pathnames.html) with restrictions.
+
+If a file contains any of them, `uiop:probe-file*` and
+`uiop:file-exists-p` will return NIL, even though your file exists.
+
+Let's have a music file named "best-of-[2000]-01.mp3":
+
+```txt
+$ touch best-of-\[2000\]-01.mp3
+```
+
+You can't use `probe-file`, unless you escape the characters with two
+backslashes (which we would do with `str:replace-all`):
+
+```lisp
+(probe-file "best-of-[2000]-01.mp3")
+;; => NIL
+
+(probe-file "best-of-\\[2000\\]-01.mp3")
+;; => #P"best-of-\\[2000]-01.mp3"
+```
+
+You can use `make-pathname` followed by `probe-file`:
+
+~~~lisp
+(probe-file (make-pathname :name "best-of-[2000]-01.mp3"))
+;; => #P"/home/me/path/to/best-of-\\[2000]-01.mp3"
+~~~
+
+On SBCL, you can use `sb-ext:parse-native-namestring`:
+
+```lisp
+(sb-ext:parse-native-namestring "best-of-[2000]-01.mp3")
+;; => #P"best-of-\\[2000]-01.mp3"
+```
+
+With `uiop:ensure-pathname`, you can use the `:want-non-wild t` key parameter.
+
 
 ### Expanding a file or a directory name with a tilde (`~`)
 
