@@ -2,40 +2,52 @@
 layout: default
 ---
 
-  <!-- Announcement we can keep for 1 month or more. I remove it and re-add it from time to time. -->
+<!-- Announcement we can keep for 1 month or more. I remove it and re-add it from time to time. -->
 
 <p class="announce">
   📢 🎓 ⭐
-  <a class="announce-link announce-link--big" href="https://www.udemy.com/course/common-lisp-programming/?couponCode=LISP-IS-NOT-DEAD"
-      title="Learn Lisp efficiently with a code-first approach. Getting started, CLOS, macros… 7 hours of content, and counting. This course is on the Udemy platform. Each chapter has free videos so you can judge before diving in. vindarel is (I am) the main contributor of this Cookbook. I teach what I learned the hard way.">Learn Common Lisp efficiently in videos</a>, by the Cookbook's main contributor.
-  <a class="announce-link announce-link--small" href="https://github.com/vindarel/common-lisp-course-in-videos/">Learn more</a>.
+  <a
+    class="announce-link announce-link--big"
+    href="https://www.udemy.com/course/common-lisp-programming/?couponCode=LISP-IS-NOT-DEAD"
+    title="Learn Lisp efficiently with a code-first approach. Getting started, CLOS, macros… 7 hours of content, and counting. This course is on the Udemy platform. Each chapter has free videos so you can judge before diving in. vindarel is (I am) the main contributor of this Cookbook. I teach what I learned the hard way."
+    >Learn Common Lisp efficiently in videos</a
+  >, by the Cookbook's main contributor.
+  <a
+    class="announce-link announce-link--small"
+    href="https://github.com/vindarel/common-lisp-course-in-videos/"
+    >Learn more</a
+  >.
 </p>
 
-  <p class="announce-neutral">
-   📕 <a href="/cl-cookbook/#download-in-epub">Get the EPUB and PDF</a>
-  </p>
+<p class="announce-neutral">
+  📕 <a href="/cl-cookbook/#download-in-epub">Get the EPUB and PDF</a>
+</p>
 
 <div id="content">
   {{ content }}
 
   <p class="page-source">
-    Page source: <a href="https://github.com/LispCookbook/cl-cookbook/blob/master/{{ page.path }}">{{ page.path }}</a>
+    Page source:
+    <a
+      href="https://github.com/LispCookbook/cl-cookbook/blob/master/{{ page.path }}"
+      >{{ page.path }}</a
+    >
   </p>
 </div>
 
 <script type="text/javascript">
+  // Don't write the TOC on the index.
+  if (window.location.pathname != "/cl-cookbook/") {
+    $("#toc").toc({
+      content: "#content", // will ignore the first h1 with the site+page title.
+      headings: "h1,h2,h3,h4",
+    });
+  }
 
- // Don't write the TOC on the index.
- if (window.location.pathname != "/cl-cookbook/") {
-   $("#toc").toc({
-     content: "#content",  // will ignore the first h1 with the site+page title.
-     headings: "h1,h2,h3,h4"});
- }
-
- $("#two-cols + ul").css({
-   "column-count": "2",
- });
- $("#contributors + ul").css({
-   "column-count": "4",
- });
+  $("#two-cols + ul").css({
+    "column-count": "2",
+  });
+  $("#contributors + ul").css({
+    "column-count": "4",
+  });
 </script>
