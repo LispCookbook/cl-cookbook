@@ -191,6 +191,19 @@ footer {
   color: #3b3b3b;
 }
 
+.announce-link {
+  text-decoration: underline;
+  color: #3b3b3b;
+
+  &--big {
+    font-size: 120%;
+  }
+
+  &--small {
+    font-size: 90%;
+  }
+}
+
 ul {
   margin-left: 0px;
 }
