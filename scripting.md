@@ -21,7 +21,8 @@ including its libraries, the names of all symbols, information about
 argument lists to functions, the compiler, the debugger, source code
 location information, and more.
 
-Note that we can similarly build self-contained executables for **web apps**.
+Note that we can similarly build self-contained executables for **web
+apps**, that will include all the static assets (HTML, JS, etc).
 
 ## Scripting with Common Lisp
 
@@ -92,9 +93,49 @@ with a form that executes code during the read phase:
   (ql:quickload "str" :silent t))
 ~~~
 
-but ASDF project definitions are here for a reason. Find me another
+but ASDF project definitions are here for a reason.
+
+Find me another
 language that makes you install dependencies in the middle of the
 application code.
+
+### The "main" entry point
+
+When you `load` a file, all top-level instructions are executed.
+
+With this:
+
+```lisp
+(defun foo ()
+  :hello)
+```
+
+the `foo` function is compiled but nothing gets executed. With this:
+
+```lisp
+(defun foo ()
+  :hello)
+
+(foo)
+```
+
+`foo` is compiled and then executed. However you didn't print anything
+to standard output, so you may see nothing in the terminal.
+
+So, you can consider that `(foo)` is your main entry point. There is no "main" function.
+
+However, a top-level expression prevents you from compiling and
+loading the whole file, without a side effect each time, like with
+`C-c C-k` in Slime. To fix this, you can do:
+
+```lisp
+(eval-when (:execute)
+  (foo))
+```
+
+Now, you can interactively develop your script from your editor, you
+can use `C-c C-k` (slime-compile-and-load-file) without hitting side
+effects of the top-level expressions.
 
 
 ## Building a self-contained executable
@@ -842,6 +883,10 @@ See [Continuous Integration](testing.html#continuous-integration).
 
 * [SBCL-GOODIES](https://github.com/sionescu/sbcl-goodies) - Allows to distribute SBCL binaries with foreign libraries: `libssl`, `libcrypto` and `libfixposix` are statically baked in. This removes the need of Deploy, when only these three foreign libraries are used.
   * it was released on February, 2023.
+* [CIEL Is an Extended Lisp](http://ciel-lang.org/) - a batteries-included Common Lisp package with script facilities.
+* [kiln](https://github.com/ruricolist/kiln) - an infrastructure (managing a hidden multicall binary) to make Lisp scripting efficient and ergonomic.
+  * Kiln makes it practical to write very small scripts. Kiln scripts are fast and cheap to the point where it makes sense to expose even small pieces of Lisp functionality to the shell.
+
 
 ## Credit
 
