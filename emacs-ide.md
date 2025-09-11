@@ -1259,3 +1259,4 @@ C-c C-v M-o     slime-clear-presentations
   * dedicated Emacs buffers for output streams
   * access to the ANSICL specification in Emacs' Info format.
   * Lisp system browser: a (work in progress) Smalltalk-like system browser for Common Lisp, where one can get different panes to browse available packages and their functions, variables, macros, classes, generic functions.
+- [Slime tips](https://github.com/lisp-tips/lisp-tips/issues?q=state%3Aopen%20label%3A%22slime%22)
