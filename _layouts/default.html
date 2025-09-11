@@ -69,7 +69,7 @@
       function duckSearch() {
         var searchField = document.getElementById("searchField");
         if (searchField && searchField.value) {
-          var query = escape("site:lispcookbook.github.io/cl-cookbook/ " + searchField.value);
+          var query = encodeURIComponent("site:lispcookbook.github.io/cl-cookbook/ " + searchField.value);
           window.location.href = "https://duckduckgo.com/?kj=b2&kf=-1&ko=1&q=" + query;
           // https://duckduckgo.com/params
           // kj=b2: blue header in results page
