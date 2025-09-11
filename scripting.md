@@ -49,6 +49,14 @@ However, we will get longer startup times as soon as we add
 dependencies. The solution is to build a binary. They start even
 faster, with all dependencies compiled.
 
+We used the SBCL CLI option `--script`. It is the equivalent of `--no-sysinit --no-userinit --disable-debugger --end-toplevel-options`:
+
+- `--no-sysinit` doesn't load a system-wide init file.
+- `--no-userinit` doesn't load the user's `~/.sbclrc` file.
+- `--disable-debugger` disables the debugger. On an error, the Lisp process prints a backtrace on and exits with a status code of 1. It doesn't give us a Lisp REPL.
+- `--end-toplevel-options` is optional and it "prevents options intended for your program being accidentally processed by SBCL".
+
+
 ### Quickloading dependencies from a script
 
 Say you don't bother with an .asd project definition yet, you just
