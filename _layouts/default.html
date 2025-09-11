@@ -71,7 +71,8 @@
     </script>
 
     <script>
-      function duckSearch() {
+      function duckSearch(event) {
+        event.preventDefault();
         var searchField = document.getElementById("searchField");
         if (searchField && searchField.value) {
           var query = encodeURIComponent("site:lispcookbook.github.io/cl-cookbook/ " + searchField.value);
