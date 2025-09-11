@@ -4,39 +4,27 @@ title: Using Emacs as an IDE
 
 This page is meant to provide an introduction to using [Emacs](https://www.gnu.org/software/emacs/) as a Lisp IDE.
 
-We divided it roughly into 2 sections: how to use Slime or Sly, and complementary information on built-in Emacs commands to work with Lisp code.
-
-If you need to configure Emacs for Common Lisp development, we invite
-you to read [emacs4cl](https://github.com/susam/emacs4cl)'s
-instructions. They are short and for the three major platforms.
-
-We also want to bring [Portacle](https://shinmera.github.io/portacle/)
-to your attention. It is a portable and multi-platform CL development
-environment shipping Emacs, Slime, SBCL, git and necessary
-extensions. It is a straightforward way to get going.
-
-However, Portacle is now old and unmaintained. It brings Emacs 27.1, it may be a pain to run on newer MacOS, and you are on your own. Still, it may work for you, and you can join the effort to update it.
+We divided it roughly into 3 sections: how to install Slime (or Sly), how to use it, and complementary information on built-in Emacs commands to work with Lisp code.
 
 ![](assets/emacs-teaser.png)
 
 <!-- todo: C-u M-x slime and its configuration to work with multiple implementations -->
 
 
-## Why Use Emacs?
+By the way, if you wonder, why use Emacs?
 
 *   Emacs has fantastic support for working with Lisp code
-*   Not tying yourself into a single CL vendor's editor
-*   Runs on virtually every OS and CL implementation
+  * the Slime-Swank client-server model predates LSP and is much richer for Common Lisp integration.
+*   it runs on virtually every OS and with every CL implementation, it is lightweight
 *   Emacs will probably always be around
 *   Emacs works well either with a mouse or without a mouse
 *   Emacs works well either in GUI mode or in the terminal
-*   Emacs has a large user base with multiple newsgroups
 *   Built-in tree-sitter and LSP support
 *   Excellent vim mode
 *   Because [Org-mode](http://orgmode.org)
 *   Because [Magit](https://magit.vc/)
 *   Because [Emacs Rocks !](http://emacsrocks.com)
-*   Vast number of extensions: [awesome-emacs](https://github.com/emacs-tw/awesome-emacs).
+*   Large user base and vast number of extensions: [awesome-emacs](https://github.com/emacs-tw/awesome-emacs).
 
 
 ## SLIME: Superior Lisp Interaction Mode for Emacs
@@ -121,8 +109,9 @@ Now you can run SLIME with, as mentioned, `M-x slime` and/or `M-x slime-connect`
 
 See also:
 
-* [https://github.com/susam/emacs4cl](https://github.com/susam/emacs4cl) - a minimal Emacs configuration to get new users up and running quickly, with a tutorial.
-* [https://wikemacs.org/wiki/SLIME](https://wikemacs.org/wiki/SLIME) - configuration examples and extensions.
+- [Portacle](https://shinmera.github.io/portacle/) - a portable and multi-platform CL development environment shipping Emacs, Slime, SBCL, git and necessary extensions. It is a straightforward way to get going.
+  - however, Portacle is now old and unmaintained. It brings Emacs 27.1, it may be a pain to run on newer MacOS, and you are on your own. Still, it may work for you, and you can join the effort to update it.
+* [emacs4cl](https://github.com/susam/emacs4cl) - a minimal Emacs configuration to get new users up and running quickly, with a tutorial.
 
 ### Doom Emacs
 
