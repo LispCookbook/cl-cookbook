@@ -38,53 +38,6 @@ and older implementations:
 * and there is more!
 
 
-### With the asdf-vm package manager
-
-The [asdf-vm](http://asdf-vm.com/) tool can be used to manage a large ecosystem of runtimes and tools.
-
-* [Steel Bank Common Lisp (SBCL)](http://www.sbcl.org/) is available via [this plugin](https://github.com/smashedtoatoms/asdf-sbcl) for [asdf-vm](http://asdf-vm.com/)
-
-### With Roswell
-
-[Roswell](https://github.com/roswell/roswell/wiki) is:
-
-* an implementation manager: it makes it easy to install a Common Lisp
-  implementation (`ros install ecl`), an exact version of an
-  implementation (`ros install sbcl/1.2.0`), to change the default one
-  being used (`ros use ecl`),
-* a scripting environment (helps to run Lisp from the shell, to get
-  the command line arguments,…),
-* a script installer,
-* a testing environment (to run tests, including on popular Continuous
-  Integration platforms),
-* a building utility (to build images and executables in a portable way).
-
-You'll find several ways of installation on its wiki (Debian package,
-Windows installer, Brew/Linux Brew,…).
-
-
-### With Docker
-
-If you already know [Docker](https://docs.docker.com), you can get
-started with Common Lisp pretty quickly. The
-[clfoundation/cl-devel](https://hub.docker.com/r/clfoundation/cl-devel)
-image comes with recent versions of SBCL, CCL, ECL and ABCL, plus
-Quicklisp installed in the home (`/home/cl`), so than we can
-`ql:quickload` libraries straight away.
-
-Docker works on GNU/Linux, Mac and Windows.
-
-The following command will download the required image (around 1.0GB
-compressed), put your local sources inside the Docker image where indicated,
-and drop you into an SBCL REPL:
-
-    docker run --rm -it -v /path/to/local/code:/home/cl/common-lisp/source clfoundation/cl-devel:latest sbcl
-
-We still want to develop using Emacs and SLIME, so we need to connect SLIME to
-the Lisp inside Docker. See
-[slime-docker](https://gitlab.common-lisp.net/cl-docker-images/slime-docker),
-which is a library that helps on setting that up.
-
 ### On macOS
 
 Use [homebrew](https://brew.sh) to install Emacs and SBCL:
@@ -113,6 +66,52 @@ clicks: you only have to extract its archive in your workspace.
 Otherwise you can install and configure Emacs yourself:
 
     > choco install emacs
+
+### With Docker
+
+If you already know [Docker](https://docs.docker.com), you can get
+started with Common Lisp pretty quickly. The
+[clfoundation/cl-devel](https://hub.docker.com/r/clfoundation/cl-devel)
+image comes with recent versions of SBCL, CCL, ECL and ABCL, plus
+Quicklisp installed in the home (`/home/cl`), so than we can
+`ql:quickload` libraries straight away.
+
+Docker works on GNU/Linux, Mac and Windows.
+
+The following command will download the required image (around 1.0GB
+compressed), put your local sources inside the Docker image where indicated,
+and drop you into an SBCL REPL:
+
+    docker run --rm -it -v /path/to/local/code:/home/cl/common-lisp/source clfoundation/cl-devel:latest sbcl
+
+We still want to develop using Emacs and SLIME, so we need to connect SLIME to
+the Lisp inside Docker. See
+[slime-docker](https://gitlab.common-lisp.net/cl-docker-images/slime-docker),
+which is a library that helps on setting that up.
+
+### With the asdf-vm package manager
+
+The [asdf-vm](http://asdf-vm.com/) tool can be used to manage a large ecosystem of runtimes and tools.
+
+* [Steel Bank Common Lisp (SBCL)](http://www.sbcl.org/) is available via [this plugin](https://github.com/smashedtoatoms/asdf-sbcl) for [asdf-vm](http://asdf-vm.com/)
+
+### With Roswell
+
+[Roswell](https://github.com/roswell/roswell/wiki) is:
+
+* an implementation manager: it makes it easy to install a Common Lisp
+  implementation (`ros install ecl`), an exact version of an
+  implementation (`ros install sbcl/1.2.0`), to change the default one
+  being used (`ros use ecl`),
+* a scripting environment (helps to run Lisp from the shell, to get
+  the command line arguments,…),
+* a script installer,
+* a testing environment (to run tests, including on popular Continuous
+  Integration platforms),
+* a building utility (to build images and executables in a portable way).
+
+You'll find several ways of installation on its wiki (Debian package,
+Windows installer, Brew/Linux Brew,…).
 
 
 ## Start a REPL
