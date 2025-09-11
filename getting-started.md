@@ -126,7 +126,7 @@ Here is a sample session:
 
 ```
 user@debian:~$ sbcl
-This is SBCL 1.3.14.debian, an implementation of ANSI Common Lisp.
+This is SBCL 2.1.11.debian, an implementation of ANSI Common Lisp.
 More information about SBCL is available at <http://www.sbcl.org/>.
 
 SBCL is free software, provided as is, with absolutely no warranty.
@@ -140,9 +140,35 @@ distribution for more information.
 user@debian:~$
 ```
 
-The REPL, is not very ergonomic out of the box, the arrow keys do not
-work in order to recall history (the previous commands entered),… You
-can slightly enhance its fuctionality by installing and using
+
+### Load and reload files
+
+You just evaluated Lisp code in a REPL, congratulations. Of course, you'll want to write code to a `.lisp` file.
+
+Use `sbcl --load myfile.lisp` to load, compile and run this
+file. After the top-level commands were run, the Lisp doesn't exit and
+it gives you a REPL, so you can keep working.
+
+Once you edit your .lisp file, you don't need to quit and call the SBCL command to `--load` your file again. You can simply `load` it from within the REPL:
+
+```
+$ rlwrap sbcl --load myfile.lisp
+
+a… bunch… of… awesome… stuff
+
+* (load "myfile.lisp")
+```
+
+See this `* ` bit? It's the default Lisp prompt in a terminal. In our editors, we usually see `CL-USER>`, denoting the current package.
+
+Speaking of editors: of course, we can have a much more interactive
+workflow with a good editor setup. But you can already work like this.
+
+### More ergonomic REPL
+
+The REPL is not very ergonomic out of the box: the arrow keys do not
+work in order to recall history (the previous commands entered), you don't have completion of built-in Lisp functions, etc. You
+can slightly enhance its functionality by installing and using
 `rlwrap`.
 
 | **Operating system** | **command**            |
@@ -157,6 +183,8 @@ The invoke it like so:
 
 But we'll setup our editor to offer a better experience instead of
 working in this REPL. See [editor-support](editor-support.html).
+
+### The interactive debugger
 
 Lisp is interactive by nature, so in case of an error we enter the
 debugger. This can be annoying in certain cases, so you might want to
@@ -331,7 +359,7 @@ Here we pretend we don't have Quicklisp installed and we use `require` to load a
 See Quicklisp's documentation for more commands. For instance, see how to upgrade or rollback your Quicklisp's distribution.
 
 
-### Advanced dependencies management
+## Advanced dependencies management
 
 You can drop Common Lisp projects into any of these folders:
 
@@ -353,7 +381,7 @@ and
 asdf:*central-registry*
 ~~~
 
-#### Providing our own version of a library. Cloning projects.
+### Providing our own version of a library. Cloning projects.
 
 Given the property above, we can clone any library into the
 `~/quicklisp/local-projects/` directory and it will be found by ASDF (and Quicklisp) and
@@ -374,7 +402,7 @@ fetch the system from the Internet if it is not already installed.
 
 Note that symlinks in local-projects to another location of your liking work too.
 
-#### How to work with local versions of libraries
+### How to work with local versions of libraries
 
 If we need libraries to be installed locally, for only one project, or
 in order to easily ship a list of dependencies with an application, we
