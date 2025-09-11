@@ -16,8 +16,8 @@ is a crafted, easy-to-install Common Lisp environment for
 **Windows**. It ships Emacs, SBCL, Slime, Quicklisp. It also shows how
 to display GUI windows with Win32, Tk, IUP, ftw and Opengl.
 
-<img src="https://github.com/pascalcombier/plain-common-lisp/raw/main/docs/images/readme/03-workspace-directory-highlight.png"
-     style="max-width: 800px" alt="plain-common-lisp is an easy to install Lisp environment for Windows"/>
+<img src="https://github.com/pascalcombier/plain-common-lisp/raw/main/docs/images/slime-pcl-install-swank/10-slime-interaction.png"
+     style="max-width: 800px" alt="Emacs and SLIME."/>
 
 
 ### Using Emacs as an IDE
