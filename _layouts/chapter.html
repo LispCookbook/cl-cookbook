@@ -35,19 +35,4 @@ layout: default
   </p>
 </div>
 
-<script type="text/javascript">
-  // Don't write the TOC on the index.
-  if (window.location.pathname != "/cl-cookbook/") {
-    $("#toc").toc({
-      content: "#content", // will ignore the first h1 with the site+page title.
-      headings: "h1,h2,h3,h4",
-    });
-  }
-
-  $("#two-cols + ul").css({
-    "column-count": "2",
-  });
-  $("#contributors + ul").css({
-    "column-count": "4",
-  });
-</script>
+<script src="{{ site.baseurl }}/assets/init-toc.js" defer></script>

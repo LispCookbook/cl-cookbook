@@ -1,45 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta name="generator" content=
-	  "HTML Tidy for HTML5 for Linux version 5.2.0">
+    <meta
+      name="generator"
+      content="HTML Tidy for HTML5 for Linux version 5.2.0"
+    />
     <title>{{ page.title }}</title>
-    <meta charset="utf-8">
-    <meta name="description" content="{{ site.description }}">
-    <meta name="viewport" content=
-	  "width=device-width, initial-scale=1">
-    <link rel="icon" href=
-	  "{{ site.baseurl }}/assets/cl-logo-blue.png"/>
-    <link rel="stylesheet" href=
-	  "{{ site.baseurl }}/assets/style.css">
-    <script type="text/javascript" src=
-	    "{{ site.baseurl }}/assets/highlight-lisp.js">
-    </script>
-    <script type="text/javascript" src=
-	    "{{ site.baseurl }}/assets/jquery-3.2.1.min.js">
-    </script>
-    <script type="text/javascript" src=
-	    "{{ site.baseurl }}/assets/jquery.toc/jquery.toc.min.js">
-    </script>
-    <script type="text/javascript" src=
-	    "{{ site.baseurl }}/assets/toggle-toc.js">
-    </script>
-
-    <link rel="stylesheet" href=
-	  "{{ site.baseurl }}/assets/github.css">
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <meta charset="utf-8" />
+    <meta name="description" content="{{ site.description }}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preconnect" href="https://maxcdn.bootstrapcdn.com" crossorigin />
+    <link rel="dns-prefetch" href="//maxcdn.bootstrapcdn.com" />
+    <link rel="preconnect" href="https://stats.documents.design" crossorigin />
+    <link rel="dns-prefetch" href="//stats.documents.design" />
+    <link rel="icon" href="{{ site.baseurl }}/assets/cl-logo-blue.png" />
+    <link rel="stylesheet" href="{{ site.baseurl }}/assets/style.css" />
+    <script src="{{ site.baseurl }}/assets/highlight-lisp.js" defer></script>
+    <script src="{{ site.baseurl }}/assets/jquery-3.2.1.min.js" defer></script>
+    <script
+      src="{{ site.baseurl }}/assets/jquery.toc/jquery.toc.min.js"
+      defer
+    ></script>
+    <script src="{{ site.baseurl }}/assets/toggle-toc.js" defer></script>
+    <link rel="stylesheet" href="{{ site.baseurl }}/assets/github.css" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+      crossorigin="anonymous"
+    />
   </head>
   <body>
-    <h1 id="title-xs"><a href="{{ site.baseurl }}/">The Common Lisp Cookbook</a> &ndash; {{ page.title }}</h1>
+    <h1 id="title-xs">
+      <a href="{{ site.baseurl }}/">The Common Lisp Cookbook</a> &ndash; {{
+      page.title }}
+    </h1>
     <div id="logo-container">
       <a href="{{ site.baseurl }}/">
-        <img id="logo" src="{{ site.baseurl }}/assets/cl-logo-blue.png" alt="Common Lisp Logo"/>
+        <img
+          id="logo"
+          src="{{ site.baseurl }}/assets/cl-logo-blue.png"
+          alt="Common Lisp Logo"
+        />
       </a>
 
       <div id="searchform-container">
-        <form onsubmit="duckSearch()" action="javascript:void(0)">
-          <input id="searchField" type="text" value="" placeholder="Search...">
+        <form onsubmit="return duckSearch(event)">
+          <label for="searchField" class="visually-hidden">Search</label>
+          <input
+            id="searchField"
+            type="search"
+            value=""
+            placeholder="Search..."
+          />
         </form>
       </div>
 
@@ -50,27 +63,32 @@
     </div>
 
     <div id="content-container">
-      <h1 id="title-non-xs"><a href="{{ site.baseurl }}/">The Common Lisp Cookbook</a> &ndash; {{ page.title }}</h1>
+      <h1 id="title-non-xs">
+        <a href="{{ site.baseurl }}/">The Common Lisp Cookbook</a> &ndash; {{
+        page.title }}
+      </h1>
 
       {{ content }}
 
-
-      <div>
-        {% include footer.html %}
-      </div>
-      <div id="toc-btn">T<br>O<br>C</div>
+      <div>{% include footer.html %}</div>
+      <div id="toc-btn">T<br />O<br />C</div>
     </div>
 
-    <script type="text/javascript">
-      HighlightLisp.highlight_auto({className: null});
+    <script>
+      HighlightLisp.highlight_auto({ className: null });
     </script>
 
-    <script type="text/javascript">
-      function duckSearch() {
+    <script>
+      function duckSearch(event) {
+        event.preventDefault();
         var searchField = document.getElementById("searchField");
         if (searchField && searchField.value) {
-          var query = escape("site:lispcookbook.github.io/cl-cookbook/ " + searchField.value);
-          window.location.href = "https://duckduckgo.com/?kj=b2&kf=-1&ko=1&q=" + query;
+          var query = encodeURIComponent(
+            "site:lispcookbook.github.io{{ site.baseurl }}/ " +
+              searchField.value
+          );
+          window.location.href =
+            "https://duckduckgo.com/?kj=b2&kf=-1&ko=1&q=" + query;
           // https://duckduckgo.com/params
           // kj=b2: blue header in results page
           // kf=-1: no favicons
@@ -78,7 +96,11 @@
       }
     </script>
 
-    <script async defer data-domain="lispcookbook.github.io" src="https://stats.documents.design/js/plausible.js"></script>
-
+    <script
+      async
+      defer
+      data-domain="lispcookbook.github.io"
+      src="https://stats.documents.design/js/plausible.js"
+    ></script>
   </body>
 </html>
