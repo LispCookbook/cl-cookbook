@@ -871,7 +871,7 @@ like this:
    #+ecl ext:interactive-interrupt
    #+allegro excl:interrupt-signal
    ()
-   (opts:exit)))
+   (uiop:quit)))
 ~~~
 
 here `#+` includes the line at compile time depending on
