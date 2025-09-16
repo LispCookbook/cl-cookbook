@@ -18,7 +18,7 @@ Use `let` or `let*` for lexical scope:
 Use `setf` to change them.
 
 
-## defparameter: top-level variables
+## `defparameter`: top-level variables
 
 Use `defparameter` to declare top-level variables, like this:
 
@@ -89,7 +89,7 @@ and load the changes the same way: either with the REPL, or with a
 A `defvar` wouldn't be redefined.
 
 
-## defvar: no redefinition
+## `defvar`: no redefinition
 
 `defvar` defines top-level *variables* and protects them from redefinition.
 
@@ -195,7 +195,7 @@ know, in Lisp everything's possible ;)
 > A dynamic variable can be referenced outside the dynamic extent of a form that binds it. Such a variable is sometimes called a "global variable" but is still in all respects just a dynamic variable whose binding happens to exist in the global environment rather than in some dynamic environment. [Hyper Spec]
 
 
-## setf: change values
+## `setf`: change values
 
 Any variable can be changed with `setf`:
 
@@ -251,7 +251,7 @@ Note that `setq` is another macro, but now seldom used, because `setf`
 works on more "places". You can setf functions and many things.
 
 
-## let, let*: create lexical scopes
+## `let`, `let*`: create lexical scopes
 
 `let` lets you define variables in a limited scope, or override top-level variables temporarily.
 
@@ -370,7 +370,7 @@ You can check if a variable (or a function) is bound with `boundp` (or
 
 You can make a variable (or function) unbound with `makunbound` (or `fmakunbound`).
 
-## Global vars are thread safe
+## Global variables are thread safe
 
 Don't be afraid of accessing and set-ing global bindings in
 threads. Each thread will have its own copy of the
@@ -382,7 +382,7 @@ share the variable between threads and where the danger lies. You can
 use a lock (very easy), but that's all another topic.
 
 
-## Lasting words
+## Guidelines and best practices
 
 A few style guidelines:
 
@@ -418,4 +418,3 @@ the default value can also be a function call:
 ```
 
 - these let bindings over global variables are idiomatic too: `(let ((*name* "other")) …)`.
-
