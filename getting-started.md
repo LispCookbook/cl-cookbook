@@ -152,7 +152,7 @@ it gives you a REPL, so you can keep working.
 Once you edit your .lisp file, you don't need to quit and call the SBCL command to `--load` your file again. You can simply `load` it from within the REPL:
 
 ```
-$ rlwrap sbcl --load myfile.lisp
+$ sbcl --load myfile.lisp
 
 a… bunch… of… awesome… stuff
 
@@ -171,13 +171,14 @@ work in order to recall history (the previous commands entered), you don't have 
 can slightly enhance its functionality by installing and using
 `rlwrap`.
 
-| **Operating system** | **command**            |
-|----------------------|------------------------|
-| Linux (Debian)       | apt-get install rlwrap |
-| macOS                | brew install rlwrap    |
-| Windows              | choco install rlwrap   |
+| **Operating system** | **command**              |
+|----------------------|--------------------------|
+| Linux (Debian)       | `apt-get install rlwrap` |
+| macOS                | `brew install rlwrap`    |
+| Windows              | `choco install rlwrap`   |
 
-The invoke it like so:
+
+Then invoke it like so:
 
     rlwrap sbcl
 
