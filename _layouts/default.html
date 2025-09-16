@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-baseurl="{{ site.baseurl }}">
   <head>
     <meta
       name="generator"
@@ -16,6 +16,7 @@
     <link rel="icon" href="{{ site.baseurl }}/assets/cl-logo-blue.png" />
     <link rel="stylesheet" href="{{ site.baseurl }}/assets/style.css" />
     <script src="{{ site.baseurl }}/assets/highlight-lisp.js" defer></script>
+    <script src="{{ site.baseurl }}/assets/init-highlight.js" defer></script>
     <script src="{{ site.baseurl }}/assets/jquery-3.2.1.min.js" defer></script>
     <script
       src="{{ site.baseurl }}/assets/jquery.toc/jquery.toc.min.js"
@@ -73,10 +74,6 @@
       <div>{% include footer.html %}</div>
       <div id="toc-btn">T<br />O<br />C</div>
     </div>
-
-    <script>
-      HighlightLisp.highlight_auto({ className: null });
-    </script>
 
     <script>
       function duckSearch(event) {
