@@ -15,7 +15,7 @@ section on [Arrays and vectors](data-structures.html).
 
 Some libraries available on [Quicklisp](https://www.quicklisp.org/beta/) for manipulating arrays:
 
-- [array-operations](https://github.com/Lisp-Stat/array-operations) maintained by @Symbolics defines
+- [array-operations](https://github.com/Lisp-Stat/array-operations), from the lisp-stat project, defines the
   functions `generate`, `permute`, `displace`, `flatten`, `split`,
   `combine`, `reshape`. It also defines `each`, for element-wise
   operations. This is a fork of [bendudson/array-operations](https://github.com/bendudson/array-operations) which is a fork of
