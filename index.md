@@ -29,6 +29,7 @@ The CL Cookbook aims to tackle all sort of topics, for the beginner and for the 
 
 <p id="two-cols"></p>
 
+* [Variables](variables.html)
 * [Functions](functions.html)
 * [Data Structures](data-structures.html)
 * [Strings](strings.html)
