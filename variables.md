@@ -323,7 +323,7 @@ We know this:
 
 (let ((*name* "inside let"))
   (format t "*name* inside let: ~s" *name*))
-;; => *name* outside let: "inside let"
+;; => *name* inside let: "inside let"
 
 (format t "*name* outside let: ~s" *name*)
 ;; => *name* outside let: "test"
@@ -344,7 +344,7 @@ we setf a dynamic parameter that was shadowed by a let binding:
 (let ((*name* "inside let"))
   (change-name)
   (format t "*name* inside let: ~s" *name*))
-;; => *name* outside let: "set!"
+;; => *name* inside let: "set!"
 
 (format t "*name* outside let: ~s" *name*)
 ;; => *name* outside let: "test"
