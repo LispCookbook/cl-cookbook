@@ -381,6 +381,80 @@ It's only if you want one single source of truth that you'll have to
 share the variable between threads and where the danger lies. You can
 use a lock (very easy), but that's all another topic.
 
+## Addendum: `defconstant`
+
+`defconstant` is here to say something is a constant and is not
+supposed to change, but in practice `defconstant` is annoying. Use
+`defparameter`, and add a convention with a new style of earmuffs:
+
+```lisp
+(defparameter +pi+ pi
+  "Just to show that pi exists but has no earmuffs. Now it does. You shouldn't change a variable with +-style earmuffs, it's a constant.")
+```
+
+`defconstant` is annoying because, at least on SBCL, it can't be
+redefined without asking for validation through the interactive
+debugger, which we may often do during development, and its default
+test is `eql`, so give it a string and it will always think that the
+constant was redefined. Look (evaluate each line one by one in order):
+
+```lisp
+(defconstant +best-lisper+ :me)
+;; so far so good.
+
+(defconstant +best-lisper+ :me)
+;; so far so good: we didn't redefine anything.
+
+(defconstant +best-lisper+ :you)
+;; => the constant is being redefined, we get the interactive debugger (SBCL):
+
+The constant +BEST-LISPER+ is being redefined (from :ME to :YOU)
+   [Condition of type SB-EXT:DEFCONSTANT-UNEQL]
+See also:
+  Common Lisp Hyperspec, DEFCONSTANT [:macro]
+  SBCL Manual, Idiosyncrasies [:node]
+
+Restarts:
+ 0: [CONTINUE] Go ahead and change the value.
+ 1: [ABORT] Keep the old value.
+ 2: [RETRY] Retry SLIME REPL evaluation request.
+ 3: [*ABORT] Return to SLIME's top level.
+ 4: [ABORT] abort thread (#<THREAD tid=573581 "repl-thread" RUNNING {120633D123}>)
+
+;; => presse 0 (zero) or click on the "Continue" restart to accept changing the value.
+```
+
+With constants as strings:
+
+```lisp
+(defconstant +best-name+ "me")
+;; so far so good, we create a new constant.
+
+(defconstant +best-name+ "me")
+;; => interactive debugger!!
+
+The constant +BEST-NAME+ is being redefined (from "me" to "me")
+…
+```
+
+As you will see in the equality chapter, two strings are not equal by
+`eql` that is a low-level equality operator (think pointers), they are
+`equal` (or `string-equal`).
+
+This is `defconstant` documentation:
+
+> Define a global constant, saying that the value is constant and may be compiled into code. If the variable already has a value, and this is not EQL to the new value, the code is not portable (undefined behavior). The third argument is an optional documentation string for the variable.
+
+The `eql` thing is in the spec, what an implementation should do when
+redefining a constant is not defined, so it may vary with your
+implementation.
+
+We invite you to look at:
+
+- [Alexandria's define-constant](https://alexandria.common-lisp.dev/draft/alexandria.html#Data-and-Control-Flow), which has a `:test` keyword (but still errors out on redefinition).
+- [Serapeum's `defconst`](https://github.com/ruricolist/serapeum/blob/master/REFERENCE.md#defconst-symbol-init-optional-docstring)
+- `cl:defparameter` ;)
+
 
 ## Guidelines and best practices
 
@@ -392,7 +466,10 @@ A few style guidelines:
 - read your compiler's warnings
 - it's better for your functions to accept arguments, rather than to rely on top-level parameters
 - your functions shouldn't mutate (modify) a top-level binding. You should create a new data structure instead, and use your function's return value as the parameter to another function, and have data flow from one function to another.
-- parameters are best for: a webserver port, a default value…
+- parameters are best for: a webserver port, a default value… and other user-facing parameters.
+- variables are best for long-living and internal variables: caches, DB connections…
+- you can forget about defconstant
+- when in doubt, use a `defparameter`
 - the pattern where a function parameter is by default a global variable is typical and idiomatic:
 
 ```lisp
