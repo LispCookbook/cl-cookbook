@@ -311,6 +311,117 @@ in the source code. It's today's best practice. It's the least
 surprising way of doing: you can *see* the scope by looking at the
 source code.
 
+### `let` vs `let*`
+
+By the way, what is the syntax of `let` and what is the difference with `let*`?
+
+`let*` lets you declare variables that depend on each other.
+
+`let`'s basic use is to declare a list of variables with no initial
+values. They are initialized to `nil`:
+
+```lisp
+(let (variable1 variable2 variable3) ;; variables are initialized to nil by default.
+  ;; use them here
+  …)
+
+;; Example:
+(let (a b square)
+  (setf a 2)
+  (setf square (* a a))
+  (list a b square))
+;; => (2 NIL 4)
+
+;; exactly the same:
+(let (a
+      b
+      square)
+  …)
+```
+
+You can give default values by using "pairs" of elements, as in `(a 2)`:
+
+```lisp
+(let ((a 2)     ;; <-- initial value
+       square)  ;; <-- no "pair" but still one element: defaults to NIL.
+  (setf square (* a a))
+  (list a square))
+```
+
+Yes, there are two `((` in a row! This is the syntax of Common
+Lisp. You don't need to count them. What appears after a `let` is
+variable definitions. Usually, one per line.
+
+The let's logic is in the body, with a meaningful indentation. You can
+read Lisp code based on indentation. If the project you are looking at
+doesn't respect that, it is a low quality project.
+
+Observe that we kept `square` to nil. We want it to be the square of
+`a`, so can we do this?
+
+```lisp
+(let ((a 2)
+      (square (* a a))) ;; WARN:
+  …)
+```
+
+You can't do that here, this is the limitation of `let`. You need `let*`.
+
+You could write two `let`s:
+
+```lisp
+(let ((a 2))
+  (let ((square (* a a)))
+    (list a square)))
+;; => (2 4)
+```
+
+This is equivalent to `let*`:
+
+```lisp
+(let* ((a 2)
+       (square (* a a)))
+  …)
+```
+
+`let` is to declare variables that don't depend on each other, `let*`
+is to declare variables which are read one after the other and where
+one can depend on a *previous* one.
+
+This is *not* valid:
+
+```lisp
+(let* ((square (* a a))  ;; WARN!
+       (a 2))
+   (list a square))
+;; => debugger:
+;; The variable A is unbound.
+```
+
+The error message is clear. At the time of reading `(square (* a a))`, `a` is unknown.
+
+
+### When you don't use defined variables
+
+Read your compiler's warnings :)
+
+Below, it tells us that `b` is defined but never used. SBCL is pretty
+good at giving us useful warnings at *compile time* (every time you
+hit `C-c C-c`, `C-c C-k` or use `load`).
+
+~~~lisp
+(let (a b square)
+  (list a square))
+;; =>
+; caught STYLE-WARNING:
+;   The variable B is defined but never used.
+~~~
+
+This example works in the REPL because SBCL's REPL always compiles expressions.
+
+This may vary with your implementation.
+
+
 ### setf inside let
 
 Let's make it even clearer: you can `setf` any value that is
