@@ -268,10 +268,19 @@ Below, our two variables only exist in-between the parenthesis of the `let`:
 ;; => ERROR: the variable A is unbound
 ```
 
-"unbound" means the variable is bound to nothing, not even to NIL. It
-doesn't exist.
+"unbound" means the variable is bound to nothing, not even to NIL. Its
+symbol may exist, but it isn't associated to anything.
 
-Outside of the scope formed by the `let`, the variables `a` and `square` don't exist.
+> Food for thought: sometimes, the fact to write a variable name and have the Lisp reader read it creates the symbol, but doesn't bind it to anything.
+
+I wanted to say that "after the let, the variable A doesn't exist",
+but because I wrote it in the format expression, it was *read* and it
+now does exist. It just isn't bound to anything anymore, although it
+was bound to the number 2 inside the let.
+
+Right?
+
+Outside of the scope formed by the `let`, the variables `a` and `square` "don't exist".
 
 They can be accessed by any form inside the `let` binding. If we
 create a second `let`, its *environment* inherits the previous one (we
