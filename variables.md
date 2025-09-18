@@ -409,50 +409,6 @@ This is *not* valid:
 
 The error message is clear. At the time of reading `(square (* a a))`, `a` is unknown.
 
-
-### When you don't use defined variables
-
-Read your compiler's warnings :)
-
-Below, it tells us that `b` is defined but never used. SBCL is pretty
-good at giving us useful warnings at *compile time* (every time you
-hit `C-c C-c`, `C-c C-k` or use `load`).
-
-~~~lisp
-(let (a b square)
-  (list a square))
-;; =>
-; caught STYLE-WARNING:
-;   The variable B is defined but never used.
-~~~
-
-This example works in the REPL because SBCL's REPL always compiles expressions.
-
-This may vary with your implementation.
-
-It's great to catch typos!
-
-```lisp
-(let* ((a 2)
-       (square (* a a)))
-  (list a squale))
-  ;;         ^^^ typo
-```
-
-If you compile this in a .lisp file (or in a `M-x slime-scratch`), you
-will have two warnings, and your editor will underline each in two
-different colors:
-
-![](assets/let-example-squale.png "A decent editor highlights compilation warnings.")
-
-- first, "square" is defined but unused
-- second, "squale" is an undefined variable.
-
-If you run the snippet in the REPL, you will get the two warnings but
-because the snippet is run, you will get the interactive debugger with
-the "The variable SQUALE is unbound" error.
-
-
 ### setf inside let
 
 Let's make it even clearer: you can `setf` any value that is
@@ -492,6 +448,49 @@ we setf a dynamic parameter that was shadowed by a let binding:
 (format t "*name* outside let: ~s" *name*)
 ;; => *name* outside let: "test"
 ```
+
+
+### When you don't use defined variables
+
+Read your compiler's warnings :)
+
+Below, it tells us that `b` is defined but never used. SBCL is pretty
+good at giving us useful warnings at *compile time* (every time you
+hit `C-c C-c`, `C-c C-k` or use `load`).
+
+~~~lisp
+(let (a b square)
+  (list a square))
+;; =>
+; caught STYLE-WARNING:
+;   The variable B is defined but never used.
+~~~
+
+This example works in the REPL because SBCL's REPL always compiles expressions.
+
+This may vary with your implementation.
+
+It's great to catch typos!
+
+```lisp
+(let* ((a 2)
+       (square (* a a)))
+  (list a squale))
+  ;;         ^^^ typo
+```
+
+If you compile this in a .lisp file (or in a `M-x slime-scratch`), you
+will have two warnings, and your editor will underline each in two
+different colors:
+
+![](assets/let-example-squale.png "A decent editor highlights compilation warnings.")
+
+- first, "square" is defined but never used
+- second, "squale" is an undefined variable.
+
+If you run the snippet in the REPL, you will get the two warnings but
+because the snippet is run, and you will see the interactive debugger
+with the error "The variable SQUALE is unbound".
 
 
 ## Unbound variables
