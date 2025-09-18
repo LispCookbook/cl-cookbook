@@ -48,9 +48,10 @@ time). In Emacs and Slime, you can ask for a symbol's docstring with
 ~~~
 
 We ask the documentation of the `*name*` *symbol*, not what it holds,
-hence the quote in `'*name*`. Another "doc-type" is `'function`. See:
-in Common Lisp, variables and functions live in different "namespaces",
-and it shows here.
+hence the quote in `'*name*` (which is short for `(quote
+*name*)`. Another "doc-type" is `'function`. See: in Common Lisp,
+variables and functions live in different "namespaces", and it shows
+here.
 
 We'll mention the `defparameter` form with no value below.
 
@@ -63,7 +64,7 @@ and Alive, Lem… and more editors, or from the terminal.
 
 That means that you can do this:
 
-1. write a first defparameter
+1- write a first defparameter
 
 ```lisp
 (defparameter *name* "me")
@@ -77,7 +78,7 @@ the current buffer). If you work from a simple terminal REPL, you can
 
 Now the `*name*` variable exists in the running image.
 
-2. edit the defparameter line:
+2- edit the defparameter line:
 
 ```lisp
 (defparameter *name* "you")
@@ -112,12 +113,12 @@ Let's see it in use:
 CL-USER> (hello)
 hello you!
 NIL
-CIEL-USER> *names-cache*
+CL-USER> *names-cache*
 ("you")
-CIEL-USER> (hello "lisper")
+CL-USER> (hello "lisper")
 hello lisper!
 NIL
-CIEL-USER> *names-cache*
+CL-USER> *names-cache*
 ("lisper" "you")
 ```
 
@@ -130,10 +131,10 @@ Indeed, this variable isn't a user-visible parameter, it doesn't have
 an immediate use, but it is important for the program correctness, or
 strength, etc. Imagine it holds the cache of your webserver: you don't
 want to erase it when you load new code. During development, we hit a
-lot `C-c C-k` to reload the current file, but there are certain things
-we want untouched. If it is a database connection, you don't want to
-set it back to nil, and connect again, everytime you compile your
-code.
+lot `C-c C-k` to reload the current file, we can as well reload our
+running app in production, but there are certain things we want
+untouched. If it is a database connection, you don't want to set it
+back to nil, and connect again, everytime you compile your code.
 
 You must use `setf` to change a defvar's variable value.
 
@@ -214,7 +215,7 @@ Actually, `setf` accepts *pairs* of value, variable:
 ;; => "app.db"
 ~~~
 
-Note that it returned the last value.
+It returned the last value.
 
 What happens if you `setf` a variable that wasn't declared yet? It
 generally works but you have a warning:
