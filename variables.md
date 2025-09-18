@@ -488,8 +488,8 @@ different colors:
 - first, "square" is defined but never used
 - second, "squale" is an undefined variable.
 
-If you run the snippet in the REPL, you will get the two warnings but
-because the snippet is run, and you will see the interactive debugger
+If you run the snippet in the REPL, you will get the two warnings but,
+because the snippet is run, you will see the interactive debugger
 with the error "The variable SQUALE is unbound".
 
 
