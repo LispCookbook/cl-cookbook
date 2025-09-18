@@ -430,6 +430,28 @@ This example works in the REPL because SBCL's REPL always compiles expressions.
 
 This may vary with your implementation.
 
+It's great to catch typos!
+
+```lisp
+(let* ((a 2)
+       (square (* a a)))
+  (list a squale))
+  ;;         ^^^ typo
+```
+
+If you compile this in a .lisp file (or in a `M-x slime-scratch`), you
+will have two warnings, and your editor will underline each in two
+different colors:
+
+![](assets/let-example-squale.png "A decent editor highlights compilation warnings.")
+
+- first, "square" is defined but unused
+- second, "squale" is an undefined variable.
+
+If you run the snippet in the REPL, you will get the two warnings but
+because the snippet is run, you will get the interactive debugger with
+the "The variable SQUALE is unbound" error.
+
 
 ### setf inside let
 
