@@ -41,7 +41,8 @@ The inline docstrings are an important part of the Common Lisp
 interactive experience. You will encounter them during your coding
 sessions (and we lispers usually keep our Lisp running for a long
 time). In Emacs and Slime, you can ask for a symbol's docstring with
-`C-c C-d d`. You can also ask for a docstring programmatically:
+`C-c C-d d` (Alt-x `slime-describe-symbol`). You can also ask for a
+docstring programmatically:
 
 ~~~lisp
 (documentation '*name* 'variable)
@@ -71,10 +72,10 @@ That means that you can do this:
 ```
 
 either write this in the REPL, either write this in a .lisp file and
-compile+load it with a shortcut (`C-c C-c` in Slime on this
-expression, or `C-c C-k` to compile and load everything you have in
-the current buffer). If you work from a simple terminal REPL, you can
-`(load …)` a .lisp file.
+compile+load it with a shortcut (`C-c C-c` (Alt-x `slime-compile-defun`) in
+Slime on this expression, or `C-c C-k` (Alt-x `slime-compile-and-load-file`)
+to compile and load everything you have in the current buffer). If you
+work from a simple terminal REPL, you can `(load …)` a .lisp file.
 
 Now the `*name*` variable exists in the running image.
 
@@ -160,7 +161,7 @@ This becomes a feature only when using earmuffs:
 (defparameter *db-name* "db.db")
 
 (defun connect (&optional (db-name *db-name*))
-  (connect db-name))
+  (sqlite:connect db-name))
 
 (let ((*db-name* "another.db"))
   (connect))
@@ -271,18 +272,14 @@ Below, our two variables only exist in-between the parenthesis of the `let`:
 "unbound" means the variable is bound to nothing, not even to NIL. Its
 symbol may exist, but it isn't associated to anything.
 
-> Food for thought: sometimes, the fact to write a variable name and have the Lisp reader read it creates the symbol, but doesn't bind it to anything.
+Just after the scope formed by the `let`, the variables `a` and `square` don't exist anymore.
 
-I wanted to say that "after the let, the variable A doesn't exist",
-but because I wrote it in the format expression, it was *read* and it
-now does exist. It just isn't bound to anything anymore, although it
-was bound to the number 2 inside the let.
+When the Lisp reader reads the `format` expression, it reads a `a`
+symbol, which now exists in the global environment, but it isn't bound.
 
-Right?
+> Food for thought: the fact to write a variable name and have the Lisp reader read it creates the symbol, but doesn't bind it to anything.
 
-Outside of the scope formed by the `let`, the variables `a` and `square` "don't exist".
-
-They can be accessed by any form inside the `let` binding. If we
+Our two variables can be accessed by any form inside the `let` binding. If we
 create a second `let`, its *environment* inherits the previous one (we
 see variables declared above, fortunately!).
 
@@ -299,8 +296,8 @@ see variables declared above, fortunately!).
     ;; inside second environment,
     ;; we access the dynamic scope.
     (log square)))
-;; name is "inside let" and square is 4
-;; NIL
+;;  => name is "inside let" and square is 4
+;;  => NIL
 
 (print *name*)
 ;; => "test"
@@ -456,7 +453,8 @@ Read your compiler's warnings :)
 
 Below, it tells us that `b` is defined but never used. SBCL is pretty
 good at giving us useful warnings at *compile time* (every time you
-hit `C-c C-c`, `C-c C-k` or use `load`).
+hit `C-c C-c` (compile and load the expression at point), `C-c C-k`
+(the whole file) or use `load`).
 
 ~~~lisp
 (let (a b square)
@@ -479,7 +477,7 @@ It's great to catch typos!
   ;;         ^^^ typo
 ```
 
-If you compile this in a .lisp file (or in a `M-x slime-scratch`), you
+If you compile this in a .lisp file (or in a `Alt-x slime-scratch` lisp buffer), you
 will have two warnings, and your editor will underline each in two
 different colors:
 
