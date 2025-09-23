@@ -139,6 +139,16 @@ back to nil, and connect again, everytime you compile your code.
 
 You must use `setf` to change a defvar's variable value.
 
+But Slime has a shortcut for this, of course. Instead of `setf`, you
+can use `C-M-x`, `slime-eval-defun` (which calls
+`slime-re-evaluate-defvar`):
+
+```
+Evaluate the current toplevel form.
+
+Use ‘slime-re-evaluate-defvar’ if the from starts with ’(defvar’
+```
+
 
 ## The "\*earmuff\*" convention
 
