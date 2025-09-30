@@ -1821,7 +1821,7 @@ value.
 For example this plist:
 
 ~~~lisp
-(defparameter my-plist (list 'foo "foo" 'bar "bar"))
+(defparameter my-plist (list :foo "foo" :bar "bar"))
 ~~~
 
 looks like this:
@@ -1829,21 +1829,78 @@ looks like this:
 ```
 [o|o]---[o|o]---[o|o]---[o|/]
  |       |       |       |
-FOO     "foo"   BAR     "bar"
+:FOO     "foo"   :BAR     "bar"
 
 ```
 
-We access an element with `getf (list elt)` (it returns the value)
-(the list comes as first element),
-
-we remove an element with `remf`.
+We access an element with `getf`:
 
 ~~~lisp
-(defparameter my-plist (list 'foo "foo" 'bar "bar"))
-;; => (FOO "foo" BAR "bar")
-(setf (getf my-plist 'foo) "foo!!!")
-;; => "foo!!!"
+(defparameter my-plist (list :foo "foo" :bar "bar"))
+;; => (:FOO "foo" :BAR "bar")
+(getf my-plist :foo)
+;; => "foo"
 ~~~
+
+we remove an element with `remf`:
+
+~~~lisp
+(defparameter my-plist (list :foo "foo" :bar "bar"))
+;; => (:FOO "foo" :BAR "bar")
+(remf my-plist :foo)
+;; => T
+my-plist
+;; => (:bar "bar")
+~~~
+
+How to add a value to a plist, you can also use `list*`:
+
+~~~lisp
+(defparameter my-plist (list :foo "foo" :bar "bar"))
+(list* :baz "baz" my-plist)
+;; => (:BAZ "baz" :FOO "foo" :BAR "bar")
+~~~
+
+And `append`:
+
+~~~lisp
+(defparameter my-plist (list :foo "foo" :bar "bar"))
+(append my-plist '(:baz "baz"))
+;; => (:FOO "foo" :BAR "bar" :BAZ "baz")
+~~~
+
+Note that `setf` & `list*` will add the values to the front of the
+plist, while `append` will add it to the end of the plist.
+
+But neither `list*` or `append` will update the plist in place, whereas
+`setf` will:
+
+~~~lisp
+(defparameter my-plist (list :foo "foo" :bar "bar"))
+(append my-plist '(:baz "baz"))
+(list* :baz "baz" my-plist)
+my-plist
+;; => (:FOO "foo" :BAR "bar")
+(setf (getf my-plist :foo) "foo!!!")
+;; => "foo!!!"
+my-plist
+;; => (:FOO "foo!!!" :BAR "bar")
+~~~
+
+### When would you use `setf (getf ...)` & `list*/append`?
+
+`setf (getf ...)` would be used when you want to modify an existing
+plist.
+
+`list*/append` would be used when you need a new plist without
+changing the original.
+
+### Key naming convention
+
+In the examples above, when creating the keys for the plist, the
+keywords were used: `:foo`, `:bar`. This is just the most common way
+to define the keys. You can use quoted symbols instead: `'foo`,
+`'bar`, but it's just less conventional.
 
 ## Structures
 
