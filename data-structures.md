@@ -1818,6 +1818,8 @@ precisely, it first has a cons cell whose `car` is the key, whose
 `cdr` points to the following cons cell whose `car` is the
 value.
 
+### Create plist
+
 For example this plist:
 
 ~~~lisp
@@ -1833,6 +1835,8 @@ looks like this:
 
 ```
 
+### Access plist
+
 We access an element with `getf`:
 
 ~~~lisp
@@ -1842,7 +1846,9 @@ We access an element with `getf`:
 ;; => "foo"
 ~~~
 
-we remove an element with `remf`:
+### Remove elements from plist
+
+To remove an element from a plist, you'd use `remf`:
 
 ~~~lisp
 (defparameter my-plist (list :foo "foo" :bar "bar"))
@@ -1853,7 +1859,9 @@ my-plist
 ;; => (:bar "bar")
 ~~~
 
-How to add a value to a plist, you can also use `list*`:
+### Add a elements to a plist
+
+To add elements to a plist, you can use `list*`:
 
 ~~~lisp
 (defparameter my-plist (list :foo "foo" :bar "bar"))
