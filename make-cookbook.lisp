@@ -3,7 +3,11 @@
 ;; pandoc to epub
 ;; calibre from epub to pdf
 ;;
-;; To generate the EPUB, just load this file.
+;; Usage:
+;;
+;; make epub
+;; make pdf
+;; make epub+pdf
 ;;
 ;; Metadata is in metadata.txt
 ;; -> change the date
@@ -85,9 +89,15 @@
   (uiop:run-program (format nil *epub-command-placeholder* *bookname* *full-markdown*)))
 
 (defun to-pdf ()
-  "Needs calibre."
-  (format t "~&Generating the pdf...~&")
-  (uiop:run-program (format nil "ebook-convert ~a common-lisp-cookbook.pdf" *bookname*)))
+  "Needs pandoc >= 3.8 with Markdown to Typst conversion,
+  and the typst binary on the path."
+  (format t "~&Generating the pdf with pandoc >= 3.8 and Typst...~&")
+  (uiop:run-program (format nil "pandoc -o full.typ ~a" *full-markdown*)
+                    :output t
+                    :error-output t)
+  (uiop:run-program "typst compile full.typ" :output t :error-output t)
+  ; todo utiliser min-book?
+  (uiop:run-program "mv full.pdf common-lisp-cookbook.pdf"))
 
 (defun build-full-source ()
   (format t "Creating the full source into ~a...~&" *full-markdown*)

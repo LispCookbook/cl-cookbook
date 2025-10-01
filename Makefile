@@ -7,10 +7,13 @@ run:
 	bundle exe jekyll serve --incremental
 
 clean:
-	rm -f full.md common-lisp-cookbook.epub common-lisp-cookbook.pdf
+	rm -f full.md full.typ common-lisp-cookbook.epub common-lisp-cookbook.pdf
 
 epub: clean
 	sbcl --load make-cookbook.lisp --eval '(generate)' --eval '(to-epub)' --eval '(uiop:quit)'
+
+pdf: clean
+	sbcl --load make-cookbook.lisp --eval '(generate)' --eval '(to-pdf)' --eval '(uiop:quit)'
 
 epub+pdf: epub
 	sbcl --load make-cookbook.lisp --eval '(to-pdf)' --eval '(uiop:quit)'

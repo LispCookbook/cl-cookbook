@@ -72,9 +72,11 @@ Also, refer to the [CONTRIBUTING.md][contributing] file.
 
 ### Building the EPUB and the PDF
 
-Run `make epub` to only build epub.  Run `make epub+pdf` to also build pdf. See `make-cookbook.lisp`.
+Run `make epub` to only build epub, `make pdf` to build the PDF.  Run `make epub+pdf` to build both. See `make-cookbook.lisp`.
 
-You need a decently recent version of [Calibre](https://calibre-ebook.com/). They provide an easy binary installation.
+For the epub, you need a decently recent version of [Calibre](https://calibre-ebook.com/). They provide an easy binary installation.
+
+For the PDF, since 2025-10-01, you need [Typst](https://typst.app/) and [Pandoc >= 3.8](https://github.com/jgm/pandoc/releases/tag/3.8).
 
 To exclude regions of text from the output (for example, embedded videos that makes no sense in a print format), use these flags:
 
@@ -85,8 +87,9 @@ Our build script roughly does the following:
 
 - concatenate all markdown content into one file
 - change yaml frontmatters to a markdown title
-- delete the mark regions from the file
+- delete the marked regions from the file
 - make internal links work on the EPUB.
+- for the PDF, transform the big .md file to a typst file with Pandoc, then run `typst compile` on it. This produces a quality PDF.
 
 It uses some metadata in `metadata.txt`.
 
