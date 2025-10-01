@@ -933,8 +933,7 @@ interact with the running application.
 
 We can also connect to the running application from our preferred
 editor, from home, and compile the changes in our editor to the
-running instance. See the following section
-[#connecting-to-a-remote-lisp-image](#connecting-to-a-remote-lisp-image).
+running instance. Read below in "Connecting to a remote Lisp image".
 
 
 ### Building a self-contained executable
@@ -1150,7 +1149,9 @@ threads, requests per second,…).
 
 ## Connecting to a remote Lisp image
 
-This this section: [debugging#remote-debugging](debugging.html#remote-debugging).
+<!-- links should be relative, but transforming to PDF with Typst blocks on it -->
+
+This this section: [debugging#remote-debugging](https://lispcookbook.github.io/cl-cookbook/debugging.html#remote-debugging).
 
 ## Hot reload
 
