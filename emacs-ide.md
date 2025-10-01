@@ -316,7 +316,7 @@ You can enhance the help buffer with the Slime extension [slime-doc-contribs](ht
 * **slime-help-apropos-documentation** will show symbols whose documentation contains matches for "PATTERN", which is a great way to lookup for functions.
 * and more.
 
-![](https://github.com/mmontone/slime-doc-contribs/raw/master/slime-help.png)
+![](assets/slime-help.png)
 
 
 ### Inspector

@@ -564,7 +564,7 @@ And again, **LispWorks** has a **graphical stepper**.
 <strong>TIP:</strong> the <a href="https://github.com/mmontone/slime-breakpoints">slime-breakpoints</a> package adds stepping and breaking buttons to Slime too.
 </div>
 
-![](https://raw.githubusercontent.com/mmontone/slime-star/master/screenshots/toolbars.png)
+![](assets/slime-breakpoints-toolbars.png)
 
 ### Resume a program execution from anywhere in the stack (demo)
 

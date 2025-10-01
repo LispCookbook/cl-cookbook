@@ -451,7 +451,12 @@ So that `(sqone (* z 13))` might expand into
 
 This is correct, but a waste of effort. For one thing, the amount of time saved is almost certainly negligible. If it's really important that `sqone` be expanded inline, one can put `(declaim (inline sqone))` before `sqone` is defined (although the compiler is not obligated to honor this declaration). For another, once `sqone` is defined as a macro, it becomes impossible to write `(mapcar #'sqone ll)`, or to do anything else with it except call it.
 
-But macros have a thousand and one legitimate uses. Why write `(lambda (x) ...)` when you can write `(^ (x) ...)`? Just define `^` as a macro: <code>(defmacro ^ (&rest body) `(lambda ,@body))</code>.
+But macros have a thousand and one legitimate uses. Why write `(lambda (x) ...)` when you can write `(^ (x) ...)`? Just define `^` as a macro:
+
+```lisp
+(defmacro ^ (&rest body)
+  `(lambda ,@body))
+```
 
 Many people find `mapcar` and `mapcan` a bit too obscure, especially when used with large `lambda` expressions. Rather than write something like
 
