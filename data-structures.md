@@ -1856,7 +1856,7 @@ package so they always evaluate to themselves. It's a bit simpler to
 use keywords.
 
 
-#### Accessing data in a plist, using plists as queues
+### Accessing data in a plist, using plists as queues
 
 We access an element with `getf`:
 
@@ -1893,7 +1893,7 @@ takes the value of the first one (from left to right):
 ~~~
 
 
-#### Removing elements from plist
+### Removing elements from a plist
 
 To remove an element from a plist, you'd use `remf`, which destructively changes the plist in place:
 
@@ -1906,7 +1906,7 @@ my-plist
 ;; => (:bar "bar")
 ~~~
 
-#### Adding elements to a plist
+### Adding elements to a plist
 
 To add elements to a plist, you can use `list*` and `append`, which
 are *not* destructive. They don't modify the original plist in place.
@@ -1939,7 +1939,7 @@ my-plist
 Use `(setf my-plist (append …))` if you want to change the plist.
 
 
-#### Setting elements of a plist
+### Setting elements of a plist
 
 You can of course `setf` a place you got with `getf`. In that case, unlike
 `list*` or `append`, `setf` will update the plist in place:
