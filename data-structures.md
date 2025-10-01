@@ -1812,30 +1812,43 @@ library, see more functions like `hash-table-alist`, `alist-plist`,…
 
 ## Plist
 
+## What's a plist
+
 A property list is simply a list that alternates a key, a value, and
-so on, where its keys are symbols (we can not set its `:test`). More
-precisely, it first has a cons cell whose `car` is the key, whose
-`cdr` points to the following cons cell whose `car` is the
-value.
-
-### Create plist
-
-For example this plist:
+so on, where its keys are keywords or symbols.
 
 ~~~lisp
 (defparameter my-plist (list :foo "foo" :bar "bar"))
 ~~~
 
-looks like this:
+The keys could be any other object, but if they are not comparable by
+`eq` (the lowest-level equality function), like strings (that are
+comparable with `equal` or `string-equal`), you won't be able to get
+them back with `getf`.
+
+To be more precise, a plist first has a cons cell whose `car` is the
+key, whose `cdr` points to the following cons cell whose `car` is the
+value. For example our above plist looks like this:
 
 ```
 [o|o]---[o|o]---[o|o]---[o|/]
  |       |       |       |
 :FOO     "foo"   :BAR     "bar"
-
 ```
 
-### Access plist
+In the example above, we used keywords for the keys: `:foo`,
+`:bar`. This is just the most common way to define the keys. You can
+use quoted symbols instead: `'foo`, `'bar`, but it's just less
+conventional.
+
+Remember that if you use symbols for keys, then when you'll want to
+access those keys from another package, you'll need to use the
+fully-qualified symbol name. However, all keywords live in the same
+package so they always evaluate to themselves. It's a bit simpler to
+use keywords.
+
+
+### Accessing data in a plist, using plists as queues
 
 We access an element with `getf`:
 
@@ -1846,9 +1859,35 @@ We access an element with `getf`:
 ;; => "foo"
 ~~~
 
-### Remove elements from plist
+Remember that we can't set a `:test` keyword to `getf`. Keys must be
+*identical* by `eq` for `getf` to get you the key. If you use strings
+for the keys, it won't work:
 
-To remove an element from a plist, you'd use `remf`:
+~~~lisp
+(defparameter not-ok-plist (list "foo" "this-is-foo" "bar" "this-is-bar"))
+
+;; you get NIL, even if you can see "foo" is a key:
+(getf not-ok-plist "foo")
+;; => NIL
+
+;; We didn't create a plist, but a list.
+~~~
+
+A plist can be used as a queue. If it has twice the same key, `getf`
+takes the value of the first one (from left to right):
+
+~~~lisp
+(defparameter my-plist (list :foo "fifo" :foo "foo" :bar "bar"))
+;;                           ^^           ^^ twice the key :foo
+
+(getf my-plist :foo)
+;; => "fifo"
+~~~
+
+
+### Removing elements from plist
+
+To remove an element from a plist, you'd use `remf`, which destructively changes the plist in place:
 
 ~~~lisp
 (defparameter my-plist (list :foo "foo" :bar "bar"))
@@ -1859,56 +1898,57 @@ my-plist
 ;; => (:bar "bar")
 ~~~
 
-### Add a elements to a plist
+### Adding elements to a plist
 
-To add elements to a plist, you can use `list*`:
+To add elements to a plist, you can use `list*` and `append`, which
+are *not* destructive. They don't modify the original plist in place.
+
+Using `list*`, we add elements in front:
 
 ~~~lisp
 (defparameter my-plist (list :foo "foo" :bar "bar"))
+
 (list* :baz "baz" my-plist)
 ;; => (:BAZ "baz" :FOO "foo" :BAR "bar")
+
+my-plist
+;; => (:FOO "foo" :BAR "bar")
+;;    the original plist was not modified.
 ~~~
 
-And `append`:
+Using `append`, we add elements to the end:
 
 ~~~lisp
 (defparameter my-plist (list :foo "foo" :bar "bar"))
 (append my-plist '(:baz "baz"))
 ;; => (:FOO "foo" :BAR "bar" :BAZ "baz")
+
+my-plist
+;; => (:FOO "foo" :BAR "bar")
+;;    the original plist was not modified.
 ~~~
 
-Note that `setf` & `list*` will add the values to the front of the
-plist, while `append` will add it to the end of the plist.
+Use `(setf my-plist (append …))` if you want to change the plist.
 
-But neither `list*` or `append` will update the plist in place, whereas
-`setf` will:
+
+### Setting elements of a plist
+
+You can of course `setf` a place you got with `getf`. In that case, unlike
+`list*` or `append`, `setf` will update the plist in place:
 
 ~~~lisp
 (defparameter my-plist (list :foo "foo" :bar "bar"))
-(append my-plist '(:baz "baz"))
-(list* :baz "baz" my-plist)
-my-plist
 ;; => (:FOO "foo" :BAR "bar")
+
+(getf my-plist :foo)
+;; => "foo"
+
 (setf (getf my-plist :foo) "foo!!!")
 ;; => "foo!!!"
+
 my-plist
 ;; => (:FOO "foo!!!" :BAR "bar")
 ~~~
-
-### When would you use `setf (getf ...)` & `list*/append`?
-
-`setf (getf ...)` would be used when you want to modify an existing
-plist.
-
-`list*/append` would be used when you need a new plist without
-changing the original.
-
-### Key naming convention
-
-In the examples above, when creating the keys for the plist, the
-keywords were used: `:foo`, `:bar`. This is just the most common way
-to define the keys. You can use quoted symbols instead: `'foo`,
-`'bar`, but it's just less conventional.
 
 ## Structures
 
