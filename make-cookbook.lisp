@@ -20,6 +20,7 @@
    "emacs-ide.md"
    "vscode-alive.md"
    "lispworks.md"
+   "variables.md"
    "functions.md"
    "data-structures.md"
    "strings.md"
