@@ -62,6 +62,9 @@
    "contributors.md"
    ))
 
+(defparameter *typst-preamble* "typst-preamble.typ"
+  "Typst declarations and settings to which we add the full typ document.")
+
 (defparameter *sed-command* (uiop:getenv "SED_CMD"))
 (defparameter *full-markdown* "full.md")
 (defparameter *bookname* "common-lisp-cookbook.epub")
@@ -92,12 +95,21 @@
   "Needs pandoc >= 3.8 with Markdown to Typst conversion,
   and the typst binary on the path."
   (format t "~&Generating the pdf with pandoc >= 3.8 and Typst...~&")
+
+  ;; Transform our md file to .typ:
   (uiop:run-program (format nil "pandoc -o full.typ ~a" *full-markdown*)
                     :output t
                     :error-output t)
-  (uiop:run-program "typst compile full.typ" :output t :error-output t)
+
+  ;; Add typst configuration:
+  (uiop:run-program (format nil "cat ~a >> full-with-preamble.typ && cat full.typ >> full-with-preamble.typ" *typst-preamble*)
+                    :output t
+                    :error-output t)
+
+  ;; Compile the Typst document:
+  (uiop:run-program "typst compile full-with-preamble.typ" :output t :error-output t)
   ; todo utiliser min-book?
-  (uiop:run-program "mv full.pdf common-lisp-cookbook.pdf"))
+  (uiop:run-program "mv full-with-preamble.pdf common-lisp-cookbook.pdf"))
 
 (defun build-full-source ()
   (format t "Creating the full source into ~a...~&" *full-markdown*)
