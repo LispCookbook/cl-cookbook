@@ -1812,7 +1812,7 @@ library, see more functions like `hash-table-alist`, `alist-plist`,…
 
 ## Plist
 
-## What's a plist
+### What's a plist
 
 A property list is simply a list that alternates a key, a value, and
 so on, where its keys are keywords or symbols.
@@ -1820,6 +1820,14 @@ so on, where its keys are keywords or symbols.
 ~~~lisp
 (defparameter my-plist (list :foo "foo" :bar "bar"))
 ~~~
+
+A plist is a key-value store, like hash-tables. However, unlike hash-tables:
+
+- a plist can store twice the same key. As such, it can be used as a queue (a "Last In First Out"), read below.
+- a plist is inherently a (linked) list, and has the same performance
+  characteristics. For non-small data sets, use hash-tables.
+  - plists are OK for configuration variables, user settings, manipulating function arguments, small internal data structures…
+- you can't really use strings as keys.
 
 The keys could be any other object, but if they are not comparable by
 `eq` (the lowest-level equality function), like strings (that are
@@ -1848,7 +1856,7 @@ package so they always evaluate to themselves. It's a bit simpler to
 use keywords.
 
 
-### Accessing data in a plist, using plists as queues
+#### Accessing data in a plist, using plists as queues
 
 We access an element with `getf`:
 
@@ -1877,15 +1885,15 @@ A plist can be used as a queue. If it has twice the same key, `getf`
 takes the value of the first one (from left to right):
 
 ~~~lisp
-(defparameter my-plist (list :foo "fifo" :foo "foo" :bar "bar"))
+(defparameter my-plist (list :foo "lifo" :foo "foo" :bar "bar"))
 ;;                           ^^           ^^ twice the key :foo
 
 (getf my-plist :foo)
-;; => "fifo"
+;; => "lifo"
 ~~~
 
 
-### Removing elements from plist
+#### Removing elements from plist
 
 To remove an element from a plist, you'd use `remf`, which destructively changes the plist in place:
 
@@ -1898,7 +1906,7 @@ my-plist
 ;; => (:bar "bar")
 ~~~
 
-### Adding elements to a plist
+#### Adding elements to a plist
 
 To add elements to a plist, you can use `list*` and `append`, which
 are *not* destructive. They don't modify the original plist in place.
@@ -1931,7 +1939,7 @@ my-plist
 Use `(setf my-plist (append …))` if you want to change the plist.
 
 
-### Setting elements of a plist
+#### Setting elements of a plist
 
 You can of course `setf` a place you got with `getf`. In that case, unlike
 `list*` or `append`, `setf` will update the plist in place:
