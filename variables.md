@@ -509,16 +509,19 @@ symbol might exist, but they have no associated value.
 You can create such variables like this:
 
 ```lisp
-(defparameter *connection*)
+(defvar *connection*)
 ```
 
-This `defparameter` form is correct. You didn't give any default
-value: the parameter is unbound.
+This `defvar` form is correct. You didn't give any default
+value: the variable is unbound.
 
 You can check if a variable (or a function) is bound with `boundp` (or
 `fboundp`). The `p` is for "predicate".
 
 You can make a variable (or function) unbound with `makunbound` (or `fmakunbound`).
+
+Note that a `defparameter` form requires an initial argument.
+
 
 ## Global variables are thread safe
 
