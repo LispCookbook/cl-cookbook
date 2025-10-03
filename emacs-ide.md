@@ -51,13 +51,13 @@ for CL programming. It has a lot of features that make it a powerful, integrated
 ## SLY: Sylvester the Cat's Common Lisp IDE
 
 [SLY](https://github.com/joaotavora/sly) is a SLIME fork that contains
-the following improvements:
+the following changes and features:
 
-* Completely redesigned REPL based on Emacs's own full-featured comint.el.
+* Completely redesigned REPL based on Emacs's own full-featured comint.el. Everything can be copied to the REPL.
 * Live code annotations via the [Stickers](https://joaotavora.github.io/sly/#Stickers) feature.
-* Consistent interactive button interface. Everything can be copied to the REPL.
-* Multiple REPLs.
-* Multiple inspectors with independent history.
+* enumerated backreferences, which highlight the object and remain stable throughout the REPL session.
+* A portable, annotation-based stepper in early but functional prototype stage.
+* Multiple REPLs and multiple inspectors.
 * Regexp-capable `M-x sly-apropos`.
 * Contribs are first class SLY citizens, enabled by default, loaded with ASDF on demand:
   - [NAMED-READTABLES](https://github.com/joaotavora/sly-named-readtables) support
@@ -65,6 +65,13 @@ the following improvements:
   - [Quicklisp](https://github.com/joaotavora/sly-quicklisp)
   - [ASDF](https://github.com/mmgeorge/sly-asdf)
   - [Evaluation Overlays](https://git.sr.ht/~fosskers/sly-overlay)
+
+On the other side, we noticed some lacks or differences:
+
+* Sly doesn't have a `slime-call-defun` (C-c C-y) equivalent.
+  * which is a bummer, as we are so much used to it. See below in "Sending code to the REPL".
+* it doesn't have the `slime-profile-*` functions (no `sb-prof` contrib).
+* the shortcut `C-c C-z` to switch to the REPL behaves differently than Slime's (it might replace your source file with the REPL window, instead of leaving your source file and showing the REPL on the side).
 
 Sly is shipped by default in [Doom Emacs](https://github.com/doomemacs/doomemacs/).
 
@@ -426,7 +433,7 @@ You can write code in the REPL, but you can also interact with code directly fro
 
 We saw **C-c C-j**, that sends the expression at point to the REPL and evaluates it.
 
-**C-c C-y** (`slime-call-defun`): send code to the REPL.
+**C-c C-y** (`slime-call-defun`): send code to the REPL (Sly doesn't have this).
 
 When the point is inside a defun and C-c C-y is pressed (below I’ll use [] as an indication where the cursor is)
 
