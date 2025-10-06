@@ -40,12 +40,21 @@ and older implementations:
 
 ### On macOS
 
-Use [homebrew](https://brew.sh) to install Emacs and SBCL:
+Use [homebrew](https://brew.sh) to install SBCL:
+
+```shell
+brew install sbcl
+```
+
+You can also install the Emacs editor with Homebrew, but it isn't
+*required* to use Common Lisp. Read below on how to use SBCL on the
+terminal and see the Editor Support section.
 
 ```shell
 brew tap d12frosted/emacs-plus
-brew install sbcl emacs-plus
+brew install emacs-plus
 ```
+
 
 ### On Windows
 
@@ -93,11 +102,17 @@ which is a library that helps on setting that up.
 
 The [asdf-vm](http://asdf-vm.com/) tool can be used to manage a large ecosystem of runtimes and tools.
 
-* [Steel Bank Common Lisp (SBCL)](http://www.sbcl.org/) is available via [this plugin](https://github.com/smashedtoatoms/asdf-sbcl) for [asdf-vm](http://asdf-vm.com/)
+[Steel Bank Common Lisp (SBCL)](http://www.sbcl.org/) is available via the [asdf-sbcl plugin](https://github.com/smashedtoatoms/asdf-sbcl).
+
+Install it with:
+
+```shell
+asdf plugin-add sbcl https://github.com/smashedtoatoms/asdf-sbcl.git
+```
 
 ### With Roswell
 
-[Roswell](https://github.com/roswell/roswell/wiki) is:
+[Roswell](https://github.com/roswell/roswell/wiki) is a Common Lisp tool that is:
 
 * an implementation manager: it makes it easy to install a Common Lisp
   implementation (`ros install ecl`), an exact version of an
@@ -105,7 +120,7 @@ The [asdf-vm](http://asdf-vm.com/) tool can be used to manage a large ecosystem 
   being used (`ros use ecl`),
 * a scripting environment (helps to run Lisp from the shell, to get
   the command line arguments,…),
-* a script installer,
+* a programs installer,
 * a testing environment (to run tests, including on popular Continuous
   Integration platforms),
 * a building utility (to build images and executables in a portable way).
