@@ -163,12 +163,11 @@ what it is and what it isn't can be found in this [thread][thread] from
 If you want to contribute to the CL Cookbook, please send a pull request in or
 file a ticket!
 
-Yes, we're talking to you! We need contributors - write a chapter that's missing
-and add it, find an open question and provide an answer, find bugs and report
-them, (If you have no idea what might be missing but would like to help, take a
-look at the [table of contents][toc] of the Perl Cookbook.) Don't worry about
-the formatting, just send plain text if you like - we'll take care about that
-later.
+Yes, we're talking to you! We need contributors - write a chapter
+that's missing and add it, find an open question and provide an
+answer, find bugs, typos or grammar errors and report them. Don't
+worry about the formatting, just send plain text if you like - we'll
+take care about that later.
 
 Thanks in advance for your help!
 

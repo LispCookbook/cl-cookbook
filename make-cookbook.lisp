@@ -1,7 +1,7 @@
 
 ;;
-;; pandoc to epub
-;; calibre from epub to pdf
+;; pandoc from markdown to epub
+;; typst from markdown to Typst to pdf
 ;;
 ;; Usage:
 ;;

@@ -2,8 +2,8 @@
 title: License
 ---
 
-Redistribution and use of the "Common Lisp Cookbook" in its original form (HTML)
-or in 'derived' forms (PDF, Postscript, RTF and so forth) with or without
+Redistribution and use of the "Common Lisp Cookbook" in its original form (Markdown)
+or in 'derived' forms (HTML, PDF, Typst and so forth) with or without
 modification, are permitted provided that the following condition is met:
 
 * Redistributions must reproduce the above copyright notice, this and the
@@ -24,5 +24,5 @@ documentation, even if advised of the possibility of such damage.
 LispCookbook Github Group addendum: this document is now managed in a modified format.
 
 Copyright:
-2015-2022 LispCookbook Github Group
-2002-2007 The Common Lisp Cookbook Project,
+2015-2025 LispCookbook Github Group,
+2002-2007 The Common Lisp Cookbook Project.
