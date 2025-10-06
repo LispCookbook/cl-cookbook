@@ -222,7 +222,12 @@ But what's the difference between evaluating and compiling some code?
 ### evaluation VS compilation
 
 There are a couple of pragmatic differences when choosing between compiling or evaluating.
-In general, it is better to *compile* top-level forms, for two reasons:
+
+However, some implementations like SBCL *always compile* your
+expressions, *unless explicitely asked otherwise*, even when you write
+code on the REPL and when you use these shortcuts for evaluation.
+
+That being said, in general, it is better to *compile* top-level forms, for two reasons:
 
 * Compiling a top-level form highlights warnings and errors in the editor, whereas evaluation does not.
 * SLIME keeps track of line-numbers of compiled forms, but when a top-level form is evaluated, the file line number information is lost. That's problematic for code navigation afterwards.
