@@ -164,6 +164,8 @@ Use `sbcl --load myfile.lisp` to load, compile and run this
 file. After the top-level commands were run, the Lisp doesn't exit and
 it gives you a REPL, so you can keep working.
 
+<!-- xxx: "compile" must be puzzling since this doesn't create a binary. -->
+
 Once you edit your .lisp file, you don't need to quit and call the SBCL command to `--load` your file again. You can simply `load` it from within the REPL:
 
 ```
@@ -181,7 +183,7 @@ workflow with a good editor setup. But you can already work like this.
 
 ### More ergonomic REPL
 
-The REPL is not very ergonomic out of the box: the arrow keys do not
+The REPL is not very ergonomic out of the box, at least with SBCL: the arrow keys do not
 work in order to recall history (the previous commands entered), you don't have completion of built-in Lisp functions, etc. You
 can slightly enhance its functionality by installing and using
 `rlwrap`.
@@ -200,12 +202,6 @@ Then invoke it like so:
 But we'll setup our editor to offer a better experience instead of
 working in this REPL. See [editor-support](editor-support.html).
 
-### The interactive debugger
-
-Lisp is interactive by nature, so in case of an error we enter the
-debugger. This can be annoying in certain cases, so you might want to
-use SBCL's `--disable-debugger` option.
-
 <div class="info" style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 17px;">
 <!-- if inside a <p> then bootstrap adds 10px padding to the bottom -->
 <strong>TIP:</strong> The CLISP implementation has a better default REPL for the
@@ -222,13 +218,18 @@ your editor and to use SBCL or CCL.
  By adding the <code>-c</code> switch to rlwrap, you can autocomplete file names.
 </div>
 
+### The interactive debugger
+
+Lisp is interactive by nature, so in case of an error we enter the
+debugger. This can be annoying in certain cases, so you might want to
+use SBCL's `--disable-debugger` option.
+
 ## Libraries
 
 Common Lisp has thousands of libraries available under a free software license. See:
 
+* the [awesome-cl](https://github.com/CodyReichert/awesome-cl) list, a curated list of libraries.
 * [Quickdocs](http://quickdocs.org/) - the library documentation hosting for CL.
-* the [Awesome-cl](https://github.com/CodyReichert/awesome-cl) list, a
-  curated list of libraries.
 * [Cliki](http://www.cliki.net/), the Common Lisp wiki.
 
 ### Some terminology
