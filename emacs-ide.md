@@ -252,8 +252,7 @@ Or on this example, with the cursor on the last parentheses, press `C-x C-e` to 
 
 You should see numbers printed in the REPL.
 
-
-See also [eval-in-repl](https://github.com/kaz-yos/eval-in-repl) to send any form to the repl.
+See also "Sending code to the REPL" below and the `C-c C-j` shortcut.
 
 
 ### Debugging
