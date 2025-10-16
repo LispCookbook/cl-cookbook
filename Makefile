@@ -15,5 +15,8 @@ epub: clean
 pdf: clean
 	sbcl --load make-cookbook.lisp --eval '(generate)' --eval '(to-pdf)' --eval '(uiop:quit)'
 
+sample-pdf: clean
+	sbcl --load make-cookbook.lisp --eval '(generate)' --eval '(sample-pdf)' --eval '(uiop:quit)'
+
 epub+pdf: epub
 	sbcl --load make-cookbook.lisp --eval '(to-pdf)' --eval '(uiop:quit)'

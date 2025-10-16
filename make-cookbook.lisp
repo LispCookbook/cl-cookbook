@@ -91,6 +91,10 @@
   (format t "~&Generating ~a...~&" *bookname*)
   (uiop:run-program (format nil *epub-command-placeholder* *bookname* *full-markdown*)))
 
+(defun sample-pdf ()
+  (format t "~&Generating a very short PDF sample.~&")
+  (uiop:run-program (format nil "typst compile ~a" *typst-preamble*)))
+
 (defun to-pdf ()
   "Needs pandoc >= 3.8 with Markdown to Typst conversion,
   and the typst binary on the path."
