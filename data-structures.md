@@ -1699,7 +1699,7 @@ Alists are just lists, so you can have the same key multiple times in the same a
 
 To get a key, we have `assoc` (use `:test 'equal` when your keys are
 strings, as usual). It returns the whole cons cell, so you may want to
-use `cdr` or `second`  to get the value, or even `assoc-value list key` from `Alexandria`.
+use `cdr` or `rest`  to get the value, or even `assoc-value list key` from `Alexandria`.
 
 ~~~lisp
 (assoc :foo *my-alist*)
