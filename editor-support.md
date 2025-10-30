@@ -16,7 +16,7 @@ is a crafted, easy-to-install Common Lisp environment for
 **Windows**. It ships Emacs, SBCL, Slime, Quicklisp. It also shows how
 to display GUI windows with Win32, Tk, IUP, ftw and Opengl.
 
-<img src="https://github.com/pascalcombier/plain-common-lisp/raw/main/docs/images/slime-pcl-install-swank/10-slime-interaction.png"
+<img src="assets/plain-cl-slime-interaction.png"
      style="max-width: 800px" alt="Emacs and SLIME."/>
 
 
