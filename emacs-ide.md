@@ -625,6 +625,10 @@ See also [Helpful](https://github.com/Wilfred/helpful), an alternative to the bu
 
 <img src="assets/emacs-helpful.png" style="height: 450px" alt="The Emacs helpful package shows detailed information about a symbol."/>
 
+<!-- pdf-include-start
+![](assets/emacs-helpful.png)
+   pdf-include-end -->
+
 
 ### Built-in tutorial
 

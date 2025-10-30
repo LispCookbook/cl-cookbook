@@ -11,14 +11,6 @@ Some sources:
 * [`Numbers, Characters and Strings`][numbers-characters-strings]
   in Practical Common Lisp
 
-<!-- epub-exclude-start -->
-<div style="text-align: center">
-    <img src="numbertower.png" alt="Number Types in Common Lisp"/>
-</div>
-<!-- epub-exclude-end -->
-
-*Types in bold, solid boxes are the ones you will typically use.*
-
 ## Introduction
 
 ### Integer types
@@ -656,6 +648,20 @@ For example:
 
 Please see the [CLHS page][logand-functions] for a more detailed explanation
 or other bit-wise functions.
+
+## Appendix: the number tower
+
+<!-- epub-exclude-start -->
+<div style="text-align: center">
+    <img src="numbertower.png" alt="Number Types in Common Lisp"/>
+</div>
+<!-- epub-exclude-end -->
+
+<!-- pdf-include-start
+![](numbertower.png)
+   pdf-include-end -->
+
+*Types in bold, solid boxes are the ones you will typically use.*
 
 
 [numbers]: https://www.cs.cmu.edu/Groups/AI/html/cltl/clm/node16.html#SECTION00610000000000000000

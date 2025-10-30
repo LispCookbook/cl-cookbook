@@ -534,6 +534,10 @@ Clack users might make a good use of plugins, like the clack-errors middleware: 
 
 <img src="assets/clack-errors.png" width="800" alt="The clack-errors plugin shows the error message, a legible backtrace and environment variables."/>
 
+<!-- pdf-include-start
+![](assets/clack-errors.png)
+   pdf-include-end -->
+
 ## Weblocks - solving the "JavaScript problem"©
 
 [Weblocks][weblocks] is a widgets-based and

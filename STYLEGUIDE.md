@@ -69,3 +69,27 @@ Please exclude them from the EPUB generation with these flags:
 
 We must tweak the markdown links so that internal links work in the
 EPUB reader. See `fix-epub-links.sed` to add your link or just ping us on GitHub.
+
+## PDF gotchas
+
+### Images
+
+Now that we transform the markdown sources to Typst to PDF, the HTML
+`<img>` tags are not taken care of.
+
+The `![](path/to/image.png)` syntax works fine, however the HTML tag is nice to set CSS attributes such as the `max-width`.
+
+So, to add an image, please do:
+
+```txt
+<img src="assets/sockets-lisp-chat.gif"
+     width="470" height="247" alt="Chat app demo between two browser windows"/>
+
+<!-- pdf-include-start
+![](assets/sockets-lisp-chat.gif)
+   pdf-include-end -->
+```
+
+The first IMG works out of the box for the HTML render and the EPUB,
+while the second, in-between HTML comments, is always ignored but we
+make it present when building the PDF (`make pdf`).

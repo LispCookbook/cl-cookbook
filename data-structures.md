@@ -2313,3 +2313,8 @@ The `access` library given above provides this, with `(accesses var key1 key2…
     <img src="collections.png" alt="Collection Types in Common Lisp"/>
 </div>
 <!-- epub-exclude-end -->
+
+
+<!-- pdf-include-start
+![](collections.png)
+   pdf-include-end -->

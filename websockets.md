@@ -220,6 +220,10 @@ should see your chat app!
 <img src="assets/sockets-lisp-chat.gif"
      width="470" height="247" alt="Chat app demo between two browser windows"/>
 
+<!-- pdf-include-start
+![](assets/sockets-lisp-chat.gif)
+   pdf-include-end -->
+
 ## All The Code
 
 ~~~lisp

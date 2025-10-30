@@ -1317,6 +1317,10 @@ _ - Conditional Newline
     <img src="string-and-chars.png" alt="String and Character Types in Common Lisp"/>
 </div>
 
+<!-- pdf-include-start
+![](string-and-chars.png)
+   pdf-include-end -->
+
 
 ## See also
 
