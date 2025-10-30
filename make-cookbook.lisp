@@ -100,6 +100,10 @@
   and the typst binary on the path."
   (format t "~&Generating the pdf with pandoc >= 3.8 and Typst...~&")
 
+  ;; Include images for the PDF.
+  ;; The issue: our images in HTLM <img> tags are not brought along in the .typ then PDF.
+  (uiop:run-program (format nil "~a -i -f include-pdf-images.sed ~a" *sed-command* *full-markdown*))
+
   ;; Transform our md file to .typ:
   (uiop:run-program (format nil "pandoc -o full.typ ~a" *full-markdown*)
                     :output t

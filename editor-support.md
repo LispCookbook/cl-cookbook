@@ -19,6 +19,12 @@ to display GUI windows with Win32, Tk, IUP, ftw and Opengl.
 <img src="assets/plain-cl-slime-interaction.png"
      style="max-width: 800px" alt="Emacs and SLIME."/>
 
+<!-- pdf-include-start
+![](assets/plain-cl-slime-interaction.png)
+   pdf-include-end -->
+
+<!-- todo: PDF generation: lacks IMG images -->
+
 
 ### Using Emacs as an IDE
 
@@ -36,6 +42,10 @@ for Vim.
 
 <img src="assets/slimv.jpg"
      style="width: 800px" alt="The Slimv plugin with an open REPL"/>
+
+<!-- pdf-include-start
+![](assets/slimv.jpg)
+   pdf-include-end -->
 
 [cl-neovim](https://github.com/adolenc/cl-neovim/) makes it possible to write
 Neovim plugins in Common Lisp.
@@ -73,6 +83,10 @@ It is based on the Swank backend, like Slime for Emacs.
 <img src="assets/atom-slime.png"
      style="width: 800px" alt="The SLIMA extension for Atom with an open Lisp REPL"/>
 
+<!-- pdf-include-start
+![](assets/atom-slime.png)
+   pdf-include-end -->
+
 ## VSCode
 
 [Alive](https://marketplace.visualstudio.com/items?itemName=rheller.alive) makes
@@ -101,6 +115,10 @@ supports:
 
 <img src="assets/commonlisp-vscode-alive.png" style="width: 800px" alt="The Alive VSCode plugin showing the interactive debugger."/>
 
+<!-- pdf-include-start
+![](assets/commonlisp-vscode-alive.png)
+   pdf-include-end -->
+
 [commonlisp-vscode
 extension](https://marketplace.visualstudio.com/items?itemName=ailisp.commonlisp-vscode)
 works via the [cl-lsp](https://github.com/ailisp/cl-lsp) language server and
@@ -116,6 +134,12 @@ supports:
 - documentation on hover
 
 <img src="assets/commonlisp-vscode.png" style="width: 800px" alt="The VSCode extension with a Lisp REPL, code completion and a mini-map."/>
+
+
+<!-- pdf-include-start
+![](assets/commonlisp-vscode.png)
+   pdf-include-end -->
+
 
 ### Using VSCode with Alive
 
@@ -146,6 +170,10 @@ At the time of writing, for its version 0.4, it supports:
 
 <img src="assets/jetbrains-slt.png" style="width: 800px" alt="SLT, a good Common Lisp plugin for JetBrains IDEs."/>
 
+<!-- pdf-include-start
+![](assets/jetbrains-slt.png)
+   pdf-include-end -->
+
 
 ## Eclipse
 
@@ -156,7 +184,11 @@ Available for Windows, Mac and Linux, built-in SBCL and CLISP support
 and possibility to connect other environments, interactive debugger
 with restarts, macro-expansion, parenthesis matching,…
 
-<img src="dandelion.png" style="width: 800px" alt="Dandelion, a simple Common Lisp plugin for Eclipse"/>
+<img src="assets/dandelion.png" style="width: 800px" alt="Dandelion, a simple Common Lisp plugin for Eclipse"/>
+
+<!-- pdf-include-start
+![](assets/dandelion.png)
+   pdf-include-end -->
 
 ## Lem
 
@@ -168,6 +200,10 @@ Python, Go, Rust, JS, Nim, Scheme, HTML, CSS, plus a directory mode, a **vim lay
 
 <img src="assets/lem-sdl2.png"
      style="width: 800px" alt="Lem running in a SDL2 GUI."/>
+
+<!-- pdf-include-start
+![](assets/lem-sdl2.png)
+   pdf-include-end -->
 
 It can be started as a REPL right away in the terminal. Run it with:
 
@@ -183,6 +219,11 @@ There is more:
   * Lem on the cloud is NEW as of April, 2024. In private beta at the time of writing.
 
 <img src="assets/lem1.png" style="width: 800px" title="Lem's REPL" alt="Lem running in the terminal with the Lisp REPL full screen, showing a completion window."/>
+
+<!-- pdf-include-start
+![](assets/lem1.png)
+   pdf-include-end -->
+
 
 ## Sublime Text
 
@@ -201,6 +242,11 @@ inspection.
 <img src="assets/editor-sublime.png"
      style="width: 800px" alt="A Lisp REPL in Sublime Text"/>
 
+<!-- pdf-include-start
+![](assets/editor-sublime.png)
+   pdf-include-end -->
+
+
 ## LispWorks (proprietary)
 
 [LispWorks](http://www.lispworks.com/) is a Common Lisp implementation that
@@ -212,6 +258,10 @@ You can [read our LispWorks review here](lispworks.html).
 
 <img src="assets/lispworks/two-sided-view.png" style="width: 800px" title="The LispWorks IDE" alt="The LispWorks listener and the editor in the Mate desktop environment"/>
 
+<!-- pdf-include-start
+![](assets/lispworks/two-sided-view.png)
+   pdf-include-end -->
+
 
 ## Geany (experimental)
 
@@ -221,6 +271,10 @@ smart indenting, jump to definition, compilation of the current file and
 highlighting of errors and warnings, a REPL, and a project skeleton creator.
 
 <img src="assets/geany.png" style="width: 800px" alt="The Geany Lisp plugin showing compilation warnings"/>
+
+<!-- pdf-include-start
+![](assets/geany.png)
+   pdf-include-end -->
 
 
 ## Notebooks
@@ -232,6 +286,10 @@ You can [see a live Jupyter notebook written in Lisp here](https://nbviewer.jupy
 
 <img src="assets/jupyterpreview.png"
      style="width: 800px" alt="A Jupyter notebook running a Common Lisp kernel, exploring the Lorentz system of differential equations, showing a colorful 3D plot with interactive controls (note: the code in the screenshot is actually not Lisp!)"/>
+
+<!-- pdf-include-start
+![](assets/jupyterpreview.png)
+   pdf-include-end -->
 
 There is also [Darkmatter](https://github.com/tamamu/darkmatter), a notebook-style
 Common Lisp environment, built in Common Lisp.
@@ -247,6 +305,10 @@ You might also like [sbcli](https://github.com/hellerve/sbcli), an even simpler 
 
 <img src="assets/cl-repl.png"
      style="width: 500px" alt="cl-repl 0.4.1 runnning in the terminal, built with Roswell, featuring multi-line prompts and syntax highlighting."/>
+
+<!-- pdf-include-start
+![](assets/cl-repl.png)
+   pdf-include-end -->
 
 
 ## Others
