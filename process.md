@@ -1164,10 +1164,10 @@ implementations, nor wonderful libraries like the Bordeaux library.
 You should follow up on your own by reading a lot more on this
 topic. I share some of my own references here:
 
--    [Common Lisp Recipes](http://weitz.de/cl-recipes/)
--    [Bordeaux API Reference](https://trac.common-lisp.net/bordeaux-threads/wiki/ApiDocumentation)
--    [SBCL Manual](http://www.sbcl.org/manual/) on [Threading](http://www.sbcl.org/manual/#Threading)
--    [The Common Lisp Hyperspec](https://www.lispworks.com/documentation/HyperSpec/Front/)
+- [Common Lisp Recipes](http://weitz.de/cl-recipes/) by Edmund Weitz
+- [Bordeaux API Reference](https://trac.common-lisp.net/bordeaux-threads/wiki/ApiDocumentation)
+- [SBCL Manual](http://www.sbcl.org/manual/) on [Threading](http://www.sbcl.org/manual/#Threading)
+- [The Common Lisp Hyperspec](https://www.lispworks.com/documentation/HyperSpec/Front/)
 
 Next up, the final post in this mini-series: parallelism in Common
 Lisp using the **lparallel** library.

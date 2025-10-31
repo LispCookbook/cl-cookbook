@@ -34,7 +34,7 @@ Call it:
 ~~~
 
 The `print` function prints its one argument to standard output *and
-returns it*. "hello world" is thus the returned value of our function.
+returns it*. "hello world!" is thus the returned value of our function.
 
 
 ## Arguments
@@ -193,7 +193,7 @@ We saw that a default key parameter is `nil` by default (`(defun hello
 (name &key happy) …)`). But how can be distinguish between "the value
 is NIL by default" and "the user wants it to be NIL"?
 
-We saw how to use a tuple to set its default value:
+We saw how to use a list of two elements to set its default value:
 
 `&key (happy t)`
 
@@ -283,8 +283,7 @@ Common Lisp has also the concept of multiple return values.
 
 ### Multiple return values
 
-Returning multiple values is **not** like returning a tuple or a list of
-results.
+Returning multiple values is **not** like returning a list of results.
 
 #### Quick example
 
@@ -714,7 +713,7 @@ NIL
 ;; We create a variable:
 CL-USER> (defparameter foo 42)
 FOO
-* foo
+CL-USER> foo
 42
 ;; Now foo is "bound":
 CL-USER> (boundp 'foo)
@@ -732,7 +731,7 @@ T
 CL-USER> (function foo)
 #<FUNCTION FOO>
 ;; and the shorthand notation:
-* #'foo
+CL-USER> #'foo
 #<FUNCTION FOO>
 ;; We call it:
 (funcall (function adder) 5)
@@ -751,7 +750,7 @@ The other cell - sometimes referred to as its _function cell_ - can hold the def
 Now, if a _symbol_ is evaluated, it is treated as a _variable_ in that its value cell is returned (just `foo`). If a _compound form_, i.e. a _cons_, is evaluated and its _car_ is a symbol, then the function cell of this symbol is used (as in `(foo 3)`).
 
 
-In Common Lisp, as opposed to Scheme, it is _not_ possible that the car of the compound form to be evaluated is an arbitrary form. If it is not a symbol, it _must_ be a _lambda expression_, which looks like `(lambda `_lambda-list_ _form*_`)`.
+In Common Lisp, as opposed to Scheme, it is _not_ possible that the car of the compound form to be evaluated is an arbitrary form. If it is not a symbol, it _must_ be a _lambda expression_, which looks like `(lambda lambda-list form*)`.
 
 This explains the error message we got above - `(adder 3)` is neither a symbol nor a lambda expression.
 

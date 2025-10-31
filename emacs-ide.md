@@ -85,10 +85,15 @@ Otherwise, install SLIME by adding this code to your `~/.emacs.d/init.el` file:
 
 ~~~lisp
 (require 'package)
+
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-(dolist (package '(slime))
+
+(defvar my-packages '(slime))
+
+(dolist (package my-packages)
   (unless (package-installed-p package)
     (package-install package)))
+
 (require 'slime)
 ~~~
 
@@ -100,6 +105,12 @@ even the SLIME REPL), you might want to enable more features with
 ~~~lisp
 (require 'slime)
 (slime-setup '(slime-fancy slime-quicklisp slime-asdf slime-mrepl))
+~~~
+
+Finally, tell Slime to use SBCL:
+
+~~~lisp
+(setq inferior-lisp-program "sbcl")
 ~~~
 
 After this you can press Alt-X on your keyboard and type `slime` and try Common Lisp!
@@ -173,7 +184,8 @@ If you can't see it, call `M-x menu-bar-mode RET`.
 
 In the terminal version of Emacs (`emacs -nw`), you can open the menu
 with `M-x menu-bar-open`, which is bound by default to `f10`, or use
-the mouse when it is enabled (`(xterm-mouse-mode +1)`).
+the mouse when it is enabled (evaluate `(xterm-mouse-mode +1)` with
+`M-:` or in the `*scratch*` buffer).
 
 ![](assets/slime-menu.png "Emacs' SLIME menu lists all available commands and keybindings.")
 
@@ -313,7 +325,7 @@ The main shortcut to know is:
 Other bindings which may be useful:
 
 - **C-c C-d f**  describes a function
-- **C-c C-d h**  looks up the symbol documentation in CLHS by opening the web browser. But it works only on symbols, so there are two more bindings:
+- **C-c C-d h**  looks up the symbol documentation in Common Lisp Hyper Spec (CLHS) by opening the web browser. But it works only on symbols, so there are two more bindings:
 - **C-c C-d #** for reader macros
 - **C-c C-d ~**  for format directives
 
@@ -342,7 +354,7 @@ Use `C-c M-m` to macroexpand a macro call
 When you compile and load a file with `C-c C-k` (or a single function
 with `C-c C-c`), and when you have compilation warnings, you don't get
 the interactive debugger. You get the list of warnings inside a
-dedicated "`*slime-compilation*`" buffer that opens up next to your
+dedicated "`*slime-compilation*`" Emacs buffer that opens up next to your
 source file.
 
 Each line of your source impacted by a warning will be underlined in red.
@@ -404,7 +416,7 @@ In Slime, you can use the usual `C-c C-k` in an .asd file to compile and load it
 - `M-x slime-rgrep-system`: run `rgrep` on the base directory of a system.
 - `M-x slime-isearch-system`: run `isearch` on the files of a system.
 - `M-x slime-query-replace-system`: run `query-replace` on an ASDF system.
-- `M-x slime-save-system`: save all files belongign to a system.
+- `M-x slime-save-system`: save all files belonging to a system.
 - `M-x slime-delete-system-fasls`: this deletes the cached .fasl files for this system.
 
 Sly users have a more featureful `sly-load-system` command that will search the .asd file on the current directory and in parent directories.
@@ -879,13 +891,13 @@ Press `C-u M-(` to enclose it with parens:
 
 With a numbered prefix argument (`C-u 2 M-(`), wrap around this number of s-expressions.
 
-Additionnaly, use `M-x check-parens` to spot malformed s-exps.
+Additionally, use `M-x check-parens` to spot malformed s-exps.
 
 There are additional packages that can make your use of parens easier:
 
 - `M-x show-paren-mode`, a built-in Emacs mode: it toggles the visualization of matching parenthesis. When enabled, place the cursor on a paren and you'll see the other paren it matches with. You can initialize it in your Emacs init file with `(show-paren-mode t)`. It is a global minor mode (it will work for all buffers, all languages).
  - **we highly suggest you enable it**.
-- when evil-mode (the vim layer) is enabled, you can use the `%` key to go to the matchin paren.
+- when evil-mode (the vim layer) is enabled, you can use the `%` key to go to the matching paren.
 - `M-x electric-pair-mode`, a built-in Emacs mode: when enabled, typing an open parenthesis automatically inserts the corresponding closing parenthesis, and vice versa.  (Likewise for brackets, etc.). If the region is active, the parentheses (brackets, etc.) are inserted around the region instead.
 - you could use [Paredit (animated guide)](http://danmidwood.com/content/2014/11/21/animated-paredit.html) to automatically insert parentheses in pairs,
 - or [lispy-mode](https://github.com/abo-abo/lispy), like Paredit, but a key triggers an action when the cursor is placed right before or right after a parentheses.
@@ -1054,7 +1066,6 @@ C-c C-o         slime-repl-clear-output
 C-c C-p         slime-repl-previous-prompt
 C-c C-s         slime-complete-form
 C-c C-u         slime-repl-kill-input
-C-c C-z         other-window
 C-c ESC         Prefix Command
 C-c I           slime-repl-inspect
 

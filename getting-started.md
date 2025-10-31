@@ -8,7 +8,7 @@ We'll begin by presenting easy steps to install a development environment and to
 
 ### With your package manager
 
-If you don't know which implementation of Common Lisp to use, try SBCL:
+If you don't know which implementation of Common Lisp to use, try [SBCL](https://www.sbcl.org/):
 
     apt-get install sbcl
 
@@ -137,7 +137,9 @@ interpreter.
 
 Quit with `(quit)` or `ctr-d` (on some implementations).
 
-Here is a sample session:
+Here is a sample session: we start the `sbcl` binary, we see a startup
+message, we are landed in a Lisp prompt (the `* `), we enter a
+lisp form, then we quit.
 
 ```
 user@debian:~$ sbcl
@@ -176,7 +178,7 @@ a… bunch… of… awesome… stuff
 * (load "myfile.lisp")
 ```
 
-See this `* ` bit? It's the default Lisp prompt in a terminal. In our editors, we usually see `CL-USER>`, denoting the current package.
+Did you see this `* ` bit? It's the default Lisp prompt in a terminal. In our editors, we usually see `CL-USER>`, denoting the current package.
 
 Speaking of editors: of course, we can have a much more interactive
 workflow with a good editor setup. But you can already work like this.
@@ -355,7 +357,7 @@ Anytime you want to use a third-party library in your Lisp REPL, you
 can run this `ql:quickload` command. It will not hit the network a second
 time if it finds that the library is already installed on your file
 system. Libraries are by default installed in
-`~/quicklisp/dist/quicklisp/`.
+`~/quicklisp/dists/quicklisp/`.
 
 Note also that dozens of Common Lisp libraries are packaged in
 Debian. The package names usually begin with the cl- prefix (use
@@ -397,6 +399,10 @@ and
 ~~~lisp
 asdf:*central-registry*
 ~~~
+
+`*central-registry*` is a top-level variable inside the `asdf`
+package written with so-called "\*earmuffs\*". They are a useful
+convention, see the [Variables](variables.html) chapter.
 
 ### Providing our own version of a library. Cloning projects.
 

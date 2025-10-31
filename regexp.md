@@ -101,7 +101,7 @@ CL-USER> (mapcar #'parse-integer *)
 (1 10 42)
 ~~~
 
-The two functions accept the usual `:start` and `:end` key arguments. Additionnaly, `all-matches-as-strings` accepts a `:sharedp` argument:
+The two functions accept the usual `:start` and `:end` key arguments. Additionally, `all-matches-as-strings` accepts a `:sharedp` argument:
 
 > If SHAREDP is true, the substrings may share structure with TARGET-STRING.
 

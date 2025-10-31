@@ -340,7 +340,7 @@ Destructuring a plist, giving defaults:
 ~~~lisp
 (destructuring-bind (&key a (b :not-found) c
                      &allow-other-keys)
-    ’(:c 23 :d "D" :a #\A :foo :whatever)
+    '(:c 23 :d "D" :a #\A :foo :whatever)
   (list a b c))
 ;; => (#\A :NOT-FOUND 23)
 ~~~
@@ -462,7 +462,7 @@ Accepts `:test`, `:test-not`, `:key` (functions or symbols).
 ### Replacing objects in a tree: subst, sublis
 
 [subst](http://www.lispworks.com/documentation/HyperSpec/Body/f_substc.htm) and
-`subst-if` search and replace occurences of an element
+`subst-if` search and replace occurrences of an element
 or subexpression in a tree (when it satisfies the optional `test`):
 
 ~~~lisp
@@ -504,51 +504,36 @@ _Note_: see also the [strings](strings.html) page.
 Many of the sequence functions take keyword arguments. All keyword
 arguments are optional and, if specified, may appear in any order.
 
-Pay attention to the `:test` argument. It defaults to `eql` (for
-strings, use `:equal`).
+Pay attention to the `:test` argument. It defaults to `eql`. For
+strings, use `:equal`.
 
-The `:key` argument should be passed either nil, or a function of one
+The `:key` argument can be passed a function of one
 argument. This key function is used as a filter through which the
 elements of the sequence are seen. For instance, this:
 
 ~~~lisp
-(find x y :key 'car)
+(defparameter *list-of-pairs* '((1 2) (41 42)))
+
+(find 42 *list-of-pairs* :key #'second)
+;; => (41 42)
 ~~~
 
-is similar to `(assoc* x y)`: It searches for an element of the list
-whose car equals x, rather than for an element which equals x
+searches for an element in the sequence
+whose `second` element equals 42, rather than for an element which equals 42
 itself. If `:key` is omitted or nil, the filter is effectively the
-identity function.
+`identity` function.
 
-Example with an alist (see definition below):
-
-~~~lisp
-(defparameter my-alist (list (cons 'foo "foo")
-                             (cons 'bar "bar")))
-;; => ((FOO . "foo") (BAR . "bar"))
-(find 'bar my-alist)
-;; => NIL
-(find 'bar my-alist :key 'car)
-;; => (BAR . "bar")
-~~~
-
-For more, use a `lambda` that takes one parameter.
-
-~~~lisp
-(find 'bar my-alist :key (lambda (it) (car it)))
-~~~
-
-~~~lisp
-(find 'bar my-alist :key ^(car %))
-(find 'bar my-alist :key (lm (it) (car it)))
-~~~
+You can use a `lambda` function or any function that accepts one
+argument.
 
 
 ### Predicates: every, some, notany
 
-`every, notevery (test, sequence)`: return nil or t, respectively, as
+`every, notevery (test, sequence)`: they return nil or t, respectively, as
 soon as one test on any set of the corresponding elements of sequences
 returns nil.
+
+`some`, `notany` *(test, sequence)*: they return either the value of the test, or nil.
 
 ~~~lisp
 (defparameter foo '(1 2 3))
@@ -558,17 +543,18 @@ returns nil.
 ;; => T
 ~~~
 
-with a list of strings:
+Example with a list of strings:
 
 ~~~lisp
-(defparameter str '("foo" "bar" "team"))
-(every #'stringp str)
+(defparameter *list-of-strings* '("foo" "bar" "team"))
+(every #'stringp *list-of-strings*)
 ;; => T
-(some (lambda (it) (= 3 (length it))) str)
+
+(some (lambda (it)
+        (= 3 (length it)))
+   *list-of-strings*)
 ;; => T
 ~~~
-
-`some`, `notany` *(test, sequence)*: return either the value of the test, or nil.
 
 
 ### Functions
@@ -619,7 +605,7 @@ To this end, use `alexandria-2:subseq*`:
 length of the one to replace.
 
 
-#### sort, stable-sort (sequence, test [, key function])
+#### sort, stable-sort (sequence, test [, key function]) (destructive)
 
 These sort functions are destructive, so one may prefer to copy the sequence with `copy-seq` before sorting:
 
@@ -637,7 +623,7 @@ In theory, the result of this:
 could be either `((1 :A) (1 :B))`, either `((1 :B) (1 :A))`. On my tests, the order is preserved, but the standard does not guarantee it.
 
 
-#### fill (sequence item &keys start end)
+#### fill (sequence item &keys start end) (destructive)
 
 `fill` is a **destructive** operation.
 
@@ -710,11 +696,29 @@ except that all elements equal to `old` are replaced with `new`.
 `nsubstitute` is the non-destructive version.
 
 
-#### sort, stable-sort, merge
+#### merge (result-type, sequence1, sequence2, predicate) (destructive)
 
-(see above)
+The `merge` function is destructive.
 
-#### replace (sequence-a, sequence-b, &key start1, end1)
+> destructively merge `sequence1` with `sequence2` according to an order determined by the predicate.
+
+~~~lisp
+(setq test1 (list 1 3 5 7))
+(setq test2 (list 2 4 6 8))
+(merge 'list test1 test2 #'<)
+;; => (1 2 3 4 5 6 7 8)
+~~~
+
+Now look at `test1`:
+
+~~~lisp
+test1
+;; => (1 2 3 4 5 6 7 8)
+;; at least on SBCL, your result may vary.
+~~~
+
+
+#### replace (sequence-a, sequence-b, &key start1, end1) (destructive)
 
 Destructively replace elements of sequence-a with elements of
 sequence-b.
@@ -727,7 +731,7 @@ The full signature is:
       &key (start1 0) (end1 nil) (start2 0) (end2 nil))
 ~~~
 
-Elements are copied to the subseqeuence bounded by START1 and END1,
+Elements are copied to the subsequence bounded by START1 and END1,
 from the subsequence bounded by START2 and END2. If these subsequences
 are not of the same length, then the shorter length determines how
 many elements are copied.
@@ -764,7 +768,7 @@ see also `remove-if[-not]` below.
 #### remove-duplicates, delete-duplicates (sequence)
 
 [remove-duplicates](http://clhs.lisp.se/Body/f_rm_dup.htm) returns a
-new sequence with uniq elements. `delete-duplicates` may modify the
+new sequence with unique elements. `delete-duplicates` may modify the
 original sequence.
 
 `remove-duplicates` accepts the following, usual arguments: `from-end
@@ -861,9 +865,15 @@ We can use sets functions.
 
 We show below how to use set operations on lists.
 
-A set doesn't contain twice the same element and is unordered.
+A set doesn't contain the same element twice and is unordered.
 
-Most of these functions have recycling (modifying) counterparts, starting with "n": `nintersection`,… They all accept the usual `:key` and `:test` arguments, so use the test `#'string=` or `#'equal` if you are working with strings.
+Most of these functions have recycling (modifying) counterparts,
+starting with "n", e.g.`nintersection` and `nreverse`. The "n" is for
+"non-consing", a lisp parlance for "don't create objects in memory".
+
+They all accept the usual `:key`
+and `:test` arguments, so use the test `#'string=` or `#'equal` if you
+are working with strings.
 
 For more, see functions in
 [Alexandria](https://common-lisp.net/project/alexandria/draft/alexandria.html#Conses):
@@ -889,12 +899,14 @@ What elements are both in list-a and list-b ?
 ;; => (4)
 ~~~
 
-### Join two lists with uniq elements (`union`)
+### Join two lists with unique elements (`union`, `nunion`)
 
 ~~~lisp
 (union list-a list-b)
 ;; => (3 1 0 2 4) ;; order can be different in your lisp
 ~~~
+
+`nunion` is the recycling, destructive version.
 
 ### Remove elements that are in both lists (`set-exclusive-or`)
 
@@ -1071,7 +1083,8 @@ Alists can be used sometimes differently though:
 - they can be easily (de)serialized
 - because of RASSOC, keys and values in alists are essentially
 interchangeable; whereas in hash tables, keys and values play very
-different roles (as usual, see CL Recipes for more).
+different roles (as usual, see "Common Lisp Recipes" by Edmund Weitz
+for more).
 
 
 <a name="create"></a>
