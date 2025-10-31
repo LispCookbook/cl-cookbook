@@ -760,9 +760,7 @@ Read more on the [Community Spec](https://cl-community-spec.github.io/pages/symb
 ## See also
 
 * [A gentle introduction to Compile-Time Computing — Part 1](https://medium.com/@MartinCracauer/a-gentle-introduction-to-compile-time-computing-part-1-d4d96099cea0)
-
 * [Safely dealing with scientific units of variables at compile time (a gentle introduction to Compile-Time Computing — part 3)](https://medium.com/@MartinCracauer/a-gentle-introduction-to-compile-time-computing-part-3-scientific-units-8e41d8a727ca)
-
 * The following video, from the series ["Little bits of
 Lisp"](https://www.youtube.com/user/CBaggers/playlists) by
 [cbaggers](https://github.com/cbaggers/), is a two hours long talk on

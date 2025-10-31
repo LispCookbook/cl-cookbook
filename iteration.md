@@ -645,6 +645,7 @@ a macro which turns (via
 [`macrolet`](http://www.lispworks.com/documentation/HyperSpec/Body/s_flet_.htm))
 its first argument into an iterator that on each invocation returns
 three values per hash table entry:
+
 - a generalized boolean that's true if an entry is returned,
 - the key of the entry,
 - and the value of the entry.

@@ -400,8 +400,7 @@ How it works: (the following instructions are for SLIME)
 1. Select the functions to trace using `M-x slime-trace-dialog-toggle-trace` bound to `C-c M-t`.
 2. Evaluate code that calls the traced functions.
 3. Open the trace dialog tool via `M-x slime-trace-dialog` bound to `C-c T`.
-4. The list of traced functions appear under `Traced specs`.
-Traces are fetched in batches. So use the the `[refresh]` button to update status information about tracing (number of available traces that can be fetched).
+4. The list of traced functions appear under `Traced specs`. Traces are fetched in batches. So use the the `[refresh]` button to update status information about tracing (number of available traces that can be fetched).
 5. Then use either the `[fetch next batch]` or `[fetch all]` buttons to fetch the traces. Traces appear under `Traced specs` after that, and you can use the SLIME inspector to visualize their data (arguments and return values).
 6. After more code that calls the traced functions is evaluated, repeat the process (go to step 4).
 

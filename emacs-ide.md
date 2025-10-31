@@ -6,26 +6,24 @@ This page is meant to provide an introduction to using [Emacs](https://www.gnu.o
 
 We divided it roughly into 3 sections: how to install Slime (or Sly), how to use it, and complementary information on built-in Emacs commands to work with Lisp code.
 
-![](assets/emacs-teaser.png)
+![Emacs teaser image](assets/emacs-teaser.png)
 
 <!-- todo: C-u M-x slime and its configuration to work with multiple implementations -->
 
-
 By the way, if you wonder, why use Emacs?
 
-*   Emacs has fantastic support for working with Lisp code
+* Emacs has fantastic support for working with Lisp code
   * the Slime-Swank client-server model predates LSP and is much richer for Common Lisp integration.
-*   it runs on virtually every OS and with every CL implementation, it is lightweight
-*   Emacs will probably always be around
-*   Emacs works well either with a mouse or without a mouse
-*   Emacs works well either in GUI mode or in the terminal
-*   Built-in tree-sitter and LSP support
-*   Excellent vim mode
-*   Because [Org-mode](http://orgmode.org)
-*   Because [Magit](https://magit.vc/)
-*   Because [Emacs Rocks !](http://emacsrocks.com)
-*   Large user base and vast number of extensions: [awesome-emacs](https://github.com/emacs-tw/awesome-emacs).
-
+* it runs on virtually every OS and with every CL implementation, it is lightweight
+* Emacs will probably always be around
+* Emacs works well either with a mouse or without a mouse
+* Emacs works well either in GUI mode or in the terminal
+* Built-in tree-sitter and LSP support
+* Excellent vim mode
+* Because [Org-mode](http://orgmode.org)
+* Because [Magit](https://magit.vc/)
+* Because [Emacs Rocks !](http://emacsrocks.com)
+* Large user base and vast number of extensions: [awesome-emacs](https://github.com/emacs-tw/awesome-emacs).
 
 ## SLIME: Superior Lisp Interaction Mode for Emacs
 
@@ -60,11 +58,11 @@ the following changes and features:
 * Multiple REPLs and multiple inspectors.
 * Regexp-capable `M-x sly-apropos`.
 * Contribs are first class SLY citizens, enabled by default, loaded with ASDF on demand:
-  - [NAMED-READTABLES](https://github.com/joaotavora/sly-named-readtables) support
-  - [macrostep.el](https://github.com/joaotavora/sly-macrostep)
-  - [Quicklisp](https://github.com/joaotavora/sly-quicklisp)
-  - [ASDF](https://github.com/mmgeorge/sly-asdf)
-  - [Evaluation Overlays](https://git.sr.ht/~fosskers/sly-overlay)
+  * [NAMED-READTABLES](https://github.com/joaotavora/sly-named-readtables) support
+  * [macrostep.el](https://github.com/joaotavora/sly-macrostep)
+  * [Quicklisp](https://github.com/joaotavora/sly-quicklisp)
+  * [ASDF](https://github.com/mmgeorge/sly-asdf)
+  * [Evaluation Overlays](https://git.sr.ht/~fosskers/sly-overlay)
 
 On the other side, we noticed some lacks or differences:
 
@@ -132,23 +130,22 @@ modules](https://common-lisp.net/project/slime/doc/html/Contributed-Packages.htm
 must be loaded to add further functionalities. The afored mentioned
 `slime-fancy` includes:
 
-
-- slime-autodoc
-- slime-c-p-c
-- slime-editing-commands
-- slime-fancy-inspector
-- slime-fancy-trace
-- slime-fontifying-fu
-- slime-fuzzy
-- slime-mdot-fu
-- slime-macrostep
-- slime-presentations
-- slime-references
-- slime-repl
-- slime-scratch
-- slime-package-fu
-- slime-trace-dialog
-- [slime-mrepl](https://slime.common-lisp.dev/doc/html/slime_002dmrepl.html#slime_002dmrepl) (multiple REPLs)
+* slime-autodoc
+* slime-c-p-c
+* slime-editing-commands
+* slime-fancy-inspector
+* slime-fancy-trace
+* slime-fontifying-fu
+* slime-fuzzy
+* slime-mdot-fu
+* slime-macrostep
+* slime-presentations
+* slime-references
+* slime-repl
+* slime-scratch
+* slime-package-fu
+* slime-trace-dialog
+* [slime-mrepl](https://slime.common-lisp.dev/doc/html/slime_002dmrepl.html#slime_002dmrepl) (multiple REPLs)
 
 SLIME also has some nice extensions like
 [Helm-SLIME](https://github.com/emacs-helm/helm-slime) which features, among
@@ -886,19 +883,10 @@ Additionnaly, use `M-x check-parens` to spot malformed s-exps.
 
 There are additional packages that can make your use of parens easier:
 
-- `M-x show-paren-mode`, a built-in Emacs mode: it toggles the
-  visualization of matching parenthesis. When enabled, place the
-  cursor on a paren and you'll see the other paren it matches
-  with. You can initialize it in your Emacs init file with
-  `(show-paren-mode t)`. It is a global minor mode (it will work for
-  all buffers, all languages).
-  - **we highly suggest you enable it**.
+- `M-x show-paren-mode`, a built-in Emacs mode: it toggles the visualization of matching parenthesis. When enabled, place the cursor on a paren and you'll see the other paren it matches with. You can initialize it in your Emacs init file with `(show-paren-mode t)`. It is a global minor mode (it will work for all buffers, all languages).
+ - **we highly suggest you enable it**.
 - when evil-mode (the vim layer) is enabled, you can use the `%` key to go to the matchin paren.
-- `M-x electric-pair-mode`, a built-in Emacs mode: when enabled,
-typing an open parenthesis automatically inserts the corresponding
-closing parenthesis, and vice versa.  (Likewise for brackets, etc.).
-If the region is active, the parentheses (brackets, etc.) are inserted
-around the region instead.
+- `M-x electric-pair-mode`, a built-in Emacs mode: when enabled, typing an open parenthesis automatically inserts the corresponding closing parenthesis, and vice versa.  (Likewise for brackets, etc.). If the region is active, the parentheses (brackets, etc.) are inserted around the region instead.
 - you could use [Paredit (animated guide)](http://danmidwood.com/content/2014/11/21/animated-paredit.html) to automatically insert parentheses in pairs,
 - or [lispy-mode](https://github.com/abo-abo/lispy), like Paredit, but a key triggers an action when the cursor is placed right before or right after a parentheses.
 

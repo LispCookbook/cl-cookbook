@@ -1078,9 +1078,7 @@ Lisp. For example:
 - [clfoundation/sbcl](https://hub.docker.com/r/clfoundation/sbcl/)
 includes the latest version of SBCL, many OS packages useful for CI
 purposes, and a script to install Quicklisp.
-- [40ants/base-lisp-image](https://github.com/40ants/base-lisp-image)
-is based on Ubuntu LTS and includes SBCL, CCL, Quicklisp, Qlot and
-Roswell.
+- [40ants/base-lisp-image](https://github.com/40ants/base-lisp-image) is based on Ubuntu LTS and includes SBCL, CCL, Quicklisp, Qlot and Roswell.
 - [container-lisp/s2i-lisp](https://github.com/container-lisp/s2i-lisp)
 is CentOs based and contains the source for building a Quicklisp based
 Common Lisp application as a reproducible docker image using OpenShift's

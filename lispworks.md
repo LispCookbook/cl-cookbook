@@ -152,6 +152,7 @@ Similar ones include:
 Some useful functions don't have a keybinding by default, for example:
 
 <!-- - delete selected text with `M-x delete-region` (or kill the region with `C-w`) -->
+
 - clear the REPL with `M-x Clear Listener`
 - `Backward Kill Line`
 
