@@ -538,10 +538,11 @@ Since January of 2023, we have the Common Lisp Community Spec: [https://cl-commu
 
 * it has a *search box*
 * it has *syntax highlihgting*
-* it is hosted on GitHub and we have the right to modify it: https://github.com/fonol/cl-community-spec
+* it is hosted on GitHub and we have the right to modify it: [https://github.com/fonol/cl-community-spec](https://github.com/fonol/cl-community-spec)
 
 If you want other tools to do a quick look-up of symbols on the CLHS,
 since the official website doesn't have a search bar, you can use:
+
 * Xach's website search utility: [https://www.xach.com/clhs?q=with-open-file](https://www.xach.com/clhs?q=with-open-file)
 * the l1sp.org website: [http://l1sp.org/search?q=with-open-file](http://l1sp.org/search?q=with-open-file),
 * and we can use Duckduckgo's or Brave Search's `!clhs` "bang".
@@ -977,6 +978,7 @@ See also interactive versions with
 It isn't necessary to write Emacs Lisp in order to use Emacs with Slime or Sly for Common Lisp.
 
 However learning Emacs Lisp can be useful and is similar (but different) from CL:
+
 *   Dynamic scope is everywhere
 *   There are no reader (or reader-related) functions
 *   Does not support all the types that are supported in CL
@@ -984,6 +986,7 @@ However learning Emacs Lisp can be useful and is similar (but different) from CL
 *   No numerical tower support
 
 Some good Emacs Lisp learning resources:
+
 *   [An Introduction to Programming in Emacs Lisp](https://www.gnu.org/software/emacs/manual/eintr.html)
 *   [Writing GNU Emacs Extensions](http://www.oreilly.com/catalog/gnuext/)
 *   [Wikemacs](http://wikemacs.org/wiki/Category:Emacs_Lisp)

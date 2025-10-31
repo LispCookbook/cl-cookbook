@@ -13,6 +13,7 @@ generation.
 ## Lists
 
 - numbered bullet lists (`1.`) should be used only at the first level. For the next nested levels, use normal non-numbered lists.
+- lists must have a newline before the first item.
 
 
 ## Code formatting

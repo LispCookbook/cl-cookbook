@@ -588,7 +588,7 @@ other built-in functions (see our data-structures chapter). If given,
 
 Read more about `reduce` on the Community Spec:
 
-- https://cl-community-spec.github.io/pages/reduce.html
+- [https://cl-community-spec.github.io/pages/reduce.html](https://cl-community-spec.github.io/pages/reduce.html)
 
 
 ### Referencing functions by name: single quote `'` or sharpsign-quote `#'`?

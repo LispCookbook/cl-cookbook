@@ -208,7 +208,7 @@ containing the elements of all its arguments:
 
 The new list shares some cons cells with the `(3 4)`:
 
-http://gigamonkeys.com/book/figures/after-append.png
+![](assets/gigamonkeys-after-append.png)
 
 `nconc` is the recycling equivalent.
 
