@@ -4,6 +4,7 @@
     to: "odd"
 )
 
+#set heading(numbering: "1.")
 #show link: underline
 
 #set page(numbering: "1")

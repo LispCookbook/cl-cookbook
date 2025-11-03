@@ -14,6 +14,17 @@
 
 (require 'asdf)
 
+;; You need the str library already installed:
+;; (ql:quickload "str")
+;; We use str:replace-all which relies on ppcre, so we need a library anyways.
+;; That's why I'm doing and using CIEL: small scripts are much easier to run and share.
+
+(handler-case
+    (require 'str)
+  (error ()
+    (format t "~&Please install the 'str' library to generate the PDF: (ql:quickload \"str\")~&")
+    (uiop:quit 1)))
+
 (defparameter chapters
   (list
    "index.md"
@@ -71,6 +82,17 @@
 (defparameter *epub-command-placeholder* "pandoc -o ~a --toc metadata.txt ~a"
   "format with book name and sources file.")
 
+(defparameter pdf-toc "== Table Of Contents (High-level)
+<high-level-table-of-contents>
+#outline(title: none, depth:1)
+
+#pagebreak()
+
+== Table Of Contents (Detailed)
+<detailed-table-of-contents>
+#outline(title: none, depth:3)
+")
+
 (defun reset-target ()
   (uiop:run-program (format nil "echo > ~a" *full-markdown*)))
 
@@ -95,6 +117,16 @@
   (format t "~&Generating a very short PDF sample.~&")
   (uiop:run-program (format nil "typst compile ~a" *typst-preamble*)))
 
+(defun insert-pdf-tocs ()
+  "Replace {{PDF-TOCS}} in the .typ file with a proper TOC declaration.
+
+  Using sed was tooooo cumbersome."
+  (format t "~&Inserting our table of contents into full-with-preamble.typ…~&")
+  (let* ((file.typ "full-with-preamble.typ")
+         (file-string (uiop:read-file-string file.typ))
+         (new-content (str:replace-all "{{PDF-TOCS}}" pdf-toc file-string)))
+    (str:to-file file.typ new-content)))
+
 (defun to-pdf ()
   "Needs pandoc >= 3.8 with Markdown to Typst conversion,
   and the typst binary on the path."
@@ -114,10 +146,14 @@
                     :output t
                     :error-output t)
 
+  ;; Insert our two outlines:
+  (insert-pdf-tocs)
+
   ;; Compile the Typst document:
   (uiop:run-program "typst compile full-with-preamble.typ" :output t :error-output t)
   ; todo utiliser min-book?
-  (uiop:run-program "mv full-with-preamble.pdf common-lisp-cookbook.pdf"))
+  (uiop:run-program "mv full-with-preamble.pdf common-lisp-cookbook.pdf")
+  (format t "Done: common-lisp-cookbook.pdf"))
 
 (defun build-full-source ()
   (format t "Creating the full source into ~a...~&" *full-markdown*)

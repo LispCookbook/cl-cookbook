@@ -80,10 +80,16 @@ The CL Cookbook aims to tackle all sort of topics, for the beginner and for the 
 * [Using the Win32 API](win32.html)
 <!-- epub-exclude-end -->
 
+<!-- pdf-include-start
 
-## Download in EPUB
+{{PDF-TOCS}}
 
-The Cookbook is also available in EPUB (and PDF) format.
+   pdf-include-end -->
+
+
+## Download in EPUB and PDF
+
+The Cookbook is also available in EPUB and PDF format.
 
 You can [download it directly in EPUB](https://github.com/LispCookbook/cl-cookbook/releases/download/2023-12-13/common-lisp-cookbook.epub) and [PDF](https://github.com/LispCookbook/cl-cookbook/releases/download/2023-12-13/common-lisp-cookbook.pdf), and you can **pay what you want** to further support its development:
 
@@ -110,7 +116,7 @@ The Cookbook has been translated to:
 * [Chinese simplified](https://oneforalone.github.io/cl-cookbook-cn/#/) ([Github](https://github.com/oneforalone/cl-cookbook-cn))
 * [Portuguese (Brazilian)](https://lisp.com.br/cl-cookbook/) ([Github](https://github.com/commonlispbr/cl-cookbook))
 
-# Other CL Resources
+## Other CL Resources
 
 <p id="two-cols"></p>
 
@@ -153,7 +159,7 @@ Specifications
 * [The Common Lisp HyperSpec](http://www.lispworks.com/documentation/HyperSpec/Front/index.htm) by Kent M. Pitman (also available in [Dash](https://kapeli.com/dash), [Zeal](https://zealdocs.org/) and [Velocity](https://velocity.silverlakesoftware.com/))
 * [The Common Lisp Community Spec](https://cl-community-spec.github.io/pages/index.html) - a new rendering produced from the ANSI specification draft, that everyone has the right to edit.
 
-# Further remarks
+## Further remarks
 
 This is a collaborative project that aims to provide for Common Lisp something
 similar to the [Perl Cookbook][perl] published by O'Reilly. More details about
