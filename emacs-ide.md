@@ -228,7 +228,7 @@ See also other commands in the menu.
 
 But what's the difference between evaluating and compiling some code?
 
-### evaluation VS compilation
+### evaluation vs. compilation
 
 There are a couple of pragmatic differences when choosing between compiling or evaluating.
 
