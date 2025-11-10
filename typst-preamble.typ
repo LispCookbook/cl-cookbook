@@ -11,6 +11,15 @@
 	it
 }
 
+// Highlight raw texts with a grey background, don't touche code blocks.
+// https://github.com/typst/typst/discussions/2911
+#show raw.where(block: false): it => box(
+  fill: rgb("ddd"),
+  outset: 2pt,
+  radius: 5pt,
+  it
+)
+
 #image("orly-cover.png", width: 90%),
 
 #pagebreak(
