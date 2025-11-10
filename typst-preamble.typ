@@ -6,6 +6,11 @@
     description: [A code-first tutorial and language reference for Common Lisp],
 )
 
+#show heading.where(level: 1, outlined: true): it => {
+	pagebreak()
+	it
+}
+
 #image("orly-cover.png", width: 90%),
 
 #pagebreak(
