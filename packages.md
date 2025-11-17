@@ -74,7 +74,7 @@ Continuing our example: in the REPL, be sure to be in `my-package` and not in `C
 ~~~lisp
 CL-USER> (in-package :my-package)
 #<PACKAGE "MY-PACKAGE">
-;; ^^^ this creates a package object.
+;; ^^^ this is the package object. You can right click or call INSPECT on it.
 MY-PACKAGE> (hello)
 ;; ^^^^ the REPL shows you the current package.
 "Hello from my package."
