@@ -636,7 +636,7 @@ It destructively replaces the elements in `sequence`, in-between the `start` and
 ;; (NIL :HELLO :HELLO)
 ~~~
 
-See also `nsubstitute` for a non destructive function.
+See also `substitute`.
 
 
 #### find, position (foo, sequence) - get index
@@ -693,7 +693,7 @@ except that all elements equal to `old` are replaced with `new`.
 ;; => ("a" "a" "a")
 ~~~
 
-`nsubstitute` is the non-destructive version.
+`nsubstitute` is the "non-consing", destructive version.
 
 
 #### merge (result-type, sequence1, sequence2, predicate) (destructive)
