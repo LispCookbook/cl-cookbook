@@ -607,6 +607,66 @@ or using `r` ("restart frame") on a given stackframe).
 
 See also the [Slime-star](https://github.com/mmontone/slime-star) Emacs extension mentioned above to set breakpoints without code annotations.
 
+## Break when a condition occurs: `*break-on-signals*`
+
+[*break-on-signals*](https://cl-community-spec.github.io/pages/002abreak_002don_002dsignals_002a.html)
+can be specially helpful when you see that an error (or any condition)
+occured, but you didn't get the debugger, and you want to force the
+debugger to open *just before* the error (or any condition) is
+signaled.
+
+For example, you witness that a `print-object` method of a database
+record from a third-party library tells you something wrong happened:
+
+    #<DB record: <<ERROR while printing the DB object>> >
+
+However, the library handled the error and you didn't get the interactive debugger.
+
+To debug this, you can set `*break-on-signals` to `'error` (or any symbol referring to an existing condition type).
+
+This is the usual case: `*break-on-signals*` is NIL.
+
+~~~lisp
+(ignore-errors
+ (format t "*break-on-signals* value is: ~a~&" *break-on-signals*)
+ (error 'simple-error :format-control "Oh no!"))
+;; *break-on-signals* value is: NIL   <--- stdout
+;; NIL                                <--- first returned value
+;; #<SIMPLE-ERROR "Oh no!" {1205C6BC03}>  <-- second returned value, the condition object.
+~~~
+
+Let's set `*break-on-signals*` to `'error`:
+
+~~~lisp
+(let ((*break-on-signals* 'error))
+ (format t "*break-on-signals* value is: ~a~&" *break-on-signals*)
+  (ignore-errors
+   (error 'simple-error :format-control "Oh no!")))
+~~~
+
+Even though our `error` is surrounded by `ignore-errors`, we get the interactive debugger:
+
+```
+Oh no!
+BREAK was entered because of *BREAK-ON-SIGNALS* (now rebound to NIL).
+   [Condition of type SIMPLE-CONDITION]
+
+Restarts:
+ 0: [CONTINUE] Return from BREAK.
+ 1: [RESET] Set *BREAK-ON-SIGNALS* to NIL and continue.
+ 2: [REASSIGN] Return from BREAK and assign a new value to *BREAK-ON-SIGNALS*.
+ …
+
+Backtrace:
+ …
+```
+
+from the debugger, we can inspect the stack trace, go to the line
+signaling the condition, fix it and resume execution.
+
+When the condition signaled is an error, we don't enter the debugger a
+second time after we handled the break.
+
 
 ## Advise and watch
 
