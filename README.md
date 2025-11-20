@@ -1,4 +1,25 @@
-# Lisp Cookbook
+
+<br />
+<p align="center">
+  <a href="https://github.com/LispCookbook/cl-cookbook/">
+    <!-- <img src="" alt="Logo" width="80" height="80"> -->
+  </a>
+
+  <h3 align="center">The Common Lisp Cookbook</h3>
+
+  <p align="center">
+    Code-first Common Lisp recipes.
+	<br />
+    <a href="https://lispcookbook.github.io/cl-cookbook/"><strong>Read online »</strong></a>
+    <br />
+    <br />
+    <a href="https://github.com/LispCookbook/cl-cookbook/releases">News</a>
+    ·
+    <a href="https://github.com/LispCookbook/cl-cookbook/releases">EPUB and PDF</a>
+    ·
+    <a href="https://github.com/LispCookbook/cl-cookbook/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22good%20first%20issue%22">Contribute</a>
+  </p>
+</p>
 
 A Cookbook is an invaluable resource, as it shows how to do various things in a clear fashion without all the theoretical context. Sometimes you just need to look things up. While cookbooks can never replace proper documentation such as the [HyperSpec][hs] or books such as [Practical Common Lisp][pcl], every language deserves a good cookbook, Common Lisp included.
 
