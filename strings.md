@@ -71,26 +71,26 @@ optional, argument is the index of the first character which is not a part of
 the substring, it is not the length of the substring.
 
 ~~~lisp
-(defparameter *my-string* (string "Groucho Marx"))
+CL-USER> (defparameter *my-string* (string "Groucho Marx"))
 *MY-STRING*
-(subseq *my-string* 8)
+CL-USER> (subseq *my-string* 8)
 "Marx"
-(subseq *my-string* 0 7)
+CL-USER> (subseq *my-string* 0 7)
 "Groucho"
-(subseq *my-string* 1 5)
+CL-USER> (subseq *my-string* 1 5)
 "rouc"
 ~~~
 
 You can also manipulate the substring if you use SUBSEQ together with SETF.
 
 ~~~lisp
-* (defparameter *my-string* (string "Harpo Marx"))
+CL-USER> (defparameter *my-string* (string "Harpo Marx"))
 *MY-STRING*
-* (subseq *my-string* 0 5)
+CL-USER> (subseq *my-string* 0 5)
 "Harpo"
-* (setf (subseq *my-string* 0 5) "Chico")
+CL-USER> (setf (subseq *my-string* 0 5) "Chico")
 "Chico"
-* *my-string*
+CL-USER> *my-string*
 "Chico Marx"
 ~~~
 
@@ -99,19 +99,19 @@ the subsequence and the new sequence are not of equal length, the shorter length
 determines the number of elements that are replaced." For example:
 
 ~~~lisp
-* (defparameter *my-string* (string "Karl Marx"))
+CL-USER> (defparameter *my-string* (string "Karl Marx"))
 *MY-STRING*
-* (subseq *my-string* 0 4)
+CL-USER> (subseq *my-string* 0 4)
 "Karl"
-* (setf (subseq *my-string* 0 4) "Harpo")
+CL-USER> (setf (subseq *my-string* 0 4) "Harpo")
 "Harpo"
-* *my-string*
+CL-USER> *my-string*
 "Harp Marx"
-* (subseq *my-string* 4)
+CL-USER> (subseq *my-string* 4)
 " Marx"
-* (setf (subseq *my-string* 4) "o Marx")
+CL-USER> (setf (subseq *my-string* 4) "o Marx")
 "o Marx"
-* *my-string*
+CL-USER> *my-string*
 "Harpo Mar"
 ~~~
 
@@ -121,17 +121,17 @@ You can use the function CHAR to access individual characters of a string. CHAR
 can also be used in conjunction with SETF.
 
 ~~~lisp
-* (defparameter *my-string* (string "Groucho Marx"))
+CL-USER> (defparameter *my-string* (string "Groucho Marx"))
 *MY-STRING*
-* (char *my-string* 11)
+CL-USER> (char *my-string* 11)
 #\x
-* (char *my-string* 7)
+CL-USER> (char *my-string* 7)
 #\Space
-* (char *my-string* 6)
+CL-USER> (char *my-string* 6)
 #\o
-* (setf (char *my-string* 6) #\y)
+CL-USER> (setf (char *my-string* 6) #\y)
 #\y
-* *my-string*
+CL-USER> *my-string*
 "Grouchy Marx"
 ~~~
 
@@ -143,11 +143,11 @@ functions `aref` and `elt` (which are more general while CHAR might be implement
 more efficiently).
 
 ~~~lisp
-* (defparameter *my-string* (string "Groucho Marx"))
+CL-USER> (defparameter *my-string* (string "Groucho Marx"))
 *MY-STRING*
-* (aref *my-string* 3)
+CL-USER> (aref *my-string* 3)
 #\u
-* (elt *my-string* 8)
+CL-USER> (elt *my-string* 8)
 #\M
 ~~~
 
@@ -160,19 +160,19 @@ Latin character set. The second example shows a multibyte encoding (beyond the
 value 255). Notice the Lisp reader can round-trip characters by name.
 
 ~~~lisp
-* (stream-external-format *standard-output*)
+CL-USER> (stream-external-format *standard-output*)
 
 :UTF-8
-* (code-char 200)
+CL-USER> (code-char 200)
 
 #\LATIN_CAPITAL_LETTER_E_WITH_GRAVE
-* (char-code #\LATIN_CAPITAL_LETTER_E_WITH_GRAVE)
+CL-USER> (char-code #\LATIN_CAPITAL_LETTER_E_WITH_GRAVE)
 
 200
-* (code-char 2048)
+CL-USER> (code-char 2048)
 #\SAMARITAN_LETTER_ALAF
 
-* (char-code #\SAMARITAN_LETTER_ALAF)
+CL-USER> (char-code #\SAMARITAN_LETTER_ALAF)
 2048
 ~~~
 
@@ -188,28 +188,28 @@ HyperSpec for more.
 `remove` one character from a string:
 
 ~~~lisp
-* (remove #\o "Harpo Marx")
+CL-USER> (remove #\o "Harpo Marx")
 "Harp Marx"
-* (remove #\a "Harpo Marx")
+CL-USER> (remove #\a "Harpo Marx")
 "Hrpo Mrx"
-* (remove #\a "Harpo Marx" :start 2)
+CL-USER> (remove #\a "Harpo Marx" :start 2)
 "Harpo Mrx"
-* (remove-if #'upper-case-p "Harpo Marx")
+CL-USER> (remove-if #'upper-case-p "Harpo Marx")
 "arpo arx"
 ~~~
 
 Replace one character with `substitute` (non destructive) or `replace` (destructive):
 
 ~~~lisp
-* (substitute #\u #\o "Groucho Marx")
+CL-USER> (substitute #\u #\o "Groucho Marx")
 "Gruuchu Marx"
-* (substitute-if #\_ #'upper-case-p "Groucho Marx")
+CL-USER> (substitute-if #\_ #'upper-case-p "Groucho Marx")
 "_roucho _arx"
-* (defparameter *my-string* (string "Zeppo Marx"))
+CL-USER> (defparameter *my-string* (string "Zeppo Marx"))
 *MY-STRING*
-* (replace *my-string* "Harpo" :end1 5)
+CL-USER> (replace *my-string* "Harpo" :end1 5)
 "Harpo Marx"
-* *my-string*
+CL-USER> *my-string*
 "Harpo Marx"
 ~~~
 
@@ -220,22 +220,22 @@ The name says it all: `concatenate` is your friend. Note that this is a generic
 sequence function and you have to provide the result type as the first argument.
 
 ~~~lisp
-* (concatenate 'string "Karl" " " "Marx")
+CL-USER> (concatenate 'string "Karl" " " "Marx")
 "Karl Marx"
-* (concatenate 'list "Karl" " " "Marx")
+CL-USER> (concatenate 'list "Karl" " " "Marx")
 (#\K #\a #\r #\l #\Space #\M #\a #\r #\x)
 ~~~
 
 With UIOP, use `strcat`:
 
 ~~~lisp
-* (uiop:strcat "karl" " " marx")
+CL-USER> (uiop:strcat "karl" " " "marx")
 ~~~
 
 or with the library `str`, use `concat`:
 
 ~~~lisp
-* (str:concat "foo" "bar")
+CL-USER> (str:concat "foo" "bar")
 ~~~
 
 If you have to construct a string out of many parts, all of these calls to
@@ -248,17 +248,17 @@ can estimate how long the string will be. (See the optional third argument to
 `vector-push-extend`.)
 
 ~~~lisp
-* (defparameter *my-string* (make-array 0
+CL-USER> (defparameter *my-string* (make-array 0
                               :element-type 'character
                               :fill-pointer 0
                               :adjustable t))
 *MY-STRING*
-* *my-string*
+CL-USER> *my-string*
 ""
-* (dolist (char '(#\Z #\a #\p #\p #\a))
+CL-USER> (dolist (char '(#\Z #\a #\p #\p #\a))
     (vector-push-extend char *my-string*))
 NIL
-* *my-string*
+CL-USER> *my-string*
 "Zappa"
 ~~~
 
@@ -268,8 +268,8 @@ arbitrary objects, (symbols, numbers, characters, strings, ...), you can use
 indicated output as a string.
 
 ~~~lisp
-* (format nil "This is a string with a list ~A in it"
-          '(1 2 3))
+CL-USER> (format nil "This is a string with a list ~A in it"
+             '(1 2 3))
 "This is a string with a list (1 2 3) in it"
 ~~~
 
@@ -277,8 +277,8 @@ We can use the looping constructs of the `format` mini language to emulate
 `concatenate`.
 
 ~~~lisp
-* (format nil "The Marx brothers are:~{ ~A~}."
-          '("Groucho" "Harpo" "Chico" "Zeppo" "Karl"))
+CL-USER> (format nil "The Marx brothers are:~{ ~A~}."
+             '("Groucho" "Harpo" "Chico" "Zeppo" "Karl"))
 "The Marx brothers are: Groucho Harpo Chico Zeppo Karl."
 ~~~
 
@@ -287,8 +287,8 @@ this last example, you can find the details in the CLHS section about formatted
 output.
 
 ~~~lisp
-* (format nil "The Marx brothers are:~{ ~A~^,~}."
-          '("Groucho" "Harpo" "Chico" "Zeppo" "Karl"))
+CL-USER> (format nil "The Marx brothers are:~{ ~A~^,~}."
+             '("Groucho" "Harpo" "Chico" "Zeppo" "Karl"))
 "The Marx brothers are: Groucho, Harpo, Chico, Zeppo, Karl."
 ~~~
 
@@ -299,10 +299,10 @@ the macro. This means you also have the full power of `format` at your disposal,
 should you need it.
 
 ~~~lisp
-* (with-output-to-string (stream)
-    (dolist (char '(#\Z #\a #\p #\p #\a #\, #\Space))
-      (princ char stream))
-    (format stream "~S - ~S" 1940 1993))
+CL-USER> (with-output-to-string (stream)
+           (dolist (char '(#\Z #\a #\p #\p #\a #\, #\Space))
+             (princ char stream))
+           (format stream "~S - ~S" 1940 1993))
 "Zappa, 1940 - 1993"
 ~~~
 
@@ -311,9 +311,9 @@ should you need it.
 Use the MAP function to process a string one character at a time.
 
 ~~~lisp
-* (defparameter *my-string* (string "Groucho Marx"))
+CL-USER> (defparameter *my-string* (string "Groucho Marx"))
 *MY-STRING*
-* (map 'string (lambda (c) (print c)) *my-string*)
+CL-USER> (map 'string (lambda (c) (print c)) *my-string*)
 #\G
 #\r
 #\o
@@ -332,8 +332,8 @@ Use the MAP function to process a string one character at a time.
 Or do it with LOOP.
 
 ~~~lisp
-* (loop for char across "Zeppo"
-        collect char)
+CL-USER> (loop for char across "Zeppo"
+               collect char)
 (#\Z #\e #\p #\p #\o)
 ~~~
 
@@ -343,9 +343,9 @@ Reversing a string by character is easy using the built-in `reverse` function (o
 its destructive counterpart `nreverse`).
 
 ~~~lisp
-*(defparameter *my-string* (string "DSL"))
+CL-USER> (defparameter *my-string* (string "DSL"))
 *MY-STRING*
-* (reverse *my-string*)
+CL-USER> (reverse *my-string*)
 "LSD"
 ~~~
 
@@ -356,20 +356,20 @@ library like SPLIT-SEQUENCE or you have to roll your own solution.
 Here's an attempt with the `str` library:
 
 ~~~lisp
-* (defparameter *singing* "singing in the rain")
+CL-USER> (defparameter *singing* "singing in the rain")
 *SINGING*
-* (str:words *SINGING*)
+CL-USER> (str:words *SINGING*)
 ("singing" "in" "the" "rain")
-* (reverse *)
+CL-USER> (reverse *)
 ("rain" "the" "in" "singing")
-* (str:unwords *)
+CL-USER> (str:unwords *)
 "rain the in singing"
 ~~~
 
 And here's another one with no external dependencies:
 
 ~~~lisp
-* (defun split-by-one-space (string)
+CL-USER> (defun split-by-one-space (string)
     "Returns a list of substrings of string
     divided by ONE space each.
     Note: Two consecutive spaces will be seen as
@@ -379,29 +379,29 @@ And here's another one with no external dependencies:
           collect (subseq string i j)
           while j))
 SPLIT-BY-ONE-SPACE
-* (split-by-one-space "Singing in the rain")
+CL-USER> (split-by-one-space "Singing in the rain")
 ("Singing" "in" "the" "rain")
-* (split-by-one-space "Singing in the  rain")
+CL-USER> (split-by-one-space "Singing in the  rain")
 ("Singing" "in" "the" "" "rain")
-* (split-by-one-space "Cool")
+CL-USER> (split-by-one-space "Cool")
 ("Cool")
-* (split-by-one-space " Cool ")
+CL-USER> (split-by-one-space " Cool ")
 ("" "Cool" "")
-* (defun join-string-list (string-list)
+CL-USER> (defun join-string-list (string-list)
     "Concatenates a list of strings
 and puts spaces between the elements."
     (format nil "~{~A~^ ~}" string-list))
 JOIN-STRING-LIST
-* (join-string-list '("We" "want" "better" "examples"))
+CL-USER> (join-string-list '("We" "want" "better" "examples"))
 "We want better examples"
-* (join-string-list '("Really"))
+CL-USER> (join-string-list '("Really"))
 "Really"
-* (join-string-list '())
+CL-USER> (join-string-list '())
 ""
-* (join-string-list
-   (nreverse
-    (split-by-one-space
-     "Reverse this sentence by word")))
+CL-USER> (join-string-list
+          (nreverse
+           (split-by-one-space
+            "Reverse this sentence by word")))
 "word by sentence this Reverse"
 ~~~
 
@@ -416,15 +416,15 @@ Sorting unicode strings with `string-lessp` as the comparison function
 isn't satisfying:
 
 ~~~lisp
-(sort '("Aaa" "Ééé" "Zzz") #'string-lessp)
-;; ("Aaa" "Zzz" "Ééé")
+CL-USER> (sort '("Aaa" "Ééé" "Zzz") #'string-lessp)
+("Aaa" "Zzz" "Ééé")
 ~~~
 
 With [SBCL](http://www.sbcl.org/manual/#String-operations), use `sb-unicode:unicode<`:
 
 ~~~lisp
-(sort '("Aaa" "Ééé" "Zzz") #'sb-unicode:unicode<)
-;; ("Aaa" "Ééé" "Zzz")
+CL-USER> (sort '("Aaa" "Ééé" "Zzz") #'sb-unicode:unicode<)
+("Aaa" "Ééé" "Zzz")
 ~~~
 
 ### Breaking strings into graphemes, sentences, lines and words
@@ -438,12 +438,12 @@ Use `sb-unicode:lines` to break a string into lines that are no wider
 than the `:margin` keyword argument. Combining marks will always be kept together with their base characters, and spaces (but not other types of whitespace) will be removed from the end of lines. If `:margin` is unspecified, it defaults to 80 characters
 
 ~~~lisp
-(sb-unicode:lines "A first sentence. A second somewhat long one." :margin 10)
-;; => ("A first"
-       "sentence."
-       "A second"
-       "somewhat"
-       "long one.")
+CL-USER> (sb-unicode:lines "A first sentence. A second somewhat long one." :margin 10)
+("A first"
+ "sentence."
+ "A second"
+ "somewhat"
+ "long one.")
 ~~~
 
 See also `sb-unicode:words` and `sb-unicode:graphemes`.
@@ -460,17 +460,17 @@ Tip: you can ensure these functions are run only in SBCL with a feature flag:
 Common Lisp has a couple of functions to control the case of a string.
 
 ~~~lisp
-* (string-upcase "cool")
+CL-USER> (string-upcase "cool")
 "COOL"
-* (string-upcase "Cool")
+CL-USER> (string-upcase "Cool")
 "COOL"
-* (string-downcase "COOL")
+CL-USER> (string-downcase "COOL")
 "cool"
-* (string-downcase "Cool")
+CL-USER> (string-downcase "Cool")
 "cool"
-* (string-capitalize "cool")
+CL-USER> (string-capitalize "cool")
 "Cool"
-* (string-capitalize "cool example")
+CL-USER> (string-capitalize "cool example")
 "Cool Example"
 ~~~
 
@@ -479,17 +479,17 @@ only manipulate a part of the string. They also have destructive counterparts
 whose names starts with "N".
 
 ~~~lisp
-* (string-capitalize "cool example" :start 5)
+CL-USER> (string-capitalize "cool example" :start 5)
 "cool Example"
-* (string-capitalize "cool example" :end 5)
+CL-USER> (string-capitalize "cool example" :end 5)
 "Cool example"
-* (defparameter *my-string* (string "BIG"))
+CL-USER> (defparameter *my-string* (string "BIG"))
 *MY-STRING*
-* (defparameter *my-downcase-string* (nstring-downcase *my-string*))
+CL-USER> (defparameter *my-downcase-string* (nstring-downcase *my-string*))
 *MY-DOWNCASE-STRING*
-* *my-downcase-string*
+CL-USER> *my-downcase-string*
 "big"
-* *my-string*
+CL-USER> *my-string*
 "big"
 ~~~
 
@@ -502,15 +502,15 @@ the following example is implementation-dependent - it may either be "BIG" or
 "BUG". If you want to be sure, use `copy-seq`.
 
 ~~~lisp
-* (defparameter *my-string* (string "BIG"))
+CL-USER> (defparameter *my-string* (string "BIG"))
 *MY-STRING*
-* (defparameter *my-upcase-string* (string-upcase *my-string*))
+CL-USER> (defparameter *my-upcase-string* (string-upcase *my-string*))
 *MY-UPCASE-STRING*
-* (setf (char *my-string* 1) #\U)
+CL-USER> (setf (char *my-string* 1) #\U)
 #\U
-* *my-string*
+CL-USER> *my-string*
 "BUG"
-* *my-upcase-string*
+CL-USER> *my-upcase-string*
 "BIG"
 ~~~
 
@@ -521,15 +521,15 @@ The format function has directives to change the case of words:
 #### To lower case: ~( ~)
 
 ~~~lisp
-(format t "~(~a~)" "HELLO WORLD")
-;; => hello world
+CL-USER> (format t "~(~a~)" "HELLO WORLD")
+hello world
 ~~~
 
 
 #### Capitalize every word: ~:( ~)
 
 ~~~lisp
-(format t "~:(~a~)" "HELLO WORLD")
+CL-USER> (format t "~:(~a~)" "HELLO WORLD")
 Hello World
 NIL
 ~~~
@@ -537,7 +537,7 @@ NIL
 #### Capitalize the first word: ~@( ~)
 
 ~~~lisp
-(format t "~@(~a~)" "hello world")
+CL-USER> (format t "~@(~a~)" "hello world")
 Hello world
 NIL
 ~~~
@@ -547,7 +547,7 @@ NIL
 Where we re-use the colon and the @:
 
 ~~~lisp
-(format t "~@:(~a~)" "hello world")
+CL-USER> (format t "~@:(~a~)" "hello world")
 HELLO WORLD
 NIL
 ~~~
@@ -562,17 +562,17 @@ removed off the beginning and/or the end. The first argument can be any sequence
 of characters.
 
 ~~~lisp
-* (string-trim " " " trim me ")
+CL-USER> (string-trim " " " trim me ")
 "trim me"
-* (string-trim " et" " trim me ")
+CL-USER> (string-trim " et" " trim me ")
 "rim m"
-* (string-left-trim " et" " trim me ")
+CL-USER> (string-left-trim " et" " trim me ")
 "rim me "
-* (string-right-trim " et" " trim me ")
+CL-USER> (string-right-trim " et" " trim me ")
 " trim m"
-* (string-right-trim '(#\Space #\e #\t) " trim me ")
+CL-USER> (string-right-trim '(#\Space #\e #\t) " trim me ")
 " trim m"
-* (string-right-trim '(#\Space #\e #\t #\m) " trim me ")
+CL-USER> (string-right-trim '(#\Space #\e #\t #\m) " trim me ")
 ~~~
 
 Note: The caveat mentioned in the section about Controlling Case also applies
@@ -591,26 +591,26 @@ details.
 Note that the case of the string is relevant.
 
 ~~~lisp
-* (in-package "COMMON-LISP-USER")
+CL-USER> (in-package "COMMON-LISP-USER")
 #<The COMMON-LISP-USER package, 35/44 internal, 0/9 external>
-* (intern "MY-SYMBOL")
+CL-USER> (intern "MY-SYMBOL")
 MY-SYMBOL
 NIL
-* (intern "MY-SYMBOL")
+CL-USER> (intern "MY-SYMBOL")
 MY-SYMBOL
 :INTERNAL
-* (export 'MY-SYMBOL)
+CL-USER> (export 'MY-SYMBOL)
 T
-* (intern "MY-SYMBOL")
+CL-USER> (intern "MY-SYMBOL")
 MY-SYMBOL
 :EXTERNAL
-* (intern "My-Symbol")
+CL-USER> (intern "My-Symbol")
 |My-Symbol|
 NIL
-* (intern "MY-SYMBOL" "KEYWORD")
+CL-USER> (intern "MY-SYMBOL" "KEYWORD")
 :MY-SYMBOL
 NIL
-* (intern "MY-SYMBOL" "KEYWORD")
+CL-USER> (intern "MY-SYMBOL" "KEYWORD")
 :MY-SYMBOL
 :EXTERNAL
 ~~~
@@ -619,13 +619,13 @@ To do the opposite, convert from a symbol to a string, use `symbol-name` or
 `string`.
 
 ~~~lisp
-* (symbol-name 'MY-SYMBOL)
+CL-USER> (symbol-name 'MY-SYMBOL)
 "MY-SYMBOL"
-* (symbol-name 'my-symbol)
+CL-USER> (symbol-name 'my-symbol)
 "MY-SYMBOL"
-* (symbol-name '|my-symbol|)
+CL-USER> (symbol-name '|my-symbol|)
 "my-symbol"
-* (string 'howdy)
+CL-USER> (string 'howdy)
 "HOWDY"
 ~~~
 
@@ -637,27 +637,27 @@ use `coerce` to convert any sequence of characters into a string. You can not us
 instead.
 
 ~~~lisp
-* (coerce "a" 'character)
+CL-USER> (coerce "a" 'character)
 #\a
-* (coerce (subseq "cool" 2 3) 'character)
+CL-USER> (coerce (subseq "cool" 2 3) 'character)
 #\o
-* (coerce "cool" 'list)
+CL-USER> (coerce "cool" 'list)
 (#\c #\o #\o #\l)
-* (coerce '(#\h #\e #\y) 'string)
+CL-USER> (coerce '(#\h #\e #\y) 'string)
 "hey"
-* (coerce (nth 2 '(#\h #\e #\y)) 'character)
+CL-USER> (coerce (nth 2 '(#\h #\e #\y)) 'character)
 #\y
-* (defparameter *my-array* (make-array 5 :initial-element #\x))
+CL-USER> (defparameter *my-array* (make-array 5 :initial-element #\x))
 *MY-ARRAY*
-* *my-array*
+CL-USER> *my-array*
 #(#\x #\x #\x #\x #\x)
-* (coerce *my-array* 'string)
+CL-USER> (coerce *my-array* 'string)
 "xxxxx"
-* (string 'howdy)
+CL-USER> (string 'howdy)
 "HOWDY"
-* (string #\y)
+CL-USER> (string #\y)
 "y"
-* (coerce #\y 'string)
+CL-USER> (coerce #\y 'string)
 #\y can't be converted to type STRING.
    [Condition of type SIMPLE-TYPE-ERROR]
 ~~~
@@ -667,37 +667,37 @@ instead.
 Use `find`, `position`, and their `…-if` counterparts to find characters in a string, with the appropriate `:test` parameter:
 
 ~~~lisp
-(find #\t "Tea time." :test #'equal)
+CL-USER> (find #\t "Tea time." :test #'equal)
 #\t
-* (find #\t "Tea time." :test #'equalp)
+CL-USER> (find #\t "Tea time." :test #'equalp)
 #\T
-* (find #\z "Tea time." :test #'equalp)
+CL-USER> (find #\z "Tea time." :test #'equalp)
 NIL
-* (find-if #'digit-char-p "Tea time.")
+CL-USER> (find-if #'digit-char-p "Tea time.")
 #\1
-* (find-if #'digit-char-p "Tea time." :from-end t)
+CL-USER> (find-if #'digit-char-p "Tea time." :from-end t)
 #\0
 
-(position #\t "Tea time." :test #'equal)
+CL-USER> (position #\t "Tea time." :test #'equal)
 4   ;; <= the first lowercase t
-(position #\t "Tea time." :test #'equalp)
+CL-USER> (position #\t "Tea time." :test #'equalp)
 0    ;; <= the first capital T
-(position-if #'digit-char-p "Tea time is at 5'00.")
+CL-USER> (position-if #'digit-char-p "Tea time is at 5'00.")
 15
-(position-if #'digit-char-p "Tea time is at 5'00." :from-end t)
+CL-USER> (position-if #'digit-char-p "Tea time is at 5'00." :from-end t)
 18
 ~~~
 
 Or use `count` and friends to count characters in a string:
 
 ~~~lisp
-(count #\t "Tea time." :test #'equal)
+CL-USER> (count #\t "Tea time." :test #'equal)
 1  ;; <= equal ignores the capital T
-(count #\t "Tea time." :test #'equalp)
+CL-USER> (count #\t "Tea time." :test #'equalp)
 2  ;; <= equalp counts the capital T
-(count-if #'digit-char-p "Tea time is at 5'00.")
+CL-USER> (count-if #'digit-char-p "Tea time is at 5'00.")
 3
-(count-if #'digit-char-p "Tea time is at 5'00." :start 18)
+CL-USER> (count-if #'digit-char-p "Tea time is at 5'00." :start 18)
 1
 ~~~
 
@@ -706,20 +706,20 @@ Or use `count` and friends to count characters in a string:
 The function `search` can find substrings of a string.
 
 ~~~lisp
-* (search "we" "If we can't be free we can at least be cheap")
+CL-USER> (search "we" "If we can't be free we can at least be cheap")
 3
-* (search "we" "If we can't be free we can at least be cheap"
+CL-USER> (search "we" "If we can't be free we can at least be cheap"
           :from-end t)
 20
-* (search "we" "If we can't be free we can at least be cheap"
+CL-USER> (search "we" "If we can't be free we can at least be cheap"
           :start2 4)
 20
-* (search "we" "If we can't be free we can at least be cheap"
+CL-USER> (search "we" "If we can't be free we can at least be cheap"
           :end2 5 :from-end t)
 3
-* (search "FREE" "If we can't be free we can at least be cheap")
+CL-USER> (search "FREE" "If we can't be free we can at least be cheap")
 NIL
-* (search "FREE" "If we can't be free we can at least be cheap"
+CL-USER> (search "FREE" "If we can't be free we can at least be cheap"
           :test #'char-equal)
 15
 ~~~
@@ -733,25 +733,25 @@ to the corresponding numeric value. The second return value is the index into
 the string where the parsing stopped.
 
 ~~~lisp
-(parse-integer "42")
+CL-USER> (parse-integer "42")
 42
 2
-(parse-integer "42" :start 1)
+CL-USER> (parse-integer "42" :start 1)
 2
 2
-(parse-integer "42" :end 1)
+CL-USER> (parse-integer "42" :end 1)
 4
 1
-(parse-integer "42" :radix 8)
+CL-USER> (parse-integer "42" :radix 8)
 34
 2
-(parse-integer " 42 ")
+CL-USER> (parse-integer " 42 ")
 42
 3
-(parse-integer " 42 is forty-two" :junk-allowed t)
+CL-USER> (parse-integer " 42 is forty-two" :junk-allowed t)
 42
 3
-(parse-integer " 42 is forty-two")
+CL-USER> (parse-integer " 42 is forty-two")
 
 Error in function PARSE-INTEGER:
    There's junk in this string: " 42 is forty-two".
@@ -766,10 +766,10 @@ in this case.
 We show this in the Regular Expressions chapter but while we are on this topic, you can find it super useful:
 
 ~~~lisp
-* (ppcre:all-matches-as-strings "-?\\d+" "42 is 41 plus 1")
+CL-USER> (ppcre:all-matches-as-strings "-?\\d+" "42 is 41 plus 1")
 ;; ("42" "41" "1")
 
-* (mapcar #'parse-integer *)
+CL-USER> (mapcar #'parse-integer *)
 ;; (42 41 1)
 ~~~
 
@@ -780,30 +780,30 @@ function. This can lead to vulnerability issues. You should use a
 library like `parse-number` or `parse-float` instead.
 
 ~~~lisp
-(read-from-string "#X23")
+CL-USER> (read-from-string "#X23")
 35
 4
-(read-from-string "4.5")
+CL-USER> (read-from-string "4.5")
 4.5
 3
-(read-from-string "6/8")
+CL-USER> (read-from-string "6/8")
 3/4
 3
-(read-from-string "#C(6/8 1)")
+CL-USER> (read-from-string "#C(6/8 1)")
 #C(3/4 1)
 9
-(read-from-string "1.2e2")
+CL-USER> (read-from-string "1.2e2")
 120.00001
 5
-(read-from-string "symbol")
+CL-USER> (read-from-string "symbol")
 SYMBOL
 6
-(defparameter *foo* 42)
+CL-USER> (defparameter *foo* 42)
 *FOO*
-(read-from-string "#.(setq *foo* \"gotcha\")")
+CL-USER> (read-from-string "#.(setq *foo* \"gotcha\")")
 "gotcha"
 23
-*foo*
+CL-USER> *foo*
 "gotcha"
 ~~~
 
@@ -835,10 +835,10 @@ other number types. The external library
 that. It doesn't use `read-from-string` so it is safe to use.
 
 ~~~lisp
-(ql:quickload "parse-float")
-(parse-float:parse-float "1.2e2")
-;; 120.00001
-;; 5
+CL-USER> (ql:quickload "parse-float")
+CL-USER> (parse-float:parse-float "1.2e2")
+120.00001
+5
 ~~~
 
 LispWorks also has a [parse-float](http://www.lispworks.com/documentation/lw51/LWRM/html/lwref-228.htm) function.
@@ -856,15 +856,14 @@ the output base for a single call. To change the output base globally, set
 represented as quotients of two integers even when converted to strings.
 
 ~~~lisp
-(write-to-string 250)
+CL-USER> (write-to-string 250)
 "250"
-(write-to-string 250.02)
+CL-USER> (write-to-string 250.02)
 "250.02"
-(write-to-string 250 :base 5)
+CL-USER> (write-to-string 250 :base 5)
 "2000"
-(write-to-string (/ 1 3))
+CL-USER> (write-to-string (/ 1 3))
 "1/3"
-*
 ~~~
 
 ## Comparing Strings
@@ -879,19 +878,19 @@ documentation in this case.
 Here are a few examples. Note that all functions that test for inequality return the position of the first mismatch as a generalized boolean. You can also use the generic sequence function `mismatch` if you need more versatility.
 
 ~~~lisp
-(string= "Marx" "Marx")
+CL-USER> (string= "Marx" "Marx")
 T
-(string= "Marx" "marx")
+CL-USER> (string= "Marx" "marx")
 NIL
-(string-equal "Marx" "marx")
+CL-USER> (string-equal "Marx" "marx")
 T
-(string< "Groucho" "Zeppo")
+CL-USER> (string< "Groucho" "Zeppo")
 0
-(string< "groucho" "Zeppo")
+CL-USER> (string< "groucho" "Zeppo")
 NIL
-(string-lessp "groucho" "Zeppo")
+CL-USER> (string-lessp "groucho" "Zeppo")
 0
-(mismatch "Harpo Marx" "Zeppo Marx" :from-end t :test #'char=)
+CL-USER> (mismatch "Harpo Marx" "Zeppo Marx" :from-end t :test #'char=)
 3
 ~~~
 
