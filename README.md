@@ -1,11 +1,8 @@
 
 <br />
 <p align="center">
-  <a href="https://github.com/LispCookbook/cl-cookbook/">
-    <!-- <img src="" alt="Logo" width="80" height="80"> -->
-  </a>
 
-  <h3 align="center">The Common Lisp Cookbook</h3>
+  <h1 align="center">The Common Lisp Cookbook</h1>
 
   <p align="center">
     Code-first Common Lisp recipes.
@@ -25,6 +22,11 @@ A Cookbook is an invaluable resource, as it shows how to do various things in a 
 
 The CL Cookbook aims to tackle all sort of topics, for the beginner as for the more advanced developer.
 
+<p align="center">
+  <a href="https://lispcookbook.github.io/cl-cookbook/">
+    <img src="https://lispcookbook.github.io/cl-cookbook/orly-cover.png" alt="Logo" max-width="150">
+  </a>
+</p>
 
 ## Contributing
 
