@@ -2321,6 +2321,8 @@ The `access` library given above provides this, with `(accesses var key1 key2…
 
 ## Appendix C - Collections Type Hierarchy
 
+*Solid nodes are concrete types, while dashed ones are type aliases. For example, `'string` is an alias for an array of characters of any size, `(array character (*))`.*
+
 <!-- epub-exclude-start -->
 <div style="text-align: center">
     <img src="collections.png" alt="Collection Types in Common Lisp"/>
@@ -2331,3 +2333,7 @@ The `access` library given above provides this, with `(accesses var key1 key2…
 <!-- pdf-include-start
 ![](collections.png)
    pdf-include-end -->
+
+## See also
+
+* [the Pretty Printer](https://cl-community-spec.github.io/pages/Examples-of-using-the-Pretty-Printer.html#Examples-of-using-the-Pretty-Printer):`*print-length*`, `*print-right-margin*`, `pprint-tabular` etc.

@@ -1310,7 +1310,7 @@ _ - Conditional Newline
 
 ## String and character types hierarchy
 
-*Solid nodes are concrete types, while dashed ones are type aliases.*
+*Solid nodes are concrete types, while dashed ones are type aliases. For example, `'string` is an alias for an array of characters of any size, `(array character (*))`.*
 
 <div style="text-align: center">
     <img src="string-and-chars.png" alt="String and Character Types in Common Lisp"/>
@@ -1323,4 +1323,5 @@ _ - Conditional Newline
 
 ## See also
 
+* [the Pretty Printer](https://cl-community-spec.github.io/pages/Examples-of-using-the-Pretty-Printer.html#Examples-of-using-the-Pretty-Printer):`*print-length*`, `*print-right-margin*`, `pprint-tabular` etc.
 * [Pretty printing table data](https://gist.github.com/WetHat/a49e6f2140b401a190d45d31e052af8f), in ASCII art, a tutorial as a Jupyter notebook.
