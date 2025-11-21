@@ -56,7 +56,10 @@ In addition, you might want to have a look to:
 * [eql, eql5, eql5-android](https://gitlab.com/eql), embedded Qt4 and Qt5 Lisp, embedded in ECL, embeddable in Qt. Port of EQL5 to the Android platform.
 * this [demo using Java Swing from ABCL](https://github.com/defunkydrummer/abcl-jazz)
 * [examples of using Gtk without C files with SBCL](https://github.com/mifpasoti/Gtk-Demos), as well as GTK-server.
-* and, last but not least, [Ceramic][ceramic], to ship a cross-platform web app with Electron.
+* [Ceramic][ceramic], to ship a cross-platform web app with Electron.
+  * read also: [three web views for Common Lisp](https://lisp-journey.gitlab.io/blog/three-web-views-for-common-lisp--cross-platform-guis/) and [web views](https://web-apps-in-lisp.github.io/building-blocks/web-views/index.html) on Web Apps in Lisp.
+* the [Barium toolkit](https://tomscii.sig7.se/barium/)
+  * an example application: [ChessLab](https://tomscii.sig7.se/chesslab/) (2025)
 
 as well as the other ones listed on [awesome-cl#gui](https://github.com/CodyReichert/awesome-cl#Gui) and [Cliki](https://www.cliki.net/GUI).
 
