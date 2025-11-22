@@ -2243,27 +2243,37 @@ the cdr of the cons cells they visit.
 
 See the functions `subst` and `sublis` above to replace elements in a tree.
 
+## FSet - immutable functional data structures
+
+You may want to have a look at the
+[FSet](https://gitlab.common-lisp.net/fset/fset/-/wikis/home)
+library (in Quicklisp) to use immutable data structures.
+
+     (ql:quickload "fset")
+
+FSet provides the following collections:
+
+- `maps`, aka hash-tables
+- `seqs`, aka sequences
+- `sets`
+- `bags` or multisets, aka sets that count how many occurences of a member is in the bag.
+
+You can start reading its [introduction](https://gitlab.common-lisp.net/fset/fset/-/wikis/FSet/Intro) and its [tutorial](https://gitlab.common-lisp.net/fset/fset/-/wikis/FSet/Tutorial).
+
 
 ### Sycamore - purely functional weight-balanced binary trees
 
-[https://github.com/ndantam/sycamore](https://github.com/ndantam/sycamore)
+Another fast, purely functional data structure library for Common Lisp
+is [Sycamore](https://github.com/ndantam/sycamore).
 
-Features:
+It features:
 
-* Fast, purely functional weight-balanced binary trees.
-  * Leaf nodes are simple-vectors, greatly reducing tree height.
-* Interfaces for tree Sets and Maps (dictionaries).
-* [Ropes](http://en.wikipedia.org/wiki/Rope_(data_structure))
-* Purely functional [pairing heaps](http://en.wikipedia.org/wiki/Pairing_heap)
-* Purely functional amortized queue.
-
-See also FSet.
-
-## Fset - immutable data structures
-
-You may want to have a look at the
-[FSet](https://common-lisp.net/project/fset/Site/FSet-Tutorial.html )
-library (in Quicklisp) to use immutable data structures.
+- fast, purely functional **Hash Array Mapped Tries** ([HAMT](https://en.wikipedia.org/wiki/Hash_array_mapped_trie)).
+* fast, purely functional weight-balanced **binary trees**.
+* interfaces for tree **sets** and **maps** (hash-tables).
+* [ropes](http://en.wikipedia.org/wiki/Rope_(data_structure))
+* purely functional [pairing **heaps**](http://en.wikipedia.org/wiki/Pairing_heap)
+* purely functional amortized **queues**.
 
 
 ## Controlling how much of data to print (`*print-length*`, `*print-level*`)
