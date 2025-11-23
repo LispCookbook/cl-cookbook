@@ -344,10 +344,10 @@ the URL, we can **generate the URL from its name**. Use
 `easy-routes:genurl` like this:
 
 ~~~lisp
-(easy-routes:genurl my-route-name :id 3)
+(easy-routes:genurl 'my-route-name :id 3)
 ;; => /foo/3
 
-(easy-routes:genurl my-route-name :id 3 :y "yay")
+(easy-routes:genurl 'my-route-name :id 3 :y "yay")
 ;; => /foo/3?y=yay
 ~~~
 
