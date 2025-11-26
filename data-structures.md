@@ -2261,7 +2261,7 @@ FSet provides the following collections:
 You can start reading its [introduction](https://gitlab.common-lisp.net/fset/fset/-/wikis/FSet/Intro) and its [tutorial](https://gitlab.common-lisp.net/fset/fset/-/wikis/FSet/Tutorial).
 
 
-### Sycamore - purely functional weight-balanced binary trees
+## Sycamore - purely functional weight-balanced binary trees
 
 Another fast, purely functional data structure library for Common Lisp
 is [Sycamore](https://github.com/ndantam/sycamore).
