@@ -23,7 +23,7 @@
 #image("orly-cover.png", width: 90%),
 
 #pagebreak(
-    to: "odd"
+    to: "even"
 )
 
 #set heading(numbering: "1.")
