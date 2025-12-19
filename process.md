@@ -166,13 +166,13 @@ You can refer to the documentation for more details (check the
 First let’s load up the Bordeaux library using Quicklisp:
 
 ~~~lisp
-CL-USER> (ql:quickload "bt-semaphore")
-To load "bt-semaphore":
+CL-USER> (ql:quickload "bordeaux-threads")
+To load "bordeaux-threads":
   Load 1 ASDF system:
-    bt-semaphore
-; Loading "bt-semaphore"
+    bordeaux-threads
+; Loading "bordeaux-threads"
 
-(:BT-SEMAPHORE)
+("bordeaux-threads")
 ~~~
 
 
