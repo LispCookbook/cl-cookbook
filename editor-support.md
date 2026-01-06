@@ -297,6 +297,30 @@ Common Lisp environment, built in Common Lisp.
 
 ## REPLs
 
+[ICL](https://github.com/atgreen/icl), Interactive Common Lisp, is an
+enhanced REPL for the terminal. It works with any implementation you
+have on your system. It brings a *lot* of nice features, such as:
+
+- easy to use terminal-based REPL (code completion, etc)
+- browser REPL
+  - with a packages and systems browser,
+  - documentation browser
+  - inspector
+  - variable "watcher"
+  - data visualization
+  - flame graph profiling
+- integration with Emacs and Slime or SLY, so you can control the browser-based tools from your favorite editor.
+
+It comes with pre-built binaries. Try it out!
+
+<!-- epub-exclude-start -->
+
+![](https://raw.githubusercontent.com/atgreen/icl/master/assets/terminal-demo.gif)
+
+![](https://raw.githubusercontent.com/atgreen/icl/master/assets/browser-demo.gif)
+
+<!-- epub-exclude-end -->
+
 [cl-repl](https://github.com/lisp-maintainers/cl-repl) is an ipython-like REPL. It supports symbol completion, magic and shell commands, multi-line editing, editing command in a file and a simple debugger.
 
 It is available as a binary.

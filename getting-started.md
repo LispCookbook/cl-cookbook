@@ -163,7 +163,7 @@ user@debian:~$
 You just evaluated Lisp code in a REPL, congratulations. Of course, you'll want to write code to a `.lisp` file.
 
 Use `sbcl --load myfile.lisp` to load, compile and run this
-file. After the top-level commands were run, the Lisp doesn't exit and
+file. After the top-level commands were run, the Lisp process doesn't exit and
 it gives you a REPL, so you can keep working.
 
 <!-- xxx: "compile" must be puzzling since this doesn't create a binary. -->
@@ -183,12 +183,12 @@ Did you see this `* ` bit? It's the default Lisp prompt in a terminal. In our ed
 Speaking of editors: of course, we can have a much more interactive
 workflow with a good editor setup. But you can already work like this.
 
-### More ergonomic REPL
+### A more ergonomic REPL: rlwrap
 
 The REPL is not very ergonomic out of the box, at least with SBCL: the arrow keys do not
-work in order to recall history (the previous commands entered), you don't have completion of built-in Lisp functions, etc. You
-can slightly enhance its functionality by installing and using
-`rlwrap`.
+work in order to recall history (the previous commands entered), you don't have completion of built-in Lisp functions, etc.
+
+You can slightly enhance its functionality by installing and using `rlwrap`.
 
 | **Operating system** | **command**              |
 |----------------------|--------------------------|
@@ -201,8 +201,9 @@ Then invoke it like so:
 
     rlwrap sbcl
 
-But we'll setup our editor to offer a better experience instead of
-working in this REPL. See [editor-support](editor-support.html).
+This brings *some* quality of life to a bare-bones terminal REPL, but
+we'll setup our editor to offer a much better editing experience instead of
+working in such a terminal REPL. See [editor-support](editor-support.html).
 
 <div class="info" style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 17px;">
 <!-- if inside a <p> then bootstrap adds 10px padding to the bottom -->
@@ -219,6 +220,56 @@ your editor and to use SBCL or CCL.
 <strong>TIP:</strong>
  By adding the <code>-c</code> switch to rlwrap, you can autocomplete file names.
 </div>
+
+### A more ergonomic REPL: ICL
+
+[ICL](https://github.com/atgreen/icl), Interactive Common Lisp, is an
+enhanced REPL for the terminal. It works with any implementation you
+have on your system. It brings a *lot* of nice features. While it
+doesn't replace a good editor, it can actually complement it.
+
+ICL provides:
+
+- a **modern interactive experience** with readline-style editing: persistent history, tab completion, and an extensible command system.
+  - it is better than `rlwrap` because it knows about Lisp code. It will offer TAB-completion for Lisp built-ins and for your code.
+- it works in the terminal,
+- it also works in a web browser, where
+  - we can browse packages and systems,
+  - we can click and browse documentation
+  - we can use its interactive data inspector
+  - we can launch an interactive Speedscope flame graph for performance profiling,
+  - we can display visual data,
+  - we can "watch" the content of variables and see them change on edits,
+  - we can run a code-coverage report (with sb-cover, SBCL only)
+  - and surely more.
+- it can also be started from your editor (Emacs) and be connected with all the nice features of the browser window.
+
+Also note that ICL is beginner friendly. It doesn't have an
+interactive debugger. Instead, it handles any error, prints the error
+message, and allows the programmer to see the backtrace with the `,bt` command.
+
+You can install it with GNU/Linux pre-built binaries and packages (.deb, .rpm),
+on Windows with a zip, an exe or a MSI installer. See the [GitHub
+releases](https://github.com/atgreen/icl/releases). It is also easy to
+build.
+
+Once you have `icl` in your path, start it:
+
+    $ icl
+    COMMON-LISP-USER>
+
+you can also `load` a file before starting the REPL with the `--load / -l` option:
+
+    $ icl -l mycode.lisp
+    your… output…
+    COMMON-LISP-USER> (your-function-is-available)
+
+Have fun!
+
+A similar project is `cl-repl`, see the editors section.
+
+ICL is a project coded with the help of LLMs.
+
 
 ### The interactive debugger
 
