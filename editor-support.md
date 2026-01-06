@@ -325,7 +325,6 @@ It comes with pre-built binaries. Try it out!
 
 It is available as a binary.
 
-You might also like [sbcli](https://github.com/hellerve/sbcli), an even simpler REPL with readline capabilities. It handles errors gracefully instead of showing a debugger.
 
 <img src="assets/cl-repl.png"
      style="width: 500px" alt="cl-repl 0.4.1 runnning in the terminal, built with Roswell, featuring multi-line prompts and syntax highlighting."/>
