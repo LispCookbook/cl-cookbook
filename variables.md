@@ -41,7 +41,7 @@ The inline docstrings are an important part of the Common Lisp
 interactive experience. You will encounter them during your coding
 sessions (and we lispers usually keep our Lisp running for a long
 time). In Emacs and Slime, you can ask for a symbol's docstring with
-`C-c C-d d` (Alt-x `slime-describe-symbol`). You can also ask for a
+`C-c C-d d` (`Alt-x slime-describe-symbol`). You can also ask for a
 docstring programmatically:
 
 ~~~lisp
@@ -56,7 +56,7 @@ here.
 
 We'll mention the `defparameter` form with no value below.
 
-### redefining a defparameter
+### Redefining a defparameter
 
 A Common Lisp coding session is usually long-lasting and very
 interactive. We leave a Lisp running and we interact with it while we
@@ -146,7 +146,7 @@ can use `C-M-x`, `slime-eval-defun` (which calls
 ```
 Evaluate the current toplevel form.
 
-Use ‘slime-re-evaluate-defvar’ if the from starts with ’(defvar’
+Use "slime-re-evaluate-defvar" if the from starts with "(defvar".
 ```
 
 

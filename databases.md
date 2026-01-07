@@ -493,15 +493,17 @@ Do the two steps above at once:
 (mito:create-dao 'user :name "Eitaro Fukamachi" :email "e.arrows@gmail.com")
 ~~~
 
-You should not export the `user` class and create objects outside of
-its package (it is good practice anyway to keep all database-related
-operations in say a `models` package and file). You should instead use
-a helper function:
+We advise you don't export the `user` symbol but use a helper function
+to create a user instead.
 
 ~~~lisp
 (defun make-user (&key name)
   (make-instance 'user :name name))
 ~~~
+
+It is good practice anyway to encapsulate all database-related operations in,
+say, a `models` package and file.
+
 
 #### Updating fields
 
@@ -626,13 +628,71 @@ You can compose your queries with regular Lisp code:
 <br>
 <!-- epub-exclude-end -->
 
-You can compose your queries further with the backquote syntax.
+#### Composing queries
+
+You can compose your queries with [SxQL's query composer](https://github.com/fukamachi/sxql/blob/master/COMPOSER.md).
+
+Below, `->` is SxQL's threading macro. It is the primary interface for
+chaining queries. It takes an initial value, and threads it through a
+series of transformations.
+
+We can define a basic query. Here, we select active users:
+
+```lisp
+(use-package :sxql)  ;; we import all sxql symbols.
+
+(defvar *base-query*
+  (-> (from :users)
+      (where (:= :active 1))))
+```
+
+We gave a name to this query: `*base-query*`.
+
+Now, we can extend it. Below, we filter by admin users:
+
+```lisp
+(defvar *admin-users*
+  (-> *base-query*
+      (where (:= :role "admin"))
+      (order-by :name)))
+```
+
+We can also add Lisp conditionals to build queries dynamically. The
+`->` macro skips expressions that evaluate to `nil`.
+
+```lisp
+(defun find-users (&key active role min-age search)
+  (-> (from :users)
+      (when active
+        (where (:= :active 1)))
+      (when role
+        (where (:= :role role)))
+      (when min-age
+        (where (:>= :age min-age)))
+      (when search
+        (where (:like :name (format nil "%~A%" search))))
+      (order-by :name)))
+
+;; Usage
+(find-users :active t :role "admin" :min-age 18)
+;=> SELECT * FROM users WHERE (((active = ?) AND (role = ?)) AND (age >= ?)) ORDER BY name
+;   (1 "admin" 18)
+```
+
+SxQL offers nice ways to build and compose your SQL queries. Please
+read more in its documentation.
+
+
+#### More custom queries
+
+We give an example on how you can compose SxQL expressions with
+regular Lisp s-expressions manipulation.
 
 Imagine you receive a `query` string, maybe composed of
 space-separated words, and you want to search for books that have
 either one of these words in their title or in their author's
-name. Searching for "bob adventure" would return a book that has
-"adventure" in its title and "bob" in its author name, or both in the
+name. Searching for "alice adventure" would return a book that has
+"adventure" in its title and "alice" in its author name, or both in the
 title.
 
 For the example sake, an author is a string, not a link to another table:
