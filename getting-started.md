@@ -237,9 +237,10 @@ ICL provides:
   - we can browse packages and systems,
   - we can click and browse documentation
   - we can use its interactive data inspector
+  - we can display certain variables' content visually (JSON string, images in byte arrays…)
+    - we can define our own visualization functions
+    - and we can watch the representation update as the variables change
   - we can launch an interactive Speedscope flame graph for performance profiling,
-  - we can display visual data,
-  - we can "watch" the content of variables and see them change on edits,
   - we can run a code-coverage report (with sb-cover, SBCL only)
   - and surely more.
 - it can also be started from your editor (Emacs) and be connected with all the nice features of the browser window.

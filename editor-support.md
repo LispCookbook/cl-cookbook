@@ -11,6 +11,14 @@ Interaction Mode for Emacs. It has support for interacting with a
 running Common Lisp process for compilation, debugging, documentation
 lookup, cross-references, and so on. It works with many implementations.
 
+[IDEmacs](https://codeberg.org/IDEmacs/IDEmacs) is an attempt at
+making Emacs beginner friendly. It ships Sly for Common Lisp. With
+Emacs v29 or higher, you can try IDEmacs temporarily without messing
+with your .emacs configuration, thanks to the new `--init-directory`
+option. Other Emacs distributions such as [Doom](https://github.com/doomemacs/doomemacs/blob/3e15fb36d7f94f0a218bda977be4d3f5da983a71/modules/lang/common-lisp/README.org#L9) or
+[Spacemacs](https://www.spacemacs.org/layers/LAYERS.html#lisp-dialects)
+ship CL support (Sly and Slime, respectively).
+
 [plain-common-lisp](https://github.com/pascalcombier/plain-common-lisp/)
 is a crafted, easy-to-install Common Lisp environment for
 **Windows**. It ships Emacs, SBCL, Slime, Quicklisp. It also shows how
