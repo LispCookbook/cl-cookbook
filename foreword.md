@@ -16,4 +16,4 @@ We hope that these EPUB and PDF versions make the learning experience
 even more practical and enjoyable.
 
 
-> Vincent "vindarel" Dardel, for the Cookbook contributors
+> Vincent "vindarel" Dardel, for the Cookbook contributors, January 2026.
