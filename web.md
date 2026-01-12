@@ -1188,6 +1188,8 @@ row.
 - [lisp-web-live-reload-example](https://github.com/vindarel/lisp-web-live-reload-example/) -
   a toy project to show how to interact with a running web app.
 - [video: how to build a web app in Lisp · part 1](https://www.youtube.com/watch?v=h_noB1sI_e8) featuring Hunchentoot, easy-routes, Djula templates, error handling, common traps.
+- [Building a TLS 1.3 implementation in Common Lisp](https://atgreen.github.io/repl-yell/posts/pure-tls/)
+- [Automatic TLS Certificates for Common Lisp with pure-tls/acme](https://atgreen.github.io/repl-yell/posts/pure-tls-acme/)
 
 ## Credits
 
