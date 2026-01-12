@@ -34,7 +34,7 @@ Evaluation took:
 ~~~
 
 By using the `time` macro it is fairly easy to find out which part of your program
-takes too much time.
+takes too much time, or take too much memory ("bytes consed").
 
 Please note that the timing information provided here is not guaranteed to be
 reliable enough for marketing comparisons. It should only be used for tuning
@@ -52,6 +52,15 @@ functions like `sb-profile:profile` does.
 
 > You might find sb-sprof more useful than the deterministic profiler when profiling functions in the common-lisp-package, SBCL internals, or code where the instrumenting overhead is excessive.
 
+Load `sb-sprof` in your image:
+
+```lisp
+(require :sb-sprof)
+```
+
+and then use the macro `sb-sprof:with-profiling`. Please see its documentation.
+
+
 ### Use flamegraphs and other tracing profilers
 
 [cl-flamegraph](https://github.com/40ants/cl-flamegraph) is a wrapper around SBCL's statistical profiler to generate FlameGraph charts. Flamegraphs are a very visual way to search for hotspots in your code:
@@ -61,6 +70,12 @@ functions like `sb-profile:profile` does.
 See also [tracer](https://github.com/TeMPOraL/tracer), a tracing
 profiler for SBCL. Its output is suitable for display in
 Chrome’s or Chromium’s Tracing Viewer (`chrome://tracing`).
+
+The tool [ICL](https://github.com/atgreen/icl/), an enhanced REPL with
+a browser interface, has a built-in command to profile a function and
+explore the results in an interactive flamegraph visualizer. You can
+switch between different views to identify bottlenecks.
+
 
 ### Checking Assembly Code
 
@@ -607,6 +622,20 @@ It can be enabled globally by adding `:inline-generic-function` flag in
 When this feature is present, all inlinable generic functions are inlined
 unless it is declared `notinline`.
 
+## Multiple return values
+
+Usually, `values` and `multiple-value-bind `are not going to "cons",
+where a `(cons a b)` call does heap allocate. Use them!
+
+In the parcom library [parcom][parcom], using `values` instead of `cons` reduced its memory usage by 30%.
+
+## Stack allocation
+
+With `(declare (dynamic-extent your-variable))`, you can tell the compiler when
+you want a local variable to be allocated on the stack and not on the
+heap, automatically freeing the memory when the function returns.
+
+
 ## Block compilation
 
 SBCL [got block compilation on version 2.0.2](https://mstmetent.blogspot.com/2020/02/block-compilation-fresh-in-sbcl-202.html), which was in CMUCL since 1991 but a little forgotten since.
@@ -667,6 +696,7 @@ Finally, be aware that "block compiling and inlining currently does not interact
 ## See also
 
 * [CMUCL's Advanced Compiler Use and Efficiency Hints](https://cmucl.org/downloads/doc/cmu-user-2010-05-03/compiler-hint.html), which is were SBCL comes from.
+* [Optimizing Common Lisp (for the parcom library)](https://www.fosskers.ca/en/blog/optimizing-common-lisp)
 
 
 [time]: http://www.lispworks.com/documentation/lw51/CLHS/Body/m_time.htm
@@ -681,3 +711,4 @@ Finally, be aware that "block compiling and inlining currently does not interact
 [declaim]: http://www.lispworks.com/documentation/lw71/CLHS/Body/m_declai.htm
 [inline]: http://www.lispworks.com/documentation/lw51/CLHS/Body/d_inline.htm
 [*features*]: http://www.lispworks.com/documentation/lw71/CLHS/Body/v_featur.htm
+[parcom]: https://www.fosskers.ca/en/blog/optimizing-common-lisp
