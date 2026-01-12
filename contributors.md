@@ -4,7 +4,8 @@ Thank you to all contributors, as well as to the people reviewing pull requests 
 
 The contributors on Github are:
 
-<!-- (this list is generated for the EPUB rendering -->
+<!-- list generated with -->
+<!-- git shortlog -sn | cut -f 2 | sed s/^/"* "/g > commiters.md -->
 
 * vindarel
 * Paul Nathan
@@ -13,22 +14,31 @@ The contributors on Github are:
 * bill_clementson
 * chuchana
 * Ben Dudson
+* Janghyeon
 * YUE Daian
 * Pierre Neidhardt
 * Rommel MARTINEZ
 * digikar99
+* em7
 * nicklevine
+* Danny YUE
+* wmannis
+* Carl Gay
 * Dmitry Petrov
 * otjura
+* Colin Woodbury
+* may
+* jgart
 * skeptomai
 * alx-a
-* jgart
 * thegoofist
 * Francis St-Amour
 * Johan Widén
 * emres
 * jdcal
+* Александар Симић
 * Boutade
+* Kevin Galligan
 * airfoyle
 * contrapunctus
 * mvilleneuve
@@ -45,6 +55,7 @@ The contributors on Github are:
 * Jiho Sung
 * Kilian M. Haemmerle
 * Matteo Landi
+* Nico Simoski
 * Nikolaos Chatzikonstantinou
 * Nisar Ahmad
 * Nisen
@@ -57,6 +68,7 @@ The contributors on Github are:
 * Amol Dosanjh
 * Andrew
 * Andrew Hill
+* André A. Gomes
 * André Alexandre Gomes
 * Ankit Chandawala
 * August Feng
@@ -66,26 +78,34 @@ The contributors on Github are:
 * Brandon Hale
 * Burhanuddin Baharuddin
 * Coin Okay
-* Colin Woodbury
+* Cthulhux
 * Daniel Uber
+* Danny Yue
 * Eric Timmons
 * Giorgos Makris
 * HiPhish
 * Inc0n
+* James Price
 * John Zhang
 * Justin
 * Kevin Layer
+* Kevin Mazzarella
 * Kevin Secretan
+* Konstantin Kotenko
 * LdBeth
+* Marcus Kammer
 * Matthew Kennedy
+* Michał "phoe" Herda
 * Momozor
 * NCM
 * Noor
+* Oliver Nikolas Winspear
 * Paul Donnelly
 * Pavel Kulyov
 * Phi-Long Nguyen
 * R Primus
 * Ralf Doering
+* Ramses
 * Salad Tea
 * Victor Anyakin
 * alaskasquirrel
@@ -93,10 +113,14 @@ The contributors on Github are:
 * contrapunctus-1
 * convert-repo
 * dangerdyke
+* eoli
 * grobe0ba
+* jhgalino
 * jthing
+* kilianmh
 * mavis
 * mwgkgk
+* nepomucen
 * paul-donnelly
 * various-and-sundry
 * Štěpán Němec
