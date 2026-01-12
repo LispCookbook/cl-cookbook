@@ -894,7 +894,7 @@ See [Continuous Integration](testing.html#continuous-integration).
 * [CIEL Is an Extended Lisp](http://ciel-lang.org/) - a batteries-included Common Lisp package with script facilities.
 * [kiln](https://github.com/ruricolist/kiln) - an infrastructure (managing a hidden multicall binary) to make Lisp scripting efficient and ergonomic.
   * Kiln makes it practical to write very small scripts. Kiln scripts are fast and cheap to the point where it makes sense to expose even small pieces of Lisp functionality to the shell.
-
+- [Cross-compiling Common Lisp for Windows](https://www.fosskers.ca/en/blog/cl-windows)
 
 ## Credit
 
