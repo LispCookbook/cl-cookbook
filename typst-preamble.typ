@@ -20,6 +20,11 @@
   it
 )
 
+#show image: it => {
+  align(center, it)
+}
+
+// The image is too small and pixelated.
 #image("orly-cover.png", width: 90%),
 
 #pagebreak(
