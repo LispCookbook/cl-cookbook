@@ -91,8 +91,7 @@ The CL Cookbook aims to tackle all sort of topics, for the beginner and for the 
 
 The Cookbook is also available in EPUB and PDF format.
 
-You can [download it directly in EPUB](https://github.com/LispCookbook/cl-cookbook/releases/download/2023-12-13/common-lisp-cookbook.epub) and [PDF](https://github.com/LispCookbook/cl-cookbook/releases/download/2023-12-13/common-lisp-cookbook.pdf), and you can **pay what you want** to further support its development:
-
+You can [download it directly in EPUB](https://github.com/LispCookbook/cl-cookbook/releases/download/2026-01-12/common-lisp-cookbook-2026-01.epub) and [PDF](https://github.com/LispCookbook/cl-cookbook/releases/download/2026-01-12/common-lisp-cookbook-2026-01.pdf), and you can [**pay what you want**](https://ko-fi.com/s/01fee22a32) to further support its development:
 
 <!-- epub-exclude-start -->
 <br>
