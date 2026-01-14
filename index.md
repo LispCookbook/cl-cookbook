@@ -93,6 +93,8 @@ The Cookbook is also available in EPUB and PDF format.
 
 You can [download it directly in EPUB](https://github.com/LispCookbook/cl-cookbook/releases/download/2026-01-12/common-lisp-cookbook-2026-01.epub) and [PDF](https://github.com/LispCookbook/cl-cookbook/releases/download/2026-01-12/common-lisp-cookbook-2026-01.pdf), and you can [**pay what you want**](https://ko-fi.com/s/01fee22a32) to further support its development:
 
+Since 2026, the PDF is produced with Typst and of better quality.
+
 <!-- epub-exclude-start -->
 <br>
 <!-- epub-exclude-end -->
