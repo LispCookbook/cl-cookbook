@@ -277,6 +277,17 @@ You can [read our LispWorks review here](lispworks.html).
 ![](assets/lispworks/two-sided-view.png)
    pdf-include-end -->
 
+## Zed (new as of 2026)
+
+[zed-cl](https://github.com/etyurkin/zed-cl) is an extension for the [Zed](https://zed.dev) editor.
+
+It provides:
+
+- smart type-aware code completion
+- smart parameter completion (includes type information when available)
+- LSP, tree-sitter
+- Jupyter REPL integration
+- rainbow brackets support
 
 ## Geany (experimental)
 
