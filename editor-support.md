@@ -364,3 +364,6 @@ It is available as a binary.
 
 There are some more editors out there, more or less discontinued, and
 free versions of other Lisp vendors, such as Allegro CL.
+
+See also [CLOG](https://github.com/rabbibotton/clog), the Common Lisp
+Omnificent GUI, a web-based GUI builder that comes with a Lisp editor.
