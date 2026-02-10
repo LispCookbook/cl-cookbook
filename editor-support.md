@@ -24,6 +24,8 @@ is a crafted, easy-to-install Common Lisp environment for
 **Windows**. It ships Emacs, SBCL, Slime, Quicklisp. It also shows how
 to display GUI windows with Win32, Tk, IUP, ftw and Opengl.
 
+[Varhammer](https://github.com/varhammer/varhammer) is another  portable Common Lisp IDE for **Windows** (Emacs + SBCL + SLIME), first released in 2025. It works fully offline, is USB ready, and doesn't require an installation.
+
 <img src="assets/plain-cl-slime-interaction.png"
      style="max-width: 800px" alt="Emacs and SLIME."/>
 
