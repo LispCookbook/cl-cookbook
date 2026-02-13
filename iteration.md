@@ -469,6 +469,7 @@ With `on`, we loop over the `cdr` of the list:
 ;; => ((1 2 3) (2 3) (3))
 ~~~
 
+In such a loop, you are allowed to modify the `car` of the current sublist but not the `cdr`.
 
 #### mapcar
 
@@ -587,7 +588,11 @@ built-ins, with `iterate` and other libraries.
 Note that due to the nature of hash tables you
 _can't_ control the order in which the entries are provided.
 
-Let's create a hash-table for our fowlling examples:
+Inside a loop over a hash-table, you may modify or remove the
+current element, but not any other element. You may not add
+new elements either.
+
+Let's create a hash-table for our following examples:
 
 ~~~lisp
 (defparameter *my-hash-table* (make-hash-table))
