@@ -122,7 +122,8 @@ The Cookbook has been translated to:
 <p id="two-cols"></p>
 
 * [lisp-lang.org](http://lisp-lang.org/): success stories, tutorials and style guide
-* [Awesome-cl](https://github.com/CodyReichert/awesome-cl), a curated list of libraries
+* [awesome-cl](https://github.com/CodyReichert/awesome-cl), a curated list of libraries
+* 🖌️ [lisp-screenshots.org](https://www.lisp-screenshots.org/), a gallery of Common Lisp applications running today
 * [List of Lisp Communities](https://github.com/CodyReichert/awesome-cl#community)
 * [Lisp Koans](https://github.com/google/lisp-koans/) - a language learning exercise, which guides the learner progressively through many language features.
 * [Learn X in Y minutes - Where X = Common Lisp](https://learnxinyminutes.com/docs/common-lisp/) - Small Common Lisp tutorial covering the essentials.
