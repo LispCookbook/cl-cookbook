@@ -11,15 +11,19 @@ an **executable**.
 
 Lisp implementations differ in their processes, but they all create
 **self-contained executables**, for the architecture they are built on. The
-final user doesn't need to install a Lisp implementation, he can run
+final user doesn't need to install a Lisp implementation, they can run
 the software right away.
 
 **Start-up times** are near to zero, specially with SBCL and CCL.
 
-Binaries **size** are large-ish. They include the whole Lisp
+Binaries **size** are large-ish, at least with open-source implementations. They include the whole Lisp
 including its libraries, the names of all symbols, information about
 argument lists to functions, the compiler, the debugger, source code
-location information, and more.
+location information, and more. However, the advantage of having the compiler
+and the debugger is that you can compile and load Lisp code while your program is running.
+In addition, LispWorks, in its paid edition,
+has a tree shaker that allows to build binaries in the realm of 3 to 5 MB. These don't include
+a compiler, so you can't live update your program.
 
 Note that we can similarly build self-contained executables for **web
 apps**, that will include all the static assets (HTML, JS, etc).
@@ -46,8 +50,9 @@ Nice! We can use this to a great extent already.
 In addition, the script was quite fast to start, 0.03s on my system.
 
 However, we will get longer startup times as soon as we add
-dependencies. The solution is to build a binary. They start even
-faster, with all dependencies compiled.
+dependencies. The obvious solution is to build a binary. They start even
+faster, with all dependencies compiled. Another possibility is to
+build a *core image* for yourself.
 
 We used the SBCL CLI option `--script`. It is the equivalent of `--no-sysinit --no-userinit --disable-debugger --end-toplevel-options`:
 
@@ -55,6 +60,10 @@ We used the SBCL CLI option `--script`. It is the equivalent of `--no-sysinit --
 - `--no-userinit` doesn't load the user's `~/.sbclrc` file.
 - `--disable-debugger` disables the debugger. On an error, the Lisp process prints a backtrace on and exits with a status code of 1. It doesn't give us a Lisp REPL.
 - `--end-toplevel-options` is optional and it "prevents options intended for your program being accidentally processed by SBCL".
+
+We also used `env -S`: normally, `env` accepts one single argument,
+but `-S` aka `--split-string` allows specifying multiple parameters,
+which allowed us to add the `--script` flag.
 
 
 ### Quickloading dependencies from a script
@@ -546,6 +555,134 @@ library dependencies. It collects all the foreign shared libraries of
 dependencies, such as libssl.so in the `bin` subdirectory.
 
 And voilà !
+
+## Building a core image: fast startup with lots of dependencies
+
+Let's come back to our initial use case, of a script using a shebang
+line (`#!/usr/bin/env -S sbcl --script`) where we want to "quickload"
+dependencies. However, we notice that the more dependencies, the
+longer it takes for our script to run. Can we fix this?
+
+We need a dozen dependencies (and their tansitive dependencies):
+
+```
+str
+cl-ppcre
+serapeum
+bordeaux-threads
+local-time
+dexador
+hunchentoot
+djula
+parse-number
+shasht
+cl-yaml
+clingon
+log4cl
+```
+
+We have a way to make our script fast again. We can dump a "core
+image" with all the dependencies pre-loaded, and run our script from
+this core image.
+
+We build a core image portably with `uiop:dump-image "my.core"`, with
+SBCL this would be `(sb-ext:save-lisp-and-die …)` and its arguments,
+except `:executable t`. If it isn't an executable, it's a core image.
+
+Create a file `build-core.lisp`:
+
+```lisp
+(ql:quickload
+ '("str"
+   "cl-ppcre"
+   "serapeum"
+   "bordeaux-threads"
+   "local-time"
+   "dexador"
+   "hunchentoot"
+   "djula"
+   "parse-number"
+   "shasht"
+   "cl-yaml"
+   "clingon"
+   "log4cl"
+   ))
+
+(uiop:dump-image "my.core")
+```
+
+Run this file and build your core image with:
+
+    sbcl --load build-core.lisp
+
+Output:
+
+```
+This is SBCL 2.5.8, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+To load "str":
+  Load 1 ASDF system:
+    str
+; Loading "str"
+...
+
+[…]
+
+[undoing binding stack and other enclosing state... done]
+[performing final GC... done]
+[defragmenting immobile space... (inst,code,sym)=1038+22032+24090... done]
+[saving current Lisp image into my.core:
+writing 65536 bytes from the linkage space at 0xb7ffb00000
+writing 1310720 bytes from the fixedobj space at 0x50000000
+writing 2752 bytes from the static space at 0x520000000000
+writing 26050560 bytes from the dynamic space at 0x1200000000
+writing 18951888 bytes from the read-only space at 0x11fede8000
+writing 12767232 bytes from the text space at 0xb800000000
+done]
+```
+
+You now have a new file `my.core`:
+
+```
+$ ls -lh my.core
+-rwxr-xr-x 1 me me 86M Mar  3 14:12 my.core
+```
+
+Now, we can use it from our script, with the command-line flag `--core my.core`. In a file myscript.lisp:
+
+```lisp
+#!/usr/bin/env -S sbcl --core my.core --script
+
+(format t "Hello script. We are using dependencies. Time is ~a.~&" (local-time:now))
+```
+
+```sh
+$ chmod +x myscript.lisp
+$ time ./myscript.lisp
+Hello script. We are using dependencies. Time is 2084-03-03T14:19:55.573738+01:00.
+./use-core.lisp  0.01s user 0.01s system 99% cpu 0.017 total
+```
+
+Look how fast it started.
+
+Lasts remarks:
+
+- a core image is not portable across machines. This one is for you,
+  you can't ship it to users or deploy it to a server. Use executables
+  for this.
+- you can pre-load more than just Lisp libraries, anything else in
+  fact, such as static files (game assets, JS and CSS, markdown
+  documents…) or pre-computed data (parse and load heavy CSV files at
+  compile time…).
+
+Read more:
+
+- [SBCL's documentation](https://www.sbcl.org/manual/#Saving-a-Core-Image)
 
 
 ## Parsing command line arguments
