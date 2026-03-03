@@ -291,6 +291,12 @@ It provides:
 - Jupyter REPL integration
 - rainbow brackets support
 
+As of writing, you need to build the editor plugin (the LSP,
+tree-sitter and Jupyter Rust crates), so you need a Rust toolchain.
+
+*It is likely that this extension was assembled with the help of LLMs*.
+
+
 ## Geany (experimental)
 
 [Geany-lisp](https://github.com/jasom/geany-lisp) is an experimental
