@@ -88,6 +88,8 @@ good Lisp IDE. It features:
 
 It is based on the Swank backend, like Slime for Emacs.
 
+**Important notice**: at the time of writing, SLIMA doesn't work with the latest Slime sources. We tested it successfully with [Slime 2.27](https://github.com/slime/slime/releases/tag/v2.27). It worked with SBCL 2.5.8 and SBCL 2.1.11.debian. Just follow SLIMA's documentation to set this 1 setting.
+
 <img src="assets/atom-slime.png"
      style="width: 800px" alt="The SLIMA extension for Atom with an open Lisp REPL"/>
 
