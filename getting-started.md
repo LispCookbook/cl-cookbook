@@ -482,11 +482,37 @@ fetch the system from the Internet if it is not already installed.
 
 Note that symlinks in local-projects to another location of your liking work too.
 
-### How to work with local versions of libraries
+### How to work with project-local versions of libraries
 
 If we need libraries to be installed locally, for only one project, or
 in order to easily ship a list of dependencies with an application, we
-can use [Qlot](https://github.com/fukamachi/qlot) or [CLPM](https://clpm.dev).
+can use [Qlot](https://github.com/fukamachi/qlot) or [ocicl](https://github.com/ocicl/ocicl/).
+
+Both projects provide a command-line tool, allow to pin dependencies
+in a lock file (`qlfile.lock` and `ocicl.csv`) and commands to install and manage
+dependencies locally, without touching your global Quicklisp installation
+(`qlot install`, `ocicl install`).
+
+Of course you are recognizing the dependency management style that is
+predominant out there in other ecosystems: `npm`, `pip` etc. However
+we are only presenting these tools now because they are far less
+needed in Common Lisp.
+
+<div class="info" style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 17px; margin: 1em;">
+<strong>NOTE:</strong> newcomers don't need to worry about project-local dependencies yet. We can go a long way with global Quicklisp dependencies and quicklisp/local-projects/. Choose the simplest tool for you (and it's surely Quicklisp).
+</div>
+
+The reasons are at least two fold: the language (and its
+implementations) is very stable, for example implementations *never*
+introduce breaking changes of *lisp syntax*. They introduce minor
+breaking changes from time to time that only hardcore users will
+notice. Second, the ecosystem is very stable too and usually *library
+authors play the game of stability*. We saw deprecation warnings
+staying for 12 (twelve) years. All in all, a newcomer in Common Lisp
+land doesn't need to worry too much if at all about project-local
+dependencies.
+
+Let's mention another couple tools for the task.
 
 Quicklisp also provides
 [Quicklisp bundles](https://www.quicklisp.org/beta/bundles.html). They
