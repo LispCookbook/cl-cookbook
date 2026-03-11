@@ -312,7 +312,7 @@ manager, it is also a central repository (a *dist*) that ensures that
 all libraries build together.
 
 <div class="info" style="background-color: #e7f3fe; border-left: 6px solid #2196F3; padding: 17px; margin: 1em;">
-<strong>SEE ALSO:</strong> the new <a href="https://github.com/ocicl/ocicl/">OCICL</a> package manager.</div>
+<strong>SEE ALSO:</strong> the new <a href="https://github.com/ocicl/ocicl/">OCICL</a> package manager. It provides a command-line tool, it works with project-local dependencies (read more below), it uses HTTPS by default and it is a repository independent from Quicklisp.</div>
 
 It provides its own *dist* but it is also possible to build our own.
 
