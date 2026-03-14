@@ -302,6 +302,53 @@ Or you can use `return` with return values:
 ~~~
 
 
+#### do
+
+The built-in `do` macro is the general-purpose iteration
+primitive. Each variable has an init-form and a step-form,
+and the loop terminates when a test becomes true:
+
+~~~lisp
+(do ((i 0 (1+ i)))
+    ((>= i 5) i)
+  (print i))
+;; =>
+0
+1
+2
+3
+4
+5
+~~~
+
+The first list declares variables: `(var init step)`.
+The second list is `(end-test result-form)`. The body
+follows.
+
+Multiple variables can be stepped in parallel:
+
+~~~lisp
+(do ((i 0 (1+ i))
+     (j 10 (- j 2)))
+    ((>= i 5) (list i j))
+  (format t "i=~a j=~a~%" i j))
+;; =>
+i=0 j=10
+i=1 j=8
+i=2 j=6
+i=3 j=4
+i=4 j=2
+(5 0)
+~~~
+
+`do*` is the same but binds variables sequentially
+(each variable can see the previous ones), like `let*`
+vs `let`.
+
+In practice, `loop` and `dotimes` are used more often
+for everyday iteration. `do` is useful when you need
+explicit control over multiple stepping variables.
+
 #### loop… repeat
 
 This prints "Hello!" 3 times and returns `nil`.
