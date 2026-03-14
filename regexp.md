@@ -159,6 +159,65 @@ assigning the matching fragment to the variable:
   (ppcre:regex-replace pat "abc" "A"))
 ~~~
 
+### S-expression syntax (parse trees)
+
+cl-ppcre can also accept regular expressions as
+s-expressions instead of strings. This is called the
+"parse tree" syntax and avoids backslash escaping:
+
+~~~lisp
+;; Match one or more digits:
+(ppcre:scan '(:greedy-repetition 1 nil :digit-class)
+            "abc123def")
+;; => 3, 6, #(), #()
+~~~
+
+You can convert between string and tree representations
+with `parse-string`:
+
+~~~lisp
+(ppcre:parse-string "(\\d+)-(\\w+)")
+;; => (:SEQUENCE
+;;     (:REGISTER
+;;      (:GREEDY-REPETITION 1 NIL :DIGIT-CLASS))
+;;     #\-
+;;     (:REGISTER
+;;      (:GREEDY-REPETITION 1 NIL :WORD-CHAR-CLASS)))
+~~~
+
+The tree form is useful for building patterns
+programmatically:
+
+~~~lisp
+(defun match-tag (tag-name)
+  "Build a regex matching an XML opening tag."
+  `(:sequence
+    "<" ,tag-name
+    (:greedy-repetition 0 nil
+      (:inverted-char-class #\>))
+    ">"))
+
+(ppcre:scan (match-tag "div") "<div class='x'>")
+;; => 0, 16, #(), #()
+~~~
+
+Common tree elements:
+
+| Tree form | String equivalent |
+|---|---|
+| `:digit-class` | `\d` |
+| `:word-char-class` | `\w` |
+| `:whitespace-char-class` | `\s` |
+| `(:greedy-repetition 0 nil x)` | `x*` |
+| `(:greedy-repetition 1 nil x)` | `x+` |
+| `(:greedy-repetition 0 1 x)` | `x?` |
+| `(:register x)` | `(x)` |
+| `(:alternation x y)` | `x\|y` |
+| `(:sequence x y)` | `xy` |
+
+See the [cl-ppcre docs](https://edicl.github.io/cl-ppcre/#create-scanner2)
+for the full parse tree syntax.
+
 ## See more
 
 - [cl-ppcre on common-lisp-libraries.readthedocs.io](https://common-lisp-libraries.readthedocs.io/cl-ppcre/) and read on: `do-matches`, `do-matches-as-strings`,
