@@ -143,6 +143,30 @@ expects the type for its result as first argument:
 ;; => "abc"
 ~~~
 
+**`map-into`** is a destructive variant that stores results
+directly into an existing sequence instead of allocating a
+new one. The result sequence is also the return value:
+
+~~~lisp
+(let ((result (make-list 3)))
+  (map-into result #'+ '(1 2 3) '(10 20 30)))
+;; => (11 22 33)
+~~~
+
+It works with vectors too, and is useful when you want
+to avoid allocation in a performance-sensitive loop:
+
+~~~lisp
+(let ((buf (make-array 4)))
+  (map-into buf #'char-code "abcd")
+  buf)
+;; => #(97 98 99 100)
+~~~
+
+Note: `map-into` modifies its first argument in place.
+Prefer `map` or `mapcar` when you don't need to reuse
+an existing buffer.
+
 The other constructs have their advantages in some situations ;) They
 either process the *tails* of lists, or *concatenate* the return
 values, or don't return anything. We'll see some of them.
