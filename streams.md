@@ -22,9 +22,14 @@ types:
 - **Output streams** support writing (`write-char`,
   `write-byte`, `write-string`, `format`).
 - **Bidirectional streams** support both.
-- **Character streams** carry characters (the default).
-- **Binary streams** carry unsigned bytes, specified by
-  an element type like `(unsigned-byte 8)`.
+
+Separately, streams have an element type:
+
+- **Character streams** carry characters, which is what
+  `read-char`, `read-line`, `format`, and most examples in
+  this chapter use by default.
+- **Binary streams** carry bytes, usually declared with an
+  element type like `(unsigned-byte 8)`.
 
 You can test what a stream supports:
 
@@ -35,7 +40,7 @@ You can test what a stream supports:
 ;; => CHARACTER
 ~~~
 
-## Standard streams
+## Standard stream variables
 
 Common Lisp provides several global stream variables that
 are bound by default:
@@ -121,9 +126,34 @@ useful for building output or parsing input without files.
 ~~~
 
 This is the idiomatic way to build strings with
-`format`, `write-string`, or other stream operations.
+`format`, `write-string`, or other stream operations. It is
+often the stream-oriented equivalent of using `format` with a
+destination of `nil`:
+
+~~~lisp
+(format nil "Hello, ~a!" "world")
+;; => "Hello, world!"
+~~~
+
+It is especially handy when you already have functions that
+write to a stream, such as `print-object` methods:
+
+~~~lisp
+(defclass person ()
+  ((name :initarg :name :reader person-name)))
+
+(defmethod print-object ((obj person) stream)
+  (print-unreadable-object (obj stream :type t)
+    (format stream "~a" (person-name obj))))
+~~~
 
 ### Reading from a string: `with-input-from-string`
+
+`read` reads the next Lisp object from the stream, so it
+parses tokens using the Lisp reader. `read-char` reads a
+single character instead. Reading from a string is useful for
+small parsers, REPL helpers, or tests where you want input
+without touching the filesystem.
 
 ~~~lisp
 (with-input-from-string (s "123 456")
@@ -134,7 +164,8 @@ This is the idiomatic way to build strings with
 ### `make-string-input-stream` and `make-string-output-stream`
 
 For cases where the macro forms are inconvenient, you
-can create string streams directly:
+can create string streams directly. This is common when you
+need to create the stream in one place and consume it later.
 
 ~~~lisp
 (let ((s (make-string-output-stream)))
@@ -155,7 +186,9 @@ can create string streams directly:
 
 `make-concatenated-stream` creates a stream that reads
 from multiple input streams in sequence. When the first
-stream is exhausted, reading continues from the next:
+stream is exhausted, reading continues from the next. This is
+useful when several inputs should look like one continuous
+source to existing stream-consuming code:
 
 ~~~lisp
 (let* ((s1 (make-string-input-stream "Hello, "))
@@ -183,6 +216,15 @@ output to multiple streams simultaneously:
 
 This is useful for logging to both the console and a
 file at the same time.
+
+Calling `make-broadcast-stream` with no arguments is also the
+portable equivalent of writing to `/dev/null`: output sent to
+that stream is discarded.
+
+~~~lisp
+(let ((sink (make-broadcast-stream)))
+  (format sink "this goes nowhere"))
+~~~
 
 ## Two-way and echo streams
 
@@ -234,14 +276,22 @@ the symbol, without changing the stream object itself.
 ## Gray streams: extending the protocol
 
 The standard stream types are implemented by the
-Common Lisp runtime. If you need custom stream behavior
+Common Lisp runtime. They let you *use* file, string, socket,
+and terminal streams, but they do not standardize how you
+define new stream classes that participate in ordinary Common
+Lisp I/O operations. If you need custom stream behavior
 (for example, a stream that compresses data, counts
-bytes, or transforms characters), you can use
+bytes, transforms characters, or reads from an application
+object instead of a file descriptor), you can use
 **Gray streams**.
 
-Gray streams are a de facto standard (supported by SBCL,
-CCL, ECL, ABCL, LispWorks, Allegro, and others) that
-lets you define stream classes with CLOS methods.
+Gray streams are a de facto standard, proposed before ANSI
+Common Lisp was finalized and based on the stream chapter from
+CLtL. They did not make it into the ANSI standard, but most
+popular implementations support this protocol anyway. In
+practice, Gray streams are the usual way to define custom
+streams that work with standard functions like `read-char`,
+`write-char`, `read-sequence`, or `write-sequence`.
 
 The [`trivial-gray-streams`](https://github.com/trivial-gray-streams/trivial-gray-streams)
 library provides a portable interface:
@@ -284,21 +334,32 @@ The key methods to implement depend on the stream type:
 
 - `stream-read-char` — read one character
 - `stream-unread-char` — push a character back
+- `stream-read-char-no-hang` (optional) — non-blocking character read
 - `stream-read-line` (optional, for performance)
+- `stream-read-sequence` (optional, for performance)
 
 **Character output streams:**
 
 - `stream-write-char` — write one character
 - `stream-line-column` — current column (or `nil`)
 - `stream-write-string` (optional, for performance)
+- `stream-write-sequence` (optional, for performance)
 
 **Binary streams:**
 
 - `stream-read-byte`
 - `stream-write-byte`
+- `stream-read-sequence` / `stream-write-sequence`
+
+The sequence methods let your stream move whole slices of data
+at once, which is often much faster than reading or writing
+one character or byte at a time.
 
 ## Further reading
 
 - [CLHS: Streams](http://www.lispworks.com/documentation/HyperSpec/Body/21_.htm)
 - [CLtL2: Streams](https://www.cs.cmu.edu/Groups/AI/html/cltl/clm/node329.html)
 - [trivial-gray-streams](https://github.com/trivial-gray-streams/trivial-gray-streams)
+- [flexi-streams](https://edicl.github.io/flexi-streams/)
+- [nontrivial-gray-streams](https://github.com/yitzchak/nontrivial-gray-streams)
+- [Allegro CL simple-streams](https://franz.com/support/documentation/10.1/doc/streams.htm)
