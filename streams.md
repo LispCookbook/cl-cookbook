@@ -226,6 +226,67 @@ that stream is discarded.
   (format sink "this goes nowhere"))
 ~~~
 
+## Real-world example: one report, many destinations
+
+A common pattern in real programs is to write functions that
+accept a stream instead of deciding for themselves whether
+output should go to the terminal, a file, or an in-memory
+string. That keeps the formatting code in one place and makes
+it easy to reuse.
+
+~~~lisp
+(defun write-expense-report (expenses stream)
+  (format stream "Expense report~%")
+  (format stream "==============~%")
+  (dolist (entry expenses)
+    (destructuring-bind (label amount) entry
+      (format stream "~a: ~,2f EUR~%" label amount)))
+  (format stream "--------------~%")
+  (format stream "Total: ~,2f EUR~%"
+          (loop for (_ amount) in expenses
+                sum amount)))
+~~~
+
+The same function can now target different destinations:
+
+~~~lisp
+(let ((expenses '(("Books" 12.50)
+                  ("Train" 24.10)
+                  ("Lunch" 18.00))))
+  ;; 1) print to the REPL / terminal
+  (write-expense-report expenses *standard-output*)
+
+  ;; 2) save to a file
+  (with-open-file (out "/tmp/expenses.txt"
+                       :direction :output
+                       :if-exists :supersede)
+    (write-expense-report expenses out))
+
+  ;; 3) capture as a string, for a test or an email body
+  (with-output-to-string (out)
+    (write-expense-report expenses out)))
+;; => "Expense report
+;; => ==============
+;; => Books: 12.50 EUR
+;; => Train: 24.10 EUR
+;; => Lunch: 18.00 EUR
+;; => --------------
+;; => Total: 54.60 EUR
+;; => "
+~~~
+
+If you want tee-style output, you can also combine destinations
+with a broadcast stream:
+
+~~~lisp
+(let* ((expenses '(("Books" 12.50)
+                   ("Train" 24.10)))
+       (copy (make-string-output-stream))
+       (tee (make-broadcast-stream *standard-output* copy)))
+  (write-expense-report expenses tee)
+  (get-output-stream-string copy))
+~~~
+
 ## Two-way and echo streams
 
 A **two-way stream** bundles an input and output stream
