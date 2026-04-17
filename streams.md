@@ -275,8 +275,9 @@ The same function can now target different destinations:
 ;; => "
 ~~~
 
-If you want tee-style output, you can also combine destinations
-with a broadcast stream:
+If you want tee-style output — that is, writing the same output
+to two streams at once, like the Unix `tee` command — you can
+also combine destinations with a broadcast stream:
 
 ~~~lisp
 (let* ((expenses '(("Books" 12.50)
