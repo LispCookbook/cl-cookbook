@@ -94,7 +94,7 @@ NIL
 ~~~
 
 
-### Testing wether a file exists (beware of wildcard characters)
+### Testing whether a file exists (beware of wildcard characters)
 
 Use `probe-file` after `(make-pathname :name filename-with-wild-chars)` or `sb-ext:parse-native-namestring` on SBCL. Why?
 
