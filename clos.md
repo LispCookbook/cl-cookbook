@@ -1888,6 +1888,7 @@ Use `find-method`:
 
 ~~~lisp
 (find-method #'print-object nil '(person t))
+;;          ^^^ a function object, not only a symbol
 ;; => <STANDARD-METHOD COMMON-LISP:PRINT-OBJECT (PERSON T) {1204FA0B83}>
 ~~~
 
@@ -1900,6 +1901,18 @@ types. `print-object` takes 2 arguments, a person and a stream. We can
 use `'(t t)` to get a reference to the generic function. We use
 `'(person t)` to get a reference to the method that specializes on a
 person, and on any stream.
+
+If no such method exists, `find-method` signals an error:
+
+```
+There is no method on
+#<STANDARD-GENERIC-FUNCTION COMMON-LISP::PRINT-OBJECT (1)> with no
+qualifiers and specializers
+(… …)
+condition of type simple-error
+```
+
+unless you set its last optional argument `errorp` to `nil`.
 
 
 ### Final words
