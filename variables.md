@@ -5,17 +5,11 @@ title: Variables
 You are writing your first Common Lisp program (welcome!) and
 you want to declare variables. What are your options?
 
-When in doubt, use `defparameter` for top-level parameters.
+When in doubt, use `defparameter` for top-level parameters, as shown below.
 
-Use `let` or `let*` for lexical scope:
-
-```lisp
-(let* ((a 2)
-       (square (* a a)))
-   (format t "the square of ~a is ~a" a square))
-```
-
-Use `setf` to change them.
+<!-- No TLDR; given here at the top, contrary to most of the
+Cookbook's sections, to keep students and other
+newcomers focused. -->
 
 
 ## `defparameter`: top-level variables
@@ -140,7 +134,7 @@ back to nil, and connect again, everytime you compile your code.
 You must use `setf` to change a defvar's variable value.
 
 But Slime has a shortcut for this, of course. Instead of `setf`, you
-can use `C-M-x`, `slime-eval-defun` (which calls
+can use `C-M-x` (Control+ Alt + x), aka the interactive function `slime-eval-defun` (which calls
 `slime-re-evaluate-defvar`):
 
 ```
@@ -161,7 +155,7 @@ in lexical scopes.
 
 ;; later…
 (let ((name "something else"))
-   ;;  ^^^ overrides the top-level name. This will cause bugs.
+   ;;  ^^^ overrides the top-level name. This may cause hard to spot bugs.
    …)
 ```
 
@@ -202,7 +196,7 @@ In Lisp, we also say these are [*dynamic variables* or *special*](https://cl-com
 
 It could also be possible to create one from anywhere by *proclaiming*
 it "special". It really isn't the thing you do everydays but, you
-know, in Lisp everything's possible ;)
+know, in Lisp everything is possible ;)
 
 > A dynamic variable can be referenced outside the dynamic extent of a form that binds it. Such a variable is sometimes called a "global variable" but is still in all respects just a dynamic variable whose binding happens to exist in the global environment rather than in some dynamic environment. [Hyper Spec]
 
@@ -320,7 +314,7 @@ time. This is a closure and it's for the chapter on functions.
 
 A "lexical scope" is simply
 
-> a scope that is limited to a spatial or textual region within the establishing form. "The names of parameters to a function normally are lexically scoped." [Hyper Spec]
+> a scope that is limited to a spatial or textual region within the establishing form. The names of parameters to a function normally are lexically scoped. [Hyper Spec]
 
 In other words, the scope of a variable is determined by its position
 in the source code. It's today's best practice. It's the least
@@ -648,3 +642,18 @@ the default value can also be a function call:
 ```
 
 - these let bindings over global variables are idiomatic too: `(let ((*name* "other")) …)`.
+
+## TLDR;
+
+For top-level variables, use `defparameter`.
+
+Use `let` or `let*` for lexical scope. You should know the difference
+between the two, but when in doubt, start with `let*`:
+
+```lisp
+(let* ((a 2)
+       (square (* a a)))
+   (format t "the square of ~a is ~a" a square))
+```
+
+Use `setf` to change variables.
