@@ -697,6 +697,7 @@ Finally, be aware that "block compiling and inlining currently does not interact
 
 * [CMUCL's Advanced Compiler Use and Efficiency Hints](https://cmucl.org/downloads/doc/cmu-user-2010-05-03/compiler-hint.html), which is were SBCL comes from.
 * [Optimizing Common Lisp (for the parcom library)](https://www.fosskers.ca/en/blog/optimizing-common-lisp)
+* [Idiomatic Lisp and the nbody benchmark](https://www.stylewarning.com/posts/nbody/) (2026) - on Lisp DSLs, matching C performance, readability, reusability and additional benefits unique to Lisp.
 
 
 [time]: http://www.lispworks.com/documentation/lw51/CLHS/Body/m_time.htm
