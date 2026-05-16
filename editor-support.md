@@ -82,6 +82,7 @@ for *both* Common Lisp and [Coalton](https://coalton-lang.github.io/)
 - [Mine's homepage](https://coalton-lang.github.io/mine/)
   - 👉 [download the latest release for Windows, MacOS and GNU/Linux](https://github.com/coalton-lang/coalton/releases/latest)
 - [Introducing mine, a Coalton and Common Lisp IDE](https://coalton-lang.github.io/20260424-mine/)
+- youtube: [video presenting `mine`](https://www.youtube.com/watch?v=qe3vDKQShKs)
 
 <img src="https://coalton-lang.github.io/20260424-mine/mine-screenshot.png"
      style="width: 80%" alt="The beginner friendly mine editor."/>
