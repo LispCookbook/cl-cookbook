@@ -26,6 +26,16 @@ is a crafted, easy-to-install Common Lisp environment for
 **Windows**. It ships Emacs, SBCL, Slime, Quicklisp. It also shows how
 to display GUI windows with Win32, Tk, IUP, ftw and Opengl.
 
+[lisp-stat's Docker image](https://lisp-stat.dev/blog/2026/03/09/getting-started/) comes
+with a ready-to-use Emacs:
+
+```
+$ docker run --rm -it ghcr.io/lisp-stat/ls-dev:latest ls-repl
+$ emacs
+… then Alt-x slime
+```
+
+
 <img src="assets/plain-cl-slime-interaction.png"
      style="max-width: 800px" alt="Emacs and SLIME."/>
 
