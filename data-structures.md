@@ -2414,8 +2414,53 @@ choose the depth to print:
 
 Reference: the [HyperSpec](http://clhs.lisp.se/Body/v_pr_lev.htm).
 
+## Appendix A - which functions are destructive and which are not?
 
-## Appendix A - generic and nested access of alists, plists, hash-tables and CLOS slots
+A destructive function alters the argument(s) it was given. For
+example, the function `nreverse` is destructive:
+
+```lisp
+(defparameter *hello* "hello")
+
+(defun greet (s)
+   (print (nreverse s)))
+
+(greet *hello*)
+;; => "olleh"
+
+;; What is *hello* now?
+(print *hello*)
+;; => "olleh"
+;;
+;; Ooops, the top-level variable was altered by a side-effect and that is not a good practice (at all).
+```
+
+How do you know which functions are destructive?
+
+- all `n`something functions are destructive: `nreverse`,
+  `nsubstitute`… "n" means "non-consing", the function will not
+  allocate any new cons cell (it won't create new objects in memory),
+  so it might reuse the original sequence, and alter it in place.
+  - `nstring-upcase`, `nstring-downcase`, `nstring-capitalize`
+  - `nunion`, `nintersection`, `nset-difference`, `nset-exclusive-or`
+  - `nbutlast`
+  - `nsubst[-if, -if-not]`, `nsublis`,  `nsubstitue[-if, -if-not]`
+  - each `n`-something function has its non-destructive counterpart, that you should prefer using.
+- `sort` and `stable-sort` are destructive functions, so is `merge`,
+  so it's best practice to use `copy-list` or `copy-seq` before calling one of them.
+- the `delete[-*]` functions are destructive (`remove` isn't destructive)
+- `(setf (nth ... ...) ...)` is obviously destructive.
+- `replace`, `fill` are destructive
+- `vector-push` *can* be destructive
+- `remprop`, `remf`
+- `map-into`
+
+Also:
+
+- `pop`, `push`: they are not destructive in the sense that they don't alter conses, but they change the car of the place they pop or push from/to.
+
+
+## Appendix B - generic and nested access of alists, plists, hash-tables and CLOS slots
 
 The solutions presented below might help you getting started, but keep
 in mind that they'll have a performance impact and that error messages
@@ -2424,7 +2469,7 @@ will be less explicit.
 * the [access](https://github.com/AccelerationNet/access) library (battle tested, used by the Djula templating system) has a generic `(access my-var :elt)` ([blog post](https://lisp-journey.gitlab.io/blog/generice-consistent-access-of-data-structures-dotted-path/)). It also has `accesses` (plural) to access and set nested values.
 * [rutils](https://github.com/vseloved/rutils) as a generic `generic-elt` or `?`,
 
-## Appendix B - accessing nested data structures
+## Appendix C - accessing nested data structures
 
 Sometimes we work with nested data structures, and we might want an
 easier way to access a nested element than intricated "getf" and
@@ -2433,7 +2478,7 @@ an intermediary key doesn't exist.
 
 The `access` library given above provides this, with `(accesses var key1 key2…)`.
 
-## Appendix C - Collections Type Hierarchy
+## Appendix D - Collections Type Hierarchy
 
 *Solid nodes are concrete types, while dashed ones are type aliases. For example, `'string` is an alias for an array of characters of any size, `(array character (*))`.*
 
