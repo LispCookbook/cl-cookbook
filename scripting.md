@@ -434,7 +434,7 @@ can do something like this:
            (format *error-output* "Aborting.~&")
            (clack:stop *server*)
            (uiop:quit)))
-    (error (c) (format t "Woops, an unknown error occured:~&~a~&" c))))
+    (error (c) (format t "Woops, an unknown error occurred:~&~a~&" c))))
 ~~~
 
 We used the `bordeaux-threads` library (`(ql:quickload

@@ -920,7 +920,7 @@ We could use such commands:
                               (parse-integer
                                 (uiop:getenv "PROJECT_PORT"))))
   (error (c)
-    (format *error-output* "~&An error occured: ~a~&" c)
+    (format *error-output* "~&An error occurred: ~a~&" c)
     (uiop:quit 1)))
 ~~~
 
