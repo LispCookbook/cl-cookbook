@@ -611,7 +611,7 @@ See also the [Slime-star](https://github.com/mmontone/slime-star) Emacs extensio
 
 [*break-on-signals*](https://cl-community-spec.github.io/pages/002abreak_002don_002dsignals_002a.html)
 can be specially helpful when you see that an error (or any condition)
-occured, but you didn't get the debugger, and you want to force the
+occurred, but you didn't get the debugger, and you want to force the
 debugger to open *just before* the error (or any condition) is
 signaled.
 
