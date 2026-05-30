@@ -43,6 +43,7 @@ The CL Cookbook aims to tackle all sort of topics, for the beginner and for the 
 * [Pattern Matching](pattern_matching.html)
 * [Input/Output](io.html)
 * [Files and Directories](files.html)
+* [CSV Files](csv.html)
 * [CLOS (the Common Lisp Object System)](clos.html)
 
 ### Advanced topics
