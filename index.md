@@ -57,6 +57,7 @@ The CL Cookbook aims to tackle all sort of topics, for the beginner and for the 
 * [Type System](type.html)
 * [Concurrency and Parallelism](process.html)
 * [Performance Tuning](performance.html)
+* [Documentation](documentation.html)
 * [Testing and Continuous Integration](testing.html)
 * [Scripting. Building executables](scripting.html)
 <!-- epub-exclude-start -->
