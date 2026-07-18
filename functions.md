@@ -305,7 +305,7 @@ now we set the result of calling this function to a variable:
 Now our function will return *multiple values*, using `values`:
 
 ~~~lisp
-(foo ()
+(defun foo ()
   (values :a :b :c))
 ~~~
 
