@@ -190,7 +190,7 @@ Now `happy` is true by default.
 You can skip this tip for now if you want, but come back later to it as it can turn handy.
 
 We saw that a default key parameter is `nil` by default (`(defun hello
-(name &key happy) …)`). But how can be distinguish between "the value
+(name &key happy) …)`). But how can we distinguish between "the value
 is NIL by default" and "the user wants it to be NIL"?
 
 We saw how to use a list of two elements to set its default value:
