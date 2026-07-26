@@ -177,7 +177,7 @@ application that serves a web page to display and send chats. First the web page
              document.getElementById(\"chat-echo-area\").appendChild(li);
          }
 
-         const ws = new WebSocket(\"ws://localhost:12345/chat\");
+         const ws = new WebSocket(\"ws://localhost:12345/\");
          ws.addEventListener('message', receivedMessage);
 
          inputField.addEventListener(\"keyup\", (evt) => {
