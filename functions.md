@@ -533,8 +533,8 @@ have a length limit.
 
 We can find this limit in the variable `call-arguments-limit`. It
 depends on the implementation. While it is rather large on SBCL
-(4611686018427387903), we have another option to apply a function with
-arguments of arbitrary length: `reduce`.
+(2³⁰ = 1073741824 on amd64), we have another option to apply a function
+with arguments of arbitrary length: `reduce`.
 
 ### `reduce`
 
