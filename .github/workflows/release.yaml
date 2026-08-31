@@ -1,0 +1,47 @@
+name: Build and release the book pdf and epub
+on:
+  push:
+    tags: ['*']
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Prepare the dev environment
+        run: |
+          sudo apt update
+          sudo apt install build-essential sbcl cl-quicklisp calibre
+          # install lisp library deps
+          yes '' | sbcl --non-interactive \
+            --eval '(load "/usr/share/common-lisp/source/quicklisp/quicklisp.lisp")' \
+            --eval '(quicklisp-quickstart:install)' \
+            --eval '(ql:add-to-init-file)' \
+            --eval '(ql:quickload "str")'
+          # install a newer pandoc
+          wget https://github.com/jgm/pandoc/releases/download/3.10.2/pandoc-3.10.2-1-amd64.deb
+          sudo apt install ./pandoc-3.10.2-1-amd64.deb
+                 
+      - name: Download and install Typst
+        run: |
+          wget -O- "https://github.com/typst/typst/releases/latest/download/typst-x86_64-unknown-linux-musl.tar.xz" \
+            | tar -xJ
+          cd typst-x86_64-unknown-linux-musl/
+          chmod +x typst
+          mv typst /usr/local/bin/typst
+          typst --version
+          
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Build pdf and epub
+        run: |
+          make epub+pdf
+          
+      - name: Release
+        uses: softprops/action-gh-release@v3
+        with:
+          files: |
+            common-lisp-cookbook.pdf
+            common-lisp-cookbook.epub
