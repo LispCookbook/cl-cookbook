@@ -1649,7 +1649,7 @@ The values for
 [`hash-table-size`](http://www.lispworks.com/documentation/HyperSpec/Body/f_hash_4.htm)
 and
 [`hash-table-rehash-size`](http://www.lispworks.com/documentation/HyperSpec/Body/f_hash_2.htm)
-are implementation-dependent. In our case, CMUCL chooses and initial
+are implementation-dependent. In our case, CMUCL chooses an initial
 size of 65, and it will increase the size of the hash by 50 percent
 whenever it needs to grow. Let's see how often we have to re-size the
 hash until we reach the final size...
