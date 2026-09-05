@@ -573,6 +573,7 @@ CL-USER> (string-right-trim " et" " trim me ")
 CL-USER> (string-right-trim '(#\Space #\e #\t) " trim me ")
 " trim m"
 CL-USER> (string-right-trim '(#\Space #\e #\t #\m) " trim me ")
+" tri"
 ~~~
 
 Note: The caveat mentioned in the section about Controlling Case also applies
@@ -673,9 +674,9 @@ CL-USER> (find #\t "Tea time." :test #'equalp)
 #\T
 CL-USER> (find #\z "Tea time." :test #'equalp)
 NIL
-CL-USER> (find-if #'digit-char-p "Tea time.")
+CL-USER> (find-if #'digit-char-p "Tea1 time.")
 #\1
-CL-USER> (find-if #'digit-char-p "Tea time." :from-end t)
+CL-USER> (find-if #'digit-char-p "Tea1 t0ime." :from-end t)
 #\0
 
 CL-USER> (position #\t "Tea time." :test #'equal)
@@ -1042,9 +1043,7 @@ So, expanding:
 10 Matrix Trilogy swe sub    3.3
 ```
 
-text is justified on the right (this would be with option `:`).
-
-#### Justifying on the left: @
+#### Justifying on the right: @
 
 Use a `@` as in `~2@A`:
 
