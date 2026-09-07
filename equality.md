@@ -93,7 +93,7 @@ As such, `eq` works for numbers on my implementation, but it might not on yours:
   49827139472193749213749218734917239479213749127394871293749123) ;; => NIL on my implementation, and on yours?
 ~~~
 
-Thea reasion is that an implementation might allocate the exact same position in memory for
+The reason is that an implementation might allocate the exact same position in memory for
 the same number, but it might not. This isn't dictated by the standard.
 
 Likewise, these might depend on the implementation:
@@ -429,20 +429,19 @@ If you really want to use `=` or `equal`, use a library, see below.
 
 ## Coalescing: the implications of `compile-file`
 
-Let's take back our `(eql "a" "a")` example, that returns NIL.
+Let's take back our `(eql "a" "a")` example, that returns `NIL`.
 
-We must precise that it return NIL on the REPL. The interpreter
-doesn't see the two strings "a" as the same object in memory, so it
-returns NIL.
+We note that it returns `NIL` on the REPL. The interpreter doesn't
+see the two strings `"a"` as the same object in memory, so it returns `NIL`.
 
 However, a compiler might coalesce objects together.
 
 If you compile a file with `compile-file`, the compiler might have
-coalesced different objects together. It might have noticed that "a"
-and "a" are two literal strings that are similar and it might have
+coalesced different objects together. It might have noticed that `"a"`
+and `"a"` are two literal strings that are similar and it might have
 saved them at the same memory location.
 
-Thus our equality predicate can return T now.
+Thus our equality predicate can return `T` now.
 
 Conclusion: use the right equality predicate.
 
