@@ -1551,7 +1551,7 @@ For simple types like `fixnum, float, t and nil` you can omit `:of-type`:
    :sum (* i j))
 ~~~
 
-You can also precise the type after `sum` and other accumulation clauses:
+You can also declare the type after `sum` and other accumulation clauses:
 
 ~~~lisp
 (loop for i fixnum below 10
