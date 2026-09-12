@@ -25,7 +25,7 @@ you will.
 The ANSI Common Lisp standard doesn't mention this topic. We will
 present here the portable
 [bordeaux-threads](https://github.com/sionescu/bordeaux-threads)
-library, an example implementation via [SBCL threads](http://www.sbcl.org/manual/#Threading) from the [SBCL Manual](http://www.sbcl.org/manual/), and the [lparallel](https://lparallel.org)
+library, an example implementation via [SBCL threads](http://www.sbcl.org/manual/#Threading) from the [SBCL Manual](http://www.sbcl.org/manual/), and the [lparallel](https://sharplispers.github.io/lparallel/)
 library ([GitHub](https://github.com/sharplispers/lparallel)).
 
 Bordeaux-threads is a de-facto standard portable library, that exposes
@@ -2367,7 +2367,7 @@ library. This post barely scratches the surface on those. However, the
 general flow of operation is amply demonstrated here, and for further
 reading, you may find the following resources useful:
 
-- [The official homepage of the lparallel library, including documentation](https://lparallel.org/)
+- [The official homepage of the lparallel library, including documentation](https://sharplispers.github.io/lparallel/)
 - [The Common Lisp Hyperspec](https://www.lispworks.com/documentation/HyperSpec/Front/), and, of course
 - Your Common Lisp implementation’s
   manual. [For SBCL, here is a link to the official manual](http://www.sbcl.org/manual/)

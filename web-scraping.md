@@ -16,7 +16,7 @@ We'll use the following libraries:
 - [Plump](https://shinmera.github.io/plump/) - a markup parser, that works on malformed HTML,
 - [Lquery](https://shinmera.github.io/lquery/) - a DOM manipulation
   library, to extract content from our Plump result,
-- [lparallel](https://lparallel.org/pmap-family/) -  a library for parallel programming (read more in the [process section](process.html)).
+- [lparallel](https://sharplispers.github.io/lparallel/pmap.html) -  a library for parallel programming (read more in the [process section](process.html)).
 
 Before starting let's install those libraries with Quicklisp:
 
@@ -268,8 +268,8 @@ wait 10 seconds for links that time out. It's time to write and
 measure an async version.
 
 After installing `lparallel` and looking at
-[its documentation](https://lparallel.org/), we see that the parallel
-map [pmap](https://lparallel.org/pmap-family/) seems to be what we
+[its documentation](https://sharplispers.github.io/lparallel/), we see that the parallel
+map [pmap](https://sharplispers.github.io/lparallel/pmap.html) seems to be what we
 want. And it's only a one word edit. Let's try:
 
 ~~~lisp

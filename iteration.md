@@ -96,7 +96,7 @@ Iterate, with minor modifications.
 
 ### The `for` library
 
-**[for](https://github.com/Shinmera/for/)** is an extensible iteration macro
+**[for](https://codeberg.org/shinmera/for/)** is an extensible iteration macro
 that is often shorter than `loop`, that "unlike `loop` is extensible and
 sensible, and unlike Iterate does not require code-walking and is easier to
 extend".

@@ -284,7 +284,7 @@ your filesystem. For example, `libssl` might be located on
 
 but on your VPS, maybe somewhere else.
 
-[Deploy](https://github.com/Shinmera/deploy) to the rescue.
+[Deploy](https://codeberg.org/shinmera/deploy) to the rescue.
 
 It will create a `bin/` directory with your binary and the required
 foreign libraries. It will auto-discover the ones your program needs,
@@ -547,7 +547,7 @@ However, we prefer to do this with ASDF (or rather, UIOP). Add this in your .asd
 
 **With Deploy**
 
-Also, the [Deploy](https://github.com/Shinmera/deploy/) library can be used
+Also, the [Deploy](https://codeberg.org/shinmera/deploy/) library can be used
 to build a fully standalone application. It will use compression if available.
 
 Deploy is specifically geared towards applications with foreign

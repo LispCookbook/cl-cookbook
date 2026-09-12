@@ -89,11 +89,11 @@ Some web frameworks include:
 database management, a templating engine (Djula), a project skeleton
 generator, a routing system à la Flask or Sinatra, deployment options
 (mod_lisp or FastCGI), support for Roswell on the command line, etc.
-- [Radiance][radiance], by [Shinmera](https://github.com/Shinmera)
+- [Radiance][radiance], by [Shinmera](https://codeberg.org/shinmera)
   (Qtools, Portacle, lquery, …), is a web application environment,
   more general than usual web frameworks. It lets us write and tie
   websites and applications together, easing their deployment as a
-  whole. It has thorough [documentation](https://shirakumo.github.io/radiance/), a [tutorial](https://github.com/Shirakumo/radiance-tutorial), [modules](https://github.com/Shirakumo/radiance-contribs), [pre-written applications](https://github.com/Shirakumo?utf8=%E2%9C%93&q=radiance&type=&language=) such as [an image board](https://github.com/Shirakumo/purplish) or a [blogging platform](https://github.com/Shirakumo/reader), and more.
+  whole. It has thorough [documentation](https://shirakumo.github.io/radiance/), a [tutorial](https://codeberg.org/shirakumo/radiance-tutorial), [modules](https://codeberg.org/shirakumo/radiance-contribs), [pre-written applications](https://codeberg.org/shirakumo?utf8=%E2%9C%93&q=radiance&type=&language=) such as [an image board](https://codeberg.org/shirakumo/purplish) or a [blogging platform](https://codeberg.org/shirakumo/reader), and more.
   For example websites, see
   [https://shinmera.com/](https://shinmera.com/),
   [reader.tymoon.eu](https://reader.tymoon.eu/) and [events.tymoon.eu](https://events.tymoon.eu/).
@@ -1198,7 +1198,7 @@ row.
 [hunchentoot]: https://edicl.github.io/hunchentoot
 [clack]: https://github.com/fukamachi/clack
 [caveman]: https://github.com/fukamachi/caveman
-[radiance]: https://github.com/Shirakumo/radiance
+[radiance]: https://codeberg.org/shirakumo/radiance
 [snooze]: https://github.com/joaotavora/snooze
 [cl-rest-server]: https://github.com/mmontone/cl-rest-server
 [weblocks]: https://github.com/40ants/weblocks

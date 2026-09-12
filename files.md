@@ -617,7 +617,7 @@ POSIX-like systems, including Windows. With Osicat we can get and set
 manipulate **files and directories**,
 **pathnames** and a bit more.
 
-[file-attributes](https://github.com/Shinmera/file-attributes/) is a
+[file-attributes](https://codeberg.org/shinmera/file-attributes/) is a
 newer and lighter OS portability library specifically for getting file attributes,
 using system calls (cffi).
 

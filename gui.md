@@ -52,7 +52,7 @@ In addition, you might want to have a look to:
 - Clozure CL's built-in [Objective-C bridge](https://ccl.clozure.com/docs/ccl.html#the-objective-c-bridge) and [CocoaInterface](https://github.com/plkrueger/CocoaInterface/), a Cocoa interface for CCL. Build Cocoa user interface windows dynamically using Lisp code and bypass the typical Xcode processes.
   - the bridge is good at catching ObjC errors and turning them into Lisp errors, so one can have an iterative REPL-based development cycle for a macOS GUI application.
 * [McCLIM](https://common-lisp.net/project/mcclim/) and [Garnet](https://github.com/earl-ducaine/cl-garnet) are toolkit in 100% Common Lisp. McClim even has [a prototype](https://techfak.de/~jmoringe/mcclim-broadway-7.ogv) running in the browser with the Broadway protocol and Garnet has an ongoing interface to Gtk.
-* [Alloy](https://github.com/Shirakumo/alloy), another very new toolkit in 100% Common Lisp, used for example in the [Kandria](https://github.com/shinmera/kandria) game.
+* [Alloy](https://codeberg.org/shirakumo/alloy), another very new toolkit in 100% Common Lisp, used for example in the [Kandria](https://codeberg.org/shinmera/kandria) game.
 * [eql, eql5, eql5-android](https://gitlab.com/eql), embedded Qt4 and Qt5 Lisp, embedded in ECL, embeddable in Qt. Port of EQL5 to the Android platform.
 * this [demo using Java Swing from ABCL](https://github.com/defunkydrummer/abcl-jazz)
 * [examples of using Gtk without C files with SBCL](https://github.com/mifpasoti/Gtk-Demos), as well as GTK-server.
@@ -179,7 +179,7 @@ The [Qtools][qtools] bindings target Qt4. The Qt5 Lisp bindings are [https://git
 
 A companion library for Qtools, that you'll want to check out once you
 made your first Qtool application, is
-[Qtools-ui](https://github.com/Shinmera/qtools-ui), a collection of
+[Qtools-ui](https://codeberg.org/shinmera/qtools-ui), a collection of
 useful widgets and pre-made components. It comes with short
 [demonstrations
 videos](https://www.youtube.com/playlist?list=PLkDl6Irujx9Mh3BWdBmt4JtIrwYgihTWp).
@@ -201,9 +201,9 @@ videos](https://www.youtube.com/playlist?list=PLkDl6Irujx9Mh3BWdBmt4JtIrwYgihTWp
 - **Bindings activity**: active
 - **Qt Licence**: both commercial and open source licences.
 - Example applications:
-  - https://github.com/Shinmera/qtools/tree/master/examples
-  - https://github.com/Shirakumo/lionchat
-  - https://github.com/shinmera/halftone - a simple image viewer
+  - https://codeberg.org/shinmera/qtools/tree/master/examples
+  - https://codeberg.org/shirakumo/lionchat
+  - https://codeberg.org/shinmera/halftone - a simple image viewer
 
 
 ### Gtk+3 (cl-cffi-gtk)
@@ -610,7 +610,7 @@ and run it:
 It is possible to build a binary and bundle it together with all the
 necessary shared libraries.
 
-Please read [https://github.com/Shinmera/qtools#deployment](https://github.com/Shinmera/qtools#deployment).
+Please read [https://codeberg.org/shinmera/qtools#deployment](https://codeberg.org/shinmera/qtools#deployment).
 
 You might also like [this Travis CI script](https://github.com/phoe-trash/furcadia-post-splitter/blob/master/.travis.yml) to build a self-contained binary for the three OSes.
 
@@ -1085,7 +1085,7 @@ Have fun, and don't hesitate to share your experience and your apps.
 [nodgui]: https://codeberg.org/cage/nodgui
 [qt4]: https://doc.qt.io/archives/qt-4.8/index.html
 [gtk]: https://www.gtk.org/
-[qtools]: https://github.com/Shinmera/qtools
+[qtools]: https://codeberg.org/shinmera/qtools
 [cl-cffi-gtk]: https://github.com/Ferada/cl-cffi-gtk/
 [iup-tecgraf]: http://webserver2.tecgraf.puc-rio.br/iup/
 [iup-lisp]: https://github.com/lispnik/iup/
