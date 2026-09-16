@@ -1724,7 +1724,7 @@ To further control the creation of object instances, we can specialize the metho
 a new instance was created but wasn't initialized yet with the
 default initargs and initforms.
 
-It is recommended (Keene) to create an after method, since creating a
+It is recommended (Keene) to create an `:after` method, since creating a
 primary method would prevent slots' initialization.
 
 ~~~lisp
@@ -1797,6 +1797,33 @@ Another rationale. The CLOS implementation of
 ~~~
 initialize-instance instance &rest initargs &key &allow-other-keys
 ~~~
+
+### Giving more key arguments to make-instance
+
+Usually, the key arguments we use with `make-instance` calls
+correspond to our defclass' `:initarg`s.
+
+We can define more key arguments in an `:after` method of
+`initialize-instance`, and that allows us to use them with `make-instance`:
+
+```lisp
+(defmethod initialize-instance :after ((p person) &key surname)
+  "If a surname is given, add it to the name."
+  (when surname
+    (setf (name p) (concatenate 'string (name p) " aka " surname))))
+```
+
+You can now do:
+
+```lisp
+(make-instance 'person :name "me" :surname "the lisper")
+;;                                ^^^^ not an :initarg of the defclass
+;; => #<PERSON {120652A7B3}>
+
+(name *)
+;; => "me aka the lisper"
+```
+
 
 ### Controlling the update of instances (update-instance-for-redefined-class)
 
