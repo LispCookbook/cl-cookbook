@@ -6,14 +6,14 @@ This is a short guide to TCP/IP and UDP/IP client/server programming in Common
 Lisp using [usockets](https://github.com/usocket/usocket).
 
 
-## TCP/IP
+## How do I create a TCP/IP server and let a client send data to it?
 
 As usual, we will use quicklisp to load usocket.
 
     (ql:quickload "usocket")
 
 Now we need to create a server. There are 2 primary functions that we need
-to call. `usocket:socket-listen` and `usocket:socket-accept`.
+to call. `usocket:socket-listen` and `usocket:socket-accept`. 
 
 `usocket:socket-listen` binds to a port and listens on it. It returns a socket
 object. We need to wait with this object until we get a connection that we
@@ -22,107 +22,79 @@ that returns only when a connection is made. This returns a new socket object
 that is specific to that connection. We can then use that connection to
 communicate with our client.
 
-So, what were the problems I faced due to my mistakes?
+If you want to write to the socket, you need to get the corresponding 
+stream from this new socket. The socket object has a stream slot and we need 
+to explicitly use that with `usocket:socket-stream`.
 
-Mistake 1 - My initial understanding was that `socket-accept` would return
-a stream object. NO.... It returns a socket object. In hindsight, its correct
-and my own mistake cost me time. So, if you want to write to the socket, you
-need to actually get the corresponding stream from this new socket. The socket
-object has a stream slot and we need to explicitly use that. And how does one
-know that? `(describe connection)` is your friend!
-
-Mistake 2 - You need to close both the new socket and the server socket.
-Again this is pretty obvious but since my initial code was only closing
-the connection, I kept running into a socket in use problem. Of course
-one more option is to reuse the socket when we listen.
-
-Once you get past these mistakes, it's pretty easy to do the rest. Close
-the connections and the server socket and boom you are done!
-
+After using the connection and the socket both need to be closed with `usocket:socket-close`. 
+This will be done automatically if we use the macro `usocket:with-socket-listener` 
+instead of `usocket:socket-listen`.
 
 ~~~lisp
 (defun create-server (port)
-  (let* ((socket (usocket:socket-listen "127.0.0.1" port))
-	 (connection (usocket:socket-accept socket :element-type
-                     'character)))
-    (unwind-protect
-        (progn
-	      (format (usocket:socket-stream connection)
-                  "Hello World~%")
-	      (force-output (usocket:socket-stream connection)))
-      (progn
-	    (format t "Closing sockets~%")
-	    (usocket:socket-close connection)
-        (usocket:socket-close socket)))))
+  (usocket:with-socket-listener (socket "127.0.0.1" port)
+    (let ((connection (usocket:socket-accept socket :element-type 'character)))
+      (format (usocket:socket-stream connection) "Hello World!~%")
+      (force-output (usocket:socket-stream connection)))))
 ~~~
 
-Now for the client. This part is easy. Just connect to the server port
-and you should be able to read from the server. The only silly mistake I
-made here was to use read and not read-line. So, I ended up seeing only a
-"Hello" from the server. I went for a walk and came back to find the issue
-and fix it.
 
+Now for the client. Just connect to the server port with 
+`usocket:with-client-socket` and you should be able to read from the server. 
+This can be done with `read-line`.
 
 ~~~lisp
 (defun create-client (port)
-  (usocket:with-client-socket (socket stream "127.0.0.1" port
-                                      :element-type 'character)
-    (unwind-protect
-         (progn
-           (usocket:wait-for-input socket)
-           (format t "Input is: ~a~%" (read-line stream)))
-      (usocket:socket-close socket))))
+  (usocket:with-client-socket (socket stream "127.0.0.1" port :element-type 'character)
+    (usocket:wait-for-input socket)
+    (format t "Input is: ~a~%" (read-line stream))))
 ~~~
 
+
 So, how do you run this? You need two REPLs, one for the server
-and one for the client. Load this file in both REPLs. Create the
-server in the first REPL.
+and one for the client. Evaluate the function definition for `create-server` and create 
+the server in the first REPL.
 
     (create-server 12321)
 
-Now you are ready to run the client on the second REPL
+Now you are ready to evaluate the function definition for `create-client` and to run 
+the client on the second REPL
 
     (create-client 12321)
 
-Voilà! You should see "Hello World" on the second REPL.
+Voilà! You should see `"Input is: Hello World!"` on the second REPL.
 
 
-## UDP/IP
+## How do I create a UDP/IP server and let a client send data to it?
 
 As a protocol, UDP is connection-less, and therefore there is no
-concept of binding and accepting a connection. Instead we only do a
-`socket-connect` but pass a specific set of parameters to make sure that
-we create an UDP socket that's waiting for data on a particular port.
+concept of binding and accepting a connection. So we would only use
+`usocket:socket-connect` to make sure that we create an UDP socket specified with
+`:protocol :datagram` that's waiting for data on a address specified with 
+`:local-host` and port specified with `:local-port`.
 
-So, what were the problems I faced due to my mistakes?
-Mistake 1 - Unlike TCP, you don't pass host and port to `socket-connect`.
-If you do that, then you are indicating that you want to send a packet.
-Instead, you pass `nil` but you set `:local-host` and `:local-port` to the address
-and port that you want to receive data on. This part took some time to
-figure out, because the documentation didn't cover it. Instead reading
-a bit of code from
-[blackthorn-engine-3d](https://code.google.com/p/blackthorn-engine-3d/source/browse/src/examples/usocket/usocket.lisp) helped a lot.
+Since we don't want to bother closing the socket we use the macro 
+`usocket:with-client-socket` which takes the same arguments instead.
+We don't need the stream variable here, so we bind it to NIL.
 
 Also, since UDP is connectionless, anyone can send data to it at any
 time. So, we need to know which host/port did we get data from so
-that we can respond on it. So we bind multiple values to `socket-receive`
-and use those values to send back data to our peer "client".
+that we can respond on it. So we bind multiple values to `usocket:socket-receive`
+and use those values to send back data with `usocket:socket-send` to our peer "client".
 
 ~~~lisp
 (defun create-server (port buffer)
-  (let* ((socket (usocket:socket-connect nil nil
-					:protocol :datagram
-					:element-type '(unsigned-byte 8)
-					:local-host "127.0.0.1"
-					:local-port port)))
-    (unwind-protect
-	 (multiple-value-bind (buffer size client receive-port)
-	     (usocket:socket-receive socket buffer 8)
-	   (format t "~A~%" buffer)
-	   (usocket:socket-send socket (reverse buffer) size
-				:port receive-port
-				:host client))
-      (usocket:socket-close socket))))
+  (usocket:with-client-socket (socket nil nil nil 
+                                      :protocol :datagram
+                                      :element-type '(unsigned-byte 8)
+					                  :local-host "127.0.0.1"
+					                  :local-port port)
+    (multiple-value-bind (buffer size client receive-port)
+	    (usocket:socket-receive socket buffer 8)
+	  (format t "~A~%" buffer)
+	  (usocket:socket-send socket (reverse buffer) size
+				           :port receive-port
+				           :host client))))
 ~~~
 
 
@@ -131,18 +103,15 @@ send data on it and receive data back.
 
 ~~~lisp
 (defun create-client (port buffer)
-  (let ((socket (usocket:socket-connect "127.0.0.1" port
-					 :protocol :datagram
-					 :element-type '(unsigned-byte 8))))
-    (unwind-protect
-	 (progn
-	   (format t "Sending data~%")
-	   (replace buffer #(1 2 3 4 5 6 7 8))
-	   (format t "Receiving data~%")
-	   (usocket:socket-send socket buffer 8)
-	   (usocket:socket-receive socket buffer 8)
-	   (format t "~A~%" buffer))
-      (usocket:socket-close socket))))
+  (usocket:with-client-socket (socket nil "127.0.0.1" port 
+                                      :protocol :datagram
+                                      :element-type '(unsigned-byte 8))
+    (format t "Sending data~%")
+    (replace buffer #(1 2 3 4 5 6 7 8))
+    (format t "Receiving data~%")
+    (usocket:socket-send socket buffer 8)
+    (usocket:socket-receive socket buffer 8)
+    (format t "~A~%" buffer)))
 ~~~
 
 
@@ -157,9 +126,15 @@ Now you are ready to run the client on the second REPL
     (create-client 12321 (make-array 8 :element-type '(unsigned-byte 8)))
 
 Voilà! You should see a vector `#(1 2 3 4 5 6 7 8)` on the first REPL
-and `#(8 7 6 5 4 3 2 1)` on the second one.
+and the output
+ 
+  Sending data
+  Receiving data
+  #(8 7 6 5 4 3 2 1)
+  
+on the second one.
 
 
 ## Credit
 
-This guide originally comes from [shortsightedsid](https://gist.github.com/shortsightedsid/71cf34282dfae0dd2528)
+This guide originally comes from [shortsightedsid](https://gist.github.com/shortsightedsid/71cf34282dfae0dd2528) and was edited.
