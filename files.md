@@ -96,46 +96,60 @@ NIL
 
 ### Testing whether a file exists (beware of wildcard characters)
 
-Use `probe-file` after `(make-pathname :name filename-with-wild-chars)` or `sb-ext:parse-native-namestring` on SBCL. Why?
+Use `uiop:ensure-pathname "filename[with wildcards].txt")` followed by `uiop:file-exists-p` or `probe-file`.
 
-The characters `*` but also `[` and `]` are wildcard characters. Inside a file name, they create
+A (silent) issue arises when your filename, as a string or a pathname,
+contains wilcard characters such as `*`, `[` or `]`.
+
+Inside a file name, these create
 [wildcard pathnames](https://cl-community-spec.github.io/pages/Restrictions-on-Wildcard-Pathnames.html) with restrictions.
-
 If a file contains any of them, `uiop:probe-file*` and
 `uiop:file-exists-p` will return NIL, even though your file exists.
 
-Let's have a music file named "best-of-[2000]-01.mp3":
+Look, let's have a music file named "best-of-[2000]-01.mp3":
 
 ```txt
 $ touch best-of-\[2000\]-01.mp3
 ```
 
-You can't use `probe-file`, unless you escape the characters with two
-backslashes (which we would do with `str:replace-all`):
+You can't use `probe-file`, unless you manually escape the characters with two
+backslashes:
 
 ```lisp
 (probe-file "best-of-[2000]-01.mp3")
 ;; => NIL
+;;   ^^^^ But our file exists!
 
 (probe-file "best-of-\\[2000\\]-01.mp3")
 ;; => #P"best-of-\\[2000]-01.mp3"
 ```
 
-You can use `make-pathname` followed by `probe-file`:
+To avoid this, do any of this:
+
+- use `uiop:ensure-pathname` before checking if the file with this filename (a string) exists,
+- use `uiop:parse-native-namestring` likewise,
+- build a pathname directly: `(make-pathname :name "filename[with wildcards].txt")`.
+
+See:
+
+with `uiop:ensure-pathname`:
+
+```lisp
+(uiop:file-exists-p
+  (uiop:ensure-pathname "best-of-[2000]-01.mp3"))
+;; => #P"best-of-\\[2000]-01.mp3"  => OK
+```
+
+with `make-pathname`:
 
 ~~~lisp
 (probe-file (make-pathname :name "best-of-[2000]-01.mp3"))
-;; => #P"/home/me/path/to/best-of-\\[2000]-01.mp3"
+;; => #P"/home/me/path/to/best-of-\\[2000]-01.mp3"  => OK
 ~~~
 
-On SBCL, you can use `sb-ext:parse-native-namestring`:
-
-```lisp
-(sb-ext:parse-native-namestring "best-of-[2000]-01.mp3")
-;; => #P"best-of-\\[2000]-01.mp3"
-```
-
-With `uiop:ensure-pathname`, you can use the `:want-non-wild t` key parameter.
+If you already manipulate pathnames, you can use the `:want-non-wild t`
+key parameter of `uiop:ensure-pathname` to be sure you
+are not dealing with wildcard characters.
 
 
 ### Expanding a file or a directory name with a tilde (`~`)
@@ -147,7 +161,7 @@ For portability, use `uiop:native-namestring`:
 "/home/me/.emacs.d/"
 ~~~
 
-It also expand the tilde with files and directories that don't exist:
+It also expands the tilde with files and directories that don't exist:
 
 ~~~lisp
 (uiop:native-namestring "~/foo987.txt")
