@@ -23,7 +23,7 @@ As a first step, you should load the needed libraries via quicklisp:
 
 ~~~lisp
 
-(ql:quickload '(clack websocket-driver alexandria))
+(ql:quickload '(clack websocket-driver alexandria clack-handler-hunchentoot))
 
 ~~~
 
