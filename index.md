@@ -70,6 +70,8 @@ The CL Cookbook aims to tackle all sort of topics, for the beginner and for the 
 
 * [Interfacing with your OS](os.html)
 * [Databases](databases.html)
+* File formats:
+  * [CSV](csv.md)
 * [Foreign Function Interfaces](ffi.html)
 * [Building Dynamic Libraries](dynamic-libraries.html)
 * [GUI programming](gui.html)
