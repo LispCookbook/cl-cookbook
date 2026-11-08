@@ -346,10 +346,10 @@ Instead of accessing a column by its index, you can access it by its name.
 
 Use `data-table:data-table-value dt &key row row-idx col-name col-idx`.
 
-For example, what is the "name" of the first row?
+For example, what is the "age" of the first row?
 
 ```lisp
-(csv:data-table-value *dt* :row-idx 0 :col-name "age")
+(data-table:data-table-value *dt* :row-idx 0 :col-name "age")
 ;; => 7
 ```
 
@@ -368,7 +368,7 @@ In this example, we create a new data-table object with only 2
 columns. We also inverted their order.
 
 ```lisp
-(csv:select-columns *dt* '("age" "name"))
+(data-table:select-columns *dt* '("age" "name"))
 ;; =>
 #<DATA-TABLE:DATA-TABLE {1203F88213}>
 CL-USER> (inspect *)
