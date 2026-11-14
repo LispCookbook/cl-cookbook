@@ -65,13 +65,13 @@ these other ways:
 
 ## Accessing Substrings
 
-As a string is a sequence, you can access substrings with the SUBSEQ
+As a string is a sequence, you can access substrings with the `subseq`
 function. The index into the string is, as always, zero-based. The third,
 optional, argument is the index of the first character which is not a part of
 the substring, it is not the length of the substring.
 
 ~~~lisp
-CL-USER> (defparameter *my-string* (string "Groucho Marx"))
+CL-USER> (defparameter *my-string* "Groucho Marx")
 *MY-STRING*
 CL-USER> (subseq *my-string* 8)
 "Marx"
@@ -81,10 +81,10 @@ CL-USER> (subseq *my-string* 1 5)
 "rouc"
 ~~~
 
-You can also manipulate the substring if you use SUBSEQ together with SETF.
+You can also manipulate the substring if you use `subseq` together with `setf`.
 
 ~~~lisp
-CL-USER> (defparameter *my-string* (string "Harpo Marx"))
+CL-USER> (defparameter *my-string* "Harpo Marx")
 *MY-STRING*
 CL-USER> (subseq *my-string* 0 5)
 "Harpo"
@@ -96,10 +96,10 @@ CL-USER> *my-string*
 
 But note that the string isn't "stretchable". To cite from the HyperSpec: "If
 the subsequence and the new sequence are not of equal length, the shorter length
-determines the number of elements that are replaced." For example:
+determines the number of elements that are replaced.". For example:
 
 ~~~lisp
-CL-USER> (defparameter *my-string* (string "Karl Marx"))
+CL-USER> (defparameter *my-string* "Karl Marx")
 *MY-STRING*
 CL-USER> (subseq *my-string* 0 4)
 "Karl"
@@ -117,11 +117,11 @@ CL-USER> *my-string*
 
 ## Accessing Individual Characters
 
-You can use the function CHAR to access individual characters of a string. CHAR
-can also be used in conjunction with SETF.
+You can use the function `char` to access individual characters of a string. `char`
+can also be used in conjunction with `setf`.
 
 ~~~lisp
-CL-USER> (defparameter *my-string* (string "Groucho Marx"))
+CL-USER> (defparameter *my-string* "Groucho Marx")
 *MY-STRING*
 CL-USER> (char *my-string* 11)
 #\x
@@ -135,15 +135,15 @@ CL-USER> *my-string*
 "Grouchy Marx"
 ~~~
 
-Note that there's also SCHAR. If efficiency is important, SCHAR can be a bit
+Note that there's also `schar`. If efficiency is important, `schar` can be a bit
 faster where appropriate.
 
 Because strings are arrays and thus sequences, you can also use the more generic
-functions `aref` and `elt` (which are more general while CHAR might be implemented
+functions `aref` and `elt` (which are more general while `char` might be implemented
 more efficiently).
 
 ~~~lisp
-CL-USER> (defparameter *my-string* (string "Groucho Marx"))
+CL-USER> (defparameter *my-string* "Groucho Marx")
 *MY-STRING*
 CL-USER> (aref *my-string* 3)
 #\u
@@ -153,7 +153,9 @@ CL-USER> (elt *my-string* 8)
 
 Each character in a string has an integer code. The range of recognized codes
 and Lisp's ability to print them is directed related to your implementation's
-character set support, e.g. ISO-8859-1, or Unicode. Here are some examples in
+character set support, e.g. ISO-8859-1, or Unicode.
+
+Here are some examples in
 SBCL of UTF-8 which encodes characters as 1 to 4 8 bit bytes. The first example
 shows a character outside the first 128 chars, or what is considered the normal
 Latin character set. The second example shows a multibyte encoding (beyond the
@@ -182,8 +184,7 @@ their encodings.
 ## Remove or replace characters from a string
 
 There's a slew of (sequence) functions that can be used to manipulate a string
-and we'll only provide some examples here. See the sequences dictionary in the
-HyperSpec for more.
+and we'll only provide some examples here. See the sequences functions in the data-structures chapter for more.
 
 `remove` one character from a string:
 
@@ -205,7 +206,7 @@ CL-USER> (substitute #\u #\o "Groucho Marx")
 "Gruuchu Marx"
 CL-USER> (substitute-if #\_ #'upper-case-p "Groucho Marx")
 "_roucho _arx"
-CL-USER> (defparameter *my-string* (string "Zeppo Marx"))
+CL-USER> (defparameter *my-string* "Zeppo Marx")
 *MY-STRING*
 CL-USER> (replace *my-string* "Harpo" :end1 5)
 "Harpo Marx"
@@ -308,10 +309,10 @@ CL-USER> (with-output-to-string (stream)
 
 ## Processing a String One Character at a Time
 
-Use the MAP function to process a string one character at a time.
+Use the `map` function to process a string one character at a time.
 
 ~~~lisp
-CL-USER> (defparameter *my-string* (string "Groucho Marx"))
+CL-USER> (defparameter *my-string* "Groucho Marx")
 *MY-STRING*
 CL-USER> (map 'string (lambda (c) (print c)) *my-string*)
 #\G
@@ -329,7 +330,9 @@ CL-USER> (map 'string (lambda (c) (print c)) *my-string*)
 "Groucho Marx"
 ~~~
 
-Or do it with LOOP.
+Or do it with `loop`.
+
+A string is a vector of characters, so use "across":
 
 ~~~lisp
 CL-USER> (loop for char across "Zeppo"
@@ -337,73 +340,16 @@ CL-USER> (loop for char across "Zeppo"
 (#\Z #\e #\p #\p #\o)
 ~~~
 
-## Reversing a String by Word or Character
+## Reversing a string by character
 
 Reversing a string by character is easy using the built-in `reverse` function (or
 its destructive counterpart `nreverse`).
 
 ~~~lisp
-CL-USER> (defparameter *my-string* (string "DSL"))
-*MY-STRING*
-CL-USER> (reverse *my-string*)
+CL-USER> (reverse "DSL")
 "LSD"
 ~~~
 
-There's no one-liner in CL to reverse a string by word (like you would do it in
-Perl with split and join). You either have to use functions from an external
-library like SPLIT-SEQUENCE or you have to roll your own solution.
-
-Here's an attempt with the `str` library:
-
-~~~lisp
-CL-USER> (defparameter *singing* "singing in the rain")
-*SINGING*
-CL-USER> (str:words *SINGING*)
-("singing" "in" "the" "rain")
-CL-USER> (reverse *)
-("rain" "the" "in" "singing")
-CL-USER> (str:unwords *)
-"rain the in singing"
-~~~
-
-And here's another one with no external dependencies:
-
-~~~lisp
-CL-USER> (defun split-by-one-space (string)
-    "Returns a list of substrings of string
-    divided by ONE space each.
-    Note: Two consecutive spaces will be seen as
-    if there were an empty string between them."
-    (loop for i = 0 then (1+ j)
-          as j = (position #\Space string :start i)
-          collect (subseq string i j)
-          while j))
-SPLIT-BY-ONE-SPACE
-CL-USER> (split-by-one-space "Singing in the rain")
-("Singing" "in" "the" "rain")
-CL-USER> (split-by-one-space "Singing in the  rain")
-("Singing" "in" "the" "" "rain")
-CL-USER> (split-by-one-space "Cool")
-("Cool")
-CL-USER> (split-by-one-space " Cool ")
-("" "Cool" "")
-CL-USER> (defun join-string-list (string-list)
-    "Concatenates a list of strings
-and puts spaces between the elements."
-    (format nil "~{~A~^ ~}" string-list))
-JOIN-STRING-LIST
-CL-USER> (join-string-list '("We" "want" "better" "examples"))
-"We want better examples"
-CL-USER> (join-string-list '("Really"))
-"Really"
-CL-USER> (join-string-list '())
-""
-CL-USER> (join-string-list
-          (nreverse
-           (split-by-one-space
-            "Reverse this sentence by word")))
-"word by sentence this Reverse"
-~~~
 
 ## Dealing with unicode strings
 
@@ -457,40 +403,40 @@ Tip: you can ensure these functions are run only in SBCL with a feature flag:
 
 ## Controlling Case
 
-Common Lisp has a couple of functions to control the case of a string.
+Common Lisp has functions to control the case of a string:
 
 ~~~lisp
 CL-USER> (string-upcase "cool")
 "COOL"
-CL-USER> (string-upcase "Cool")
-"COOL"
 CL-USER> (string-downcase "COOL")
 "cool"
-CL-USER> (string-downcase "Cool")
-"cool"
-CL-USER> (string-capitalize "cool")
-"Cool"
 CL-USER> (string-capitalize "cool example")
 "Cool Example"
 ~~~
 
+They return a new string.
+
 These functions take the `:start` and `:end` keyword arguments so you can optionally
-only manipulate a part of the string. They also have destructive counterparts
-whose names starts with "N".
+only manipulate a part of the string:
 
 ~~~lisp
 CL-USER> (string-capitalize "cool example" :start 5)
 "cool Example"
 CL-USER> (string-capitalize "cool example" :end 5)
 "Cool example"
-CL-USER> (defparameter *my-string* (string "BIG"))
+~~~
+
+They also have destructive counterparts whose names starts with `n`
+(meaning "non-consing", aka not allocating memory):
+
+~~~lisp
+CL-USER> (defparameter *my-string* "BIG")
 *MY-STRING*
-CL-USER> (defparameter *my-downcase-string* (nstring-downcase *my-string*))
-*MY-DOWNCASE-STRING*
-CL-USER> *my-downcase-string*
+CL-USER> (nstring-downcase *my-string*)
 "big"
 CL-USER> *my-string*
 "big"
+;; ^^ the parameter was modified in place.
 ~~~
 
 Note this potential caveat: according to the HyperSpec,
@@ -502,7 +448,7 @@ the following example is implementation-dependent - it may either be "BIG" or
 "BUG". If you want to be sure, use `copy-seq`.
 
 ~~~lisp
-CL-USER> (defparameter *my-string* (string "BIG"))
+CL-USER> (defparameter *my-string* "BIG")
 *MY-STRING*
 CL-USER> (defparameter *my-upcase-string* (string-upcase *my-string*))
 *MY-UPCASE-STRING*
