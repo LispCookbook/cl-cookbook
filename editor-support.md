@@ -319,9 +319,17 @@ So you probably want a shell alias:
 
 See more:
 
-- [Lem quick tour (7 minutes, end of 2026)](https://www.youtube.com/watch?v=Y5mo4FpatB8)
+- [Lem quick tour (7 minutes)](https://www.youtube.com/watch?v=Y5mo4FpatB8)
 
-<img src="assets/lem1.png" style="width: 800px" title="Lem's REPL" alt="Lem running in the terminal with the Lisp REPL full screen, showing a completion window."/>
+
+<!-- epub-exclude-start -->
+<a href="https://www.youtube.com/watch?v=Y5mo4FpatB8">
+ <img src="assets/lem-editor-vignette.png" style="width: 800px" title="Lem quick tour"
+    alt="Lem video on Youtube."/>
+</a>
+<!-- epub-exclude-end -->
+
+<!-- <img src="assets/lem1.png" style="width: 800px" title="Lem's REPL" alt="Lem running in the terminal with the Lisp REPL full screen, showing a completion window."/> -->
 
 <!-- pdf-include-start
 ![](assets/lem1.png)
