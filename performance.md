@@ -18,12 +18,12 @@ a form, evaluates it and prints timing information in
 [`*trace-output*`][trace-output], as shown below:
 
 ~~~lisp
-* (defun collect (start end)
-    "Collect numbers [start, end] as list."
-    (loop for i from start to end
-          collect i))
+(defun collect (start end)
+  "Collect numbers [start, end] as list."
+  (loop for i from start to end
+        collect i))
 
-* (time (collect 1 10))
+(time (collect 1 10))
 
 Evaluation took:
   0.000 seconds of real time
@@ -52,13 +52,108 @@ functions like `sb-profile:profile` does.
 
 > You might find sb-sprof more useful than the deterministic profiler when profiling functions in the common-lisp-package, SBCL internals, or code where the instrumenting overhead is excessive.
 
+**sb-profile**
+
+`sb-profile` is surely already loaded in SBCL, you don't need to load it.
+
+Like `trace`, tell which functions you want to profile:
+
+~~~lisp
+(defun hello ()
+  (print "hello!"))
+
+(defun bye ()
+  (print  "bye!"))
+
+(sb-profile:profile hello bye)
+~~~
+
+Then run some code, and ask for a report:
+
+~~~lisp
+(dotimes (i 10)
+  (hello)
+  (bye))
+
+(sb-profile:report)
+~~~
+
+which shows you:
+
+~~~txt
+  seconds  |     gc     | consed | calls |  sec/call  |  name
+----------------------------------------------------
+     0.000 |      0.000 |      0 |    10 |   0.000007 | HELLO
+     0.000 |      0.000 |      0 |    10 |   0.000003 | BYE
+----------------------------------------------------
+     0.000 |      0.000 |      0 |    20 |            | Total
+
+estimated total profiling overhead: 0.00 seconds
+overhead estimation parameters:
+  6.816e-9s/call, 1.311368e-6s total profiling, 6.12266e-7s internal profiling
+~~~
+
+When done, you can `reset` the data for all profiled functions.
+
+**sb-sprof**
+
 Load `sb-sprof` in your image:
 
 ```lisp
 (require :sb-sprof)
 ```
 
-and then use the macro `sb-sprof:with-profiling`. Please see its documentation.
+Get some interesting code to profile:
+
+~~~lisp
+;; from the SBCL documentation:
+(defun cpu-test-inner (a i)
+  (logxor a
+          (* i 5)
+          (+ a i)))
+
+(defun cpu-test (n)
+  (let ((a 0))
+    (dotimes (i (expt 2 n) a)
+      (setf a (cpu-test-inner a i)))))
+~~~
+
+and use the macro `sb-sprof:with-profiling`:
+
+~~~lisp
+(sb-sprof:with-profiling (:max-samples 1000
+                          :report :flat
+                          :loop nil)
+  (cpu-test 26))
+~~~
+
+which reports automatically:
+
+```txt
+Number of samples:   82
+Sample interval:     0.01 seconds
+Total sampling time: 0.82 seconds
+Graph cycles:        0
+Sampled threads:
+   #<THREAD tid=81091 "main thread" RUNNING {1200BE0003}> (13408/1048576 bytes, 41 hash buckets)
+
+           Self        Total        Cumul
+  Nr  Count     %  Count     %  Count     %    Calls  Function
+------------------------------------------------------------------------
+   1     23  28.0     31  37.8     23  28.0        -  CPU-TEST-INNER
+   2     22  26.8     22  26.8     45  54.9        -  SB-KERNEL:TWO-ARG-XOR
+   3     14  17.1     71  86.6     59  72.0        -  CPU-TEST
+   4     12  14.6     12  14.6     71  86.6        -  GENERIC-+
+   5     10  12.2     10  12.2     81  98.8        -  GENERIC-*
+   6      1   1.2      1   1.2     82 100.0        -  GENERIC-<
+   7      0   0.0     82 100.0     82 100.0        -  (LAMBDA ()) in #<code id=9142 [1] (LAMBDA ()) {B800D7E2DF..B800D7E5F0}>
+   8      0   0.0     82 100.0     82 100.0        -  SWANK::EVAL-REGION
+   9      0   0.0     82 100.0     82 100.0        -  (LAMBDA NIL :IN SWANK-REPL::REPL-EVAL)
+  10      0   0.0     82 100.0     82 100.0        -  SWANK-REPL::TRACK-PACKAGE
+  […]
+```
+
+Please see [all details and options on its documentation](https://www.sbcl.org/manual/#Statistical-Profiler).
 
 
 ### Use flamegraphs and other tracing profilers
