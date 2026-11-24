@@ -510,7 +510,7 @@ the context (`e`), etc.
 Often, you can edit a buggy function, compile it (with the `C-c C-c`
 shortcut in Slime), choose the "RETRY" restart and see your code pass.
 
-All this depends on compiler options, wether it is optimized for
+All this depends on compiler options, whether it is optimized for
 debugging, speed or security.
 
 See our [debugging section](debugging.html).
