@@ -1125,7 +1125,7 @@ Combine it with `~:*` to implement irregular plural:
 ;; => "I saw two elves."
 ~~~
 
-## Capturing what is is printed into a stream
+## Capturing what is printed into a stream
 
 Inside `(with-output-to-string (mystream) …)`, everything that is
 printed into the stream `mystream` is captured and returned as a

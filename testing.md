@@ -406,9 +406,9 @@ that we use in the Continuous Integration section below. It provides a
 
 But let us highlight something you'll have to take care of if you ran
 your tests like this: the **exit code**. Indeed, `(run!)` prints a
-report, but it doesn't say to your Lisp wether the tests were
-successful or not, and wether to exit with an exit code of 0 (for
-success) or more (for errors). So, if your testst were run on a CI
+report, but it doesn't say to your Lisp whether the tests were
+successful or not, and whether to exit with an exit code of 0 (for
+success) or more (for errors). So, if your tests were run on a CI
 system, the CI status would be always green, even if tests failed. To
 remedy that, replace `run!` by:
 
@@ -510,7 +510,7 @@ parts of our code were tested or not:
 
 Such capabilities are included into Lisp implementations. For example, SBCL has the
 [sb-cover](http://www.sbcl.org/manual/index.html#sb_002dcover) module
-and the feature is also built-in in [CCL](https://ccl.clozure.com/docs/ccl.html#code-coverage)
+and the feature is also built into [CCL](https://ccl.clozure.com/docs/ccl.html#code-coverage)
 or [LispWorks](http://www.lispworks.com/documentation/lw71/LW/html/lw-68.htm).
 
 ### Generating an html test coverage output

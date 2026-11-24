@@ -401,7 +401,7 @@ Assuming that you have [CLPM](https://clpm.dev) installed and
 configured, [modify your vscode settings](https://code.visualstudio.com/docs/getstarted/settings) to
 look like this:
 
-1. Add the following to to your VSCode settings:
+1. Add the following to your VSCode settings:
 
 ```json
   "alive.swank.startupCommand":[

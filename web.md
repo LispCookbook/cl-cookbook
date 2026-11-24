@@ -1153,7 +1153,7 @@ threads, requests per second,…).
 
 <!-- links should be relative, but transforming to PDF with Typst blocks on it -->
 
-This this section: [debugging#remote-debugging](https://lispcookbook.github.io/cl-cookbook/debugging.html#remote-debugging).
+This section: [debugging#remote-debugging](https://lispcookbook.github.io/cl-cookbook/debugging.html#remote-debugging).
 
 ## Hot reload
 
