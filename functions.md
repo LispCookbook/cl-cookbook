@@ -629,7 +629,7 @@ Using `function` or the `#'` shorthand allows us to refer to local
 functions. If we pass instead a symbol to `funcall`, what is
 called is always the function named by that symbol in the *global environment*.
 
-In addition, `#'` catches the function by value. If the function is redefined, bindings that refered to this function by `#'` will still run its original behaviour.
+In addition, `#'` catches the function by value. If the function is redefined, bindings that referred to this function by `#'` will still run its original behaviour.
 
 Let's assign a function to a parameter:
 
