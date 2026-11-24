@@ -466,7 +466,7 @@ If this gives you the will to do pattern matching, see
 
 `listp` tests whether an object is a list or nil.
 
-`consp` tests wether an object is a cons cell.
+`consp` tests whether an object is a cons cell.
 
 The empty list is *not* a cons, so `(consp nil)` is falsy, while
 `(listp nil)` is truthy.
