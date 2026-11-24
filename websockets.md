@@ -110,7 +110,7 @@ Your chat server will not make use of that environment, but if you want to learn
 more you can check out Clack's documentation.
 
 When a browser connects to your server, a websocket will be instantiated and
-handlers will be defined on it for each of the the events you want to support.
+handlers will be defined on it for each of the events you want to support.
 A WebSocket "handshake" will then be sent back to the browser, indicating
 that the connection has been made. Here's how it works:
 
