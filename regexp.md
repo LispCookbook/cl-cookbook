@@ -42,7 +42,7 @@ below.
 ### Looking for matching patterns: scan, create-scanner
 
 The `scan` function tries to match the given pattern and on success
-returns four multiple-values values - the start of the match, the end
+returns four values - the start of the match, the end
 of the match, and two arrays denoting the beginnings and ends of
 register matches. On failure returns `NIL`.
 
