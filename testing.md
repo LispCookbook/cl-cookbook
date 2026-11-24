@@ -510,7 +510,7 @@ parts of our code were tested or not:
 
 Such capabilities are included into Lisp implementations. For example, SBCL has the
 [sb-cover](http://www.sbcl.org/manual/index.html#sb_002dcover) module
-and the feature is also built-in in [CCL](https://ccl.clozure.com/docs/ccl.html#code-coverage)
+and the feature is also built into [CCL](https://ccl.clozure.com/docs/ccl.html#code-coverage)
 or [LispWorks](http://www.lispworks.com/documentation/lw71/LW/html/lw-68.htm).
 
 ### Generating an html test coverage output
