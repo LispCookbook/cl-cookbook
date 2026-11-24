@@ -928,7 +928,7 @@ We now only have to write the main entry point of our binary and we're done.
 By the way, `clingon:getopt` returns 3 values:
 
 - the option's value
-- a boolean, indicating wether this option was provided on the command-line
+- a boolean, indicating whether this option was provided on the command-line
 - the command which provided the option for this value.
 
 See also `clingon:opt-is-set-p`.
