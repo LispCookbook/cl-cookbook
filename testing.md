@@ -408,7 +408,7 @@ But let us highlight something you'll have to take care of if you ran
 your tests like this: the **exit code**. Indeed, `(run!)` prints a
 report, but it doesn't say to your Lisp whether the tests were
 successful or not, and whether to exit with an exit code of 0 (for
-success) or more (for errors). So, if your testst were run on a CI
+success) or more (for errors). So, if your tests were run on a CI
 system, the CI status would be always green, even if tests failed. To
 remedy that, replace `run!` by:
 
