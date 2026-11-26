@@ -2087,7 +2087,7 @@ my-plist
 Structures offer a way to store data in named slots. They support
 single inheritance.
 
-Classes provided by the Common Lisp Object System (CLOS) are more flexible however structures may offer better performance (see for example the SBCL manual).
+Classes provided by the Common Lisp Object System (CLOS) are more flexible however structures may offer better performance (see for example the SBCL manual). Moreover, structures are compared slotwise by the builtin function `equalp`, whereas no builtin comparison function compares class instances other than by object identity. One use case where this matters is hash tables: structures can be used as keys in hash tables whose `:test` function is `equalp`.
 
 ### Creation
 
